@@ -5,7 +5,7 @@ var watchify = require('watchify');
 var coffee = require('gulp-coffee');
 var babel = require('gulp-babel');
 var plumber = require('gulp-plumber');
-var server = require( 'gulp-develop-server' );
+var server = require('gulp-develop-server');
 
 gulp.task('bundle', function() {
   return browserify('client/App.js')
@@ -18,9 +18,9 @@ gulp.task('bundle', function() {
 gulp.task('bundleCoffee', function() {
   return gulp.src('server/**/*.coffee')
     .pipe(plumber())
-    .pipe(coffee({bare: true}))
+    .pipe(coffee({bare: true, coffee: require('coffeescript')}))
     .pipe(babel({
-        presets: ['env']
+       presets: ['import-export']
     }))
     .pipe(gulp.dest('./build/server'));
 });
@@ -29,7 +29,7 @@ gulp.task('bundleJs', function() {
   return gulp.src('server/**/*.js')
     .pipe(plumber())
     .pipe(babel({
-        presets: ['env']
+        presets: ['import-export']
     }))
     .pipe(gulp.dest('./build/server'));
 });
