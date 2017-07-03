@@ -1,4 +1,6 @@
 rp = require('request-promise-native')
+import Submit from '../models/submit'
+import User from '../models/user'
 
 export class AllSubmitDownloader
     
@@ -17,7 +19,7 @@ export class AllSubmitDownloader
         true
         
     setDirty: (userId, probid) ->
-        conole.log "setDirty", userId, probId
+        console.log "setDirty", userId, probid
         return
     
         @dirtyResults[userId + "::" + probid] = 1
@@ -45,12 +47,19 @@ export class AllSubmitDownloader
             outcome = "IG"
         if (outcome == @DQ) 
             outcome = "DQ"
-    
-        console.log "processSubmit", uid, name, pid, runid, prob, date, outcome
-        return
-    
-        Submits.addSubmit(runid, date, uid, "p"+pid, outcome)
-        Users.addUser(uid, name, @userList)
+
+        new Submit(
+            _id: runid,
+            time: date,
+            user: uid,
+            problem: "p" + pid,
+            outcome: outcome
+        ).addSubmit()
+        new User(
+            _id: uid,
+            name: name,
+            userList: @userList
+        ).addUser()
         @addedUsers[uid] = uid
         @setDirty(uid, "p"+pid)
         res
@@ -84,7 +93,6 @@ export class AllSubmitDownloader
         while true
             submitsUrl = @baseUrl(page, @submitsPerPage)
             submits = await rp submitsUrl
-            console.log submits.constructor.name
             submits = JSON.parse(submits)["result"]["text"]
             result = @parseSubmits(submits, page >= @minPages)
             if (page < @minPages) # always load at least minPages pages

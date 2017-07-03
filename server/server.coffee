@@ -3,10 +3,19 @@ express = require('express')
 bodyParser = require('body-parser')
 MongoClient = require('mongodb').MongoClient
 ObjectId = require('mongodb').ObjectID
-
-#require('./cron/test-async-c')
+mongoose = require('mongoose');
 
 import jobs from './cron/cron'
+
+mongoose.Promise = global.Promise;
+initMongo = ->
+    await mongoose.connect 'mongodb://localhost/algoprog'
+
+initMongo().catch (error)-> 
+    console.log error
+    process.exit(1)
+
+db = mongoose.connection
 
 app = express()
 

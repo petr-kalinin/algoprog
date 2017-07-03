@@ -34,6 +34,7 @@
     "history": "^1.17.0",
     "jquery": "^2.1.4",
     "mongodb": "^2.1.2",
+    "mongoose": "^4.11.0",
     "react": "^0.14.5",
     "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.5",
