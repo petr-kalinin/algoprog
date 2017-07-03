@@ -21,7 +21,7 @@ usersSchema = new mongoose.Schema
         activity: Number,
         progress: Number
         
-usersSchema.methods.addUser = () ->
+usersSchema.methods.upsert = () ->
     User.update({_id: @_id}, this, {upsert: true}).exec()
 
 User = mongoose.model('Users', usersSchema);

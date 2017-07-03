@@ -1,8 +1,8 @@
-rp = require('request-promise-native')
+request = require('request-promise-native')
 import Submit from '../models/submit'
 import User from '../models/user'
 
-export class AllSubmitDownloader
+class AllSubmitDownloader
     
     constructor: (@baseUrl, @userList, @submitsPerPage, @minPages, @limitPages) ->
         @addedUsers = {}
@@ -54,12 +54,12 @@ export class AllSubmitDownloader
             user: uid,
             problem: "p" + pid,
             outcome: outcome
-        ).addSubmit()
+        ).upsert()
         new User(
             _id: uid,
             name: name,
             userList: @userList
-        ).addUser()
+        ).upsert()
         @addedUsers[uid] = uid
         @setDirty(uid, "p"+pid)
         res
@@ -92,7 +92,9 @@ export class AllSubmitDownloader
         page = 0
         while true
             submitsUrl = @baseUrl(page, @submitsPerPage)
-            submits = await rp submitsUrl
+            submits = await request
+                url: submitsUrl
+                jar: request.jar()
             submits = JSON.parse(submits)["result"]["text"]
             result = @parseSubmits(submits, page >= @minPages)
             if (page < @minPages) # always load at least minPages pages
@@ -103,7 +105,7 @@ export class AllSubmitDownloader
             if page > @limitPages
                 break
             
-        return
+        return  # TODO
             
         tables = Tables.findAll().fetch()
         for uid,tmp of @addedUsers
@@ -114,12 +116,12 @@ export class AllSubmitDownloader
             u.updateLevel()
         console.log "Finish AllSubmitDownloader::run ", @userList, @limitPages
             
-export class LastSubmitDownloader extends AllSubmitDownloader
+class LastSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
         false
         #!Submits.findById(runid)
 
-export class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
+class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
         false
         #res = Submits.findById(runid)?.outcome
@@ -127,9 +129,21 @@ export class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
         #return r
 
 # Лицей 40
-export lic40url = (page, submitsPerPage) ->
+lic40url = (page, submitsPerPage) ->
         'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5401&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
         
 # Заоч
-export zaochUrl = (page, submitsPerPage) ->
+zaochUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5402&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+
+export runAll = () ->
+    (new AllSubmitDownloader(lic40url, 'lic40', 1000, 1, 1e9)).run()
+    (new AllSubmitDownloader(zaochUrl, 'zaoch', 1000, 1, 1e9)).run()
+    
+export runUntilIgnored = () -> 
+    (new UntilIgnoredSubmitDownloader(lic40url, 'lic40', 100, 2, 4)).run()
+    (new UntilIgnoredSubmitDownloader(zaochUrl, 'zaoch', 100, 2, 4)).run()
+    
+export runLast = () ->
+    (new LastSubmitDownloader(lic40url, 'lic40', 20, 1, 1)).run()
+    (new LastSubmitDownloader(zaochUrl, 'zaoch', 20, 1, 1)).run()
