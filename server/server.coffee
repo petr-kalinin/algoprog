@@ -5,6 +5,8 @@ MongoClient = require('mongodb').MongoClient
 ObjectId = require('mongodb').ObjectID
 mongoose = require('mongoose');
 
+process.on 'unhandledRejection', (r) -> console.log(r)
+
 import jobs from './cron/cron'
 
 mongoose.Promise = global.Promise;

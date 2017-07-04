@@ -87,9 +87,8 @@ class RegionContestDownloader extends ContestDownloader
             @processContest('', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)
             levels.push('reg' + year)
         #id, name, tables, problems, parent, order
-        return # TODO
         Tables.addTable("reg", "reg", levels, [], "main", 10000)
-        table = Tables.findById("reg")
+        #table = Tables.findById("reg")
         #users = Users.findAll().fetch()
         #for user in users
         #    Results.updateResults(user, table)

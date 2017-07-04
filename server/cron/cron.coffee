@@ -2,8 +2,8 @@ import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits.js"
 import * as downloadContests from "./downloadContests.js"
 
-#downloadSubmits.runLast()
-downloadContests.run()
+downloadSubmits.runLast().catch((e) -> console.log(e))
+#downloadContests.run()
 
 #jobAll = new Cron.CronJob('* * 3 * * *', runAll, null, true);
 #jobUntilIgnored = new Cron.CronJob('* */3 * * * *', runUntilIgnored, null, true);

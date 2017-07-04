@@ -1,6 +1,10 @@
 request = require('request-promise-native')
 import Submit from '../models/submit'
 import User from '../models/user'
+import Problem from '../models/problem'
+import Table from '../models/table'
+
+import updateResults from '../calculations/updateResults'
 
 class AllSubmitDownloader
     
@@ -19,23 +23,20 @@ class AllSubmitDownloader
         true
         
     setDirty: (userId, probid) ->
-        console.log "setDirty", userId, probid
-        return
-    
         @dirtyResults[userId + "::" + probid] = 1
-        problem = Problems.findById(probid)
+        problem = await Problem.findById(probid)
         if not problem
             console.log "unknown problem ", probid
             return
         for table in problem.tables
             t = table
             while true
-                t = Tables.findById(t)
-                if t._id == Tables.main
+                t = await Table.findById(t)
+                if t._id == Table.main
                     break
                 @dirtyResults[userId + "::" + t._id] = 1
                 t = t.parent
-        @dirtyResults[userId + "::" + Tables.main] = 1
+        @dirtyResults[userId + "::" + Table.main] = 1
 
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
         res = @needContinueFromSubmit(runid)
@@ -105,12 +106,10 @@ class AllSubmitDownloader
             if page > @limitPages
                 break
             
-        return  # TODO
-            
-        tables = Tables.findAll().fetch()
+        tables = await Table.find({})
         for uid,tmp of @addedUsers
             updateResults(uid, @dirtyResults)
-            u = Users.findById(uid)
+            u = await User.findById(uid)
             u.updateChocos()
             u.updateRatingEtc()
             u.updateLevel()
@@ -118,15 +117,13 @@ class AllSubmitDownloader
             
 class LastSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
-        false
-        #!Submits.findById(runid)
+        !await Submit.findById(runid)
 
 class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
-        false
-        #res = Submits.findById(runid)?.outcome
-        #r = !((res == "AC") || (res == "IG"))
-        #return r
+        res = (await Submit.findById(runid))?.outcome
+        r = !((res == "AC") || (res == "IG"))
+        return r
 
 # Лицей 40
 lic40url = (page, submitsPerPage) ->
