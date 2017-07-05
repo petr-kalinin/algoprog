@@ -1,4 +1,5 @@
 import Table from '../models/table'
+import Result from '../models/result'
 
 export default calculateLevel = (user, baseLevel, lastDate) ->
     #console.log "lastdate=", lastDate
@@ -35,7 +36,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
             else if smallLevel == "Г"
                 needProblem = probNumber * 0.3333
             if (probAc < needProblem) and ((!baseLevel) or (baseLevel <= level))
-                console.log user, level
+                console.log "calculated level", user, level
                 return level
     return "inf"
     

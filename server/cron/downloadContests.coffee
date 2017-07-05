@@ -30,7 +30,7 @@ class ContestDownloader
         new Table(
             _id: cid,
             name: name,
-            problems: [],
+            problems: problemIds,
             parent: level,
             order: order*100
         ).upsert()

@@ -108,7 +108,7 @@ class AllSubmitDownloader
             
         tables = await Table.find({})
         for uid,tmp of @addedUsers
-            updateResults(uid, @dirtyResults)
+            await updateResults(uid, @dirtyResults)
             u = await User.findById(uid)
             u.updateChocos()
             u.updateRatingEtc()

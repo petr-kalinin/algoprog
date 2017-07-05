@@ -31,7 +31,6 @@ getActivityAndProgress = (user) ->
         if (not first)  # very first contest has no meaning as start rating is 1500
             change += (elem["newRating"] - elem["oldRating"]) * timeScore(thisDate)
         contests += timeScore(thisDate)
-        console.log (elem["newRating"] - elem["oldRating"]), timeScore(thisDate)
         first = false
     return activity: contests, progress: change
 

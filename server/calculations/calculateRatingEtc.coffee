@@ -1,4 +1,5 @@
 import Submit from '../models/submit'
+import Problem from '../models/problem'
 
 startDayForWeeks = 
     "lic40": "2016-12-28"
@@ -7,8 +8,10 @@ startDayForWeeks =
 WEEK_ACTIVITY_EXP = 0.55
 LEVEL_RATING_EXP = 2.5
 ACTIVITY_THRESHOLD = 0.1
+MSEC_IN_WEEK = 7 * 24 * 60 * 60 * 1000
 
 levelVersion = (level) ->
+    console.log "levelVersion", level
     if (level.slice(0,3) == "reg")
         major = 3
         minor = 'А'
@@ -58,7 +61,7 @@ export default calculateRatingEtc = (user) ->
     for s in submits
         if probSolved[s.problem]
             continue
-        level = findProblemLevel(s.problem)
+        level = await findProblemLevel(s.problem)
         if not level
             continue
         submitDate = new Date(s.time)

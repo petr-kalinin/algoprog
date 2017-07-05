@@ -32,13 +32,13 @@ usersSchema.methods.upsert = () ->
     User.update({_id: @_id}, this, {upsert: true}).exec()
     
 usersSchema.methods.updateChocos = ->
-    @chocos = calculateChocos @_id
-    console.log @name, @chocos
+    @chocos = await calculateChocos @_id
+    console.log "calculated chocos", @name, @chocos
     User.update({_id: @_id}, {$set: {chocos: @chocos}})
         
 usersSchema.methods.updateRatingEtc = ->
-    res = calculateRatingEtc this
-    console.log @name, res
+    res = await calculateRatingEtc this
+    console.log "updateRatingEtc", @name, res
     User.update({_id: @_id}, {$set: res})
     
 usersSchema.methods.updateLevel = ->

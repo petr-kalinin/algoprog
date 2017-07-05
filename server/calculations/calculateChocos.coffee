@@ -1,4 +1,5 @@
 import Table from '../models/table'
+import Result from '../models/result'
 
 class FullContestChocoCalculator
     constructor: ->
@@ -7,7 +8,7 @@ class FullContestChocoCalculator
     processContest: (contest) ->
         full = true
         for p in contest
-            if p.solved == 0
+            if not p or p.solved == 0
                 full = false
         if full
             #console.log "+full"
@@ -29,7 +30,7 @@ class CleanContestChocoCalculator
     processContest: (contest) ->
         clean = true
         for p in contest
-            if (p.attempts > 0) or (p.solved == 0)
+            if not p or (p.attempts > 0) or (p.solved == 0)
                 clean = false
         if clean
             #console.log "+clean"
@@ -46,9 +47,9 @@ class HalfCleanContestChocoCalculator
         clean = true
         half = true
         for p in contest
-            if (p.attempts > 0) or (p.solved == 0)
+            if not p or (p.attempts > 0) or (p.solved == 0)
                 clean = false
-            if (p.attempts > 1) or (p.solved == 0)
+            if not p or (p.attempts > 1) or (p.solved == 0)
                 half = false
         if half and (not clean)
             #console.log "+half"
@@ -66,7 +67,7 @@ export default calculateChocos = (userId) ->
         results = []
         for problem in table.problems
             results.push(await Result.findByUserAndTable(userId, problem))
-        #console.log table.name
+        console.log table.name, results
         for calc in chocoCalcs
             calc.processContest(results)
     res = []

@@ -1,4 +1,5 @@
 import parseLevel from '../lib/parseLevel'
+import Problem from './problem'
 
 mongoose = require('mongoose')
 
@@ -35,7 +36,7 @@ tablesSchema.methods.setOrder = (order) ->
 tablesSchema.methods.upsert = () ->
     Table.update({_id: @_id}, this, {upsert: true}).exec()
     for prob in @problems
-        Problems.findById(prob).addTable(@_id)
+        (await Problem.findById(prob)).addTable(@_id)
     if @parent
         if not await Table.findById(@parent)
             pp = parentFromParent(@parent)

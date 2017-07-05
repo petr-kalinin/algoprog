@@ -28,7 +28,7 @@ TablesCollection.helpers
         @tables = expandedTables
         expandedProblems = []
         for problem in @problems
-            expandedProblem = Problems.findById(problem)
+            expandedProblem = Problem.findById(problem)
             expandedProblems.push(expandedProblem)
         @problems = expandedProblems
         return this
