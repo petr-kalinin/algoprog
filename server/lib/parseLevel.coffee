@@ -10,5 +10,4 @@ export default parseLevel = (level) ->
         res = { major : level }
     else 
         res = { major : level.slice(0, -1), minor : last }
-    console.log "level ", level, " parsed ", res
     res

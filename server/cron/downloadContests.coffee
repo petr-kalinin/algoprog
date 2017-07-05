@@ -26,6 +26,7 @@ class ContestDownloader
                 name: prob.name
             ).add()
             problemIds.push(prob._id)
+        console.log "Downloaded contest ", name
         new Table(
             _id: cid,
             name: name,
@@ -91,5 +92,6 @@ class RegionContestDownloader extends ContestDownloader
         #    Results.updateResults(user, table)
 
 export run = () ->
+    console.log "Downloading contests"
     new ContestDownloader().run()
     #new RegionContestDownloader().run()

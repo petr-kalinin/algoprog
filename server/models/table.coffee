@@ -22,16 +22,21 @@ parentFromParent = (level) ->
         
         
 tablesSchema.methods.addTable = (id) ->
-        Table.collection.update({ _id: @_id }, {$push: { tables: id }})
+    Table.collection.update({ _id: @_id }, {$push: { tables: id }})
+
+tablesSchema.methods.setOrder = (order) ->
+    Table.collection.update({ _id: @_id }, {$set: { order: order }})
+    @order = order
+    if @parent
+        p = await Table.findById(@parent)
+        if p.order > @order - 1
+            await p.setOrder(@order - 1)
 
 tablesSchema.methods.upsert = () ->
     Table.update({_id: @_id}, this, {upsert: true}).exec()
     for prob in @problems
-        console.log prob, @_id
         Problems.findById(prob).addTable(@_id)
     if @parent
-        console.log "parent=", @parent
-        console.log "pt=", await Table.findById(@parent) 
         if not await Table.findById(@parent)
             pp = parentFromParent(@parent)
             await new Table(
@@ -41,8 +46,9 @@ tablesSchema.methods.upsert = () ->
                 order: @order - 1
             ).upsert()
         p = await Table.findById(@parent)
-        console.log p
         await p.addTable(@_id)
+        if p.order > @order - 1
+            await p.setOrder(@order - 1)
     
 tablesSchema.methods.height = () ->
         if @tables.length > 0
