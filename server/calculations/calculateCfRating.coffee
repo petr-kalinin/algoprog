@@ -43,7 +43,7 @@ colorByRating = (rating) ->
         color = c[1]
     return color
 
-@updateCfRating = (user) ->
+export default calculateCfRating = (user) ->
     if not user.cfLogin
         return
     rating = getRating(user)

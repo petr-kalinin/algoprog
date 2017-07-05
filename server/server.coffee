@@ -1,23 +1,14 @@
+process.on 'unhandledRejection', (r) -> 
+    console.log "Unhandled rejection "
+    console.log(r)
+
 require("babel-polyfill")
 express = require('express')
 bodyParser = require('body-parser')
-MongoClient = require('mongodb').MongoClient
-ObjectId = require('mongodb').ObjectID
-mongoose = require('mongoose');
-
-process.on 'unhandledRejection', (r) -> console.log(r)
 
 import jobs from './cron/cron'
 
-mongoose.Promise = global.Promise;
-initMongo = ->
-    await mongoose.connect 'mongodb://localhost/algoprog'
-
-initMongo().catch (error)-> 
-    console.log error
-    process.exit(1)
-
-db = mongoose.connection
+import db from './mongo/mongo'
 
 app = express()
 

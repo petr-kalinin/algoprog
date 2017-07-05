@@ -8,7 +8,6 @@ class ContestDownloader
     baseUrl: 'http://informatics.mccme.ru/mod/statements/'
 
     constructor: ->
-        @order = 0
         @jar = request.jar()
         
     makeProblem: (fullText, href, pid, letter, name) ->
@@ -18,31 +17,27 @@ class ContestDownloader
             name: name
         }
         
-    addContest: (cid, name, level, problems) ->
-        console.log "Contest ", cid, name, level, problems
-    
+    addContest: (order, cid, name, level, problems) ->
         problemIds = []
         for prob in problems
-            new Problem(
+            await new Problem(
                 _id: prob._id, 
                 letter: prob.letter, 
                 name: prob.name
             ).add()
             problemIds.push(prob._id)
-        @order++
         new Table(
             _id: cid,
             name: name,
             problems: [],
-            level: level,
-            order: @order*100
+            parent: level,
+            order: order*100
         ).upsert()
         
-    processContest: (fullText, href, cid, name, level) ->
+    processContest: (order, fullText, href, cid, name, level) ->
         text = await request 
             url: href
             jar: @jar
-        console.log href, name, level, @url
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>'
         secondProbRes = re.exec text
         secondProbHref = secondProbRes[1].replace('&amp;','&')
@@ -56,14 +51,17 @@ class ContestDownloader
         text.replace re, (res, a, b, c, d) =>
             problems.push(@makeProblem(res, a, b, c, d))
         problems.splice(1, 0, secondProb);
-        @addContest(cid, name, level, problems)
+        @addContest(order, cid, name, level, problems)
         
     run: ->
         text = await request 
             url: @url
             jar: @jar
         re = new RegExp '<a title="Условия задач"\\s*href="(http://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
-        text.replace re, (a,b,c,d,e) => @processContest(a,b,c,d,e)
+        order = 0
+        text.replace re, (a,b,c,d,e) => 
+            order++
+            @processContest(order,a,b,c,d,e)
         
 class RegionContestDownloader extends ContestDownloader
     contests: 
@@ -81,7 +79,6 @@ class RegionContestDownloader extends ContestDownloader
     run: ->
         levels = []
         for year, cont of @contests
-            console.log "Downloading contests of ", year, cont
             fullText = ' тур региональной олимпиады ' + year + ' года'
             @processContest('', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
             @processContest('', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)

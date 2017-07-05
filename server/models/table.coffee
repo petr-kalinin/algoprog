@@ -1,3 +1,5 @@
+import parseLevel from '../lib/parseLevel'
+
 mongoose = require('mongoose')
 
 tablesSchema = new mongoose.Schema
@@ -8,8 +10,39 @@ tablesSchema = new mongoose.Schema
     parent: String
     order: Number
         
+
+parentFromParent = (level) ->
+    if level == Table.main
+        return undefined
+    p = parseLevel(level)
+    if p.minor
+        return p.major
+    else 
+        return Table.main
+        
+        
+tablesSchema.methods.addTable = (id) ->
+        Table.collection.update({ _id: @_id }, {$push: { tables: id }})
+
 tablesSchema.methods.upsert = () ->
     Table.update({_id: @_id}, this, {upsert: true}).exec()
+    for prob in @problems
+        console.log prob, @_id
+        Problems.findById(prob).addTable(@_id)
+    if @parent
+        console.log "parent=", @parent
+        console.log "pt=", await Table.findById(@parent) 
+        if not await Table.findById(@parent)
+            pp = parentFromParent(@parent)
+            await new Table(
+                _id: @parent
+                name: @parent
+                parent: pp
+                order: @order - 1
+            ).upsert()
+        p = await Table.findById(@parent)
+        console.log p
+        await p.addTable(@_id)
     
 tablesSchema.methods.height = () ->
         if @tables.length > 0

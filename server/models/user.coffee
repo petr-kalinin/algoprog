@@ -3,6 +3,7 @@ mongoose = require('mongoose')
 import calculateChocos from '../calculations/calculateChocos'
 import calculateRatingEtc from '../calculations/calculateRatingEtc'
 import calculateLevel from '../calculations/calculateLevel'
+import calculateCfRating from '../calculations/calculateCfRating'
 
 SEMESTER_START = "2016-06-01"
 
@@ -46,7 +47,7 @@ usersSchema.methods.updateLevel = ->
     User.update({_id: @_id}, {$set: {level: @level, startLevel : @startLevel}})
     
 usersSchema.methods.updateCfRating = ->
-    res = updateCfRating this
+    res = calculateCfRating this
     if not res
         return
     @cfRating = res.rating
