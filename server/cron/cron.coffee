@@ -3,7 +3,8 @@ import * as downloadSubmits from "./downloadSubmits"
 import * as downloadContests from "./downloadContests"
 import updateCf from "./updateCf"
 
-downloadSubmits.runAll().catch((e) -> console.log(e))
+downloadSubmits.runLast().catch((e) -> console.log(e))
+downloadSubmits.runLast().catch((e) -> console.log(e))
 #downloadContests.run().catch((e) -> console.log(e))
 #updateCf().catch((e) -> console.log(e))
 

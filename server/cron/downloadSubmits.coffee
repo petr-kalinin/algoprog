@@ -140,14 +140,36 @@ lic40url = (page, submitsPerPage) ->
 zaochUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5402&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
-export runAll = () ->
-    (new AllSubmitDownloader(lic40url, 'lic40', 1000, 1, 1e9)).run()
-    (new AllSubmitDownloader(zaochUrl, 'zaoch', 1000, 1, 1e9)).run()
+running = false
+
+wrapRunning = (callable) ->
+    () ->
+        if running
+            console.log "Already running downloadSubmits"
+            return
+        try
+            running = true
+            await callable()
+        finally
+            running = false
+
+export runAll = wrapRunning () ->
+    try
+        await (new AllSubmitDownloader(lic40url, 'lic40', 1000, 1, 1e9)).run()
+        await (new AllSubmitDownloader(zaochUrl, 'zaoch', 1000, 1, 1e9)).run()
+    catch e
+        console.log "Error in AllSubmitDownloader", e
+   
+export runUntilIgnored = wrapRunning () -> 
+    try
+        await (new UntilIgnoredSubmitDownloader(lic40url, 'lic40', 100, 2, 4)).run()
+        await (new UntilIgnoredSubmitDownloader(zaochUrl, 'zaoch', 100, 2, 4)).run()
+    catch e
+        console.log "Error in UntilIgnoredSubmitDownloader", e
     
-export runUntilIgnored = () -> 
-    (new UntilIgnoredSubmitDownloader(lic40url, 'lic40', 100, 2, 4)).run()
-    (new UntilIgnoredSubmitDownloader(zaochUrl, 'zaoch', 100, 2, 4)).run()
-    
-export runLast = () ->
-    (new LastSubmitDownloader(lic40url, 'lic40', 20, 1, 1)).run()
-    (new LastSubmitDownloader(zaochUrl, 'zaoch', 20, 1, 1)).run()
+export runLast = wrapRunning () ->
+    try
+        await (new LastSubmitDownloader(lic40url, 'lic40', 20, 1, 1)).run()
+        await (new LastSubmitDownloader(zaochUrl, 'zaoch', 20, 1, 1)).run()
+    catch e
+        console.log "Error in LastSubmitDownloader", e
