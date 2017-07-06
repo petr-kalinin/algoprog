@@ -13,12 +13,12 @@ usersSchema = new mongoose.Schema
     userList: String,
     chocos: [Number],
     level:
-        currrent: String,
+        current: String,
         start: String,
         base: String,
     active: Boolean,
     ratingSort: Number,
-    byWeek: [{solved: Number, ok: Number}],
+    byWeek: {solved: mongoose.Schema.Types.Mixed, ok: mongoose.Schema.Types.Mixed},
     rating: Number,
     activity: Number,
     cf:
@@ -29,48 +29,47 @@ usersSchema = new mongoose.Schema
         progress: Number
         
 usersSchema.methods.upsert = () ->
-    User.update({_id: @_id}, this, {upsert: true}).exec()
+    @update(this, {upsert: true})
     
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
     console.log "calculated chocos", @name, @chocos
-    User.update({_id: @_id}, {$set: {chocos: @chocos}})
+    @update({$set: {chocos: @chocos}})
         
 usersSchema.methods.updateRatingEtc = ->
     res = await calculateRatingEtc this
     console.log "updateRatingEtc", @name, res
-    User.update({_id: @_id}, {$set: res})
+    @update({$set: res})
     
 usersSchema.methods.updateLevel = ->
-    @level = calculateLevel @_id, @baseLevel, new Date("2100-01-01")
-    @startLevel = calculateLevel @_id, @baseLevel, new Date(SEMESTER_START)
-    User.update({_id: @_id}, {$set: {level: @level, startLevel : @startLevel}})
+    @level.current = await calculateLevel @_id, @level.base, new Date("2100-01-01")
+    @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
+    @update({$set: {level: @level}})
     
 usersSchema.methods.updateCfRating = ->
-    res = calculateCfRating this
+    res = await calculateCfRating this
     if not res
         return
     @cfRating = res.rating
     @cfColor = res.color
     @cfActivity = res.activity
     @cfProgress = res.progress
-    User.update({_id: @_id}, {$set: {cfRating: @cfRating, cfColor: @cfColor, cfActivity: @cfActivity, cfProgress: @cfProgress}})
+    @update({$set: {cfRating: @cfRating, cfColor: @cfColor, cfActivity: @cfActivity, cfProgress: @cfProgress}})
 
 usersSchema.methods.setBaseLevel = (level) ->
-    User.update({_id: @_id}, {$set: {baseLevel: level}})
+    await @update({$set: {baseLevel: level}})
     @baseLevel = level
-    @updateLevel()
+    await @updateLevel()
     @updateRatingEtc()
 
 usersSchema.methods.setCfLogin = (cfLogin) ->
-    User.update({_id: @_id}, {$set: {cfLogin: cfLogin}})
+    await @update({$set: {cfLogin: cfLogin}})
     @cfLogin = cfLogin
     @updateCfRating()
     
 
 usersSchema.statics.findByList = (list) ->
     User.find {userList: list}, {sort: {active: -1, level: -1, ratingSort: -1}}
-
 
 
 usersSchema.index

@@ -69,7 +69,7 @@ export default calculateChocos = (userId) ->
             results.push(await Result.findByUserAndTable(userId, problem))
         console.log table.name, results
         for calc in chocoCalcs
-            calc.processContest(results)
+            await calc.processContest(results)
     res = []
     for calc in chocoCalcs
         res.push(calc.chocos())

@@ -23,10 +23,10 @@ parentFromParent = (level) ->
         
         
 tablesSchema.methods.addTable = (id) ->
-    Table.collection.update({ _id: @_id }, {$push: { tables: id }})
+    @update({$push: { tables: id }})
 
 tablesSchema.methods.setOrder = (order) ->
-    Table.collection.update({ _id: @_id }, {$set: { order: order }})
+    await @update({$set: { order: order }})
     @order = order
     if @parent
         p = await Table.findById(@parent)
@@ -34,7 +34,7 @@ tablesSchema.methods.setOrder = (order) ->
             await p.setOrder(@order - 1)
 
 tablesSchema.methods.upsert = () ->
-    Table.update({_id: @_id}, this, {upsert: true}).exec()
+    await @update(this, {upsert: true}).exec()
     for prob in @problems
         (await Problem.findById(prob)).addTable(@_id)
     if @parent
@@ -61,7 +61,7 @@ tablesSchema.methods.expand = () ->
         expandedTables = []
         for table in @tables
             subTable = await Table.findById(table)
-            subTable.expand()
+            await subTable.expand()
             expandedTables.push(subTable)
         @tables = expandedTables
         expandedProblems = []
@@ -75,13 +75,14 @@ tablesSchema.methods.descendandTables = () ->
         result = [@_id]
         for table in @table
             subTable = await Table.findById(table)
-            result = result.concat(subTable.descendandTables())
+            result = result.concat(await subTable.descendandTables())
         for problem in @problems
             result.push(problem)
+        result
             
             
 tablesSchema.statics.removeDuplicateChildren = () ->
-        tables = @findAll().fetch()
+        tables = await Table.findAll()
         for table in tables
             wasTables = {}
             newTables = []
@@ -90,7 +91,7 @@ tablesSchema.statics.removeDuplicateChildren = () ->
                     wasTables[subTable] = 1
                     newTables.push(subTable)
             table.tables = newTables
-            Table.update({_id: table._id}, table)
+            await Table.update({_id: table._id}, table)
 
 tablesSchema.statics.main = "main"
 

@@ -39,8 +39,8 @@ class AllSubmitDownloader
         @dirtyResults[userId + "::" + Table.main] = 1
 
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
-        res = @needContinueFromSubmit(runid)
-        if (outcome == @CE)  # completely ignore CEs
+        res = await @needContinueFromSubmit(runid)
+        if (outcome == @CE)
             outcome = "CE"
         if (outcome == @AC) 
             outcome = "AC"
@@ -49,26 +49,27 @@ class AllSubmitDownloader
         if (outcome == @DQ) 
             outcome = "DQ"
 
-        new Submit(
+        await new Submit(
             _id: runid,
             time: date,
             user: uid,
             problem: "p" + pid,
             outcome: outcome
         ).upsert()
-        new User(
+        await new User(
             _id: uid,
             name: name,
             userList: @userList
         ).upsert()
         @addedUsers[uid] = uid
-        @setDirty(uid, "p"+pid)
+        await @setDirty(uid, "p"+pid)
         res
     
-    parseSubmits: (submitsTable, canBreak) ->
+    parseSubmits: (submitsTable) ->
         submitsRows = submitsTable.split("<tr>")
         result = true
         wasSubmit = false
+        resultPromises = []
         for row in submitsRows
             re = new RegExp '<td>[^<]*</td>\\s*<td><a href="/moodle/user/view.php\\?id=(\\d+)">([^<]*)</a></td>\\s*<td><a href="/moodle/mod/statements/view3.php\\?chapterid=(\\d+)&run_id=([0-9r]+)">([^<]*)</a></td>\\s*<td>([^<]*)</td>\\s*<td>[^<]*</td>\\s*<td>([^<]*)</td>', 'gm'
             data = re.exec row
@@ -81,12 +82,20 @@ class AllSubmitDownloader
             prob = data[5]
             date = data[6]
             outcome = data[7].trim()
-            resultSubmit = @processSubmit(uid, name, pid, runid, prob, date, outcome)
-            result = result and resultSubmit
+            resultPromises.push(@processSubmit(uid, name, pid, runid, prob, date, outcome))
             wasSubmit = true
-            if (not result) and canBreak
-                break
-        return result and wasSubmit
+        results = await Promise.all(resultPromises)
+        result = wasSubmit
+        for r in results
+            result = result and r
+        return result
+    
+    processAddedUser: (uid) ->
+        await updateResults(uid, @dirtyResults)
+        u = await User.findById(uid)
+        await u.updateChocos()
+        await u.updateRatingEtc()
+        await u.updateLevel()
     
     run: ->
         console.log "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
@@ -97,7 +106,7 @@ class AllSubmitDownloader
                 url: submitsUrl
                 jar: request.jar()
             submits = JSON.parse(submits)["result"]["text"]
-            result = @parseSubmits(submits, page >= @minPages)
+            result = await @parseSubmits(submits)
             if (page < @minPages) # always load at least minPages pages
                 result = true
             if not result
@@ -107,12 +116,10 @@ class AllSubmitDownloader
                 break
             
         tables = await Table.find({})
-        for uid,tmp of @addedUsers
-            await updateResults(uid, @dirtyResults)
-            u = await User.findById(uid)
-            u.updateChocos()
-            u.updateRatingEtc()
-            u.updateLevel()
+        addedPromises = []
+        for uid, tmp of @addedUsers
+            addedPromises.push(@processAddedUser(uid))
+        await Promise.all(addedPromises)
         console.log "Finish AllSubmitDownloader::run ", @userList, @limitPages
             
 class LastSubmitDownloader extends AllSubmitDownloader

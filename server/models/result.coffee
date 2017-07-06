@@ -18,15 +18,15 @@ resultsSchema = new mongoose.Schema
 
 resultsSchema.methods.upsert = () ->
     # required: user, table, total, solved, ok, attempts, ignored, lastSubmitId, lastSubmitTime
-    @userList = await User.findById(@user).userList
+    @userList = (await User.findById(@user)).userList
     @_id = @user + "::" + @table
-    Result.update({_id: @_id}, this, {upsert: true}).exec()
+    @update(this, {upsert: true}).exec()
 
     
 resultsSchema.statics.DQconst = -10
 
 resultsSchema.statics.findByUserListAndTable = (userList, table) ->
-    tableList = Table.findById(table).descendandTables()
+    tableList = await Table.findById(table).descendandTables()
     return Result.find({
         userList: userList, 
         table: {$in: tableList}
@@ -55,6 +55,32 @@ resultsSchema.statics.findLastWA = (limit) ->
         attempts: {$gte: 1},
     }).sort({ lastSubmitTime: -1 }).limit(limit)
     
+
+resultsSchema.index
+    userList: 1
+    table : 1 
+    solved: -1
+    attempts: 1
+
+resultsSchema.index
+    userList: 1
+    solved: -1
+    attempts: 1
+
+resultsSchema.index
+    user: 1
+    table: 1
+
+resultsSchema.index
+    total: 1
+    solved: 1 
+    ok: 1
+    ignored: 1
+    attempts: 1
+    lastSubmitTime: -1
+
+
 Result = mongoose.model('Results', resultsSchema);
+
 
 export default Result

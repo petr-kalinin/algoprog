@@ -9,7 +9,7 @@ submitsSchema = new mongoose.Schema
         
 submitsSchema.methods.upsert = () ->
     console.log("Add submit", this)
-    Submit.update({_id: @_id}, this, {upsert: true}).exec()
+    @update(this, {upsert: true})
     
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find

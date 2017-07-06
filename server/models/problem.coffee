@@ -20,8 +20,8 @@ problemsSchema.methods.addTable = (table) ->
     if table in @tables
         return
     @tables.push(table)
-    Problem.update({ _id: @_id }, {$set: { tables: @tables }})
-    await (await Problem.findById(@_id)).updateLevel()
+    await @update({$set: { tables: @tables }})
+    (await Problem.findById(@_id)).updateLevel()
         
 problemsSchema.methods.updateLevel = ->
     reg = ""
@@ -36,7 +36,7 @@ problemsSchema.methods.updateLevel = ->
         @level = reg
     if @level == ""
         @level = undefined
-    Problem.update({_id: @_id}, {$set: {level: @level}})
+    @update({$set: {level: @level}})
 
 Problem = mongoose.model('Problems', problemsSchema);
 

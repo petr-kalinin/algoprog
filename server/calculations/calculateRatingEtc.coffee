@@ -11,7 +11,6 @@ ACTIVITY_THRESHOLD = 0.1
 MSEC_IN_WEEK = 7 * 24 * 60 * 60 * 1000
 
 levelVersion = (level) ->
-    console.log "levelVersion", level
     if (level.slice(0,3) == "reg")
         major = 3
         minor = 'А'
@@ -98,10 +97,12 @@ export default calculateRatingEtc = (user) ->
             delete weekOk[w]
     activity *= (1 - WEEK_ACTIVITY_EXP) # make this averaged
     return {
-        solvedByWeek: weekSolved
-        okByWeek: weekOk
-        rating: Math.floor(rating)
-        activity: activity
-        ratingSort: if activity > ACTIVITY_THRESHOLD then rating else -1/(rating+1)
+        byWeek: {
+            solved: weekSolved,
+            ok: weekOk
+        },
+        rating: Math.floor(rating),
+        activity: activity,
+        ratingSort: if activity > ACTIVITY_THRESHOLD then rating else -1/(rating+1),
         active: if activity > ACTIVITY_THRESHOLD then 1 else 0
     }
