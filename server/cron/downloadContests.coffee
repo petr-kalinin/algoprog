@@ -60,9 +60,11 @@ class ContestDownloader
             jar: @jar
         re = new RegExp '<a title="Условия задач"\\s*href="(http://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
+        promises = []
         text.replace re, (a,b,c,d,e) => 
             order++
-            @processContest(order,a,b,c,d,e)
+            promises.push(@processContest(order,a,b,c,d,e))
+        Promise.all(promises)
         
 class RegionContestDownloader extends ContestDownloader
     contests: 
@@ -90,8 +92,22 @@ class RegionContestDownloader extends ContestDownloader
         #users = Users.findAll().fetch()
         #for user in users
         #    Results.updateResults(user, table)
+        
+running = false
 
-export run = () ->
+wrapRunning = (callable) ->
+    () ->
+        if running
+            console.log "Already running downloadContests"
+            return
+        try
+            running = true
+            await callable()
+        finally
+            running = false
+
+export run = wrapRunning () ->
     console.log "Downloading contests"
-    new ContestDownloader().run()
+    await (new ContestDownloader().run())
     #new RegionContestDownloader().run()
+    Table.removeDuplicateChildren()

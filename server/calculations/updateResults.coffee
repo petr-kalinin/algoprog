@@ -24,7 +24,6 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
             lastSubmitTime = res.lastSubmitTime
     
     table = await Table.findById(tableId)
-    console.log "table=", table
     for child in table.tables
         res = await updateResultsForTable(userId, child, dirtyResults)
         processRes(res)
@@ -96,6 +95,6 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     return result
 
 export default updateResults = (user, dirtyResults) ->
-    console.log "updating results for user ", user
+    #console.log "updating results for user ", user
     updateResultsForTable(user, Table.main, dirtyResults)
     

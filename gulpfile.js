@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
@@ -17,11 +18,13 @@ gulp.task('bundle', function() {
 
 gulp.task('bundleCoffee', function() {
   return gulp.src('server/**/*.coffee')
+    .pipe(sourcemaps.init())
     .pipe(plumber())
     .pipe(coffee({bare: true, coffee: require('coffeescript')}))
     .pipe(babel({
        presets: ['import-export']
     }))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('./build/server'));
 });
 

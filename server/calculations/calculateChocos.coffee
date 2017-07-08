@@ -67,7 +67,6 @@ export default calculateChocos = (userId) ->
         results = []
         for problem in table.problems
             results.push(await Result.findByUserAndTable(userId, problem))
-        console.log table.name, results
         for calc in chocoCalcs
             await calc.processContest(results)
     res = []

@@ -1,4 +1,6 @@
 request = require('request-promise-native')
+deepEqual = require('deep-equal')
+
 import Submit from '../models/submit'
 import User from '../models/user'
 import Problem from '../models/problem'
@@ -26,7 +28,6 @@ class AllSubmitDownloader
         @dirtyResults[userId + "::" + probid] = 1
         problem = await Problem.findById(probid)
         if not problem
-            console.log "unknown problem ", probid
             return
         for table in problem.tables
             t = table
@@ -48,14 +49,26 @@ class AllSubmitDownloader
             outcome = "IG"
         if (outcome == @DQ) 
             outcome = "DQ"
+            
+        oldSumit = await Submit.findById(runid)
 
-        await new Submit(
+        newSubmit = new Submit(
             _id: runid,
             time: date,
             user: uid,
             problem: "p" + pid,
             outcome: outcome
-        ).upsert()
+        )
+        
+        #console.log "old=", oldSumit, "\nnew=", newSubmit
+        
+        if oldSumit and newSubmit and deepEqual(oldSumit.toObject(), newSubmit.toObject())
+            #console.log "equal"
+            return res
+        
+        #console.log "not equal"
+        
+        await newSubmit.upsert()
         await new User(
             _id: uid,
             name: name,

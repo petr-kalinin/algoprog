@@ -81,6 +81,9 @@ tablesSchema.methods.descendandTables = () ->
         result
             
             
+tablesSchema.statics.findAll = ->
+    @find {}
+            
 tablesSchema.statics.removeDuplicateChildren = () ->
         tables = await Table.findAll()
         for table in tables
@@ -90,8 +93,9 @@ tablesSchema.statics.removeDuplicateChildren = () ->
                 if not (subTable of wasTables)
                     wasTables[subTable] = 1
                     newTables.push(subTable)
+            console.log "removing duplicate from ", table._id, " new tables=", newTables
             table.tables = newTables
-            await Table.update({_id: table._id}, table)
+            await table.update(table)
 
 tablesSchema.statics.main = "main"
 

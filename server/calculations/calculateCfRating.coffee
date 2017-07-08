@@ -52,7 +52,6 @@ colorByRating = (rating) ->
     return color
 
 export default calculateCfRating = (user) ->
-    console.log "cf login=", user.cf.login
     if not user.cf.login
         return
     rating = await getRating(user)

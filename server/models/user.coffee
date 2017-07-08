@@ -33,12 +33,12 @@ usersSchema.methods.upsert = () ->
     
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
-    console.log "calculated chocos", @name, @chocos
+    #console.log "calculated chocos", @name, @chocos
     @update({$set: {chocos: @chocos}})
         
 usersSchema.methods.updateRatingEtc = ->
     res = await calculateRatingEtc this
-    console.log "updateRatingEtc", @name, res
+    #console.log "updateRatingEtc", @name, res
     @update({$set: res})
     
 usersSchema.methods.updateLevel = ->
@@ -47,9 +47,9 @@ usersSchema.methods.updateLevel = ->
     @update({$set: {level: @level}})
     
 usersSchema.methods.updateCfRating = ->
-    console.log "Updating cf rating ", @name
+    #console.log "Updating cf rating ", @name
     res = await calculateCfRating this
-    console.log "Updated cf rating ", @name, res
+    #console.log "Updated cf rating ", @name, res
     if not res
         return
     res.login = @cf.login

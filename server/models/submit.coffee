@@ -8,7 +8,6 @@ submitsSchema = new mongoose.Schema
     outcome: String
         
 submitsSchema.methods.upsert = () ->
-    console.log("Add submit", this)
     @update(this, {upsert: true})
     
 submitsSchema.statics.findByUser = (userId) ->

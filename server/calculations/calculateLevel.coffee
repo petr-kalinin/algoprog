@@ -36,7 +36,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
             else if smallLevel == "Г"
                 needProblem = probNumber * 0.3333
             if (probAc < needProblem) and ((!baseLevel) or (baseLevel <= level))
-                console.log "calculated level", user, level
+                #console.log "calculated level", user, level
                 return level
     return "inf"
     

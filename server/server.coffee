@@ -1,3 +1,5 @@
+require('source-map-support').install()
+
 process.on 'unhandledRejection', (r) -> 
     console.log "Unhandled rejection "
     console.log(r)
