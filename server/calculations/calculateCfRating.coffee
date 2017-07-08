@@ -1,10 +1,12 @@
+request = require('request-promise-native')
+import CfResult from '../models/cfResult'
+
 colors = [[0, "gray"], [1200, "green"], [1400, "#03A89E"], [1600, "blue"], 
          [1900, "#a0a"], [2200, "#bb0"], [2300, "#FF8C00"], [2400, "red"]];
 
 getRating = (user) ->
-    href = "http://codeforces.com/api/user.info?handles=" + user.cfLogin
-    text = syncDownload(href).content
-    #console.log "cf returns ", text
+    href = "http://codeforces.com/api/user.info?handles=" + user.cf.login
+    text = await request href
     data = JSON.parse(text)["result"]
     return data[0]["rating"]
 
@@ -15,8 +17,8 @@ timeScore = (date) ->
     return Math.pow(0.5, weeks)
 
 getActivityAndProgress = (user) ->
-    href = "http://codeforces.com/api/user.rating?handle=" + user.cfLogin
-    text = syncDownload(href).content
+    href = "http://codeforces.com/api/user.rating?handle=" + user.cf.login
+    text = await request href
     #console.log "cf returns ", text
     data = JSON.parse(text)["result"]
 
@@ -27,7 +29,14 @@ getActivityAndProgress = (user) ->
     
     for elem in data
         thisDate = new Date(elem["ratingUpdateTimeSeconds"] * 1000)
-        cfResults.addResult(user._id, elem["contestId"], thisDate, elem["rank"], elem["oldRating"], elem["newRating"])
+        await new CfResult(
+            userId: user._id, 
+            contestId: elem["contestId"], 
+            time: thisDate, 
+            place: elem["rank"], 
+            oldRating: elem["oldRating"], 
+            newRating: elem["newRating"]
+        ).upsert()
         if (not first)  # very first contest has no meaning as start rating is 1500
             change += (elem["newRating"] - elem["oldRating"]) * timeScore(thisDate)
         contests += timeScore(thisDate)
@@ -43,11 +52,16 @@ colorByRating = (rating) ->
     return color
 
 export default calculateCfRating = (user) ->
-    if not user.cfLogin
+    console.log "cf login=", user.cf.login
+    if not user.cf.login
         return
-    rating = getRating(user)
+    rating = await getRating(user)
     color = colorByRating(rating)
-    activityAndProgress = getActivityAndProgress(user)
-    return rating: rating, color: color, activity: activityAndProgress.activity, progress: activityAndProgress.progress
+    activityAndProgress = await getActivityAndProgress(user)
+    return 
+        rating: rating, 
+        color: color, 
+        activity: activityAndProgress.activity, 
+        progress: activityAndProgress.progress
     
     

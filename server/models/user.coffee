@@ -22,9 +22,9 @@ usersSchema = new mongoose.Schema
     rating: Number,
     activity: Number,
     cf:
-        login: Number,
+        login: String,
         rating: Number,
-        color: Number,
+        color: String,
         activity: Number,
         progress: Number
         
@@ -47,14 +47,13 @@ usersSchema.methods.updateLevel = ->
     @update({$set: {level: @level}})
     
 usersSchema.methods.updateCfRating = ->
+    console.log "Updating cf rating ", @name
     res = await calculateCfRating this
+    console.log "Updated cf rating ", @name, res
     if not res
         return
-    @cfRating = res.rating
-    @cfColor = res.color
-    @cfActivity = res.activity
-    @cfProgress = res.progress
-    @update({$set: {cfRating: @cfRating, cfColor: @cfColor, cfActivity: @cfActivity, cfProgress: @cfProgress}})
+    res.login = @cf.login
+    @update({$set: {cf: res}})
 
 usersSchema.methods.setBaseLevel = (level) ->
     await @update({$set: {baseLevel: level}})
@@ -70,6 +69,9 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
 
 usersSchema.statics.findByList = (list) ->
     User.find {userList: list}, {sort: {active: -1, level: -1, ratingSort: -1}}
+
+usersSchema.statics.findAll = (list) ->
+    User.find {}
 
 
 usersSchema.index
