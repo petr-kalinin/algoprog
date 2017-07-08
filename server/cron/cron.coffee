@@ -8,8 +8,8 @@ import logger from '../log'
 #downloadContests.run().catch((e) -> logger.error(e))
 #updateCf().catch((e) -> logger.error(e))
 
-jobAll = new Cron.CronJob('0 0 3 * * *', downloadSubmits.runAll, null, true);
-jobUntilIgnored = new Cron.CronJob('0 */3 * * * *', downloadSubmits.runUntilIgnored, null, true);
+jobAll = new Cron.CronJob('58 59 2 * * *', downloadSubmits.runAll, null, true);
+jobUntilIgnored = new Cron.CronJob('59 */3 * * * *', downloadSubmits.runUntilIgnored, null, true);
 jobLast = new Cron.CronJob('*/30 * * * * *', downloadSubmits.runLast, null, true);
 
 jobContests = new Cron.CronJob('0 */5 * * * *', downloadContests.run, null, true);
