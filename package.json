@@ -35,6 +35,7 @@
     "gulp-sourcemaps": "^2.6.0",
     "history": "^1.17.0",
     "jquery": "^2.1.4",
+    "log4js": "^2.0.0",
     "mongodb": "^2.1.2",
     "mongoose": "^4.11.0",
     "react": "^0.14.5",

@@ -1,5 +1,6 @@
 import parseLevel from '../lib/parseLevel'
 import Problem from './problem'
+import logger from '../log'
 
 mongoose = require('mongoose')
 
@@ -93,7 +94,7 @@ tablesSchema.statics.removeDuplicateChildren = () ->
                 if not (subTable of wasTables)
                     wasTables[subTable] = 1
                     newTables.push(subTable)
-            console.log "removing duplicate from ", table._id, " new tables=", newTables
+            logger.trace "removing duplicate from ", table._id, " new tables=", newTables
             table.tables = newTables
             await table.update(table)
 

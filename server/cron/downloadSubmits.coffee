@@ -8,6 +8,8 @@ import Table from '../models/table'
 
 import updateResults from '../calculations/updateResults'
 
+import logger from '../log'
+
 class AllSubmitDownloader
     
     constructor: (@baseUrl, @userList, @submitsPerPage, @minPages, @limitPages) ->
@@ -60,13 +62,8 @@ class AllSubmitDownloader
             outcome: outcome
         )
         
-        #console.log "old=", oldSumit, "\nnew=", newSubmit
-        
         if oldSumit and newSubmit and deepEqual(oldSumit.toObject(), newSubmit.toObject())
-            #console.log "equal"
             return res
-        
-        #console.log "not equal"
         
         await newSubmit.upsert()
         await new User(
@@ -111,7 +108,7 @@ class AllSubmitDownloader
         await u.updateLevel()
     
     run: ->
-        console.log "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
+        logger.info "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
         page = 0
         while true
             submitsUrl = @baseUrl(page, @submitsPerPage)
@@ -133,7 +130,7 @@ class AllSubmitDownloader
         for uid, tmp of @addedUsers
             addedPromises.push(@processAddedUser(uid))
         await Promise.all(addedPromises)
-        console.log "Finish AllSubmitDownloader::run ", @userList, @limitPages
+        logger.info "Finish AllSubmitDownloader::run ", @userList, @limitPages
             
 class LastSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
@@ -158,7 +155,7 @@ running = false
 wrapRunning = (callable) ->
     () ->
         if running
-            console.log "Already running downloadSubmits"
+            logger.info "Already running downloadSubmits"
             return
         try
             running = true
@@ -171,18 +168,18 @@ export runAll = wrapRunning () ->
         await (new AllSubmitDownloader(lic40url, 'lic40', 1000, 1, 1e9)).run()
         await (new AllSubmitDownloader(zaochUrl, 'zaoch', 1000, 1, 1e9)).run()
     catch e
-        console.log "Error in AllSubmitDownloader", e
+        logger.error "Error in AllSubmitDownloader", e
    
 export runUntilIgnored = wrapRunning () -> 
     try
         await (new UntilIgnoredSubmitDownloader(lic40url, 'lic40', 100, 2, 4)).run()
         await (new UntilIgnoredSubmitDownloader(zaochUrl, 'zaoch', 100, 2, 4)).run()
     catch e
-        console.log "Error in UntilIgnoredSubmitDownloader", e
+        logger.error "Error in UntilIgnoredSubmitDownloader", e
     
 export runLast = wrapRunning () ->
     try
         await (new LastSubmitDownloader(lic40url, 'lic40', 20, 1, 1)).run()
         await (new LastSubmitDownloader(zaochUrl, 'zaoch', 20, 1, 1)).run()
     catch e
-        console.log "Error in LastSubmitDownloader", e
+        logger.error "Error in LastSubmitDownloader", e

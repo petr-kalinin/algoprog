@@ -41,7 +41,6 @@ findProblemLevel = (problemId) ->
 
 timeScore = (date) ->
     weeks = (new Date() - date)/MSEC_IN_WEEK
-    #console.log weeks
     return Math.pow(WEEK_ACTIVITY_EXP, weeks)
 
 activityScore = (level, date) ->
@@ -78,13 +77,11 @@ export default calculateRatingEtc = (user) ->
                 weekOk[week] = 0
             weekOk[week]++
     for level in ["1А", "1Б"]
-        #console.log "checking add probs ", level, user.baseLevel
         if (!user.baseLevel) or (level >= user.baseLevel)
             break
         for prob in await Problem.findByLevel(level)
             if probSolved[prob._id]
                 continue
-            #console.log "correcting user ", user.name, " problem ", prob
             rating += levelScore(level)
     for week of wasSubmits
         if !weekSolved[week]

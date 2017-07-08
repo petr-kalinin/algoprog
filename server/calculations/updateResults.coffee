@@ -1,6 +1,7 @@
 import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
+import logger from '../log'
 
 updateResultsForTable = (userId, tableId, dirtyResults) ->
     if dirtyResults and (not ((userId + "::" + tableId) of dirtyResults))
@@ -31,7 +32,7 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
         res = await updateResultsForProblem(userId, prob, dirtyResults)
         processRes(res)
         
-    console.log "updated result ", userId, tableId, total, solved, ok, attempts, lastSubmitTime
+    logger.debug "updated result ", userId, tableId, total, solved, ok, attempts, lastSubmitTime
     result = new Result(
         user: userId, 
         table: tableId, 
@@ -80,7 +81,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
             continue  # we might have a future AC
         else  if submit.outcome != "CE"
             attempts++
-    console.log "updated result ", userId, problemId, solved, ok, attempts, ignored, lastSubmitId
+    logger.debug "updated result ", userId, problemId, solved, ok, attempts, ignored, lastSubmitId
     result = new Result
         user: userId,
         table: problemId,
@@ -95,6 +96,6 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     return result
 
 export default updateResults = (user, dirtyResults) ->
-    #console.log "updating results for user ", user
+    logger.info "updating results for user ", user
     updateResultsForTable(user, Table.main, dirtyResults)
     

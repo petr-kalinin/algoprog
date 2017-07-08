@@ -2,6 +2,7 @@ request = require('request-promise-native')
 
 import Problem from "../models/problem"
 import Table from "../models/table"
+import logger from '../log'
 
 class ContestDownloader
     url: 'http://informatics.mccme.ru/course/view.php?id=1135'
@@ -26,7 +27,7 @@ class ContestDownloader
                 name: prob.name
             ).add()
             problemIds.push(prob._id)
-        console.log "Downloaded contest ", name
+        logger.debug "Downloaded contest ", name
         new Table(
             _id: cid,
             name: name,
@@ -98,7 +99,7 @@ running = false
 wrapRunning = (callable) ->
     () ->
         if running
-            console.log "Already running downloadContests"
+            logger.info "Already running downloadContests"
             return
         try
             running = true
@@ -107,7 +108,8 @@ wrapRunning = (callable) ->
             running = false
 
 export run = wrapRunning () ->
-    console.log "Downloading contests"
+    logger.info "Downloading contests"
     await (new ContestDownloader().run())
     #new RegionContestDownloader().run()
-    Table.removeDuplicateChildren()
+    await Table.removeDuplicateChildren()
+    logger.info "Done downloading contests"

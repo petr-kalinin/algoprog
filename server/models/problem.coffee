@@ -1,6 +1,7 @@
 mongoose = require('mongoose')
 
 import Table from './table'
+import logger from '../log'
 
 problemsSchema = new mongoose.Schema
     _id: String
@@ -16,7 +17,7 @@ problemsSchema.methods.add = () ->
     @save()
     
 problemsSchema.methods.addTable = (table) ->
-    console.log "add table", @name, @tables
+    logger.debug "add table", @name, @tables
     if table in @tables
         return
     @tables.push(table)

@@ -2,10 +2,11 @@ import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits"
 import * as downloadContests from "./downloadContests"
 import updateCf from "./updateCf"
+import logger from '../log'
 
-#downloadSubmits.runLast().catch((e) -> console.log(e))
-#downloadContests.run().catch((e) -> console.log(e))
-#updateCf().catch((e) -> console.log(e))
+#downloadSubmits.runLast().catch((e) -> logger.error(e))
+#downloadContests.run().catch((e) -> logger.error(e))
+#updateCf().catch((e) -> logger.error(e))
 
 jobAll = new Cron.CronJob('0 0 3 * * *', downloadSubmits.runAll, null, true);
 jobUntilIgnored = new Cron.CronJob('0 */3 * * * *', downloadSubmits.runUntilIgnored, null, true);

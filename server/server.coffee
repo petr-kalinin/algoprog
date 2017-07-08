@@ -1,8 +1,10 @@
+import logger from './log'
+
 require('source-map-support').install()
 
 process.on 'unhandledRejection', (r) -> 
-    console.log "Unhandled rejection "
-    console.log(r)
+    logger.error "Unhandled rejection "
+    logger.error r
 
 require("babel-polyfill")
 express = require('express')
@@ -17,8 +19,8 @@ app = express()
 app.use(express.static('build/client'))
 
 app.get '/status', (req, res) -> 
-  console.log "Query string", req.query
+  logger.info "Query string", req.query
   res.send "OK"
 
 app.listen 3000, () ->
-  console.log 'Example app listening on port 3000!'
+  logger.info 'Example app listening on port 3000!'

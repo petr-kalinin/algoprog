@@ -1,8 +1,8 @@
 import Table from '../models/table'
 import Result from '../models/result'
+import logger from '../log'
 
 export default calculateLevel = (user, baseLevel, lastDate) ->
-    #console.log "lastdate=", lastDate
     for bigLevel in [1..10]
         for smallLevel in ["А", "Б", "В", "Г"]
             tableId = bigLevel + smallLevel
@@ -25,9 +25,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
                     if result.solved == 0
                         continue
                     submitDate = new Date(result.lastSubmitTime)
-                    #console.log "submitDate=", submitDate
                     if submitDate >= lastDate
-                        #console.log "skipping submit"
                         continue
                     probAc++
             needProblem = probNumber
@@ -36,7 +34,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
             else if smallLevel == "Г"
                 needProblem = probNumber * 0.3333
             if (probAc < needProblem) and ((!baseLevel) or (baseLevel <= level))
-                #console.log "calculated level", user, level
+                logger.debug "calculated level", user, level
                 return level
     return "inf"
     

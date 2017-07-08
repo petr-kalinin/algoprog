@@ -1,5 +1,6 @@
 request = require('request-promise-native')
 import CfResult from '../models/cfResult'
+import logger from '../log'
 
 colors = [[0, "gray"], [1200, "green"], [1400, "#03A89E"], [1600, "blue"], 
          [1900, "#a0a"], [2200, "#bb0"], [2300, "#FF8C00"], [2400, "red"]];
@@ -19,7 +20,7 @@ timeScore = (date) ->
 getActivityAndProgress = (user) ->
     href = "http://codeforces.com/api/user.rating?handle=" + user.cf.login
     text = await request href
-    #console.log "cf returns ", text
+    logger.trace "cf returns ", text
     data = JSON.parse(text)["result"]
 
     startDate = new Date("2016-09-01")

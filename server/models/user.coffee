@@ -5,6 +5,8 @@ import calculateRatingEtc from '../calculations/calculateRatingEtc'
 import calculateLevel from '../calculations/calculateLevel'
 import calculateCfRating from '../calculations/calculateCfRating'
 
+import logger from '../log'
+
 SEMESTER_START = "2016-06-01"
 
 usersSchema = new mongoose.Schema
@@ -33,12 +35,12 @@ usersSchema.methods.upsert = () ->
     
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
-    #console.log "calculated chocos", @name, @chocos
+    logger.debug "calculated chocos", @name, @chocos
     @update({$set: {chocos: @chocos}})
         
 usersSchema.methods.updateRatingEtc = ->
     res = await calculateRatingEtc this
-    #console.log "updateRatingEtc", @name, res
+    logger.debug "updateRatingEtc", @name, res
     @update({$set: res})
     
 usersSchema.methods.updateLevel = ->
@@ -47,9 +49,9 @@ usersSchema.methods.updateLevel = ->
     @update({$set: {level: @level}})
     
 usersSchema.methods.updateCfRating = ->
-    #console.log "Updating cf rating ", @name
+    logger.debug "Updating cf rating ", @name
     res = await calculateCfRating this
-    #console.log "Updated cf rating ", @name, res
+    logger.debug "Updated cf rating ", @name, res
     if not res
         return
     res.login = @cf.login

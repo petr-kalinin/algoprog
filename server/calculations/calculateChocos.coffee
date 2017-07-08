@@ -1,5 +1,6 @@
 import Table from '../models/table'
 import Result from '../models/result'
+import logger from '../log'
 
 class FullContestChocoCalculator
     constructor: ->
@@ -11,7 +12,6 @@ class FullContestChocoCalculator
             if not p or p.solved == 0
                 full = false
         if full
-            #console.log "+full"
             @fullContests++
             
     chocos: ->
@@ -33,7 +33,6 @@ class CleanContestChocoCalculator
             if not p or (p.attempts > 0) or (p.solved == 0)
                 clean = false
         if clean
-            #console.log "+clean"
             @cleanContests++
             
     chocos: ->
@@ -52,7 +51,6 @@ class HalfCleanContestChocoCalculator
             if not p or (p.attempts > 1) or (p.solved == 0)
                 half = false
         if half and (not clean)
-            #console.log "+half"
             @hcleanContests++
             
     chocos: ->
