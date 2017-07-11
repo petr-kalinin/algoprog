@@ -10,7 +10,7 @@ require("babel-polyfill")
 express = require('express')
 bodyParser = require('body-parser')
 
-import jobs from './cron/cron'
+#import jobs from './cron/cron'
 
 import db from './mongo/mongo'
 

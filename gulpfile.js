@@ -9,6 +9,18 @@ var plumber = require('gulp-plumber');
 var server = require('gulp-develop-server');
 var coffeescript = require('coffeescript');
 var through = require('through');
+var log4js = require('log4js')
+var logger = log4js.getLogger()
+
+log4js.configure({
+  appenders: {
+    out: { type: 'stdout', layout: {
+      type: 'pattern',
+      pattern: '%[[%r] %p%] %m',
+    }}
+  },
+  categories: { default: { appenders: ['out'], level: 'info' } }
+});
 
 function coffeescriptTransform(file) {
     var data = '';
@@ -25,15 +37,17 @@ function coffeescriptTransform(file) {
 function browserifyTransform(b) {
     return b
         .transform(coffeescriptTransform)
-        .transform('babelify', {presets: ['env'], extensions: [".coffee"]})
-        .bundle()
-        .pipe(source('bundle.js'))
-        .pipe(gulp.dest('./build/client/'));
+        .transform('babelify', {presets: ['env', 'react'], extensions: [".coffee"]});
 }
 
 function browserifyFinalize(b) {
     return b
         .bundle()
+        .on("error", (err) => {
+            logger.error("Browserify error:")
+            logger.error(err.message)
+            logger.error(err.codeFrame)
+        })        
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('./build/client/'));
 }
@@ -51,7 +65,7 @@ gulp.task('client:js:watch', function() {
     });
     browserifyTransform(b);
     b.on('update', bundle);
-    b.on('log', (msg) => console.log("Client bundle updated:", msg));
+    b.on('log', (msg) => logger.info("Client bundle updated:", msg));
     bundle();
     
     function bundle() {
