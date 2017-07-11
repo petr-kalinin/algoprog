@@ -10,23 +10,53 @@ var server = require('gulp-develop-server');
 var coffeescript = require('coffeescript');
 var through = require('through');
 
-gulp.task('client:js', function() {
-    return browserify('./client/client.coffee')
-        .transform(function (file) {
-                var data = '';
-                return through(write, end);
+function coffeescriptTransform(file) {
+    var data = '';
+    return through(write, end);
 
-                function write (buf) { data += buf }
-                function end () {
-                    result = coffeescript.compile(data);
-                    this.queue(result);
-                    this.queue(null);
-                }
-        })
+    function write (buf) { data += buf }
+    function end () {
+        result = coffeescript.compile(data);
+        this.queue(result);
+        this.queue(null);
+    }
+}
+
+function browserifyTransform(b) {
+    return b
+        .transform(coffeescriptTransform)
         .transform('babelify', {presets: ['env'], extensions: [".coffee"]})
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('./build/client/'));
+}
+
+function browserifyFinalize(b) {
+    return b
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('./build/client/'));
+}
+
+gulp.task('client:js', function() {
+    return browserifyFinalize(browserifyTransform(browserify('./client/client.coffee')));
+});
+
+gulp.task('client:js:watch', function() {
+    var b = browserify({
+        entries: ['./client/client.coffee'],
+        cache: {},
+        packageCache: {},
+        plugin: [watchify]
+    });
+    browserifyTransform(b);
+    b.on('update', bundle);
+    b.on('log', (msg) => console.log("Client bundle updated:", msg));
+    bundle();
+    
+    function bundle() {
+        browserifyFinalize(b);
+    }
 });
 
 gulp.task('client:html', function() {
@@ -34,7 +64,7 @@ gulp.task('client:html', function() {
     .pipe(gulp.dest('./build/client'));
 });
 
-gulp.task('client:bundle', ['client:js', 'client:html']);
+gulp.task('client:bundle:watch', ['client:js:watch', 'client:html']);
 
 gulp.task('server:coffee', function() {
   return gulp.src('server/**/*.coffee')
@@ -72,4 +102,4 @@ gulp.task( 'server:restart', ['server:start'], function() {
     gulp.watch( [ './build/server/**/*' ], server.restart );
 });
 
-gulp.task('default', ['client:bundle', 'watchServer', 'server:restart']);
+gulp.task('default', ['client:bundle:watch', 'watchServer', 'server:restart']);
