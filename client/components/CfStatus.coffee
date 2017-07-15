@@ -1,5 +1,7 @@
 React = require('react')
 
+#import './CfStatus.css'
+
 export default class CfStatus extends React.Component 
     render:  () ->
         cf = @props.cf;

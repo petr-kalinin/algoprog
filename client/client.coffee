@@ -1,20 +1,13 @@
 React = require('react')
+import { BrowserRouter, Route, Link} from 'react-router-dom'
+
 ReactDOM = require('react-dom')
-Router = require('react-router').Router
-Route = require('react-router').Route
-Redirect = require('react-router').Redirect
 
-import UserBadge from './components/UserBadge.coffee'
-
-NoMatch = React.createClass
-    render: () ->
-        return <h2>No match for the route</h2>
+import Routes from './routes.coffee'
 
 ReactDOM.render(
-    <Router>
-        <Route path="/userBadge/:id" component={UserBadge} />
-        <Redirect from="/" to="/home" />
-        <Route path="*" component={NoMatch} />
-    </Router>,
+    <BrowserRouter>
+        {Routes}
+    </BrowserRouter>,
     document.getElementById('main')
 )

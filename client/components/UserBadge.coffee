@@ -2,7 +2,7 @@ React = require('react')
 
 import { Grid } from 'react-bootstrap'
 
-import CfStatus from './CfStatus.coffee'
+import CfStatus from './CfStatus'
 
 data = 
     user:
