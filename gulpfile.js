@@ -39,6 +39,10 @@ function coffeescriptTransform(file) {
 
 function browserifyTransform(b) {
     return b
+        .plugin(require('css-modulesify'), {
+            rootDir: __dirname,
+            output: './build/assets/bundle.css',
+        })
         .transform(coffeescriptTransform)
         .transform('babelify', {
             presets: ['env', 'react'],
@@ -80,16 +84,9 @@ gulp.task('assets:js:watch', function() {
     }
 });
 
-gulp.task('server:coffee', function() {
-  return gulp.src('server/**/*.coffee')
-    .pipe(sourcemaps.init())
-    .pipe(plumber())
-    .pipe(coffee({bare: true, coffee: require('coffeescript')}))
-    .pipe(babel({
-       presets: ['import-export', 'react']
-    }))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./build/server'));
+gulp.task('client:css', function() {
+  return gulp.src('client/**/*.css')
+    .pipe(gulp.dest('./build/client'));
 });
 
 gulp.task('client:coffee', function() {
@@ -104,6 +101,18 @@ gulp.task('client:coffee', function() {
     .pipe(gulp.dest('./build/client'));
 });
 
+gulp.task('server:coffee', function() {
+  return gulp.src('server/**/*.coffee')
+    .pipe(sourcemaps.init())
+    .pipe(plumber())
+    .pipe(coffee({bare: true, coffee: require('coffeescript')}))
+    .pipe(babel({
+       presets: ['import-export', 'react']
+    }))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./build/server'));
+});
+
 gulp.task('server:js', function() {
   return gulp.src('server/**/*.js')
     .pipe(plumber())
@@ -113,11 +122,12 @@ gulp.task('server:js', function() {
     .pipe(gulp.dest('./build/server'));
 });
 
-gulp.task('server:bundle', ['server:coffee', 'client:coffee', 'server:js']);
+gulp.task('server:bundle', ['server:coffee', 'client:coffee', 'server:js', 'client:css']);
 
 gulp.task('server:watch', function() {
-    gulp.watch('server/**/*.coffee', ['server:coffee']);
     gulp.watch('client/**/*.coffee', ['client:coffee']);
+    gulp.watch('client/**/*.css', ['client:css']);
+    gulp.watch('server/**/*.coffee', ['server:coffee']);
     gulp.watch('server/**/*.js', ['server:js']);
 });
 
@@ -127,6 +137,7 @@ gulp.task( 'server:start', ['server:bundle'], function() {
 
 gulp.task( 'server:restart', ['server:start'], function() {
     gulp.watch( [ './build/server/**/*' ], server.restart );
+    gulp.watch( [ './build/client/**/*' ], server.restart );
 });
 
 gulp.task('default', ['assets:js:watch', 'server:watch', 'server:restart']);

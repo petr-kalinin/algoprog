@@ -1,6 +1,6 @@
 React = require('react')
 
-#import './CfStatus.css'
+import styles from './CfStatus.css'
 
 export default class CfStatus extends React.Component 
     render:  () ->
@@ -15,12 +15,12 @@ export default class CfStatus extends React.Component
         return 
             <span>
                 <a href={"http://codeforces.com/profile/" + cf.login}>
-                    <span className="cfColor" style={color: cf.color}>
+                    <span className={styles.color} style={color: cf.color}>
                         {cf.rating}
                     </span>
                 </a>
                 &nbsp;(
-                <span className="cfProgress" title="Взвешенный прирост рейтинга за последнее время" style={color: cfProgressColor}>
+                <span className={styles.progress} title="Взвешенный прирост рейтинга за последнее время" style={color: cfProgressColor}>
                     {(if cf.progress > 0 then "+" else "") + cf.progress.toFixed(1)}
                 </span>
                 /

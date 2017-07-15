@@ -1,3 +1,7 @@
-.cfColor {
+.color {
+    font-weight: bold;
+}
+
+.progress {
     font-weight: bold;
 }

@@ -1,3 +1,5 @@
+import csshook from 'css-modules-require-hook/preset'
+
 express = require('express')
 
 import logger from './log'
