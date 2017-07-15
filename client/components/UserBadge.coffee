@@ -6,34 +6,16 @@ import { Grid } from 'react-bootstrap'
 import CfStatus from './CfStatus'
 import UserName from './UserName'
 
-export default class UserBadge extends React.Component 
-    constructor: (props) ->
-        super(props)
-        @id = props.match.params.id
-        @state = {}
-        
-    render:  () ->
-        if not @state?.name
-            return
-                <Grid fluid>
-                </Grid>
-        return 
-            <Grid fluid>
-                <h1>
-                    <UserName user={@state}/>
-                </h1>
-                <blockquote>
-                    <div>Уровень: {@state.level.current}</div>
-                    <div>Рейтинг: {@state.rating}</div>
-                    <div>Активность: {@state.activity}</div>
-                    { @state.cf?.login && 
-                        <div> Codeforces рейтинг: <CfStatus cf={@state.cf}/> </div> }
-                </blockquote>
-            </Grid>
-
-    componentDidMount: ->
-        $.ajax('/api/user/' + @id).done(((data) ->
-            this.setState(data);
-        ).bind(this))
-            
-            
+export default UserBadge = (props) ->
+    <div>
+        <h1>
+            <UserName user={props.user}/>
+        </h1>
+        <blockquote>
+            <div>Уровень: {props.user.level.current}</div>
+            <div>Рейтинг: {props.user.rating}</div>
+            <div>Активность: {props.user.activity}</div>
+            { props.user.cf?.login && 
+                <div> Codeforces рейтинг: <CfStatus cf={props.user.cf}/> </div> }
+        </blockquote>
+    </div>

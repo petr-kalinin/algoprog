@@ -7,7 +7,7 @@ import {
   Redirect
 } from 'react-router-dom'
 
-import UserBadge from './components/UserBadge'
+import UserBadgePage from './pages/UserBadgePage'
 
 class NoMatch extends React.Component 
     render: () ->
@@ -15,7 +15,7 @@ class NoMatch extends React.Component
 
 export default  (
     <Switch>
-        <Route path="/userBadge/:id" component={UserBadge} />
+        <Route path="/userBadge/:id" component={UserBadgePage} />
         <Route component={NoMatch}/>
     </Switch>
 )
