@@ -14,15 +14,21 @@ process.on 'unhandledRejection', (r) ->
 #import jobs from './cron/cron'
 
 import db from './mongo/mongo'
+import User from './models/user'
 
 app = express()
 
 app.use(express.static('build/assets'))
 
 app.get '/status', (req, res) -> 
-  logger.info "Query string", req.query
-  res.send "OK"
+    logger.info "Query string", req.query
+    res.send "OK"
   
+app.get '/api/user/:id', (req, res) ->
+    User.findOne({_id: req.params.id}, (err, record) ->
+        res.json(record)
+    )
+
 app.use renderOnServer
 
 app.listen 3000, () ->

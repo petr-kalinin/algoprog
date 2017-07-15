@@ -1,34 +1,39 @@
 React = require('react')
+$ = require('jquery');
 
 import { Grid } from 'react-bootstrap'
 
 import CfStatus from './CfStatus'
-
-data = 
-    user:
-        name: "Василий Пупкин",
-        level:
-            current: "2Б"
-        rating: 123,
-        activity: 1.45
-        cf:
-            login: "abc",
-            color: "green",
-            rating: 1400,
-            activity: 3.456,
-            progress: 85.123
-            
+import UserName from './UserName'
 
 export default class UserBadge extends React.Component 
+    constructor: (props) ->
+        super(props)
+        @id = props.match.params.id
+        @state = {}
+        
     render:  () ->
+        if not @state?.name
+            return
+                <Grid fluid>
+                </Grid>
         return 
             <Grid fluid>
-                <h1>{data.user.name}</h1>
+                <h1>
+                    <UserName user={@state}/>
+                </h1>
                 <blockquote>
-                    <div>Уровень: {data.user.level.current}</div>
-                    <div>Рейтинг: {data.user.rating}</div>
-                    <div>Активность: {data.user.activity}</div>
-                    { data.user.cf?.login && 
-                        <div> Codeforces рейтинг: <CfStatus cf={data.user.cf}/> </div> }
+                    <div>Уровень: {@state.level.current}</div>
+                    <div>Рейтинг: {@state.rating}</div>
+                    <div>Активность: {@state.activity}</div>
+                    { @state.cf?.login && 
+                        <div> Codeforces рейтинг: <CfStatus cf={@state.cf}/> </div> }
                 </blockquote>
             </Grid>
+
+    componentDidMount: ->
+        $.ajax('/api/user/' + @id).done(((data) ->
+            this.setState(data);
+        ).bind(this))
+            
+            

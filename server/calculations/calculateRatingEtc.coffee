@@ -1,14 +1,7 @@
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 
-startDayForWeeks = 
-    "lic40": "2016-12-28"
-    "zaoch": "2017-01-01"
-
-WEEK_ACTIVITY_EXP = 0.55
-LEVEL_RATING_EXP = 2.5
-ACTIVITY_THRESHOLD = 0.1
-MSEC_IN_WEEK = 7 * 24 * 60 * 60 * 1000
+import {startDayForWeeks, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
 
 levelVersion = (level) ->
     if (level.slice(0,3) == "reg")

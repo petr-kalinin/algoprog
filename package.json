@@ -28,6 +28,7 @@
     "request": "*",
     "request-promise-native": "*",
     "source-map-support": "*",
+    "tinycolor2": "^1.4.1",
     "vinyl-source-stream": "*",
     "watchify": "*"
   },
