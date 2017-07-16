@@ -3,6 +3,7 @@ import fetch from 'isomorphic-fetch'
 
 import { Grid } from 'react-bootstrap'
 import UserBadge from '../components/UserBadge'
+import callApi from '../lib/callApi'
 
 class UserBadgePage extends React.Component 
     constructor: (props) ->
@@ -28,7 +29,6 @@ class UserBadgePage extends React.Component
         match.params.id
             
     @loadData: (match) ->
-        response = await fetch('http://localhost:3000/api/user/' + UserBadgePage.getId(match))
-        return response.json()
+        callApi 'user/' + UserBadgePage.getId(match)
 
 export default UserBadgePage 
