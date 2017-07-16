@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom'
 
 import UserBadgePage from './pages/UserBadgePage'
+import DashboardPage from './pages/DashboardPage'
 
 class NoMatch extends React.Component 
     render: () ->
@@ -19,6 +20,12 @@ export default [
         key: "userBadge",
         component: UserBadgePage,
         loadData: UserBadgePage.loadData,
+    },
+    { 
+        path: '/dashboard',
+        key: "dashboard",
+        component: DashboardPage,
+        loadData: DashboardPage.loadData,
     },
     { 
         component: NoMatch,
