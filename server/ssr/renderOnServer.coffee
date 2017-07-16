@@ -2,8 +2,9 @@ import Routes from '../../client/routes'
 React = require('react')
 import { StaticRouter } from 'react-router'
 import { renderToString } from 'react-dom/server';
+import { matchPath, Switch, Route } from 'react-router-dom'
 
-renderFullPage = (html) ->
+renderFullPage = (html, data) ->
     return '
         <html>
         <head>
@@ -11,6 +12,9 @@ renderFullPage = (html) ->
             <title>Test</title>
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>  
             <link rel="stylesheet" href="/bundle.css"/>  
+            <script>
+                window.__INITIAL_STATE__ = ' + JSON.stringify(data) + ';
+            </script>
         </head>
         <body>
             <div id="main">' + html + '</div>
@@ -19,11 +23,22 @@ renderFullPage = (html) ->
         </html>'
 
 export default renderOnServer = (req, res, next) => 
-    context = {}
-    html = renderToString (
-        <StaticRouter location={req.url} context={context}>
-            {Routes}
-        </StaticRouter>
+    component = undefined
+    foundMatch = undefined
+    data = undefined
+    
+    Routes.some((route) ->
+        match = matchPath(req.url, route)
+        if (match)
+            foundMatch = match
+            component = route.component
+            if component.loadData
+                data = component.loadData(match)
+        return match
     )
+    data = await data
+    element = React.createElement(component, {match: foundMatch, data: data})
+    html = renderToString(element)
 
-    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html))
+    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, data))
+

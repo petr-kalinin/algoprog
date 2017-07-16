@@ -13,10 +13,16 @@ class NoMatch extends React.Component
     render: () ->
         return <h2>404 Not found</h2>
 
-export default  (
-    <Switch>
-        <Route path="/userBadge/:id" component={UserBadgePage} />
-        <Route component={NoMatch}/>
-    </Switch>
-)
-
+export default [
+    { 
+        path: '/userBadge/:id',
+        key: "userBadge",
+        component: UserBadgePage,
+        loadData: UserBadgePage.loadData,
+    },
+    { 
+        component: NoMatch,
+        key: "nomatch"
+    },
+]
+  

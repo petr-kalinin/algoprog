@@ -1,14 +1,14 @@
 React = require('react')
-$ = require('jquery');
+import fetch from 'isomorphic-fetch'
 
 import { Grid } from 'react-bootstrap'
 import UserBadge from '../components/UserBadge'
 
-export default class UserBadgePage extends React.Component 
+class UserBadgePage extends React.Component 
     constructor: (props) ->
         super(props)
-        @id = props.match.params.id
-        @state = {}
+        @id = UserBadgePage.getId(props.match)
+        @state = props.data || window.__INITIAL_STATE__ || {}
         
     render:  () ->
         if not @state?.name
@@ -19,11 +19,16 @@ export default class UserBadgePage extends React.Component
             <Grid fluid>
                 <UserBadge user={@state}/>
             </Grid>
-
+            
     componentDidMount: ->
-        $.ajax('/api/user/' + @id).done(((data) ->
-            this.setState(data);
-        ).bind(this))
+        data = await UserBadgePage.loadData(@props.match)
+        @setState(data)
+        
+    @getId: (match) ->
+        match.params.id
             
-            
+    @loadData: (match) ->
+        response = await fetch('http://localhost:3000/api/user/' + UserBadgePage.getId(match))
+        return response.json()
 
+export default UserBadgePage 
