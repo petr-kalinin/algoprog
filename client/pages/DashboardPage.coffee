@@ -34,7 +34,10 @@ data2 =
     lastSubmitTime: new Date(2017, 4, 15, 12, 14, 16)
     
 data = 
-    ok: [data1, data2]
+    ok: [data1, data2],
+    wa: [],
+    ig: [data1],
+    ac: [data2]
 
 class DashboardPage extends React.Component 
     constructor: (props) ->

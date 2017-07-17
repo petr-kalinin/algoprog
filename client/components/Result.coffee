@@ -1,4 +1,5 @@
 React = require('react')
+moment = require('moment');
 
 makeUserName = (user) ->
     star = ""
@@ -18,7 +19,7 @@ export default Submit = (props) ->
     return 
         <tr>
             <td>
-                <a href={href} target="_blank">{r.lastSubmitTime.toLocaleString()}</a>
+                <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD kk:mm:ss')}</a>
                 &nbsp;[ x {r.attempts} ]
             </td>
             <td>
