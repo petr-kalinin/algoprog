@@ -55,7 +55,6 @@ class DashboardPage extends React.Component
         @setState(data)
         
     @loadData: (match) ->
-        return data
-        #callApi 'user/' + UserBadgePage.getId(match)
+        callApi 'dashboard'
 
 export default DashboardPage 

@@ -4,7 +4,7 @@ import * as downloadContests from "./downloadContests"
 import updateCf from "./updateCf"
 import logger from '../log'
 
-#downloadSubmits.runLast().catch((e) -> logger.error(e))
+downloadSubmits.runLast().catch((e) -> logger.error(e))
 #downloadContests.run().catch((e) -> logger.error(e))
 #updateCf().catch((e) -> logger.error(e))
 

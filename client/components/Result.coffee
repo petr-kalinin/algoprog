@@ -5,7 +5,7 @@ makeUserName = (user) ->
     star = ""
     if user.userList == "stud"
         star = "*"
-    star + user.name + " (" + user.level + ")"    
+    star + user.name + " (" + user.level.current + ")"    
 
 export default Submit = (props) ->
     r = props.result
