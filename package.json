@@ -35,9 +35,7 @@
     "source-map-support": "*",
     "tinycolor2": "^1.4.1",
     "vinyl-source-stream": "*",
-    "watchify": "*"
-  },
-  "devDependencies": {
+    "watchify": "*",
     "babel-cli": "*",
     "babel-plugin-transform-react-jsx": "*",
     "babel-plugin-transform-react-pug": "*",
@@ -53,5 +51,7 @@
     "gulp-develop-server": "*",
     "gulp-plumber": "*",
     "gulp-watch": "*"
+  },
+  "devDependencies": {
   }
 }
