@@ -1,6 +1,9 @@
 {
   "name": "",
   "version": "1.0.0",
+  "scripts": {
+    "start": "gulp"
+  },
   "dependencies": {
     "babel-plugin-react-css-modules": "*",
     "babel-preset-react": "*",
