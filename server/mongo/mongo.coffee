@@ -4,7 +4,7 @@ import logger from '../log'
 mongoose.Promise = global.Promise;
 
 ( () ->
-    await mongoose.connect 'mongodb://localhost/algoprog'
+    await mongoose.connect(process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/algoprog')
 )().catch((error) -> 
     logger.error error
     process.exit(1)
