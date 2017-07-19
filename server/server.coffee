@@ -70,5 +70,6 @@ app.get '/api/dashboard', (req, res) ->
 
 app.use renderOnServer
 
-app.listen 3000, () ->
-  logger.info 'Example app listening on port 3000!'
+port = (process.env.OPENSHIFT_NODEJS_PORT || 3000)
+app.listen port, () ->
+  logger.info 'Example app listening on port ', port
