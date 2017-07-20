@@ -11,7 +11,7 @@ process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
 
-#import jobs from './cron/cron'
+import jobs from './cron/cron'
 
 import db from './mongo/mongo'
 import User from './models/user'
