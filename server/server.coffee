@@ -70,6 +70,6 @@ app.get '/api/dashboard', (req, res) ->
 
 app.use renderOnServer
 
-port = 80 # (process.env.OPENSHIFT_NODEJS_PORT || 3000)
+port = (process.env.OPENSHIFT_NODEJS_PORT || 3000)
 app.listen port, () ->
   logger.info 'Example app listening on port ', port
