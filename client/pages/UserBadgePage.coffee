@@ -9,7 +9,7 @@ class UserBadgePage extends React.Component
     constructor: (props) ->
         super(props)
         @id = UserBadgePage.getId(props.match)
-        @state = props.data || window.__INITIAL_STATE__ || {}
+        @state = props.data || window?.__INITIAL_STATE__ || {}
         
     render:  () ->
         if not @state?.name
