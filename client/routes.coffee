@@ -9,6 +9,8 @@ import {
 
 import UserBadgePage from './pages/UserBadgePage'
 import DashboardPage from './pages/DashboardPage'
+import Login from './components/Login'
+import Register from './components/Register'
 
 class NoMatch extends React.Component 
     render: () ->
@@ -26,6 +28,16 @@ export default [
         key: "dashboard",
         component: DashboardPage,
         loadData: DashboardPage.loadData,
+    },
+    { 
+        path: '/login',
+        key: "login",
+        component: Login,
+    },
+    { 
+        path: '/register',
+        key: "register",
+        component: Register,
     },
     { 
         component: NoMatch,

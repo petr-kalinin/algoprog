@@ -1,9 +1,22 @@
 import csshook from 'css-modules-require-hook/preset'
 
 express = require('express')
+passport = require('passport')
+connectEnsureLogin = require('connect-ensure-login')
 
 import logger from './log'
 import renderOnServer from './ssr/renderOnServer'
+
+#import jobs from './cron/cron'
+
+import db from './mongo/mongo'
+import User from './models/user'
+import Result from './models/result'
+import Problem from './models/problem'
+import Table from './models/table'
+import RegisteredUser from './models/registeredUser'
+
+import configurePassport from './passport'
 
 require('source-map-support').install()
 
@@ -11,21 +24,37 @@ process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
 
-import jobs from './cron/cron'
-
-import db from './mongo/mongo'
-import User from './models/user'
-import Result from './models/result'
-import Problem from './models/problem'
-import Table from './models/table'
 
 app = express()
+
+configurePassport(app)
 
 app.use(express.static('build/assets'))
 
 app.get '/status', (req, res) -> 
     logger.info "Query string", req.query
     res.send "OK"
+    
+app.post('/login', passport.authenticate('local', 
+    successRedirect: '/api/me',
+    failureRedirect: '/login'
+))
+
+app.post '/register', (req, res) ->
+    user = new RegisteredUser
+        username: req.body.username
+        admin: false
+    RegisteredUser.register user, req.body.password, (err) ->
+        if (err)
+            console.log 'error while user register!', err
+            return next err
+        console.log 'user registered!'
+        res.redirect '/'
+        
+app.get('/api/me', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
+    res.json req.user
+)
+
   
 app.get '/api/user/:id', (req, res) ->
     User.findOne({_id: req.params.id}, (err, record) ->
