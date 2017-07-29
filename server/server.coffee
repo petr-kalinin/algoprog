@@ -19,7 +19,7 @@ process.on 'unhandledRejection', (r) ->
 
 app = express()
 
-configurePassport(app)
+configurePassport(app, db)
 setupApi(app)
 
 app.use(express.static('build/assets'))
