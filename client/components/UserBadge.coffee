@@ -3,6 +3,8 @@ deepcopy = require("deepcopy")
 
 import { Grid } from 'react-bootstrap'
 
+import callApi from '../lib/callApi'
+
 import CfStatus from './CfStatus'
 import UserName from './UserName'
 
@@ -32,8 +34,13 @@ export default class UserBadge extends React.Component
         @handleChange("cfLogin", event)
         
     handleSubmit: (event) ->
-        console.log "state", @state
-        event.preventDefault()
+        await callApi('user/' + @props.user._id + '/set', 
+            level:
+                base: @state.baseLevel
+            cf:
+                login: @state.cfLogin
+        )
+        @props.handleReload()
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"
@@ -52,7 +59,7 @@ export default class UserBadge extends React.Component
                     </div> }
                 <div>Рейтинг: {@props.user.rating}</div>
                 <div>Активность: {@props.user.activity}</div>
-                { @props.user.cf?.login && 
+                { @props.user.cf?.rating && 
                     <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div> }
                 
                 { @props.me?.admin && 

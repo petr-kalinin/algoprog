@@ -55,7 +55,10 @@ colorByRating = (rating) ->
 export default calculateCfRating = (user) ->
     if not user.cf.login
         return
-    rating = await getRating(user)
+    try
+        rating = await getRating(user)
+    catch
+        return {}
     color = colorByRating(rating)
     activityAndProgress = await getActivityAndProgress(user)
     return 

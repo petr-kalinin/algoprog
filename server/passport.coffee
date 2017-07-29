@@ -15,7 +15,7 @@ export default configure = (app, db) ->
     mongoStore = new MongoStore({ mongooseConnection: db })
 
     app.use(cookieParser('zdgadf'))
-    #app.use(bodyParser.json())
+    app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(session({secret: 'zdgadf', store: mongoStore, resave: false, saveUninitialized: false}))
     app.use(passport.initialize())

@@ -58,14 +58,14 @@ usersSchema.methods.updateCfRating = ->
     @update({$set: {cf: res}})
 
 usersSchema.methods.setBaseLevel = (level) ->
-    await @update({$set: {baseLevel: level}})
-    @baseLevel = level
+    await @update({$set: {"level.base": level}})
+    @level.base = level
     await @updateLevel()
     @updateRatingEtc()
 
 usersSchema.methods.setCfLogin = (cfLogin) ->
-    await @update({$set: {cfLogin: cfLogin}})
-    @cfLogin = cfLogin
+    await @update({$set: {"cf.login": cfLogin}})
+    @cf.login = cfLogin
     @updateCfRating()
     
 

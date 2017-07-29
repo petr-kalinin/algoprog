@@ -43,6 +43,14 @@ export default setupApi = (app) ->
         res.json req.user
     )
 
+    app.post '/api/user/:id/set', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        User.findOne({_id: req.params.id}, (err, record) ->
+            await record.setBaseLevel req.body.level.base
+            await record.setCfLogin req.body.cf.login
+            res.send('OK')
+        )
     
     app.get '/api/user/:id', (req, res) ->
         User.findOne({_id: req.params.id}, (err, record) ->
