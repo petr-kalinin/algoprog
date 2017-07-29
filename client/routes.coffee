@@ -24,6 +24,12 @@ export default [
         loadData: UserBadgePage.loadData,
     },
     { 
+        path: '/user/:id',
+        key: "user",
+        component: UserBadgePage,
+        loadData: UserBadgePage.loadData,
+    },
+    { 
         path: '/dashboard',
         key: "dashboard",
         component: DashboardPage,
