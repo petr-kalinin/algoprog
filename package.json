@@ -28,6 +28,7 @@
     "css-modules-require-hook": "^4.0.6",
     "css-modulesify": "^0.28.0",
     "deep-equal": "*",
+    "deepcopy": "^0.6.3",
     "express": "*",
     "express-session": "^1.15.4",
     "gulp": "*",

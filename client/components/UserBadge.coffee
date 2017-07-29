@@ -1,27 +1,80 @@
 React = require('react')
-$ = require('jquery');
+deepcopy = require("deepcopy")
 
 import { Grid } from 'react-bootstrap'
 
 import CfStatus from './CfStatus'
 import UserName from './UserName'
 
-export default UserBadge = (props) ->
-    <div>
-        <h1>
-            <UserName user={props.user}/>
-        </h1>
-        <blockquote>
-            <div>Уровень: {props.user.level.current}</div>
-            { props.me?.admin && 
-                <form>
+import styles from './UserBadge.css'
+
+export default class UserBadge extends React.Component 
+    constructor: (props) ->
+        super(props)
+        @state = 
+            baseLevel: props.user.level.base || '',
+            cfLogin: @props.user.cf?.login || ''
+        @handleChange = @handleChange.bind(this)
+        @handleBlChange = @handleBlChange.bind(this)
+        @handleCfChange = @handleCfChange.bind(this)
+        @handleSubmit = @handleSubmit.bind(this)
+        @handleKeyPressed = @handleKeyPressed.bind(this)
+        
+    handleChange: (field, event) ->
+        newState = deepcopy(@state)
+        newState[field] = event.target.value
+        @setState(newState)
+        
+    handleBlChange: (event) ->
+        @handleChange("baseLevel", event)
+
+    handleCfChange: (event) ->
+        @handleChange("cfLogin", event)
+        
+    handleSubmit: (event) ->
+        console.log "state", @state
+        event.preventDefault()
+
+    handleKeyPressed: (e) ->
+        if e.key == "Enter"
+            @handleSubmit(e)
+    
+    render: () ->
+        <div>
+            <h1>
+                <UserName user={@props.user}/>
+            </h1>
+            <blockquote>
+                <div>Уровень: {@props.user.level.current}</div>
+                { @props.me?.admin && 
                     <div> 
-                        Базовый уровень: <input type="text" name="newLevel" value={props.user.baseLevel} size="3"/> 
-                    </div> 
-                </form> }
-            <div>Рейтинг: {props.user.rating}</div>
-            <div>Активность: {props.user.activity}</div>
-            { props.user.cf?.login && 
-                <div> Codeforces рейтинг: <CfStatus cf={props.user.cf}/> </div> }
-        </blockquote>
-    </div>
+                        Уровень на начало полугодия: {@props.user.level.start}
+                    </div> }
+                <div>Рейтинг: {@props.user.rating}</div>
+                <div>Активность: {@props.user.activity}</div>
+                { @props.user.cf?.login && 
+                    <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div> }
+                
+                { @props.me?.admin && 
+                    <form className={styles.form} onSubmit={@handleSubmit}>
+                        <div> 
+                            Базовый уровень: <input 
+                                type="text" 
+                                name="newLevel" 
+                                value={@state.baseLevel} 
+                                size="3"
+                                onChange={@handleBlChange}
+                                onKeyPress={@handleKeyPressed} /> 
+                        </div> 
+                        <div> 
+                            Cf login: <input 
+                                type="text" 
+                                name="newLogin" 
+                                value={@state.cfLogin} 
+                                size="20"
+                                onChange={@handleCfChange}
+                                onKeyPress={@handleKeyPressed} /> 
+                        </div> 
+                    </form> }
+            </blockquote>
+        </div>
