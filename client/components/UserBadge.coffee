@@ -13,6 +13,12 @@ export default UserBadge = (props) ->
         </h1>
         <blockquote>
             <div>Уровень: {props.user.level.current}</div>
+            { props.me?.admin && 
+                <form>
+                    <div> 
+                        Базовый уровень: <input type="text" name="newLevel" value={props.user.baseLevel} size="3"/> 
+                    </div> 
+                </form> }
             <div>Рейтинг: {props.user.rating}</div>
             <div>Активность: {props.user.activity}</div>
             { props.user.cf?.login && 

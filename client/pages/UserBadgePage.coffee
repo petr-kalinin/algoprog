@@ -12,13 +12,13 @@ class UserBadgePage extends React.Component
         @state = props.data || window?.__INITIAL_STATE__ || {}
         
     render:  () ->
-        if not @state?.name
+        if not @state?.user.name
             return
                 <Grid fluid>
                 </Grid>
         return 
             <Grid fluid>
-                <UserBadge user={@state}/>
+                <UserBadge user={@state.user} me={@state.me}/>
             </Grid>
             
     componentDidMount: ->
@@ -29,6 +29,10 @@ class UserBadgePage extends React.Component
         match.params.id
             
     @loadData: (match) ->
-        callApi 'user/' + UserBadgePage.getId(match)
+        user = await callApi 'user/' + UserBadgePage.getId(match)
+        me = await callApi 'me'
+        return
+            user: user
+            me: me
 
 export default UserBadgePage 
