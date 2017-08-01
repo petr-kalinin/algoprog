@@ -134,16 +134,17 @@ export default TableRow = (p) ->
             <td className={globalStyles.mainTable_td}>
                 <UserName user={props.user} />
             </td>
-            {[[
-                [[
-                    <td className={globalStyles.border} key={subtable._id + "b"}/>,
-                    [(
-                        <Result result={result} user={props.user} key={result._id}/> 
-                    ) for result in subtable.results ]
-                ] for subtable in table.tables ],
-                <td className={globalStyles.border} key={table._id + "b"} />,
-                <TotalResult table={table} key={table._id + "t"} />
-            ] for table in props.tables]}
+            {
+            res = []
+            a = (el) -> res.push(el)
+            for table in props.tables
+                for subtable in table.tables
+                    a <td className={globalStyles.border} key={subtable._id + "b"}/>
+                    for result in subtable.results
+                        a <Result result={result} user={props.user} key={result._id}/> 
+                a <td className={globalStyles.border} key={table._id + "b"} />,
+                a <TotalResult table={table} key={table._id + "t"} />
+            res}
             <td className={globalStyles.border} />
             <TotalResult />
             <Attempts />
