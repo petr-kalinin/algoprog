@@ -4,11 +4,23 @@ import styles from './TableRow.css'
 import globalStyles from './global.css'
 
 import UserName from './UserName'
+import CfStatus from './CfStatus'
 
 data = 
+    details: true
     user:
         _id: "123456",
         name: "Василий Пупкин"
+        level:
+            current: "1А"
+        rating: 123
+        activity: 23.456
+        cf:
+            login: "abc"
+            rating: 456
+            color: "red"
+            activity: 20
+            progress: 100
     tables: [{
         _id: "1А",
         tables: [{
@@ -20,7 +32,8 @@ data =
                 solved: 1,
                 ok: 0,
                 ignored: 0,
-                attempts: 1
+                attempts: 1,
+                total: 1
             }, {
                 _id: "456"
                 table: "p456",
@@ -29,6 +42,7 @@ data =
                 ok: 1,
                 ignored: 0,
                 attempts: 2
+                total: 1
             }]
         }, {
             _id: "1А: ячс",
@@ -40,6 +54,7 @@ data =
                 ok: 0,
                 ignored: 1,
                 attempts: 3
+                total: 1
             }]
         }], 
     }, {
@@ -54,6 +69,7 @@ data =
                 ok: 0,
                 ignored: 0,
                 attempts: 4
+                total: 1
             }]
         }, {
             _id: "1Б: фыв",
@@ -65,6 +81,16 @@ data =
                 ok: 0,
                 ignored: -10,
                 attempts: 0
+                total: 1
+            }, {
+                _id: "3"
+                table: "p3",
+                problemName: "Задача 6"
+                solved: 1,
+                ok: 0,
+                ignored: 0,
+                attempts: 0
+                total: 1
             }]
         }]
     }]
@@ -121,13 +147,37 @@ Result = (props) ->
     </td>
             
 TotalResult = (props) ->
-    return <td className={globalStyles.mainTable_td}>T</td>
+    return 
+        <td className={globalStyles.mainTable_td}>
+            {props.total.solved} 
+            {if props.total.ok then " + " + props.total.ok}
+            {" / " + props.total.total}
+        </td>
 
 Attempts = (props) ->
-    return <td className={globalStyles.mainTable_td}>A</td>
+    return <td className={globalStyles.mainTable_td}>{props.total.attempts}</td>
+
+accountAttempts = (result) ->
+    if result.solved or result.ok
+        result.attempts
+    else
+        0
+
+addTotal = (a, b) ->
+    if not a
+        return b
+    else if not b
+        return a
+    return
+        solved: a.solved + b.solved
+        ok: a.ok + b.ok
+        ignored: a.ignored + b.ignored
+        attempts: accountAttempts(a) + accountAttempts(b)
+        total: a.total + b.total
 
 export default TableRow = (p) ->
     props = data
+    total = null
     return
         <tr>
             <td className={globalStyles.border} />
@@ -135,18 +185,30 @@ export default TableRow = (p) ->
                 <UserName user={props.user} />
             </td>
             {
+            if props.details
+                res = []
+                a = (el) -> res.push(el)
+                a <td className={globalStyles.mainTable_td} key="level">{props.user.level?.current}</td>
+                a <td className={globalStyles.mainTable_td} key="rating">{props.user.rating}</td>
+                a <td className={globalStyles.mainTable_td} key="activity">{props.user.activity.toFixed(1)}</td>
+                a <td className={globalStyles.mainTable_td} key="cf"><CfStatus cf={props.user.cf}/></td>
+                res}
+            {
             res = []
             a = (el) -> res.push(el)
             for table in props.tables
+                subTotal = null
                 for subtable in table.tables
                     a <td className={globalStyles.border} key={subtable._id + "b"}/>
                     for result in subtable.results
                         a <Result result={result} user={props.user} key={result._id}/> 
-                a <td className={globalStyles.border} key={table._id + "b"} />,
-                a <TotalResult table={table} key={table._id + "t"} />
+                        subTotal = addTotal(subTotal, result)
+                a <td className={globalStyles.border} key={table._id + "b"} />
+                a <TotalResult total={subTotal} key={table._id + "t"} />
+                total = addTotal(total, subTotal)
             res}
             <td className={globalStyles.border} />
-            <TotalResult />
-            <Attempts />
+            <TotalResult total={total}/>
+            <Attempts total={total}/>
             <td className={globalStyles.border} />
         </tr>

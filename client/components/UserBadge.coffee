@@ -58,7 +58,7 @@ export default class UserBadge extends React.Component
                         Уровень на начало полугодия: {@props.user.level.start}
                     </div> }
                 <div>Рейтинг: {@props.user.rating}</div>
-                <div>Активность: {@props.user.activity}</div>
+                <div>Активность: {@props.user.activity.toFixed(1)}</div>
                 { @props.user.cf?.rating && 
                     <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div> }
                 

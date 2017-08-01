@@ -4,7 +4,10 @@ import styles from './CfStatus.css'
 
 export default class CfStatus extends React.Component 
     render:  () ->
-        cf = @props.cf;
+        cf = @props.cf
+        
+        if not cf
+            return null
         
         cfProgressColor = "inherit"
         if cf.progress > 10
