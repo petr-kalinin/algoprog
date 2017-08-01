@@ -1,0 +1,35 @@
+.mainTable {
+    border-left:1px solid black;
+    border-top:1px solid black;
+    margin-bottom: 10px;
+}
+.mainTable_td {
+    border-bottom:1px solid black;
+    border-right:1px solid black;
+    padding: 3px;
+    text-align: center;
+    min-width: 3ex;
+}
+.border {
+    background:black;
+    padding:0px;
+    border-right:3px solid black;
+    border-bottom:1px solid black;
+    min-width: 0px;
+}
+.ac {
+    background: #44ff44;
+}
+.ok {
+    background: #ffff00;
+}
+.wa {
+    background: #ff4444;
+}
+.ig {
+    background: #aaaaff;
+}
+.dq {
+    background: black;
+}
+

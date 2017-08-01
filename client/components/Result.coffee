@@ -7,7 +7,7 @@ makeUserName = (user) ->
         star = "*"
     star + user.name + " (" + user.level.current + ")"    
 
-export default Submit = (props) ->
+export default Result = (props) ->
     r = props.result
     problem = r.table._id.substr(1)
     href =  'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + problem + '&submit&user_id=' + r.user._id
