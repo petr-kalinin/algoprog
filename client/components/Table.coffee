@@ -118,6 +118,8 @@ data = [{
     results: tables
 }]
 
+data = []
+
 getHeader = (results) ->
     if not results
         return undefined
@@ -137,6 +139,9 @@ getHeader = (results) ->
 export default Table = (p) ->
     props = 
         results: data
+    if not props.results?.length
+        return <table className={globalStyles.mainTable}/>
+
     header = getHeader(props.results[0].results)
     <table className={globalStyles.mainTable}>
         <tbody>
