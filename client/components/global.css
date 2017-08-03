@@ -10,6 +10,9 @@
     text-align: center;
     min-width: 3ex;
 }
+.mainTable_user {
+    text-align: left;
+}
 .border {
     background:black;
     padding:0px;

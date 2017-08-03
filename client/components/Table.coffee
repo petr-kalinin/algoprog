@@ -4,11 +4,25 @@ import TableRow from './TableRow'
 
 import globalStyles from './global.css'
 
-user =
+user1 =
     _id: "123456",
     name: "Василий Пупкин"
     level:
         current: "1А"
+    rating: 123
+    activity: 23.456
+    cf:
+        login: "abc"
+        rating: 456
+        color: "red"
+        activity: 20
+        progress: 100
+
+user2 =
+    _id: "123457",
+    name: "Василий Пупкин2"
+    level:
+        current: "2А"
     rating: 123
     activity: 23.456
     cf:
@@ -23,7 +37,6 @@ tables = [{
         tables: [{
             _id: "1А: фыв",
             name: "1А: ааа",
-            colspan: 2
             results: [{
                 _id: "123",
                 table: "p123",
@@ -46,7 +59,6 @@ tables = [{
         }, {
             _id: "1А: ячс",
             name: "1А: ббб",
-            colspan: 1
             results: [{
                 _id: "789"
                 table: "p789",
@@ -63,7 +75,6 @@ tables = [{
         tables: [{
             _id: "1Б: йцу",
             name: "1А: ввв",
-            colspan: 1
             results: [{
                 _id: "1"
                 table: "p1",
@@ -77,7 +88,6 @@ tables = [{
         }, {
             _id: "1Б: фыв",
             name: "1А: ггг",
-            colspan: 2
             results: [{
                 _id: "2"
                 table: "p2",
@@ -99,12 +109,43 @@ tables = [{
             }]
         }]
     }]
+            
+data = [{
+    user: user1,
+    results: tables
+}, {
+    user: user2,
+    results: tables
+}]
 
+getHeader = (results) ->
+    if not results
+        return undefined
+    res = []
+    for table in results
+        t = 
+            _id: table._id
+            tables: []
+        for subtable in table.tables
+            t.tables.push
+                _id: subtable._id
+                name: subtable.name
+                colspan: subtable.results.length
+        res.push(t)
+    return res
 
 export default Table = (p) ->
+    props = 
+        results: data
+    header = getHeader(props.results[0].results)
     <table className={globalStyles.mainTable}>
         <tbody>
-            <TableRow details={true} header={true} tables={tables}/>
-            <TableRow details={true} user={user} tables={tables}/>
+            <TableRow details={true} header={true} tables={header}/>
+            {
+            res = []
+            a = (el) -> res.push(el)
+            for result in props.results
+                a <TableRow details={true} user={result.user} tables={result.results} key={result.user._id}/>
+            res}
         </tbody>
     </table>

@@ -98,7 +98,7 @@ export default TableRow = (props) ->
     return
         <tr>
             <td className={globalStyles.border} />
-            <td className={globalStyles.mainTable_td}>
+            <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user}>
                 {if h then "" else <UserName user={props.user} />}
             </td>
             {
