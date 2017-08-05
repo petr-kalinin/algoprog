@@ -31,7 +31,7 @@ export default [
         loadData: UserBadgePage.loadData,
     },
     { 
-        path: '/table/:id/:userList',
+        path: '/table/:userList/:id',
         key: "table",
         component: Table
     },
