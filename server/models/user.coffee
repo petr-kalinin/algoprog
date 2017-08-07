@@ -70,7 +70,7 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     
 
 usersSchema.statics.findByList = (list) ->
-    User.find {userList: list}, {sort: {active: -1, level: -1, ratingSort: -1}}
+    User.find({userList: list}).sort({active: -1, level: -1, ratingSort: -1})
 
 usersSchema.statics.findAll = (list) ->
     User.find {}

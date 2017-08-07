@@ -11,7 +11,7 @@ import UserBadgePage from './pages/UserBadgePage'
 import DashboardPage from './pages/DashboardPage'
 import Login from './components/Login'
 import Register from './components/Register'
-import Table from './components/Table'
+import TablePage from './pages/TablePage'
 
 class NoMatch extends React.Component 
     render: () ->
@@ -33,7 +33,8 @@ export default [
     { 
         path: '/table/:userList/:id',
         key: "table",
-        component: Table
+        component: TablePage
+        loadData: TablePage.loadData,
     },
     { 
         path: '/dashboard',
