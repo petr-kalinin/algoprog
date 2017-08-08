@@ -8,7 +8,7 @@ import CfStatus from './CfStatus'
 
 import addTotal from '../lib/addTotal'
 
-Result = (props) ->
+ProblemResult = (props) ->
     r = props.result
     text = 
         if r.ignored < 0  # DQ
@@ -57,7 +57,6 @@ Result = (props) ->
     <td title={props.user.name + " : " + props.result.problemName} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
         {text}
     </td>
-        
             
 TotalResult = (props) ->
     return 
@@ -65,15 +64,21 @@ TotalResult = (props) ->
             {if props.header
                 "="
             else
-                ("" + props.total.solved + 
-                 (if props.total.ok then " + " + props.total.ok else "") +
-                " / " + props.total.total)
+                ("" + props.result.solved + 
+                 (if props.result.ok then " + " + props.result.ok else "") +
+                " / " + props.result.total)
             }
         </td>
+        
+Result = (props) ->
+    if props.result.total > 1
+        `<TotalResult {...props}/>`
+    else
+        `<ProblemResult {...props}/>`
 
 Attempts = (props) ->
     return <td className={globalStyles.mainTable_td}>
-        {if props.header then "Попыток" else props.total.attempts}
+        {if props.header then "Попыток" else props.result.attempts}
     </td>
 
 export default TableRow = (props) ->
@@ -114,11 +119,11 @@ export default TableRow = (props) ->
                             a <Result header={props.header} result={result} user={props.user} key={result._id + "::" + subtable._id}/> 
                             subTotal = addTotal(subTotal, result)
                 a <td className={globalStyles.border} key={table._id + "b"} />
-                a <TotalResult header={props.header} total={subTotal} key={table._id + "t"} />
+                a <TotalResult header={props.header} result={subTotal} key={table._id + "t"} />
                 total = addTotal(total, subTotal)
             res}
             <td className={globalStyles.border} />
-            <TotalResult header={props.header} total={total}/>
-            <Attempts header={props.header} total={total}/>
+            <TotalResult header={props.header} result={total}/>
+            <Attempts header={props.header} result={total}/>
             <td className={globalStyles.border} />
         </tr>

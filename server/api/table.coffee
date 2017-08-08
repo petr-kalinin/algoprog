@@ -10,6 +10,8 @@ import Table from '../models/table'
 import addTotal from '../../client/lib/addTotal'
 
 getTables = (table) ->
+    if table == "main"
+        return ["main"]
     tableIds = table.split(",")
     if tableIds.length != 1
         return tableIds
@@ -70,6 +72,25 @@ getUserResult = (user, tables, depth) ->
         total: total
                 
 export default table = (userList, table) ->
+    data = []
+    users = User.findByList(userList)
+    tables = getTables(table)
+    [users, tables] = await Promise.all([users, tables])
+    for user in users
+        data.push(getUserResult(user, tables, 1))
+    results = await Promise.all(data)
+    results = (r for r in results when r)
+    results = results.sort (a, b) ->
+        if a.user.active != b.user.active
+            return if a.user.active then -1 else 1
+        if a.total.solved != b.total.solved
+            return b.total.solved - a.total.solved 
+        if a.total.attempts != b.total.attempts
+            return a.total.attempts - b.total.attempts
+        return 0
+    return results
+
+export overallTable = (userList) ->
     data = []
     users = User.findByList(userList)
     tables = getTables(table)
