@@ -6,6 +6,8 @@ import globalStyles from './global.css'
 import UserName from './UserName'
 import CfStatus from './CfStatus'
 
+import addTotal from '../lib/addTotal'
+
 Result = (props) ->
     r = props.result
     text = 
@@ -73,24 +75,6 @@ Attempts = (props) ->
     return <td className={globalStyles.mainTable_td}>
         {if props.header then "Попыток" else props.total.attempts}
     </td>
-
-accountAttempts = (result) ->
-    if result.solved or result.ok
-        result.attempts
-    else
-        0
-
-addTotal = (a, b) ->
-    if not a
-        return b
-    else if not b
-        return a
-    return
-        solved: a.solved + b.solved
-        ok: a.ok + b.ok
-        ignored: a.ignored + b.ignored
-        attempts: accountAttempts(a) + accountAttempts(b)
-        total: a.total + b.total
 
 export default TableRow = (props) ->
     total = null
