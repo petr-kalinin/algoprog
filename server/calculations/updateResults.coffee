@@ -1,3 +1,4 @@
+import User from '../models/user'
 import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
@@ -99,3 +100,7 @@ export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
     updateResultsForTable(user, Table.main, dirtyResults)
     
+export updateAllResults = () ->
+    users = await User.find({})
+    for user in users
+        updateResults(user)

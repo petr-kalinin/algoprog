@@ -15,9 +15,10 @@ submitsSchema.statics.findByUser = (userId) ->
         user: userId
 
 submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
-    Submit.find
+    Submit.find({
         user: userId
         problem: problemId
+    }).sort({time: 1})
 
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })
