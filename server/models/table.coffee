@@ -93,7 +93,11 @@ tablesSchema.statics.removeDuplicateChildren = () ->
             for subTable in table.tables
                 if not (subTable of wasTables)
                     wasTables[subTable] = 1
-                    newTables.push(subTable)
+                    newTables.push
+                        _id: subTable
+                        order: (await Table.findById(subTable)).order
+            newTables.sort((a, b) -> a.order - b.order)
+            newTables = (t._id for t in newTables)
             logger.trace "removing duplicate from ", table._id, " new tables=", newTables
             table.tables = newTables
             await table.update(table)
