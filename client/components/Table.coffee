@@ -11,9 +11,9 @@ getHeader = (results) ->
     for table in results
         t = 
             _id: table._id
-            tables: []
-        for subtable in table.tables
-            t.tables.push
+            results: []
+        for subtable in table.results
+            t.results.push
                 _id: subtable._id
                 name: subtable.name
                 colspan: subtable.results.length
@@ -27,12 +27,12 @@ export default Table = (props) ->
     header = getHeader(props.data[0].results)
     <table className={globalStyles.mainTable}>
         <tbody>
-            <TableRow details={true} header={true} tables={header}/>
+            <TableRow details={true} header={true} results={header}/>
             {
             res = []
             a = (el) -> res.push(el)
             for result in props.data
-                a <TableRow details={true} user={result.user} tables={result.results} key={result.user._id}/>
+                a <TableRow details={true} user={result.user} results={result.results} key={result.user._id}/>
             res}
         </tbody>
     </table>

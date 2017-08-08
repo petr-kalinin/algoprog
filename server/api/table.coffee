@@ -30,44 +30,52 @@ needUser = (userId, tables) ->
             return true
     return false
 
-getUserResult = (user, tables) ->
+recurseResults = (user, tableId, depth) ->
+    table = await Table.findById(tableId)
+    tableResults = []
+    total = null
+    if depth > 0
+        for subtableId in table.tables
+            subtableResults = await recurseResults(user, subtableId, depth-1)
+            total = addTotal(total, subtableResults.total)
+            delete subtableResults.total
+            tableResults.push(subtableResults)
+    else
+        for subtableId in table.tables
+            tableResults.push(getResult(user._id, subtableId , Table))
+        for subtableId in table.problems
+            tableResults.push(getResult(user._id, subtableId , Problem))
+        tableResults = await Promise.all(tableResults)
+        for r in tableResults
+            total = addTotal(total, r)
+    return
+        _id: tableId,
+        name: table.name
+        results: tableResults
+        total: total
+
+getUserResult = (user, tables, depth) ->
     if not await needUser(user._id, tables)
         return null
     total = null
     results = []
     for tableId in tables
-        table = await Table.findById(tableId)
-        tableResults = []
-        for subtableId in table.tables
-            subtable = await Table.findById(subtableId)
-            subtableResults = []
-            for sstableId in subtable.tables
-                subtableResults.push(getResult(user._id, sstableId, Table))
-            for sstableId in subtable.problems
-                subtableResults.push(getResult(user._id, sstableId, Problem))
-            subtableResults = await Promise.all(subtableResults)
-            for r in subtableResults
-                total = addTotal(total, r)
-            tableResults.push
-                _id: subtableId
-                name: subtable.name
-                results: subtableResults
-        results.push
-            _id: tableId,
-            tables: tableResults
+        tableResults = await recurseResults(user, tableId, depth)
+        total = addTotal(total, tableResults.total)
+        delete tableResults.total
+        results.push tableResults
     return 
         user: user
         results: results
         total: total
                 
-
 export default table = (userList, table) ->
     data = []
     users = User.findByList(userList)
     tables = getTables(table)
     [users, tables] = await Promise.all([users, tables])
     for user in users
-        data.push(getUserResult(user, tables))
+        data.push(getUserResult(user, tables, 1))
     results = await Promise.all(data)
     results = (r for r in results when r)
     results = results.sort (a, b) ->

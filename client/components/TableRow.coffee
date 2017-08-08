@@ -101,9 +101,9 @@ export default TableRow = (props) ->
                 a <td className={globalStyles.mainTable_td} key="cf" title="Codeforces">
                     {if h then "CF" else <CfStatus cf={props.user.cf}/>}
                 </td>
-            for table in props.tables
+            for table in props.results
                 subTotal = null
-                for subtable in table.tables
+                for subtable in table.results
                     a <td className={globalStyles.border} key={subtable._id + "b"}/>
                     if props.header
                         a <td className={globalStyles.mainTable_td} colSpan={subtable.colspan}  key={subtable._id + "c"}>
