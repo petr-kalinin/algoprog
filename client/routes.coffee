@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom'
 
 import UserBadgePage from './pages/UserBadgePage'
+import UserPage from './pages/UserPage'
 import DashboardPage from './pages/DashboardPage'
 import Login from './components/Login'
 import Register from './components/Register'
@@ -28,8 +29,8 @@ export default [
     { 
         path: '/user/:id',
         key: "user",
-        component: UserBadgePage,
-        loadData: UserBadgePage.loadData,
+        component: UserPage,
+        loadData: UserPage.loadData,
     },
     { 
         path: '/table/:userList/:id',
