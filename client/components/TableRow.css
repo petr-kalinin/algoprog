@@ -2,3 +2,15 @@
     font-family: monospace;
     text-align: center;
 }
+
+.full {
+    background: #00dd00;
+}
+.done {
+    background: #009900;
+}
+.started {
+    background: #cccccc;
+}
+.none {
+}

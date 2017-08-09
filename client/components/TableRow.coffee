@@ -57,10 +57,36 @@ ProblemResult = (props) ->
     <td title={props.user.name + " : " + props.result.problemName} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
         {text}
     </td>
+    
+totalResultClass = (result) ->
+    if not result.problemName
+        return undefined
+    if result.total == result.solved
+        return "full"
+    else 
+        needed = result.total
+        if result.problemName.slice(-1) == "В"
+            needed = Math.ceil(needed / 2)
+        else if result.problemName.slice(-1) == "Г"
+            needed = Math.ceil(needed / 3)
+        if result.solved >= needed
+            return "done"
+        else if result.solved > 0
+            return "started"
+        else
+            return "none"
             
 TotalResult = (props) ->
+    style = globalStyles.mainTable_td
+    title = ""
+    if not props.header
+        s = totalResultClass(props.result)
+        if s
+            style += " " + styles[s]
+        if props.result.problemName
+            title = props.user.name + ": " + props.result.problemName
     return 
-        <td className={globalStyles.mainTable_td}>
+        <td className={style} title={title}>
             {if props.header
                 "="
             else
