@@ -3,8 +3,6 @@ React = require('react')
 import styles from './TableRow.css'
 import globalStyles from './global.css'
 
-import UserName from './UserName'
-import CfStatus from './CfStatus'
 import userTableHeader from './UserTableHeader'
 
 import addTotal from '../lib/addTotal'

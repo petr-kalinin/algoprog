@@ -12,6 +12,7 @@ import DashboardPage from './pages/DashboardPage'
 import Login from './components/Login'
 import Register from './components/Register'
 import TablePage from './pages/TablePage'
+import SolvedByWeekPage from './pages/SolvedByWeekPage'
 
 class NoMatch extends React.Component 
     render: () ->
@@ -41,6 +42,12 @@ export default [
         key: "dashboard",
         component: DashboardPage,
         loadData: DashboardPage.loadData,
+    },
+    { 
+        path: '/solvedByWeek/:userList',
+        key: "solvedByWeek",
+        component: SolvedByWeekPage,
+        loadData: SolvedByWeekPage.loadData,
     },
     { 
         path: '/login',
