@@ -89,23 +89,3 @@ export default table = (userList, table) ->
             return a.total.attempts - b.total.attempts
         return 0
     return results
-
-export overallTable = (userList) ->
-    data = []
-    users = User.findByList(userList)
-    tables = getTables(table)
-    [users, tables] = await Promise.all([users, tables])
-    for user in users
-        data.push(getUserResult(user, tables, 1))
-    results = await Promise.all(data)
-    results = (r for r in results when r)
-    results = results.sort (a, b) ->
-        if a.user.active != b.user.active
-            return if a.user.active then -1 else 1
-        if a.total.solved != b.total.solved
-            return b.total.solved - a.total.solved 
-        if a.total.attempts != b.total.attempts
-            return a.total.attempts - b.total.attempts
-        return 0
-    return results
-

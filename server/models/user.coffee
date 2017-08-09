@@ -64,6 +64,7 @@ usersSchema.methods.setBaseLevel = (level) ->
     @updateRatingEtc()
 
 usersSchema.methods.setCfLogin = (cfLogin) ->
+    logger.info "setting cf login ", @_id, cfLogin
     await @update({$set: {"cf.login": cfLogin}})
     @cf.login = cfLogin
     @updateCfRating()
