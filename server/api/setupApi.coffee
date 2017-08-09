@@ -42,3 +42,6 @@ export default setupApi = (app) ->
 
     app.get '/api/table/:userList/:table', (req, res) ->
         res.json(await table(req.params.userList, req.params.table))
+
+    app.get '/api/users/:userList', (req, res) ->
+        res.json(await User.findByList(req.params.userList))

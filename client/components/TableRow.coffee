@@ -5,6 +5,7 @@ import globalStyles from './global.css'
 
 import UserName from './UserName'
 import CfStatus from './CfStatus'
+import userTableHeader from './UserTableHeader'
 
 import addTotal from '../lib/addTotal'
 
@@ -113,25 +114,10 @@ export default TableRow = (props) ->
     return
         <tr>
             <td className={globalStyles.border} />
-            <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user}>
-                {if h then "" else <UserName user={props.user} />}
-            </td>
             {
             res = []
             a = (el) -> res.push(el)
-            if props.details
-                a <td className={globalStyles.mainTable_td} key="level" title="Уровень">
-                    {if h then "У" else props.user.level?.current}
-                </td>
-                a <td className={globalStyles.mainTable_td} key="rating" title="Рейтинг">
-                    {if h then "Р" else props.user.rating}
-                </td>
-                a <td className={globalStyles.mainTable_td} key="activity" title="Активность">
-                    {if h then "А" else props.user.activity.toFixed(1)}
-                </td>
-                a <td className={globalStyles.mainTable_td} key="cf" title="Codeforces">
-                    {if h then "CF" else <CfStatus cf={props.user.cf}/>}
-                </td>
+            userTableHeader(res, props)
             for table in props.results
                 subTotal = null
                 for subtable in table.results
