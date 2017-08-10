@@ -47,7 +47,7 @@ export default FullUser = (props) ->
     <div>
         {`<UserBadge {...props}/>`}
         {props.user.userList == "lic40" && <Chocos chocos={props.user.chocos}/> }
-        <SolvedByWeek users={[props.user]} userList={props.user.userList} details={false}/>
+        <SolvedByWeek users={[props.user]} userList={props.user.userList} details={false} headerClass="h2"/>
         {
         res = []
         a =  (el) -> res.push(el)

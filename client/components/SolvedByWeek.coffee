@@ -30,6 +30,17 @@ weekHeader = (weekNumber, userList) ->
     startDay = new Date(+thisStart + MSEC_IN_WEEK * weekNumber)
     endDay = new Date(+startDay + MSEC_IN_WEEK - 1)
     startDay.getUTCDate() + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
+    
+Header = (props) ->
+    cl = props.headerClass || "h1"
+    H = React.createElement(cl, {}, 'Сданные задачи по неделям');
+    <div>
+        {H}
+        <p className="small">
+            Количество зачтенных посылок за неделю; 0.5, если посылки были, но ни одной зачтенной
+        </p>
+    </div>
+    
 
 SolvedByWeekRow = (props) ->
     <tr>
@@ -68,15 +79,18 @@ export default SolvedByWeek = (props) ->
     if not props.users?.length
         return <table className={globalStyles.mainTable}/>
     weeks = weekSet(props.userList)
-
-    <table className={globalStyles.mainTable}>
-        <tbody>
-            {
-            res = []
-            a = (el) -> res.push(el)
-            a <SolvedByWeekRow header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
-            for user in props.users
-                a <SolvedByWeekRow details={props.details} user={user} weeks={weeks} key={user._id}/>
-            res}
-        </tbody>
-    </table>
+    
+    <div>
+        <Header headerClass={props.headerClass} />
+        <table className={globalStyles.mainTable}>
+            <tbody>
+                {
+                res = []
+                a = (el) -> res.push(el)
+                a <SolvedByWeekRow header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
+                for user in props.users
+                    a <SolvedByWeekRow details={props.details} user={user} weeks={weeks} key={user._id}/>
+                res}
+            </tbody>
+        </table>
+    </div>
