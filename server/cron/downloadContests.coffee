@@ -96,12 +96,12 @@ class RegionContestDownloader extends ContestDownloader
             name: "reg",
             tables: levels,
             parent: "main",
-            order: 2000
+            order: 200000
         ).upsert())
         users = await User.findAll()
         promises = []
-        for user in users
-            promises.push(User.updateUser(user._id))
+        #for user in users
+        #    promises.push(User.updateUser(user._id))
         await Promise.all(promises)
         
 running = false
@@ -119,7 +119,7 @@ wrapRunning = (callable) ->
 
 export run = wrapRunning () ->
     logger.info "Downloading contests"
-    await (new ContestDownloader().run())
-    #await (new RegionContestDownloader().run())
+    #await (new ContestDownloader().run())
+    await (new RegionContestDownloader().run())
     await Table.removeDuplicateChildren()
     logger.info "Done downloading contests"
