@@ -6,8 +6,6 @@ import User from '../models/user'
 import Problem from '../models/problem'
 import Table from '../models/table'
 
-import updateResults from '../calculations/updateResults'
-
 import logger from '../log'
 
 class AllSubmitDownloader
@@ -101,11 +99,7 @@ class AllSubmitDownloader
         return result
     
     processAddedUser: (uid) ->
-        await updateResults(uid, @dirtyResults)
-        u = await User.findById(uid)
-        await u.updateChocos()
-        await u.updateRatingEtc()
-        await u.updateLevel()
+        User.updateUser(uid, @dirtyResults)
     
     run: ->
         logger.info "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages

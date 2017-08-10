@@ -7,6 +7,8 @@ import calculateCfRating from '../calculations/calculateCfRating'
 
 import logger from '../log'
 
+import updateResults from '../calculations/updateResults'
+
 SEMESTER_START = "2016-06-01"
 
 usersSchema = new mongoose.Schema
@@ -75,8 +77,15 @@ usersSchema.statics.findByList = (list) ->
 
 usersSchema.statics.findAll = (list) ->
     User.find {}
-
-
+    
+usersSchema.statics.updateUser = (userId, dirtyResults) ->
+    await updateResults(userId, dirtyResults)
+    u = await User.findById(userId)
+    await u.updateChocos()
+    await u.updateRatingEtc()
+    await u.updateLevel()
+    
+    
 usersSchema.index
     userList: 1
     active: -1

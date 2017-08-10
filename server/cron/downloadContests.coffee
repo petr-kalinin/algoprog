@@ -2,6 +2,8 @@ request = require('request-promise-native')
 
 import Problem from "../models/problem"
 import Table from "../models/table"
+import User from "../models/user"
+
 import logger from '../log'
 
 class ContestDownloader
@@ -77,6 +79,7 @@ class RegionContestDownloader extends ContestDownloader
         '2014': ['10372', '10376']
         '2015': ['14482', '14483']
         '2016': ['18805', '18806']
+        '2017': ['24702', '24703']
     
     contestBaseUrl: 'http://informatics.mccme.ru/mod/statements/view.php?id='
         
@@ -84,15 +87,22 @@ class RegionContestDownloader extends ContestDownloader
         levels = []
         for year, cont of @contests
             fullText = ' тур региональной олимпиады ' + year + ' года'
-            @processContest('', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
-            @processContest('', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)
+            @processContest(year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
+            @processContest(year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)
             levels.push('reg' + year)
         #id, name, tables, problems, parent, order
-        Tables.addTable("reg", "reg", levels, [], "main", 10000)
-        #table = Tables.findById("reg")
-        #users = Users.findAll().fetch()
-        #for user in users
-        #    Results.updateResults(user, table)
+        await (new Table(
+            _id: "reg"
+            name: "reg",
+            tables: levels,
+            parent: "main",
+            order: 2000
+        ).upsert())
+        users = await User.findAll()
+        promises = []
+        for user in users
+            promises.push(User.updateUser(user._id))
+        await Promise.all(promises)
         
 running = false
 
@@ -110,6 +120,6 @@ wrapRunning = (callable) ->
 export run = wrapRunning () ->
     logger.info "Downloading contests"
     await (new ContestDownloader().run())
-    #new RegionContestDownloader().run()
+    #await (new RegionContestDownloader().run())
     await Table.removeDuplicateChildren()
     logger.info "Done downloading contests"
