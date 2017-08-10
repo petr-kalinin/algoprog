@@ -7,7 +7,7 @@ import Table from '../models/table'
 import RegisteredUser from '../models/registeredUser'
 
 import dashboard from './dashboard'
-import table from './table'
+import table, * as tableApi from './table'
 
 export default setupApi = (app) ->
     app.post '/api/register', (req, res, next) ->
@@ -45,6 +45,9 @@ export default setupApi = (app) ->
 
     app.get '/api/table/:userList/:table', (req, res) ->
         res.json(await table(req.params.userList, req.params.table))
+
+    app.get '/api/fullUser/:id', (req, res) ->
+        res.json(await tableApi.fullUser(req.params.id))
 
     app.get '/api/users/:userList', (req, res) ->
         res.json(await User.findByList(req.params.userList))

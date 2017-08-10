@@ -27,12 +27,12 @@ export default Table = (props) ->
     header = getHeader(props.data[0].results)
     <table className={globalStyles.mainTable}>
         <tbody>
-            <TableRow details={true} header={true} results={header}/>
+            <TableRow details={props.details} header={true} results={header}/>
             {
             res = []
             a = (el) -> res.push(el)
             for result in props.data
-                a <TableRow details={true} user={result.user} results={result.results} key={result.user._id}/>
+                a <TableRow details={props.details} user={result.user} results={result.results} key={result.user._id}/>
             res}
         </tbody>
     </table>

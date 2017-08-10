@@ -15,7 +15,7 @@ class TablePage extends React.Component
     render:  () ->
         return 
             <Grid fluid>
-                <Table data={@state.data} me={@state.me} handleReload={@handleReload}/>
+                <Table details={true} data={@state.data} me={@state.me} handleReload={@handleReload}/>
             </Grid>
             
     componentDidMount: ->

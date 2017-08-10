@@ -28,7 +28,7 @@ getResult = (userId, tableId, collection) ->
 needUser = (userId, tables) ->
     for tableId in tables
         result = await Result.findByUserAndTable(userId, tableId)
-        if result.solved > 0 or result.ok > 0 or result.attempts > 0
+        if result and (result.solved > 0 or result.ok > 0 or result.attempts > 0)
             return true
     return false
 
@@ -89,3 +89,22 @@ export default table = (userList, table) ->
             return a.total.attempts - b.total.attempts
         return 0
     return results
+
+export fullUser = (userId) ->
+    tables = [["1А", "1Б"],
+              ["1В", "1Г"]];
+    for level in [2..10]
+        tables.push(((level + ch) for ch in ["А", "Б", "В"]))
+    user = await User.findById(userId)
+    if not user
+        return null
+    results = []
+    for t in tables
+        results.push(getUserResult(user, t, 1))
+    results = await Promise.all(results)
+    results = (r.results for r in results when r)
+    return 
+        user: user
+        results: results
+        
+    console.log tables
