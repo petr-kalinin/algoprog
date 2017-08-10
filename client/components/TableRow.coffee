@@ -129,7 +129,8 @@ export default TableRow = (props) ->
                             a <Result header={props.header} result={result} user={props.user} key={result._id + "::" + subtable._id}/> 
                             subTotal = addTotal(subTotal, result)
                 a <td className={globalStyles.border} key={table._id + "b"} />
-                a <TotalResult header={props.header} result={subTotal} key={table._id + "t"} />
+                if props.results.length > 1
+                    a <TotalResult header={props.header} result={subTotal} key={table._id + "t"} />
                 total = addTotal(total, subTotal)
             res}
             <td className={globalStyles.border} />
