@@ -10,6 +10,7 @@ import UserName from './UserName'
 
 import styles from './UserBadge.css'
 
+
 export default class UserBadge extends React.Component 
     constructor: (props) ->
         super(props)

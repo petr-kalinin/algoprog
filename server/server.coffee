@@ -24,6 +24,8 @@ setupApi(app)
 
 app.use(express.static('build/assets'))
 
+app.use(express.static('public'))
+
 app.get '/status', (req, res) -> 
     logger.info "Query string", req.query
     res.send "OK"

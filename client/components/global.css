@@ -35,4 +35,6 @@
 .dq {
     background: black;
 }
-
+.small {
+    font-size: 70%;
+}
