@@ -1,6 +1,8 @@
 React = require('react')
 moment = require('moment');
 
+import styles from './Result.css'
+
 makeUserName = (user) ->
     star = ""
     if user.userList == "stud"
@@ -18,17 +20,17 @@ export default Result = (props) ->
     userName = makeUserName(r.user)
     return 
         <tr>
-            <td>
+            <td className={styles.td}>
                 <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD kk:mm:ss')}</a>
                 &nbsp;[ x {r.attempts} ]
             </td>
-            <td>
+            <td className={styles.td}>
                 <a href={userHref}>{userName}</a>
             </td>
-            <td>
+            <td className={styles.td}>
                 <a href={problemHref}>{problemName}</a>
             </td>
-            <td>
+            <td className={styles.td}>
                 {contests.join(", ")}
             </td>
         </tr>
