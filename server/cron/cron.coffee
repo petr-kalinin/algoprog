@@ -13,6 +13,7 @@ jobUntilIgnored = new Cron.CronJob('59 */3 * * * *', downloadSubmits.runUntilIgn
 jobLast = new Cron.CronJob('*/30 * * * * *', downloadSubmits.runLast, null, true);
 
 #jobContests = new Cron.CronJob('0 */10 * * * *', downloadContests.run, null, true);
+jobContests = undefined
 
 jobCf = new Cron.CronJob('0 0 * * * *', updateCf, null, true);
 
