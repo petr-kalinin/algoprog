@@ -12,7 +12,7 @@ jobAll = new Cron.CronJob('58 59 2 * * *', downloadSubmits.runAll, null, true);
 jobUntilIgnored = new Cron.CronJob('59 */3 * * * *', downloadSubmits.runUntilIgnored, null, true);
 jobLast = new Cron.CronJob('*/30 * * * * *', downloadSubmits.runLast, null, true);
 
-jobContests = new Cron.CronJob('0 */10 * * * *', downloadContests.run, null, true);
+#jobContests = new Cron.CronJob('0 */10 * * * *', downloadContests.run, null, true);
 
 jobCf = new Cron.CronJob('0 0 * * * *', updateCf, null, true);
 
