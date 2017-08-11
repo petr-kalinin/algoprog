@@ -39,7 +39,10 @@ export default renderOnServer = (req, res, next) =>
     )
     data = await data
     element = React.createElement(component, {match: foundMatch, data: data})
-    html = renderToString(element)
+    context = {}
+    # We have already identified the element,
+    # but we need StaticRouter for Link to work
+    html = renderToString(<StaticRouter context={context}>{element}</StaticRouter>)
 
     res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, data))
 

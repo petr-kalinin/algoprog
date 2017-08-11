@@ -52,7 +52,7 @@
     "react-bootstrap": "^0.31.1",
     "react-dom": "^15.6.1",
     "react-router": "*",
-    "react-router-dom": "^4.1.1",
+    "react-router-dom": "*",
     "real-isomorphic-fetch": "^1.2.2",
     "request": "*",
     "request-promise-native": "*",
