@@ -18,7 +18,7 @@ renderFullPage = (html, data) ->
             <script type="text/javascript" src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js"></script>
         </head>
         <body>
-            <div id="main">' + html + '</div>
+            <div id="main" style="min-width: 100%; min-height: 100%">' + html + '</div>
             <script src="/bundle.js" type="text/javascript"></script>
         </body>
         </html>'
