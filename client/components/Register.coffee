@@ -2,7 +2,7 @@ React = require('react')
 
 export default class Register extends React.Component 
     render:  () ->
-        <form action="/register" method="post">
+        <form action="/api/register" method="post">
             <div>
                 <label>Username:</label>
                 <input type="text" name="username"/>

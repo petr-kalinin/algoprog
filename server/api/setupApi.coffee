@@ -9,14 +9,19 @@ import RegisteredUser from '../models/registeredUser'
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
 
+import logger from '../log'
+
 export default setupApi = (app) ->
     app.post '/api/register', (req, res, next) ->
+        logger.info("Try register user", req.body.username)
         user = new RegisteredUser
             username: req.body.username
             admin: false
         RegisteredUser.register user, req.body.password, (err) ->
             if (err)
+                logger.error("Can register user", err)
                 return next err
+            logger.info("Regitered user")
             res.redirect '/'
             
     app.get('/api/me', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
