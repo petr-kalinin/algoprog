@@ -15,6 +15,7 @@ renderFullPage = (html, data) ->
             <script>
                 window.__INITIAL_STATE__ = ' + JSON.stringify(data) + ';
             </script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js"></script>
         </head>
         <body>
             <div id="main">' + html + '</div>
