@@ -33,7 +33,11 @@ usersSchema = new mongoose.Schema
         progress: Number
         
 usersSchema.methods.upsert = () ->
-    @update(this, {upsert: true})
+    # https://jira.mongodb.org/browse/SERVER-14322
+    try
+        @update(this, {upsert: true})
+    catch
+        logger.info "Could not upsert a user"
     
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
