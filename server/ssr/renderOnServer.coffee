@@ -9,7 +9,7 @@ renderFullPage = (html, data) ->
         <html>
         <head>
             <meta charset="UTF-8" />
-            <title>Test</title>
+            <title>Сводные таблицы</title>
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>  
             <link rel="stylesheet" href="/bundle.css"/>  
             <script>

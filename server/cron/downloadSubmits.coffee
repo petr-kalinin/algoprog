@@ -136,13 +136,20 @@ class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
         r = !((res == "AC") || (res == "IG"))
         return r
 
-# Лицей 40
 lic40url = (page, submitsPerPage) ->
         'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5401&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
         
-# Заоч
 zaochUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5402&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+
+
+studUrl = (page, submitsPerPage) ->
+    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7170&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+    
+urls = 
+    'lic40': lic40url,
+    'zaoch': zaochUrl,
+    'stud': studUrl
 
 running = false
 
@@ -159,21 +166,21 @@ wrapRunning = (callable) ->
 
 export runAll = wrapRunning () ->
     try
-        await (new AllSubmitDownloader(lic40url, 'lic40', 1000, 1, 1e9)).run()
-        await (new AllSubmitDownloader(zaochUrl, 'zaoch', 1000, 1, 1e9)).run()
+        for group, url of urls
+            await (new AllSubmitDownloader(url, group, 1000, 1, 1e9)).run()
     catch e
         logger.error "Error in AllSubmitDownloader", e
    
 export runUntilIgnored = wrapRunning () -> 
     try
-        await (new UntilIgnoredSubmitDownloader(lic40url, 'lic40', 100, 2, 4)).run()
-        await (new UntilIgnoredSubmitDownloader(zaochUrl, 'zaoch', 100, 2, 4)).run()
+        for group, url of urls
+            await (new UntilIgnoredSubmitDownloader(url, group, 100, 2, 4)).run()
     catch e
         logger.error "Error in UntilIgnoredSubmitDownloader", e
     
 export runLast = wrapRunning () ->
     try
-        await (new LastSubmitDownloader(lic40url, 'lic40', 20, 1, 1)).run()
-        await (new LastSubmitDownloader(zaochUrl, 'zaoch', 20, 1, 1)).run()
+        for group, url of urls
+            await (new LastSubmitDownloader(url, group, 20, 1, 1)).run()
     catch e
         logger.error "Error in LastSubmitDownloader", e
