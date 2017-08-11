@@ -89,4 +89,6 @@ export default class UserBadge extends React.Component
                         </div> 
                     </form> }
             </blockquote>
+            { @props.explain &&
+                <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
         </div>
