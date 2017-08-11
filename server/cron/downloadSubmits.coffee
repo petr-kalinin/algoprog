@@ -40,6 +40,7 @@ class AllSubmitDownloader
         @dirtyResults[userId + "::" + Table.main] = 1
 
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
+        logger.debug "Found submit ", uid, pid, runid
         res = await @needContinueFromSubmit(runid)
         if (outcome == @CE)
             outcome = "CE"
@@ -61,8 +62,10 @@ class AllSubmitDownloader
         )
         
         if oldSumit and newSubmit and deepEqual(oldSumit.toObject(), newSubmit.toObject())
+            logger.debug "Submit already in the database"
             return res
         
+        logger.debug "Adding submit"
         await newSubmit.upsert()
         await new User(
             _id: uid,
@@ -122,6 +125,7 @@ class AllSubmitDownloader
         tables = await Table.find({})
         addedPromises = []
         for uid, tmp of @addedUsers
+            logger.debug "Will process added user ", uid
             addedPromises.push(@processAddedUser(uid))
         await Promise.all(addedPromises)
         logger.info "Finish AllSubmitDownloader::run ", @userList, @limitPages
