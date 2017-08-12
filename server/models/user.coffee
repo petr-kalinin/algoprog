@@ -33,7 +33,11 @@ usersSchema = new mongoose.Schema
         progress: Number
         
 usersSchema.methods.upsert = () ->
-    @update(this, {upsert: true})
+    # https://jira.mongodb.org/browse/SERVER-14322
+    try
+        @update(this, {upsert: true})
+    catch
+        logger.info "Could not upsert a user"
     
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
@@ -73,7 +77,7 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     
 
 usersSchema.statics.findByList = (list) ->
-    User.find({userList: list}).sort({active: -1, level: -1, ratingSort: -1})
+    User.find({userList: list}).sort({active: -1, "level.current": -1, ratingSort: -1})
 
 usersSchema.statics.findAll = (list) ->
     User.find {}

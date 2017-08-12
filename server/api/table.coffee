@@ -70,6 +70,25 @@ getUserResult = (user, tables, depth) ->
         user: user
         results: results
         total: total
+        
+sortBySolved = (a, b) ->
+    if a.user.active != b.user.active
+        return if a.user.active then -1 else 1
+    if a.total.solved != b.total.solved
+        return b.total.solved - a.total.solved 
+    if a.total.attempts != b.total.attempts
+        return a.total.attempts - b.total.attempts
+    return 0
+    
+sortByLevel = (a, b) ->
+    if a.user.active != b.user.active
+        return if a.user.active then -1 else 1
+    if a.user.level.current != b.user.level.current
+        return if a.user.level.current > b.user.level.current then -1 else 1
+    if a.user.level != b.user.level
+        return if a.user.level > b.user.level then -1 else 1
+    return 0
+    
                 
 export default table = (userList, table) ->
     data = []
@@ -80,14 +99,7 @@ export default table = (userList, table) ->
         data.push(getUserResult(user, tables, 1))
     results = await Promise.all(data)
     results = (r for r in results when r)
-    results = results.sort (a, b) ->
-        if a.user.active != b.user.active
-            return if a.user.active then -1 else 1
-        if a.total.solved != b.total.solved
-            return b.total.solved - a.total.solved 
-        if a.total.attempts != b.total.attempts
-            return a.total.attempts - b.total.attempts
-        return 0
+    results = results.sort(if table == "main" then sortByLevel else sortBySolved)
     return results
 
 export fullUser = (userId) ->

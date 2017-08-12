@@ -2,6 +2,7 @@ React = require('react')
 tinycolor = require("tinycolor2")
 
 import styles from './UserName.css'
+import { Link } from 'react-router-dom'
 
 import {LEVEL_RATING_EXP, ACTIVITY_THRESHOLD} from '../../server/calculations/ratingConstants'
 MAX_ACTIVITY = 7
@@ -18,8 +19,8 @@ color = (user) ->
 
 
 export default UserName = (props) ->
-    <a href={"/user/" + props.user._id}>
+    <Link to={"/user/" + props.user._id}>
         <span className={styles.name} style={ {color:  color(props.user)} }>
             {props.user.name}
         </span>
-    </a>
+    </Link>

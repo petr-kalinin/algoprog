@@ -2,6 +2,8 @@ React = require('react')
 
 import { Grid } from 'react-bootstrap'
 import FullUser from '../components/FullUser'
+import { CometSpinLoader } from 'react-css-loaders';
+
 import callApi from '../lib/callApi'
 
 export default class FullUserPage extends React.Component 
@@ -12,10 +14,9 @@ export default class FullUserPage extends React.Component
         @handleReload = @handleReload.bind(this)
         
     render:  () ->
-        if not @state?.user.name
+        if not @state?.user?.name
             return
-                <Grid fluid>
-                </Grid>
+                <CometSpinLoader />
         return 
             <Grid fluid>
                 <FullUser user={@state.user} me={@state.me} results={@state.results} handleReload={@handleReload}/>
