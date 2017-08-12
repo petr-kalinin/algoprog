@@ -1,5 +1,6 @@
 React = require('react')
 moment = require('moment');
+import {Link} from 'react-router-dom'
 
 import styles from './Result.css'
 
@@ -25,7 +26,7 @@ export default Result = (props) ->
                 &nbsp;[ x {r.attempts} ]
             </td>
             <td className={styles.td}>
-                <a href={userHref}>{userName}</a>
+                <Link to={userHref}>{userName}</Link>
             </td>
             <td className={styles.td}>
                 <a href={problemHref}>{problemName}</a>

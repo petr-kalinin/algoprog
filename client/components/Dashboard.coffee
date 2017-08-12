@@ -1,5 +1,6 @@
 React = require('react')
 moment = require('moment');
+import {Link} from 'react-router-dom'
 
 import Result from './Result'
 
@@ -28,7 +29,7 @@ export default Dashboard = (props) ->
                         {props["cf"].map((result) ->
                             <tr key={result._id}>
                                 <td className={styles.td}>{moment(result.time).format('YYYY-MM-DD kk:mm:ss')}</td>
-                                <td className={styles.td}><a href={"/user/" + result.user._id}>{result.user.name}</a></td>
+                                <td className={styles.td}><Link to={"/user/" + result.user._id}>{result.user.name}</Link></td>
                                 <td className={styles.td}>{result.contestId}</td>
                                 <td className={styles.td}><a href={"http://codeforces.com/submissions/" + result.user.cf.login + "/contest/" + result.contestId}>
                                     {        

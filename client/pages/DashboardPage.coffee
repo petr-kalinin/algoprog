@@ -17,8 +17,18 @@ class DashboardPage extends React.Component
             </Grid>
             
     componentDidMount: ->
+        @reloadAndSetTimeout()
+        
+    componentWillUnmount: ->
+        clearTimeout(@timeout)
+        
+    reload: ->
         data = await DashboardPage.loadData(@props.match)
         @setState(data)
+        
+    reloadAndSetTimeout: ->
+        await @reload()
+        @timeout = setTimeout((() => @reloadAndSetTimeout()), 20000)
         
     @loadData: (match) ->
         callApi 'dashboard'
