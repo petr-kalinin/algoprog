@@ -4,6 +4,7 @@ import User from '../models/user'
 import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
+import CfResult from '../models/cfResult'
 
 expandResult = (result) ->
     res = result.toObject()
@@ -26,6 +27,18 @@ expandResults = (results) ->
 runDashboardQuery = (key, query, result) ->
     subResults = await Result.find(query).sort({lastSubmitTime: -1}).limit(20)
     result[key] = await expandResults(subResults)
+
+expandCfResult = (result) ->
+    result = result.toObject()
+    result.user = (await User.findById(result.userId)).toObject()
+    return result
+
+runCfQuery = (result) ->
+    cfr = await CfResult.findLastResults(20)
+    result["cf"] = []
+    for r in cfr
+        result["cf"].push(expandCfResult(r))
+    result["cf"] = await Promise.all(result["cf"])
     
 export default dashboard = () ->
     queries = 
@@ -36,8 +49,9 @@ export default dashboard = () ->
     result = {}
     promises = []
     for key, query of queries
-        query["total"] = 1
+        query["total"] = 1                          
         promises.push(runDashboardQuery(key, query, result))
+    promises.push(runCfQuery(result))
     await Promise.all(promises)
     return result
 
