@@ -4,6 +4,7 @@ import csshook from 'css-modules-require-hook/preset'
 
 express = require('express')
 passport = require('passport')
+compression = require('compression')
 
 import logger from './log'
 import renderOnServer from './ssr/renderOnServer'
@@ -18,6 +19,7 @@ process.on 'unhandledRejection', (r) ->
     logger.error r
 
 app = express()
+app.use(compression())
 
 configurePassport(app, db)
 setupApi(app)
