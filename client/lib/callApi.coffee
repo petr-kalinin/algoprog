@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || '3000')
-ip = (process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0')
+ip = (process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1')
 export API_URL = (if (typeof window == 'undefined') then ('http://' + ip + ':' + port) else '') + '/api/'
 
 export default callApi = (endpoint, data) ->
