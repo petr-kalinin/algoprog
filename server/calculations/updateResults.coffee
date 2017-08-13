@@ -62,9 +62,10 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     for submit in submits
         lastSubmitId = submit._id
         lastSubmitTime = submit.time
-        if submit.outcome == "IG"
-            ignored = 1
-            ok = 0
+        if submit.outcome == "IG" 
+            if solved == 0
+                ignored = 1
+                ok = 0
             continue
         # any other result resets ignored flag
         ignored = 0
@@ -76,11 +77,11 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         else if submit.outcome == "AC"
             solved = 1
             ok = 0
-            break
+	    continue  # we might have a future OK
         else if submit.outcome == "OK"
             ok = 1
             continue  # we might have a future AC
-        else  if submit.outcome != "CE"
+        else if submit.outcome != "CE"
             attempts++
     logger.debug "updated result ", userId, problemId, solved, ok, attempts, ignored, lastSubmitId
     result = new Result
