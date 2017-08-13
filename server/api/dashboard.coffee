@@ -25,7 +25,10 @@ expandResults = (results) ->
     return res
     
 runDashboardQuery = (key, query, result) ->
-    subResults = await Result.find(query).sort({lastSubmitTime: -1}).limit(20)
+    limit = 20
+    if key == "ok"
+        limit = 200
+    subResults = await Result.find(query).sort({lastSubmitTime: -1}).limit(limit)
     result[key] = await expandResults(subResults)
 
 expandCfResult = (result) ->
@@ -42,7 +45,7 @@ runCfQuery = (result) ->
     
 export default dashboard = () ->
     queries = 
-        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 6, 10)}},
+        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 8, 13)}},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},
         ac: {solved: 1}
