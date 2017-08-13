@@ -27,7 +27,10 @@ class DashboardPage extends React.Component
         @setState(data)
         
     reloadAndSetTimeout: ->
-        await @reload()
+        try
+            await @reload()
+        catch
+            console.log "Can't reload dashboard"
         @timeout = setTimeout((() => @reloadAndSetTimeout()), 20000)
         
     @loadData: (match) ->
