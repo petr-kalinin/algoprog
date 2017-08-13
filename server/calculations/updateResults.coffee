@@ -77,7 +77,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         else if submit.outcome == "AC"
             solved = 1
             ok = 0
-	    continue  # we might have a future OK
+            continue  # we might have a future OK
         else if submit.outcome == "OK"
             ok = 1
             continue  # we might have a future AC
