@@ -45,7 +45,7 @@ runCfQuery = (result) ->
     
 export default dashboard = () ->
     queries = 
-        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 8, 13)}},
+        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 8, 12)}},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},
         ac: {solved: 1}
