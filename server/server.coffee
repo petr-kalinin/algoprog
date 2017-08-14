@@ -47,5 +47,5 @@ app.listen port, ip, () ->
 #import {updateAllResults} from './calculations/updateResults'
 #updateAllResults()
 
-import Table from './models/table'
-Table.removeDuplicateChildren()
+import downloadMaterials from './cron/downloadMaterials'
+downloadMaterials()
