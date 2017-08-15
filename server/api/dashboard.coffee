@@ -45,6 +45,7 @@ runCfQuery = (result) ->
     
 export default dashboard = () ->
     queries = 
+        # remember that months start from 0
         ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 7, 12)}},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},
