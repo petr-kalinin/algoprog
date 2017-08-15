@@ -1,5 +1,6 @@
 request = require('request-promise-native')
 deepEqual = require('deep-equal')
+moment = require('moment')
 
 import Submit from '../models/submit'
 import User from '../models/user'
@@ -52,6 +53,8 @@ class AllSubmitDownloader
             outcome = "DQ"
             
         oldSumit = await Submit.findById(runid)
+        
+        date = new Date(moment(date + "+03"))
 
         newSubmit = new Submit(
             _id: runid,
