@@ -92,10 +92,9 @@ getProblem = (href, order) ->
         logger.error("Can't find statement for problem " + href)
         return undefined
     
-    id = document.getElementById("problem_id")
-    if not id
-        logger.error("Can't find id for problem " + href)
-        return undefined
+    re = new RegExp '.*view3.php\\?id=\\d+&chapterid=(\\d+)'
+    res = re.exec href
+    id = res[1]
     
     name = document.getElementsByTagName("title")[0]
     if not name
@@ -107,14 +106,32 @@ getProblem = (href, order) ->
         text += "<div>" + tag.innerHTML + "</div>"
     
     material = new Material
-        _id: "p" + id.innerHTML,
+        _id: "p" + id,
         order: order,
         type: "problem",
         text: text,
         materials: []
     await material.upsert()
     return material
+
+
+getProblemsHrefsFromStatements = (href) ->
+    document = await downloadAndParse(href)
+    toc = document.getElementsByClassName("statements_toc_alpha")
+    if toc.length > 1
+        logger.error("Found several tocs in statements " + href)
+        return undefined
+    toc = toc[0]
     
+    hrefs = []
+    tags = toc.getElementsByTagName("a")
+    for tag in tags
+        if tag.href.startsWith("http://informatics.mccme.ru/mod/statements/view3.php")
+            hrefs.push(tag.href)
+        else
+            logger.error("Strange link in statements toc: " + tag.href + " " + href)
+            
+    return hrefs
 
 parseStatements = (activity, order) ->
     if activity.children.length != 2
@@ -122,23 +139,12 @@ parseStatements = (activity, order) ->
         return undefined
     a = activity.children[1]
     
-    document = await downloadAndParse(a.href)
-    toc = document.getElementsByClassName("statements_toc_alpha")
-    if toc.length > 1
-        logger.error("Found several tocs in statements " + a.href)
-        return undefined
-    toc = toc[0]
-    
-    hrefs = [a.href]
-    tags = toc.getElementsByTagName("a")
-    for tag in tags
-        if tag.href.startsWith("http://informatics.mccme.ru/mod/statements/view3.php")
-            hrefs.push(tag.href)
-        else
-            logger.error("Strange link in statements toc: " + tag.href + " " + a.href)
+    hrefs = await getProblemsHrefsFromStatements(a.href)
+    hrefs2 = await getProblemsHrefsFromStatements(hrefs[0])
+    hrefs.splice(0, 0, hrefs2[0])
     
     name = a.innerHTML
-    logger.info(name + ": found " + hrefs.length + " problems")
+    logger.info(name + ": found " + hrefs.length + " problems: " + hrefs.join(" "))
     
     materials = []
     for href, i in hrefs
@@ -154,9 +160,6 @@ parseStatements = (activity, order) ->
         materials: materials
     await material.upsert()
     return material
-        
-            
-    return undefined
     
 
 parseActivity = (activity, order) ->
