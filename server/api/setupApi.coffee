@@ -5,9 +5,11 @@ import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
 import RegisteredUser from '../models/registeredUser'
+import Material from '../models/Material'
 
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
+import level from './level'
 
 import logger from '../log'
 
@@ -23,7 +25,7 @@ export default setupApi = (app) ->
                 return next err
             logger.info("Regitered user")
             res.redirect '/'
-            
+
     app.get('/api/me', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
         res.json req.user
     )
@@ -39,12 +41,12 @@ export default setupApi = (app) ->
             await record.setCfLogin cfLogin
             res.send('OK')
         )
-    
+
     app.get '/api/user/:id', (req, res) ->
         User.findOne({_id: req.params.id}, (err, record) ->
             res.json(record)
         )
-        
+
     app.get '/api/dashboard', (req, res) ->
         res.json(await dashboard())
 
@@ -56,3 +58,6 @@ export default setupApi = (app) ->
 
     app.get '/api/users/:userList', (req, res) ->
         res.json(await User.findByList(req.params.userList))
+
+    app.get '/api/level/:level', (req, res) ->
+        res.json(await level(req.params.level))
