@@ -10,7 +10,7 @@ url = 'http://informatics.mccme.ru/course/view.php?id=1135'
 
 downloadAndParse = (href) ->
     jar = request.jar()
-    page = await request 
+    page = await request
         url: href
         jar: jar
     document = (new JSDOM(page, {url: href})).window.document
@@ -37,11 +37,11 @@ getPage = (href, id) ->
     if not data
         logger.error("Can't find content for page " + href)
         return undefined
-    
+
     mod = data.getElementsByClassName('modified')
     for m in mod
         m.parentElement.removeChild(m)
-        
+
     material = new Material
         _id: id,
         order: 0,
@@ -91,20 +91,20 @@ getProblem = (href, order) ->
     if not data
         logger.error("Can't find statement for problem " + href)
         return undefined
-    
+
     re = new RegExp '.*view3.php\\?id=\\d+&chapterid=(\\d+)'
     res = re.exec href
     id = res[1]
-    
+
     name = document.getElementsByTagName("title")[0]
     if not name
         logger.error("Can't find name for problem " + href)
         return undefined
-    
+
     text = "<h1>" + name.innerHTML + "</h1>"
     for tag in data
         text += "<div>" + tag.innerHTML + "</div>"
-    
+
     material = new Material
         _id: "p" + id,
         order: order,
@@ -122,7 +122,7 @@ getProblemsHrefsFromStatements = (href) ->
         logger.error("Found several tocs in statements " + href)
         return undefined
     toc = toc[0]
-    
+
     hrefs = []
     tags = toc.getElementsByTagName("a")
     for tag in tags
@@ -130,7 +130,7 @@ getProblemsHrefsFromStatements = (href) ->
             hrefs.push(tag.href)
         else
             logger.error("Strange link in statements toc: " + tag.href + " " + href)
-            
+
     return hrefs
 
 parseStatements = (activity, order) ->
@@ -138,29 +138,33 @@ parseStatements = (activity, order) ->
         logger.error("Found resource with >2 children " + activity.innerHTML)
         return undefined
     a = activity.children[1]
-    
+
+    re = new RegExp 'view.php\\?id=(\\d+)'
+    res = re.exec a.href
+    id = res[1]
+
     hrefs = await getProblemsHrefsFromStatements(a.href)
     hrefs2 = await getProblemsHrefsFromStatements(hrefs[0])
     hrefs.splice(0, 0, hrefs2[0])
-    
+
     name = a.innerHTML
     logger.info(name + ": found " + hrefs.length + " problems: " + hrefs.join(" "))
-    
+
     materials = []
     for href, i in hrefs
         materials.push(getProblem(href, i))
-        
+
     materials = await finalizeMaterialsList(materials)
-    
+
     material = new Material
-        _id: activity.id
+        _id: id
         order: order
         type: "problems"
         text: name
         materials: materials
     await material.upsert()
     return material
-    
+
 
 parseActivity = (activity, order) ->
     if activity.classList.contains("label")
@@ -182,7 +186,7 @@ parseSection = (section, id) ->
     for activity, i in activities
         materials.push(parseActivity(activity, i))
     materials = await finalizeMaterialsList(materials)
-    
+
     material = new Material
         _id: +id
         order: id
@@ -191,12 +195,12 @@ parseSection = (section, id) ->
         materials: materials
     await material.upsert()
     return material
-    
+
 
 export default downloadMaterials = ->
     logger.info("Start downloading materials")
     document = await downloadAndParse(url)
-    
+
     materials = []
 
     for sectionId in [1..10]
@@ -204,9 +208,9 @@ export default downloadMaterials = ->
         if not section
             continue
         materials.push(parseSection(section, sectionId))
-        
+
     materials = await finalizeMaterialsList(materials)
-        
+
     mainPageMaterial = new Material
         _id: "main"
         order: 0
