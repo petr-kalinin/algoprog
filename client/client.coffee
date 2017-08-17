@@ -16,3 +16,5 @@ ReactDOM.render(
     </BrowserRouter>,
     document.getElementById('main')
 )
+
+import observer from './mathJaxObserver'
