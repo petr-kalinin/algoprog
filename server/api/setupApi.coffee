@@ -10,6 +10,7 @@ import Material from '../models/Material'
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
 import level from './level'
+import contest from './contest'
 
 import logger from '../log'
 
@@ -64,3 +65,6 @@ export default setupApi = (app) ->
 
     app.get '/api/material/:id', (req, res) ->
         res.json(await Material.findById(req.params.id))
+
+    app.get '/api/contest/:id', (req, res) ->
+        res.json(await contest(req.params.id))

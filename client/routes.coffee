@@ -13,6 +13,7 @@ import TablePage from './pages/TablePage'
 import LevelPage from './pages/LevelPage'
 import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
+import ContestPage from './pages/ContestPage'
 
 import Login from './components/Login'
 import Register from './components/Register'
@@ -63,6 +64,12 @@ export default [
         key: "material",
         component: MaterialPage,
         loadData: MaterialPage.loadData,
+    },
+    {
+        path: '/contest/:id',
+        key: "contest",
+        component: ContestPage,
+        loadData: ContestPage.loadData,
     },
     {
         path: '/login',
