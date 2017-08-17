@@ -15,9 +15,9 @@ LinkMaterial = (props) ->
         {props.head}: <a href={props.material.href}>{props.material.text}</a>
     </div>
 
-Problems = (props) ->
+Contest = (props) ->
     <div>
-        <Link to={"/problems/" + props.material._id}>{props.material.text}</Link>
+        <Link to={"/contest/" + props.material._id}>{props.material.text}</Link>
     </div>
 
 Material = (props) ->
@@ -26,7 +26,7 @@ Material = (props) ->
         when 'pageLink' then `<PageLink {...props}/>`
         when 'pdf' then `<LinkMaterial head="pdf" {...props}/>`
         when 'image' then `<LinkMaterial head="image" {...props}/>`
-        when 'problems' then `<Problems {...props}/>`
+        when 'contest' then `<Contest {...props}/>`
         else <div>{props.material.type}</div>
 
 export default Level = (props) ->

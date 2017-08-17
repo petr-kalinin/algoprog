@@ -159,7 +159,7 @@ parseStatements = (activity, order) ->
     material = new Material
         _id: id
         order: order
-        type: "problems"
+        type: "contest"
         text: name
         materials: materials
     await material.upsert()
