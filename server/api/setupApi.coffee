@@ -61,3 +61,6 @@ export default setupApi = (app) ->
 
     app.get '/api/level/:level', (req, res) ->
         res.json(await level(req.params.level))
+
+    app.get '/api/material/:id', (req, res) ->
+        res.json(await Material.findById(req.params.id))

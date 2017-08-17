@@ -11,6 +11,7 @@ import FullUserPage from './pages/FullUserPage'
 import DashboardPage from './pages/DashboardPage'
 import TablePage from './pages/TablePage'
 import LevelPage from './pages/LevelPage'
+import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
 
 import Login from './components/Login'
@@ -56,6 +57,12 @@ export default [
         key: "level",
         component: LevelPage,
         loadData: LevelPage.loadData,
+    },
+    {
+        path: '/material/:id',
+        key: "material",
+        component: MaterialPage,
+        loadData: MaterialPage.loadData,
     },
     {
         path: '/login',

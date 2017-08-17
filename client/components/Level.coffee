@@ -7,7 +7,7 @@ Label = (props) ->
 
 PageLink = (props) ->
     <div>
-        <Link to={"/material/" + props.material._id}>{props.material.text}</Link>
+        <Link to={"/material/" + props.material.materials[0]}>{props.material.text}</Link>
     </div>
 
 LinkMaterial = (props) ->
