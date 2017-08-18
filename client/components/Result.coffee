@@ -8,7 +8,7 @@ makeUserName = (user) ->
     star = ""
     if user.userList == "stud"
         star = "*"
-    star + user.name + " (" + user.level.current + ")"    
+    star + user.name + " (" + user.level.current + ")"
 
 export default Result = (props) ->
     r = props.result
@@ -19,19 +19,19 @@ export default Result = (props) ->
     problemName = r.table.name
     contests = r.table.tables
     userName = makeUserName(r.user)
-    return 
+    return
         <tr>
-            <td className={styles.td}>
+            <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD kk:mm:ss')}</a>
-                &nbsp;[ x {r.attempts} ]
+                {" "}[ x {r.attempts} ]
             </td>
-            <td className={styles.td}>
+            <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to={userHref}>{userName}</Link>
             </td>
             <td className={styles.td}>
                 <a href={problemHref}>{problemName}</a>
             </td>
-            <td className={styles.td}>
-                {contests.join(", ")}
+            <td className={styles.td} style={{whiteSpace: "pre-wrap"}}>
+                {contests.join("\n")}
             </td>
         </tr>
