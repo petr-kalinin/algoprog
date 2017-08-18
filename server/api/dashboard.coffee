@@ -16,14 +16,14 @@ expandResult = (result) ->
     tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
     res.table.tables = tableNames
     return res
-    
+
 expandResults = (results) ->
     promises = []
     for result in results
         promises.push(expandResult(result))
     res = await Promise.all(promises)
     return res
-    
+
 runDashboardQuery = (key, query, result) ->
     limit = 20
     if key == "ok"
@@ -42,20 +42,19 @@ runCfQuery = (result) ->
     for r in cfr
         result["cf"].push(expandCfResult(r))
     result["cf"] = await Promise.all(result["cf"])
-    
+
 export default dashboard = () ->
-    queries = 
+    queries =
         # remember that months start from 0
-        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 7, 12)}},
+        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2017, 7, 18)}},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},
         ac: {solved: 1}
     result = {}
     promises = []
     for key, query of queries
-        query["total"] = 1                          
+        query["total"] = 1
         promises.push(runDashboardQuery(key, query, result))
     promises.push(runCfQuery(result))
     await Promise.all(promises)
     return result
-
