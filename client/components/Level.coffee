@@ -1,4 +1,6 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
+
 import { Link } from 'react-router-dom'
 
 Label = (props) ->
@@ -12,7 +14,7 @@ Page = (props) ->
 
 LinkMaterial = (props) ->
     <div>
-        {props.head}: <a href={props.material.href}>{props.material.title}</a>
+        <FontAwesome name={props.head}/> <a href={props.material.href}>{props.material.title}</a>
     </div>
 
 Contest = (props) ->
@@ -24,8 +26,8 @@ Material = (props) ->
     switch props.material.type
         when 'label' then `<Label {...props}/>`
         when 'page' then `<Page {...props}/>`
-        when 'pdf' then `<LinkMaterial head="pdf" {...props}/>`
-        when 'image' then `<LinkMaterial head="image" {...props}/>`
+        when 'pdf' then `<LinkMaterial head="file-pdf-o" {...props}/>`
+        when 'image' then `<LinkMaterial head="picture-o" {...props}/>`
         when 'contest' then `<Contest {...props}/>`
         else <div>{props.material.type}</div>
 
