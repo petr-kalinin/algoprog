@@ -35,6 +35,8 @@ export default Level = (props) ->
     res = []
     a = (el) -> res.push(el)
     for m in props.level.materials
-        a <Material material={m} key={m._id}/>
+        a(<div style={{marginLeft: m.indent}} key={m._id}>
+            <Material material={m}/>
+        </div>)
     res}
     </div>

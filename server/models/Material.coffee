@@ -6,6 +6,7 @@ materialsSchema = new mongoose.Schema
     _id: String
     order: Number
     type: String
+    indent: Number
     title: String
     content: String
     materials: [mongoose.Schema.Types.Mixed]  # will always be an array of dictionaries

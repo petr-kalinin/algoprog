@@ -21,10 +21,22 @@ finalizeMaterialsList = (materials) ->
     materials = await Promise.all(materials)
     return (m._id for m in materials)
 
+getIndent = (activity) ->
+    spacers = activity.getElementsByClassName('spacer')
+    indent = 0
+    for s in spacers
+        indent += s.width
+        s.parentElement.removeChild(s)
+    if indent > 0
+        indent -= 20
+    return indent
+
 parseLabel = (activity, order) ->
+    indent = getIndent(activity)
     material = new Material
         _id: activity.id,
-        order: order,
+        order: order
+        indent: indent
         type: "label",
         title: "",
         content: activity.innerHTML,
@@ -46,6 +58,7 @@ getPageContent = (href) ->
     return data.innerHTML
 
 parseResource = (activity, order) ->
+    indent = getIndent(activity)
     icon = activity.firstChild
     material = undefined
     if activity.children.length != 2
@@ -57,6 +70,7 @@ parseResource = (activity, order) ->
             _id: activity.id,
             order: order,
             type: "pdf",
+            indent: indent
             content: a.href
             title: a.innerHTML,
             materials: []
@@ -65,6 +79,7 @@ parseResource = (activity, order) ->
             _id: activity.id,
             order: order,
             type: "image",
+            indent: indent
             content: a.href
             title: a.innerHTML,
             materials: []
@@ -73,6 +88,7 @@ parseResource = (activity, order) ->
             _id: activity.id,
             order: order,
             type: "page",
+            indent: indent
             content: await getPageContent(a.href)
             title: a.innerHTML,
             materials: []
@@ -130,6 +146,7 @@ getProblemsHrefsFromStatements = (href) ->
     return hrefs
 
 parseStatements = (activity, order) ->
+    indent = getIndent(activity)
     if activity.children.length != 2
         logger.error("Found resource with >2 children " + activity.innerHTML)
         return undefined
@@ -156,6 +173,7 @@ parseStatements = (activity, order) ->
         _id: id
         order: order
         type: "contest"
+        indent: indent
         title: name
         materials: materials
     await material.upsert()
@@ -172,10 +190,6 @@ parseActivity = (activity, order) ->
     return undefined
 
 parseSection = (section, id) ->
-    spacers = section.getElementsByClassName('spacer')
-    for s in spacers
-        s.parentElement.removeChild(s)
-
     activities = section.getElementsByClassName('activity')
     materials = []
 
@@ -187,6 +201,7 @@ parseSection = (section, id) ->
         _id: id
         order: id
         type: "level"
+        indent: 0
         title: id
         content: ""
         materials: materials
