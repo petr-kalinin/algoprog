@@ -2,28 +2,28 @@ React = require('react')
 import { Link } from 'react-router-dom'
 
 Label = (props) ->
-    <div dangerouslySetInnerHTML={{__html: props.material.text}}>
+    <div dangerouslySetInnerHTML={{__html: props.material.content}}>
     </div>
 
-PageLink = (props) ->
+Page = (props) ->
     <div>
-        <Link to={"/material/" + props.material.materials[0]}>{props.material.text}</Link>
+        <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
 LinkMaterial = (props) ->
     <div>
-        {props.head}: <a href={props.material.href}>{props.material.text}</a>
+        {props.head}: <a href={props.material.href}>{props.material.title}</a>
     </div>
 
 Contest = (props) ->
     <div>
-        <Link to={"/contest/" + props.material._id}>{props.material.text}</Link>
+        <Link to={"/contest/" + props.material._id}>{props.material.title}</Link>
     </div>
 
 Material = (props) ->
     switch props.material.type
         when 'label' then `<Label {...props}/>`
-        when 'pageLink' then `<PageLink {...props}/>`
+        when 'page' then `<Page {...props}/>`
         when 'pdf' then `<LinkMaterial head="pdf" {...props}/>`
         when 'image' then `<LinkMaterial head="image" {...props}/>`
         when 'contest' then `<Contest {...props}/>`

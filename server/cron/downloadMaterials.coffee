@@ -26,12 +26,13 @@ parseLabel = (activity, order) ->
         _id: activity.id,
         order: order,
         type: "label",
-        text: activity.innerHTML,
+        title: "",
+        content: activity.innerHTML,
         materials: []
     await material.upsert()
     return material
 
-getPage = (href, id) ->
+getPageContent = (href) ->
     document = await downloadAndParse(href)
     data = document.getElementById("content")
     if not data
@@ -42,14 +43,7 @@ getPage = (href, id) ->
     for m in mod
         m.parentElement.removeChild(m)
 
-    material = new Material
-        _id: id,
-        order: 0,
-        type: "page",
-        text: data.innerHTML,
-        materials: []
-    await material.upsert()
-    return material
+    return data.innerHTML
 
 parseResource = (activity, order) ->
     icon = activity.firstChild
@@ -63,25 +57,25 @@ parseResource = (activity, order) ->
             _id: activity.id,
             order: order,
             type: "pdf",
-            href: a.href
-            text: a.innerHTML,
+            content: a.href
+            title: a.innerHTML,
             materials: []
     else if icon.src.endsWith("image.gif")
         material = new Material
             _id: activity.id,
             order: order,
             type: "image",
-            href: a.href
-            text: a.innerHTML,
+            content: a.href
+            title: a.innerHTML,
             materials: []
     else
-        page = await getPage(a.href, activity.id + "p")
         material = new Material
             _id: activity.id,
             order: order,
-            type: "pageLink",
-            text: a.innerHTML,
-            materials: [page._id]
+            type: "page",
+            content: await getPageContent(a.href)
+            title: a.innerHTML,
+            materials: []
     await material.upsert()
     return material
 
@@ -100,8 +94,9 @@ getProblem = (href, order) ->
     if not name
         logger.error("Can't find name for problem " + href)
         return undefined
+    name = name.innerHTML
 
-    text = "<h1>" + name.innerHTML + "</h1>"
+    text = "<h1>" + name + "</h1>"
     for tag in data
         text += "<div>" + tag.innerHTML + "</div>"
 
@@ -109,7 +104,8 @@ getProblem = (href, order) ->
         _id: "p" + id,
         order: order,
         type: "problem",
-        text: text,
+        title: name,
+        content: text,
         materials: []
     await material.upsert()
     return material
@@ -160,7 +156,7 @@ parseStatements = (activity, order) ->
         _id: id
         order: order
         type: "contest"
-        text: name
+        title: name
         materials: materials
     await material.upsert()
     return material
@@ -188,10 +184,11 @@ parseSection = (section, id) ->
     materials = await finalizeMaterialsList(materials)
 
     material = new Material
-        _id: +id
+        _id: id
         order: id
         type: "level"
-        text: ""
+        title: id
+        content: ""
         materials: materials
     await material.upsert()
     return material
@@ -215,7 +212,6 @@ export default downloadMaterials = ->
         _id: "main"
         order: 0
         type: "main"
-        text: ""
         materials: materials
     await mainPageMaterial.upsert()
 
