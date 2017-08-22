@@ -40,6 +40,8 @@ expandCfResult = (result) ->
     result.user = await User.findById(result.userId)
     if not result.user
         return undefined
+    if not result.user.cf
+        return undefined
     result.user = result.user.toObject()
     return result
 
