@@ -15,7 +15,7 @@ Contest = (props) ->
             res = []
             a = (el) -> res.push(el)
             for m in props.contest.materials
-                a <ListGroupItem key={m} onClick={goToProblem(m, props.history)}>Problem {m}</ListGroupItem>
+                a <ListGroupItem key={m._id} onClick={goToProblem(m._id, props.history)}>{m.title}</ListGroupItem>
             res}
         </ListGroup>
     </div>

@@ -107,10 +107,14 @@ getProblem = (href, order) ->
     id = res[1]
 
     name = document.getElementsByTagName("title")[0]
+    name = name.innerHTML
+
+    re = new RegExp '^.*?\\((.*)\\)$'
+    res = re.exec name
+    name = res[1]
     if not name
         logger.error("Can't find name for problem " + href)
         return undefined
-    name = name.innerHTML
 
     text = "<h1>" + name + "</h1>"
     for tag in data
@@ -167,7 +171,7 @@ parseStatements = (activity, order) ->
         materials.push(getProblem(href, i))
 
     materials = await finalizeMaterialsList(materials)
-    materials = [{_id: m._id, title: m.title} for m in materials]
+    materials = ({_id: m._id, title: m.title} for m in materials)
 
     material = new Material
         _id: id
@@ -226,8 +230,6 @@ splitLevel = (materials) ->
             currentLevel.materials.push m
     if currentLevel
         levels.push currentLevel
-    for l in levels
-        console.log l.title, l.materials.length
     return levels
 
 parseSection = (section, id) ->
@@ -240,7 +242,7 @@ parseSection = (section, id) ->
     materials = splitLevel(materials)
 
     for m in materials
-        m.materials = [mm._id for mm in m.materials]
+        m.materials = (mm._id for mm in m.materials)
         await m.upsert()
 
     material = new Material
@@ -250,7 +252,7 @@ parseSection = (section, id) ->
         indent: 0
         title: id
         content: ""
-        materials: [m._id for m in materials]
+        materials: (m._id for m in materials)
     await material.upsert()
     return material
 
