@@ -19,7 +19,7 @@ downloadAndParse = (href) ->
 finalizeMaterialsList = (materials) ->
     materials = (m for m in materials when m)
     materials = await Promise.all(materials)
-    return (m._id for m in materials)
+    return materials
 
 getIndent = (activity) ->
     spacers = activity.getElementsByClassName('spacer')
@@ -161,13 +161,13 @@ parseStatements = (activity, order) ->
     hrefs.splice(0, 0, hrefs2[0])
 
     name = a.innerHTML
-    logger.info(name + ": found " + hrefs.length + " problems: " + hrefs.join(" "))
 
     materials = []
     for href, i in hrefs
         materials.push(getProblem(href, i))
 
     materials = await finalizeMaterialsList(materials)
+    materials = [{_id: m._id, title: m.title} for m in materials]
 
     material = new Material
         _id: id
@@ -179,7 +179,6 @@ parseStatements = (activity, order) ->
     await material.upsert()
     return material
 
-
 parseActivity = (activity, order) ->
     if activity.classList.contains("label")
         return parseLabel(activity, order)
@@ -189,6 +188,48 @@ parseActivity = (activity, order) ->
         return parseStatements(activity, order)
     return undefined
 
+getSublevel = (material) ->
+    if material.type != "label"
+        return undefined
+
+    re = new RegExp '\\s*<h3>(Уровень\\s+(.*))</h3>'
+    res = re.exec material.content
+    if not res
+        return undefined
+    id = res[2]
+    name = res[1]
+    return
+        _id: id
+        name: name
+
+splitLevel = (materials) ->
+    levels = []
+    currentLevel = undefined
+    order = 0
+    pendingMaterials = []
+    for m in materials
+        sublevel = getSublevel(m)
+        if sublevel
+            if currentLevel
+                levels.push currentLevel
+            currentLevel = new Material
+                _id: sublevel._id
+                order: order
+                type: "level"
+                title: sublevel.name
+                materials: pendingMaterials
+            order += 1
+            pendingMaterials = []
+        if not currentLevel
+            pendingMaterials.push m
+        else
+            currentLevel.materials.push m
+    if currentLevel
+        levels.push currentLevel
+    for l in levels
+        console.log l.title, l.materials.length
+    return levels
+
 parseSection = (section, id) ->
     activities = section.getElementsByClassName('activity')
     materials = []
@@ -196,6 +237,11 @@ parseSection = (section, id) ->
     for activity, i in activities
         materials.push(parseActivity(activity, i))
     materials = await finalizeMaterialsList(materials)
+    materials = splitLevel(materials)
+
+    for m in materials
+        m.materials = [mm._id for mm in m.materials]
+        await m.upsert()
 
     material = new Material
         _id: id
@@ -204,7 +250,7 @@ parseSection = (section, id) ->
         indent: 0
         title: id
         content: ""
-        materials: materials
+        materials: [m._id for m in materials]
     await material.upsert()
     return material
 
@@ -221,7 +267,7 @@ export default downloadMaterials = ->
             continue
         materials.push(parseSection(section, sectionId))
 
-    materials = await finalizeMaterialsList(materials)
+    materials = await finalizeMaterialsList(materials, ["_id"])
 
     mainPageMaterial = new Material
         _id: "main"
