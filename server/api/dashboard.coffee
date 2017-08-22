@@ -8,7 +8,10 @@ import CfResult from '../models/cfResult'
 
 expandResult = (result) ->
     res = result.toObject()
-    res.user = (await User.findById(result.user)).toObject()
+    res.user = (await User.findById(result.user))
+    if not res.user
+        return undefined
+    res.user = res.user.toObject()
     res.table = (await Problem.findById(result.table)).toObject()
     tableNamePromises = []
     for table in res.table.tables
@@ -22,6 +25,7 @@ expandResults = (results) ->
     for result in results
         promises.push(expandResult(result))
     res = await Promise.all(promises)
+    res = (r for r in res when r)
     return res
 
 runDashboardQuery = (key, query, result) ->
@@ -33,7 +37,10 @@ runDashboardQuery = (key, query, result) ->
 
 expandCfResult = (result) ->
     result = result.toObject()
-    result.user = (await User.findById(result.userId)).toObject()
+    result.user = await User.findById(result.userId)
+    if not result.user
+        return undefined
+    result.user = result.user.toObject()
     return result
 
 runCfQuery = (result) ->
@@ -42,6 +49,7 @@ runCfQuery = (result) ->
     for r in cfr
         result["cf"].push(expandCfResult(r))
     result["cf"] = await Promise.all(result["cf"])
+    result["cf"] = (r for r in result["cf"] when r)
 
 export default dashboard = () ->
     queries =

@@ -10,21 +10,21 @@ import Table from '../models/table'
 import logger from '../log'
 
 class AllSubmitDownloader
-    
+
     constructor: (@baseUrl, @userList, @submitsPerPage, @minPages, @limitPages) ->
         @addedUsers = {}
         @dirtyResults = {}
-    
+
     AC: 'Зачтено/Принято'
     IG: 'Проигнорировано'
     DQ: 'Дисквалифицировано'
     CE: 'Ошибка компиляции'
-        
+
     addedUsers: {}
-        
+
     needContinueFromSubmit: (runid) ->
         true
-        
+
     setDirty: (userId, probid) ->
         @dirtyResults[userId + "::" + probid] = 1
         problem = await Problem.findById(probid)
@@ -45,15 +45,16 @@ class AllSubmitDownloader
         res = await @needContinueFromSubmit(runid)
         if (outcome == @CE)
             outcome = "CE"
-        if (outcome == @AC) 
+        if (outcome == @AC)
             outcome = "AC"
-        if (outcome == @IG) 
+        if (outcome == @IG)
             outcome = "IG"
-        if (outcome == @DQ) 
+        if (outcome == @DQ)
             outcome = "DQ"
-            
+
         oldSumit = await Submit.findById(runid)
-        
+        oldUser = await User.findById(uid)
+
         date = new Date(moment(date + "+03"))
 
         newSubmit = new Submit(
@@ -63,22 +64,24 @@ class AllSubmitDownloader
             problem: "p" + pid,
             outcome: outcome
         )
-        
-        if oldSumit and newSubmit and deepEqual(oldSumit.toObject(), newSubmit.toObject())
-            logger.debug "Submit already in the database"
-            return res
-        
-        logger.debug "Adding submit"
-        await newSubmit.upsert()
-        await new User(
+        newUser = new User(
             _id: uid,
             name: name,
             userList: @userList
-        ).upsert()
+        )
+
+        # we can't compare oldUser and newUser because they will have different rating, etc
+        if (oldSumit and newSubmit and deepEqual(oldSumit.toObject(), newSubmit.toObject()) and oldUser)
+            logger.debug "Submit already in the database"
+            return res
+
+        logger.debug "Adding submit"
+        await newSubmit.upsert()
+        await newUser.upsert()
         @addedUsers[uid] = uid
         await @setDirty(uid, "p"+pid)
         res
-    
+
     parseSubmits: (submitsTable) ->
         submitsRows = submitsTable.split("<tr>")
         result = true
@@ -103,10 +106,10 @@ class AllSubmitDownloader
         for r in results
             result = result and r
         return result
-    
+
     processAddedUser: (uid) ->
         User.updateUser(uid, @dirtyResults)
-    
+
     run: ->
         logger.info "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
         page = 0
@@ -124,7 +127,7 @@ class AllSubmitDownloader
             page = page + 1
             if page > @limitPages
                 break
-            
+
         tables = await Table.find({})
         addedPromises = []
         for uid, tmp of @addedUsers
@@ -132,7 +135,7 @@ class AllSubmitDownloader
             addedPromises.push(@processAddedUser(uid))
         await Promise.all(addedPromises)
         logger.info "Finish AllSubmitDownloader::run ", @userList, @limitPages
-            
+
 class LastSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
         !await Submit.findById(runid)
@@ -144,16 +147,16 @@ class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
         return r
 
 lic40url = (page, submitsPerPage) ->
-        'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5401&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
-        
+        'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7248&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+
 zaochUrl = (page, submitsPerPage) ->
-    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=5402&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7247&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
 
 studUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7170&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
-    
-urls = 
+
+urls =
     'lic40': lic40url,
     'zaoch': zaochUrl,
     'stud': studUrl
@@ -177,14 +180,14 @@ export runAll = wrapRunning () ->
             await (new AllSubmitDownloader(url, group, 1000, 1, 1e9)).run()
     catch e
         logger.error "Error in AllSubmitDownloader", e
-   
-export runUntilIgnored = wrapRunning () -> 
+
+export runUntilIgnored = wrapRunning () ->
     try
         for group, url of urls
             await (new UntilIgnoredSubmitDownloader(url, group, 100, 2, 4)).run()
     catch e
         logger.error "Error in UntilIgnoredSubmitDownloader", e
-    
+
 export runLast = wrapRunning () ->
     try
         for group, url of urls
