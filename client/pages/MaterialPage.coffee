@@ -19,6 +19,10 @@ class MaterialPage extends React.Component
     componentDidMount: ->
         @reload()
 
+    componentDidUpdate: (prevProps, prevState) ->
+        if (prevProps.match.params.id != @props.match.params.id)
+            @reload()
+
     componentWillUnmount: ->
         clearTimeout(@timeout)
 

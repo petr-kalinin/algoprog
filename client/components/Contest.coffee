@@ -9,12 +9,12 @@ goToProblem = (m, history) ->
 
 Contest = (props) ->
     <div>
-        <h1>{props.contest.title}</h1>
+        <h1>{props.material.title}</h1>
         <ListGroup>
             {
             res = []
             a = (el) -> res.push(el)
-            for m in props.contest.materials
+            for m in props.material.materials
                 a <ListGroupItem key={m._id} onClick={goToProblem(m._id, props.history)}>{m.title}</ListGroupItem>
             res}
         </ListGroup>

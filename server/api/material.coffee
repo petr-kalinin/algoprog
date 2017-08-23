@@ -1,6 +1,6 @@
 import Material from '../models/Material'
 
-expandMaterial = (material) ->
+expandLevel = (material) ->
     res = material.toObject()
     promises = []
     for m in res.materials
@@ -8,6 +8,8 @@ expandMaterial = (material) ->
     res.materials = await Promise.all(promises)
     return res
 
-export default level = (id) ->
+export default material = (id) ->
     material = await Material.findById(id)
-    return await expandMaterial(material)
+    if material.type == "level"
+        material = await expandLevel(material)
+    return material

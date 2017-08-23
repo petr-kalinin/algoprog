@@ -54,22 +54,10 @@ export default [
         loadData: SolvedByWeekPage.loadData,
     },
     {
-        path: '/level/:level',
-        key: "level",
-        component: LevelPage,
-        loadData: LevelPage.loadData,
-    },
-    {
         path: '/material/:id',
         key: "material",
         component: MaterialPage,
         loadData: MaterialPage.loadData,
-    },
-    {
-        path: '/contest/:id',
-        key: "contest",
-        component: ContestPage,
-        loadData: ContestPage.loadData,
     },
     {
         path: '/login',

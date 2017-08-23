@@ -14,12 +14,12 @@ Page = (props) ->
 
 LinkMaterial = (props) ->
     <div>
-        <FontAwesome name={props.head}/> <a href={props.material.href}>{props.material.title}</a>
+        <FontAwesome name={props.head}/> <a href={props.material.content}>{props.material.title}</a>
     </div>
 
 Contest = (props) ->
     <div>
-        <Link to={"/contest/" + props.material._id}>{props.material.title}</Link>
+        <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
 Material = (props) ->
@@ -36,7 +36,7 @@ export default Level = (props) ->
     {
     res = []
     a = (el) -> res.push(el)
-    for m in props.level.materials
+    for m in props.material.materials
         a(<div style={{marginLeft: m.indent}} key={m._id}>
             <Material material={m}/>
         </div>)

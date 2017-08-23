@@ -9,8 +9,7 @@ import Material from '../models/Material'
 
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
-import level from './level'
-import contest from './contest'
+import material from './material'
 
 import logger from '../log'
 
@@ -60,11 +59,5 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
-    app.get '/api/level/:level', (req, res) ->
-        res.json(await level(req.params.level))
-
     app.get '/api/material/:id', (req, res) ->
-        res.json(await Material.findById(req.params.id))
-
-    app.get '/api/contest/:id', (req, res) ->
-        res.json(await contest(req.params.id))
+        res.json(await material(req.params.id))
