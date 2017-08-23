@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 
 goToProblem = (m, history) ->
     () ->
-        history.push("/problem/" + m)
+        history.push("/material/" + m)
 
 Contest = (props) ->
     <div>

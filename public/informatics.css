@@ -1,0 +1,13 @@
+.section-title {
+    font-size: 120%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.sample-test {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+.sample-test .input {
+    padding-right: 20px;
+}
