@@ -1,7 +1,7 @@
-export startDayForWeeks = 
-    "lic40": "2016-12-28"
-    "zaoch": "2017-01-01"
-    "stud": "2017-06-26"
+export startDayForWeeks =
+    "lic40": "2017-08-23"
+    "zaoch": "2017-08-20"
+    "stud": "2017-08-21"
 
 export WEEK_ACTIVITY_EXP = 0.55
 export LEVEL_RATING_EXP = 2.5
