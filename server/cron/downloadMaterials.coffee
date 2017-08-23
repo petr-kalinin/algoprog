@@ -192,11 +192,11 @@ parseActivity = (activity, order) ->
         return parseStatements(activity, order)
     return undefined
 
-getSublevel = (material) ->
+getLevelHeader = (material, header) ->
     if material.type != "label"
         return undefined
 
-    re = new RegExp '\\s*<h3>(Уровень\\s+(.*))</h3>'
+    re = new RegExp '\\s*<' + header + '>(Уровень\\s+(.*))</' + header + '>'
     res = re.exec material.content
     if not res
         return undefined
@@ -206,12 +206,24 @@ getSublevel = (material) ->
         _id: id
         name: name
 
+getLevel = (material) ->
+    getLevelHeader(material, 'h2')
+
+getSublevel = (material) ->
+    getLevelHeader(material, 'h3')
+
 splitLevel = (materials) ->
     levels = []
     currentLevel = undefined
     order = 0
     pendingMaterials = []
+    title = ''
     for m in materials
+        level = getLevel(m)
+        if level
+            # heading label
+            levels.push m
+            continue
         sublevel = getSublevel(m)
         if sublevel
             if currentLevel
@@ -230,7 +242,9 @@ splitLevel = (materials) ->
             currentLevel.materials.push m
     if currentLevel
         levels.push currentLevel
-    return levels
+    return
+        levels: levels
+        title: title
 
 parseSection = (section, id) ->
     activities = section.getElementsByClassName('activity')
@@ -239,7 +253,9 @@ parseSection = (section, id) ->
     for activity, i in activities
         materials.push(parseActivity(activity, i))
     materials = await finalizeMaterialsList(materials)
-    materials = splitLevel(materials)
+    split = splitLevel(materials)
+    materials = split.levels
+    title = split.title
 
     for m in materials
         m.materials = (mm._id for mm in m.materials)
@@ -250,7 +266,7 @@ parseSection = (section, id) ->
         order: id
         type: "level"
         indent: 0
-        title: id
+        title: title.name
         content: ""
         materials: (m._id for m in materials)
     await material.upsert()
