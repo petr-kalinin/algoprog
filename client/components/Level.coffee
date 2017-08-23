@@ -7,28 +7,24 @@ Label = (props) ->
     <div dangerouslySetInnerHTML={{__html: props.material.content}}>
     </div>
 
-Page = (props) ->
+MaterialLink = (props) ->
     <div>
         <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
-LinkMaterial = (props) ->
+ExternalLink = (props) ->
     <div>
         <FontAwesome name={props.head}/> <a href={props.material.content}>{props.material.title}</a>
-    </div>
-
-Contest = (props) ->
-    <div>
-        <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
 Material = (props) ->
     switch props.material.type
         when 'label' then `<Label {...props}/>`
-        when 'page' then `<Page {...props}/>`
-        when 'pdf' then `<LinkMaterial head="file-pdf-o" {...props}/>`
-        when 'image' then `<LinkMaterial head="picture-o" {...props}/>`
-        when 'contest' then `<Contest {...props}/>`
+        when 'page' then `<MaterialLink {...props}/>`
+        when 'pdf' then `<ExternalLink head="file-pdf-o" {...props}/>`
+        when 'image' then `<ExternalLink head="picture-o" {...props}/>`
+        when 'contest' then `<MaterialLink {...props}/>`
+        when 'level' then `<MaterialLink {...props}/>`
         else <div>{props.material.type}</div>
 
 export default Level = (props) ->
