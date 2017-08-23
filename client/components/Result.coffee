@@ -15,7 +15,7 @@ export default Result = (props) ->
     problem = r.table._id.substr(1)
     href =  'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + problem + '&submit&user_id=' + r.user._id
     userHref = "/user/" + r.user._id
-    problemHref = 'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + problem
+    problemHref = '/material/' + r.table._id
     problemName = r.table.name
     contests = r.table.tables
     userName = makeUserName(r.user)
@@ -29,7 +29,7 @@ export default Result = (props) ->
                 <Link to={userHref}>{userName}</Link>
             </td>
             <td className={styles.td}>
-                <a href={problemHref}>{problemName}</a>
+                <Link to={problemHref}>{problemName}</Link>
             </td>
             <td className={styles.td} style={{whiteSpace: "pre-wrap"}}>
                 {contests.join("\n")}
