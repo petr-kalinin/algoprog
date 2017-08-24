@@ -8,6 +8,9 @@ import logger from '../log'
 
 url = 'http://informatics.mccme.ru/course/view.php?id=1135'
 
+clone = (material) ->
+    JSON.parse(JSON.stringify(material))
+
 downloadAndParse = (href) ->
     jar = request.jar()
     page = await request
@@ -42,7 +45,9 @@ parseLabel = (activity, order) ->
         content: activity.innerHTML,
         materials: []
     await material.upsert()
-    return material
+    return
+        material: material
+        tree: null
 
 getPageContent = (href) ->
     document = await downloadAndParse(href)
@@ -93,7 +98,9 @@ parseResource = (activity, order) ->
             title: a.innerHTML,
             materials: []
     await material.upsert()
-    return material
+    return
+        material: material
+        tree: null
 
 getProblem = (href, order) ->
     document = await downloadAndParse(href)
@@ -128,8 +135,11 @@ getProblem = (href, order) ->
         content: text,
         materials: []
     await material.upsert()
-    return material
-
+    tree = clone(material)
+    delete tree.content
+    return
+        material: material
+        tree: tree
 
 getProblemsHrefsFromStatements = (href) ->
     document = await downloadAndParse(href)
@@ -171,7 +181,8 @@ parseStatements = (activity, order) ->
         materials.push(getProblem(href, i))
 
     materials = await finalizeMaterialsList(materials)
-    materials = ({_id: m._id, title: m.title} for m in materials)
+    trees = (m.tree for m in materials)
+    materials = ({_id: m.material._id, title: m.material.title} for m in materials)
 
     material = new Material
         _id: id
@@ -181,7 +192,13 @@ parseStatements = (activity, order) ->
         title: name
         materials: materials
     await material.upsert()
-    return material
+
+    tree = clone(material)
+    delete tree.indent
+    tree.materials = trees
+    return
+        material: material
+        tree: tree
 
 parseActivity = (activity, order) ->
     if activity.classList.contains("label")
@@ -214,36 +231,46 @@ getSublevel = (material) ->
 
 splitLevel = (materials) ->
     levels = []
+    trees = []
     currentLevel = undefined
+    currentTree = undefined
     order = 0
     pendingMaterials = []
     title = ''
     for m in materials
-        level = getLevel(m)
+        level = getLevel(m.material)
         if level
             # heading label
-            levels.push m
+            levels.push m.material
             continue
-        sublevel = getSublevel(m)
+        sublevel = getSublevel(m.material)
         if sublevel
             if currentLevel
                 levels.push currentLevel
+                trees.push currentTree
             currentLevel = new Material
                 _id: sublevel._id
                 order: order
                 type: "level"
                 title: sublevel.name
-                materials: pendingMaterials
+                materials: (m.material for m in pendingMaterials)
+            currentTree = clone(currentLevel)
+            delete currentTree.type
+            currentTree.materials = (m.tree for m in pendingMaterials when m.tree)
             order += 1
             pendingMaterials = []
         if not currentLevel
             pendingMaterials.push m
         else
-            currentLevel.materials.push m
+            currentLevel.materials.push m.material
+            if m.tree
+                currentTree.materials.push m.tree
     if currentLevel
         levels.push currentLevel
+        trees.push currentTree
     return
         levels: levels
+        trees: trees
         title: title
 
 parseSection = (section, id) ->
@@ -256,6 +283,7 @@ parseSection = (section, id) ->
     split = splitLevel(materials)
     materials = split.levels
     title = split.title
+    trees = split.trees
 
     for m in materials
         await m.upsert()
@@ -269,8 +297,14 @@ parseSection = (section, id) ->
         content: ""
         materials: ({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
     await material.upsert()
-    return material
 
+    tree = clone(material)
+    delete tree.type
+    delete tree.indent
+    tree.materials = trees
+    return
+        material: material
+        tree: tree
 
 export default downloadMaterials = ->
     logger.info("Start downloading materials")
@@ -284,13 +318,18 @@ export default downloadMaterials = ->
             continue
         materials.push(parseSection(section, sectionId))
 
-    materials = await finalizeMaterialsList(materials, ["_id"])
+    materials = await finalizeMaterialsList(materials)
 
     mainPageMaterial = new Material
         _id: "main"
         order: 0
         type: "main"
-        materials: materials
+        materials: (m.material for m in materials)
     await mainPageMaterial.upsert()
+
+    treeMaterial = new Material
+        _id: "tree",
+        materials: (m.tree for m in materials)
+    await treeMaterial.upsert()
 
     logger.info("Done downloading materials")
