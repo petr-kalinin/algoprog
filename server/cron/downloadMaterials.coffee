@@ -286,6 +286,9 @@ parseSection = (section, id) ->
     trees = split.trees
 
     for m in materials
+        for mm in m.materials
+            if mm.type == "page"
+                mm.content = ""
         await m.upsert()
 
     material = new Material
