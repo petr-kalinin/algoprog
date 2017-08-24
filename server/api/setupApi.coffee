@@ -9,7 +9,6 @@ import Material from '../models/Material'
 
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
-import material from './material'
 
 import logger from '../log'
 
@@ -60,4 +59,4 @@ export default setupApi = (app) ->
         res.json(await User.findByList(req.params.userList))
 
     app.get '/api/material/:id', (req, res) ->
-        res.json(await material(req.params.id))
+        res.json(await Material.findById(req.params.id))

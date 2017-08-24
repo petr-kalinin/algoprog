@@ -258,7 +258,6 @@ parseSection = (section, id) ->
     title = split.title
 
     for m in materials
-        m.materials = (mm._id for mm in m.materials)
         await m.upsert()
 
     material = new Material
@@ -268,7 +267,7 @@ parseSection = (section, id) ->
         indent: 0
         title: title.name
         content: ""
-        materials: (m._id for m in materials)
+        materials: ({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
     await material.upsert()
     return material
 
