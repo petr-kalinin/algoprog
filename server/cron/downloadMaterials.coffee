@@ -242,6 +242,7 @@ splitLevel = (materials) ->
         if level
             # heading label
             levels.push m.material
+            title = level.name
             continue
         sublevel = getSublevel(m.material)
         if sublevel
@@ -296,7 +297,7 @@ parseSection = (section, id) ->
         order: id
         type: "level"
         indent: 0
-        title: title.name
+        title: title
         content: ""
         materials: ({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
     await material.upsert()

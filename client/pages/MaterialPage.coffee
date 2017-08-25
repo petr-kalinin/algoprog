@@ -39,7 +39,9 @@ class MaterialPage extends React.Component
 
     @loadData: (match) ->
         material = await callApi 'material/' + match.params.id
+        tree = await callApi 'material/tree'
         return
             material: material
+            tree: tree
 
 export default MaterialPage
