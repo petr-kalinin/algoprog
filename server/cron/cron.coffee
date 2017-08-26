@@ -8,7 +8,13 @@ import logger from '../log'
 #downloadContests.run().catch((e) -> logger.error(e))
 #updateCf().catch((e) -> logger.error(e))
 
-jobAll = new Cron.CronJob('58 59 2 * * *', downloadSubmits.runAll, null, true);
+offset = (new Date().getTimezoneOffset()) / 60
+MOSCOW_OFFSET = -3
+nightHour = (3 + MOSCOW_OFFSET - offset - 1) %% 24
+
+logger.info "Will set downloadAll to " + nightHour + ":59:58 local time"
+
+jobAll = new Cron.CronJob('58 59 ' + nightHour + ' * * *', downloadSubmits.runAll, null, true);
 jobUntilIgnored = new Cron.CronJob('59 */3 * * * *', downloadSubmits.runUntilIgnored, null, true);
 jobLast = new Cron.CronJob('*/30 * * * * *', downloadSubmits.runLast, null, true);
 
