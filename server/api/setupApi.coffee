@@ -11,6 +11,8 @@ import table, * as tableApi from './table'
 
 import logger from '../log'
 
+import {updateAllResults} from '../calculations/updateResults'
+
 export default setupApi = (app) ->
     app.post '/api/register', (req, res, next) ->
         logger.info("Try register user", req.body.username)
@@ -23,7 +25,7 @@ export default setupApi = (app) ->
                 return next err
             logger.info("Regitered user")
             res.redirect '/'
-            
+
     app.get('/api/me', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
         res.json req.user
     )
@@ -39,12 +41,12 @@ export default setupApi = (app) ->
             await record.setCfLogin cfLogin
             res.send('OK')
         )
-    
+
     app.get '/api/user/:id', (req, res) ->
         User.findOne({_id: req.params.id}, (err, record) ->
             res.json(record)
         )
-        
+
     app.get '/api/dashboard', (req, res) ->
         res.json(await dashboard())
 
@@ -56,3 +58,9 @@ export default setupApi = (app) ->
 
     app.get '/api/users/:userList', (req, res) ->
         res.json(await User.findByList(req.params.userList))
+
+    app.get '/api/updateResults', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        await updateAllResults()
+        res.send('OK')

@@ -15,7 +15,7 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
     attempts = 0
     lastSubmitId = undefined
     lastSubmitTime = undefined
-    
+
     processRes = (res) ->
         total += res.total
         solved += res.solved
@@ -24,7 +24,7 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
         if (!lastSubmitId) or (res.lastSubmitId and res.lastSubmitTime > lastSubmitTime)
             lastSubmitId = res.lastSubmitId
             lastSubmitTime = res.lastSubmitTime
-    
+
     table = await Table.findById(tableId)
     for child in table.tables
         res = await updateResultsForTable(userId, child, dirtyResults)
@@ -32,16 +32,16 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
     for prob in table.problems
         res = await updateResultsForProblem(userId, prob, dirtyResults)
         processRes(res)
-        
+
     logger.debug "updated result ", userId, tableId, total, solved, ok, attempts, lastSubmitTime
     result = new Result(
-        user: userId, 
-        table: tableId, 
-        total: total, 
-        solved: solved, 
-        ok: ok, 
-        attempts: attempts, 
-        lastSubmitId: lastSubmitId, 
+        user: userId,
+        table: tableId,
+        total: total,
+        solved: solved,
+        ok: ok,
+        attempts: attempts,
+        lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
     )
     await result.upsert()
@@ -62,7 +62,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     for submit in submits
         lastSubmitId = submit._id
         lastSubmitTime = submit.time
-        if submit.outcome == "IG" 
+        if submit.outcome == "IG"
             if solved == 0
                 ignored = 1
                 ok = 0
@@ -87,12 +87,12 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     result = new Result
         user: userId,
         table: problemId,
-        total: 1, 
-        solved: solved, 
-        ok: ok, 
-        attempts: attempts, 
-        ignored: ignored, 
-        lastSubmitId: lastSubmitId, 
+        total: 1,
+        solved: solved,
+        ok: ok,
+        attempts: attempts,
+        ignored: ignored,
+        lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
     await result.upsert()
     return result
@@ -100,8 +100,10 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
     updateResultsForTable(user, Table.main, dirtyResults)
-    
+
 export updateAllResults = () ->
     users = await User.find({})
+    promises = []
     for user in users
-        updateResults(user)
+        promises.push(updateResults(user))
+    Promise.all(promises)
