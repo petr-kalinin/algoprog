@@ -1,5 +1,6 @@
 React = require('react')
 import { Link } from 'react-router-dom'
+import { Row, Col } from 'react-bootstrap'
 
 import Problem from './Problem'
 import Level from './Level'
@@ -21,7 +22,11 @@ MaterialProper = (props) ->
         `<Problem {...props} />`
 
 export default Material = (props) ->
-    <div>
-        <Tree tree={props.tree} id={props.material._id} />
-        <MaterialProper material={props.material} />
-    </div>
+    <Row>
+        <Col xsHidden smHidden md={4} lg={3}>
+            <Tree tree={props.tree} id={props.material._id} />
+        </Col>
+        <Col xs={12} sm={12} md={8} lg={9}>
+            <MaterialProper material={props.material} />
+        </Col>
+    </Row>

@@ -1,9 +1,18 @@
 deepcopy = require("deepcopy")
 React = require('react')
+tinycolor = require("tinycolor2")
 import { Link } from 'react-router-dom'
+import { Nav, NavItem } from 'react-bootstrap'
+import { withRouter } from 'react-router'
 
 MAX_GLOBAL_DEPTH = 1
 MAX_LOCAL_DEPTH = 1
+BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
+ACTIVE_COLOR = "#fdf6e3"
+
+goTo = (history) ->
+    (id) ->
+        history.push("/material/" + id)
 
 markNeeded = (tree, id, globalDepth, localDepth) ->
     if tree._id == id
@@ -22,20 +31,31 @@ markNeeded = (tree, id, globalDepth, localDepth) ->
                 m.needed = true
     return tree.needed
 
-TreeRec = (props) ->
-    <div>
-        {props.tree.title + (if props.tree._id == props.id then "!" else "")}
-        {
-        res = []
-        a = (el) -> res.push(el)
-        for m in props.tree.materials
-            if m.needed and m.title
-                a <li key={m._id}><TreeRec tree={m} id={props.id}/></li>
-        res && <ul>{res}</ul>
-        }
-    </div>
+colorByIndent = (indent) ->
+    return BASE_COLOR.clone().lighten(indent * 8).toHex()
 
-export default Tree = (props) ->
+recTree = (tree, id, indent) ->
+    res = []
+    a = (el) -> res.push(el)
+    for m in tree.materials
+        if m.needed and m.title
+            if m._id == id
+                color = ACTIVE_COLOR
+            else
+                color = colorByIndent(indent)
+            a <NavItem key={m._id} active={m._id==id} className={if indent>=2 then "small"} eventKey={m._id}>
+                <span style={"paddingLeft": 15*indent + "px"}>
+                    {m.title}
+                </span>
+            </NavItem>
+            res = res.concat(recTree(m, id, indent + 1))
+    return res
+
+Tree = (props) ->
     tree = deepcopy(props.tree)
     markNeeded(tree, props.id, 0, 100)
-    <TreeRec tree={tree} id={props.id}/>
+    <Nav bsStyle="pills" stacked onSelect={goTo(props.history)}>
+        {recTree(tree, props.id, 0)}
+    </Nav>
+
+export default withRouter(Tree)
