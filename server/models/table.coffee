@@ -11,7 +11,7 @@ tablesSchema = new mongoose.Schema
     problems: [String]
     parent: String
     order: Number
-        
+
 
 parentFromParent = (level) ->
     if level == Table.main
@@ -19,11 +19,13 @@ parentFromParent = (level) ->
     p = parseLevel(level)
     if p.minor
         return p.major
-    else 
+    else
         return Table.main
-        
-        
+
+
 tablesSchema.methods.addTable = (id) ->
+    if id in @tables
+        return
     @update({$push: { tables: id }})
 
 tablesSchema.methods.setOrder = (order) ->
@@ -51,13 +53,13 @@ tablesSchema.methods.upsert = () ->
         await p.addTable(@_id)
         if p.order > @order - 1
             await p.setOrder(@order - 1)
-    
+
 tablesSchema.methods.height = () ->
         if @tables.length > 0
             return await (await Table.findById(@tables[0])).height() + 1
         else
             return 1
-        
+
 tablesSchema.methods.expand = () ->
         expandedTables = []
         for table in @tables
@@ -71,7 +73,7 @@ tablesSchema.methods.expand = () ->
             expandedProblems.push(expandedProblem)
         @problems = expandedProblems
         return this
-        
+
 tablesSchema.methods.descendandTables = () ->
         result = [@_id]
         for table in @table
@@ -80,11 +82,11 @@ tablesSchema.methods.descendandTables = () ->
         for problem in @problems
             result.push(problem)
         result
-            
-            
+
+
 tablesSchema.statics.findAll = ->
     @find {}
-            
+
 tablesSchema.statics.removeDuplicateChildren = () ->
         tables = await Table.findAll()
         for table in tables
