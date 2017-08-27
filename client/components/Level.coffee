@@ -23,6 +23,7 @@ Material = (props) ->
         when 'page' then `<MaterialLink {...props}/>`
         when 'pdf' then `<ExternalLink head="file-pdf-o" {...props}/>`
         when 'image' then `<ExternalLink head="picture-o" {...props}/>`
+        when 'link' then `<ExternalLink head="external-link" {...props}/>`
         when 'contest' then `<MaterialLink {...props}/>`
         when 'level' then `<MaterialLink {...props}/>`
         else <div>{props.material.type}</div>

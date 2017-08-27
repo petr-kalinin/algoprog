@@ -62,7 +62,7 @@ getPageContent = (href) ->
 
     return data.innerHTML
 
-parseResource = (activity, order) ->
+parseResource = (activity, order, keepResourcesInTree) ->
     indent = getIndent(activity)
     icon = activity.firstChild
     material = undefined
@@ -88,6 +88,15 @@ parseResource = (activity, order) ->
             content: a.href
             title: a.innerHTML,
             materials: []
+    else if icon.src.endsWith("web.gif")
+        material = new Material
+            _id: activity.id,
+            order: order,
+            type: "link",
+            indent: indent
+            content: a.href
+            title: a.innerHTML,
+            materials: []
     else
         material = new Material
             _id: activity.id,
@@ -98,9 +107,13 @@ parseResource = (activity, order) ->
             title: a.innerHTML,
             materials: []
     await material.upsert()
+    tree = null
+    if keepResourcesInTree
+        tree = clone(material)
+        delete tree.content
     return
         material: material
-        tree: null
+        tree: tree
 
 getProblem = (href, order) ->
     document = await downloadAndParse(href)
@@ -200,11 +213,11 @@ parseStatements = (activity, order) ->
         material: material
         tree: tree
 
-parseActivity = (activity, order) ->
+parseActivity = (activity, order, keepResourcesInTree) ->
     if activity.classList.contains("label")
         return parseLabel(activity, order)
     else if activity.classList.contains("resource")
-        return parseResource(activity, order)
+        return parseResource(activity, order, keepResourcesInTree)
     else if activity.classList.contains("statements")
         return parseStatements(activity, order)
     return undefined
@@ -273,18 +286,27 @@ splitLevel = (materials) ->
         levels: levels
         trees: trees
         title: title
+        pendingMaterials: pendingMaterials
 
 parseSection = (section, id) ->
+    hidden = section.getElementsByClassName('algoprog-hidden')
+    for h in hidden
+        h.parentElement.removeChild(h)
+
     activities = section.getElementsByClassName('activity')
     materials = []
 
     for activity, i in activities
-        materials.push(parseActivity(activity, i))
+        materials.push(parseActivity(activity, i, id==0))
     materials = await finalizeMaterialsList(materials)
     split = splitLevel(materials)
     materials = split.levels
     title = split.title
     trees = split.trees
+    pendingMaterials = split.pendingMaterials
+
+    if id == 0
+        title = "Информация по курсу"
 
     for m in materials
         for mm in m.materials
@@ -299,13 +321,14 @@ parseSection = (section, id) ->
         indent: 0
         title: title
         content: ""
-        materials: ({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
+    material.materials = (m.material for m in pendingMaterials when m.material)
+    material.materials = material.materials.concat({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
     await material.upsert()
 
     tree = clone(material)
     delete tree.type
     delete tree.indent
-    tree.materials = trees
+    tree.materials = (m.tree for m in pendingMaterials when m.tree).concat(trees)
     return
         material: material
         tree: tree
@@ -316,7 +339,7 @@ export default downloadMaterials = ->
 
     materials = []
 
-    for sectionId in [1..10]
+    for sectionId in [0..10]
         section = document.getElementById("section-" + sectionId)
         if not section
             continue
