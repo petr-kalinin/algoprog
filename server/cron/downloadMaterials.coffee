@@ -13,9 +13,15 @@ clone = (material) ->
 
 downloadAndParse = (href) ->
     jar = request.jar()
-    page = await request
-        url: href
-        jar: jar
+    try
+        page = await request
+            url: href
+            jar: jar
+    catch
+        logger.info "Error donloading " + href + " will re-download"
+        page = await request
+            url: href
+            jar: jar
     document = (new JSDOM(page, {url: href})).window.document
     return document
 
@@ -34,21 +40,6 @@ getIndent = (activity) ->
         indent -= 20
     return indent
 
-parseLabel = (activity, order) ->
-    indent = getIndent(activity)
-    material = new Material
-        _id: activity.id,
-        order: order
-        indent: indent
-        type: "label",
-        title: "",
-        content: activity.innerHTML,
-        materials: []
-    await material.upsert()
-    return
-        material: material
-        tree: null
-
 getPageContent = (href) ->
     document = await downloadAndParse(href)
     data = document.getElementById("content")
@@ -62,17 +53,11 @@ getPageContent = (href) ->
 
     return data.innerHTML
 
-parseResource = (activity, order, keepResourcesInTree) ->
-    indent = getIndent(activity)
-    icon = activity.firstChild
+parseLink = (a, id, order, keepResourcesInTree, indent, icon) ->
     material = undefined
-    if activity.children.length != 2
-        logger.error("Found resource with >2 children " + activity.innerHTML)
-        return undefined
-    a = activity.children[1]
     if icon.src.endsWith("pdf.gif")
         material = new Material
-            _id: activity.id,
+            _id: id,
             order: order,
             type: "pdf",
             indent: indent
@@ -81,7 +66,7 @@ parseResource = (activity, order, keepResourcesInTree) ->
             materials: []
     else if icon.src.endsWith("image.gif")
         material = new Material
-            _id: activity.id,
+            _id: id,
             order: order,
             type: "image",
             indent: indent
@@ -90,7 +75,7 @@ parseResource = (activity, order, keepResourcesInTree) ->
             materials: []
     else if icon.src.endsWith("web.gif")
         material = new Material
-            _id: activity.id,
+            _id: id,
             order: order,
             type: "link",
             indent: indent
@@ -99,7 +84,7 @@ parseResource = (activity, order, keepResourcesInTree) ->
             materials: []
     else
         material = new Material
-            _id: activity.id,
+            _id: id,
             order: order,
             type: "page",
             indent: indent
@@ -114,6 +99,55 @@ parseResource = (activity, order, keepResourcesInTree) ->
     return
         material: material
         tree: tree
+
+makeLabelMaterial = (id, order, indent, content) ->
+    material = new Material
+        _id: id,
+        order: order
+        indent: indent
+        type: "label",
+        title: "",
+        content: content,
+        materials: []
+    await material.upsert()
+    return
+        material: material
+        tree: null
+
+makeSpecialPage = (id, order, indent, element, keepResourcesInTree) ->
+    a = element.getElementsByTagName("a")
+    if a.length != 1
+        logger.error("Found resource with != 1 children " + activity.innerHTML)
+        return undefined
+    return parseLink(a[0], id, order, keepResourcesInTree, indent, {src: ""})
+
+parseLabel = (activity, order, keepResourcesInTree) ->
+    indent = getIndent(activity)
+    materials = []
+    currentText = ""
+    id = 0
+    for child in activity.childNodes
+        if child.classList?.contains("algoprog-page")
+            if currentText
+                materials.push(await makeLabelMaterial(activity.id + "_" + id, order + id, indent, currentText))
+                currentText = ""
+                id++
+            materials.push(await makeSpecialPage(activity.id + "_" + id, order + id, indent, child, keepResourcesInTree))
+            id++
+        else
+            currentText += child.outerHTML || child.nodeValue
+    if currentText
+        materials.push(await makeLabelMaterial(activity.id + "_" + id, order + id, indent, currentText))
+    return materials
+
+parseResource = (activity, order, keepResourcesInTree) ->
+    indent = getIndent(activity)
+    icon = activity.firstChild
+    if activity.children.length != 2
+        logger.error("Found resource with >2 children " + activity.innerHTML)
+        return undefined
+    a = activity.children[1]
+    return parseLink(a, activity.id, order, keepResourcesInTree, indent, icon)
 
 getProblem = (href, order) ->
     document = await downloadAndParse(href)
@@ -215,7 +249,7 @@ parseStatements = (activity, order) ->
 
 parseActivity = (activity, order, keepResourcesInTree) ->
     if activity.classList.contains("label")
-        return parseLabel(activity, order)
+        return parseLabel(activity, order, keepResourcesInTree)
     else if activity.classList.contains("resource")
         return parseResource(activity, order, keepResourcesInTree)
     else if activity.classList.contains("statements")
@@ -297,8 +331,10 @@ parseSection = (section, id) ->
     materials = []
 
     for activity, i in activities
-        materials.push(parseActivity(activity, i, id==0))
+        parsed = parseActivity(activity, i, id==0)
+        materials.push(parsed)
     materials = await finalizeMaterialsList(materials)
+    materials = [].concat.apply([], materials);
     split = splitLevel(materials)
     materials = split.levels
     title = split.title
