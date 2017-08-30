@@ -3,12 +3,14 @@ FontAwesome = require('react-fontawesome')
 
 import { Link } from 'react-router-dom'
 
+import styles from './Level.css'
+
 Label = (props) ->
     <div dangerouslySetInnerHTML={{__html: props.material.content}}>
     </div>
 
 MaterialLink = (props) ->
-    <div>
+    <div className={props.className && styles[props.className]}>
         <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
@@ -26,6 +28,7 @@ Material = (props) ->
         when 'link' then `<ExternalLink head="external-link" {...props}/>`
         when 'contest' then `<MaterialLink {...props}/>`
         when 'level' then `<MaterialLink {...props}/>`
+        when 'epigraph' then `<MaterialLink {...props} className="epigraph"/>`
         else <div>{props.material.type}</div>
 
 export default Level = (props) ->

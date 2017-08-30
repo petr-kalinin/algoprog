@@ -53,7 +53,7 @@ getPageContent = (href) ->
 
     return data.innerHTML
 
-parseLink = (a, id, order, keepResourcesInTree, indent, icon) ->
+parseLink = (a, id, order, keepResourcesInTree, indent, icon, type) ->
     material = undefined
     if icon.src.endsWith("pdf.gif")
         material = new Material
@@ -86,14 +86,14 @@ parseLink = (a, id, order, keepResourcesInTree, indent, icon) ->
         material = new Material
             _id: id,
             order: order,
-            type: "page",
+            type: type || "page",
             indent: indent
             content: await getPageContent(a.href)
-            title: a.innerHTML,
+            title: a.textContent,
             materials: []
     await material.upsert()
     tree = null
-    if keepResourcesInTree
+    if keepResourcesInTree and (not type or type == "page")
         tree = clone(material)
         delete tree.content
     return
@@ -119,7 +119,10 @@ makeSpecialPage = (id, order, indent, element, keepResourcesInTree) ->
     if a.length != 1
         logger.error("Found resource with != 1 children " + activity.innerHTML)
         return undefined
-    return parseLink(a[0], id, order, keepResourcesInTree, indent, {src: ""})
+    type = "page"
+    if element.classList?.contains("algoprog-epigraph")
+        type = "epigraph"
+    return parseLink(a[0], id, order, keepResourcesInTree, indent, {src: ""}, type)
 
 parseLabel = (activity, order, keepResourcesInTree) ->
     indent = getIndent(activity)
@@ -127,7 +130,7 @@ parseLabel = (activity, order, keepResourcesInTree) ->
     currentText = ""
     id = 0
     for child in activity.childNodes
-        if child.classList?.contains("algoprog-page")
+        if child.classList?.contains("algoprog-page") or child.classList?.contains("algoprog-epigraph")
             if currentText
                 materials.push(await makeLabelMaterial(activity.id + "_" + id, order + id, indent, currentText))
                 currentText = ""
@@ -325,6 +328,10 @@ splitLevel = (materials) ->
 parseSection = (section, id) ->
     hidden = section.getElementsByClassName('algoprog-hidden')
     for h in hidden
+        h.parentElement.removeChild(h)
+
+    news = section.getElementsByClassName('algoprog-news')
+    for h in news
         h.parentElement.removeChild(h)
 
     activities = section.getElementsByClassName('activity')

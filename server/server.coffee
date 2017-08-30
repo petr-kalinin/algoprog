@@ -47,5 +47,5 @@ app.listen port, ip, () ->
 #import {updateAllResults} from './calculations/updateResults'
 #updateAllResults()
 
-#import downloadMaterials from './cron/downloadMaterials'
-#downloadMaterials()
+import downloadMaterials from './cron/downloadMaterials'
+downloadMaterials()
