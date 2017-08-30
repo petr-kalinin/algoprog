@@ -134,7 +134,7 @@ parseLabel = (activity, order, keepResourcesInTree) ->
                 id++
             materials.push(await makeSpecialPage(activity.id + "_" + id, order + id, indent, child, keepResourcesInTree))
             id++
-        else
+        else if child.nodeType != 8  # Node.COMMENT_NODE
             currentText += child.outerHTML || child.nodeValue
     if currentText
         materials.push(await makeLabelMaterial(activity.id + "_" + id, order + id, indent, currentText))
