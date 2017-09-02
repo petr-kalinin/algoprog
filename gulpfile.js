@@ -81,10 +81,10 @@ function browserifyFinalize(b) {
     return b
         .bundle()
         .on('uncaughtException', (err) => {
-            logError("Browserify error", err.stack)
+            logError("Browserify error", err)
         })
         .on("error", (err) => {
-            logError("Browserify error", err.stack)
+            logError("Browserify error", err)
         })
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('./build/assets/'));
@@ -104,7 +104,7 @@ gulp.task('assets:js:watch', function() {
     });
     browserifyTransform(b);
     b.on('update', bundle);
-    b.on('log', (msg) => logSuccess("Client bundle updated:" + msg));
+    b.on('log', (msg) => logSuccess("Client bundle updated: " + msg));
     bundle();
 
     function bundle() {
