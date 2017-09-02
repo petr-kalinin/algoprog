@@ -47,6 +47,7 @@
     "moment": "^2.18.1",
     "mongodb": "^2.2.30",
     "mongoose": "^4.11.3",
+    "node-notifier": "^5.1.2",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",

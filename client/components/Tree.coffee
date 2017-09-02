@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { Nav, NavItem } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 
+import styles from "./Tree.css"
+
 MAX_GLOBAL_DEPTH = 1
 MAX_LOCAL_DEPTH = 1
 BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
@@ -43,10 +45,10 @@ recTree = (tree, id, indent) ->
                 color = ACTIVE_COLOR
             else
                 color = colorByIndent(indent)
-            a <NavItem key={m._id} active={m._id==id} className={if indent>=2 then "small"} eventKey={m._id}>
-                <span style={"paddingLeft": 15*indent + "px"}>
+            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small") + " " + (if m._id!=id then styles.navitem)} eventKey={m._id}>
+                <div style={"paddingLeft": 15*indent + "px"}>
                     {m.title}
-                </span>
+                </div>
             </NavItem>
             res = res.concat(recTree(m, id, indent + 1))
     return res
