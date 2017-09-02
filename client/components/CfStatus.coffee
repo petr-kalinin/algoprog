@@ -2,20 +2,20 @@ React = require('react')
 
 import styles from './CfStatus.css'
 
-export default class CfStatus extends React.Component 
+export default class CfStatus extends React.Component
     render:  () ->
         cf = @props.cf
-        
+
         if not cf or not cf.login
             return null
-        
+
         cfProgressColor = "inherit"
         if cf.progress > 10
             cfProgressColor = "#00aa00"
         else if cf.progress < -10
             cfProgressColor = "#aa0000"
 
-        return 
+        return
             <span>
                 <a href={"http://codeforces.com/profile/" + cf.login}>
                     <span className={styles.color} style={color: cf.color}>
