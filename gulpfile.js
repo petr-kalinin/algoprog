@@ -22,6 +22,28 @@ log4js.configure({
   categories: { default: { appenders: ['out'], level: 'info' } }
 });
 
+function logError(title, err) {
+    logger.error(title);
+    logger.error(err.stack);
+}
+
+function logSuccess(title) {
+    logger.info(title);
+}
+
+function logServerRestarted() {
+    logSuccess("Server restarted");
+}
+
+function plumb() {
+    return plumber({
+        errorHandler: function (err) {
+            logError("Plumber error", err);
+            this.emit('end');
+        }
+    });
+}
+
 function coffeescriptTransform(file) {
     var data = '';
     return through(write, end);
@@ -30,8 +52,12 @@ function coffeescriptTransform(file) {
     function end () {
         if (!file.endsWith('.coffee'))
             result = data
-        else 
-            result = coffeescript.compile(data);
+        else
+            try {
+                result = coffeescript.compile(data);
+            } catch (err) {
+                logError("Coffeescript error", err);
+            }
         this.queue(result);
         this.queue(null);
     }
@@ -54,10 +80,12 @@ function browserifyTransform(b) {
 function browserifyFinalize(b) {
     return b
         .bundle()
+        .on('uncaughtException', (err) => {
+            logError("Browserify error", err.stack)
+        })
         .on("error", (err) => {
-            logger.error("Browserify error:")
-            logger.error(err.stack)
-        })        
+            logError("Browserify error", err.stack)
+        })
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('./build/assets/'));
 }
@@ -76,9 +104,9 @@ gulp.task('assets:js:watch', function() {
     });
     browserifyTransform(b);
     b.on('update', bundle);
-    b.on('log', (msg) => logger.info("Client bundle updated:", msg));
+    b.on('log', (msg) => logSuccess("Client bundle updated:" + msg));
     bundle();
-    
+
     function bundle() {
         browserifyFinalize(b);
     }
@@ -92,7 +120,7 @@ gulp.task('client:css', function() {
 gulp.task('client:coffee', function() {
   return gulp.src('client/**/*.coffee')
     .pipe(sourcemaps.init())
-    .pipe(plumber())
+    .pipe(plumb())
     .pipe(coffee({bare: true, coffee: require('coffeescript')}))
     .pipe(babel({
        presets: ['import-export', 'react']
@@ -104,7 +132,7 @@ gulp.task('client:coffee', function() {
 gulp.task('server:coffee', function() {
   return gulp.src('server/**/*.coffee')
     .pipe(sourcemaps.init())
-    .pipe(plumber())
+    .pipe(plumb())
     .pipe(coffee({bare: true, coffee: require('coffeescript')}))
     .pipe(babel({
        presets: ['import-export', 'react']
@@ -115,7 +143,7 @@ gulp.task('server:coffee', function() {
 
 gulp.task('server:js', function() {
   return gulp.src('server/**/*.js')
-    .pipe(plumber())
+    .pipe(plumb())
     .pipe(babel({
         presets: ['import-export', 'react']
     }))
