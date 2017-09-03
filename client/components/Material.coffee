@@ -24,7 +24,7 @@ MaterialProper = (props) ->
 export default Material = (props) ->
     <Row>
         <Col xsHidden smHidden md={4} lg={3}>
-            <Tree tree={props.tree} id={props.material._id} />
+            <Tree tree={props.tree} path={props.material.path} id={props.material._id} />
         </Col>
         <Col xs={12} sm={12} md={8} lg={9}>
             <MaterialProper material={props.material} />

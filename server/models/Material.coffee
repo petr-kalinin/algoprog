@@ -9,6 +9,7 @@ materialsSchema = new mongoose.Schema
     indent: Number
     title: String
     content: String
+    path: [String]
     materials: [mongoose.Schema.Types.Mixed]  # will always be an array of dictionaries
 
 materialsSchema.methods.upsert = () ->

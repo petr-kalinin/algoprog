@@ -16,18 +16,16 @@ goTo = (history) ->
     (id) ->
         history.push("/material/" + id)
 
-markNeeded = (tree, id, globalDepth, localDepth) ->
+markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
         tree.needed = true
         for m in tree.materials
-            markNeeded(m, id, globalDepth + 1, 1)
+            markNeeded(m, id, path, globalDepth + 1, 1)
     else
         tree.needed = globalDepth <= MAX_GLOBAL_DEPTH or localDepth <= MAX_LOCAL_DEPTH
-        needChildren = false
         for m in tree.materials
-            if markNeeded(m, id, globalDepth + 1, localDepth + 1)
-                needChildren = true
-        if needChildren
+            markNeeded(m, id, path, globalDepth + 1, localDepth + 1)
+        if tree._id in path
             tree.needed = true
             for m in tree.materials
                 m.needed = true
@@ -55,7 +53,7 @@ recTree = (tree, id, indent) ->
 
 Tree = (props) ->
     tree = deepcopy(props.tree)
-    markNeeded(tree, props.id, 0, 100)
+    markNeeded(tree, props.id, props.path, 0, 100)
     <Nav bsStyle="pills" stacked onSelect={goTo(props.history)}>
         {recTree(tree, props.id, 0)}
     </Nav>
