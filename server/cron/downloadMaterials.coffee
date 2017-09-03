@@ -93,7 +93,7 @@ parseLink = (a, id, order, keepResourcesInTree, indent, icon, type) ->
             materials: []
     await material.upsert()
     tree = null
-    if keepResourcesInTree and (not type or type == "page")
+    if keepResourcesInTree and material.type == "page"
         tree = clone(material)
         delete tree.content
     return
