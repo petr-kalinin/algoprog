@@ -94,9 +94,15 @@ getSublevel = (material) ->
 class MaterialsDownloader
     constructor: ->
         @materials = {}
+        @news = []
 
     addMaterial: (material) ->
         @materials[material._id] = material
+
+    addNews: (header, element) ->
+        @news.push
+            header: header
+            text: element.innerHTML
 
     parseLink: (a, id, order, keepResourcesInTree, indent, icon, type) ->
         material = undefined
@@ -332,6 +338,14 @@ class MaterialsDownloader
             title: title
             pendingMaterials: pendingMaterials
 
+    parseNews: (element) ->
+        header = element.getElementsByClassName('algoprog-header')
+        if header.length != 1
+            logger.error("Missing or several headers for news " + element.innerHTML)
+        headerText = header[0].innerHTML
+        header[0].parentElement.removeChild(header[0])
+        @addNews(headerText, element)
+
     parseSection: (section, id) ->
         hidden = section.getElementsByClassName('algoprog-hidden')
         for h in hidden
@@ -339,6 +353,7 @@ class MaterialsDownloader
 
         news = section.getElementsByClassName('algoprog-news')
         for h in news
+            @parseNews(h)
             h.parentElement.removeChild(h)
 
         activities = section.getElementsByClassName('activity')
@@ -396,6 +411,12 @@ class MaterialsDownloader
             promises.push(material.upsert())
         await Promise.all(promises)
 
+    saveNews: ->
+        material = new Material
+            _id: "news",
+            materials: @news
+        await material.upsert()
+
     run: ->
         document = await downloadAndParse(url)
 
@@ -423,6 +444,8 @@ class MaterialsDownloader
             _id: "tree",
             materials: (m.tree for m in materials)
         await treeMaterial.upsert()
+
+        @saveNews()
 
 
 export default downloadMaterials = ->
