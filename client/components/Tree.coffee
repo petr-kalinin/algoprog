@@ -53,7 +53,7 @@ recTree = (tree, id, indent) ->
 
 Tree = (props) ->
     tree = deepcopy(props.tree)
-    markNeeded(tree, props.id, props.path, 0, 100)
+    markNeeded(tree, props.id, (p._id for p in props.path), 0, 100)
     <Nav bsStyle="pills" stacked onSelect={goTo(props.history)}>
         {recTree(tree, props.id, 0)}
     </Nav>

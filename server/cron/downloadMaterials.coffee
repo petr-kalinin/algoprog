@@ -401,7 +401,9 @@ class MaterialsDownloader
 
     fillPaths: (material, path) ->
         material.path = path
-        path = path.concat(material._id)
+        path = path.concat
+            _id: material._id
+            title: material.title
         for m in material.materials
             @fillPaths(@materials[m._id], path)
 
@@ -434,6 +436,7 @@ class MaterialsDownloader
             _id: "main"
             order: 0
             type: "main"
+            title: "/"
             materials: (m.material for m in materials)
         @addMaterial(mainPageMaterial)
 
