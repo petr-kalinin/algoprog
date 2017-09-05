@@ -27,7 +27,8 @@ Bread = (props) ->
     <Breadcrumb>
         {
         props.path.map((p) ->
-            <LinkContainer to={"/material/" + p._id} key={p._id} isActive={() -> false}>
+            href = if p._id != "main" then "/material/" + p._id else "/"
+            <LinkContainer to={href} key={p._id} isActive={() -> false}>
                  <Breadcrumb.Item active={p._id==props.id}>
                     {p.title}
                 </Breadcrumb.Item>
