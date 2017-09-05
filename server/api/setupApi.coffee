@@ -5,6 +5,7 @@ import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
 import RegisteredUser from '../models/registeredUser'
+import Material from '../models/Material'
 
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
@@ -59,6 +60,9 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
+    app.get '/api/material/:id', (req, res) ->
+        res.json(await Material.findById(req.params.id))
+        
     app.get '/api/updateResults', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

@@ -12,9 +12,9 @@ import db from './mongo/mongo'
 import configurePassport from './passport'
 import setupApi from './api/setupApi'
 
-import jobs from './cron/cron'
+#import jobs from './cron/cron'
 
-process.on 'unhandledRejection', (r) -> 
+process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
 
@@ -28,11 +28,11 @@ app.use(express.static('build/assets'))
 
 app.use(express.static('public'))
 
-app.get '/status', (req, res) -> 
+app.get '/status', (req, res) ->
     logger.info "Query string", req.query
     res.send "OK"
-    
-app.post('/login', passport.authenticate('local', 
+
+app.post('/login', passport.authenticate('local',
     successRedirect: '/api/me',
     failureRedirect: '/login'
 ))
@@ -47,5 +47,5 @@ app.listen port, ip, () ->
 #import {updateAllResults} from './calculations/updateResults'
 #updateAllResults()
 
-import Table from './models/table'
-Table.removeDuplicateChildren()
+#import downloadMaterials from './cron/downloadMaterials'
+#downloadMaterials()
