@@ -43,7 +43,7 @@ recTree = (tree, id, indent) ->
                 color = ACTIVE_COLOR
             else
                 color = colorByIndent(indent)
-            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small") + " " + (if m._id!=id then styles.navitem)} eventKey={m._id}>
+            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "")} eventKey={m._id}>
                 <div style={"paddingLeft": 15*indent + "px"}>
                     {m.title}
                 </div>

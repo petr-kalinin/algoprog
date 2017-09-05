@@ -27,8 +27,8 @@ Bread = (props) ->
     <Breadcrumb>
         {
         props.path.map((p) ->
-            <LinkContainer to={"/material/" + p._id} key={p._id}>
-                <Breadcrumb.Item active={p._id==props.id}>
+            <LinkContainer to={"/material/" + p._id} key={p._id} isActive={() -> false}>
+                 <Breadcrumb.Item active={p._id==props.id}>
                     {p.title}
                 </Breadcrumb.Item>
             </LinkContainer>
