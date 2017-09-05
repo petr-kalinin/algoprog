@@ -14,7 +14,6 @@ renderFullPage = (html, data) ->
             <link rel="stylesheet" href="/bundle.css"/>
             <link rel="stylesheet" href="/informatics.css"/>
             <link rel="stylesheet" href="/bootstrap.min.css"/>
-            <link rel="stylesheet" href="/bootstrap-theme.min.css"/>
             <script>
                 window.__INITIAL_STATE__ = ' + JSON.stringify(data) + ';
             </script>
