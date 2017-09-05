@@ -71,11 +71,14 @@ getProblemsHrefsFromStatements = (href) ->
 
     return hrefs
 
-getLevelHeader = (material, header) ->
+getLevelHeader = (material, header, nameRegex) ->
     if material.type != "label"
         return undefined
 
-    re = new RegExp '\\s*<' + header + '>(Уровень\\s+(.*))</' + header + '>'
+    if not nameRegex
+        nameRegex = '(Уровень\\s+(.*))'
+
+    re = new RegExp '\\s*<' + header + '>' + nameRegex + '</' + header + '>'
     res = re.exec material.content
     if not res
         return undefined
@@ -90,6 +93,9 @@ getLevel = (material) ->
 
 getSublevel = (material) ->
     getLevelHeader(material, 'h3')
+
+getTopic = (material) ->
+    getLevelHeader(material, 'h4', '(.*)')
 
 class MaterialsDownloader
     constructor: ->
@@ -300,6 +306,7 @@ class MaterialsDownloader
         order = 0
         pendingMaterials = []
         title = ''
+        currentTopics = []
         for m in materials
             level = getLevel(m.material)
             if level
@@ -311,6 +318,7 @@ class MaterialsDownloader
             if sublevel
                 if currentLevel
                     levels.push currentLevel
+                    levels = levels.concat currentTopics
                     trees.push currentTree
                 currentLevel = new Material
                     _id: sublevel._id
@@ -323,6 +331,11 @@ class MaterialsDownloader
                 currentTree.materials = (m.tree for m in pendingMaterials when m.tree)
                 order += 1
                 pendingMaterials = []
+                currentTopics = []
+            topic = getTopic(m.material)
+            if topic
+                label = @makeLabelMaterial(m.material._id + "t", m.material.order, 20, topic.name)
+                currentTopics.push label.material
             if not currentLevel
                 pendingMaterials.push clone(m)
             else
@@ -388,7 +401,7 @@ class MaterialsDownloader
             title: title
             content: ""
         material.materials = (m.material for m in pendingMaterials when m.material)
-        material.materials = material.materials.concat({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
+        material.materials = material.materials.concat({_id: m._id, title: m.title, type: m.type, content: m.content, indent: m.indent} for m in materials)
         @addMaterial(material)
 
         tree = clone(material)
