@@ -12,7 +12,7 @@ import db from './mongo/mongo'
 import configurePassport from './passport'
 import setupApi from './api/setupApi'
 
-#import jobs from './cron/cron'
+import jobs from './cron/cron'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
