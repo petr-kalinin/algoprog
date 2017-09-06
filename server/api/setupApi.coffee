@@ -13,6 +13,7 @@ import table, * as tableApi from './table'
 import logger from '../log'
 
 import {updateAllResults} from '../calculations/updateResults'
+import downloadMaterials from '../cron/downloadMaterials'
 
 export default setupApi = (app) ->
     app.post '/api/register', (req, res, next) ->
@@ -62,9 +63,15 @@ export default setupApi = (app) ->
 
     app.get '/api/material/:id', (req, res) ->
         res.json(await Material.findById(req.params.id))
-        
+
     app.get '/api/updateResults', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         await updateAllResults()
+        res.send('OK')
+
+    app.get '/api/downloadMaterials', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        await downloadMaterials()
         res.send('OK')
