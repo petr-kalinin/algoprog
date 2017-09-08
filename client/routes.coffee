@@ -14,6 +14,7 @@ import LevelPage from './pages/LevelPage'
 import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import ContestPage from './pages/ContestPage'
+import RootPage from './pages/RootPage'
 
 import Login from './components/Login'
 import Register from './components/Register'
@@ -58,6 +59,12 @@ export default [
         key: "material",
         component: MaterialPage,
         loadData: MaterialPage.loadData,
+    },
+    {
+        path: '/',
+        key: "/",
+        component: RootPage,
+        loadData: RootPage.loadData,
     },
     {
         path: '/login',
