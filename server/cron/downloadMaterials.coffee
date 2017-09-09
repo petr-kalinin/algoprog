@@ -385,7 +385,7 @@ class MaterialsDownloader
         pendingMaterials = split.pendingMaterials
 
         if id == 0
-            title = "Информация по курсу"
+            title = "О курсе"
 
         for m in materials
             for mm in m.materials
