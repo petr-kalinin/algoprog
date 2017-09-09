@@ -26,7 +26,8 @@ class RootPage extends React.Component
         @setState(data)
 
     @loadData: (match) ->
-        tree = await callApi 'material/tree'
+        #tree = await callApi 'material/tree'
+        tree = undefined
         return
             tree: tree
 
