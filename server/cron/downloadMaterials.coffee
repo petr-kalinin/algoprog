@@ -13,17 +13,15 @@ clone = (material) ->
 
 downloadAndParse = (href) ->
     jar = request.jar()
-    try
-        page = await request
-            url: href
-            jar: jar
-    catch
-        logger.info "Error donloading " + href + " will re-download"
-        page = await request
-            url: href
-            jar: jar
-    document = (new JSDOM(page, {url: href})).window.document
-    return document
+    for i in [1..10]
+        try
+            page = await request
+                url: href
+                jar: jar
+            document = (new JSDOM(page, {url: href})).window.document
+            return document
+        catch
+            logger.info "Error downloading " + href + " " + i + " will re-download"
 
 finalizeMaterialsList = (materials) ->
     materials = (m for m in materials when m)
