@@ -20,6 +20,8 @@ MaterialProper = (props) ->
         `<Level {...props} />`
     else if props.material.type == 'contest'
         `<Contest {...props} />`
+    else if props.material.type == 'epigraph'
+        `<Page {...props} />`
     else
         `<Problem {...props} />`
 
