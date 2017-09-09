@@ -5,6 +5,7 @@ import { Grid } from 'react-bootstrap'
 import callApi from '../lib/callApi'
 
 import Tree from '../components/Tree'
+import Root from '../components/Root'
 
 class RootPage extends React.Component
     constructor: (props) ->
@@ -14,7 +15,7 @@ class RootPage extends React.Component
     render:  () ->
         return
             <Grid fluid>
-                Root
+                <Root tree={@state.tree}/>
             </Grid>
 
     componentDidMount: ->
