@@ -40,9 +40,8 @@ app.post('/login', passport.authenticate('local',
 app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
-ip = (process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0')
-app.listen port, ip, () ->
-  logger.info 'Example app listening on port ', port
+app.listen port, () ->
+  logger.info 'App listening on port ', port
 
 #import {updateAllResults} from './calculations/updateResults'
 #updateAllResults()
