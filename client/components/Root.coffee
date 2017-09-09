@@ -41,6 +41,9 @@ export default Root = (props) ->
                     for d, index in data
                         a <Col xs={12} sm={6} md={4} lg={4} key={index}>
                             <div className={styles.item}>
+                                <div className={styles.number}>
+                                    {index.toString(2)}
+                                </div>
                                 {d}
                             </div>
                         </Col>
@@ -51,14 +54,14 @@ export default Root = (props) ->
                     res}
                 </Row>
             </Grid>
-            <h2>Что это за курс?</h2>
+            <h2 className={styles.whatitis}>Что это за курс?</h2>
             <Tab.Container defaultActiveKey="school" id="info">
                 <div>
                     <Nav bsStyle="pills" justified>
-                        <NavItem eventKey="school">
+                        <NavItem eventKey="school" className={styles.whoami}>
                             Я школьник
                         </NavItem>
-                        <NavItem eventKey="stud">
+                        <NavItem eventKey="stud" className={styles.whoami}>
                             Я студент или выпускник
                         </NavItem>
                     </Nav>
