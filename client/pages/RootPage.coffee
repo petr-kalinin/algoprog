@@ -22,7 +22,7 @@ class RootPage extends React.Component
         @reload()
 
     reload: ->
-        data = await MaterialPage.loadData(@props.match)
+        data = await RootPage.loadData(@props.match)
         @setState(data)
 
     @loadData: (match) ->
