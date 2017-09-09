@@ -1,3 +1,4 @@
+import logger from '../log'
 request = require('request-promise-native')
 
 export default download = (href, jar) ->
