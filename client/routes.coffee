@@ -61,12 +61,6 @@ export default [
         loadData: MaterialPage.loadData,
     },
     {
-        path: '/',
-        key: "/",
-        component: RootPage,
-        loadData: RootPage.loadData,
-    },
-    {
         path: '/login',
         key: "login",
         component: Login,
@@ -75,6 +69,12 @@ export default [
         path: '/register',
         key: "register",
         component: Register,
+    },
+    {
+        path: '/',
+        key: "/",
+        component: RootPage,
+        loadData: RootPage.loadData,
     },
     {
         component: NoMatch,
