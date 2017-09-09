@@ -1,8 +1,7 @@
-request = require('request-promise-native')
-
 import { JSDOM } from 'jsdom'
 
 import Material from "../models/Material"
+import download from '../lib/download'
 
 import logger from '../log'
 
@@ -12,16 +11,9 @@ clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
 downloadAndParse = (href) ->
-    jar = request.jar()
-    for i in [1..10]
-        try
-            page = await request
-                url: href
-                jar: jar
-            document = (new JSDOM(page, {url: href})).window.document
-            return document
-        catch
-            logger.info "Error downloading " + href + " " + i + " will re-download"
+    page = await download(href)
+    document = (new JSDOM(page, {url: href})).window.document
+    return document
 
 finalizeMaterialsList = (materials) ->
     materials = (m for m in materials when m)

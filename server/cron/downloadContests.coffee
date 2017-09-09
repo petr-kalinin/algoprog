@@ -5,6 +5,7 @@ import Table from "../models/table"
 import User from "../models/user"
 
 import logger from '../log'
+import download from '../lib/download'
 
 class ContestDownloader
     url: 'http://informatics.mccme.ru/course/view.php?id=1135'
@@ -12,20 +13,20 @@ class ContestDownloader
 
     constructor: ->
         @jar = request.jar()
-        
+
     makeProblem: (fullText, href, pid, letter, name) ->
         {
             _id: "p"+pid
             letter: letter
             name: name
         }
-        
+
     addContest: (order, cid, name, level, problems) ->
         problemIds = []
         for prob in problems
             await new Problem(
-                _id: prob._id, 
-                letter: prob.letter, 
+                _id: prob._id,
+                letter: prob.letter,
                 name: prob.name
             ).add()
             problemIds.push(prob._id)
@@ -37,40 +38,34 @@ class ContestDownloader
             parent: level,
             order: order*100
         ).upsert()
-        
+
     processContest: (order, fullText, href, cid, name, level) ->
-        text = await request 
-            url: href
-            jar: @jar
+        text = await download(href, @jar)
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>'
         secondProbRes = re.exec text
         secondProbHref = secondProbRes[1].replace('&amp;','&')
         secondProb = @makeProblem(secondProbRes[0], secondProbRes[1], secondProbRes[2], secondProbRes[3], secondProbRes[4])
 
-        text = await request 
-            url: @baseUrl + secondProbHref
-            jar: @jar
+        text = await download(@baseUrl + secondProbHref, @jar)
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
         problems = []
         text.replace re, (res, a, b, c, d) =>
             problems.push(@makeProblem(res, a, b, c, d))
         problems.splice(1, 0, secondProb);
         @addContest(order, cid, name, level, problems)
-        
+
     run: ->
-        text = await request 
-            url: @url
-            jar: @jar
+        text = await download(@url, @jar)
         re = new RegExp '<a title="Условия задач"\\s*href="(http://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
         promises = []
-        text.replace re, (a,b,c,d,e) => 
+        text.replace re, (a,b,c,d,e) =>
             order++
             promises.push(@processContest(order,a,b,c,d,e))
         Promise.all(promises)
-        
+
 class RegionContestDownloader extends ContestDownloader
-    contests: 
+    contests:
         '2009': ['894', '895']
         '2010': ['1540', '1541']
         '2011': ['2748', '2780']
@@ -80,9 +75,9 @@ class RegionContestDownloader extends ContestDownloader
         '2015': ['14482', '14483']
         '2016': ['18805', '18806']
         '2017': ['24702', '24703']
-    
+
     contestBaseUrl: 'http://informatics.mccme.ru/mod/statements/view.php?id='
-        
+
     run: ->
         levels = []
         for year, cont of @contests
@@ -103,7 +98,7 @@ class RegionContestDownloader extends ContestDownloader
         for user in users
             promises.push(User.updateUser(user._id))
         await Promise.all(promises)
-        
+
 running = false
 
 wrapRunning = (callable) ->
