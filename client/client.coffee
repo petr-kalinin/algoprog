@@ -8,13 +8,16 @@ ReactDOM = require('react-dom')
 
 import Routes from './routes'
 import ScrollToTop from './components/ScrollToTop'
+import YaMetrikaHit from './components/YaMetrikaHit'
 
 ReactDOM.render(
     <BrowserRouter>
         <ScrollToTop>
-            <Switch>
-                {Routes.map((route) => `<Route {...route} data={window.__INITIAL_STATE__}/>`)}
-            </Switch>
+            <YaMetrikaHit>
+                <Switch>
+                    {Routes.map((route) => `<Route {...route} data={window.__INITIAL_STATE__}/>`)}
+                </Switch>
+            </YaMetrikaHit>
         </ScrollToTop>
     </BrowserRouter>,
     document.getElementById('main')
