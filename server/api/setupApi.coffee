@@ -74,11 +74,11 @@ export default setupApi = (app) ->
     app.get '/api/downloadMaterials', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
-        await downloadMaterials()
+        downloadMaterials()
         res.send('OK')
 
     app.get '/api/downloadContests', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
-        await downloadContests.run()
+        downloadContests.run()
         res.send('OK')
