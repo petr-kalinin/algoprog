@@ -22,7 +22,7 @@ export default Root = (props) ->
         </Col>
         <Col xs={12} sm={12} md={8} lg={9}>
             <PageHeader>
-                Алгоритмические программирование<br/>
+                <div className={styles.mainHeader}>Алгоритмические программирование</div>
                 <small>Очно-заочный курс Петра Калинина</small>
             </PageHeader>
             <Grid fluid>
