@@ -15,6 +15,7 @@ import logger from '../log'
 import {updateAllResults} from '../calculations/updateResults'
 import downloadMaterials from '../cron/downloadMaterials'
 import * as downloadContests from '../cron/downloadContests'
+import * as downloadSubmits from "../cron/downloadSubmits"
 
 export default setupApi = (app) ->
     app.post '/api/register', (req, res, next) ->
@@ -81,4 +82,10 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         downloadContests.run()
+        res.send('OK')
+
+    app.get '/api/downloadAllSubmits', connectEnsureLogin.ensureLoggedIn(), (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        downloadSubmits.runAll()
         res.send('OK')
