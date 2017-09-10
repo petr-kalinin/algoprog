@@ -42,7 +42,7 @@ export default Root = (props) ->
                         a <Col xs={12} sm={6} md={4} lg={4} key={index}>
                             <div className={styles.item}>
                                 <div className={styles.number}>
-                                    {index.toString(2)}
+                                    {index.toString(2).replace(/0/g, "○").replace(/1/g, "●")}
                                 </div>
                                 {d}
                             </div>
