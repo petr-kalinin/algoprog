@@ -1,7 +1,10 @@
 React = require('react')
 import fetch from 'isomorphic-fetch'
 
+import { Helmet } from "react-helmet"
+
 import { Grid } from 'react-bootstrap'
+
 import Material from '../components/Material'
 import callApi from '../lib/callApi'
 
@@ -13,6 +16,9 @@ class MaterialPage extends React.Component
     render:  () ->
         return
             <Grid fluid>
+                <Helmet>
+                    {@state.material?.title && <title>{@state.material.title}</title>}
+                </Helmet>
                 {@state.material && `<Material {...this.state}/>`}
             </Grid>
 

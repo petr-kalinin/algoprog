@@ -1,10 +1,12 @@
 React = require('react')
 
 import { Grid } from 'react-bootstrap'
+import { Helmet } from "react-helmet"
+
 import UserBadge from '../components/UserBadge'
 import callApi from '../lib/callApi'
 
-Explanation = 
+Explanation =
     <div>
         <h1>Неизвестный пользователь</h1>
         <p>Это может быть ошибкой, а может быть нормально:</p>
@@ -18,34 +20,37 @@ Explanation =
         </ul>
     </div>
 
-class UserBadgePage extends React.Component 
+class UserBadgePage extends React.Component
     constructor: (props) ->
         super(props)
         @id = UserBadgePage.getId(props.match)
         @state = props.data || window?.__INITIAL_STATE__ || {}
         @handleReload = @handleReload.bind(this)
-        
+
     render:  () ->
         if not @state?.user?.name
             return
                 <Grid fluid>
                     {Explanation}
                 </Grid>
-        return 
+        return
             <Grid fluid>
+                <Helmet>
+                    <title>{@state.user.name}</title>
+                </Helmet>
                 <UserBadge user={@state.user} me={@state.me} handleReload={@handleReload} explain={true}/>
             </Grid>
-            
+
     componentDidMount: ->
         @handleReload()
-        
+
     handleReload: ->
         data = await UserBadgePage.loadData(@props.match)
         @setState(data)
-        
+
     @getId: (match) ->
         match.params.id
-            
+
     @loadData: (match) ->
         user = await callApi 'user/' + UserBadgePage.getId(match)
         me = await callApi 'me'
@@ -53,4 +58,4 @@ class UserBadgePage extends React.Component
             user: user
             me: me
 
-export default UserBadgePage 
+export default UserBadgePage

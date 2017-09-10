@@ -23,7 +23,7 @@ getResult = (userId, tableId, collection) ->
     result = await Result.findByUserAndTable(userId, tableId)
     result = result.toObject()
     result.problemName = table.name
-    return result  
+    return result
 
 needUser = (userId, tables) ->
     for tableId in tables
@@ -66,20 +66,20 @@ getUserResult = (user, tables, depth) ->
         total = addTotal(total, tableResults.total)
         delete tableResults.total
         results.push tableResults
-    return 
+    return
         user: user
         results: results
         total: total
-        
+
 sortBySolved = (a, b) ->
     if a.user.active != b.user.active
         return if a.user.active then -1 else 1
     if a.total.solved != b.total.solved
-        return b.total.solved - a.total.solved 
+        return b.total.solved - a.total.solved
     if a.total.attempts != b.total.attempts
         return a.total.attempts - b.total.attempts
     return 0
-    
+
 sortByLevel = (a, b) ->
     if a.user.active != b.user.active
         return if a.user.active then -1 else 1
@@ -88,13 +88,13 @@ sortByLevel = (a, b) ->
     if a.user.level != b.user.level
         return if a.user.level > b.user.level then -1 else 1
     return 0
-    
-                
+
+
 export default table = (userList, table) ->
     data = []
-    users = User.findByList(userList)
-    tables = getTables(table)
-    [users, tables] = await Promise.all([users, tables])
+    users = await User.findByList(userList)
+    tables = await getTables(table)
+    #[users, tables] = await Promise.all([users, tables])
     for user in users
         data.push(getUserResult(user, tables, 1))
     results = await Promise.all(data)
@@ -117,8 +117,8 @@ export fullUser = (userId) ->
         results.push(getUserResult(user, t, 1))
     results = await Promise.all(results)
     results = (r.results for r in results when r)
-    return 
+    return
         user: user
         results: results
-        
+
     console.log tables

@@ -1,15 +1,22 @@
 import Routes from '../../client/routes'
+import DefaultHelmet from '../../client/components/DefaultHelmet'
+
 React = require('react')
+
 import { StaticRouter } from 'react-router'
 import { renderToString } from 'react-dom/server';
 import { matchPath, Switch, Route } from 'react-router-dom'
 
-renderFullPage = (html, data) ->
+import { Helmet } from "react-helmet"
+
+import logger from '../log'
+
+renderFullPage = (html, data, helmet) ->
     return '
         <html>
         <head>
             <meta charset="UTF-8" />
-            <title>Сводные таблицы</title>
+            ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/bundle.css"/>
             <link rel="stylesheet" href="/informatics.css"/>
@@ -72,24 +79,34 @@ export default renderOnServer = (req, res, next) =>
     foundMatch = undefined
     data = undefined
 
-    Routes.some((route) ->
-        match = matchPath(req.url, route)
-        if (match)
-            foundMatch = match
-            component = route.component
-            if component.loadData
-                data = component.loadData(match)
-        return match
-    )
-    data = await data
-    element = React.createElement(component, {match: foundMatch, data: data})
-    context = {}
-    # We have already identified the element,
-    # but we need StaticRouter for Link to work
-    html = renderToString(
-        <StaticRouter context={context}>
-            {element}
-        </StaticRouter>
-    )
+    try
+        Routes.some((route) ->
+            match = matchPath(req.url, route)
+            if (match)
+                foundMatch = match
+                component = route.component
+                if component.loadData
+                    data = component.loadData(match)
+            return match
+        )
+        data = await data
+        element = React.createElement(component, {match: foundMatch, data: data})
+        context = {}
+        # We have already identified the element,
+        # but we need StaticRouter for Link to work
+        html = renderToString(
+            <div>
+                <DefaultHelmet/>
+                <StaticRouter context={context}>
+                    {element}
+                </StaticRouter>
+            </div>
+        )
+    catch error
+        logger.error(error)
+        res.status(500).send('Error 500')
+        return
+    finally
+        helmet = Helmet.renderStatic();
 
-    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, data))
+    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, data, helmet))

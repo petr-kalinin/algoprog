@@ -1,5 +1,7 @@
 React = require('react')
 
+import { Helmet } from "react-helmet";
+
 import TableRow from './TableRow'
 
 import globalStyles from './global.css'
@@ -10,7 +12,7 @@ getHeader = (results) ->
         return undefined
     res = []
     for table in results
-        t = 
+        t =
             _id: table._id
             results: []
         for subtable in table.results
@@ -24,18 +26,24 @@ getHeader = (results) ->
 Text = (props) ->
     if props.levels == "main"
         <div>
+            <Helmet>
+                <title>Общая таблица</title>
+            </Helmet>
             <h1>Общая таблица</h1>
             <p>Цвет ячеек: белая — на уровне не решено ни одной задачи, серая — на уровне решено сколько-то задач, но недостаточно, чтобы пройти уровень, темно-зеленая — уровень пройден, но решены не все задачи, ярко-зеленая — решены вообще все задачи. (На уровнях с необязательными темами бывают ошибки раскраски.)</p>
             <p>Имена школьников — ссылки на странички с результатами каждого конкретного школьника.</p>
         </div>
     else
         <div>
+            <Helmet>
+                <title>{"Сводная таблица по уровням " + props.levels}</title>
+            </Helmet>
             <h1>Сводная таблица по уровням {props.levels}</h1>
             <p>Цвета:{" "}
-                <span className={globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "} 
-                <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "} 
+                <span className={globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
+                <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
                 <span className={globalStyles.ok + " " + styles.example}>OK</span>{" "}
-                <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span> 
+                <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
             </p>
             <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
             <p>Двойной щелчок по ячейке таблицы открывает соответствующую задачу и, если по ней были посылки, то последнюю посылку по ней</p>
@@ -49,7 +57,7 @@ export default Table = (props) ->
 
     header = getHeader(props.data[0].results)
     levels = (r._id for r in header).join(", ")
-    
+
     <div>
         {props.headerText && <Text levels={levels} /> }
         <table className={globalStyles.mainTable}>
