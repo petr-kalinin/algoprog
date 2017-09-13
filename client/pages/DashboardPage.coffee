@@ -1,16 +1,20 @@
 React = require('react')
-import fetch from 'isomorphic-fetch'
 
 import { Grid } from 'react-bootstrap'
 import { Helmet } from "react-helmet"
 
 import Dashboard from '../components/Dashboard'
-import callApi from '../lib/callApi'
+import ConnectedComponent from './ConnectedComponent'
 
 class DashboardPage extends React.Component
     constructor: (props) ->
         super(props)
-        @state = props.data || window.__INITIAL_STATE__ || {}
+
+    @url: () ->
+        "dashboard"
+
+    @timeout: () ->
+        20000
 
     render:  () ->
         return
@@ -18,27 +22,8 @@ class DashboardPage extends React.Component
                 <Helmet>
                     <title>Последние результаты</title>
                 </Helmet>
-                {`<Dashboard {...this.state}/>`}
+                {`<Dashboard {...this.props.data}/>`}
             </Grid>
 
-    componentDidMount: ->
-        @reloadAndSetTimeout()
 
-    componentWillUnmount: ->
-        clearTimeout(@timeout)
-
-    reload: ->
-        data = await DashboardPage.loadData(@props.match)
-        @setState(data)
-
-    reloadAndSetTimeout: ->
-        try
-            await @reload()
-        catch
-            console.log "Can't reload dashboard"
-        @timeout = setTimeout((() => @reloadAndSetTimeout()), 20000)
-
-    @loadData: (match) ->
-        callApi 'dashboard'
-
-export default DashboardPage
+export default ConnectedComponent(DashboardPage)

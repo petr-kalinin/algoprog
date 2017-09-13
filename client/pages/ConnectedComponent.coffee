@@ -20,9 +20,16 @@ export default ConnectedComponent = (Component) ->
                 return`<Component  {...this.props}/>`
 
         componentWillMount: ->
-            promises = @requestData()
             if not window?
+                promises = @requestData()
                 @props.saveDataPromises(promises)
+
+        componentDidMount: ->
+            @requestDataAndSetTimeout()
+
+        componentWillUnmount: ->
+            if @timeout
+                clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
             if Component.url(prevProps.match.params) != Component.url(@props.match.params)
@@ -30,6 +37,16 @@ export default ConnectedComponent = (Component) ->
 
         requestData: () ->
             return [@props.getMe(), @props.getData(Component.url(@props.match.params)), @props.getTree(), @props.getNews()]
+
+        requestDataAndSetTimeout: () ->
+            try
+                await Promise.all(@requestData())
+            catch
+                console.log "Can't reload dashboard"
+            if Component.timeout?()
+                console.log "Setting timeout"
+                @timeout = setTimeout((() => @requestDataAndSetTimeout()), Component.timeout())
+
 
 
     mapStateToProps = (state, ownProps) ->

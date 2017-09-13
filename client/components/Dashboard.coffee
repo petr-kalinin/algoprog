@@ -34,13 +34,20 @@ export default Dashboard = (props) ->
                                 <td className={styles.td}>{moment(result.time).format('YYYY-MM-DD kk:mm:ss')}</td>
                                 <td className={styles.td}><Link to={"/user/" + result.user._id}>{result.user.name}</Link></td>
                                 <td className={styles.td}>{result.contestId}</td>
-                                <td className={styles.td}><a href={"http://codeforces.com/submissions/" + result.user.cf.login + "/contest/" + result.contestId}>
+                                <td className={styles.td}>
                                     {
-                                    delta = result.newRating - result.oldRating
-                                    if delta > 0
-                                        delta = "+" + delta
-                                    delta + " (" + result.oldRating + " -> " + result.newRating + " / " + result.place + ")"}
-                                </a></td>
+                                        if result.user.cf?.login
+                                            <a href={"http://codeforces.com/submissions/" + result.user.cf.login + "/contest/" + result.contestId}>
+                                                {
+                                                delta = result.newRating - result.oldRating
+                                                if delta > 0
+                                                    delta = "+" + delta
+                                                delta + " (" + result.oldRating + " -> " + result.newRating + " / " + result.place + ")"}
+                                            </a>
+                                        else
+                                            <div>Unknown cf login</div>
+                                    }
+                                    </td>
                             </tr>)}
                     </tbody>
                 </Table>
