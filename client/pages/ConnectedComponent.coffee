@@ -10,10 +10,11 @@ export default ConnectedComponent = (Component) ->
             super(props)
 
         url: ->
-            return Component.url(@props.match.params)
+            if Component.url
+                return Component.url(@props.match.params)
 
         render:  () ->
-            if @props.dataUrl != @url() or not @props.data
+            if @url() and (@props.dataUrl != @url() or not @props.data)
                 return
                     <CometSpinLoader />
             else
@@ -32,17 +33,21 @@ export default ConnectedComponent = (Component) ->
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
-            if Component.url(prevProps.match.params) != Component.url(@props.match.params)
+            if @url() and (Component.url(prevProps.match.params) != Component.url(@props.match.params))
                 @requestData()
 
         requestData: () ->
-            return [@props.getMe(), @props.getData(Component.url(@props.match.params)), @props.getTree(), @props.getNews()]
+            promises = [@props.getMe(), @props.getTree(), @props.getNews()]
+            if @url()
+                promises.push(@props.getData(@url()))
+            return promises
 
         requestDataAndSetTimeout: () ->
             try
                 await Promise.all(@requestData())
+                console.log "Updated data"
             catch
-                console.log "Can't reload dashboard"
+                console.log "Can't reload data"
             if Component.timeout?()
                 console.log "Setting timeout"
                 @timeout = setTimeout((() => @requestDataAndSetTimeout()), Component.timeout())

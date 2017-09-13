@@ -1,33 +1,21 @@
 React = require('react')
-import fetch from 'isomorphic-fetch'
 
 import { Grid } from 'react-bootstrap'
-import callApi from '../lib/callApi'
 
 import Tree from '../components/Tree'
 import Root from '../components/Root'
 
+import ConnectedComponent from './ConnectedComponent'
+
 class RootPage extends React.Component
     constructor: (props) ->
         super(props)
-        @state = props.data || window.__INITIAL_STATE__ || {}
 
     render:  () ->
         return
             <Grid fluid>
-                <Root tree={@state.tree}/>
+                <Root tree={@props.tree}/>
             </Grid>
 
-    componentDidMount: ->
-        @reload()
 
-    reload: ->
-        data = await RootPage.loadData(@props.match)
-        @setState(data)
-
-    @loadData: (match) ->
-        tree = await callApi 'material/tree'
-        return
-            tree: tree
-
-export default RootPage
+export default ConnectedComponent(RootPage)
