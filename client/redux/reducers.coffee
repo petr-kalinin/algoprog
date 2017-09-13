@@ -7,8 +7,6 @@ me = (state=null, action) ->
     switch action.type
         when "#{GET_ME}_#{FULFILLED}"
             return action.payload
-        when "#{GET_ME}_#{REJECTED}"
-            return null
         else
             return state
 
@@ -16,8 +14,6 @@ tree = (state=null, action) ->
     switch action.type
         when "#{GET_TREE}_#{FULFILLED}"
             return action.payload
-        when "#{GET_TREE}_#{REJECTED}"
-            return null
         else
             return state
 
@@ -25,8 +21,6 @@ news = (state=null, action) ->
     switch action.type
         when "#{GET_NEWS}_#{FULFILLED}"
             return action.payload
-        when "#{GET_NEWS}_#{REJECTED}"
-            return null
         else
             return state
 
@@ -36,10 +30,6 @@ data = (state={}, action) ->
             return
                 data: action.payload
                 url: action.meta.url
-        when "#{GET_DATA}_#{REJECTED}"
-            return
-                data: null
-                url: null
         else
             return state
 
