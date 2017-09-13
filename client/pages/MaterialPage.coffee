@@ -1,5 +1,8 @@
 React = require('react')
 import fetch from 'isomorphic-fetch'
+import { connect } from 'react-redux'
+
+import { CometSpinLoader } from 'react-css-loaders';
 
 import { Helmet } from "react-helmet"
 
@@ -8,48 +11,57 @@ import { Grid } from 'react-bootstrap'
 import Material from '../components/Material'
 import callApi from '../lib/callApi'
 
+import * as actions from '../redux/actions'
+
 class MaterialPage extends React.Component
     constructor: (props) ->
         super(props)
-        @state = props.data || window.__INITIAL_STATE__ || {}
+
+    url: ->
+        return "material/#{@props.match.params.id}"
 
     render:  () ->
+        if @props.dataUrl != @url()
+            return
+                <CometSpinLoader />
         return
             <Grid fluid>
                 <Helmet>
-                    {@state.material?.title && <title>{@state.material.title}</title>}
+                    {@props.material?.title && <title>{@props.material.title}</title>}
                 </Helmet>
-                {@state.material && `<Material {...this.state}/>`}
+                {@props.material && `<Material {...this.props}/>`}
             </Grid>
 
-    componentDidMount: ->
-        @reload()
+    componentWillMount: ->
+        promises = @requestData()
+        if not window?
+            @props.saveDataPromises(promises)
 
     componentDidUpdate: (prevProps, prevState) ->
         if (prevProps.match.params.id != @props.match.params.id)
-            @reload()
+            @requestData()
 
-    componentWillUnmount: ->
-        clearTimeout(@timeout)
+    requestData: () ->
+        return [@props.getMe(), @props.getData(@url()), @props.getTree(), @props.getNews()]
 
-    reload: ->
-        data = await MaterialPage.loadData(@props.match)
-        @setState(data)
 
-    reloadAndSetTimeout: ->
-        try
-            await @reload()
-        catch
-            console.log "Can't reload data"
-        @timeout = setTimeout((() => @reloadAndSetTimeout()), 20000)
+mapStateToProps = (state, ownProps) ->
+    return
+        me: state.me
+        tree: state.tree
+        news: state.news
+        dataUrl: state.data.url
+        material: state.data.data
 
-    @loadData: (match) ->
-        material = await callApi 'material/' + match.params.id
-        tree = await callApi 'material/tree'
-        news = await callApi 'material/news'
-        return
-            material: material
-            tree: tree
-            news: news
+mapDispatchToProps = (dispatch, ownProps) ->
+    return
+        getMe: () -> dispatch(actions.getMe())
+        getTree: () -> dispatch(actions.getTree())
+        getNews: () -> dispatch(actions.getNews())
+        getData: (url) -> dispatch(actions.getData(url))
+        saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
 
-export default MaterialPage
+export default MaterialPageConnected = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MaterialPage)

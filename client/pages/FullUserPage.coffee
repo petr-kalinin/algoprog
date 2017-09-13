@@ -34,11 +34,8 @@ class FullUserPage extends React.Component
         if not window?
             @props.saveDataPromises(promises)
 
-    @loadData: () ->
-        undefined
-
     requestData: () ->
-        return [@props.getMe(), @props.getUser(@url())]
+        return [@props.getMe(), @props.getData(@url())]
 
 mapStateToProps = (state, ownProps) ->
     return
@@ -50,7 +47,7 @@ mapStateToProps = (state, ownProps) ->
 mapDispatchToProps = (dispatch, ownProps) ->
     return
         getMe: () -> dispatch(actions.getMe())
-        getUser: (url) -> dispatch(actions.getData(url))
+        getData: (url) -> dispatch(actions.getData(url))
         saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
 
 export default FullUserPageConnected = connect(

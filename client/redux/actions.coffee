@@ -1,6 +1,8 @@
 import callApi from '../lib/callApi'
 
 export GET_ME = 'GET_ME'
+export GET_TREE = 'GET_TREE'
+export GET_NEWS = 'GET_NEWS'
 export GET_DATA = 'GET_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 
@@ -8,6 +10,16 @@ export getMe = () ->
     return
         type: GET_ME
         payload: callApi 'me'
+
+export getTree = () ->
+    return
+        type: GET_TREE
+        payload: callApi 'material/tree'
+
+export getNews = () ->
+    return
+        type: GET_NEWS
+        payload: callApi 'material/news'
 
 export getData = (url) ->
     return
