@@ -422,6 +422,100 @@ class MaterialsDownloader
             materials: @news
         await material.upsert()
 
+    createTableMaterials: ->
+        getTableTitle = (table) ->
+            if table == "reg"
+                return "Сводная таблица по региональным олимпиадам"
+            else if table == "main"
+                return "Сводная таблица по всем уровням"
+            else if table == "byWeek"
+                return "Сводная таблица по неделям"
+            tables = table.split(",")
+            if tables.length == 1
+                return "Сводная таблица по уровню " + table
+            else
+                return "Сводная таблица по уровням " + tables.join(", ")
+
+        getTreeTitle = (table) ->
+            if table == "reg"
+                return "Региональные олимпиады"
+            else if table == "main"
+                return "Все уровни"
+            else if table == "byWeek"
+                return "По неделям"
+            tables = table.split(",")
+            if tables.length == 1
+                return "Уровень " + table
+            else
+                return "Уровни " + tables.join(", ")
+
+        getTableLink = (group, table) ->
+            if table == "byWeek"
+                return "/solvedByWeek/#{group}"
+            return "/table/#{group}/#{table}"
+
+        groups =
+            lic40: "Лицей 40",
+            zaoch: "ННГУ и другие школьники",
+            stud: "Студенты и старше"
+        tables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "main", "reg", "byWeek"]
+        materials = []
+        trees = []
+        globalHeaderMaterial = new Material
+            _id: "table:header"
+            type: "label",
+            content: "<h1>Сводные таблицы</h1>"
+        @addMaterial(globalHeaderMaterial)
+        materials.push(globalHeaderMaterial)
+        for group, groupName of groups
+            thisMaterials = []
+            thisTrees = []
+            headerMaterial = new Material
+                _id: "table:#{group}:header"
+                type: "label",
+                content: "<h1>#{groupName}: сводные таблицы</h1>"
+            @addMaterial(headerMaterial)
+            thisMaterials.push(headerMaterial)
+
+            for table in tables
+                subMaterial = new Material
+                    _id: "table:" + group + ":" + table
+                    type: "table",
+                    title: getTableTitle(table)
+                    content: getTableLink(group, table)
+                @addMaterial(subMaterial)
+                thisMaterials.push(subMaterial)
+
+                subTree = clone(subMaterial)
+                subTree.title = getTreeTitle(table)
+                thisTrees.push(subTree)
+
+            material = new Material
+                _id: "tables:#{group}"
+                type: "level"
+                title: groupName
+                materials: thisMaterials
+            @addMaterial(material)
+            materials.push(material)
+
+            tree = clone(material)
+            tree.materials = thisTrees
+            trees.push(tree)
+
+        material = new Material
+            _id: "tables"
+            type: "level"
+            title: "Сводные таблицы"
+            materials: ({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
+        @addMaterial(material)
+
+        tree = clone(material)
+        tree.materials = trees
+
+        return
+            material: material
+            tree: tree
+
     run: ->
         document = await downloadAndParse(url)
 
@@ -432,6 +526,8 @@ class MaterialsDownloader
             if not section
                 continue
             materials.push(@parseSection(section, sectionId))
+
+        materials.push(@createTableMaterials())
 
         materials = await finalizeMaterialsList(materials)
 

@@ -9,6 +9,11 @@ Label = (props) ->
     <div dangerouslySetInnerHTML={{__html: props.material.content}}>
     </div>
 
+InternalLink = (props) ->
+    <div>
+        <Link to={props.material.content}>{props.material.title}</Link>
+    </div>
+
 MaterialLink = (props) ->
     <div className={props.className && styles[props.className]}>
         <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
@@ -29,6 +34,7 @@ Material = (props) ->
         when 'contest' then `<MaterialLink {...props}/>`
         when 'level' then `<MaterialLink {...props}/>`
         when 'epigraph' then `<MaterialLink {...props} className="epigraph"/>`
+        when 'table' then `<InternalLink {...props}/>`
         else <div>{props.material.type}</div>
 
 export default Level = (props) ->

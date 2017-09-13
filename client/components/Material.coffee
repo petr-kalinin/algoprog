@@ -22,8 +22,10 @@ MaterialProper = (props) ->
         `<Contest {...props} />`
     else if props.material.type == 'epigraph'
         `<Page {...props} />`
-    else
+    else if props.material.type == 'problem'
         `<Problem {...props} />`
+    else
+        <div>Unknown material type</div>
 
 Bread = (props) ->
     <Breadcrumb>

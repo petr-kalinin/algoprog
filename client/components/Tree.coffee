@@ -12,9 +12,15 @@ MAX_LOCAL_DEPTH = 1
 BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
 ACTIVE_COLOR = "#fdf6e3"
 
+getHref = (material) ->
+    if material.type == "table"
+        return material.content
+    else
+        return "/material/#{material._id}"
+
 goTo = (history) ->
-    (id) ->
-        history.push("/material/" + id)
+    (href) ->
+        history.push(href)
 
 markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
@@ -43,7 +49,7 @@ recTree = (tree, id, indent) ->
                 color = ACTIVE_COLOR
             else
                 color = colorByIndent(indent)
-            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "")} eventKey={m._id} href={"/material/" + m._id}>
+            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "")} eventKey={getHref(m)} href={getHref(m)}>
                 <div style={"paddingLeft": 15*indent + "px"}>
                     {m.title}
                 </div>
