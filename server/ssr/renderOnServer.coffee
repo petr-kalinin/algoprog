@@ -85,7 +85,6 @@ export default renderOnServer = (req, res, next) =>
     store = createStore()
 
     try
-
         Routes.some((route) ->
             match = matchPath(req.url, route)
             if (match)
