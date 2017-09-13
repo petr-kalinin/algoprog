@@ -5,16 +5,13 @@ import { renderToString } from 'react-dom/server';
 import { matchPath, Switch, Route } from 'react-router-dom'
 
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import promiseMiddleware from 'redux-promise-middleware'
 
 import { Helmet } from "react-helmet"
 
 import Routes from '../../client/routes'
 import DefaultHelmet from '../../client/components/DefaultHelmet'
 
-import rootReducer from '../../client/redux/reducers'
-
+import createStore from '../../client/redux/store'
 
 import logger from '../log'
 
@@ -30,7 +27,7 @@ renderFullPage = (html, data, helmet) ->
             <link rel="stylesheet" href="/informatics.css"/>
             <link rel="stylesheet" href="/bootstrap.min.css"/>
             <script>
-                window.__INITIAL_STATE__ = ' + JSON.stringify(data) + ';
+                window.__PRELOADED_STATE__ = ' + JSON.stringify(data) + ';
             </script>
             <script type="text/x-mathjax-config">
                 MathJax.Hub.Config({
@@ -85,28 +82,23 @@ renderFullPage = (html, data, helmet) ->
 export default renderOnServer = (req, res, next) =>
     component = undefined
     foundMatch = undefined
-    data = undefined
+    store = createStore()
 
     try
+
         Routes.some((route) ->
             match = matchPath(req.url, route)
             if (match)
                 foundMatch = match
                 component = route.component
-                if component.loadData
-                    data = component.loadData(match)
             return match
         )
-        data = await data
-        element = React.createElement(component, {match: foundMatch, data: data})
+        element = React.createElement(component, {match: foundMatch})
         context = {}
-
-        store = createStore(rootReducer, applyMiddleware(promiseMiddleware()))
 
         # We have already identified the element,
         # but we need StaticRouter for Link to work
-        html = renderToString(
-            <Provider store={store}>
+        wrappedElement = <Provider store={store}>
                 <div>
                     <DefaultHelmet/>
                     <StaticRouter context={context}>
@@ -114,7 +106,11 @@ export default renderOnServer = (req, res, next) =>
                     </StaticRouter>
                 </div>
             </Provider>
-        )
+
+        html = renderToString(wrappedElement)
+        await Promise.all(store.getState().dataPromises)
+        html = renderToString(wrappedElement)
+
     catch error
         logger.error(error)
         res.status(500).send('Error 500')
@@ -122,4 +118,7 @@ export default renderOnServer = (req, res, next) =>
     finally
         helmet = Helmet.renderStatic();
 
-    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, data, helmet))
+    state = store.getState()
+    delete state.dataPromises
+
+    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, state, helmet))

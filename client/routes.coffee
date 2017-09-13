@@ -71,6 +71,7 @@ export default [
     {
         path: '/',
         key: "/",
+        exact: true,
         component: RootPage,
         loadData: RootPage.loadData,
     },

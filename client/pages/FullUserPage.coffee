@@ -26,15 +26,16 @@ class FullUserPage extends React.Component
                 <FullUser user={@props.user} me={@props.me} results={@props.results} handleReload={@handleReload}/>
             </Grid>
 
-    componentDidMount: ->
-        FullUserPage.requestData(@props)
+    componentWillMount: ->
+        promises = @requestData()
+        if not window?
+            @props.saveDataPromises(promises)
 
     @loadData: () ->
         undefined
 
-    @requestData: (props) ->
-        props.getMe()
-        props.getUser()
+    requestData: () ->
+        return [@props.getMe(), @props.getUser()]
 
 mapStateToProps = (state, ownProps) ->
     return
@@ -45,9 +46,10 @@ mapStateToProps = (state, ownProps) ->
 mapDispatchToProps = (dispatch, ownProps) ->
     return
         getMe: () -> dispatch(actions.getMe())
-        getUser: ()-> dispatch(actions.getFullUser(ownProps.match.params.id))
+        getUser: () -> dispatch(actions.getFullUser(ownProps.match.params.id))
+        saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
 
 export default FullUserPageConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(FullUserPage)
