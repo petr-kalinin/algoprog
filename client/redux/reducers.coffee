@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
-import { GET_ME, GET_FULL_USER, SAVE_DATA_PROMISES } from './actions'
+import { GET_ME, GET_DATA, SAVE_DATA_PROMISES } from './actions'
 
 me = (state=null, action) ->
     switch action.type
@@ -12,12 +12,16 @@ me = (state=null, action) ->
         else
             return state
 
-users = (state={}, action) ->
+data = (state={}, action) ->
     switch action.type
-        when "#{GET_FULL_USER}_#{FULFILLED}"
-            return  {state..., "#{action.meta._id}": action.payload}
-        when "#{GET_FULL_USER}_#{REJECTED}"
-            return {state..., "#{action.meta._id}": null}
+        when "#{GET_DATA}_#{FULFILLED}"
+            return
+                data: action.payload
+                url: action.meta.url
+        when "#{GET_DATA}_#{REJECTED}"
+            return
+                data: null
+                url: null
         else
             return state
 
@@ -31,6 +35,6 @@ dataPromises = (state=[], action) ->
 export default rootReducer =
     combineReducers {
         me,
-        users
+        data,
         dataPromises
     }

@@ -14,8 +14,11 @@ class FullUserPage extends React.Component
     constructor: (props) ->
         super(props)
 
+    url: ->
+        return "fullUser/#{@props.match.params.id}"
+
     render:  () ->
-        if not @props?.user?.name
+        if @props.dataUrl != @url()
             return
                 <CometSpinLoader />
         return
@@ -35,18 +38,19 @@ class FullUserPage extends React.Component
         undefined
 
     requestData: () ->
-        return [@props.getMe(), @props.getUser()]
+        return [@props.getMe(), @props.getUser(@url())]
 
 mapStateToProps = (state, ownProps) ->
     return
         me: state.me
-        user: state.users[ownProps.match.params.id]?.user
-        results: state.users[ownProps.match.params.id]?.results
+        dataUrl: state.data.url
+        user: state.data.data?.user
+        results: state.data.data?.results
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
         getMe: () -> dispatch(actions.getMe())
-        getUser: () -> dispatch(actions.getFullUser(ownProps.match.params.id))
+        getUser: (url) -> dispatch(actions.getData(url))
         saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
 
 export default FullUserPageConnected = connect(

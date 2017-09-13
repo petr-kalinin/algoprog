@@ -1,7 +1,7 @@
 import callApi from '../lib/callApi'
 
 export GET_ME = 'GET_ME'
-export GET_FULL_USER = 'GET_FULL_USER'
+export GET_DATA = 'GET_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 
 export getMe = () ->
@@ -9,12 +9,12 @@ export getMe = () ->
         type: GET_ME
         payload: callApi 'me'
 
-export getFullUser = (id) ->
+export getData = (url) ->
     return
-        type: GET_FULL_USER
-        payload: callApi 'fullUser/' + id
+        type: GET_DATA
+        payload: callApi url
         meta:
-            _id: id
+            url: url
 
 export saveDataPromises = (promises) ->
     return
