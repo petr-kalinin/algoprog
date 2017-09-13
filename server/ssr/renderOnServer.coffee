@@ -1,13 +1,20 @@
-import Routes from '../../client/routes'
-import DefaultHelmet from '../../client/components/DefaultHelmet'
-
 React = require('react')
 
 import { StaticRouter } from 'react-router'
 import { renderToString } from 'react-dom/server';
 import { matchPath, Switch, Route } from 'react-router-dom'
 
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import promiseMiddleware from 'redux-promise-middleware'
+
 import { Helmet } from "react-helmet"
+
+import Routes from '../../client/routes'
+import DefaultHelmet from '../../client/components/DefaultHelmet'
+
+import rootReducer from '../../client/redux/reducers'
+
 
 import logger from '../log'
 
@@ -93,15 +100,20 @@ export default renderOnServer = (req, res, next) =>
         data = await data
         element = React.createElement(component, {match: foundMatch, data: data})
         context = {}
+
+        store = createStore(rootReducer, applyMiddleware(promiseMiddleware()))
+
         # We have already identified the element,
         # but we need StaticRouter for Link to work
         html = renderToString(
-            <div>
-                <DefaultHelmet/>
-                <StaticRouter context={context}>
-                    {element}
-                </StaticRouter>
-            </div>
+            <Provider store={store}>
+                <div>
+                    <DefaultHelmet/>
+                    <StaticRouter context={context}>
+                        {element}
+                    </StaticRouter>
+                </div>
+            </Provider>
         )
     catch error
         logger.error(error)
