@@ -8,6 +8,7 @@ export default ConnectedComponent = (Component) ->
     class Result extends React.Component
         constructor: (props) ->
             super(props)
+            @handleReload = @handleReload.bind(this)
 
         url: ->
             if Component.url
@@ -15,10 +16,13 @@ export default ConnectedComponent = (Component) ->
 
         render:  () ->
             if @url() and (@props.dataUrl != @url() or not @props.data)
-                return
-                    <CometSpinLoader />
+                if Component.Placeholder
+                    return <Component.Placeholder/>
+                else
+                    return
+                        <CometSpinLoader />
             else
-                return`<Component  {...this.props}/>`
+                return`<Component  {...this.props} handleReload={this.handleReload}/>`
 
         componentWillMount: ->
             if not window?
@@ -41,6 +45,9 @@ export default ConnectedComponent = (Component) ->
             if @url()
                 promises.push(@props.getData(@url()))
             return promises
+
+        handleReload: () ->
+            @requestData()
 
         requestDataAndSetTimeout: () ->
             try

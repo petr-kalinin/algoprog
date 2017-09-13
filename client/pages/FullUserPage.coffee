@@ -18,7 +18,7 @@ class FullUserPage extends React.Component
             <Helmet>
                 <title>{@props.data.user.name}</title>
             </Helmet>
-            <FullUser user={@props.data.user} me={@props.me} results={@props.data.results} handleReload={@handleReload}/>
+            <FullUser user={@props.data.user} me={@props.me} results={@props.data.results} handleReload={@props.handleReload}/>
         </Grid>
 
 export default ConnectedComponent(FullUserPage)

@@ -4,7 +4,7 @@ import { Grid } from 'react-bootstrap'
 import { Helmet } from "react-helmet"
 
 import UserBadge from '../components/UserBadge'
-import callApi from '../lib/callApi'
+import ConnectedComponent from './ConnectedComponent'
 
 Explanation =
     <div>
@@ -25,37 +25,25 @@ class UserBadgePage extends React.Component
         super(props)
         @id = UserBadgePage.getId(props.match)
         @state = props.data || window?.__INITIAL_STATE__ || {}
-        @handleReload = @handleReload.bind(this)
+
+    @Placeholder: () ->
+        <Grid fluid>
+            {Explanation}
+        </Grid>
 
     render:  () ->
-        if not @state?.user?.name
-            return
-                <Grid fluid>
-                    {Explanation}
-                </Grid>
         return
             <Grid fluid>
                 <Helmet>
-                    <title>{@state.user.name}</title>
+                    <title>{@props.data.name}</title>
                 </Helmet>
-                <UserBadge user={@state.user} me={@state.me} handleReload={@handleReload} explain={true}/>
+                <UserBadge user={@props.data} me={@state.me} handleReload={@props.handleReload} explain={true}/>
             </Grid>
-
-    componentDidMount: ->
-        @handleReload()
-
-    handleReload: ->
-        data = await UserBadgePage.loadData(@props.match)
-        @setState(data)
 
     @getId: (match) ->
         match.params.id
 
-    @loadData: (match) ->
-        user = await callApi 'user/' + UserBadgePage.getId(match)
-        me = await callApi 'me'
-        return
-            user: user
-            me: me
+    @url: (params) ->
+        'user/' + params.id
 
-export default UserBadgePage
+export default ConnectedComponent(UserBadgePage)
