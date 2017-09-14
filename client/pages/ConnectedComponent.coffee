@@ -15,9 +15,13 @@ export default ConnectedComponent = (Component) ->
                 return Component.url(@props.match.params)
 
         dataOutdated: () ->
+            if not @props.tree
+                return true
+            if not @props.news
+                return true
             url = @url()
             if not url
-                returl false
+                return false
             if not @props.data
                 return true
             if @props.dataUrl == url
@@ -34,7 +38,7 @@ export default ConnectedComponent = (Component) ->
                     return
                         <CometSpinLoader />
             else
-                return`<Component  {...this.props} handleReload={this.handleReload}/>`
+                return `<Component  {...this.props} handleReload={this.handleReload}/>`
 
         componentWillMount: ->
             if not window?

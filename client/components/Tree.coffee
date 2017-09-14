@@ -13,7 +13,7 @@ BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
 ACTIVE_COLOR = "#fdf6e3"
 
 getHref = (material) ->
-    if material.type == "table"
+    if material.type == "link"
         return material.content
     else
         return "/material/#{material._id}"

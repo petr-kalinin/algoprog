@@ -13,6 +13,7 @@ import TablePage from './pages/TablePage'
 import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import RootPage from './pages/RootPage'
+import FullNewsPage from './pages/FullNewsPage'
 
 import Login from './components/Login'
 import Register from './components/Register'
@@ -57,6 +58,12 @@ export default [
         key: "material",
         component: MaterialPage,
         loadData: MaterialPage.loadData,
+    },
+    {
+        path: '/news',
+        key: "news",
+        component: FullNewsPage,
+        loadData: FullNewsPage.loadData,
     },
     {
         path: '/login',

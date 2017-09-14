@@ -2,19 +2,19 @@ React = require('react')
 
 import { Grid } from 'react-bootstrap'
 
-import Root from '../components/Root'
+import FullNews from '../components/FullNews'
 
 import ConnectedComponent from './ConnectedComponent'
 
-class RootPage extends React.Component
+class FullNewsPage extends React.Component
     constructor: (props) ->
         super(props)
 
     render:  () ->
         return
             <Grid fluid>
-                <Root tree={@props.tree}/>
+                {`<FullNews {...this.props}/>`}
             </Grid>
 
 
-export default ConnectedComponent(RootPage)
+export default ConnectedComponent(FullNewsPage)

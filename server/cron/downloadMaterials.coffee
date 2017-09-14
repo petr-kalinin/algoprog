@@ -488,6 +488,7 @@ class MaterialsDownloader
 
                 subTree = clone(subMaterial)
                 subTree.title = getTreeTitle(table)
+                subTree.type = "link"
                 thisTrees.push(subTree)
 
             material = new Material
@@ -516,6 +517,14 @@ class MaterialsDownloader
             material: material
             tree: tree
 
+    createNewsTree: ->
+        return
+            _id: "news",
+            type: "link"
+            content: "/news"
+            title: "Новости"
+            materials: []
+
     run: ->
         document = await downloadAndParse(url)
 
@@ -542,9 +551,12 @@ class MaterialsDownloader
         @fillPaths(mainPageMaterial, [])
         @save()
 
+        trees = (m.tree for m in materials)
+        trees.splice(1, 0, @createNewsTree())
+
         treeMaterial = new Material
             _id: "tree",
-            materials: (m.tree for m in materials)
+            materials: trees
         await treeMaterial.upsert()
 
         @saveNews()
