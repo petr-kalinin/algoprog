@@ -19,8 +19,8 @@ class SolvedByWeekPage extends React.Component
         sceletonProps = {
             @props...,
             location: {title: "Сданные задачи по неделям", _id: "table:#{@userList}:byWeek"},
-            showNews: "hide"#,
-            #showTree: "hide"
+            showNews: "hide",
+            showTree: "hide"
         }
         child = <SolvedByWeek userList={@userList} users={@props.data} me={@props.me} details={true}/>
         `<Sceleton {...sceletonProps}>{child}</Sceleton>`
