@@ -10,6 +10,7 @@ import Tree from './Tree'
 import News from './News'
 
 export default Sceleton = (props) ->
+
     <Grid fluid>
         <Helmet>
             {props.location?.title && <title>{props.location?.title}</title>}
@@ -18,11 +19,11 @@ export default Sceleton = (props) ->
             <Col xsHidden smHidden md={4} lg={3}>
                 <Tree tree={props.tree} path={props.location?.path} id={props.location?._id} />
             </Col>
-            <Col xs={12} sm={12} md={8} lg={6}>
+            <Col xs={12} sm={12} md={8} lg={6 + if props.hideNews then 3 else 0}>
                 {props.children}
             </Col>
-            <Col xsHidden smHidden mdHidden lg={3}>
+            {props.hideNews || <Col xsHidden smHidden mdHidden lg={3}>
                 <News news={props.news.materials} />
-            </Col>
+            </Col>}
         </Row>
     </Grid>

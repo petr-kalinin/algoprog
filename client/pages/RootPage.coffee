@@ -6,15 +6,4 @@ import Root from '../components/Root'
 
 import ConnectedComponent from './ConnectedComponent'
 
-class RootPage extends React.Component
-    constructor: (props) ->
-        super(props)
-
-    render:  () ->
-        return
-            <Grid fluid>
-                <Root tree={@props.tree}/>
-            </Grid>
-
-
-export default ConnectedComponent(RootPage)
+export default ConnectedComponent(Root)
