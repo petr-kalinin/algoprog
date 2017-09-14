@@ -24,8 +24,9 @@ renderFullPage = (html, data, helmet) ->
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/bundle.css"/>
-            <link rel="stylesheet" href="/informatics.css"/>
             <link rel="stylesheet" href="/bootstrap.min.css"/>
+            <link rel="stylesheet" href="/informatics.css"/>
+            <link rel="stylesheet" href="/main.css"/>
             <script>
                 window.__PRELOADED_STATE__ = ' + JSON.stringify(data) + ';
             </script>

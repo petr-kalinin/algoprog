@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet"
 
 import Tree from './Tree'
 import News from './News'
+import TopPanel from './TopPanel'
 
 SIZES = ["xs", "sm", "md", "lg"]
 
@@ -74,26 +75,41 @@ getSizes = (props) ->
 
     return {treeSize, newsSize, selfSize}
 
-export default Sceleton = (props) ->
-    path = props.location.path || props.news.path
-    breadPath = path.concat
-        _id: props.location._id
-        title: props.location.title
-    {treeSize, newsSize, selfSize} = getSizes(props)
-    <Grid fluid>
-        <Helmet>
-            {props.location?.title && <title>{props.location?.title}</title>}
-        </Helmet>
-        <Row>
-            <ColWrapper size={treeSize}>
-                <Tree tree={props.tree} path={props.location?.path || []} id={props.location?._id} />
-            </ColWrapper>
-            <ColWrapper size={selfSize}>
-                {props.hideBread || <Bread path={breadPath} id={props.location._id} /> }
-                {props.children}
-            </ColWrapper>
-            <ColWrapper size={newsSize}>
-                <News news={props.news.materials} />
-            </ColWrapper>
-        </Row>
-    </Grid>
+export default class Sceleton extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            showTree: props.showTree
+            showNews: props.showNews
+        @toggleTree = @toggleTree.bind(this)
+
+    toggleTree: () ->
+        newTree = if @state.showTree == "force" then "hide" else "force"
+        @setState({@state..., showTree: newTree})
+
+    render: () ->
+        path = @props.location.path || @props.news.path
+        breadPath = path.concat
+            _id: @props.location._id
+            title: @props.location.title
+        {treeSize, newsSize, selfSize} = getSizes(@state)
+        <div>
+            <Helmet>
+                {@props.location?.title && <title>{@props.location?.title}</title>}
+            </Helmet>
+            <TopPanel me={@props.me} toggleTree={@toggleTree}/>
+            <Grid fluid>
+                <Row>
+                    <ColWrapper size={treeSize}>
+                        <Tree tree={@props.tree} path={@props.location?.path || []} id={@props.location?._id} />
+                    </ColWrapper>
+                    <ColWrapper size={selfSize}>
+                        {@props.hideBread || <Bread path={breadPath} id={@props.location._id} /> }
+                        {@props.children}
+                    </ColWrapper>
+                    <ColWrapper size={newsSize}>
+                        <News news={@props.news.materials} />
+                    </ColWrapper>
+                </Row>
+            </Grid>
+        </div>
