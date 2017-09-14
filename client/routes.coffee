@@ -27,43 +27,36 @@ export default [
         path: '/userBadge/:id',
         key: "userBadge",
         component: UserBadgePage,
-        loadData: UserBadgePage.loadData,
     },
     {
         path: '/user/:id',
         key: "user",
         component: FullUserPage,
-        loadData: FullUserPage.loadData,
     },
     {
         path: '/table/:userList/:id',
         key: "table",
         component: TablePage
-        loadData: TablePage.loadData,
     },
     {
         path: '/dashboard',
         key: "dashboard",
         component: DashboardPage,
-        loadData: DashboardPage.loadData,
     },
     {
         path: '/solvedByWeek/:userList',
         key: "solvedByWeek",
         component: SolvedByWeekPage,
-        loadData: SolvedByWeekPage.loadData,
     },
     {
         path: '/material/:id',
         key: "material",
         component: MaterialPage,
-        loadData: MaterialPage.loadData,
     },
     {
         path: '/news',
         key: "news",
         component: FullNewsPage,
-        loadData: FullNewsPage.loadData,
     },
     {
         path: '/login',
@@ -80,7 +73,6 @@ export default [
         key: "/",
         exact: true,
         component: RootPage,
-        loadData: RootPage.loadData,
     },
     {
         component: NoMatch,
