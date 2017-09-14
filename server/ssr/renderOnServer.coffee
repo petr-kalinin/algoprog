@@ -27,6 +27,7 @@ renderFullPage = (html, data, helmet) ->
             <link rel="stylesheet" href="/bootstrap.min.css"/>
             <link rel="stylesheet" href="/informatics.css"/>
             <link rel="stylesheet" href="/main.css"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
             <script>
                 window.__PRELOADED_STATE__ = ' + JSON.stringify(data) + ';
             </script>
