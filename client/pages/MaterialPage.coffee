@@ -1,9 +1,7 @@
 React = require('react')
 
-import { Helmet } from "react-helmet"
-import { Grid } from 'react-bootstrap'
-
 import Material from '../components/Material'
+import Sceleton from '../components/Sceleton'
 import ConnectedComponent from './ConnectedComponent'
 
 class MaterialPage extends React.Component
@@ -14,11 +12,7 @@ class MaterialPage extends React.Component
         return "material/#{params.id}"
 
     render:  () ->
-        <Grid fluid>
-            <Helmet>
-                {@props.data?.title && <title>{@props.data.title}</title>}
-            </Helmet>
-            {`<Material {...this.props} material={this.props.data}/>`}
-        </Grid>
+        sceletonProps = {@props..., location: {title: @props.data?.title, path: @props.data.path, _id: @props.data._id}}
+        `<Sceleton {...sceletonProps}><Material {...this.props} material={this.props.data}/></Sceleton>`
 
 export default MaterialPageConnected = ConnectedComponent(MaterialPage)
