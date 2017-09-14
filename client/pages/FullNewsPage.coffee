@@ -1,6 +1,7 @@
 React = require('react')
 
 import { Grid } from 'react-bootstrap'
+import { Helmet } from "react-helmet"
 
 import FullNews from '../components/FullNews'
 
@@ -13,6 +14,9 @@ class FullNewsPage extends React.Component
     render:  () ->
         return
             <Grid fluid>
+                <Helmet>
+                    <title>Новости</title>
+                </Helmet>
                 {`<FullNews {...this.props}/>`}
             </Grid>
 
