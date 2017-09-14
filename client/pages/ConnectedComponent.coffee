@@ -14,8 +14,20 @@ export default ConnectedComponent = (Component) ->
             if Component.url
                 return Component.url(@props.match.params)
 
+        dataOutdated: () ->
+            url = @url()
+            if not url
+                returl false
+            if not @props.data
+                return true
+            if @props.dataUrl == url
+                return false
+            if decodeURIComponent(@props.dataUrl) == url
+                return false
+            return true
+
         render:  () ->
-            if @url() and (@props.dataUrl != @url() or not @props.data)
+            if @dataOutdated()
                 if Component.Placeholder
                     return <Component.Placeholder/>
                 else
