@@ -31,6 +31,7 @@
     "deep-equal": "*",
     "deepcopy": "^0.6.3",
     "express": "*",
+    "express-exceptions": "0.0.7",
     "express-session": "^1.15.4",
     "gulp": "*",
     "gulp-babel": "*",
