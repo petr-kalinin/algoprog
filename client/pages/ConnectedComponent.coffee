@@ -50,6 +50,7 @@ export default ConnectedComponent = (Component) ->
 
         componentWillUnmount: ->
             if @timeout
+                console.log "Clearing timeout"
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->

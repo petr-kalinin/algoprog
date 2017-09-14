@@ -4,6 +4,7 @@ import { Grid } from 'react-bootstrap'
 import { Helmet } from "react-helmet"
 
 import Dashboard from '../components/Dashboard'
+import Sceleton from '../components/Sceleton'
 import ConnectedComponent from './ConnectedComponent'
 
 class DashboardPage extends React.Component
@@ -17,13 +18,13 @@ class DashboardPage extends React.Component
         20000
 
     render:  () ->
-        return
-            <Grid fluid>
-                <Helmet>
-                    <title>Последние результаты</title>
-                </Helmet>
-                {`<Dashboard {...this.props.data}/>`}
-            </Grid>
+        sceletonProps = {
+            @props...,
+            location: {title: "Последние посылки", _id: "dashboard"},
+            showNews: "hide",
+            showTree: "hide"
+        }
+        `<Sceleton {...sceletonProps}><Dashboard {...this.props.data}/></Sceleton>`
 
 
 export default ConnectedComponent(DashboardPage)

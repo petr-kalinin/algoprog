@@ -7,8 +7,8 @@ import { withRouter } from 'react-router'
 
 import styles from "./Tree.css"
 
-MAX_GLOBAL_DEPTH = 1
-MAX_LOCAL_DEPTH = 1
+MAX_GLOBAL_DEPTH = 0
+MAX_LOCAL_DEPTH = 0
 BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
 ACTIVE_COLOR = "#fdf6e3"
 
@@ -30,11 +30,12 @@ markNeeded = (tree, id, path, globalDepth, localDepth) ->
     else
         tree.needed = globalDepth <= MAX_GLOBAL_DEPTH or localDepth <= MAX_LOCAL_DEPTH
         for m in tree.materials
-            markNeeded(m, id, path, globalDepth + 1, localDepth + 1)
-        if tree._id in path
-            tree.needed = true
-            for m in tree.materials
-                m.needed = true
+            subNeeded = markNeeded(m, id, path, globalDepth + 1, localDepth + 1)
+            tree.needed = tree.needed or subNeeded
+    tree.needed = tree.needed or tree._id in path
+    if tree.needed
+        for m in tree.materials
+            m.needed = true
     return tree.needed
 
 colorByIndent = (indent) ->

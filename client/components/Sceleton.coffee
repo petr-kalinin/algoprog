@@ -75,7 +75,8 @@ getSizes = (props) ->
     return {treeSize, newsSize, selfSize}
 
 export default Sceleton = (props) ->
-    breadPath = props.location.path.concat
+    path = props.location.path || props.news.path
+    breadPath = path.concat
         _id: props.location._id
         title: props.location.title
     {treeSize, newsSize, selfSize} = getSizes(props)
@@ -85,7 +86,7 @@ export default Sceleton = (props) ->
         </Helmet>
         <Row>
             <ColWrapper size={treeSize}>
-                <Tree tree={props.tree} path={props.location?.path} id={props.location?._id} />
+                <Tree tree={props.tree} path={props.location?.path || []} id={props.location?._id} />
             </ColWrapper>
             <ColWrapper size={selfSize}>
                 {props.hideBread || <Bread path={breadPath} id={props.location._id} /> }
