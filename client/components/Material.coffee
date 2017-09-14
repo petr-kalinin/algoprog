@@ -1,13 +1,8 @@
 React = require('react')
-import { Link } from 'react-router-dom'
-import { Row, Col, Breadcrumb } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
 
 import Problem from './Problem'
 import Level from './Level'
 import Contest from './Contest'
-import Tree from './Tree'
-import News from './News'
 
 Page = (props) ->
     <div dangerouslySetInnerHTML={{__html: props.material.content}}>
@@ -27,25 +22,7 @@ MaterialProper = (props) ->
     else
         <div>Unknown material type</div>
 
-Bread = (props) ->
-    <Breadcrumb>
-        {
-        props.path.map((p) ->
-            href = if p._id != "main" then "/material/" + p._id else "/"
-            <LinkContainer to={href} key={p._id} isActive={() -> false}>
-                 <Breadcrumb.Item active={p._id==props.id}>
-                    {p.title}
-                </Breadcrumb.Item>
-            </LinkContainer>
-        )
-        }
-    </Breadcrumb>
-
 export default Material = (props) ->
-    breadPath = props.material.path.concat
-        _id: props.material._id
-        title: props.material.title
     <div>
-        <Bread path={breadPath} id={props.material._id} />
         <MaterialProper material={props.material} />
     </div>

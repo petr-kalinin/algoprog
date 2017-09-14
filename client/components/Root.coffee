@@ -110,6 +110,6 @@ export default Root = (props) ->
             </PageHeader>
         </Grid>
         {
-        sceletonProps = {props..., location: {path: [], _id: null}, hideNews: true}
+        sceletonProps = {props..., location: {path: [], _id: "main"}, hideNews: true, hideBread:true}
         `<Sceleton {...sceletonProps}>{Inner}</Sceleton>`}
     </div>

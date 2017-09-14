@@ -420,6 +420,8 @@ class MaterialsDownloader
         material = new Material
             _id: "news",
             materials: @news
+            path: [{_id: "main", title: "/"}]
+
         await material.upsert()
 
     createTableMaterials: ->
