@@ -1,7 +1,5 @@
 React = require('react')
 
-import { Grid } from 'react-bootstrap'
-
 import Root from '../components/Root'
 
 import ConnectedComponent from './ConnectedComponent'

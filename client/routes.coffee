@@ -14,9 +14,9 @@ import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import RootPage from './pages/RootPage'
 import FullNewsPage from './pages/FullNewsPage'
+import RegisterPage from './pages/RegisterPage'
 
 import Login from './components/Login'
-import Register from './components/Register'
 
 class NoMatch extends React.Component
     render: () ->
@@ -66,7 +66,7 @@ export default [
     {
         path: '/register',
         key: "register",
-        component: Register,
+        component: RegisterPage,
     },
     {
         path: '/',
