@@ -20,17 +20,17 @@ export default TopPanel = (props) ->
         <Navbar.Header>
             <Navbar.Brand>
                 {
-                if props.myUser?.user
+                if props.myUser?.name
                     <span>
-                        <UserName user={props.myUser.user}/>
+                        <UserName user={props.myUser}/>
                         <span className={styles.separator}/>
-                        <span title="Уровень">{props.myUser.user.level.current}</span>
+                        <span title="Уровень">{props.myUser.level.current}</span>
                         <span className={styles.separator}/>
-                        <span title="Рейтинг" style={color: color(props.myUser.user)}>{props.myUser.user.rating}</span>
+                        <span title="Рейтинг" style={color: color(props.myUser)}>{props.myUser.rating}</span>
                         {" / "}
-                        <span title="Активность">{props.myUser.user.activity}</span>
+                        <span title="Активность">{props.myUser.activity.toFixed(1)}</span>
                         <span className={styles.separator}/>
-                        <CfStatus cf={props.myUser.user.cf} />
+                        <CfStatus cf={props.myUser.cf} />
                     </span>
                 else
                     "Неизвестный пользователь"

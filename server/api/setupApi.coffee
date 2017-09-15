@@ -84,7 +84,9 @@ export default setupApi = (app) ->
         res.json req.user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
-        res.json(await tableApi.fullUser(req.user.informaticsId))
+        User.findOne({_id: req.user.informaticsId}, (err, record) ->
+            res.json(record)
+        )
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
