@@ -11,8 +11,8 @@ class FullUserPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: (params) ->
-        return "fullUser/#{params.id}"
+    @url: (props) ->
+        return "fullUser/#{props.match.params.id}"
 
     render:  () ->
         sceletonProps = {

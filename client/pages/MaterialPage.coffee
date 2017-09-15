@@ -8,8 +8,8 @@ class MaterialPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: (params) ->
-        return "material/#{params.id}"
+    @url: (props) ->
+        return "material/#{props.match.params.id}"
 
     render:  () ->
         sceletonProps = {@props..., location: {title: @props.data?.title, path: @props.data.path, _id: @props.data._id}}

@@ -12,8 +12,8 @@ class TablePage extends React.Component
         @id = props.match.params.id
         @userList = props.match.params.userList
 
-    @url: (params) ->
-        'table/' + params.userList + '/' + params.id
+    @url: (props) ->
+        'table/' + props.match.params.userList + '/' + props.match.params.id
 
     render:  () ->
         sceletonProps = {

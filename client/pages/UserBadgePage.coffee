@@ -43,7 +43,7 @@ class UserBadgePage extends React.Component
     @getId: (match) ->
         match.params.id
 
-    @url: (params) ->
-        'user/' + params.id
+    @url: (props) ->
+        'user/' + props.match.params.id
 
 export default ConnectedComponent(UserBadgePage)

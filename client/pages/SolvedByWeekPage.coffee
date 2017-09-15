@@ -12,8 +12,8 @@ class SolvedByWeekPage extends React.Component
         super(props)
         @userList = props.match.params.userList
 
-    @url: (params) ->
-        'users/' + params.userList
+    @url: (props) ->
+        'users/' + props.match.params.userList
 
     render:  () ->
         sceletonProps = {

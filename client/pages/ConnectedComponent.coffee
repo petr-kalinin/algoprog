@@ -13,7 +13,7 @@ export default ConnectedComponent = (Component) ->
 
         url: ->
             if Component.url
-                return Component.url(@props.match.params)
+                return Component.url(@props)
 
         dataOutdated: () ->
             if not @props.tree
@@ -55,7 +55,7 @@ export default ConnectedComponent = (Component) ->
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
-            if @url() and (Component.url(prevProps.match.params) != Component.url(@props.match.params))
+            if @url() and (Component.url(prevProps) != Component.url(@props))
                 @requestData()
 
         requestData: () ->
@@ -99,6 +99,6 @@ export default ConnectedComponent = (Component) ->
             getData: (url) -> dispatch(actions.getData(url))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
             logout: () -> dispatch(actions.logout(dispatch))
-            reloadMyData: () -> dispatch(actions.getMe()); dispatch(actions.getMyUser()) 
+            reloadMyData: () -> dispatch(actions.getMe()); dispatch(actions.getMyUser())
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)
