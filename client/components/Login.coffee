@@ -1,17 +1,100 @@
 React = require('react')
+import { CometSpinLoader } from 'react-css-loaders';
+import { withRouter } from 'react-router'
 
-export default class Login extends React.Component
+import Grid from 'react-bootstrap/lib/Grid'
+import Form from 'react-bootstrap/lib/Form'
+import FormGroup from 'react-bootstrap/lib/FormGroup'
+import FormControl from 'react-bootstrap/lib/FormControl'
+import ControlLabel from 'react-bootstrap/lib/ControlLabel'
+import HelpBlock from 'react-bootstrap/lib/HelpBlock'
+import Button from 'react-bootstrap/lib/Button'
+
+import callApi from '../lib/callApi'
+
+import FieldGroup from './FieldGroup'
+
+class Login extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            username: ""
+            password: ""
+        @setField = @setField.bind(this)
+        @tryLogin = @tryLogin.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    tryLogin: (event) ->
+        event.preventDefault()
+        newState = {
+            @state...
+            loading: true
+        }
+        @setState(newState)
+        try
+            data = await callApi "login", {
+                username: @state.username,
+                password: @state.password,
+            }
+            if not data.logged
+                throw "Error"
+            @props.reloadMyData()
+            @props.history.push("/")
+        catch
+            data =
+                error: true
+                message: "Неверный логин или пароль"
+            newState = {
+                @state...,
+                loading: false,
+                data...
+            }
+            @setState(newState)
+
+
     render:  () ->
-        <form action="/api/login" method="post">
-            <div>
-                <label>Username:</label>
-                <input type="text" name="username"/>
-            </div>
-            <div>
-                <label>Password:</label>
-                <input type="password" name="password"/>
-            </div>
-            <div>
-                <input type="submit" value="Log In"/>
-            </div>
-        </form>
+        canSubmit = @state.username && @state.password && !@state.loading
+        <Grid fluid>
+            <h1>Вход в систему</h1>
+
+            <form onSubmit={@tryLogin}>
+                {
+                if not @state.loading
+                    <div>
+                        <FieldGroup
+                            id="username"
+                            label="Имя пользователя"
+                            type="text"
+                            setField={@setField}
+                            state={@state}
+                            validationState={@state.error && 'error'}/>
+                        <FieldGroup
+                            id="password"
+                            label="Пароль"
+                            type="password"
+                            setField={@setField}
+                            state={@state}
+                            validationState={@state.error && 'error'}/>
+                    </div>
+                else
+                    <CometSpinLoader/>
+                }
+                {
+                @state.message &&
+                <FormGroup>
+                    <FormControl.Static>
+                        {@state.message}
+                    </FormControl.Static>
+                </FormGroup>
+                }
+                <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                    Войти
+                </Button>
+            </form>
+        </Grid>
+
+export default withRouter(Login)

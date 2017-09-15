@@ -15,8 +15,7 @@ import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import RootPage from './pages/RootPage'
 import FullNewsPage from './pages/FullNewsPage'
 import RegisterPage from './pages/RegisterPage'
-
-import Login from './components/Login'
+import LoginPage from './pages/LoginPage'
 
 class NoMatch extends React.Component
     render: () ->
@@ -61,7 +60,7 @@ export default [
     {
         path: '/login',
         key: "login",
-        component: Login,
+        component: LoginPage,
     },
     {
         path: '/register',

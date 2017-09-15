@@ -13,16 +13,7 @@ import Modal from 'react-bootstrap/lib/Modal'
 
 import callApi from '../lib/callApi'
 
-FieldGroup = ({ id, label, help, setField, state, validationState, props... }) =>
-    onChange = (e) =>
-        setField(id, e.target.value)
-    value = if "value" of props then props.value else state[id]
-    <FormGroup controlId={id} validationState={validationState}>
-        <ControlLabel>{label}</ControlLabel>
-        {`<FormControl {...props} value={value} onChange={onChange}/>`}
-        {help && <HelpBlock>{help}</HelpBlock>}
-    </FormGroup>
-
+import FieldGroup from './FieldGroup'
 
 class Register extends React.Component
     constructor: (props) ->

@@ -38,7 +38,6 @@ export default TopPanel = (props) ->
         <Navbar.Form pullRight>
             {
             if props.me?._id
-                console.log props
                 <ButtonGroup>
                     {
                     ###

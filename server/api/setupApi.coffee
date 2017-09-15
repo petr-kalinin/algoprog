@@ -20,6 +20,8 @@ import * as downloadSubmits from "../cron/downloadSubmits"
 
 import InformaticsUser from '../informatics/InformaticsUser'
 
+ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
+
 wrap = (fn) ->
     (args...) ->
         try
@@ -28,6 +30,9 @@ wrap = (fn) ->
             args[2](error)
 
 export default setupApi = (app) ->
+    app.get '/api/forbidden', wrap (req, res) ->
+        res.status(403).send('No permissions')
+
     app.post '/api/register', wrap (req, res, next) ->
         logger.info("Try register user", req.body.username)
         {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin} = req.body
@@ -75,13 +80,13 @@ export default setupApi = (app) ->
         req.logout()
         res.json({loggedOut: true})
 
-    app.get '/api/me', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
         res.json req.user
 
-    app.get '/api/myUser', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
         res.json(await tableApi.fullUser(req.user.informaticsId))
 
-    app.post '/api/user/:id/set', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         cfLogin = req.body.cf.login
@@ -113,25 +118,25 @@ export default setupApi = (app) ->
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
 
-    app.get '/api/updateResults', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.get '/api/updateResults', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         await updateAllResults()
         res.send('OK')
 
-    app.get '/api/downloadMaterials', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.get '/api/downloadMaterials', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         downloadMaterials()
         res.send('OK')
 
-    app.get '/api/downloadContests', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         downloadContests.run()
         res.send('OK')
 
-    app.get '/api/downloadAllSubmits', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+    app.get '/api/downloadAllSubmits', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         downloadSubmits.runAll()
