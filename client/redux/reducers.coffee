@@ -1,11 +1,18 @@
 import { combineReducers } from 'redux'
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
-import { GET_ME, GET_TREE, GET_NEWS, GET_DATA, SAVE_DATA_PROMISES } from './actions'
+import { GET_ME, GET_MY_USER, GET_TREE, GET_NEWS, GET_DATA, SAVE_DATA_PROMISES } from './actions'
 
 me = (state=null, action) ->
     switch action.type
         when "#{GET_ME}_#{FULFILLED}"
+            return action.payload
+        else
+            return state
+
+myUser = (state=null, action) ->
+    switch action.type
+        when "#{GET_MY_USER}_#{FULFILLED}"
             return action.payload
         else
             return state
@@ -43,6 +50,7 @@ dataPromises = (state=[], action) ->
 export default rootReducer =
     combineReducers {
         me,
+        myUser,
         tree,
         news,
         data,

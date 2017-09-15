@@ -7,6 +7,11 @@ import Navbar from 'react-bootstrap/lib/Navbar'
 import Button from 'react-bootstrap/lib/Button'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 
+import UserName, {color} from './UserName'
+import CfStatus from './CfStatus'
+
+import styles from './TopPanel.css'
+
 export default TopPanel = (props) ->
     <Navbar fixedTop fluid>
         <Navbar.Form pullLeft>
@@ -14,22 +19,49 @@ export default TopPanel = (props) ->
         </Navbar.Form>
         <Navbar.Header>
             <Navbar.Brand>
-                <a href="#">Неизвестный пользователь</a>
+                {
+                if props.myUser?.user
+                    <span>
+                        <UserName user={props.myUser.user}/>
+                        <span className={styles.separator}/>
+                        <span title="Рейтинг" style={color: color(props.myUser.user)}>{props.myUser.user.rating}</span>
+                        {" / "}
+                        <span title="Активность">{props.myUser.user.activity}</span>
+                        <span className={styles.separator}/>
+                        <CfStatus cf={props.myUser.user.cf} />
+                    </span>
+                else
+                    "Неизвестный пользователь"
+                }
             </Navbar.Brand>
         </Navbar.Header>
         <Navbar.Form pullRight>
-            <ButtonGroup>
-                <LinkContainer to="/register" isActive={() -> false}>
-                    <Button bsStyle="primary">
-                        <FontAwesome name="user-plus"/> Регистрация
-                    </Button>
-                </LinkContainer>
-                <LinkContainer to="/login" isActive={() -> false}>
+            {
+            if props.me?._id
+                <ButtonGroup>
+                    <LinkContainer to="/profile" isActive={() -> false}>
+                        <Button bsStyle="primary">
+                            <FontAwesome name="cog"/> Профиль
+                        </Button>
+                    </LinkContainer>
                     <Button bsStyle="success">
-                        <FontAwesome name="sign-in"/> Вход
+                        <FontAwesome name="sign-out"/> Выход
                     </Button>
-                </LinkContainer>
-            </ButtonGroup>
+                </ButtonGroup>
+            else
+                <ButtonGroup>
+                    <LinkContainer to="/register" isActive={() -> false}>
+                        <Button bsStyle="primary">
+                            <FontAwesome name="user-plus"/> Регистрация
+                        </Button>
+                    </LinkContainer>
+                    <LinkContainer to="/login" isActive={() -> false}>
+                        <Button bsStyle="success">
+                            <FontAwesome name="sign-in"/> Вход
+                        </Button>
+                    </LinkContainer>
+                </ButtonGroup>
+            }
         </Navbar.Form>
     </Navbar>
 

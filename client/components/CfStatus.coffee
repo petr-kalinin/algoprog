@@ -6,7 +6,7 @@ export default class CfStatus extends React.Component
     render:  () ->
         cf = @props.cf
 
-        if not cf or not cf.login
+        if not cf or not cf.login or not cf.rating
             return null
 
         cfProgressColor = "inherit"

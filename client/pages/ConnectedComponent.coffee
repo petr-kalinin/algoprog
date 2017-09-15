@@ -58,7 +58,7 @@ export default ConnectedComponent = (Component) ->
                 @requestData()
 
         requestData: () ->
-            promises = [@props.getMe(), @props.getTree(), @props.getNews()]
+            promises = [@props.getMe(), @props.getTree(), @props.getNews(), @props.getMyUser()]
             if @url()
                 promises.push(@props.getData(@url()))
             return promises
@@ -81,6 +81,7 @@ export default ConnectedComponent = (Component) ->
     mapStateToProps = (state, ownProps) ->
         return
             me: state.me
+            myUser: state.myUser
             tree: state.tree
             news: state.news
             dataUrl: state.data.url
@@ -89,6 +90,7 @@ export default ConnectedComponent = (Component) ->
     mapDispatchToProps = (dispatch, ownProps) ->
         return
             getMe: () -> dispatch(actions.getMe())
+            getMyUser: () -> dispatch(actions.getMyUser())
             getTree: () -> dispatch(actions.getTree())
             getNews: () -> dispatch(actions.getNews())
             getData: (url) -> dispatch(actions.getData(url))

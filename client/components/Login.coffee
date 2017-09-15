@@ -1,8 +1,8 @@
 React = require('react')
 
-export default class Login extends React.Component 
+export default class Login extends React.Component
     render:  () ->
-        <form action="/login" method="post">
+        <form action="/api/login" method="post">
             <div>
                 <label>Username:</label>
                 <input type="text" name="username"/>

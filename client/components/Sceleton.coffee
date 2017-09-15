@@ -97,7 +97,7 @@ export default class Sceleton extends React.Component
             <Helmet>
                 {@props.location?.title && <title>{@props.location?.title}</title>}
             </Helmet>
-            <TopPanel me={@props.me} toggleTree={@toggleTree}/>
+            <TopPanel me={@props.me} myUser={@props.myUser} toggleTree={@toggleTree}/>
             <Grid fluid>
                 <Row>
                     <ColWrapper size={treeSize}>
