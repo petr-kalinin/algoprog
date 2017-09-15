@@ -31,29 +31,29 @@ usersSchema = new mongoose.Schema
         color: String,
         activity: Number,
         progress: Number
-        
+
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
     try
         @update(this, {upsert: true})
     catch
         logger.info "Could not upsert a user"
-    
+
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
     logger.debug "calculated chocos", @name, @chocos
     @update({$set: {chocos: @chocos}})
-        
+
 usersSchema.methods.updateRatingEtc = ->
     res = await calculateRatingEtc this
     logger.debug "updateRatingEtc", @name, res
     @update({$set: res})
-    
+
 usersSchema.methods.updateLevel = ->
     @level.current = await calculateLevel @_id, @level.base, new Date("2100-01-01")
     @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
-    
+
 usersSchema.methods.updateCfRating = ->
     logger.debug "Updating cf rating ", @name
     res = await calculateCfRating this
@@ -74,27 +74,30 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     await @update({$set: {"cf.login": cfLogin}})
     @cf.login = cfLogin
     @updateCfRating()
-    
+
 
 usersSchema.statics.findByList = (list) ->
     User.find({userList: list}).sort({active: -1, "level.current": -1, ratingSort: -1})
 
 usersSchema.statics.findAll = (list) ->
     User.find {}
-    
+
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await updateResults(userId, dirtyResults)
     u = await User.findById(userId)
     await u.updateChocos()
     await u.updateRatingEtc()
     await u.updateLevel()
-    
-    
+
+
 usersSchema.index
     userList: 1
     active: -1
     level: -1
     ratingSort: -1
+
+usersSchema.index
+    username: 1
 
 User = mongoose.model('Users', usersSchema);
 

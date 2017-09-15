@@ -1,5 +1,6 @@
 React = require('react')
 import { CometSpinLoader } from 'react-css-loaders';
+import { withRouter } from 'react-router'
 
 import Grid from 'react-bootstrap/lib/Grid'
 import Form from 'react-bootstrap/lib/Form'
@@ -8,14 +9,9 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
+import Modal from 'react-bootstrap/lib/Modal'
 
 import callApi from '../lib/callApi'
-
-testSubmit = (event) ->
-    event.preventDefault()
-    username = document.getElementById("informatics-username").value
-    password = document.getElementById("informatics-password").value
-    console.log await callApi "informatics/userData", {username, password}
 
 FieldGroup = ({ id, label, help, setField, state, validationState, props... }) =>
     onChange = (e) =>
@@ -28,16 +24,21 @@ FieldGroup = ({ id, label, help, setField, state, validationState, props... }) =
     </FormGroup>
 
 
-export default class Register extends React.Component
+class Register extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            username: "111"
-            password: "222"
-            informatics_username: ""
-            informatics_password: ""
+            username: ""
+            password: ""
+            password2: ""
+            informaticsUsername: ""
+            informaticsPassword: ""
+            aboutme: ""
+            cfLogin: ""
         @setField = @setField.bind(this)
         @updateInformatics = @updateInformatics.bind(this)
+        @tryRegister = @tryRegister.bind(this)
+        @closeModal = @closeModal.bind(this)
 
     setField: (field, value) ->
         newState = {@state...}
@@ -45,7 +46,7 @@ export default class Register extends React.Component
         @setState(newState)
 
     updateInformatics: () ->
-        if @state.informatics_username and @state.informatics_password
+        if @state.informaticsUsername and @state.informaticsPassword
             newState = {
                 @state...
                 informaticsData:
@@ -54,22 +55,57 @@ export default class Register extends React.Component
             @setState(newState)
             try
                 data = await callApi "informatics/userData", {
-                    username: @state.informatics_username,
-                    password: @state.informatics_password
+                    username: @state.informaticsUsername,
+                    password: @state.informaticsPassword
                 }
-                console.log data
                 if not ("name" of data)
                     throw "Can't find name"
             catch
                 data =
                     error: true
-            console.log data
             newState = {
                 @state...
                 informaticsData: data
             }
             @setState(newState)
 
+    tryRegister: (event) ->
+        event.preventDefault()
+        newState = {
+            @state...
+            registered:
+                loading: true
+        }
+        @setState(newState)
+        try
+            data = await callApi "register", {
+                username: @state.username,
+                password: @state.password,
+                informaticsUsername: @state.informaticsUsername,
+                informaticsPassword: @state.informaticsPassword
+                aboutme: @state.aboutme
+            }
+        catch
+            data =
+                registered:
+                    error: true
+                    message: "Неопознанная ошибка"
+        newState = {
+            @state...
+            registered: data.registered
+        }
+        @setState(newState)
+
+    closeModal: () ->
+        if @state.registered.error
+            newState = {@state..., registered: null}
+            @setState(newState)
+        else
+            data = await callApi "login", {
+                username: @state.username,
+                password: @state.password
+            }
+            @props.history.push("/")
 
     render: () ->
         validationState = null
@@ -81,7 +117,7 @@ export default class Register extends React.Component
             validationState = 'warning'
 
         passwordValidationState = null
-        if @state.password == @state.password2
+        if @state.password and @state.password == @state.password2
             passwordValidationState = 'success'
         else if @state.password and @state.password2
             passwordValidationState = 'error'
@@ -91,7 +127,7 @@ export default class Register extends React.Component
         <Grid fluid>
             <h1>Регистрация</h1>
 
-            <form onSubmit={testSubmit}>
+            <form onSubmit={@tryRegister}>
                 <FieldGroup
                     id="username"
                     label="Имя пользователя"
@@ -128,7 +164,7 @@ export default class Register extends React.Component
                 Если вы уже закончили школу, то не заполняйте поле "класс".</p>
 
                 <FieldGroup
-                    id="informatics_username"
+                    id="informaticsUsername"
                     label="Ваш логин на informatics"
                     type="text"
                     setField={@setField}
@@ -136,7 +172,7 @@ export default class Register extends React.Component
                     onBlur={@updateInformatics}
                     validationState={validationState}/>
                 <FieldGroup
-                    id="informatics_password"
+                    id="informaticsPassword"
                     label="Ваш пароль на informatics"
                     type="password"
                     setField={@setField}
@@ -144,8 +180,8 @@ export default class Register extends React.Component
                     onBlur={@updateInformatics}
                     validationState={validationState}/>
 
-                <h2>Прочие данные</h2>
-                <p>Они выгружаются из вашего аккаунта на informatics. Если они неверны,
+                <h2>Личная информация</h2>
+                <p>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
                 исправьте данные в вашем профиле там.</p>
                 {
                 @state.informaticsData?.loading && <div>
@@ -168,45 +204,86 @@ export default class Register extends React.Component
                 </FormGroup>
                 }
                 {
-                @state.informaticsData?.name &&
+                (@state.informaticsData?.name or not @state.informaticsData)&&
                 <div>
                     <FieldGroup
-                        id="informatics_name"
+                        id="informaticsName"
                         label="Имя"
                         type="text"
-                        value={@state.informaticsData.name || ""}
+                        value={@state.informaticsData?.name || ""}
                         disabled/>
                     <FieldGroup
-                        id="informatics_class"
-                        label={"Класс в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году"}
+                        id="informaticsClass"
+                        label={"Класс" + (@state.informaticsData &&
+                        "в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году")}
                         type="text"
-                        value={@state.informaticsData.class || ""}
+                        value={@state.informaticsData?.class || ""}
                         disabled/>
                     <FieldGroup
-                        id="informatics_school"
+                        id="informaticsSchool"
                         label="Школа"
                         type="text"
-                        value={@state.informaticsData.school || ""}
+                        value={@state.informaticsData?.school || ""}
                         disabled/>
                     <FieldGroup
-                        id="informatics_city"
+                        id="informaticsCity"
                         label="Город"
                         type="text"
-                        value={@state.informaticsData.city || ""}
+                        value={@state.informaticsData?.city || ""}
                         disabled/>
                 </div>
                 }
 
-                <h2>О вас</h2>
+                <h2>Аккаунт на codeforces</h2>
+
+                <p>Укажите свой логин на codeforces, если он у вас есть. Если вы там не зарегистрированы — не страшно,
+                просто не заполняйте поле ниже.</p>
+                <FieldGroup
+                    id="cfLogin"
+                    label=""
+                    type="text"
+                    setField={@setField}
+                    state={@state}/>
+
+                <h2>О себе</h2>
                 <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
-                а также участвовали ли вы в олимпиадах по программированию и по математике.</p>
+                а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
+                можете не писать ничего.</p>
 
                 <FormGroup controlId="aboutme">
-                  <FormControl componentClass="textarea" placeholder="" />
+                    <FieldGroup
+                        id="aboutme"
+                        label=""
+                        componentClass="textarea"
+                        setField={@setField}
+                        state={@state}/>
                 </FormGroup>
 
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
                     Зарегистрироваться
                 </Button>
             </form>
+            {
+            @state.registered &&
+            <div className="static-modal">
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.Title>Регистрация</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {@state.registered.loading && <CometSpinLoader />}
+                        {@state.registered.error && "Ошибка: " + @state.registered.message}
+                        {@state.registered.success && "Регистрация успешна!"}
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        {not @state.registered.loading && <Button bsStyle="primary" onClick={@closeModal}>OK</Button>}
+                    </Modal.Footer>
+
+                </Modal.Dialog>
+            </div>
+            }
         </Grid>
+
+export default withRouter(Register)

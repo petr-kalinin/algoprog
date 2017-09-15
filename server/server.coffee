@@ -32,11 +32,6 @@ app.get '/status', (req, res) ->
     logger.info "Query string", req.query
     res.send "OK"
 
-app.post('/login', passport.authenticate('local',
-    successRedirect: '/api/me',
-    failureRedirect: '/login'
-))
-
 app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)

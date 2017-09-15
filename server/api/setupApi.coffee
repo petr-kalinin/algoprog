@@ -1,4 +1,5 @@
 connectEnsureLogin = require('connect-ensure-login')
+passport = require('passport')
 
 import User from '../models/user'
 import Result from '../models/result'
@@ -29,19 +30,53 @@ wrap = (fn) ->
 export default setupApi = (app) ->
     app.post '/api/register', wrap (req, res, next) ->
         logger.info("Try register user", req.body.username)
-        user = new RegisteredUser
-            username: req.body.username
-            admin: false
-        RegisteredUser.register user, req.body.password, (err) ->
-            if (err)
-                logger.error("Can register user", err)
-                return next err
-            logger.info("Regitered user")
-            res.redirect '/'
+        {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin} = req.body
 
-    app.get('/api/me', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+        informaticsUser = new InformaticsUser(informaticsUsername, informaticsPassword)
+        informaticsData = await informaticsUser.getData()
+
+        newUser = new User(
+            _id: informaticsData.id,
+            name: informaticsData.name,
+            userList: "unknown",
+        )
+        if cfLogin
+            newUser.cf =
+                login: cfLogin
+        await newUser.upsert()
+        if cfLogin
+            await newUser.updateCfRating()
+        await newUser.updateLevel()
+        await newUser.updateRatingEtc()
+
+        newRegisteredUser = new RegisteredUser({
+            username,
+            informaticsId: informaticsData.id,
+            informaticsUsername,
+            informaticsPassword,
+            aboutme,
+            admin: false
+        })
+        RegisteredUser.register newRegisteredUser, req.body.password, (err) ->
+            if (err)
+                logger.error("Cant register user", err)
+                res.json
+                    registered:
+                        error: true
+                        message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
+            else
+                logger.info("Registered user")
+                res.json({registered: {success: true}})
+
+    app.post '/api/login', passport.authenticate('local'), wrap (req, res) ->
+        res.json({logged: true})
+
+
+    app.get '/api/me', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
         res.json req.user
-    )
+
+    app.get '/api/myUser', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
+        res.json(await tableApi.fullUser(req.user.informaticsId))
 
     app.post '/api/user/:id/set', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
         if not req.user?.admin
