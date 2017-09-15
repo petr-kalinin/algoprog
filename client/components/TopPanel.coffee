@@ -24,6 +24,8 @@ export default TopPanel = (props) ->
                     <span>
                         <UserName user={props.myUser.user}/>
                         <span className={styles.separator}/>
+                        <span title="Уровень">{props.myUser.user.level.current}</span>
+                        <span className={styles.separator}/>
                         <span title="Рейтинг" style={color: color(props.myUser.user)}>{props.myUser.user.rating}</span>
                         {" / "}
                         <span title="Активность">{props.myUser.user.activity}</span>
