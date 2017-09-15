@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
-import { GET_ME, GET_MY_USER, GET_TREE, GET_NEWS, GET_DATA, SAVE_DATA_PROMISES } from './actions'
+import { GET_ME, GET_MY_USER, GET_TREE, GET_NEWS, GET_DATA, GET_SUBMITS, SAVE_DATA_PROMISES } from './actions'
 
 me = (state=null, action) ->
     switch action.type
@@ -40,6 +40,15 @@ data = (state={}, action) ->
         else
             return state
 
+submits = (state={}, action) ->
+    switch action.type
+        when "#{GET_SUBMITS}_#{FULFILLED}"
+            return
+                data: action.payload
+                url: action.meta.url
+        else
+            return state
+
 dataPromises = (state=[], action) ->
     if action.type == SAVE_DATA_PROMISES
         return state.concat(action.payload.dataPromises)
@@ -54,5 +63,6 @@ export default rootReducer =
         tree,
         news,
         data,
+        submits,
         dataPromises
     }

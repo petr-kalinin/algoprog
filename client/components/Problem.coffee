@@ -1,10 +1,16 @@
 React = require('react')
-import { Link } from 'react-router-dom'
+
+import SubmitList from './SubmitList'
+
+problemId = (props) ->
+    props.material._id.substring(1)
 
 export default Problem = (props) ->
-    href = "http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=" + props.material._id.substring(1)
+    href = "http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=" + problemId(props)
     <div>
         <div dangerouslySetInnerHTML={{__html: props.material.content}}>
         </div>
-        <a href={href}>Задача на informatics</a>
+        <p><a href={href}>Задача на informatics</a></p>
+        <h4>Попытки</h4>
+        {`<SubmitList {...props}/>`}
     </div>

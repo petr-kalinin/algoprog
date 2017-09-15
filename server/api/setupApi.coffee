@@ -2,6 +2,7 @@ connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
 
 import User from '../models/user'
+import Submit from '../models/submit'
 import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
@@ -116,6 +117,9 @@ export default setupApi = (app) ->
 
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
+
+    app.get '/api/submits/:user/:problem', wrap (req, res) ->
+        res.json(await Submit.findByUserAndProblem(req.params.user, req.params.problem))
 
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))

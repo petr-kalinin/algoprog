@@ -5,6 +5,7 @@ export GET_MY_USER = 'GET_MY_USER'
 export GET_TREE = 'GET_TREE'
 export GET_NEWS = 'GET_NEWS'
 export GET_DATA = 'GET_DATA'
+export GET_SUBMITS = 'GET_SUBMITS'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 
@@ -31,6 +32,13 @@ export getNews = () ->
 export getData = (url) ->
     return
         type: GET_DATA
+        payload: callApi url
+        meta:
+            url: url
+
+export getSubmits = (url) ->
+    return
+        type: GET_SUBMITS
         payload: callApi url
         meta:
             url: url

@@ -9,7 +9,6 @@ export default ConnectedComponent = (Component) ->
         constructor: (props) ->
             super(props)
             @handleReload = @handleReload.bind(this)
-            @handleLogout = @handleLogout.bind(this)
 
         url: ->
             if Component.url
@@ -67,16 +66,14 @@ export default ConnectedComponent = (Component) ->
         handleReload: () ->
             @requestData()
 
-        handleLogout: () ->
-
         requestDataAndSetTimeout: () ->
             try
                 await Promise.all(@requestData())
-                console.log "Updated data"
+                console.log "Updated data", @url()
             catch
-                console.log "Can't reload data"
+                console.log "Can't reload data", @url()
             if Component.timeout?()
-                console.log "Setting timeout"
+                console.log "Setting timeout", @url()
                 @timeout = setTimeout((() => @requestDataAndSetTimeout()), Component.timeout())
 
 
