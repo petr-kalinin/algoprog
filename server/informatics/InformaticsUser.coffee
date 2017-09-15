@@ -3,16 +3,31 @@ request = require('request-promise-native')
 
 import download from '../lib/download'
 
+# this will give some mistake due to leap years, but we will neglect it
+MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
+
 getClass = (year) ->
-    console.log "year=", year
     graduateDate = new Date(year, 7, 31)  # 31 august
     now = new Date()
     time = graduateDate - now
     if time < 0
-        return 12
+        return null
     else
-        # this will give some mistake due to leap years, but we will neglect it
-        return 11 - Math.floor(time / 1000 / 60 / 60 / 24/ 365)
+        return 11 - Math.floor(time / MS_PER_YEAR)
+
+getCurrentYearStart = () ->
+    baseDate = new Date(1990, 7, 31)
+    now = new Date()
+    baseTime = now - baseDate
+    baseYears = Math.floor(baseTime / MS_PER_YEAR)
+    currentYearStart = baseDate.getTime() + baseYears * MS_PER_YEAR
+    return new Date(currentYearStart).getFullYear()
+
+getGraduateYear = (cl) ->
+    yearStart = getCurrentYearStart()
+    yearStartDate = new Date(yearStart, 7, 31)
+    graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
+    return new Date(graduateDate).getFullYear()
 
 export default class InformaticsUser
     constructor: (@username, @password) ->
@@ -50,6 +65,7 @@ export default class InformaticsUser
                   "id_city",
                   "id_country",
                   "id_profile_field_School",
+                  "id_profile_field_class",
                   "id_profile_field_graduateyear"]
         data = {}
         for field in fields
@@ -58,12 +74,22 @@ export default class InformaticsUser
         @city = data.id_city
         @country = data.id_country
         @school = data.id_profile_field_School
-        @graduateYear = +data.id_profile_field_graduateyear + 2008
-        @class = getClass(@graduateYear)
+        # 'values' for class select are inverted and start from 0 for 11 class
+        @class = 11 - data.id_profile_field_class
+        if @class <= 2
+            @class = null
+        if @class
+            @graduateYear = getGraduateYear(@class)
+            @class = getClass(@graduateYear)
+        else
+            @graduateYear = data.id_profile_field_graduateyear
 
         return
+            id: @id
             name: @name
             class: @class
             school: @school
             city: @city
+            graduateYear: @graduateYear
             country: @country
+            currentYearStart: getCurrentYearStart()

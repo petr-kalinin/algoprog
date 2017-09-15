@@ -17,7 +17,7 @@ import downloadMaterials from '../cron/downloadMaterials'
 import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
 
-import InformaticsUser from '../informatics/api'
+import InformaticsUser from '../informatics/InformaticsUser'
 
 wrap = (fn) ->
     (args...) ->
