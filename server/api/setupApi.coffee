@@ -71,6 +71,9 @@ export default setupApi = (app) ->
     app.post '/api/login', passport.authenticate('local'), wrap (req, res) ->
         res.json({logged: true})
 
+    app.get '/api/logout', wrap (req, res) ->
+        req.logout()
+        res.json({loggedOut: true})
 
     app.get '/api/me', connectEnsureLogin.ensureLoggedIn(), wrap (req, res) ->
         res.json req.user

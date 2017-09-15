@@ -9,6 +9,7 @@ export default ConnectedComponent = (Component) ->
         constructor: (props) ->
             super(props)
             @handleReload = @handleReload.bind(this)
+            @handleLogout = @handleLogout.bind(this)
 
         url: ->
             if Component.url
@@ -66,6 +67,8 @@ export default ConnectedComponent = (Component) ->
         handleReload: () ->
             @requestData()
 
+        handleLogout: () ->
+
         requestDataAndSetTimeout: () ->
             try
                 await Promise.all(@requestData())
@@ -95,5 +98,6 @@ export default ConnectedComponent = (Component) ->
             getNews: () -> dispatch(actions.getNews())
             getData: (url) -> dispatch(actions.getData(url))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
+            logout: () -> dispatch(actions.logout(dispatch))
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)

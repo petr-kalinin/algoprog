@@ -38,13 +38,18 @@ export default TopPanel = (props) ->
         <Navbar.Form pullRight>
             {
             if props.me?._id
+                console.log props
                 <ButtonGroup>
+                    {
+                    ###
                     <LinkContainer to="/profile" isActive={() -> false}>
                         <Button bsStyle="primary">
                             <FontAwesome name="cog"/> Профиль
                         </Button>
                     </LinkContainer>
-                    <Button bsStyle="success">
+                    ###
+                    }
+                    <Button bsStyle="success" onClick={props.handleLogout}>
                         <FontAwesome name="sign-out"/> Выход
                     </Button>
                 </ButtonGroup>

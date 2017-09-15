@@ -6,6 +6,7 @@ export GET_TREE = 'GET_TREE'
 export GET_NEWS = 'GET_NEWS'
 export GET_DATA = 'GET_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
+export LOGOUT = 'LOGOUT'
 
 export getMe = () ->
     return
@@ -39,3 +40,12 @@ export saveDataPromises = (promises) ->
         type: SAVE_DATA_PROMISES
         payload:
             dataPromises: promises
+
+doLogout = (dispatch) ->
+    await callApi 'logout'
+    await Promise.all([dispatch(getMe()), dispatch(getMyUser())])
+
+export logout = (dispatch) ->
+    return
+        type: LOGOUT
+        payload: doLogout dispatch
