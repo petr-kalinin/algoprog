@@ -8,7 +8,7 @@ registeredUserSchema = new mongoose.Schema
     informaticsId: Number
     aboutme: String
 
-registeredUserSchema.plugin(passportLocalMongoose, {selectFields: ["last", "attempts", "username", "admin", "informaticsId"]});
+registeredUserSchema.plugin(passportLocalMongoose);
 
 RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);
 

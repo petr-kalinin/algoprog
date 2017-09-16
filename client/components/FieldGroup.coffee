@@ -11,6 +11,6 @@ export default FieldGroup = ({ id, label, help, setField, state, validationState
     value = if "value" of props then props.value else state[id]
     <FormGroup controlId={id} validationState={validationState}>
         <ControlLabel>{label}</ControlLabel>
-        {`<FormControl {...props} value={value} onChange={onChange}/>`}
+        {`<FormControl {...props} value={value} onChange={onChange} name={id}/>`}
         {help && <HelpBlock>{help}</HelpBlock>}
     </FormGroup>

@@ -81,8 +81,15 @@ export default setupApi = (app) ->
         req.logout()
         res.json({loggedOut: true})
 
+    app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
+        informaticsUser = new InformaticsUser(req.user.informaticsUsername, req.user.informaticsPassword)
+        informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
+        res.json({submit: true})
+
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
-        res.json req.user
+        user = JSON.parse(JSON.stringify(req.user))
+        delete user.informaticsPassword
+        res.json user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
         User.findOne({_id: req.user.informaticsId}, (err, record) ->

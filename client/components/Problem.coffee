@@ -1,6 +1,7 @@
 React = require('react')
 
 import SubmitList from './SubmitList'
+import SubmitForm from './SubmitForm'
 
 problemId = (props) ->
     props.material._id.substring(1)
@@ -11,6 +12,7 @@ export default Problem = (props) ->
         <div dangerouslySetInnerHTML={{__html: props.material.content}}>
         </div>
         <p><a href={href}>Задача на informatics</a></p>
+        <SubmitForm problemId={problemId(props)}/>
         <h4>Попытки</h4>
         {`<SubmitList {...props}/>`}
     </div>

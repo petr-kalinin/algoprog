@@ -50,7 +50,7 @@ export default class InformaticsUser
         id = a.href.match(/view.php\?id=(\d+)/)
         @name = a.innerHTML
         if not id or id.length < 2
-            throw "Can't detect id, href=" + a.href
+            throw "Can't detect id, href=" + a.href + " username=" + @username
         @id = id[1]
         return
             id: @id,
@@ -93,3 +93,15 @@ export default class InformaticsUser
             graduateYear: @graduateYear
             country: @country
             currentYearStart: getCurrentYearStart()
+
+    submit: (problemId, contentType, body) ->
+        await @doLogin()
+        page = await download("http://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
+            method: 'POST',
+            headers: {'Content-Type': contentType},
+            body,
+            followAllRedirects: true
+        })
+        res = JSON.parse(page)
+        if res.res != "ok"
+            throw "Can't submit"
