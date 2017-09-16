@@ -8,6 +8,10 @@ registeredUserSchema = new mongoose.Schema
     informaticsId: Number
     aboutme: String
 
+registeredUserSchema.statics.findAdmin = (list) ->
+    RegisteredUser.findOne({admin: true})
+
+
 registeredUserSchema.plugin(passportLocalMongoose);
 
 RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);

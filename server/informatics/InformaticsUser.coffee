@@ -56,6 +56,9 @@ export default class InformaticsUser
             id: @id,
             name: @name
 
+    download: (href) ->
+        download(href, @jar)
+
     getData: () ->
         await @doLogin()
         page = await download("http://informatics.mccme.ru/user/edit.php?id=#{@id}", @jar)

@@ -1,11 +1,14 @@
 request = require('request-promise-native')
 deepEqual = require('deep-equal')
 moment = require('moment')
+import { JSDOM } from 'jsdom'
 
 import Submit from '../models/submit'
 import User from '../models/user'
+import RegisteredUser from '../models/registeredUser'
 import Problem from '../models/problem'
 import Table from '../models/table'
+import InformaticsUser from '../informatics/InformaticsUser'
 
 import logger from '../log'
 
@@ -40,6 +43,27 @@ class AllSubmitDownloader
                 t = t.parent
         @dirtyResults[userId + "::" + Table.main] = 1
 
+    parseRunId: (runid) ->
+        [dummy, contest, run] = runid.match(/(\d+)r(\d+)p(\d+)/)
+        return [contest, run]
+
+    getSource: (runid) ->
+        [contest, run] = @parseRunId(runid)
+        page = await @adminUser.download("http://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}")
+        document = (new JSDOM(page)).window.document
+        return document.getElementById("source-textarea").innerHTML
+
+    getComments: (runid) ->
+        [contest, run] = @parseRunId(runid)
+        data = await @adminUser.download("http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}")
+        comments = JSON.parse(data).comments
+        return (c.comment for c in comments)
+
+    getResults: (runid) ->
+        [contest, run] = @parseRunId(runid)
+        data = await @adminUser.download("http://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}")
+        return JSON.parse(data)
+
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
         logger.debug "Found submit ", uid, pid, runid
         res = await @needContinueFromSubmit(runid)
@@ -57,12 +81,17 @@ class AllSubmitDownloader
 
         date = new Date(moment(date + "+03"))
 
+        [source, comments, results] = await Promise.all([@getSource(runid), @getComments(runid), @getResults(runid)])
+
         newSubmit = new Submit(
             _id: runid,
             time: date,
             user: uid,
             problem: "p" + pid,
-            outcome: outcome
+            outcome: outcome,
+            source: source,
+            comments: comments,
+            results: results
         )
         newUser = new User(
             _id: uid,
@@ -112,6 +141,11 @@ class AllSubmitDownloader
 
     run: ->
         logger.info "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
+
+        admin = await RegisteredUser.findAdmin()
+        @adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
+        await @adminUser.doLogin()
+
         page = 0
         while true
             submitsUrl = @baseUrl(page, @submitsPerPage)
