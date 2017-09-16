@@ -76,22 +76,19 @@ class AllSubmitDownloader
         if (outcome == @DQ)
             outcome = "DQ"
 
-        oldSumit = await Submit.findById(runid)
+        oldSubmit = await Submit.findById(runid)
         oldUser = await User.findById(uid)
 
         date = new Date(moment(date + "+03"))
 
-        [source, comments, results] = await Promise.all([@getSource(runid), @getComments(runid), @getResults(runid)])
-
+        comments = @getComments(runid)
         newSubmit = new Submit(
             _id: runid,
             time: date,
             user: uid,
             problem: "p" + pid,
             outcome: outcome,
-            source: source,
-            comments: comments,
-            results: results
+            comment: comments
         )
         newUser = new User(
             _id: uid,
@@ -99,10 +96,18 @@ class AllSubmitDownloader
             userList: @userList
         )
 
+        if oldSubmit
+            oldSubmit = oldSubmit.toObject()
+            delete oldSubmit.source
+            delete oldSubmit.results
         # we can't compare oldUser and newUser because they will have different rating, etc
-        if (oldSumit and newSubmit and deepEqual(oldSumit.toObject(), newSubmit.toObject()) and oldUser)
+        if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) and oldUser)
             logger.debug "Submit already in the database"
             return res
+
+        [source, results] = await Promise.all([@getSource(runid), @getResults(runid)])
+        newSubmit.source = source
+        newSubmit.results = results
 
         logger.debug "Adding submit"
         await newSubmit.upsert()
