@@ -11,6 +11,7 @@ import Table from '../models/table'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 import logger from '../log'
+import download from '../lib/download'
 
 class AllSubmitDownloader
 
@@ -154,9 +155,7 @@ class AllSubmitDownloader
         page = 0
         while true
             submitsUrl = @baseUrl(page, @submitsPerPage)
-            submits = await request
-                url: submitsUrl
-                jar: request.jar()
+            submits = await download submitsUrl
             submits = JSON.parse(submits)["result"]["text"]
             result = await @parseSubmits(submits)
             if (page < @minPages) # always load at least minPages pages

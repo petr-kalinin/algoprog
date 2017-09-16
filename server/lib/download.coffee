@@ -4,12 +4,13 @@ request = require('request-promise-native')
 export default download = (href, jar, options) ->
     if not jar
         jar = request.jar()
-    for i in [1..10] 
+    for i in [1..10]
         try
             page = await request({
                 options...,
                 url: href
-                jar: jar
+                jar: jar,
+                timeout: options?.timeout || 7 * 1000
             })
             return page
         catch e

@@ -40,7 +40,8 @@ export default class InformaticsUser
                 username: @username,
                 password: @password
             },
-            followAllRedirects: true
+            followAllRedirects: true,
+            timeout: 30 * 1000
         })
         document = (new JSDOM(page)).window.document
         el = document.getElementsByClassName("logininfo")
