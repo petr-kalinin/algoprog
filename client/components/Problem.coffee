@@ -13,6 +13,5 @@ export default Problem = (props) ->
         </div>
         <p><a href={href}>Задача на informatics</a></p>
         <SubmitForm problemId={problemId(props)}/>
-        <h4>Попытки</h4>
         {`<SubmitList {...props}/>`}
     </div>

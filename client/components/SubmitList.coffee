@@ -18,34 +18,41 @@ class SubmitList extends React.Component
             "submits/#{@props.myUser._id}/#{@props.material._id}"
 
     render:  () ->
-        if @dataOutdated()
-            <CometSpinLoader />
-        else if @props.submits?.length
-            <Table responsive striped condensed hover>
-                <thead>
-                    <tr>
-                        <th>Время</th>
-                        <th>Результат</th>
-                     </tr>
-                </thead>
-                <tbody>
-                    {@props.submits && @props.submits.map((submit) ->
-                        cl = undefined
-                        if submit.outcome == "AC"
-                            cl = "success"
-                        else if submit.outcome == "IG"
-                            cl = "info"
-                        else if submit.outcome == "OK"
-                            cl = "warning"
-                        <tr key={submit._id} className={cl}>
-                            <td>{moment(submit.time).format('YYYY-MM-DD kk:mm:ss')}</td>
-                            <td>{submit.outcome}</td>
-                        </tr>
-                    ).reverse()}
-                </tbody>
-            </Table>
-        else
-            <p>Посылок по этой задаче еще не было</p>
+        if not @props.myUser?._id
+            return null
+        <div>
+            <h4>Попытки</h4>
+            {
+            if @dataOutdated()
+                <CometSpinLoader />
+            else if @props.submits?.length
+                <Table responsive striped condensed hover>
+                    <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Результат</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                        {@props.submits && @props.submits.map((submit) ->
+                            cl = undefined
+                            if submit.outcome == "AC"
+                                cl = "success"
+                            else if submit.outcome == "IG"
+                                cl = "info"
+                            else if submit.outcome == "OK"
+                                cl = "warning"
+                            <tr key={submit._id} className={cl}>
+                                <td>{moment(submit.time).format('YYYY-MM-DD kk:mm:ss')}</td>
+                                <td>{submit.outcome}</td>
+                            </tr>
+                        ).reverse()}
+                    </tbody>
+                </Table>
+            else
+                <p>Посылок по этой задаче еще не было</p>
+            }
+        </div>
 
     dataOutdated: () ->
         url = @url()

@@ -1,5 +1,6 @@
 React = require('react')
 import { CometSpinLoader } from 'react-css-loaders';
+import { connect } from 'react-redux'
 
 import Alert from 'react-bootstrap/lib/Alert'
 import Grid from 'react-bootstrap/lib/Grid'
@@ -81,9 +82,13 @@ class SubmitForm extends React.Component
         @setState(newState)
 
     render: () ->
+        if not @props.myUser?._id
+            return null
+
         canSubmit = (not @state.submit?.loading) and (@state.wasFile)
 
         <div>
+            <h4>Отправить решение</h4>
             <Form inline onSubmit={@submit} id="submitForm">
                 <FieldGroup
                     id="file"
@@ -127,4 +132,8 @@ class SubmitForm extends React.Component
             }
         </div>
 
-export default SubmitForm
+mapStateToProps = (state) ->
+    return
+        myUser: state.myUser
+
+export default connect(mapStateToProps)(SubmitForm)
