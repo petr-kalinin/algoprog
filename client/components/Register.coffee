@@ -11,6 +11,8 @@ import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
 import Modal from 'react-bootstrap/lib/Modal'
 
+import { Link } from 'react-router-dom'
+
 import callApi from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
@@ -76,6 +78,11 @@ class Register extends React.Component
                 informaticsPassword: @state.informaticsPassword
                 aboutme: @state.aboutme
             }
+            if data.registered.success
+                await callApi "login", {
+                    username: @state.username,
+                    password: @state.password
+                }
         catch
             data =
                 registered:
@@ -92,10 +99,6 @@ class Register extends React.Component
             newState = {@state..., registered: null}
             @setState(newState)
         else
-            data = await callApi "login", {
-                username: @state.username,
-                password: @state.password
-            }
             @props.history.push("/")
 
     render: () ->
@@ -265,7 +268,13 @@ class Register extends React.Component
                     <Modal.Body>
                         {@state.registered.loading && <CometSpinLoader />}
                         {@state.registered.error && "Ошибка: " + @state.registered.message}
-                        {@state.registered.success && "Регистрация успешна!"}
+                        {@state.registered.success &&
+                            <div>
+                                <p>Регистрация успешна!</p>
+                                <p><b>Если вы еще не занимались в этом курсе, обязательно напишите мне о том, что вы зарегистрировались,
+                                чтобы я активировал вашу учетную запись. Мои контакты — на страничке
+                                {" "}<Link to="/material/0">О курсе</Link>.</b></p>
+                            </div>}
                     </Modal.Body>
 
                     <Modal.Footer>
