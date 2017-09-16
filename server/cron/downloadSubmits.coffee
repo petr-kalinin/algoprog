@@ -55,9 +55,12 @@ class AllSubmitDownloader
         return document.getElementById("source-textarea").innerHTML
 
     getComments: (runid) ->
+        return []  # temporary
         [contest, run] = @parseRunId(runid)
         data = await @adminUser.download("http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}")
         comments = JSON.parse(data).comments
+        if not comments
+            return []
         return (c.comment for c in comments)
 
     getResults: (runid) ->
@@ -82,7 +85,7 @@ class AllSubmitDownloader
 
         date = new Date(moment(date + "+03"))
 
-        comments = @getComments(runid)
+        comments = await @getComments(runid)
         newSubmit = new Submit(
             _id: runid,
             time: date,
