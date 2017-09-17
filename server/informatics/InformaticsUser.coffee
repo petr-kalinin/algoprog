@@ -3,8 +3,11 @@ request = require('request-promise-native')
 
 import download from '../lib/download'
 
+import logger from '../log'
+
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
+REQUESTS_LIMIT = 20
 
 getClass = (year) ->
     graduateDate = new Date(year, 7, 31)  # 31 august
@@ -32,6 +35,8 @@ getGraduateYear = (cl) ->
 export default class InformaticsUser
     constructor: (@username, @password) ->
         @jar = request.jar()
+        @requests = 0
+        @promises = []
 
     doLogin: () ->
         page = await download("http://informatics.mccme.ru/login/index.php", @jar, {
@@ -58,7 +63,17 @@ export default class InformaticsUser
             name: @name
 
     download: (href) ->
-        download(href, @jar)
+        if @requests >= REQUESTS_LIMIT
+            await new Promise((resolve) => @promises.push(resolve))
+        if @requests >= REQUESTS_LIMIT
+            throw "Too many requests"
+        @requests++
+        result = await download(href, @jar)
+        @requests--
+        if @promises.length
+            promise = @promises.shift()
+            promise(0)  # resolve
+        return result
 
     getData: () ->
         await @doLogin()

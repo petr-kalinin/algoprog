@@ -49,23 +49,38 @@ class AllSubmitDownloader
         return [contest, run]
 
     getSource: (runid) ->
-        [contest, run] = @parseRunId(runid)
-        page = await @adminUser.download("http://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}")
-        document = (new JSDOM(page)).window.document
-        return document.getElementById("source-textarea").innerHTML
+        try
+            [contest, run] = @parseRunId(runid)
+            href = "http://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}"
+            page = await @adminUser.download(href)
+            document = (new JSDOM(page)).window.document
+            return document.getElementById("source-textarea").innerHTML
+        catch
+            logger.info "Can't download source ", runid, href
+            return ""
 
     getComments: (runid) ->
-        [contest, run] = @parseRunId(runid)
-        data = await @adminUser.download("http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}")
-        comments = JSON.parse(data).comments
-        if not comments
+        try
+            [contest, run] = @parseRunId(runid)
+            href = "http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}"
+            data = await @adminUser.download(href)
+            comments = JSON.parse(data).comments
+            if not comments
+                return []
+            return (c.comment for c in comments)
+        catch
+            logger.info "Can't download comments ", runid, href
             return []
-        return (c.comment for c in comments)
 
     getResults: (runid) ->
-        [contest, run] = @parseRunId(runid)
-        data = await @adminUser.download("http://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}")
-        return JSON.parse(data)
+        try
+            [contest, run] = @parseRunId(runid)
+            href = "http://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}"
+            data = await @adminUser.download(href)
+            return JSON.parse(data)
+        catch
+            logger.info "Can't download results ", runid, href
+            return {}
 
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
         logger.debug "Found submit ", uid, pid, runid
@@ -99,10 +114,13 @@ class AllSubmitDownloader
 
         if oldSubmit
             oldSubmit = oldSubmit.toObject()
-            delete oldSubmit.source
-            delete oldSubmit.results
+            newSubmit.source = oldSubmit.source
+            newSubmit.results = oldSubmit.results
+            newSubmit.comments = oldSubmit.comments
         # we can't compare oldUser and newUser because they will have different rating, etc
-        if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) and oldUser and oldUser.userList == newUser.userList)
+        if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
+                and oldUser and oldUser.userList == newUser.userList \
+                and oldSubmit.results)
             logger.debug "Submit already in the database"
             return res
 
@@ -155,6 +173,7 @@ class AllSubmitDownloader
 
         page = 0
         while true
+            logger.info("Dowloading submits, page #{page}")
             submitsUrl = @baseUrl(page, @submitsPerPage)
             submits = await download submitsUrl
             submits = JSON.parse(submits)["result"]["text"]
