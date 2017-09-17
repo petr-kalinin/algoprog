@@ -41,19 +41,24 @@ export default setupApi = (app) ->
         informaticsUser = new InformaticsUser(informaticsUsername, informaticsPassword)
         informaticsData = await informaticsUser.getData()
 
-        newUser = new User(
-            _id: informaticsData.id,
-            name: informaticsData.name,
-            userList: "unknown",
-        )
-        if cfLogin
-            newUser.cf =
-                login: cfLogin
-        await newUser.upsert()
-        if cfLogin
-            await newUser.updateCfRating()
-        await newUser.updateLevel()
-        await newUser.updateRatingEtc()
+        oldUser = await User.findById(informaticsData.id)
+        if not oldUser
+            logger.info "Register new Table User", informaticsData.id
+            newUser = new User(
+                _id: informaticsData.id,
+                name: informaticsData.name,
+                userList: "unknown",
+            )
+            if cfLogin
+                newUser.cf =
+                    login: cfLogin
+            await newUser.upsert()
+            if cfLogin
+                await newUser.updateCfRating()
+            await newUser.updateLevel()
+            await newUser.updateRatingEtc()
+        else
+            logger.info "Table User already registered"
 
         newRegisteredUser = new RegisteredUser({
             username,
