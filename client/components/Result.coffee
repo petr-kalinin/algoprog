@@ -22,7 +22,7 @@ export default Result = (props) ->
     return
         <tr>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
-                <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD kk:mm:ss')}</a>
+                <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD HH:mm:ss')}</a>
                 {" "}[ x {r.attempts} ]
             </td>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>

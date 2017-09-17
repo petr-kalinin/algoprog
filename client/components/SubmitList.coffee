@@ -26,13 +26,13 @@ OpenSubmit = (props) ->
                     {
                     res = []
                     a = (el) -> res.push(el)
-                    for comment, index in props.submit.comments
+                    for comment, index in (props.submit?.comments || [])
                         a <pre key={index} dangerouslySetInnerHTML={{__html: comment}}></pre>
                     res}
                 </Tab>
                 <Tab eventKey={3} title="Результаты">
                     <h4>Вывод компилятора</h4>
-                    <pre dangerouslySetInnerHTML={{__html: props.submit.results.compiler_output}}></pre>
+                    <pre dangerouslySetInnerHTML={{__html: props.submit.results?.compiler_output}}></pre>
                     <Table striped bordered condensed hover responsive>
                         <thead>
                             <tr>
@@ -46,7 +46,7 @@ OpenSubmit = (props) ->
                             {
                             res = []
                             a = (el) -> res.push(el)
-                            for index, result of props.submit.results.tests
+                            for index, result of (props.submit.results?.tests || [])
                                 a <tr key={index}>
                                     <td>{index}</td>
                                     <td>{result.string_status}</td>
@@ -117,7 +117,7 @@ class SubmitList extends React.Component
                             else if submit.outcome == "OK"
                                 cl = "warning"
                             <tr key={submit._id} className={cl}>
-                                <td>{moment(submit.time).format('YYYY-MM-DD kk:mm:ss')}</td>
+                                <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
                                 <td>{submit.outcome}</td>
                                 <td><a onClick={@openSubmit(submit)}>Подробнее</a></td>
                             </tr>
