@@ -136,6 +136,9 @@ export default setupApi = (app) ->
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
 
+    app.get '/api/submit/:id', wrap (req, res) ->
+        res.json(await Submit.findById(req.params.id))
+
     app.get '/api/updateResults', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
