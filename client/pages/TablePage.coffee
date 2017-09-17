@@ -15,6 +15,9 @@ class TablePage extends React.Component
     @url: (props) ->
         'table/' + props.match.params.userList + '/' + props.match.params.id
 
+    @timeout: () ->
+        20000
+
     render:  () ->
         sceletonProps = {
             @props...,

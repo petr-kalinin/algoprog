@@ -15,6 +15,9 @@ class SolvedByWeekPage extends React.Component
     @url: (props) ->
         'users/' + props.match.params.userList
 
+    @timeout: () ->
+        20000
+
     render:  () ->
         sceletonProps = {
             @props...,
