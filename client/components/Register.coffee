@@ -209,7 +209,7 @@ class Register extends React.Component
                     <FieldGroup
                         id="informaticsClass"
                         label={"Класс" + (@state.informaticsData &&
-                        "в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году")}
+                        " в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году")}
                         type="text"
                         value={@state.informaticsData?.class || ""}
                         disabled/>
