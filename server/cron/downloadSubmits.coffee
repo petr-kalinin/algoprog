@@ -105,7 +105,7 @@ class AllSubmitDownloader
             delete oldSubmit.source
             delete oldSubmit.results
         # we can't compare oldUser and newUser because they will have different rating, etc
-        if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) and oldUser)
+        if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) and oldUser and oldUser.userList == newUser.userList)
             logger.debug "Submit already in the database"
             return res
 
