@@ -55,7 +55,6 @@ class AllSubmitDownloader
         return document.getElementById("source-textarea").innerHTML
 
     getComments: (runid) ->
-        return []  # temporary
         [contest, run] = @parseRunId(runid)
         data = await @adminUser.download("http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}")
         comments = JSON.parse(data).comments
@@ -85,14 +84,12 @@ class AllSubmitDownloader
 
         date = new Date(moment(date + "+03"))
 
-        comments = await @getComments(runid)
         newSubmit = new Submit(
             _id: runid,
             time: date,
             user: uid,
             problem: "p" + pid,
-            outcome: outcome,
-            comment: comments
+            outcome: outcome
         )
         newUser = new User(
             _id: uid,
@@ -109,9 +106,10 @@ class AllSubmitDownloader
             logger.debug "Submit already in the database"
             return res
 
-        [source, results] = await Promise.all([@getSource(runid), @getResults(runid)])
+        [source, comments, results] = await Promise.all([@getSource(runid), @getComments(runid), @getResults(runid)])
         newSubmit.source = source
         newSubmit.results = results
+        newSubmit.comments = comments
 
         logger.debug "Adding submit"
         await newSubmit.upsert()
