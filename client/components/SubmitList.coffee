@@ -95,6 +95,7 @@ class SubmitList extends React.Component
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
             }
             <h4>Попытки</h4>
+            <p>Не обновляйте страницу; список посылок обновляется автоматически.</p>
             {
             if @dataOutdated()
                 <CometSpinLoader />
