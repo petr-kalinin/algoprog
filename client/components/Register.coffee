@@ -124,7 +124,7 @@ class Register extends React.Component
             <form onSubmit={@tryRegister}>
                 <FieldGroup
                     id="username"
-                    label="Имя пользователя"
+                    label="Логин"
                     type="text"
                     setField={@setField}
                     state={@state}/>
