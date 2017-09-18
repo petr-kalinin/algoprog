@@ -4,6 +4,7 @@ moment = require('moment')
 import { JSDOM } from 'jsdom'
 
 import Submit from '../models/submit'
+import SubmitComment from '../models/SubmitComment'
 import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
 import Problem from '../models/problem'
@@ -59,7 +60,7 @@ class AllSubmitDownloader
             logger.info "Can't download source ", runid, href
             return ""
 
-    getComments: (runid) ->
+    getComments: (problemId, userId, runid) ->
         try
             [contest, run] = @parseRunId(runid)
             href = "http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}"
@@ -67,9 +68,21 @@ class AllSubmitDownloader
             comments = JSON.parse(data).comments
             if not comments
                 return []
+            result = []
+            for c in comments
+                result.push(c.comment)
+                problem = await Problem.findById(problemId)
+                newComment = new SubmitComment
+                    _id: c.id + "r" + runid
+                    problemId: problemId
+                    problemName: problem.name
+                    userId: userId
+                    text: c.comment
+                await newComment.upsert()
+
             return (c.comment for c in comments)
-        catch
-            logger.info "Can't download comments ", runid, href
+        catch e
+            logger.info "Can't download comments ", runid, href, e.stack
             return []
 
     getResults: (runid) ->
@@ -81,6 +94,13 @@ class AllSubmitDownloader
         catch
             logger.info "Can't download results ", runid, href
             return {}
+
+    mergeComments: (c1, c2) ->
+        result = c1
+        for c in c2
+            if not c in result
+                result.push(c)
+        return result
 
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
         logger.debug "Found submit ", uid, pid, runid
@@ -124,10 +144,11 @@ class AllSubmitDownloader
             logger.debug "Submit already in the database"
             return res
 
-        [source, comments, results] = await Promise.all([@getSource(runid), @getComments(runid), @getResults(runid)])
+        [source, comments, results] = await Promise.all([
+            @getSource(runid), @getComments(newSubmit.problem, newSubmit.user, runid), @getResults(runid)])
         newSubmit.source = source
         newSubmit.results = results
-        newSubmit.comments = comments
+        newSubmit.comments = @mergeComments(newSubmit.comments, comments)
 
         logger.debug "Adding submit"
         await newSubmit.upsert()

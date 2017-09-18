@@ -9,13 +9,13 @@ problemsSchema = new mongoose.Schema
     name: String
     tables: [String]
     level: String
-        
+
 problemsSchema.methods.add = () ->
     oldProblem = await Problem.findById @_id
     if oldProblem
         return
     @save()
-    
+
 problemsSchema.methods.addTable = (table) ->
     logger.debug "add table", @name, @tables
     if table in @tables
@@ -23,7 +23,7 @@ problemsSchema.methods.addTable = (table) ->
     @tables.push(table)
     await @update({$set: { tables: @tables }})
     (await Problem.findById(@_id)).updateLevel()
-        
+
 problemsSchema.methods.updateLevel = ->
     reg = ""
     @level = ""
@@ -38,6 +38,7 @@ problemsSchema.methods.updateLevel = ->
     if @level == ""
         @level = undefined
     @update({$set: {level: @level}})
+
 
 Problem = mongoose.model('Problems', problemsSchema);
 
