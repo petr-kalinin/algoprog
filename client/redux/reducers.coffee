@@ -1,51 +1,19 @@
 import { combineReducers } from 'redux'
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
-import { GET_ME, GET_MY_USER, GET_TREE, GET_NEWS, GET_DATA, GET_SUBMITS, SAVE_DATA_PROMISES } from './actions'
+import { GET_DATA, SAVE_DATA_PROMISES } from './actions'
 
-me = (state=null, action) ->
-    switch action.type
-        when "#{GET_ME}_#{FULFILLED}"
-            return action.payload
-        else
-            return state
+MAX_DATA_ITEMS = 20
 
-myUser = (state=null, action) ->
-    switch action.type
-        when "#{GET_MY_USER}_#{FULFILLED}"
-            return action.payload
-        else
-            return state
-
-tree = (state=null, action) ->
-    switch action.type
-        when "#{GET_TREE}_#{FULFILLED}"
-            return action.payload
-        else
-            return state
-
-news = (state=null, action) ->
-    switch action.type
-        when "#{GET_NEWS}_#{FULFILLED}"
-            return action.payload
-        else
-            return state
-
-data = (state={}, action) ->
+data = (state=[], action) ->
     switch action.type
         when "#{GET_DATA}_#{FULFILLED}"
-            return
-                data: action.payload
-                url: action.meta.url
-        else
-            return state
-
-submits = (state={}, action) ->
-    switch action.type
-        when "#{GET_SUBMITS}_#{FULFILLED}"
-            return
-                data: action.payload
-                url: action.meta.url
+            a = [{data: action.payload, url: action.meta.url}]
+            b = (x for x in state when x.url != action.meta.url)
+            result = a.concat(b)
+            if result.length > MAX_DATA_ITEMS
+                result.pop()
+            return result
         else
             return state
 
@@ -58,11 +26,6 @@ dataPromises = (state=[], action) ->
 
 export default rootReducer =
     combineReducers {
-        me,
-        myUser,
-        tree,
-        news,
         data,
-        submits,
         dataPromises
     }

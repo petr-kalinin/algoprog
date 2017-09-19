@@ -1,47 +1,26 @@
 import callApi from '../lib/callApi'
 
-export GET_ME = 'GET_ME'
-export GET_MY_USER = 'GET_MY_USER'
-export GET_TREE = 'GET_TREE'
-export GET_NEWS = 'GET_NEWS'
 export GET_DATA = 'GET_DATA'
-export GET_SUBMITS = 'GET_SUBMITS'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 
-export getMe = () ->
-    return
-        type: GET_ME
-        payload: callApi 'me'
-
-export getMyUser = () ->
-    return
-        type: GET_MY_USER
-        payload: callApi 'myUser'
-
-export getTree = () ->
-    return
-        type: GET_TREE
-        payload: callApi 'material/tree'
-
-export getNews = () ->
-    return
-        type: GET_NEWS
-        payload: callApi 'material/news'
-
-export getData = (url) ->
+export getData = (url, force) ->
     return
         type: GET_DATA
         payload: callApi url
         meta:
             url: url
 
-export getSubmits = (url) ->
-    return
-        type: GET_SUBMITS
-        payload: callApi url
-        meta:
-            url: url
+getDataWrapper = (url) -> (args...) ->
+    return getData(url, args...)
+
+export getMe = getDataWrapper('me')
+
+export getMyUser = getDataWrapper('myUser')
+
+export getTree = getDataWrapper('material/tree')
+
+export getNews = getDataWrapper('material/news')
 
 export saveDataPromises = (promises) ->
     return
@@ -51,7 +30,7 @@ export saveDataPromises = (promises) ->
 
 doLogout = (dispatch) ->
     await callApi 'logout'
-    await Promise.all([dispatch(getMe()), dispatch(getMyUser())])
+    await Promise.all([dispatch(getMe(true)), dispatch(getMyUser(true))])
 
 export logout = (dispatch) ->
     return

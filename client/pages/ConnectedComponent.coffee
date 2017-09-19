@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { CometSpinLoader } from 'react-css-loaders';
 
 import * as actions from '../redux/actions'
+import * as getters from '../redux/getters'
 
 export default ConnectedComponent = (Component) ->
     class Result extends React.Component
@@ -22,13 +23,7 @@ export default ConnectedComponent = (Component) ->
             url = @url()
             if not url
                 return false
-            if not @props.data
-                return true
-            if @props.dataUrl == url
-                return false
-            if decodeURIComponent(@props.dataUrl) == url
-                return false
-            return true
+            return not @props.data(url)
 
         render:  () ->
             if @dataOutdated()
@@ -38,7 +33,10 @@ export default ConnectedComponent = (Component) ->
                     return
                         <CometSpinLoader />
             else
-                return `<Component  {...this.props} handleReload={this.handleReload}/>`
+                componentProps = {@props...}
+                componentProps.handleReload = @handleReload
+                componentProps.data = @props.data(@url())
+                return `<Component  {...componentProps}/>`
 
         componentWillMount: ->
             if not window?
@@ -80,12 +78,11 @@ export default ConnectedComponent = (Component) ->
 
     mapStateToProps = (state, ownProps) ->
         return
-            me: state.me
-            myUser: state.myUser
-            tree: state.tree
-            news: state.news
-            dataUrl: state.data.url
-            data: state.data.data
+            me: getters.getMe(state),
+            myUser: getters.getMyUser(state),
+            tree: getters.getTree(state),
+            news: getters.getNews(state),
+            data: (url) -> getters.getData(state, url)
 
     mapDispatchToProps = (dispatch, ownProps) ->
         return

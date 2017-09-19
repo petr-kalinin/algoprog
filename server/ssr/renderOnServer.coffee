@@ -110,6 +110,15 @@ export default renderOnServer = (req, res, next) =>
 
         html = renderToString(wrappedElement)
         await Promise.all(store.getState().dataPromises)
+
+        wrappedElement = <Provider store={store}>
+                <div>
+                    <DefaultHelmet/>
+                    <StaticRouter context={context}>
+                        {element}
+                    </StaticRouter>
+                </div>
+            </Provider>
         html = renderToString(wrappedElement)
 
     catch error
