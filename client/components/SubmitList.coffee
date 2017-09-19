@@ -75,15 +75,23 @@ class SubmitList extends React.Component
                     <tbody>
                         {@props.submits && @props.submits.map((submit) =>
                             cl = undefined
-                            if submit.outcome == "AC"
-                                cl = "success"
-                            else if submit.outcome == "IG"
-                                cl = "info"
-                            else if submit.outcome == "OK"
-                                cl = "warning"
+                            message = submit.outcome
+                            switch submit.outcome
+                                when "AC"
+                                    cl = "success"
+                                    message = "Зачтено"
+                                when "IG"
+                                    cl = "info"
+                                    message = "Проигнорировано"
+                                when "OK"
+                                    cl = "warning"
+                                when "CE"
+                                    message = "Ошибка компиляции"
+                                when "DQ"
+                                    message = "Дисквалифицировано"
                             <tr key={submit._id} className={cl}>
                                 <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
-                                <td>{submit.outcome}</td>
+                                <td>{message}</td>
                                 <td><a onClick={@openSubmit(submit)} href="#">Подробнее</a></td>
                             </tr>
                         ).reverse()}
