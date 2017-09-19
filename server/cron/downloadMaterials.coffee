@@ -164,7 +164,7 @@ class MaterialsDownloader
     makeSpecialPage: (id, order, indent, element, keepResourcesInTree) ->
         a = element.getElementsByTagName("a")
         if a.length != 1
-            logger.error("Found resource with != 1 children " + activity.innerHTML)
+            logger.error("Found resource with != 1 children " + element.innerHTML)
             return undefined
         type = "page"
         if element.classList?.contains("algoprog-epigraph")
