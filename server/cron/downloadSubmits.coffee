@@ -98,7 +98,7 @@ class AllSubmitDownloader
     mergeComments: (c1, c2) ->
         result = c1
         for c in c2
-            if not c in result
+            if not (c in result)
                 result.push(c)
         return result
 
@@ -146,6 +146,7 @@ class AllSubmitDownloader
 
         [source, comments, results] = await Promise.all([
             @getSource(runid), @getComments(newSubmit.problem, newSubmit.user, runid), @getResults(runid)])
+
         newSubmit.source = source
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
