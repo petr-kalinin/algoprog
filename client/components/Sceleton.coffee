@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet"
 
 import Tree from './Tree'
 import News from './News'
+import CommentList from './CommentList'
 import TopPanel from './TopPanel'
 
 SIZES = ["xs", "sm", "md", "lg"]
@@ -109,6 +110,7 @@ export default class Sceleton extends React.Component
                     </ColWrapper>
                     <ColWrapper size={newsSize}>
                         <News news={@props.news.materials} />
+                        <CommentList />
                     </ColWrapper>
                 </Row>
             </Grid>

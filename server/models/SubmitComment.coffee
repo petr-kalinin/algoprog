@@ -8,6 +8,8 @@ submitCommentsSchema = new mongoose.Schema
     problemName: String
     userId: String
     text: String
+    time: Date
+    outcome: String
 
 submitCommentsSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -15,6 +17,14 @@ submitCommentsSchema.methods.upsert = () ->
         @update(this, {upsert: true})
     catch
         logger.info "Could not upsert a submitComment"
+
+submitCommentsSchema.statics.findLastByUser = (id) ->
+    SubmitComment.find({userId: id}).sort({time: -1}).limit(20)
+
+submitCommentsSchema.index
+    userId: 1
+    time: -1
+
 
 SubmitComment = mongoose.model('SubmitComments', submitCommentsSchema);
 

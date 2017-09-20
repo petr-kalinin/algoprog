@@ -6,6 +6,7 @@ import Submit from '../models/submit'
 import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
+import SubmitComment from '../models/SubmitComment'
 import RegisteredUser from '../models/registeredUser'
 import Material from '../models/Material'
 
@@ -138,6 +139,9 @@ export default setupApi = (app) ->
 
     app.get '/api/submit/:id', wrap (req, res) ->
         res.json(await Submit.findById(req.params.id))
+
+    app.get '/api/lastComments/:user', wrap (req, res) ->
+        res.json(await SubmitComment.findLastByUser(req.params.user))
 
     app.get '/api/updateResults', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

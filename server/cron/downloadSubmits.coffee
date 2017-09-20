@@ -60,7 +60,7 @@ class AllSubmitDownloader
             logger.info "Can't download source ", runid, href
             return ""
 
-    getComments: (problemId, userId, runid) ->
+    getComments: (problemId, userId, runid, outcome) ->
         try
             [contest, run] = @parseRunId(runid)
             href = "http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}"
@@ -78,6 +78,9 @@ class AllSubmitDownloader
                     problemName: problem.name
                     userId: userId
                     text: c.comment
+                    time: new Date()
+                    outcome: outcome
+                console.log newComment
                 await newComment.upsert()
 
             return (c.comment for c in comments)
@@ -145,7 +148,10 @@ class AllSubmitDownloader
             return res
 
         [source, comments, results] = await Promise.all([
-            @getSource(runid), @getComments(newSubmit.problem, newSubmit.user, runid), @getResults(runid)])
+            @getSource(runid),
+            @getComments(newSubmit.problem, newSubmit.user, runid, newSubmit.outcome),
+            @getResults(runid)
+        ])
 
         newSubmit.source = source
         newSubmit.results = results
