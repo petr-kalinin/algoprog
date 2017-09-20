@@ -78,9 +78,8 @@ class AllSubmitDownloader
                     problemName: problem.name
                     userId: userId
                     text: c.comment
-                    time: new Date()
+                    time: new Date(moment(c.date + "+03"))
                     outcome: outcome
-                console.log newComment
                 await newComment.upsert()
 
             return (c.comment for c in comments)
