@@ -35,6 +35,9 @@ class SubmitList extends React.Component
         if props?.myUser?._id
             "submits/#{props.myUser._id}/#{props.material._id}"
 
+    @timeout: () ->
+        20 * 1000
+
     openSubmit: (submit) ->
         (e) =>
             e.preventDefault()
