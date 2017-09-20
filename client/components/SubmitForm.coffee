@@ -15,6 +15,8 @@ import {callApiWithBody} from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
 
+import ConnectedComponent from '../pages/ConnectedComponent'
+
 LANGUAGES = [
     [27, "Python 3.4.3", "py", "py3"]
     [1, "Free Pascal 2.6.4", "pas"]
@@ -132,8 +134,4 @@ class SubmitForm extends React.Component
             }
         </div>
 
-mapStateToProps = (state) ->
-    return
-        myUser: state.myUser
-
-export default connect(mapStateToProps)(SubmitForm)
+export default ConnectedComponent(SubmitForm)
