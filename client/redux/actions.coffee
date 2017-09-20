@@ -1,15 +1,24 @@
 import callApi from '../lib/callApi'
 
+import {getRawData as getRawDataGetter} from './getters'
+
 export GET_DATA = 'GET_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 
 export getData = (url, force) ->
-    return
-        type: GET_DATA
-        payload: callApi url
-        meta:
-            url: url
+    (dispatch, getState) ->
+        existingData = getRawDataGetter(getState(), url)
+        if not force and existingData?.updateTime
+            console.log "Data for #{url} already in store"
+            return
+
+        console.log "Will update #{url}"
+        dispatch
+            type: GET_DATA
+            payload: callApi url
+            meta:
+                url: url
 
 getDataWrapper = (url) -> (args...) ->
     return getData(url, args...)

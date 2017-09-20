@@ -58,7 +58,7 @@ export default ConnectedComponent = (Component) ->
         requestData: () ->
             promises = [@props.getMe(), @props.getTree(), @props.getNews(), @props.getMyUser()]
             if @url()
-                promises.push(@props.getData(@url()))
+                promises.push(@props.getData(@url(), true))
             return promises
 
         handleReload: () ->
@@ -90,7 +90,7 @@ export default ConnectedComponent = (Component) ->
             getMyUser: () -> dispatch(actions.getMyUser())
             getTree: () -> dispatch(actions.getTree())
             getNews: () -> dispatch(actions.getNews())
-            getData: (url) -> dispatch(actions.getData(url))
+            getData: (url, force) -> dispatch(actions.getData(url, force))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
             logout: () -> dispatch(actions.logout(dispatch))
             reloadMyData: () -> dispatch(actions.getMe()); dispatch(actions.getMyUser())

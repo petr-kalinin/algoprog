@@ -64,6 +64,7 @@
     "react-router-dom": "*",
     "real-isomorphic-fetch": "^1.2.2",
     "redux": "^3.7.2",
+    "redux-multi": "^0.1.12",
     "redux-promise-middleware": "^4.4.1",
     "redux-thunk": "^2.2.0",
     "request": "*",

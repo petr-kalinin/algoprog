@@ -8,7 +8,8 @@ MAX_DATA_ITEMS = 20
 data = (state=[], action) ->
     switch action.type
         when "#{GET_DATA}_#{FULFILLED}"
-            a = [{data: action.payload, url: action.meta.url}]
+            updateTime = if window? then new Date() else undefined
+            a = [{data: action.payload, url: action.meta.url, updateTime}]
             b = (x for x in state when x.url != action.meta.url)
             result = a.concat(b)
             if result.length > MAX_DATA_ITEMS
