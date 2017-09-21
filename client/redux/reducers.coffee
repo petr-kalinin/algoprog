@@ -7,6 +7,13 @@ MAX_DATA_ITEMS = 20
 
 data = (state=[], action) ->
     switch action.type
+        when "#{GET_DATA}_#{PENDING}"
+            updateTime = if window? then new Date() else undefined
+            return state.map (data) ->
+                if data.url == action.meta.url
+                    return {data..., updateTime}
+                else
+                    return data
         when "#{GET_DATA}_#{FULFILLED}"
             updateTime = if window? then new Date() else undefined
             a = [{data: action.payload, url: action.meta.url, updateTime}]
