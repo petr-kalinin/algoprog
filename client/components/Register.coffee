@@ -13,7 +13,11 @@ import Modal from 'react-bootstrap/lib/Modal'
 
 import { Link } from 'react-router-dom'
 
+import { connect } from 'react-redux'
+
 import callApi from '../lib/callApi'
+
+import * as actions from '../redux/actions'
 
 import FieldGroup from './FieldGroup'
 
@@ -83,6 +87,7 @@ class Register extends React.Component
                     username: @state.username,
                     password: @state.password
                 }
+                @props.dispatch(actions.postLogin())
         catch
             data =
                 registered:
@@ -286,4 +291,4 @@ class Register extends React.Component
             }
         </Grid>
 
-export default withRouter(Register)
+export default withRouter(connect()(Register))

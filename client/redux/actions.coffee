@@ -5,6 +5,7 @@ import {getRawData as getRawDataGetter} from './getters'
 export GET_DATA = 'GET_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
+export LOGIN = 'POST_LOGIN'
 
 export getData = (url, force) ->
     (dispatch, getState) ->
@@ -45,3 +46,8 @@ export logout = (dispatch) ->
     return
         type: LOGOUT
         payload: doLogout dispatch
+
+export postLogin = () ->
+    (dispatch) ->
+        console.log "Dispatching postLogin"
+        await Promise.all([dispatch(getMe(true)), dispatch(getMyUser(true))])
