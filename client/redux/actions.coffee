@@ -11,10 +11,7 @@ export getData = (url, force) ->
     (dispatch, getState) ->
         existingData = getRawDataGetter(getState(), url)
         if not force and existingData?.updateTime
-            console.log "Data for #{url} already in store"
             return
-
-        console.log "Will update #{url}"
         dispatch
             type: GET_DATA
             payload: callApi url
@@ -49,5 +46,4 @@ export logout = (dispatch) ->
 
 export postLogin = () ->
     (dispatch) ->
-        console.log "Dispatching postLogin"
         await Promise.all([dispatch(getMe(true)), dispatch(getMyUser(true))])
