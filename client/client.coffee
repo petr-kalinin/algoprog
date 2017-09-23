@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import createStore from './redux/store'
 
 import Routes from './routes'
+import GotoProvider from './components/GotoProvider'
 import ScrollToTop from './components/ScrollToTop'
 import YaMetrikaHit from './components/YaMetrikaHit'
 import DefaultHelmet from './components/DefaultHelmet'
@@ -26,9 +27,11 @@ ReactDOM.render(
             <BrowserRouter>
                 <ScrollToTop>
                     <YaMetrikaHit>
-                        <Switch>
-                            {Routes.map((route) => `<Route {...route} data={window.__INITIAL_STATE__}/>`)}
-                        </Switch>
+                        <GotoProvider>
+                            <Switch>
+                                {Routes.map((route) => `<Route {...route} data={window.__INITIAL_STATE__}/>`)}
+                            </Switch>
+                        </GotoProvider>
                     </YaMetrikaHit>
                 </ScrollToTop>
             </BrowserRouter>
