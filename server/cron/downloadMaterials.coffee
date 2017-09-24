@@ -91,6 +91,18 @@ class MaterialsDownloader
     constructor: ->
         @materials = {}
         @news = []
+        @urlToMaterial = {}
+
+    getUrlKey: (url) ->
+        res = /mod\/resource\/view\.php\?id=(\d+)/.exec(url)
+        add = "in"
+        if not res
+            res = /mod\/statements\/view3\.php\?id=\d+\&chapterid=(\d+)/.exec(url)
+            add = "inp"
+        if not res
+            return null
+        result = add + res[1]
+        return result
 
     addMaterial: (material) ->
         @materials[material._id] = material
@@ -98,11 +110,12 @@ class MaterialsDownloader
     addNews: (header, element) ->
         @news.push
             header: header
+            type: "news"
             text: element.innerHTML
 
-    parseLink: (a, id, order, keepResourcesInTree, indent, icon, type) ->
+    parseLink: (a, id, order, keepResourcesInTree, indent, icon, type, path) ->
         material = undefined
-        if icon.src.endsWith("pdf.gif")
+        if icon?.src?.endsWith("pdf.gif")
             material = new Material
                 _id: id,
                 order: order,
@@ -110,8 +123,9 @@ class MaterialsDownloader
                 indent: indent
                 content: a.href
                 title: a.innerHTML,
+                path: path
                 materials: []
-        else if icon.src.endsWith("image.gif")
+        else if icon?.src?.endsWith("image.gif")
             material = new Material
                 _id: id,
                 order: order,
@@ -119,8 +133,9 @@ class MaterialsDownloader
                 indent: indent
                 content: a.href
                 title: a.innerHTML,
+                path: path
                 materials: []
-        else if icon.src.endsWith("web.gif")
+        else if icon?.src?.endsWith("web.gif")
             material = new Material
                 _id: id,
                 order: order,
@@ -128,6 +143,7 @@ class MaterialsDownloader
                 indent: indent
                 content: a.href
                 title: a.innerHTML,
+                path: path
                 materials: []
         else
             material = new Material
@@ -137,12 +153,15 @@ class MaterialsDownloader
                 indent: indent
                 content: await getPageContent(a.href)
                 title: a.textContent,
+                path: path
                 materials: []
         @addMaterial(material)
         tree = null
         if keepResourcesInTree and material.type == "page"
             tree = clone(material)
             delete tree.content
+        if material.type == "page"
+            @urlToMaterial[@getUrlKey(a.href)] = material._id
         return
             material: material
             tree: tree
@@ -232,6 +251,7 @@ class MaterialsDownloader
             content: text,
             materials: []
         @addMaterial(material)
+        @urlToMaterial[@getUrlKey(href)] = material._id
         tree = clone(material)
         delete tree.content
         return
@@ -317,7 +337,6 @@ class MaterialsDownloader
                     title: sublevel.name
                     materials: (m.material for m in pendingMaterials)
                 currentTree = clone(currentLevel)
-                delete currentTree.type
                 currentTree.materials = (m.tree for m in pendingMaterials when m.tree)
                 order += 1
                 pendingMaterials = []
@@ -395,7 +414,6 @@ class MaterialsDownloader
         @addMaterial(material)
 
         tree = clone(material)
-        delete tree.type
         delete tree.indent
         tree.materials = (m.tree for m in pendingMaterials when m.tree).concat(trees)
         return
@@ -527,6 +545,43 @@ class MaterialsDownloader
             title: "Новости"
             materials: []
 
+    correctInternalLinksInMaterial: (material) ->
+        if not (material.type in ["page", "label", "epigraph", "problem", "news"])
+            return
+        document = (new JSDOM(material.content, {url: "http://informatics.mccme.ru"})).window.document
+        links = document.getElementsByTagName("a")
+        subpath = [{_id: "main", title: "/"}]
+        if material.path and material._id
+            subpath = [material.path..., {_id: material._id, title: material.title}]
+        else if material._id
+            subpath = [subpath..., {_id: material._id, title: material.title}]
+        subpath = (p for p in subpath when p.title)
+        for a in links
+            href = a.href
+            key = @getUrlKey(href)
+            if not key
+                continue
+            if not (key of @urlToMaterial)
+                await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
+            if not (key of @urlToMaterial)
+                logger.error("Found internal link without a material: #{href}")
+                continue
+            newhref = "/material/#{@urlToMaterial[key]}"
+            a.href = newhref
+            a.setAttribute("onclick", "window.goto('#{newhref}')();return false;")
+        body = document.getElementsByTagName("body")[0]
+        material.content = body.innerHTML
+
+    correctInternalLinks: ->
+        promises = []
+        for id, material of @materials
+            promises.push(@correctInternalLinksInMaterial(material))
+            for m in material.materials
+                promises.push(@correctInternalLinksInMaterial(m))
+        for n in @news
+            promises.push(@correctInternalLinksInMaterial(n))
+        await Promise.all(promises)
+
     run: ->
         document = await downloadAndParse(url)
 
@@ -551,6 +606,7 @@ class MaterialsDownloader
         @addMaterial(mainPageMaterial)
 
         @fillPaths(mainPageMaterial, [])
+        await @correctInternalLinks()
         @save()
 
         trees = (m.tree for m in materials)

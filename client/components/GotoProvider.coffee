@@ -6,7 +6,8 @@ class GotoProvider extends React.Component
     componentDidMount: (prevProps) ->
         window.goto = (url) =>
             (e) =>
-                e.preventDefault()
+                if e
+                    e.preventDefault()
                 @props.history.push(url)
 
     render: ->
