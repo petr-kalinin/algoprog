@@ -111,7 +111,7 @@ class MaterialsDownloader
         @news.push
             header: header
             type: "news"
-            text: element.innerHTML
+            content: element.innerHTML
 
     parseLink: (a, id, order, keepResourcesInTree, indent, icon, type, path) ->
         material = undefined
