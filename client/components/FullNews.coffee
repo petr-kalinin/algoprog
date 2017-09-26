@@ -9,7 +9,7 @@ export default News = (props) ->
         for m, i in props.news.materials
             a <div key={i}>
                 <h2>{m.header}</h2>
-                <div dangerouslySetInnerHTML={{__html: m.text}}/>
+                <div dangerouslySetInnerHTML={{__html: m.content}}/>
             </div>
         res
         }

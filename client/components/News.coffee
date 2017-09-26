@@ -10,7 +10,7 @@ export default News = (props) ->
         res = []
         a = (el) -> res.push(el)
         for m, i in props.news
-            a <Panel collapsible header={m.header} key={i}><div dangerouslySetInnerHTML={{__html: m.text}}/></Panel>
+            a <Panel collapsible header={m.header} key={i}><div dangerouslySetInnerHTML={{__html: m.content}}/></Panel>
         res
         }
     </div>
