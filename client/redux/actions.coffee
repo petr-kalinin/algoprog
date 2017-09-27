@@ -6,6 +6,7 @@ export GET_DATA = 'GET_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 export LOGIN = 'POST_LOGIN'
+export SET_UNKNOWN_WARNING_SHOWN = 'SET_UNKNOWN_WARNING_SHOWN'
 
 export getData = (url, force) ->
     (dispatch, getState) ->
@@ -47,3 +48,7 @@ export logout = (dispatch) ->
 export postLogin = () ->
     (dispatch) ->
         await Promise.all([dispatch(getMe(true)), dispatch(getMyUser(true))])
+
+export setUnknownWarningShown = () ->
+    return
+        type: SET_UNKNOWN_WARNING_SHOWN

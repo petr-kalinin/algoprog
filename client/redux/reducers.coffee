@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
-import { GET_DATA, SAVE_DATA_PROMISES } from './actions'
+import { GET_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
 
 MAX_DATA_ITEMS = 20
 
@@ -31,9 +31,16 @@ dataPromises = (state=[], action) ->
     else
         return state
 
+unknownWarningShown = (state = false, action) ->
+    if action.type == SET_UNKNOWN_WARNING_SHOWN
+        return true
+    else
+        return state
+
 
 export default rootReducer =
     combineReducers {
         data,
-        dataPromises
+        dataPromises,
+        unknownWarningShown
     }
