@@ -8,6 +8,8 @@ makeUserName = (user) ->
     star = ""
     if user.userList == "stud"
         star = "*"
+    if user.userList == "unknown"
+        star = "u"
     star + user.name + " (" + user.level.current + ")"
 
 export default Result = (props) ->
