@@ -95,7 +95,8 @@ class AllSubmitDownloader
             return JSON.parse(data)
         catch
             logger.info "Can't download results ", runid, href
-            return {}
+            # mark so that it will not be re-downloaded
+            return {failed: true}
 
     mergeComments: (c1, c2) ->
         result = c1
@@ -156,11 +157,12 @@ class AllSubmitDownloader
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
 
-        logger.debug "Adding submit"
+        logger.debug "Adding submit", uid, pid, runid
         await newSubmit.upsert()
         await newUser.upsert()
         @addedUsers[uid] = uid
         await @setDirty(uid, "p"+pid)
+        logger.debug "Done submit", uid, pid, runid, res
         res
 
     parseSubmits: (submitsTable) ->
@@ -241,15 +243,16 @@ zaochUrl = (page, submitsPerPage) ->
 studUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7170&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
-    
+
 unknownUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7647&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
-    
+
 urls =
     'lic40': lic40url,
     'zaoch': zaochUrl,
-    'stud': studUrl
+    'stud': studUrl,
+    'unknown': unknownUrl
 
 running = false
 

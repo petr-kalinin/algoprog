@@ -68,11 +68,13 @@ export default class InformaticsUser
         if @requests >= REQUESTS_LIMIT
             throw "Too many requests"
         @requests++
-        result = await download(href, @jar)
-        @requests--
-        if @promises.length
-            promise = @promises.shift()
-            promise(0)  # resolve
+        try
+            result = await download(href, @jar)
+        finally
+            @requests--
+            if @promises.length
+                promise = @promises.shift()
+                promise(0)  # resolve
         return result
 
     getData: () ->
