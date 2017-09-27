@@ -249,8 +249,7 @@ unknownUrl = (page, submitsPerPage) ->
 urls =
     'lic40': lic40url,
     'zaoch': zaochUrl,
-    'stud': studUrl,
-    'unknown': unknownUrl
+    'stud': studUrl
 
 running = false
 
