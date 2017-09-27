@@ -241,10 +241,16 @@ zaochUrl = (page, submitsPerPage) ->
 studUrl = (page, submitsPerPage) ->
     'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7170&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
+    
+unknownUrl = (page, submitsPerPage) ->
+    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7647&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+
+    
 urls =
     'lic40': lic40url,
     'zaoch': zaochUrl,
-    'stud': studUrl
+    'stud': studUrl,
+    'unknown': unknownUrl
 
 running = false
 
