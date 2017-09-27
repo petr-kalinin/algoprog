@@ -14,6 +14,8 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import logger from '../log'
 import download from '../lib/download'
 
+UNKNOWN_GROUP = '7647'
+
 class AllSubmitDownloader
 
     constructor: (@baseUrl, @userList, @submitsPerPage, @minPages, @limitPages) ->
@@ -105,6 +107,16 @@ class AllSubmitDownloader
                 result.push(c)
         return result
 
+    removeUserFromUnknownGroup: (uid) ->
+        href = "http://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=delete"
+        body = 'deleteParam={"id":"' + uid + '"}&group_id=&session_sid='
+        await @adminUser.download(href, {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
+            body: body,
+            followAllRedirects: true
+        })
+
     processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
         logger.debug "Found submit ", uid, pid, runid
         res = await @needContinueFromSubmit(runid)
@@ -160,6 +172,8 @@ class AllSubmitDownloader
         logger.debug "Adding submit", uid, pid, runid
         await newSubmit.upsert()
         await newUser.upsert()
+        if newUser.userList != "unknown" and oldUser.userList == "unknown"
+            await @removeUserFromUnknownGroup(uid)
         @addedUsers[uid] = uid
         await @setDirty(uid, "p"+pid)
         logger.debug "Done submit", uid, pid, runid, res
@@ -245,7 +259,7 @@ studUrl = (page, submitsPerPage) ->
 
 
 unknownUrl = (page, submitsPerPage) ->
-    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7647&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+    "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{UNKNOWN_GROUP}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=" + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
 
 urls =

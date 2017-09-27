@@ -12,6 +12,7 @@ import Material from '../models/Material'
 
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
+import register from './register'
 
 import logger from '../log'
 
@@ -35,51 +36,7 @@ export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
         res.status(403).send('No permissions')
 
-    app.post '/api/register', wrap (req, res, next) ->
-        logger.info("Try register user", req.body.username)
-        {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin} = req.body
-
-        informaticsUser = new InformaticsUser(informaticsUsername, informaticsPassword)
-        informaticsData = await informaticsUser.getData()
-
-        oldUser = await User.findById(informaticsData.id)
-        if not oldUser
-            logger.info "Register new Table User", informaticsData.id
-            newUser = new User(
-                _id: informaticsData.id,
-                name: informaticsData.name,
-                userList: "unknown",
-            )
-            if cfLogin
-                newUser.cf =
-                    login: cfLogin
-            await newUser.upsert()
-            if cfLogin
-                await newUser.updateCfRating()
-            await newUser.updateLevel()
-            await newUser.updateRatingEtc()
-        else
-            logger.info "Table User already registered"
-
-        newRegisteredUser = new RegisteredUser({
-            username,
-            informaticsId: informaticsData.id,
-            informaticsUsername,
-            informaticsPassword,
-            aboutme,
-            admin: false
-        })
-        RegisteredUser.register newRegisteredUser, req.body.password, (err) ->
-            if (err)
-                logger.error("Cant register user", err)
-                res.json
-                    registered:
-                        error: true
-                        message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
-            else
-                logger.info("Registered user")
-                res.json({registered: {success: true}})
-
+    app.post '/api/register', wrap register
     app.post '/api/login', passport.authenticate('local'), wrap (req, res) ->
         res.json({logged: true})
 

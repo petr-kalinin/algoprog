@@ -62,14 +62,14 @@ export default class InformaticsUser
             id: @id,
             name: @name
 
-    download: (href) ->
+    download: (href, options) ->
         if @requests >= REQUESTS_LIMIT
             await new Promise((resolve) => @promises.push(resolve))
         if @requests >= REQUESTS_LIMIT
             throw "Too many requests"
         @requests++
         try
-            result = await download(href, @jar)
+            result = await download(href, @jar, options)
         finally
             @requests--
             if @promises.length
