@@ -180,8 +180,15 @@ class Register extends React.Component
                     validationState={validationState}/>
 
                 <h2>Личная информация</h2>
-                <p>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
-                исправьте данные в вашем профиле там.</p>
+                <p><span>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
+                исправьте данные </span>
+                {
+                if @state.informaticsData?.id
+                    <a href={"http://informatics.mccme.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"}>в вашем профиле там.</a>
+                else
+                    <span>в вашем профиле там.</span>
+                }
+                </p>
                 {
                 @state.informaticsData?.loading && <div>
                     <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
