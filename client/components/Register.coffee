@@ -198,7 +198,7 @@ class Register extends React.Component
                 @state.informaticsData?.error &&
                 <FormGroup>
                     <FormControl.Static>
-                    Не удалось получить данные с informatics. Проверьте логин и пароль выше
+                    Не удалось получить данные с informatics. Проверьте логин и пароль выше.
                     </FormControl.Static>
                 </FormGroup>
                 }
