@@ -15,6 +15,7 @@ import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import SubmitPage from './pages/SubmitPage'
 import RootPage from './pages/RootPage'
 import FullNewsPage from './pages/FullNewsPage'
+import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 
@@ -62,6 +63,11 @@ export default [
         path: '/news',
         key: "news",
         component: FullNewsPage,
+    },
+    {
+        path: '/registeredUsers',
+        key: "registeredUsers",
+        component: RegisteredUsersPage,
     },
     {
         path: '/login',

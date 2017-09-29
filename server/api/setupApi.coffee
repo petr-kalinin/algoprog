@@ -88,6 +88,11 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
+    app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        res.json(await RegisteredUser.find({}))
+
     app.get '/api/submits/:user/:problem', wrap (req, res) ->
         res.json(await Submit.findByUserAndProblem(req.params.user, req.params.problem))
 
