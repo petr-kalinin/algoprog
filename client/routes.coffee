@@ -80,6 +80,11 @@ export default [
         component: RegisterPage,
     },
     {
+        path: '/stud',
+        key: "/stud",
+        component: RootPage,
+    },
+    {
         path: '/',
         key: "/",
         exact: true,

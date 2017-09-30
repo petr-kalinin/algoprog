@@ -17,7 +17,7 @@ import globalStyles from './global.css'
 import Tree from './Tree'
 import styles from './Root.css'
 
-Inner =
+Inner = (props) ->
     <div>
         <Grid fluid>
             <Row>
@@ -49,7 +49,7 @@ Inner =
             </Row>
         </Grid>
         <h2 className={styles.whatitis}>Что это за курс?</h2>
-        <Tab.Container defaultActiveKey="school" id="info">
+        <Tab.Container defaultActiveKey={if props.match.path=="/stud" then "stud" else "school"} id="info">
             <div>
                 <Nav bsStyle="pills" justified>
                     <NavItem eventKey="school" className={styles.whoami}>
@@ -111,5 +111,5 @@ export default Root = (props) ->
         </Grid>
         {
         sceletonProps = {props..., location: {path: [], _id: "main"}, showNews: "hide", hideBread:true}
-        `<Sceleton {...sceletonProps}>{Inner}</Sceleton>`}
+        `<Sceleton {...sceletonProps}><Inner match={props.match}/></Sceleton>`}
     </div>
