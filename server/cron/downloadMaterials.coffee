@@ -221,6 +221,10 @@ class MaterialsDownloader
 
     getProblem: (href, order) ->
         document = await downloadAndParse(href)
+        submit = document.getElementById('submit')
+        if submit
+            submit.parentElement.removeChild(submit)
+
         data = document.getElementsByClassName("problem-statement")
         if not data or data.length == 0
             logger.error("Can't find statement for problem " + href)
@@ -242,7 +246,15 @@ class MaterialsDownloader
 
         text = "<h1>" + name + "</h1>"
         for tag in data
-            text += "<div>" + tag.innerHTML + "</div>"
+            need = true
+            pred = tag.parentElement
+            while pred
+                if pred.classList.contains("problem-statement")
+                    need = false
+                    break
+                pred = pred.parentElement
+            if need
+                text += "<div>" + tag.innerHTML + "</div>"
 
         material = new Material
             _id: "p" + id,
