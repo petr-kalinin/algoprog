@@ -18,6 +18,7 @@ downloadAndParse = (href) ->
 finalizeMaterialsList = (materials) ->
     materials = (m for m in materials when m)
     materials = await Promise.all(materials)
+    materials = (m for m in materials when m)
     return materials
 
 getIndent = (activity) ->
@@ -221,7 +222,7 @@ class MaterialsDownloader
     getProblem: (href, order) ->
         document = await downloadAndParse(href)
         data = document.getElementsByClassName("problem-statement")
-        if not data
+        if not data or data.length == 0
             logger.error("Can't find statement for problem " + href)
             return undefined
 

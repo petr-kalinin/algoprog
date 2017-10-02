@@ -18,8 +18,8 @@ export default download = (href, jar, options) ->
             })
             return page
         catch e
-            console.log e.message
             logger.info "Error downloading " + href + " " + i + " will re-download"
+            logger.info e.message
             await sleep(delay)
             delay *= 2
     throw "Can't download"
