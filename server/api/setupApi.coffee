@@ -16,7 +16,7 @@ import register from './register'
 
 import logger from '../log'
 
-import {updateAllResults} from '../calculations/updateResults'
+import updateResults {updateAllResults} from '../calculations/updateResults'
 import downloadMaterials from '../cron/downloadMaterials'
 import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
@@ -105,7 +105,13 @@ export default setupApi = (app) ->
     app.get '/api/lastComments/:user', wrap (req, res) ->
         res.json(await SubmitComment.findLastByUser(req.params.user))
 
-    app.get '/api/updateResults', ensureLoggedIn, wrap (req, res) ->
+    app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        await User.updateUser(req.params.user)
+        res.send('OK')
+
+    app.get '/api/updateAllResults', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         await updateAllResults()
