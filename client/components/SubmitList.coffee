@@ -79,6 +79,8 @@ class SubmitList extends React.Component
                             cl = undefined
                             message = submit.outcome
                             switch submit.outcome
+                                when "Частичное решение"
+                                    message = "Неполное решение"
                                 when "AC"
                                     cl = "success"
                                     message = "Зачтено"
