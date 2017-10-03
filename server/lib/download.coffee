@@ -5,6 +5,7 @@ sleep = (milliseconds) ->
     return new Promise((resolve) -> setTimeout(resolve, milliseconds))
 
 export default download = (href, jar, options) ->
+    logger.debug "Downloading", href
     if not jar
         jar = request.jar()
     delay = 5

@@ -261,6 +261,10 @@ studUrl = (page, submitsPerPage) ->
 unknownUrl = (page, submitsPerPage) ->
     "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{UNKNOWN_GROUP}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=" + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
 
+userUrl = (userId) ->
+    (page, submitsPerPage) ->
+        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+
 
 urls =
     'lic40': lic40url,
@@ -280,6 +284,15 @@ wrapRunning = (callable) ->
             await callable()
         finally
             running = false
+
+
+export runForUser = (userId, submitsPerPage, maxPages) ->
+    try
+        user = await User.findById(userId)
+        await (new AllSubmitDownloader(userUrl(userId), user.userList, submitsPerPage, 1, maxPages)).run()
+    catch e
+        logger.error "Error in AllSubmitDownloader", e
+
 
 export runAll = wrapRunning () ->
     try

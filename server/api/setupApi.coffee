@@ -129,6 +129,12 @@ export default setupApi = (app) ->
         downloadContests.run()
         res.send('OK')
 
+    app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        await downloadSubmits.runForUser(req.params.user, 100, 1e9)
+        res.send('OK')
+
     app.get '/api/downloadAllSubmits', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
