@@ -9,6 +9,9 @@ export default RegisteredUsers = (props) ->
             {props.users.map?((user) ->
                 <tr key={user.username}>
                     <td>
+                        {user.username}
+                    </td>
+                    <td>
                         <Link to={"/user/#{user.informaticsId}"}>{user.informaticsId}</Link>
                     </td>
                     <td>
