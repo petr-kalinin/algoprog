@@ -45,8 +45,11 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
-        informaticsUser = new InformaticsUser(req.user.informaticsUsername, req.user.informaticsPassword)
-        informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
+        try
+            informaticsUser = new InformaticsUser(req.user.informaticsUsername, req.user.informaticsPassword)
+            informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
+        finally
+            await downloadSubmits.runForUser(req.user.informaticsId, 5, 1)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->

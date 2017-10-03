@@ -1,5 +1,6 @@
 React = require('react')
 moment = require('moment')
+FontAwesome = require('react-fontawesome')
 
 import Table from 'react-bootstrap/lib/Table'
 import Modal from 'react-bootstrap/lib/Modal'
@@ -8,6 +9,7 @@ import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
 
 import Submit from './Submit'
+import SubmitForm from './SubmitForm'
 
 import ConnectedComponent from '../pages/ConnectedComponent'
 
@@ -23,6 +25,9 @@ OpenSubmit = (props) ->
             <Button bsStyle="primary" onClick={props.close}>Закрыть</Button>
         </Modal.Footer>
     </Modal>
+
+problemId = (props) ->
+    props.material._id.substring(1)
 
 class SubmitList extends React.Component
     constructor: (props) ->
@@ -52,11 +57,12 @@ class SubmitList extends React.Component
         if not @props.myUser?._id
             return null
         <div>
+            <SubmitForm problemId={problemId(@props)} reloadSubmitList={@props.handleReload}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
             }
-            <h4>Попытки</h4>
+            <h4>Попытки <Button onClick={@props.handleReload}>{"\u200B"}<FontAwesome name="refresh"/></Button></h4>
             <p>Не обновляйте страницу; список посылок обновляется автоматически.</p>
             {
             if @props.data?.length

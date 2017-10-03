@@ -70,6 +70,7 @@ class SubmitForm extends React.Component
                 data =
                     submit:
                         result: true
+                @props.reloadSubmitList()
             else
                 throw ""
         catch
