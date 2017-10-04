@@ -123,8 +123,7 @@ class SubmitForm extends React.Component
             {
             if @state.submit?.result
                 <Alert bsStyle="success">
-                    Решение успешно отправлено, оно появится ниже в течение пары минут.
-                    Если не появляется, напишите мне.
+                    Решение успешно отправлено.
                 </Alert>
             }
             {

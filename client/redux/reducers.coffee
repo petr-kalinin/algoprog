@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
+import {reducer as notifications} from 'react-notification-system-redux';
+
 import { GET_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
 
 MAX_DATA_ITEMS = 20
@@ -42,5 +44,6 @@ export default rootReducer =
     combineReducers {
         data,
         dataPromises,
-        unknownWarningShown
+        unknownWarningShown,
+        notifications
     }

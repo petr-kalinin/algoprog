@@ -15,6 +15,7 @@ import GotoProvider from './components/GotoProvider'
 import ScrollToTop from './components/ScrollToTop'
 import YaMetrikaHit from './components/YaMetrikaHit'
 import DefaultHelmet from './components/DefaultHelmet'
+import ConnectedNotifications from './components/ConnectedNotifications'
 
 preloadedState = window.__PRELOADED_STATE__
 delete window.__PRELOADED_STATE__
@@ -25,15 +26,18 @@ ReactDOM.render(
         <div>
             <DefaultHelmet/>
             <BrowserRouter>
-                <ScrollToTop>
-                    <YaMetrikaHit>
-                        <GotoProvider>
-                            <Switch>
-                                {Routes.map((route) => `<Route {...route} data={window.__INITIAL_STATE__}/>`)}
-                            </Switch>
-                        </GotoProvider>
-                    </YaMetrikaHit>
-                </ScrollToTop>
+                <div>
+                    <ScrollToTop>
+                        <YaMetrikaHit>
+                            <GotoProvider>
+                                <Switch>
+                                    {Routes.map((route) => `<Route {...route} data={window.__INITIAL_STATE__}/>`)}
+                                </Switch>
+                            </GotoProvider>
+                        </YaMetrikaHit>
+                    </ScrollToTop>
+                    <ConnectedNotifications/>
+                </div>
             </BrowserRouter>
         </div>
     </Provider>,

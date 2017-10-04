@@ -94,5 +94,6 @@ export default ConnectedComponent = (Component) ->
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
             logout: () -> dispatch(actions.logout(dispatch))
             reloadMyData: () -> dispatch(actions.postLogin())
+            dispatch: dispatch
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)
