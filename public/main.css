@@ -8,3 +8,6 @@ body {
     position: relative !important;
 }
 }
+.panel-heading a {
+    cursor: pointer;
+}
