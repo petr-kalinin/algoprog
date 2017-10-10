@@ -89,7 +89,7 @@ export default renderOnServer = (req, res, next) =>
 
     try
         Routes.some((route) ->
-            match = matchPath(req.url, route)
+            match = matchPath(req.path, route)
             if (match)
                 foundMatch = match
                 component = route.component
