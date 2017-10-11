@@ -61,7 +61,7 @@ class CommentList extends React.Component
                 @props.data.map((comment) =>
                     cl = commentClass(comment)
                     <Panel collapsible key={comment._id} header={comment.problemName} bsStyle={cl}>
-                        <pre>{comment.text}</pre>
+                        <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
                         <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
                     </Panel>
                 )
