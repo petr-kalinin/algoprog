@@ -9,7 +9,7 @@ import addTotal from '../lib/addTotal'
 
 ProblemResult = (props) ->
     r = props.result
-    text = 
+    text =
         if r.ignored < 0  # DQ
             ""
         else if r.solved > 0 or r.ok > 0
@@ -18,7 +18,7 @@ ProblemResult = (props) ->
             "-" + r.attempts
         else
             " "
-    className = 
+    className =
         if r.solved > 0
             "ac"
         else if r.ignored > 0
@@ -31,38 +31,36 @@ ProblemResult = (props) ->
             "wa"
         else
             undefined
-            
+
     if className
         className = globalStyles[className]
-        
+
     realProblem = r.table.substr(1)
     runId = r.lastSubmitId
-    runSuff = ''
     if runId
         if runId.indexOf("p") > 0
             runId = runId.substr(0, runId.indexOf("p"))  # strip problem suffix
-        runSuff = '&run_id=' + runId
-    dbClickUrl = 'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + realProblem + runSuff
+    dbClickUrl = "/material/#{r.table}"
 
     ctrlDbClickUrl = 'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + realProblem + '&submit&user_id=' + props.user._id
-    
+
     dbClickHandler = (event) ->
-        if event.ctrlKey 
-            window.open(ctrlDbClickUrl, '_blank') 
-        else 
+        if event.ctrlKey
+            window.open(ctrlDbClickUrl, '_blank')
+        else
             window.open(dbClickUrl, '_blank')
 
 
     <td title={props.user.name + " : " + props.result.problemName} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
         {text}
     </td>
-    
+
 totalResultClass = (result) ->
     if not result.problemName
         return undefined
     if result.total == result.solved
         return "full"
-    else 
+    else
         needed = result.total
         if result.problemName.slice(-1) == "В"
             needed = Math.ceil(needed / 2)
@@ -74,7 +72,7 @@ totalResultClass = (result) ->
             return "started"
         else
             return "none"
-            
+
 TotalResult = (props) ->
     style = globalStyles.mainTable_td
     title = ""
@@ -84,17 +82,17 @@ TotalResult = (props) ->
             style += " " + styles[s]
         if props.result.problemName
             title = props.user.name + ": " + props.result.problemName
-    return 
+    return
         <td className={style} title={title}>
             {if props.header
                 "="
             else
-                ("" + props.result.solved + 
+                ("" + props.result.solved +
                  (if props.result.ok then " + " + props.result.ok else "") +
                 " / " + props.result.total)
             }
         </td>
-        
+
 Result = (props) ->
     if props.result.total > 1
         `<TotalResult {...props}/>`
@@ -126,7 +124,7 @@ export default TableRow = (props) ->
                         </td>
                     else
                         for result in subtable.results
-                            a <Result header={props.header} result={result} user={props.user} key={result._id + "::" + subtable._id}/> 
+                            a <Result header={props.header} result={result} user={props.user} key={result._id + "::" + subtable._id}/>
                             subTotal = addTotal(subTotal, result)
                 a <td className={globalStyles.border} key={table._id + "b"} />
                 if props.results.length > 1
