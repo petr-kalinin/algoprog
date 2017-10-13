@@ -106,6 +106,11 @@ export default setupApi = (app) ->
         submit = (await Submit.findById(req.params.id)).toObject()
         submit.fullUser = await User.findById(submit.user)
         submit.fullProblem = await Problem.findById(submit.problem)
+        tableNamePromises = []
+        for t in submit.fullProblem.tables
+            tableNamePromises.push(Table.findById(t))
+        tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
+        submit.fullProblem.tables = tableNames
         res.json(submit)
 
     app.get '/api/lastComments/:user', wrap (req, res) ->

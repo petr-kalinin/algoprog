@@ -5,6 +5,10 @@ import Table from 'react-bootstrap/lib/Table'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
 
+import {Link} from 'react-router-dom'
+
+import UserName from './UserName'
+
 import outcomeToText from '../lib/outcomeToText'
 
 export default Submit = (props) ->
@@ -13,7 +17,11 @@ export default Submit = (props) ->
         {props.showHeader &&
             <div>
                 <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
-                <h1>{"#{props.submit.fullUser.name}, #{props.submit.fullProblem.name}: #{message}"}</h1>
+                <h1><UserName user={props.submit.fullUser}/>{" (#{props.submit.fullUser.level.current}), "}
+                    <Link to={"/material/#{props.submit.problem}"}>{props.submit.fullProblem.name}</Link>{": "}
+                    {message}
+                </h1>
+                <h4>{props.submit.fullProblem.tables.join("\n")}</h4>
             </div>}
         <Tabs defaultActiveKey={1} id="submitTabs">
             <Tab eventKey={1} title="Исходный код">
