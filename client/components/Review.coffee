@@ -48,10 +48,11 @@ class ReviewResult extends React.Component
         'submit/' + props.result.lastSubmitId
 
     setResult: (result) ->
-        callApi "/setOutcome/#{@props.result.lastSubmitId}", {
+        callApi "setOutcome/#{@props.result.lastSubmitId}", {
             result,
             comment: @state.commentText
         }
+        @props.handleDone()
 
     accept: () ->
         @setResult("AC")
@@ -70,7 +71,9 @@ class ReviewResult extends React.Component
                 if newText.endsWith(tail)
                     newText = newText.substring(0, newText.length - tail.length);
             newText = newText.trim()
-            @setField("commentText", @state.commentText + "\n\n" + newText)
+            if @state.commentText.length
+                newText = @state.commentText + "\n\n" + newText
+            @setField("commentText", newText)
 
 
     setField: (field, value) ->
@@ -106,10 +109,15 @@ export default class Review extends React.Component
         super(props)
         @state =
             results: props.data.ok
+        @gotoNext = @gotoNext.bind this
+
+    gotoNext: () ->
+        @setState
+            results: @state.results[...-1]
 
     render: () ->
         if @state.results.length == 0
             return <div>Ревьювить больше нечего, обновите страницу</div>
         <div>
-            <ConnectedReviewResult result={@state.results[@state.results.length-1]}/>
+            <ConnectedReviewResult result={@state.results[@state.results.length-1]} handleDone={@gotoNext}/>
         </div>
