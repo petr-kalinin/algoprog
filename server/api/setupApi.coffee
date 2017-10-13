@@ -111,6 +111,9 @@ export default setupApi = (app) ->
     app.get '/api/lastComments/:user', wrap (req, res) ->
         res.json(await SubmitComment.findLastByUser(req.params.user))
 
+    app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
+        res.json(await SubmitComment.findLastByProblem(req.params.problem))
+
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

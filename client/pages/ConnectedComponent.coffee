@@ -68,8 +68,8 @@ export default ConnectedComponent = (Component) ->
             try
                 await Promise.all(@requestData())
                 console.log "Updated data", @url()
-            catch
-                console.log "Can't reload data", @url()
+            catch e
+                console.log "Can't reload data", @url(), e
             if Component.timeout?()
                 console.log "Setting timeout", @url()
                 @timeout = setTimeout((() => @requestDataAndSetTimeout()), Component.timeout())

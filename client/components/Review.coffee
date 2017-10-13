@@ -3,6 +3,7 @@ moment = require('moment');
 import {Link} from 'react-router-dom'
 
 import Button from 'react-bootstrap/lib/Button'
+import Panel from 'react-bootstrap/lib/Panel'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import FormControl from 'react-bootstrap/lib/FormControl'
 import FormGroup from 'react-bootstrap/lib/FormGroup'
@@ -15,6 +16,23 @@ import callApi from '../lib/callApi'
 
 import ConnectedComponent from '../pages/ConnectedComponent'
 
+TAIL_TEXTS = ["Решение проигнорировано", "Решение зачтено"]
+
+class ProblemCommentsLists extends React.Component
+    @url: (props) ->
+        "lastCommentsByProblem/#{props.problemId}"
+
+    render: () ->
+        <div>
+            <h4>Предыдущие комментарии по этой задаче:</h4>
+            {@props.data.map((comment) =>
+                <pre key={comment._id} onClick={@props.handleCommentClicked(comment)} dangerouslySetInnerHTML={{__html: comment.text}}/>
+            )}
+        </div>
+
+ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists)
+
+
 class ReviewResult extends React.Component
     constructor: (props) ->
         super(props)
@@ -24,6 +42,7 @@ class ReviewResult extends React.Component
         @ignore = @ignore.bind this
         @comment = @comment.bind this
         @setField = @setField.bind this
+        @setComment = @setComment.bind this
 
     @url: (props) ->
         'submit/' + props.result.lastSubmitId
@@ -43,6 +62,17 @@ class ReviewResult extends React.Component
     comment: () ->
         @setResult(null)
 
+    setComment: (comment) ->
+        () =>
+            newText = comment.text
+            newText = newText.trim()
+            for tail in TAIL_TEXTS
+                if newText.endsWith(tail)
+                    newText = newText.substring(0, newText.length - tail.length);
+            newText = newText.trim()
+            @setField("commentText", @state.commentText + "\n\n" + newText)
+
+
     setField: (field, value) ->
         newState = {@state...}
         newState[field] = value
@@ -58,11 +88,14 @@ class ReviewResult extends React.Component
                 setField={@setField}
                 style={{ height: 200 }}
                 state={@state}/>
-            <ButtonGroup>
-                <Button onClick={@accept} bsStyle="success">Зачесть</Button>
-                <Button onClick={@ignore} bsStyle="info">Проигнорировать</Button>
-                <Button onClick={@comment}>Прокомментировать</Button>
-            </ButtonGroup>
+            <FormGroup>
+                <ButtonGroup>
+                    <Button onClick={@accept} bsStyle="success">Зачесть</Button>
+                    <Button onClick={@ignore} bsStyle="info">Проигнорировать</Button>
+                    <Button onClick={@comment}>Прокомментировать</Button>
+                </ButtonGroup>
+            </FormGroup>
+            <ConnectedProblemCommentsLists problemId={@props.data.problem} handleCommentClicked={@setComment}/>
         </div>
 
 ConnectedReviewResult = ConnectedComponent(ReviewResult)
