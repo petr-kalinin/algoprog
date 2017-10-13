@@ -48,7 +48,7 @@ class AllSubmitDownloader
         @dirtyResults[userId + "::" + Table.main] = 1
 
     parseRunId: (runid) ->
-        [dummy, contest, run] = runid.match(/(\d+)r(\d+)p(\d+)/)
+        [fullMatch, contest, run] = runid.match(/(\d+)r(\d+)p(\d+)/)
         return [contest, run]
 
     getSource: (runid) ->

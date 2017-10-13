@@ -1,6 +1,8 @@
 import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
 
+import RegisteredUser from '../models/registeredUser'
+
 import download from '../lib/download'
 
 import logger from '../log'
@@ -37,6 +39,12 @@ export default class InformaticsUser
         @jar = request.jar()
         @requests = 0
         @promises = []
+
+    @findAdmin: () ->
+        admin = await RegisteredUser.findAdmin()
+        adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
+        await adminUser.doLogin()
+        return adminUser
 
     doLogin: () ->
         page = await download("http://informatics.mccme.ru/login/index.php", @jar, {

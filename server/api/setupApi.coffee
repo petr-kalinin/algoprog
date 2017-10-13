@@ -119,6 +119,34 @@ export default setupApi = (app) ->
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
         res.json(await SubmitComment.findLastByProblem(req.params.problem))
 
+    app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+        adminUser = await InformaticsUser.findAdmin()
+        [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
+        if req.body.comment
+            href = "http://informatics.mccme.ru/py/comment/add"
+            body =
+                run_id: run
+                contest_id: contest
+                comment: req.body.comment
+                lines: ""
+            await adminUser.download(href, {
+                method: 'POST',
+                headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
+                form: body,
+                followAllRedirects: true
+            })
+        outcomeCode = undefined
+        if req.body.result == "AC"
+            outcomeCode = 8
+        if req.body.result == "IG"
+            outcomeCode = 9
+        if outcomeCode
+            href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
+            await adminUser.download href
+        res.send('OK')
+
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
