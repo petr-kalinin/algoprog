@@ -103,7 +103,10 @@ export default setupApi = (app) ->
         res.json(await Material.findById(req.params.id))
 
     app.get '/api/submit/:id', wrap (req, res) ->
-        res.json(await Submit.findById(req.params.id))
+        submit = (await Submit.findById(req.params.id)).toObject()
+        submit.fullUser = await User.findById(submit.user)
+        submit.fullProblem = await Problem.findById(submit.problem)
+        res.json(submit)
 
     app.get '/api/lastComments/:user', wrap (req, res) ->
         res.json(await SubmitComment.findLastByUser(req.params.user))

@@ -13,6 +13,8 @@ import SubmitForm from './SubmitForm'
 
 import ConnectedComponent from '../pages/ConnectedComponent'
 
+import outcomeToText from '../lib/outcomeToText'
+
 import styles from './SubmitList.css'
 
 OpenSubmit = (props) ->
@@ -76,23 +78,7 @@ class SubmitList extends React.Component
                     </thead>
                     <tbody>
                         {@props.data && @props.data.map((submit) =>
-                            cl = undefined
-                            message = submit.outcome
-                            switch submit.outcome
-                                when "Частичное решение"
-                                    message = "Неполное решение"
-                                when "AC"
-                                    cl = "success"
-                                    message = "Зачтено"
-                                when "IG"
-                                    cl = "info"
-                                    message = "Проигнорировано"
-                                when "OK"
-                                    cl = "warning"
-                                when "CE"
-                                    message = "Ошибка компиляции"
-                                when "DQ"
-                                    message = "Дисквалифицировано"
+                            [cl, message] = outcomeToText(submit.outcome)
                             <tr key={submit._id} className={cl}>
                                 <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
                                 <td>{message}</td>

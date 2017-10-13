@@ -15,6 +15,7 @@ import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import SubmitPage from './pages/SubmitPage'
 import RootPage from './pages/RootPage'
 import FullNewsPage from './pages/FullNewsPage'
+import ReviewPage from './pages/ReviewPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
@@ -43,6 +44,11 @@ export default [
         path: '/dashboard',
         key: "dashboard",
         component: DashboardPage,
+    },
+    {
+        path: '/review',
+        key: "review",
+        component: ReviewPage,
     },
     {
         path: '/solvedByWeek/:userList',
