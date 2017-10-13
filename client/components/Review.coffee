@@ -1,5 +1,8 @@
 React = require('react')
 moment = require('moment');
+Entities = require('html-entities').XmlEntities;
+entities = new Entities();
+
 import {Link} from 'react-router-dom'
 
 import Button from 'react-bootstrap/lib/Button'
@@ -54,6 +57,11 @@ class ReviewResult extends React.Component
         }
         @props.handleDone()
 
+    componentDidUpdate: (prevProps, prevState) ->
+        if prevProps.result._id != @props.result._id
+            @setState
+                commentText: ""
+
     accept: () ->
         @setResult("AC")
 
@@ -65,7 +73,7 @@ class ReviewResult extends React.Component
 
     setComment: (comment) ->
         () =>
-            newText = comment.text
+            newText = entities.decode(comment.text)
             newText = newText.trim()
             for tail in TAIL_TEXTS
                 if newText.endsWith(tail)
@@ -92,11 +100,16 @@ class ReviewResult extends React.Component
                 style={{ height: 200 }}
                 state={@state}/>
             <FormGroup>
-                <ButtonGroup>
-                    <Button onClick={@accept} bsStyle="success">Зачесть</Button>
-                    <Button onClick={@ignore} bsStyle="info">Проигнорировать</Button>
-                    <Button onClick={@comment}>Прокомментировать</Button>
-                </ButtonGroup>
+                {
+                if @props.data.fullUser.userList != "unknown"
+                    <ButtonGroup>
+                        <Button onClick={@accept} bsStyle="success">Зачесть</Button>
+                        <Button onClick={@ignore} bsStyle="info">Проигнорировать</Button>
+                        <Button onClick={@comment}>Прокомментировать</Button>
+                    </ButtonGroup>
+                else
+                    <Button onClick={@props.handleDone}>Пропустить</Button>
+                }
             </FormGroup>
             <ConnectedProblemCommentsLists problemId={@props.data.problem} handleCommentClicked={@setComment}/>
         </div>
@@ -120,4 +133,8 @@ export default class Review extends React.Component
             return <div>Ревьювить больше нечего, обновите страницу</div>
         <div>
             <ConnectedReviewResult result={@state.results[@state.results.length-1]} handleDone={@gotoNext}/>
+            {@state.results.length > 1 &&    # prefetch next submit
+                <div style={{display: "none"}}>
+                    <ConnectedReviewResult result={@state.results[@state.results.length-2]} handleDone={@gotoNext}/>
+                </div>}
         </div>

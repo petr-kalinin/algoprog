@@ -17,7 +17,8 @@ export default Submit = (props) ->
         {props.showHeader &&
             <div>
                 <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
-                <h1><UserName user={props.submit.fullUser}/>{" (#{props.submit.fullUser.level.current}), "}
+                <h1><UserName user={props.submit.fullUser}/>
+                    {" (#{props.submit.fullUser.level.current}, #{props.submit.fullUser.userList}), "}
                     <Link to={"/material/#{props.submit.problem}"}>{props.submit.fullProblem.name}</Link>{": "}
                     {message}
                 </h1>

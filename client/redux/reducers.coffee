@@ -5,7 +5,7 @@ import {reducer as notifications} from 'react-notification-system-redux';
 
 import { GET_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
 
-MAX_DATA_ITEMS = 20
+MAX_DATA_ITEMS = 100
 
 data = (state=[], action) ->
     switch action.type
