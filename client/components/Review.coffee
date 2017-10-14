@@ -121,7 +121,7 @@ export default class Review extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            results: props.data.ok
+            results: (r for r in props.data.ok when r.userList != "unknown")
         @gotoNext = @gotoNext.bind this
 
     gotoNext: () ->
