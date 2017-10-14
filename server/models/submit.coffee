@@ -9,6 +9,7 @@ submitsSchema = new mongoose.Schema
     source: String
     comments: [String]
     results: mongoose.Schema.Types.Mixed
+    force: { type: Boolean, default: false },
 
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true})

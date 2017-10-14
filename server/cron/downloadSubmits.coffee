@@ -159,6 +159,11 @@ class AllSubmitDownloader
             logger.debug "Submit already in the database"
             return res
 
+        if oldSubmit and oldSubmit.force
+            logger.info("Will not overwrite a forced submit")
+            await @setDirty(uid, "p"+pid)
+            return res
+
         [source, comments, results] = await Promise.all([
             @getSource(runid),
             @getComments(newSubmit.problem, newSubmit.user, runid, newSubmit.outcome),
