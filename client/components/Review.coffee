@@ -128,9 +128,10 @@ export default class Review extends React.Component
         @setState
             results: @state.results[...-1]
 
-    componentDidUpdate: () ->
-        @state =
-            results: (r for r in props.data.ok when r.userList != "unknown")
+    componentDidUpdate: (prevProps) ->
+        if @props.data[0]?._id != prevProps.data[0]?._id
+            @setState
+                results: (r for r in @props.data.ok when r.userList != "unknown")
 
     render: () ->
         <div>
