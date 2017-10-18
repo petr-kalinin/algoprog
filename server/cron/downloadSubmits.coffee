@@ -21,6 +21,11 @@ class AllSubmitDownloader
     constructor: (@baseUrl, @userList, @submitsPerPage, @minPages, @limitPages) ->
         @addedUsers = {}
         @dirtyResults = {}
+        @_forceMetadata = false
+
+    forceMetadata: () ->
+        @_forceMetadata = true
+        return this
 
     AC: 'Зачтено/Принято'
     IG: 'Проигнорировано'
@@ -155,14 +160,18 @@ class AllSubmitDownloader
         # we can't compare oldUser and newUser because they will have different rating, etc
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldUser and oldUser.userList == newUser.userList \
-                and oldSubmit.results)
+                and oldSubmit.results \
+                and not @_forceMetadata)
             logger.debug "Submit already in the database"
             return res
 
-        if oldSubmit and oldSubmit.force
+        if oldSubmit and oldSubmit?.force and not @_forceMetadata
             logger.info("Will not overwrite a forced submit")
             await @setDirty(uid, "p"+pid)
             return res
+
+        if @_forceMetadata and oldSubmit?.force
+            newSubmit.outcome = oldSubmit.outcome
 
         [source, comments, results] = await Promise.all([
             @getSource(runid),
@@ -268,6 +277,9 @@ userUrl = (userId) ->
     (page, submitsPerPage) ->
         "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
 
+userProblemUrl = (userId, problemId) ->
+    (page, submitsPerPage) ->
+        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
 
 urls =
     'lic40': lic40url,
@@ -293,6 +305,14 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
     try
         user = await User.findById(userId)
         await (new AllSubmitDownloader(userUrl(userId), user.userList, submitsPerPage, 1, maxPages)).run()
+    catch e
+        logger.error "Error in AllSubmitDownloader", e
+
+export runForUserAndProblem = (userId, problemId) ->
+    try
+        user = await User.findById(userId)
+        iProblemId = problemId.substr(1)
+        await (new AllSubmitDownloader(userProblemUrl(userId, iProblemId), user.userList, 100, 1, 10)).forceMetadata().run()
     catch e
         logger.error "Error in AllSubmitDownloader", e
 

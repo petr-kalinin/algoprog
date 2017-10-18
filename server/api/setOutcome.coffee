@@ -4,6 +4,8 @@ import Problem from '../models/problem'
 import SubmitComment from '../models/SubmitComment'
 import InformaticsUser from '../informatics/InformaticsUser'
 
+import {runForUserAndProblem} from '../cron/downloadSubmits'
+
 import logger from '../log'
 
 postToInformatics = (req, res) ->
@@ -31,7 +33,15 @@ postToInformatics = (req, res) ->
         href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
         await adminUser.download href
 
+updateData = (req, res) ->
+    [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
+    submit = await Submit.findById(req.params.submitId)
+    await runForUserAndProblem(submit.user, "p" + problem)
+    submit = await Submit.findById(req.params.submitId)
+    return submit.outcome == req.body.result
+
 storeToDatabase = (req, res) ->
+    logger.info("Force-storing to database result #{req.params.submitId}")
     [fullSubmitId, runId, problemId] = req.params.submitId.match(/(\d+r\d+)p(\d+)/)
     submit = await Submit.findById(req.params.submitId)
     problem = await Problem.findById(problemId)
@@ -55,5 +65,7 @@ storeToDatabase = (req, res) ->
 
 export default setOutcome = (req, res) ->
     await postToInformatics(req, res)
-    await storeToDatabase(req, res)
+    success = await updateData(req, res)
+    if not success and req.body.result
+        await storeToDatabase(req, res)
     res.send('OK')
