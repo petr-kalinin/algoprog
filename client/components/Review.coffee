@@ -128,13 +128,23 @@ export default class Review extends React.Component
         @setState
             results: @state.results[...-1]
 
+    componentDidUpdate: () ->
+        @state =
+            results: (r for r in props.data.ok when r.userList != "unknown")
+
     render: () ->
-        if @state.results.length == 0
-            return <div>Ревьювить больше нечего, обновите страницу</div>
         <div>
-            <ConnectedReviewResult result={@state.results[@state.results.length-1]} handleDone={@gotoNext}/>
-            {@state.results.length > 1 &&    # prefetch next submit
-                <div style={{display: "none"}}>
-                    <ConnectedReviewResult result={@state.results[@state.results.length-2]} handleDone={@gotoNext}/>
-                </div>}
+            <Button onClick={@props.handleReload}>Обновить</Button>
+            {
+            if @state.results.length == 0
+                <div>Ревьювить больше нечего, обновите страницу</div>
+            else
+                <div>
+                    <ConnectedReviewResult result={@state.results[@state.results.length-1]} handleDone={@gotoNext}/>
+                    {@state.results.length > 1 &&    # prefetch next submit
+                        <div style={{display: "none"}}>
+                            <ConnectedReviewResult result={@state.results[@state.results.length-2]} handleDone={@gotoNext}/>
+                        </div>}
+                </div>
+            }
         </div>
