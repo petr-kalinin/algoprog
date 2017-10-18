@@ -34,17 +34,28 @@ getGraduateYear = (cl) ->
     graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
     return new Date(graduateDate).getFullYear()
 
+adminUser = undefined
+
 export default class InformaticsUser
     constructor: (@username, @password) ->
         @jar = request.jar()
         @requests = 0
         @promises = []
 
-    @findAdmin: () ->
+    @_findAdmin: () ->
         admin = await RegisteredUser.findAdmin()
         adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
         await adminUser.doLogin()
         return adminUser
+
+    @findAdmin: () ->
+        if not adminUser or (new Date() - adminUser.loginTime > 1000 * 1000 * 60 * 60)
+            logger.info("Creating new adminUser")
+            newAdminUser =
+                user: await InformaticsUser._findAdmin()
+                loginTime: new Date()
+            adminUser = newAdminUser
+        return adminUser.user
 
     doLogin: () ->
         page = await download("http://informatics.mccme.ru/login/index.php", @jar, {

@@ -215,9 +215,7 @@ class AllSubmitDownloader
     run: ->
         logger.info "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
 
-        admin = await RegisteredUser.findAdmin()
-        @adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
-        await @adminUser.doLogin()
+        @adminUser = await InformaticsUser.findAdmin()
 
         page = 0
         while true
