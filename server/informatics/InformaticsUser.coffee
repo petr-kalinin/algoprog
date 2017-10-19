@@ -49,7 +49,7 @@ export default class InformaticsUser
         return adminUser
 
     @findAdmin: () ->
-        if not adminUser or (new Date() - adminUser.loginTime > 1000 * 1000 * 60 * 60)
+        if not adminUser or (new Date() - adminUser.loginTime > 1000 * 60 * 60)
             logger.info("Creating new adminUser")
             newAdminUser =
                 user: await InformaticsUser._findAdmin()
