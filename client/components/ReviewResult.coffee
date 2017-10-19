@@ -102,9 +102,12 @@ class ReviewResult extends React.Component
             <FormGroup>
                 {
                 if @props.data.fullUser.userList != "unknown"
+                    bsSize = null
+                    if not (@props.data.outcome in ["OK", "AC", "IG"])
+                        bsSize = "xsmall"
                     <ButtonGroup>
-                        <Button onClick={@accept} bsStyle="success">Зачесть</Button>
-                        <Button onClick={@ignore} bsStyle="info">Проигнорировать</Button>
+                        <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
+                        <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
                         <Button onClick={@comment}>Прокомментировать</Button>
                     </ButtonGroup>
                 else
