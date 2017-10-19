@@ -162,11 +162,11 @@ class AllSubmitDownloader
                 and oldUser and oldUser.userList == newUser.userList \
                 and oldSubmit.results \
                 and not @_forceMetadata)
-            logger.debug "Submit already in the database"
+            logger.debug "Submit already in the database #{runid}"
             return res
 
         if oldSubmit and oldSubmit?.force and not @_forceMetadata
-            logger.info("Will not overwrite a forced submit")
+            logger.info("Will not overwrite a forced submit #{runid}")
             await @setDirty(uid, "p"+pid)
             return res
 
