@@ -103,6 +103,9 @@ export default setupApi = (app) ->
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
 
+    app.get '/api/result/:id', wrap (req, res) ->
+        res.json(await Result.findById(req.params.id))
+
     app.get '/api/submit/:id', wrap (req, res) ->
         submit = (await Submit.findById(req.params.id)).toObject()
         submit.fullUser = await User.findById(submit.user)

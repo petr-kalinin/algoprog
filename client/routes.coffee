@@ -13,6 +13,7 @@ import TablePage from './pages/TablePage'
 import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
 import SubmitPage from './pages/SubmitPage'
+import ReviewResultPage from './pages/ReviewResultPage'
 import RootPage from './pages/RootPage'
 import FullNewsPage from './pages/FullNewsPage'
 import ReviewPage from './pages/ReviewPage'
@@ -64,6 +65,11 @@ export default [
         path: '/submit/:id',
         key: "submit",
         component: SubmitPage,
+    },
+    {
+        path: '/reviewResult/:id',
+        key: "reviewResult",
+        component: ReviewResultPage,
     },
     {
         path: '/news',

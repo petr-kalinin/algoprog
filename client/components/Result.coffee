@@ -26,7 +26,7 @@ export default Result = (props) ->
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD HH:mm:ss')}</a>
                 {" "}[ x {r.attempts} ]
-                {" "}<Link to="/submit/#{r.lastSubmitId}">{"#"}</Link>
+                {" "}<Link to="/reviewResult/#{r._id}">{"#"}</Link>
             </td>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to={userHref}>{userName}</Link>
