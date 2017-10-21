@@ -222,7 +222,7 @@ class AllSubmitDownloader
         User.updateUser(uid, @dirtyResults)
 
     run: ->
-        logger.info "AllSubmitDownloader::run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
+        logger.info "AllSubmitDownloader.run ", @userList, @submitsPerPage, @minPages, '-', @limitPages
 
         @adminUser = await InformaticsUser.findAdmin()
 
@@ -247,7 +247,7 @@ class AllSubmitDownloader
             logger.debug "Will process added user ", uid
             addedPromises.push(@processAddedUser(uid))
         await Promise.all(addedPromises)
-        logger.info "Finish AllSubmitDownloader::run ", @userList, @limitPages
+        logger.info "Finish AllSubmitDownloader.run ", @userList, @limitPages
 
 class LastSubmitDownloader extends AllSubmitDownloader
     needContinueFromSubmit: (runid) ->
