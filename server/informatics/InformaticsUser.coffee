@@ -44,9 +44,9 @@ export default class InformaticsUser
 
     @_findAdmin: () ->
         admin = await RegisteredUser.findAdmin()
-        adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
-        await adminUser.doLogin()
-        return adminUser
+        _adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
+        await _adminUser.doLogin()
+        return _adminUser
 
     @findAdmin: () ->
         if not adminUser or (new Date() - adminUser.loginTime > 1000 * 60 * 60)
