@@ -33,6 +33,17 @@ wrap = (fn) ->
         catch error
             args[2](error)
 
+expandSubmit = (submit) ->
+    submit.fullUser = await User.findById(submit.user)
+    submit.fullProblem = await Problem.findById(submit.problem)
+    tableNamePromises = []
+    for t in submit.fullProblem.tables
+        tableNamePromises.push(Table.findById(t))
+    tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
+    submit.fullProblem.tables = tableNames
+    return submit
+
+
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
         res.status(403).send('No permissions')
@@ -98,7 +109,11 @@ export default setupApi = (app) ->
         res.json(await RegisteredUser.find({}))
 
     app.get '/api/submits/:user/:problem', wrap (req, res) ->
-        res.json(await Submit.findByUserAndProblem(req.params.user, req.params.problem))
+        submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
+        submits = submits.map((submit) -> submit.toObject())
+        submits = submits.map(expandSubmit)
+        submits = await Promise.all(submits)
+        res.json(submits)
 
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
@@ -108,13 +123,7 @@ export default setupApi = (app) ->
 
     app.get '/api/submit/:id', wrap (req, res) ->
         submit = (await Submit.findById(req.params.id)).toObject()
-        submit.fullUser = await User.findById(submit.user)
-        submit.fullProblem = await Problem.findById(submit.problem)
-        tableNamePromises = []
-        for t in submit.fullProblem.tables
-            tableNamePromises.push(Table.findById(t))
-        tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
-        submit.fullProblem.tables = tableNames
+        submit = expandSubmit(submit)
         res.json(submit)
 
     app.get '/api/lastComments/:user', wrap (req, res) ->

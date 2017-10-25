@@ -10,6 +10,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 
 import Submit from './Submit'
 import SubmitForm from './SubmitForm'
+import SubmitListTable from './SubmitListTable'
 
 import ConnectedComponent from '../pages/ConnectedComponent'
 
@@ -68,25 +69,7 @@ class SubmitList extends React.Component
             <p>Не обновляйте страницу; список посылок обновляется автоматически.</p>
             {
             if @props.data?.length
-                <Table responsive striped condensed hover>
-                    <thead>
-                        <tr>
-                            <th>Время</th>
-                            <th>Результат</th>
-                            <th>&nbsp;</th>
-                         </tr>
-                    </thead>
-                    <tbody>
-                        {@props.data && @props.data.map((submit) =>
-                            [cl, message] = outcomeToText(submit.outcome)
-                            <tr key={submit._id} className={cl}>
-                                <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
-                                <td>{message}</td>
-                                <td><a onClick={@openSubmit(submit)} href="#">Подробнее</a></td>
-                            </tr>
-                        ).reverse()}
-                    </tbody>
-                </Table>
+                <SubmitListTable submits={@props.data} handleSubmitClick={@openSubmit} />
             else
                 <p>Посылок по этой задаче еще не было</p>
             }

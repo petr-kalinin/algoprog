@@ -5,6 +5,8 @@ entities = new Entities();
 
 import {Link} from 'react-router-dom'
 
+import Grid from 'react-bootstrap/lib/Grid'
+import Col from 'react-bootstrap/lib/Col'
 import Button from 'react-bootstrap/lib/Button'
 import Panel from 'react-bootstrap/lib/Panel'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
@@ -14,6 +16,7 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 
 import Submit from './Submit'
 import FieldGroup from './FieldGroup'
+import SubmitListTable from './SubmitListTable'
 
 import callApi from '../lib/callApi'
 
@@ -41,17 +44,19 @@ class ReviewResult extends React.Component
         super(props)
         @state =
             commentText: ""
+            currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
         @accept = @accept.bind this
         @ignore = @ignore.bind this
         @comment = @comment.bind this
         @setField = @setField.bind this
         @setComment = @setComment.bind this
+        @setCurrentSubmit = @setCurrentSubmit.bind this
 
     @url: (props) ->
-        'submit/' + props.result.lastSubmitId
+        "submits/#{props.result.user._id}/#{props.result.table._id}"
 
     setResult: (result) ->
-        callApi "setOutcome/#{@props.result.lastSubmitId}", {
+        callApi "setOutcome/#{@state.currentSubmit._id}", {
             result,
             comment: @state.commentText
         }
@@ -61,6 +66,7 @@ class ReviewResult extends React.Component
         if prevProps.result._id != @props.result._id
             @setState
                 commentText: ""
+                currentSubmit: @props.data?[0]
 
     accept: () ->
         @setResult("AC")
@@ -83,38 +89,55 @@ class ReviewResult extends React.Component
                 newText = @state.commentText + "\n\n" + newText
             @setField("commentText", newText)
 
-
     setField: (field, value) ->
         newState = {@state...}
         newState[field] = value
         @setState(newState)
 
+    setCurrentSubmit: (submit) ->
+        (e) =>
+            e.preventDefault()
+            @setState
+                currentSubmit: submit
+
     render:  () ->
-        <div>
-            <Submit submit={@props.data} showHeader/>
-            <FieldGroup
-                id="commentText"
-                label="Комментарий"
-                componentClass="textarea"
-                setField={@setField}
-                style={{ height: 200 }}
-                state={@state}/>
-            <FormGroup>
+        <Grid fluid>
+            <Col xs={12} sm={12} md={8} lg={8}>
                 {
-                if @props.data.fullUser.userList != "unknown"
-                    bsSize = null
-                    if not (@props.data.outcome in ["OK", "AC", "IG"])
-                        bsSize = "xsmall"
-                    <ButtonGroup>
-                        <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
-                        <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
-                        <Button onClick={@comment}>Прокомментировать</Button>
-                    </ButtonGroup>
-                else
-                    <Button onClick={@props.handleDone}>Пропустить</Button>
+                if @state.currentSubmit
+                    <div>
+                        <Submit submit={@state.currentSubmit} showHeader/>
+                        <FieldGroup
+                            id="commentText"
+                            label="Комментарий"
+                            componentClass="textarea"
+                            setField={@setField}
+                            style={{ height: 200 }}
+                            state={@state}/>
+                        <FormGroup>
+                            {
+                            if @props.result.userList != "unknown"
+                                bsSize = null
+                                if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
+                                    bsSize = "xsmall"
+                                <ButtonGroup>
+                                    <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
+                                    <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
+                                    <Button onClick={@comment}>Прокомментировать</Button>
+                                </ButtonGroup>
+                            else
+                                <Button onClick={@props.handleDone}>Пропустить</Button>
+                            }
+                        </FormGroup>
+                    </div>
                 }
-            </FormGroup>
-            <ConnectedProblemCommentsLists problemId={@props.data.problem} handleCommentClicked={@setComment}/>
-        </div>
+            </Col>
+            <Col xs={12} sm={12} md={4} lg={4}>
+                <SubmitListTable submits={@props.data} handleSubmitClick={@setCurrentSubmit} />
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={12}>
+                <ConnectedProblemCommentsLists problemId={@props.result.table._id} handleCommentClicked={@setComment}/>
+            </Col>
+        </Grid>
 
 export default ConnectedComponent(ReviewResult)
