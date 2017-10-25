@@ -14,13 +14,13 @@ makeUserName = (user) ->
 
 export default Result = (props) ->
     r = props.result
-    problem = r.table._id.substr(1)
-    href =  'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + problem + '&submit&user_id=' + r.user._id
-    userHref = "/user/" + r.user._id
-    problemHref = '/material/' + r.table._id
-    problemName = r.table.name
-    contests = r.table.tables
-    userName = makeUserName(r.user)
+    problem = r.fullTable._id.substr(1)
+    href =  'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + problem + '&submit&user_id=' + r.fullUser._id
+    userHref = "/user/" + r.fullUser._id
+    problemHref = '/material/' + r.fullTable._id
+    problemName = r.fullTable.name
+    contests = r.fullTable.tables
+    userName = makeUserName(r.fullUser)
     return
         <tr>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>

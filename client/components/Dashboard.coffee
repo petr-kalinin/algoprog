@@ -32,7 +32,7 @@ export default class Dashboard extends React.Component
                     <Table striped condensed hover>
                         <tbody>
                             {@props[type].map((result) =>
-                                if result.user.userList != "unknown" or @state.showUnknown
+                                if result.fullUser.userList != "unknown" or @state.showUnknown
                                     <Result result={result} key={result._id}/>
                                 else
                                     null
@@ -48,12 +48,12 @@ export default class Dashboard extends React.Component
                         {@props["cf"].map((result) ->
                             <tr key={result._id}>
                                 <td className={styles.td}>{moment(result.time).format('YYYY-MM-DD kk:mm:ss')}</td>
-                                <td className={styles.td}><Link to={"/user/" + result.user._id}>{result.user.name}</Link></td>
+                                <td className={styles.td}><Link to={"/user/" + result.fullUser._id}>{result.fullUser.name}</Link></td>
                                 <td className={styles.td}>{result.contestId}</td>
                                 <td className={styles.td}>
                                     {
-                                        if result.user.cf?.login
-                                            <a href={"http://codeforces.com/submissions/" + result.user.cf.login + "/contest/" + result.contestId}>
+                                        if result.fullUser.cf?.login
+                                            <a href={"http://codeforces.com/submissions/" + result.fullUser.cf.login + "/contest/" + result.contestId}>
                                                 {
                                                 delta = result.newRating - result.oldRating
                                                 if delta > 0

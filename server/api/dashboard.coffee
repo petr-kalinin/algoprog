@@ -8,16 +8,16 @@ import CfResult from '../models/cfResult'
 
 expandResult = (result) ->
     res = result.toObject()
-    res.user = (await User.findById(result.user))
-    if not res.user
+    res.fullUser = (await User.findById(result.user))
+    if not res.fullUser
         return undefined
-    res.user = res.user.toObject()
-    res.table = (await Problem.findById(result.table)).toObject()
+    res.fullUser = res.fullUser.toObject()
+    res.fullTable = (await Problem.findById(result.table)).toObject()
     tableNamePromises = []
-    for table in res.table.tables
+    for table in res.fullTable.tables
         tableNamePromises.push(Table.findById(table))
     tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
-    res.table.tables = tableNames
+    res.fullTable.tables = tableNames
     return res
 
 expandResults = (results) ->
@@ -37,12 +37,12 @@ runDashboardQuery = (key, query, result) ->
 
 expandCfResult = (result) ->
     result = result.toObject()
-    result.user = await User.findById(result.userId)
-    if not result.user
+    result.fullUser = await User.findById(result.userId)
+    if not result.fullUser
         return undefined
-    if not result.user.cf
+    if not result.fullUser.cf
         return undefined
-    result.user = result.user.toObject()
+    result.fullUser = result.fullUser.toObject()
     return result
 
 runCfQuery = (result) ->

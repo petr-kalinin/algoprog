@@ -53,7 +53,7 @@ class ReviewResult extends React.Component
         @setCurrentSubmit = @setCurrentSubmit.bind this
 
     @url: (props) ->
-        "submits/#{props.result.user._id}/#{props.result.table._id}"
+        "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
 
     setResult: (result) ->
         callApi "setOutcome/#{@state.currentSubmit._id}", {
@@ -136,7 +136,7 @@ class ReviewResult extends React.Component
                 <SubmitListTable submits={@props.data} handleSubmitClick={@setCurrentSubmit} />
             </Col>
             <Col xs={12} sm={12} md={12} lg={12}>
-                <ConnectedProblemCommentsLists problemId={@props.result.table._id} handleCommentClicked={@setComment}/>
+                <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
             </Col>
         </Grid>
 
