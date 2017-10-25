@@ -66,7 +66,7 @@ class ReviewResult extends React.Component
         if prevProps.result._id != @props.result._id
             @setState
                 commentText: ""
-                currentSubmit: @props.data?[0]
+                currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
 
     accept: () ->
         @setResult("AC")
