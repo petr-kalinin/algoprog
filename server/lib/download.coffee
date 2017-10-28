@@ -15,6 +15,7 @@ export default download = (href, jar, options) ->
                 options...,
                 url: href
                 jar: jar,
+                gzip: true,
                 timeout: options?.timeout || 7 * 1000
             })
             return page

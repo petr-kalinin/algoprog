@@ -60,11 +60,12 @@ class AllSubmitDownloader
         try
             [contest, run] = @parseRunId(runid)
             href = "http://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}"
-            page = await @adminUser.download(href)
+            page = await @adminUser.download(href, {encoding: 'latin1'})
             document = (new JSDOM(page)).window.document
-            return document.getElementById("source-textarea").innerHTML
-        catch
-            logger.info "Can't download source ", runid, href
+            source = document.getElementById("source-textarea").innerHTML
+            return source
+        catch e
+            logger.info "Can't download source ", runid, href, e
             return ""
 
     getComments: (problemId, userId, runid, outcome) ->
