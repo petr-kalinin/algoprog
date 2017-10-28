@@ -33,6 +33,16 @@ export default class Submit extends React.Component
             @setState
                 encoding: encoding
 
+    componentDidMount: ->
+        @doHighlight()
+
+    componentDidUpdate: ->
+        @doHighlight()
+
+    doHighlight: ->
+        for el in document.getElementsByClassName("sourcecode")
+            hljs.highlightBlock(el)
+
     render: () ->
         [cl, message] = outcomeToText(@props.submit.outcome)
         <div>
@@ -48,7 +58,7 @@ export default class Submit extends React.Component
                 </div>}
             <Tabs defaultActiveKey={1} id="submitTabs">
                 <Tab eventKey={1} title="Исходный код">
-                    <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}}></pre>
+                    <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className="sourcecode"></pre>
                     Кодировка:{" "}
                     <ButtonGroup>
                         {

@@ -27,6 +27,7 @@ renderFullPage = (html, data, helmet) ->
             <link rel="stylesheet" href="/bundle.css"/>
             <link rel="stylesheet" href="/bootstrap.min.css"/>
             <link rel="stylesheet" href="/informatics.css"/>
+            <link rel="stylesheet" href="/highlight-default.css"/>
             <link rel="stylesheet" href="/main.css"/>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <script>
@@ -46,6 +47,7 @@ renderFullPage = (html, data, helmet) ->
             </script>
             <script type="text/javascript" src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+            <script src="/highlight.pack.js"></script>
         </head>
         <body>
             <div id="main" style="min-width: 100%; min-height: 100%">' + html + '</div>
