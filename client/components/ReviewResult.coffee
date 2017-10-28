@@ -133,7 +133,7 @@ class ReviewResult extends React.Component
                 }
             </Col>
             <Col xs={12} sm={12} md={4} lg={4}>
-                <SubmitListTable submits={@props.data} handleSubmitClick={@setCurrentSubmit} />
+                <SubmitListTable submits={@props.data} handleSubmitClick={@setCurrentSubmit} activeId={@state.currentSubmit?._id}/>
             </Col>
             <Col xs={12} sm={12} md={12} lg={12}>
                 <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>

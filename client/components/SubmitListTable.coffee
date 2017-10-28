@@ -5,6 +5,8 @@ import Table from 'react-bootstrap/lib/Table'
 
 import outcomeToText from '../lib/outcomeToText'
 
+import styles from './SubmitListTable.css'
+
 export default SubmitListTable = (props) ->
     <Table responsive striped condensed hover>
         <thead>
@@ -17,6 +19,8 @@ export default SubmitListTable = (props) ->
         <tbody>
             {props.submits && props.submits.map((submit) =>
                 [cl, message] = outcomeToText(submit.outcome)
+                if submit._id == props.activeId
+                    cl += " " + styles.active
                 <tr key={submit._id} className={cl}>
                     <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
                     <td>{message}</td>
