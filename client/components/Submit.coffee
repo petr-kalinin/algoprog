@@ -36,8 +36,9 @@ export default class Submit extends React.Component
     componentDidMount: ->
         @doHighlight()
 
-    componentDidUpdate: ->
-        @doHighlight()
+    componentDidUpdate:  (prevProps, prevState) ->
+        if @props.submit._id != prevProps.submit._id
+            @doHighlight()
 
     doHighlight: ->
         for el in document.getElementsByClassName("sourcecode")
