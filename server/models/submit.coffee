@@ -7,6 +7,7 @@ submitsSchema = new mongoose.Schema
     problem: String,
     outcome: String
     source: String
+    language: String
     comments: [String]
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },

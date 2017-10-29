@@ -24,6 +24,7 @@ export default SubmitListTable = (props) ->
                 <tr key={submit._id} className={cl}>
                     <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
                     <td>{message}</td>
+                    <td>{submit.language}</td>
                     <td><a onClick={props.handleSubmitClick(submit)} href="#">Подробнее</a></td>
                 </tr>
             ).reverse()}

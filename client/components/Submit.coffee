@@ -14,6 +14,29 @@ import UserName from './UserName'
 
 import outcomeToText from '../lib/outcomeToText'
 
+LANGUAGES =
+    "Python 3.4.3": "Python",
+    "Free Pascal 2.6.4": "Delphi",
+    "PascalABC 3.1.0.1198": "Delphi",
+    "GNU C++ 5.3.1": "cpp",
+    "GNU C 5.3.1": "cpp",
+    "Borland Delphi 6 - 14.5": "Delphi",
+    "Java JDK 1.8": "Java"
+    "PHP 5.6.19": "PHP",
+    "Python 2.7.10": "Python",
+    "Perl 5.22.1": "Perl",
+    "Mono C# 4.0.5": "cs",
+    "Ruby 2.2.4": "Ruby",
+    "Haskell GHC 7.8.4": "Haskell",
+    "FreeBASIC 1.05.0": "Basic",
+    "GNU C++ 5.3.1 + sanitizer": "cpp"
+
+langClass = (lang) ->
+    if lang of LANGUAGES
+        return LANGUAGES[lang]
+    else
+        return ""
+
 convert = (source, encoding) ->
     buf = Buffer.from(source, "latin1")
     return iconv.decode(buf, encoding)
@@ -59,7 +82,7 @@ export default class Submit extends React.Component
                 </div>}
             <Tabs defaultActiveKey={1} id="submitTabs">
                 <Tab eventKey={1} title="Исходный код">
-                    <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className="sourcecode"></pre>
+                    <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
                     Кодировка:{" "}
                     <ButtonGroup>
                         {

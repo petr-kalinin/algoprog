@@ -123,8 +123,8 @@ class AllSubmitDownloader
             followAllRedirects: true
         })
 
-    processSubmit: (uid, name, pid, runid, prob, date, outcome) ->
-        logger.debug "Found submit ", uid, pid, runid
+    processSubmit: (uid, name, pid, runid, prob, date, language, outcome) ->
+        logger.debug "Found submit ", uid, pid, runid, prob, date, language, outcome
         res = await @needContinueFromSubmit(runid)
         if (outcome == @CE)
             outcome = "CE"
@@ -146,6 +146,7 @@ class AllSubmitDownloader
             user: uid,
             problem: "p" + pid,
             outcome: outcome
+            language: language
         )
         newUser = new User(
             _id: uid,
@@ -200,7 +201,7 @@ class AllSubmitDownloader
         wasSubmit = false
         resultPromises = []
         for row in submitsRows
-            re = new RegExp '<td>[^<]*</td>\\s*<td><a href="/moodle/user/view.php\\?id=(\\d+)">([^<]*)</a></td>\\s*<td><a href="/moodle/mod/statements/view3.php\\?chapterid=(\\d+)&run_id=([0-9r]+)">([^<]*)</a></td>\\s*<td>([^<]*)</td>\\s*<td>[^<]*</td>\\s*<td>([^<]*)</td>', 'gm'
+            re = new RegExp '<td>[^<]*</td>\\s*<td><a href="/moodle/user/view.php\\?id=(\\d+)">([^<]*)</a></td>\\s*<td><a href="/moodle/mod/statements/view3.php\\?chapterid=(\\d+)&run_id=([0-9r]+)">([^<]*)</a></td>\\s*<td>([^<]*)</td>\\s*<td>([^<]*)</td>\\s*<td>([^<]*)</td>', 'gm'
             data = re.exec row
             if not data
                 continue
@@ -210,8 +211,9 @@ class AllSubmitDownloader
             runid = data[4] + "p" + pid
             prob = data[5]
             date = data[6]
-            outcome = data[7].trim()
-            resultPromises.push(@processSubmit(uid, name, pid, runid, prob, date, outcome))
+            language = data[7]
+            outcome = data[8].trim()
+            resultPromises.push(@processSubmit(uid, name, pid, runid, prob, date, language, outcome))
             wasSubmit = true
         results = await Promise.all(resultPromises)
         result = wasSubmit
