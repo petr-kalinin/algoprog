@@ -100,10 +100,11 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
     updateResultsForTable(user, Table.main, dirtyResults)
+    logger.info "updated results for user ", user
 
 export updateAllResults = () ->
     users = await User.find({})
     promises = []
     for user in users
-        promises.push(updateResults(user))
+        promises.push(updateResults(user._id))
     Promise.all(promises)

@@ -1,6 +1,7 @@
 import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits"
 import * as downloadContests from "./downloadContests"
+import {updateAllResults} from '../calculations/updateResults'
 import updateCf from "./updateCf"
 import logger from '../log'
 
@@ -24,4 +25,6 @@ jobContests = undefined
 
 jobCf = new Cron.CronJob('0 0 * * * *', updateCf, null, true);
 
-export default [jobAll, jobUntilIgnored, jobLast, jobContests, jobCf]
+jobUpdateResults = new Cron.CronJob('45 45 ' + (nightHour + 1) + ' * * *', updateAllResults, null, true);
+
+export default [jobAll, jobUntilIgnored, jobLast, jobContests, jobCf, jobUpdateResults]
