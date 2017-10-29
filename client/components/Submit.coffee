@@ -60,7 +60,7 @@ export default class Submit extends React.Component
         @doHighlight()
 
     componentDidUpdate:  (prevProps, prevState) ->
-        if @props.submit._id != prevProps.submit._id
+        if @props.submit._id != prevProps.submit._id or prevState.encoding != @state.encoding
             @doHighlight()
 
     doHighlight: ->
