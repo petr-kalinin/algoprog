@@ -149,7 +149,7 @@ export default setupApi = (app) ->
     app.get '/api/updateAllResults', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
-        await updateAllResults()
+        User.updateAllUsers()
         res.send('OK')
 
     app.get '/api/downloadMaterials', ensureLoggedIn, wrap (req, res) ->

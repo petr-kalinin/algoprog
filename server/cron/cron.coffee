@@ -4,6 +4,7 @@ import * as downloadContests from "./downloadContests"
 import {updateAllResults} from '../calculations/updateResults'
 import updateCf from "./updateCf"
 import logger from '../log'
+import User from '../models/user'
 
 #downloadSubmits.runUntilIgnored()
 #downloadSubmits.runAll().catch((e) -> logger.error(e))
@@ -25,6 +26,6 @@ jobContests = undefined
 
 jobCf = new Cron.CronJob('0 0 * * * *', updateCf, null, true);
 
-jobUpdateResults = new Cron.CronJob('45 45 ' + (nightHour + 1) + ' * * *', updateAllResults, null, true);
+jobUpdateResults = new Cron.CronJob('45 46 ' + (nightHour + 1) + ' * * *', User.updateAllUsers, null, true);
 
 export default [jobAll, jobUntilIgnored, jobLast, jobContests, jobCf, jobUpdateResults]

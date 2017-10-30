@@ -83,12 +83,20 @@ usersSchema.statics.findAll = (list) ->
     User.find {}
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
+    logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
     u = await User.findById(userId)
     await u.updateChocos()
     await u.updateRatingEtc()
     await u.updateLevel()
+    logger.info "Updated user", userId
 
+usersSchema.statics.updateAllUsers = (dirtyResults) ->
+    users = await User.find {}
+    promises = []
+    for u in users
+        promises.push(User.updateUser(u._id))
+    await Promise.all(promises)
 
 usersSchema.index
     userList: 1
