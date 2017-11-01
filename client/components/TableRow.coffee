@@ -35,20 +35,14 @@ ProblemResult = (props) ->
     if className
         className = globalStyles[className]
 
-    realProblem = r.table.substr(1)
-    runId = r.lastSubmitId
-    if runId
-        if runId.indexOf("p") > 0
-            runId = runId.substr(0, runId.indexOf("p"))  # strip problem suffix
     dbClickUrl = "/material/#{r.table}"
-
-    ctrlDbClickUrl = 'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + realProblem + '&submit&user_id=' + props.user._id
+    ctrlDbClickUrl = "/reviewResult/#{props.user._id}::#{r.table}"
 
     dbClickHandler = (event) ->
         if event.ctrlKey
-            window.open(ctrlDbClickUrl, '_blank')
+            window.goto(ctrlDbClickUrl)()
         else
-            window.open(dbClickUrl, '_blank')
+            window.goto(dbClickUrl)()
 
 
     <td title={props.user.name + " : " + props.result.problemName} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
