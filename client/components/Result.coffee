@@ -14,8 +14,6 @@ makeUserName = (user) ->
 
 export default Result = (props) ->
     r = props.result
-    problem = r.fullTable._id.substr(1)
-    href =  'http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=' + problem + '&submit&user_id=' + r.fullUser._id
     userHref = "/user/" + r.fullUser._id
     problemHref = '/material/' + r.fullTable._id
     problemName = r.fullTable.name
@@ -24,9 +22,8 @@ export default Result = (props) ->
     return
         <tr>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
-                <a href={href} target="_blank">{moment(r.lastSubmitTime).format('YYYY-MM-DD HH:mm:ss')}</a>
+                <Link to="/reviewResult/#{r._id}">{moment(r.lastSubmitTime).format('YYYY-MM-DD HH:mm:ss')}</Link>
                 {" "}[ x {r.attempts} ]
-                {" "}<Link to="/reviewResult/#{r._id}">{"#"}</Link>
             </td>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to={userHref}>{userName}</Link>
