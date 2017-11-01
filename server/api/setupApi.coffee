@@ -108,7 +108,9 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
         res.json(await RegisteredUser.find({}))
 
-    app.get '/api/submits/:user/:problem', wrap (req, res) ->
+    app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).send('No permissions')
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
         submits = submits.map(expandSubmit)
@@ -124,15 +126,21 @@ export default setupApi = (app) ->
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
 
-    app.get '/api/submit/:id', wrap (req, res) ->
+    app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).send('No permissions')
         submit = (await Submit.findById(req.params.id)).toObject()
         submit = expandSubmit(submit)
         res.json(submit)
 
-    app.get '/api/lastComments/:user', wrap (req, res) ->
+    app.get '/api/lastComments/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).send('No permissions')
         res.json(await SubmitComment.findLastByUser(req.params.user))
 
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
         res.json(await SubmitComment.findLastByProblem(req.params.problem))
 
     app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
