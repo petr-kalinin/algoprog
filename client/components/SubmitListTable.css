@@ -1,3 +1,6 @@
 .active td {
     font-weight: bold;
 }
+.outerDiv table {
+    margin-bottom: 5px !important;
+}
