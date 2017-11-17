@@ -1,9 +1,11 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
 
 import Row from 'react-bootstrap/lib/Row'
 import Col from 'react-bootstrap/lib/Col'
 import Grid from 'react-bootstrap/lib/Grid'
 import Breadcrumb from 'react-bootstrap/lib/Breadcrumb'
+import Navbar from 'react-bootstrap/lib/Navbar'
 import { LinkContainer } from 'react-router-bootstrap'
 
 
@@ -13,6 +15,8 @@ import Tree from './Tree'
 import News from './News'
 import CommentList from './CommentList'
 import TopPanel from './TopPanel'
+
+import styles from './Sceleton.css'
 
 SIZES = ["xs", "sm", "md", "lg"]
 
@@ -40,6 +44,34 @@ ColWrapper = (props) ->
         else
             subProps[size] = props.size[size]
     `<Col {...subProps}>{props.children}</Col>`
+
+BottomPanel = (props) ->
+    <div className={styles.footer}>
+        <Grid fluid>
+            <Row>
+                <Col xs={12} sm={6} md={6} lg={6}>
+                    <div className="text-muted">
+                        <a href="http://algoprog.ru/material/module-29054">Лицензия</a>
+                        {" | "}
+                        сайт © Петр Калинин, GNU AGPL, <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
+                    </div>
+                </Col>
+                <Col xs={12} sm={6} md={6} lg={6}>
+                    <div className={styles.right + " text-muted"}>
+                        {
+                        if props.me?.userList == "stud"
+                            "Оплатить занятия "
+                        else
+                            "Поддержать занятия "
+                        }
+                        <FontAwesome name="cc-visa"/>
+                        {" "}
+                        <FontAwesome name="cc-mastercard"/>
+                    </div>
+                </Col>
+            </Row>
+        </Grid>
+    </div>
 
 
 fixSize = (prop, def) ->
@@ -94,24 +126,27 @@ export default class Sceleton extends React.Component
             _id: @props.location._id
             title: @props.location.title
         {treeSize, newsSize, selfSize} = getSizes(@state)
-        <div>
+        <div className={styles.wrapper}>
             <Helmet>
                 {@props.location?.title && <title>{@props.location?.title}</title>}
             </Helmet>
             <TopPanel me={@props.me} myUser={@props.myUser} toggleTree={@toggleTree} handleLogout={@props.logout}/>
-            <Grid fluid>
-                <Row>
-                    <ColWrapper size={treeSize}>
-                        <Tree tree={@props.tree} path={@props.location?.path || []} id={@props.location?._id} />
-                    </ColWrapper>
-                    <ColWrapper size={selfSize}>
-                        {@props.hideBread || <Bread path={breadPath} id={@props.location._id} /> }
-                        {@props.children}
-                    </ColWrapper>
-                    <ColWrapper size={newsSize}>
-                        <News news={@props.news.materials} />
-                        <CommentList />
-                    </ColWrapper>
-                </Row>
-            </Grid>
+            <div className={styles.main}>
+                <Grid fluid>
+                    <Row>
+                        <ColWrapper size={treeSize}>
+                            <Tree tree={@props.tree} path={@props.location?.path || []} id={@props.location?._id} />
+                        </ColWrapper>
+                        <ColWrapper size={selfSize}>
+                            {@props.hideBread || <Bread path={breadPath} id={@props.location._id} /> }
+                            {@props.children}
+                        </ColWrapper>
+                        <ColWrapper size={newsSize}>
+                            <News news={@props.news.materials} />
+                            <CommentList />
+                        </ColWrapper>
+                    </Row>
+                </Grid>
+            </div>
+            <BottomPanel me={@props.me} />
         </div>
