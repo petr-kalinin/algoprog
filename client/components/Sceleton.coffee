@@ -61,15 +61,17 @@ BottomPanel = (props) ->
                 </Col>
                 <Col xs={12} sm={6} md={6} lg={6}>
                     <div className={styles.right + " text-muted"}>
-                        {
-                        if props.me?.userList == "stud"
-                            "Оплатить занятия "
-                        else
-                            "Поддержать занятия "
-                        }
-                        <FontAwesome name="cc-visa"/>
-                        {" "}
-                        <FontAwesome name="cc-mastercard"/>
+                        <Link to="/pay">
+                            {
+                            if props.myUser?.userList == "stud"
+                                "Оплатить занятия "
+                            else
+                                "Поддержать занятия "
+                            }
+                            <FontAwesome name="cc-visa"/>
+                            {" "}
+                            <FontAwesome name="cc-mastercard"/>
+                        </Link>
                     </div>
                 </Col>
             </Row>
@@ -151,5 +153,5 @@ export default class Sceleton extends React.Component
                     </Row>
                 </Grid>
             </div>
-            <BottomPanel me={@props.me} />
+            <BottomPanel myUser={@props.myUser} />
         </div>

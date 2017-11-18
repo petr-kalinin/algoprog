@@ -20,6 +20,7 @@ import ReviewPage from './pages/ReviewPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
+import PayPage from './pages/PayPage'
 
 class NoMatch extends React.Component
     render: () ->
@@ -75,6 +76,11 @@ export default [
         path: '/news',
         key: "news",
         component: FullNewsPage,
+    },
+    {
+        path: '/pay',
+        key: "pay",
+        component: PayPage,
     },
     {
         path: '/registeredUsers',
