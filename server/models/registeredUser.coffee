@@ -9,7 +9,7 @@ registeredUserSchema = new mongoose.Schema
     aboutme: String
 
 registeredUserSchema.statics.findAdmin = (list) ->
-    RegisteredUser.findOne({admin: true})
+    RegisteredUser.findOne({admin: true, username: "pkalinin"})
 
 
 registeredUserSchema.plugin(passportLocalMongoose);
