@@ -7,6 +7,7 @@ import Grid from 'react-bootstrap/lib/Grid'
 import Breadcrumb from 'react-bootstrap/lib/Breadcrumb'
 import Navbar from 'react-bootstrap/lib/Navbar'
 import { LinkContainer } from 'react-router-bootstrap'
+import { Link } from 'react-router-dom'
 
 
 import { Helmet } from "react-helmet"
@@ -51,9 +52,11 @@ BottomPanel = (props) ->
             <Row>
                 <Col xs={12} sm={6} md={6} lg={6}>
                     <div className="text-muted">
-                        <a href="http://algoprog.ru/material/module-29054">Лицензия</a>
+                        <Link to="/">algoprog.ru</Link>
+                        {" © Петр Калинин, GNU AGPL, "}
+                        <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
-                        сайт © Петр Калинин, GNU AGPL, <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
+                        <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
                     </div>
                 </Col>
                 <Col xs={12} sm={6} md={6} lg={6}>
