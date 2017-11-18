@@ -136,7 +136,7 @@ export default setupApi = (app) ->
     app.get '/api/lastComments/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).send('No permissions')
-        res.json(await SubmitComment.findLastByUser(req.params.user))
+        res.json(await SubmitComment.findLastNotViewedByUser(req.params.user))
 
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
@@ -147,6 +147,15 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
         setOutcome(req, res)
+
+    app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
+        comment = await SubmitComment.findById(req.params.commentId)
+        console.log "Set comment viewed ", req.params.commentId, ""+req.user?.informaticsId, "" + comment?.userId
+        if ""+req.user?.informaticsId != "" + comment?.userId
+            res.status(403).send('No permissions')
+        comment.viewed = true
+        await comment.save()
+        res.send('OK')
 
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

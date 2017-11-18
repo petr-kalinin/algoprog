@@ -10,6 +10,7 @@ submitCommentsSchema = new mongoose.Schema
     text: String
     time: Date
     outcome: String
+    viewed: { type: Boolean, default: false }
 
 submitCommentsSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -18,8 +19,9 @@ submitCommentsSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a submitComment"
 
-submitCommentsSchema.statics.findLastByUser = (id) ->
-    SubmitComment.find({userId: id}).sort({time: -1}).limit(20)
+submitCommentsSchema.statics.findLastNotViewedByUser = (id) ->
+    SubmitComment.find({userId: id, viewed: false, time: {$gt: new Date(2017, 10, 11)}}) \
+        .sort({time: -1}).limit(20)
 
 submitCommentsSchema.statics.findLastByProblem = (id) ->
     SubmitComment.find({problemId: id}).sort({time: -1}).limit(20)

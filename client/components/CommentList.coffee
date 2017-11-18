@@ -8,6 +8,8 @@ import Notifications from 'react-notification-system-redux';
 
 import ConnectedComponent from '../pages/ConnectedComponent'
 
+import callApi from '../lib/callApi'
+
 commentClass = (comment) ->
     switch comment.outcome
         when "AC" then "success"
@@ -23,6 +25,9 @@ commentText = (comment) ->
 class CommentList extends React.Component
     constructor: (props) ->
         super(props)
+        @markAsViewed = @markAsViewed.bind this
+        @state =
+            viewed: {}
 
     @url: (props) ->
         if props?.myUser?._id
@@ -30,6 +35,12 @@ class CommentList extends React.Component
 
     @timeout: () ->
         20 * 1000
+
+    markAsViewed: (commentId) ->
+        (e) =>
+            e.preventDefault()
+            await callApi "setCommentViewed/#{commentId}", {}
+            await @props.handleReload()
 
     componentDidUpdate: (prevProps) ->
         # do not show anything if we do not have comments or we were not logged in
@@ -60,7 +71,14 @@ class CommentList extends React.Component
             if @props.data?.length
                 @props.data.map((comment) =>
                     cl = commentClass(comment)
-                    <Panel collapsible key={comment._id} header={comment.problemName} bsStyle={cl}>
+                    title =
+                        <span>
+                            {comment.problemName}
+                            <button type="button" className="close" onClick={@markAsViewed(comment._id)}>
+                                <span>&times;</span>
+                            </button>
+                        </span>
+                    <Panel collapsible key={comment._id} header={title} bsStyle={cl}>
                         <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
                         <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
                     </Panel>
