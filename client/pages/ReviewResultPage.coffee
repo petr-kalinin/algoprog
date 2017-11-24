@@ -21,7 +21,7 @@ class ReviewResultPage extends React.Component
             showNews: "hide",
             showTree: "hide"
         }
-        `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data}/></Sceleton>`
+        `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data} me={this.props.me}/></Sceleton>`
 
 
 export default ConnectedComponent(ReviewResultPage)

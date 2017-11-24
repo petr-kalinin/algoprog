@@ -101,43 +101,50 @@ class ReviewResult extends React.Component
                 currentSubmit: submit
 
     render:  () ->
+        admin = @props.me?.admin
         <Grid fluid>
             <Col xs={12} sm={12} md={8} lg={8}>
                 {
                 if @state.currentSubmit
                     <div>
-                        <Submit submit={@state.currentSubmit} showHeader/>
-                        <FieldGroup
-                            id="commentText"
-                            label="Комментарий"
-                            componentClass="textarea"
-                            setField={@setField}
-                            style={{ height: 200 }}
-                            state={@state}/>
-                        <FormGroup>
-                            {
-                            if @props.result.userList != "unknown"
-                                bsSize = null
-                                if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
-                                    bsSize = "xsmall"
-                                <ButtonGroup>
-                                    <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
-                                    <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
-                                    <Button onClick={@comment}>Прокомментировать</Button>
-                                </ButtonGroup>
-                            else
-                                <Button onClick={@props.handleDone}>Пропустить</Button>
-                            }
-                        </FormGroup>
+                        <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
+                        {
+                        admin && <div>
+                            <FieldGroup
+                                    id="commentText"
+                                    label="Комментарий"
+                                    componentClass="textarea"
+                                    setField={@setField}
+                                    style={{ height: 200 }}
+                                    state={@state}/>
+                                <FormGroup>
+                                    {
+                                    if @props.result.userList != "unknown"
+                                        bsSize = null
+                                        if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
+                                            bsSize = "xsmall"
+                                        <ButtonGroup>
+                                            <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
+                                            <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
+                                            <Button onClick={@comment}>Прокомментировать</Button>
+                                        </ButtonGroup>
+                                    else
+                                        <Button onClick={@props.handleDone}>Пропустить</Button>
+                                    }
+                                </FormGroup>
+                            </div>
+                        }
                     </div>
                 }
             </Col>
             <Col xs={12} sm={12} md={4} lg={4}>
                 <SubmitListTable submits={@props.data} handleSubmitClick={@setCurrentSubmit} activeId={@state.currentSubmit?._id}/>
             </Col>
-            <Col xs={12} sm={12} md={12} lg={12}>
+            {
+            admin && <Col xs={12} sm={12} md={12} lg={12}>
                 <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
             </Col>
+            }
         </Grid>
 
 export default ConnectedComponent(ReviewResult)
