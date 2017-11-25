@@ -69,7 +69,7 @@ export default class Submit extends React.Component
 
     render: () ->
         [cl, message] = outcomeToText(@props.submit.outcome)
-        admin = @props.me.admin
+        admin = @props.me?.admin
         <div>
             {@props.showHeader &&
                 <div>
