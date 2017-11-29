@@ -19,12 +19,14 @@ process.on 'unhandledRejection', (r) ->
     logger.error r
 
 requireHTTPS = (req, res, next) ->
-    logger.info "secure=", req.secure, req.protocol, req.headers.host, req.url
+    logger.info "secure=", req.secure, req.protocol, req.headers.host, req.url, req.headers["X-Forwarded-Proto"]
     if !req.secure
         return res.redirect 'https://' + req.headers.host + req.url
     next()
 
 app = express()
+app.enable('trust proxy')
+
 if process.env["FORCE_HTTPS"]
     app.use(requireHTTPS)
 app.use(compression())
