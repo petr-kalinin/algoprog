@@ -19,6 +19,7 @@ process.on 'unhandledRejection', (r) ->
     logger.error r
 
 requireHTTPS = (req, res, next) ->
+    logger.info "secure=", req.secure, req.protocol
     if !req.secure
         return res.redirect 'https://' + req.headers.host + req.url
     next()
