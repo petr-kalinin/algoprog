@@ -18,7 +18,14 @@ process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
 
+requireHTTPS = (req, res, next) ->
+    if !req.secure
+        return res.redirect 'https://' + req.headers.host + req.url
+    next()
+
 app = express()
+if process.env["FORCE_HTTPS"]
+    app.use(requireHTTPS)
 app.use(compression())
 
 configurePassport(app, db)
