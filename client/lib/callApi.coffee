@@ -2,7 +2,8 @@ import fetch from 'isomorphic-fetch';
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '3000')
 ip = (process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1')
-export API_URL = (if (typeof window == 'undefined') then ('http://' + ip + ':' + port) else '') + '/api/'
+protocol = (if process.env.FORCE_HTTPS then 'https' else 'http')
+export API_URL = (if (typeof window == 'undefined') then (protocol + '://' + ip + ':' + port) else '') + '/api/'
 
 export callApiWithBody = (endpoint, method, headers, body) ->
     response = await fetch(API_URL + endpoint, {
