@@ -20,7 +20,8 @@ process.on 'unhandledRejection', (r) ->
 
 requireHTTPS = (req, res, next) ->
     logger.info "secure=", req.secure, req.protocol, req.headers.host, req.url, req.headers["X-Forwarded-Proto"]
-    if !req.secure and req.headers.host != "127.0.0.1"  # the latter is to avoid inner api requests
+    if !req.secure and !req.headers.host.startsWith("127.0.0.1")  # the latter is to avoid inner api requests
+        logger.info "Redirecting to https"  req.protocol, req.headers.host, req.url, req.headers["X-Forwarded-Proto"]
         return res.redirect 'https://' + req.headers.host + req.url
     next()
 
