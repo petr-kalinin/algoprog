@@ -16,3 +16,10 @@ body {
 .panel-heading a {
     cursor: pointer;
 }
+
+.panel-dq_text {
+    background: black !important;
+}
+.panel-dq_text {
+    color: white;
+}

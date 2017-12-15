@@ -47,6 +47,7 @@ class ReviewResult extends React.Component
             currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
         @accept = @accept.bind this
         @ignore = @ignore.bind this
+        @disqualify = @disqualify.bind this
         @comment = @comment.bind this
         @setField = @setField.bind this
         @setComment = @setComment.bind this
@@ -73,6 +74,9 @@ class ReviewResult extends React.Component
 
     ignore: () ->
         @setResult("IG")
+
+    disqualify: () ->
+        @setResult("DQ")
 
     comment: () ->
         @setResult(null)
@@ -127,6 +131,7 @@ class ReviewResult extends React.Component
                                             <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
                                             <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
                                             <Button onClick={@comment}>Прокомментировать</Button>
+                                            <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
                                         </ButtonGroup>
                                     else
                                         <Button onClick={@props.handleDone}>Пропустить</Button>

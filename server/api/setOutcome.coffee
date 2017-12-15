@@ -29,6 +29,8 @@ postToInformatics = (req, res) ->
         outcomeCode = 8
     if req.body.result == "IG"
         outcomeCode = 9
+    if req.body.result == "DQ"
+        outcomeCode = 10
     if outcomeCode
         href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
         await adminUser.download href

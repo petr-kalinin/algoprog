@@ -32,6 +32,9 @@
 .ig {
     background: #aaaaff;
 }
-.dq {
-    background: black;
+.dq, .dq_text {
+    background: black !important;
+}
+.dq_text {
+    color: white;
 }

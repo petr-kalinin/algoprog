@@ -1,3 +1,5 @@
+import globalStyles from '../components/global.css'
+
 export default outcomeToText = (outcome) ->
     cl = undefined
     message = outcome
@@ -15,5 +17,6 @@ export default outcomeToText = (outcome) ->
         when "CE"
             message = "Ошибка компиляции"
         when "DQ"
+            cl = globalStyles.dq_text
             message = "Дисквалифицировано"
     return [cl, message]

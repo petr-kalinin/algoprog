@@ -2,6 +2,7 @@ React = require('react')
 moment = require('moment')
 
 import Panel from 'react-bootstrap/lib/Panel'
+import {bootstrapUtils} from 'react-bootstrap/lib/utils'
 import {Link} from 'react-router-dom'
 
 import Notifications from 'react-notification-system-redux';
@@ -10,16 +11,26 @@ import ConnectedComponent from '../pages/ConnectedComponent'
 
 import callApi from '../lib/callApi'
 
+import globalStyles from './global.css'
+
+bootstrapUtils.addStyle(Panel, 'dq_text');
+
 commentClass = (comment) ->
     switch comment.outcome
         when "AC" then "success"
         when "IG" then "info"
         else undefined
 
+commentPanelClass = (comment) ->
+    if comment.outcome == "DQ"
+        return "dq_text"
+    return commentClass(comment)
+
 commentText = (comment) ->
     switch comment.outcome
         when "AC" then "Решение зачтено"
         when "IG" then "Решение проигнорировано"
+        when "DQ" then "Решение дисквалифицировано"
         else "Решение прокомментировано"
 
 class CommentList extends React.Component
@@ -70,7 +81,7 @@ class CommentList extends React.Component
             {
             if @props.data?.length
                 @props.data.map((comment) =>
-                    cl = commentClass(comment)
+                    cl = commentPanelClass(comment)
                     title =
                         <span>
                             {comment.problemName}
