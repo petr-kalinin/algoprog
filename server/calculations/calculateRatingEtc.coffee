@@ -30,7 +30,6 @@ levelScore = (level) ->
 findProblemLevel = (problemId) ->
     problem = await Problem.findById(problemId)
     problem?.level
-        
 
 timeScore = (date) ->
     weeks = (new Date() - date)/MSEC_IN_WEEK
@@ -69,6 +68,12 @@ export default calculateRatingEtc = (user) ->
             if !weekOk[week]
                 weekOk[week] = 0
             weekOk[week]++
+        else if s.outcome == "DQ"
+            if !weekSolved[week]
+                weekSolved[week] = 0
+            weekSolved[week] -= 2
+            rating -= 2 * levelScore(level)
+            activity -= 2 * activityScore(level, submitDate)
     for level in ["1А", "1Б"]
         if (!user.baseLevel) or (level >= user.baseLevel)
             break
