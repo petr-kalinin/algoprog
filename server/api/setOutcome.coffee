@@ -44,9 +44,12 @@ updateData = (req, res) ->
 
 storeToDatabase = (req, res) ->
     logger.info("Force-storing to database result #{req.params.submitId}")
-    [fullSubmitId, runId, problemId] = req.params.submitId.match(/(\d+r\d+)p(\d+)/)
+    [fullSubmitId, runId, problemId] = req.params.submitId.match(/(\d+r\d+)(p\d+)/)
     submit = await Submit.findById(req.params.submitId)
     problem = await Problem.findById(problemId)
+    if req.body.result in ["AC", "IG", "DQ"]
+        submit.outcome = req.body.result
+        submit.force = true
     if req.body.comment
         rndId = Math.floor(Math.random() * 1000000)
         newComment = new SubmitComment
@@ -56,12 +59,9 @@ storeToDatabase = (req, res) ->
             userId: submit.user
             text: req.body.comment
             time: new Date()
-            outcome: outcome
+            outcome: submit.outcome
         await newComment.upsert()
         submit.comments.push(req.body.comment)
-    if req.body.result in ["AC", "IG"]
-        submit.outcome = req.body.result
-        submit.force = true
     await submit.upsert()
     await User.updateUser(submit.user)
 
