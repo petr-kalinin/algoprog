@@ -28,7 +28,7 @@
     "cron": "*",
     "css-modules-require-hook": "^4.0.6",
     "css-modulesify": "^0.28.0",
-    "deep-equal": "*",
+    "deep-equal": "^1.0.1",
     "deepcopy": "^0.6.3",
     "express": "*",
     "express-exceptions": "0.0.7",

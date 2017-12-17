@@ -1,4 +1,5 @@
 React = require('react')
+deepEqual = require('deep-equal')
 import { connect } from 'react-redux'
 import { CometSpinLoader } from 'react-css-loaders';
 
@@ -11,31 +12,26 @@ export default ConnectedComponent = (Component) ->
             super(props)
             @handleReload = @handleReload.bind(this)
 
-        url: ->
-            if Component.url
-                return Component.url(@props)
+        urls: () ->
+            Component.urls(@props)
 
-        dataOutdated: () ->
-            if not @props.tree
-                return true
-            if not @props.news
-                return true
-            url = @url()
-            if not url
-                return false
-            return not @props.data(url)
+        dataLoaded: () ->
+            for key, url of @urls()
+                if not @props.data(url)
+                    return false
+            return true
 
         render:  () ->
-            if @dataOutdated()
+            if not @dataLoaded()
                 if Component.Placeholder
                     return <Component.Placeholder/>
                 else
-                    return
-                        <CometSpinLoader />
+                    return <CometSpinLoader/>
             else
                 componentProps = {@props...}
                 componentProps.handleReload = @handleReload
-                componentProps.data = @props.data(@url())
+                for key, url of @urls()
+                    componentProps[key] = @props.data(url)
                 return `<Component  {...componentProps}/>`
 
         componentWillMount: ->
@@ -52,13 +48,11 @@ export default ConnectedComponent = (Component) ->
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
-            if @url() and (Component.url(prevProps) != Component.url(@props))
+            if not deepEqual(Component.url(prevProps), Component.url(@props))
                 @requestData()
 
         requestData: () ->
-            promises = [@props.getMe(), @props.getTree(), @props.getNews(), @props.getMyUser()]
-            if @url()
-                promises.push(@props.getData(@url(), true))
+            promises = [@props.getData(url, true) for key, url in @urls()]
             return promises
 
         handleReload: () ->
@@ -78,21 +72,12 @@ export default ConnectedComponent = (Component) ->
 
     mapStateToProps = (state, ownProps) ->
         return
-            me: getters.getMe(state),
-            myUser: getters.getMyUser(state),
-            tree: getters.getTree(state),
-            news: getters.getNews(state),
             data: (url) -> getters.getData(state, url)
 
     mapDispatchToProps = (dispatch, ownProps) ->
         return
-            getMe: () -> dispatch(actions.getMe())
-            getMyUser: () -> dispatch(actions.getMyUser())
-            getTree: () -> dispatch(actions.getTree())
-            getNews: () -> dispatch(actions.getNews())
             getData: (url, force) -> dispatch(actions.getData(url, force))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
-            logout: () -> dispatch(actions.logout(dispatch))
             reloadMyData: () -> dispatch(actions.postLogin())
             dispatch: dispatch
 
