@@ -5,14 +5,14 @@ import { Helmet } from "react-helmet"
 
 import RegisteredUsers from '../components/RegisteredUsers'
 import Sceleton from '../components/Sceleton'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class RegisteredUsersPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: () ->
-        "registeredUsers"
+    @urls: () ->
+        "data": "registeredUsers"
 
     render:  () ->
         sceletonProps = {

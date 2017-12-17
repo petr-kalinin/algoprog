@@ -12,7 +12,7 @@ export default ConnectedComponent = (Component) ->
             super(props)
             @handleReload = @handleReload.bind(this)
 
-        urls: () ->
+        @urls: () ->
             Component.urls(@props)
 
         dataLoaded: () ->

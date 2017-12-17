@@ -5,14 +5,14 @@ import { Helmet } from "react-helmet"
 
 import ReviewResult from '../components/ReviewResult'
 import Sceleton from '../components/Sceleton'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class ReviewResultPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: (props) ->
-        'result/' + props.match.params.id
+    @urls: (props) ->
+        data: "result/#{props.match.params.id}"
 
     render:  () ->
         sceletonProps = {

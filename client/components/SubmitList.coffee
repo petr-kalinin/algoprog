@@ -12,7 +12,7 @@ import Submit from './Submit'
 import SubmitForm from './SubmitForm'
 import SubmitListTable from './SubmitListTable'
 
-import ConnectedComponent from '../pages/ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 import outcomeToText from '../lib/outcomeToText'
 
@@ -39,9 +39,11 @@ class SubmitList extends React.Component
         @openSubmit = @openSubmit.bind(this)
         @closeSubmit = @closeSubmit.bind(this)
 
-    @url: (props) ->
+    @urls: (props) ->
+        urls = {"myUser"}
         if props?.myUser?._id
-            "submits/#{props.myUser._id}/#{props.material._id}"
+            urls["data"] = "submits/#{props.myUser._id}/#{props.material._id}"
+        return urls
 
     @timeout: () ->
         20 * 1000

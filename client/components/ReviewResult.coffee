@@ -20,13 +20,13 @@ import SubmitListTable from './SubmitListTable'
 
 import callApi from '../lib/callApi'
 
-import ConnectedComponent from '../pages/ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 TAIL_TEXTS = ["Решение проигнорировано", "Решение зачтено"]
 
 class ProblemCommentsLists extends React.Component
-    @url: (props) ->
-        "lastCommentsByProblem/#{props.problemId}"
+    @urls: (props) ->
+        data: "lastCommentsByProblem/#{props.problemId}"
 
     render: () ->
         <div>
@@ -53,8 +53,9 @@ class ReviewResult extends React.Component
         @setComment = @setComment.bind this
         @setCurrentSubmit = @setCurrentSubmit.bind this
 
-    @url: (props) ->
-        "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+    @urls: (props) ->
+        data: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+        me: "me"
 
     setResult: (result) ->
         callApi "setOutcome/#{@state.currentSubmit._id}", {

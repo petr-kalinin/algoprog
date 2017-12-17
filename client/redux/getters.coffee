@@ -11,11 +11,3 @@ export getData = (state, url) ->
 
 getDataWrapper = (url) -> (state) ->
     return getData(state, url)
-
-export getMe = getDataWrapper('me')
-
-export getMyUser = getDataWrapper('myUser')
-
-export getTree = getDataWrapper('material/tree')
-
-export getNews = getDataWrapper('material/news')

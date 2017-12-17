@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 
 import Notifications from 'react-notification-system-redux';
 
-import ConnectedComponent from '../pages/ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 import callApi from '../lib/callApi'
 
@@ -40,9 +40,11 @@ class CommentList extends React.Component
         @state =
             viewed: {}
 
-    @url: (props) ->
+    @urls: (props) ->
+        urls = {"myUser"}
         if props?.myUser?._id
-            "lastComments/#{props.myUser._id}"
+            urls["data"] = "lastComments/#{props.myUser._id}"
+        return urls
 
     @timeout: () ->
         20 * 1000

@@ -15,7 +15,7 @@ import {callApiWithBody} from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
 
-import ConnectedComponent from '../pages/ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 LANGUAGES = [
     [27, "Python 3.4.3", "py", "py3"]
@@ -42,6 +42,9 @@ class SubmitForm extends React.Component
             lang_id: ""
         @setField = @setField.bind(this)
         @submit = @submit.bind(this)
+
+    @urls: () ->
+        { "myUser" }
 
     setField: (field, value) ->
         newState = {@state...}

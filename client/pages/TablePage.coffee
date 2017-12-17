@@ -4,7 +4,7 @@ import { Grid } from 'react-bootstrap'
 import Table from '../components/Table'
 import Sceleton from '../components/Sceleton'
 
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class TablePage extends React.Component
     constructor: (props) ->
@@ -12,8 +12,9 @@ class TablePage extends React.Component
         @id = props.match.params.id
         @userList = props.match.params.userList
 
-    @url: (props) ->
-        'table/' + props.match.params.userList + '/' + props.match.params.id
+    @urls: (props) ->
+        data: "table/#{props.match.params.userList}/#{props.match.params.id}"
+        me: "me"
 
     @timeout: () ->
         20000

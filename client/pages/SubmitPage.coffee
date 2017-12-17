@@ -5,14 +5,14 @@ import { Helmet } from "react-helmet"
 
 import Submit from '../components/Submit'
 import Sceleton from '../components/Sceleton'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class SubmitPage extends React.Component
     constructor: (props) ->
         super(props)
 
     @url: (props) ->
-        'submit/' + props.match.params.id
+        data: "submit/#{props.match.params.id}"
 
     render:  () ->
         sceletonProps = {

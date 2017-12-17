@@ -5,14 +5,15 @@ import { Helmet } from "react-helmet"
 
 import FullUser from '../components/FullUser'
 import Sceleton from '../components/Sceleton'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class FullUserPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: (props) ->
-        return "fullUser/#{props.match.params.id}"
+    @urls: (props) ->
+        data: "fullUser/#{props.match.params.id}"
+        me: "me"
 
     render:  () ->
         sceletonProps = {

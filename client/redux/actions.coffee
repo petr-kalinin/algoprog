@@ -22,14 +22,6 @@ export getData = (url, force) ->
 getDataWrapper = (url) -> (args...) ->
     return getData(url, args...)
 
-export getMe = getDataWrapper('me')
-
-export getMyUser = getDataWrapper('myUser')
-
-export getTree = getDataWrapper('material/tree')
-
-export getNews = getDataWrapper('material/news')
-
 export saveDataPromises = (promises) ->
     return
         type: SAVE_DATA_PROMISES

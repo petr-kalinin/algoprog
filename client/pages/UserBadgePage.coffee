@@ -4,7 +4,7 @@ import { Grid } from 'react-bootstrap'
 import { Helmet } from "react-helmet"
 
 import UserBadge from '../components/UserBadge'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 Explanation =
     <div>
@@ -43,7 +43,7 @@ class UserBadgePage extends React.Component
     @getId: (match) ->
         match.params.id
 
-    @url: (props) ->
-        'user/' + props.match.params.id
+    @urls: (props) ->
+        data: "user/#{props.match.params.id}"
 
 export default ConnectedComponent(UserBadgePage)

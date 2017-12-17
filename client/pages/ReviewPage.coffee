@@ -2,14 +2,14 @@ React = require('react')
 
 import Review from '../components/Review'
 import Sceleton from '../components/Sceleton'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class ReviewPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: () ->
-        "dashboard"
+    @urls: () ->
+        "data": "dashboard"
 
     render:  () ->
         sceletonProps = {

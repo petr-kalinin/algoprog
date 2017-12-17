@@ -5,15 +5,16 @@ import { Helmet } from "react-helmet"
 
 import SolvedByWeek from '../components/SolvedByWeek'
 import Sceleton from '../components/Sceleton'
-import ConnectedComponent from './ConnectedComponent'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 class SolvedByWeekPage extends React.Component
     constructor: (props) ->
         super(props)
         @userList = props.match.params.userList
 
-    @url: (props) ->
-        'users/' + props.match.params.userList
+    @urls: (props) ->
+        data: "users/#{props.match.params.userList}"
+        me: "me"
 
     @timeout: () ->
         20000
