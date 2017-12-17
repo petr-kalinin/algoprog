@@ -12,7 +12,7 @@ export default ConnectedComponent = (Component) ->
             super(props)
             @handleReload = @handleReload.bind(this)
 
-        @urls: () ->
+        urls: () ->
             Component.urls(@props)
 
         dataLoaded: () ->
@@ -48,11 +48,11 @@ export default ConnectedComponent = (Component) ->
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
-            if not deepEqual(Component.url(prevProps), Component.url(@props))
+            if not deepEqual(Component.urls(prevProps), Component.urls(@props))
                 @requestData()
 
         requestData: () ->
-            promises = [@props.getData(url, true) for key, url in @urls()]
+            promises = [@props.getData(url, true) for key, url of @urls()]
             return promises
 
         handleReload: () ->
@@ -61,11 +61,11 @@ export default ConnectedComponent = (Component) ->
         requestDataAndSetTimeout: () ->
             try
                 await Promise.all(@requestData())
-                console.log "Updated data", @url()
+                console.log "Updated data", @urls()
             catch e
-                console.log "Can't reload data", @url(), e
+                console.log "Can't reload data", @urls(), e
             if Component.timeout?()
-                console.log "Setting timeout", @url()
+                console.log "Setting timeout", @urls()
                 @timeout = setTimeout((() => @requestDataAndSetTimeout()), Component.timeout())
 
 
@@ -78,7 +78,6 @@ export default ConnectedComponent = (Component) ->
         return
             getData: (url, force) -> dispatch(actions.getData(url, force))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
-            reloadMyData: () -> dispatch(actions.postLogin())
             dispatch: dispatch
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)
