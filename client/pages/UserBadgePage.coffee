@@ -21,29 +21,23 @@ Explanation =
     </div>
 
 class UserBadgePage extends React.Component
-    constructor: (props) ->
-        super(props)
-        @id = UserBadgePage.getId(props.match)
-        @state = props.data || window?.__INITIAL_STATE__ || {}
-
-    @Placeholder: () ->
-        <Grid fluid>
-            {Explanation}
-        </Grid>
-
     render:  () ->
         return
             <Grid fluid>
                 <Helmet>
                     <title>{@props.data.name}</title>
                 </Helmet>
-                <UserBadge user={@props.data} me={@state.me} handleReload={@props.handleReload} explain={true}/>
+                <UserBadge user={@props.data} me={@props.me} handleReload={@props.handleReload} explain={true}/>
             </Grid>
 
-    @getId: (match) ->
-        match.params.id
+options =
+    Placeholder: () ->
+        <Grid fluid>
+            {Explanation}
+        </Grid>
 
-    @urls: (props) ->
+    urls: (props) ->
         data: "user/#{props.match.params.id}"
+        me: "me"
 
-export default ConnectedComponent(UserBadgePage)
+export default ConnectedComponent(UserBadgePage, options)

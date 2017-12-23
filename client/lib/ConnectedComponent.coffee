@@ -6,14 +6,14 @@ import { CometSpinLoader } from 'react-css-loaders';
 import * as actions from '../redux/actions'
 import * as getters from '../redux/getters'
 
-export default ConnectedComponent = (Component) ->
+export default ConnectedComponent = (Component, options) ->
     class Result extends React.Component
         constructor: (props) ->
             super(props)
             @handleReload = @handleReload.bind(this)
 
         urls: () ->
-            Component.urls(@props)
+            options.urls(@props)
 
         dataLoaded: () ->
             for key, url of @urls()
@@ -23,8 +23,9 @@ export default ConnectedComponent = (Component) ->
 
         render:  () ->
             if not @dataLoaded()
-                if Component.Placeholder
-                    return <Component.Placeholder/>
+                if options.Placeholder
+                    Placeholder = options.Placeholder
+                    return <Placeholder/>
                 else
                     return <CometSpinLoader/>
             else
@@ -48,11 +49,11 @@ export default ConnectedComponent = (Component) ->
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
-            if not deepEqual(Component.urls(prevProps), Component.urls(@props))
+            if not deepEqual(options.urls(prevProps), options.urls(@props))
                 @requestData()
 
         requestData: () ->
-            promises = [@props.getData(url, true) for key, url of @urls()]
+            promises = (@props.getData(url, true) for key, url of @urls())
             return promises
 
         handleReload: () ->
@@ -64,9 +65,9 @@ export default ConnectedComponent = (Component) ->
                 console.log "Updated data", @urls()
             catch e
                 console.log "Can't reload data", @urls(), e
-            if Component.timeout?()
+            if options.timeout
                 console.log "Setting timeout", @urls()
-                @timeout = setTimeout((() => @requestDataAndSetTimeout()), Component.timeout())
+                @timeout = setTimeout((() => @requestDataAndSetTimeout()), options.timeout)
 
 
 
