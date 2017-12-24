@@ -17,7 +17,7 @@ export default ConnectedComponent = (Component, options) ->
 
         dataLoaded: () ->
             for key, url of @urls()
-                if not @props.data(url)
+                if not @props.hasData(url)
                     return false
             return true
 
@@ -31,6 +31,11 @@ export default ConnectedComponent = (Component, options) ->
             else
                 componentProps = {@props...}
                 componentProps.handleReload = @handleReload
+                delete componentProps.data
+                delete componentProps.hasData
+                delete componentProps.getData
+                delete componentProps.saveDataPromises
+                delete componentProps.dispatch
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
                 return `<Component  {...componentProps}/>`
@@ -69,11 +74,10 @@ export default ConnectedComponent = (Component, options) ->
                 console.log "Setting timeout", @urls()
                 @timeout = setTimeout((() => @requestDataAndSetTimeout()), options.timeout)
 
-
-
     mapStateToProps = (state, ownProps) ->
         return
             data: (url) -> getters.getData(state, url)
+            hasData: (url) -> getters.hasData(state, url)
 
     mapDispatchToProps = (dispatch, ownProps) ->
         return

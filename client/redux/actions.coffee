@@ -28,18 +28,14 @@ export saveDataPromises = (promises) ->
         payload:
             dataPromises: promises
 
-doLogout = (dispatch) ->
-    await callApi 'logout'
-    await Promise.all([dispatch(getMe(true)), dispatch(getMyUser(true))])
-
-export logout = (dispatch) ->
-    return
-        type: LOGOUT
-        payload: doLogout dispatch
-
-export postLogin = () ->
+export reloadMyData = () ->
     (dispatch) ->
-        await Promise.all([dispatch(getMe(true)), dispatch(getMyUser(true))])
+        await Promise.all([dispatch(getData("me", true)), dispatch(getData("myUser", true))])
+
+export logout = () ->
+    (dispatch) ->
+        await callApi 'logout'
+        await reloadMyData()(dispatch)
 
 export setUnknownWarningShown = () ->
     return

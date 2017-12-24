@@ -17,6 +17,7 @@ import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './TopPanel.css'
 
@@ -92,7 +93,7 @@ class TopPanel extends React.Component
                             </LinkContainer>
                             ###
                             }
-                            <Button bsStyle="success" onClick={@props.handleLogout}>
+                            <Button bsStyle="success" onClick={@props.logout}>
                                 <FontAwesome name="sign-out"/> Выход
                             </Button>
                         </ButtonGroup>
@@ -137,12 +138,21 @@ class TopPanel extends React.Component
             }
         </div>
 
+options =
+    urls: () ->
+        {"me", "myUser"}
+
+    timeout: 20000
+
+ConnectedTopPanel = ConnectedComponent(TopPanel, options)
+
 mapStateToProps = (state) ->
     return
         unknownWarningShown: state.unknownWarningShown
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
+        logout: () -> dispatch(actions.logout())
         setUnknownWarningShown: () -> dispatch(actions.setUnknownWarningShown())
 
-export default connect(mapStateToProps, mapDispatchToProps)(TopPanel)
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectedTopPanel)

@@ -6,6 +6,9 @@ export getRawData = (state, url) ->
         return null
     return found[0]
 
+export hasData = (state, url) ->
+    return getRawData(state, url)?
+
 export getData = (state, url) ->
     return getRawData(state, url)?.data
 

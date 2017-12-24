@@ -133,10 +133,10 @@ export default setupApi = (app) ->
         submit = expandSubmit(submit)
         res.json(submit)
 
-    app.get '/api/lastComments/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+    app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.informaticsId
             res.status(403).send('No permissions')
-        res.json(await SubmitComment.findLastNotViewedByUser(req.params.user))
+        res.json(await SubmitComment.findLastNotViewedByUser(req.user?.informaticsId))
 
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

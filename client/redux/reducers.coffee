@@ -26,6 +26,7 @@ data = (state=[], action) ->
             return result
         when "#{GET_DATA}_#{REJECTED}"
             console.log "rejected data", action.meta.url
+            return state
         else
             return state
 

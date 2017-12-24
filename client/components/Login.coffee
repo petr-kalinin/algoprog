@@ -1,6 +1,7 @@
 React = require('react')
 import { CometSpinLoader } from 'react-css-loaders';
 import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
 
 import Grid from 'react-bootstrap/lib/Grid'
 import Form from 'react-bootstrap/lib/Form'
@@ -13,6 +14,8 @@ import Button from 'react-bootstrap/lib/Button'
 import callApi from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
+
+import * as actions from '../redux/actions'
 
 class Login extends React.Component
     constructor: (props) ->
@@ -43,7 +46,7 @@ class Login extends React.Component
             if not data.logged
                 throw "Error"
             @props.reloadMyData()
-            @props.history.push("/")
+            @props.history.goBack()
         catch
             data =
                 error: true
@@ -97,4 +100,11 @@ class Login extends React.Component
             </form>
         </Grid>
 
-export default withRouter(Login)
+mapStateToProps = () ->
+    {}
+
+mapDispatchToProps = (dispatch) ->
+    return
+        reloadMyData: () -> dispatch(actions.reloadMyData())
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))

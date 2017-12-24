@@ -20,6 +20,7 @@ import TopPanel from './TopPanel'
 import styles from './Sceleton.css'
 
 SIZES = ["xs", "sm", "md", "lg"]
+DEFAULT_PATH = [{_id: "main", title: "/"}]
 
 Bread = (props) ->
     <Breadcrumb>
@@ -125,7 +126,7 @@ export default class Sceleton extends React.Component
         @setState({@state..., showTree: newTree})
 
     render: () ->
-        path = @props.location.path || @props.news.path
+        path = @props.location.path || DEFAULT_PATH
         breadPath = path.concat
             _id: @props.location._id
             title: @props.location.title
@@ -134,7 +135,7 @@ export default class Sceleton extends React.Component
             <Helmet>
                 {@props.location?.title && <title>{@props.location?.title}</title>}
             </Helmet>
-            <TopPanel me={@props.me} myUser={@props.myUser} toggleTree={@toggleTree} handleLogout={@props.logout}/>
+            <TopPanel me={@props.me} myUser={@props.myUser} toggleTree={@toggleTree}/>
             <div className={styles.main}>
                 <Grid fluid>
                     <Row>

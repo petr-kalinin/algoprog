@@ -92,11 +92,9 @@ class CommentList extends React.Component
 
 options = {
     urls: (props) ->
-        urls = {"myUser"}
-        if props?.myUser?._id
-            urls["data"] = "lastComments/#{props.myUser._id}"
-        console.log "commentlist urls=", urls
-        return urls
+        return
+            myUser: "myUser"
+            data: "lastComments"
 
     timeout: 20 * 1000
 }
