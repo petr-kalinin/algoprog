@@ -11,9 +11,6 @@ class SubmitPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @url: (props) ->
-        data: "submit/#{props.match.params.id}"
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -24,4 +21,8 @@ class SubmitPage extends React.Component
         `<Sceleton {...sceletonProps}><Submit submit={this.props.data}/></Sceleton>`
 
 
-export default ConnectedComponent(SubmitPage)
+options =
+    url: (props) ->
+        data: "submit/#{props.match.params.id}"
+
+export default ConnectedComponent(SubmitPage, options)

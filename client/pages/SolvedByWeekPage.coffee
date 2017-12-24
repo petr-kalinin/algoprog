@@ -12,13 +12,6 @@ class SolvedByWeekPage extends React.Component
         super(props)
         @userList = props.match.params.userList
 
-    @urls: (props) ->
-        data: "users/#{props.match.params.userList}"
-        me: "me"
-
-    @timeout: () ->
-        20000
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -29,4 +22,11 @@ class SolvedByWeekPage extends React.Component
         child = <SolvedByWeek userList={@userList} users={@props.data} me={@props.me} details={true}/>
         `<Sceleton {...sceletonProps}>{child}</Sceleton>`
 
-export default ConnectedComponent(SolvedByWeekPage)
+options =
+    urls: (props) ->
+        data: "users/#{props.match.params.userList}"
+        me: "me"
+
+    timeout: 20000
+
+export default ConnectedComponent(SolvedByWeekPage, options)

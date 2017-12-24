@@ -12,12 +12,13 @@ class FullNewsPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @urls: () ->
-        { "news" }
-
     render:  () ->
         sceletonProps = {@props..., location: {title: "Новости", path: @props.news.path, _id: @props.news._id}}
         `<Sceleton {...sceletonProps}><FullNews {...this.props}/></Sceleton>`
 
 
-export default ConnectedComponent(FullNewsPage)
+options =
+    urls: () ->
+        { "news" }
+
+export default ConnectedComponent(FullNewsPage, options)

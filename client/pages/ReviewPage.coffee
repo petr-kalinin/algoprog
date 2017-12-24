@@ -8,9 +8,6 @@ class ReviewPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @urls: () ->
-        "data": "dashboard"
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -20,5 +17,8 @@ class ReviewPage extends React.Component
         }
         `<Sceleton {...sceletonProps}><Review {...this.props}/></Sceleton>`
 
+options =
+    urls: () ->
+        "data": "dashboard"
 
-export default ConnectedComponent(ReviewPage)
+export default ConnectedComponent(ReviewPage, options)

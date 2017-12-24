@@ -36,7 +36,6 @@ Bread = (props) ->
         }
     </Breadcrumb>
 
-
 ColWrapper = (props) ->
     subProps = {}
     for size in SIZES
@@ -147,7 +146,7 @@ export default class Sceleton extends React.Component
                             {@props.children}
                         </ColWrapper>
                         <ColWrapper size={newsSize}>
-                            <News news={@props.news.materials} />
+                            <News/>
                             <CommentList />
                         </ColWrapper>
                     </Row>

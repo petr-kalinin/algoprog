@@ -40,15 +40,6 @@ class CommentList extends React.Component
         @state =
             viewed: {}
 
-    @urls: (props) ->
-        urls = {"myUser"}
-        if props?.myUser?._id
-            urls["data"] = "lastComments/#{props.myUser._id}"
-        return urls
-
-    @timeout: () ->
-        20 * 1000
-
     markAsViewed: (commentId) ->
         (e) =>
             e.preventDefault()
@@ -99,4 +90,15 @@ class CommentList extends React.Component
             }
         </div>
 
-export default ConnectedComponent(CommentList)
+options = {
+    urls: (props) ->
+        urls = {"myUser"}
+        if props?.myUser?._id
+            urls["data"] = "lastComments/#{props.myUser._id}"
+        console.log "commentlist urls=", urls
+        return urls
+
+    timeout: 20 * 1000
+}
+
+export default ConnectedComponent(CommentList, options)

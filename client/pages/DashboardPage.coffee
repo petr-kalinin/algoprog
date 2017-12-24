@@ -11,12 +11,6 @@ class DashboardPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @urls: () ->
-        data: "dashboard"
-
-    @timeout: () ->
-        20000
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -26,5 +20,10 @@ class DashboardPage extends React.Component
         }
         `<Sceleton {...sceletonProps}><Dashboard {...this.props.data}/></Sceleton>`
 
+options =
+    urls: () ->
+        data: "dashboard"
 
-export default ConnectedComponent(DashboardPage)
+    timeout: 20000
+
+export default ConnectedComponent(DashboardPage, options)

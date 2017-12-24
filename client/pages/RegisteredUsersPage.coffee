@@ -11,9 +11,6 @@ class RegisteredUsersPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @urls: () ->
-        "data": "registeredUsers"
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -23,5 +20,8 @@ class RegisteredUsersPage extends React.Component
         }
         `<Sceleton {...sceletonProps}><RegisteredUsers users={this.props.data}/></Sceleton>`
 
+options =
+    urls: () ->
+        "data": "registeredUsers"
 
-export default ConnectedComponent(RegisteredUsersPage)
+export default ConnectedComponent(RegisteredUsersPage, options)

@@ -39,15 +39,6 @@ class SubmitList extends React.Component
         @openSubmit = @openSubmit.bind(this)
         @closeSubmit = @closeSubmit.bind(this)
 
-    @urls: (props) ->
-        urls = {"myUser"}
-        if props?.myUser?._id
-            urls["data"] = "submits/#{props.myUser._id}/#{props.material._id}"
-        return urls
-
-    @timeout: () ->
-        20 * 1000
-
     openSubmit: (submit) ->
         (e) =>
             e.preventDefault()
@@ -77,4 +68,15 @@ class SubmitList extends React.Component
             }
         </div>
 
-export default ConnectedComponent(SubmitList)
+options =
+    urls: (props) ->
+        urls = {"myUser"}
+        if props?.myUser?._id
+            urls["data"] = "submits/#{props.myUser._id}/#{props.material._id}"
+        return urls
+
+    timeout: 20 * 1000
+
+
+
+export default ConnectedComponent(SubmitList, options)

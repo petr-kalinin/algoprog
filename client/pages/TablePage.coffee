@@ -12,13 +12,6 @@ class TablePage extends React.Component
         @id = props.match.params.id
         @userList = props.match.params.userList
 
-    @urls: (props) ->
-        data: "table/#{props.match.params.userList}/#{props.match.params.id}"
-        me: "me"
-
-    @timeout: () ->
-        20000
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -29,4 +22,11 @@ class TablePage extends React.Component
         child = <Table details={true} data={@props.data} me={@props.me} headerText={true}/>
         `<Sceleton {...sceletonProps}>{child}</Sceleton>`
 
-export default ConnectedComponent(TablePage)
+options =
+    urls: (props) ->
+        data: "table/#{props.match.params.userList}/#{props.match.params.id}"
+        me: "me"
+
+    timeout: 20000
+
+export default ConnectedComponent(TablePage, options)

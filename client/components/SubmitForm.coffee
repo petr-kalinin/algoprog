@@ -43,9 +43,6 @@ class SubmitForm extends React.Component
         @setField = @setField.bind(this)
         @submit = @submit.bind(this)
 
-    @urls: () ->
-        { "myUser" }
-
     setField: (field, value) ->
         newState = {@state...}
         if field == "file"
@@ -137,4 +134,8 @@ class SubmitForm extends React.Component
             }
         </div>
 
-export default ConnectedComponent(SubmitForm)
+options =
+    urls: () ->
+        { "myUser" }
+
+export default ConnectedComponent(SubmitForm, options)

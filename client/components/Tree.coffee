@@ -7,6 +7,8 @@ import { withRouter } from 'react-router'
 
 import styles from "./Tree.css"
 
+import ConnectedComponent from '../lib/ConnectedComponent'
+
 MAX_GLOBAL_DEPTH = 0
 MAX_LOCAL_DEPTH = 0
 BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
@@ -69,4 +71,8 @@ Tree = (props) ->
         </Nav>
     </div>
 
-export default withRouter(Tree)
+options =
+    urls: ->
+        tree: "material/tree" 
+
+export default ConnectedComponent(withRouter(Tree), options)

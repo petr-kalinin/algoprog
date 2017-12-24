@@ -11,9 +11,6 @@ class ReviewResultPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @urls: (props) ->
-        data: "result/#{props.match.params.id}"
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -23,5 +20,8 @@ class ReviewResultPage extends React.Component
         }
         `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data} me={this.props.me}/></Sceleton>`
 
+options =
+    urls: (props) ->
+        data: "result/#{props.match.params.id}"
 
-export default ConnectedComponent(ReviewResultPage)
+export default ConnectedComponent(ReviewResultPage, options)

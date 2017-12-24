@@ -11,10 +11,6 @@ class FullUserPage extends React.Component
     constructor: (props) ->
         super(props)
 
-    @urls: (props) ->
-        data: "fullUser/#{props.match.params.id}"
-        me: "me"
-
     render:  () ->
         sceletonProps = {
             @props...,
@@ -25,4 +21,9 @@ class FullUserPage extends React.Component
         child = <FullUser user={@props.data.user} me={@props.me} results={@props.data.results} handleReload={@props.handleReload}/>
         `<Sceleton {...sceletonProps}>{child}</Sceleton>`
 
-export default ConnectedComponent(FullUserPage)
+options =
+    urls: (props) ->
+        data: "fullUser/#{props.match.params.id}"
+        me: "me"
+
+export default ConnectedComponent(FullUserPage, options)

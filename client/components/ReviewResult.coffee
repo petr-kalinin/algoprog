@@ -25,9 +25,6 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 TAIL_TEXTS = ["Решение проигнорировано", "Решение зачтено"]
 
 class ProblemCommentsLists extends React.Component
-    @urls: (props) ->
-        data: "lastCommentsByProblem/#{props.problemId}"
-
     render: () ->
         <div>
             <h4>Предыдущие комментарии по этой задаче:</h4>
@@ -36,7 +33,11 @@ class ProblemCommentsLists extends React.Component
             )}
         </div>
 
-ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists)
+listOptions =
+    urls: (props) ->
+        data: "lastCommentsByProblem/#{props.problemId}"
+
+ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists, listOptions)
 
 
 class ReviewResult extends React.Component
@@ -52,10 +53,6 @@ class ReviewResult extends React.Component
         @setField = @setField.bind this
         @setComment = @setComment.bind this
         @setCurrentSubmit = @setCurrentSubmit.bind this
-
-    @urls: (props) ->
-        data: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
-        me: "me"
 
     setResult: (result) ->
         callApi "setOutcome/#{@state.currentSubmit._id}", {
@@ -153,4 +150,9 @@ class ReviewResult extends React.Component
             }
         </Grid>
 
-export default ConnectedComponent(ReviewResult)
+options =
+    urls: (props) ->
+        data: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+        me: "me"
+
+export default ConnectedComponent(ReviewResult, options)

@@ -24,6 +24,8 @@ data = (state=[], action) ->
             if result.length > MAX_DATA_ITEMS
                 result.pop()
             return result
+        when "#{GET_DATA}_#{REJECTED}"
+            console.log "rejected data", action.meta.url
         else
             return state
 
