@@ -141,8 +141,8 @@ class TopPanel extends React.Component
 options =
     urls: () ->
         {"me", "myUser"}
-
     timeout: 20000
+    allowNotLoaded: true
 
 ConnectedTopPanel = ConnectedComponent(TopPanel, options)
 

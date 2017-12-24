@@ -22,7 +22,7 @@ export default ConnectedComponent = (Component, options) ->
             return true
 
         render:  () ->
-            if not @dataLoaded()
+            if not @dataLoaded() and not options.allowNotLoaded
                 if options.Placeholder
                     Placeholder = options.Placeholder
                     return <Placeholder/>

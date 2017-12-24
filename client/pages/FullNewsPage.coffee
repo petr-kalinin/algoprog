@@ -19,6 +19,6 @@ class FullNewsPage extends React.Component
 
 options =
     urls: () ->
-        { "news" }
+        news: "material/news"
 
 export default ConnectedComponent(FullNewsPage, options)
