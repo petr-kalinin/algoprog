@@ -87,7 +87,7 @@ class Register extends React.Component
                     username: @state.username,
                     password: @state.password
                 }
-                @props.dispatch(actions.postLogin())
+                @props.dispatch(actions.reloadMyData())
         catch
             data =
                 registered:

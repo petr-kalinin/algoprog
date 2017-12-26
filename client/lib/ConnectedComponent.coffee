@@ -1,4 +1,5 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
 deepEqual = require('deep-equal')
 import { connect } from 'react-redux'
 import { CometSpinLoader } from 'react-css-loaders';
@@ -21,8 +22,16 @@ export default ConnectedComponent = (Component, options) ->
                     return false
             return true
 
+        dataRejected: () ->
+            for key, url of @urls()
+                if @props.isDataRejected(url)
+                    return true
+            return false
+
         render:  () ->
-            if not @dataLoaded() and not options.allowNotLoaded
+            if @dataRejected()
+                <h1><FontAwesome name="exclamation-circle"/></h1>
+            else if not @dataLoaded() and not options.allowNotLoaded
                 if options.Placeholder
                     Placeholder = options.Placeholder
                     return <Placeholder/>
@@ -33,7 +42,7 @@ export default ConnectedComponent = (Component, options) ->
                 componentProps.handleReload = @handleReload
                 delete componentProps.data
                 delete componentProps.hasData
-                delete componentProps.getData
+                delete componentProps.updateData
                 delete componentProps.saveDataPromises
                 delete componentProps.dispatch
                 for key, url of @urls()
@@ -42,7 +51,7 @@ export default ConnectedComponent = (Component, options) ->
 
         componentWillMount: ->
             if not window?
-                promises = @requestData()
+                promises = @requestData(0)
                 @props.saveDataPromises(promises)
 
         componentDidMount: ->
@@ -55,18 +64,23 @@ export default ConnectedComponent = (Component, options) ->
 
         componentDidUpdate: (prevProps, prevState) ->
             if not deepEqual(options.urls(prevProps), options.urls(@props))
-                @requestData()
+                @requestData(options.timeout)
 
-        requestData: () ->
-            promises = (@props.getData(url, true) for key, url of @urls())
+        requestData: (timeout) ->
+            promises = (@props.updateData(url, timeout) for key, url of @urls())
             return promises
 
-        handleReload: () ->
-            @requestData()
+        invalidateData: () ->
+            (@props.invalidateData(url) for key, url of @urls())
+
+        handleReload: (force) ->
+            if force
+                @invalidateData()
+            @requestData(0)
 
         requestDataAndSetTimeout: () ->
             try
-                await Promise.all(@requestData())
+                await Promise.all(@requestData(options.timeout))
                 console.log "Updated data", @urls()
             catch e
                 console.log "Can't reload data", @urls(), e
@@ -78,10 +92,12 @@ export default ConnectedComponent = (Component, options) ->
         return
             data: (url) -> getters.getData(state, url)
             hasData: (url) -> getters.hasData(state, url)
+            isDataRejected: (url) -> getters.isDataRejected(state, url)
 
     mapDispatchToProps = (dispatch, ownProps) ->
         return
-            getData: (url, force) -> dispatch(actions.getData(url, force))
+            invalidateData: (url) -> dispatch(actions.invalidateData(url))
+            updateData: (url, timeout) -> dispatch(actions.updateData(url, timeout))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
             dispatch: dispatch
 

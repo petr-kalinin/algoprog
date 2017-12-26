@@ -3,7 +3,7 @@ import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
+import { GET_DATA, INVALIDATE_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
 
 MAX_DATA_ITEMS = 100
 
@@ -16,17 +16,21 @@ data = (state=[], action) ->
                     return {data..., updateTime}
                 else
                     return data
-        when "#{GET_DATA}_#{FULFILLED}"
+        when "#{GET_DATA}_#{FULFILLED}", "#{GET_DATA}_#{REJECTED}"
             updateTime = if window? then new Date() else undefined
-            a = [{data: action.payload, url: action.meta.url, updateTime}]
+            if action.type == "#{GET_DATA}_#{FULFILLED}"
+                newValue = {data: action.payload, success: true}
+            else
+                newValue = {rejected: true}
+            a = [{newValue..., url: action.meta.url, updateTime}]
             b = (x for x in state when x.url != action.meta.url)
             result = a.concat(b)
             if result.length > MAX_DATA_ITEMS
                 result.pop()
             return result
-        when "#{GET_DATA}_#{REJECTED}"
-            console.log "rejected data", action.meta.url
-            return state
+        when INVALIDATE_DATA
+            result = (x for x in state when x.url != action.meta.url)
+            return result
         else
             return state
 

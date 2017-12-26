@@ -7,10 +7,10 @@ export getRawData = (state, url) ->
     return found[0]
 
 export hasData = (state, url) ->
-    return getRawData(state, url)?
+    return getRawData(state, url)?.success
+
+export isDataRejected = (state, url) ->
+    return getRawData(state, url)?.rejected
 
 export getData = (state, url) ->
     return getRawData(state, url)?.data
-
-getDataWrapper = (url) -> (state) ->
-    return getData(state, url)
