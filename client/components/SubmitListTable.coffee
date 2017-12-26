@@ -18,7 +18,7 @@ export default SubmitListTable = (props) ->
                  </tr>
             </thead>
             <tbody>
-                {props.submits && props.submits.map((submit) =>
+                {props.submits?.map?((submit) =>
                     [cl, message] = outcomeToText(submit.outcome)
                     if submit._id == props.activeId
                         cl += " " + styles.active
@@ -32,7 +32,7 @@ export default SubmitListTable = (props) ->
             </tbody>
         </Table>
         {
-        if props.submits
+        if props.submits?[0]
             infProblem = props.submits[0].problem.substr(1)
             <a href={"http://informatics.mccme.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{props.submits[0].user}"} target="_blank">Попытки на информатикс</a>
         }
