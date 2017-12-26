@@ -4,6 +4,7 @@ import {getRawData} from './getters'
 
 export GET_DATA = 'GET_DATA'
 export INVALIDATE_DATA = 'INVALIDATE_DATA'
+export INVALIDATE_ALL_DATA = 'INVALIDATE_ALL_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 export LOGIN = 'POST_LOGIN'
@@ -27,7 +28,7 @@ export updateData = (url, minAgeToUpdate) ->
 
 export invalidateData = (url) ->
     return
-        type: invalidateData
+        type: INVALIDATE_DATA
         meta:
             url: url
 
@@ -37,14 +38,14 @@ export saveDataPromises = (promises) ->
         payload:
             dataPromises: promises
 
-export reloadMyData = () ->
-    (dispatch) ->
-        await Promise.all([dispatch(updateData("me", 0)), dispatch(updateData("myUser", 0))])
+export invalidateAllData = () ->
+    return
+        type: INVALIDATE_ALL_DATA
 
 export logout = () ->
     (dispatch) ->
         await callApi 'logout'
-        await reloadMyData()(dispatch)
+        dispatch(invalidateAllData())
 
 export setUnknownWarningShown = () ->
     return

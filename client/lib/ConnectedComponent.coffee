@@ -65,6 +65,9 @@ export default ConnectedComponent = (Component, options) ->
         componentDidUpdate: (prevProps, prevState) ->
             if not deepEqual(options.urls(prevProps), options.urls(@props))
                 @requestData(options.timeout)
+            else
+                # this will request data only if it was not requested yet
+                @requestData()
 
         requestData: (timeout) ->
             promises = (@props.updateData(url, timeout) for key, url of @urls())

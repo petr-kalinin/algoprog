@@ -3,25 +3,23 @@ import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
 
 MAX_DATA_ITEMS = 100
 
 data = (state=[], action) ->
     switch action.type
-        when "#{GET_DATA}_#{PENDING}"
+        when "#{GET_DATA}_#{PENDING}", "#{GET_DATA}_#{FULFILLED}", "#{GET_DATA}_#{REJECTED}"
             updateTime = if window? then new Date() else undefined
-            return state.map (data) ->
-                if data.url == action.meta.url
-                    return {data..., updateTime}
-                else
-                    return data
-        when "#{GET_DATA}_#{FULFILLED}", "#{GET_DATA}_#{REJECTED}"
-            updateTime = if window? then new Date() else undefined
-            if action.type == "#{GET_DATA}_#{FULFILLED}"
-                newValue = {data: action.payload, success: true}
-            else
-                newValue = {rejected: true}
+            switch action.type
+                when "#{GET_DATA}_#{PENDING}"
+                    newValue = (x for x in state when x.url == action.meta.url)[0] || {}
+                    delete newValue.rejected
+                    newValue.pending = true
+                when "#{GET_DATA}_#{FULFILLED}"
+                    newValue = {data: action.payload, success: true}
+                when "#{GET_DATA}_#{REJECTED}"
+                    newValue = {rejected: true}
             a = [{newValue..., url: action.meta.url, updateTime}]
             b = (x for x in state when x.url != action.meta.url)
             result = a.concat(b)
@@ -31,6 +29,8 @@ data = (state=[], action) ->
         when INVALIDATE_DATA
             result = (x for x in state when x.url != action.meta.url)
             return result
+        when INVALIDATE_ALL_DATA
+            return []
         else
             return state
 

@@ -105,6 +105,6 @@ mapStateToProps = () ->
 
 mapDispatchToProps = (dispatch) ->
     return
-        reloadMyData: () -> dispatch(actions.reloadMyData())
+        reloadMyData: () -> dispatch(actions.invalidateAllData())
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))
