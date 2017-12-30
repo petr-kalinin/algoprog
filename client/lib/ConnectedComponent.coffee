@@ -44,7 +44,6 @@ export default ConnectedComponent = (Component, options) ->
                 delete componentProps.hasData
                 delete componentProps.updateData
                 delete componentProps.saveDataPromises
-                delete componentProps.dispatch
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
                 return `<Component  {...componentProps}/>`
@@ -102,6 +101,5 @@ export default ConnectedComponent = (Component, options) ->
             invalidateData: (url) -> dispatch(actions.invalidateData(url))
             updateData: (url, timeout) -> dispatch(actions.updateData(url, timeout))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
-            dispatch: dispatch
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)
