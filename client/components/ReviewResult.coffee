@@ -121,18 +121,19 @@ class ReviewResult extends React.Component
                                     state={@state}/>
                                 <FormGroup>
                                     {
-                                    if @props.result.userList != "unknown"
-                                        bsSize = null
-                                        if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
-                                            bsSize = "xsmall"
-                                        <ButtonGroup>
-                                            <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
-                                            <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
-                                            <Button onClick={@comment}>Прокомментировать</Button>
-                                            <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
-                                        </ButtonGroup>
-                                    else
-                                        <Button onClick={@props.handleDone}>Пропустить</Button>
+                                    bsSize = null
+                                    bsCommentSize = null
+                                    if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
+                                        bsSize = "xsmall"
+                                    if @props.result.userList == "unknown"
+                                        bsSize = "xsmall"
+                                        bsCommentSize = "xsmall"
+                                    <ButtonGroup>
+                                        <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
+                                        <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
+                                        <Button onClick={@comment}  bsSize={bsCommentSize}>Прокомментировать</Button>
+                                        <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
+                                    </ButtonGroup>
                                     }
                                 </FormGroup>
                             </div>
