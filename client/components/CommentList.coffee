@@ -4,6 +4,7 @@ moment = require('moment')
 import Panel from 'react-bootstrap/lib/Panel'
 import {bootstrapUtils} from 'react-bootstrap/lib/utils'
 import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import Notifications from 'react-notification-system-redux';
 
@@ -64,7 +65,7 @@ class CommentList extends React.Component
                 autoDismiss: 0,
                 children:
                     <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
-            @props.dispatch(Notifications.show(notification, cl));
+            @props.showNotification(notification, cl)
 
     render:  () ->
         if not @props.myUser?._id
@@ -90,13 +91,20 @@ class CommentList extends React.Component
             }
         </div>
 
+mapStateToProps = () -> {}
+mapDispatchToProps = (dispatch) ->
+    showNotification: (notification, cl) -> dispatch(Notifications.show(notification, cl))
+
+CommentListWithNotifications = connect(mapStateToProps, mapDispatchToProps)(CommentList)
+
+
 options = {
     urls: (props) ->
         return
             myUser: "myUser"
             data: "lastComments"
 
-    timeout: 20 * 1000
+    timeout: 20000
 }
 
-export default ConnectedComponent(CommentList, options)
+export default ConnectedComponent(CommentListWithNotifications, options)
