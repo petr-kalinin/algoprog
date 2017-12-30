@@ -18,7 +18,7 @@ export updateData = (url, minAgeToUpdate) ->
             if not minAgeToUpdate?
                 return
             # -200 to ensure that on age equal to minAgeToUpdate we re-request data
-            if (new Date() - existingDataTime) < minAgeToUpdate * 1000 - 200
+            if (new Date() - existingDataTime) < minAgeToUpdate - 200
                 return
         dispatch
             type: GET_DATA
