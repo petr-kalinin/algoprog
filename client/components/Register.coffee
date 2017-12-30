@@ -87,7 +87,7 @@ class Register extends React.Component
                     username: @state.username,
                     password: @state.password
                 }
-                @props.dispatch(actions.reloadMyData())
+                @props.reloadMyData()
         catch
             data =
                 registered:
@@ -298,4 +298,11 @@ class Register extends React.Component
             }
         </Grid>
 
-export default withRouter(connect()(Register))
+mapStateToProps = () ->
+    {}
+
+mapDispatchToProps = (dispatch) ->
+    return
+        reloadMyData: () -> dispatch(actions.invalidateAllData())
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Register))
