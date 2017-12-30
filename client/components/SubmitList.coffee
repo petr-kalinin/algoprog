@@ -70,13 +70,16 @@ class SubmitList extends React.Component
 
 options =
     urls: (props) ->
-        urls = {"myUser"}
         if props?.myUser?._id
-            urls["data"] = "submits/#{props.myUser._id}/#{props.material._id}"
-        return urls
+            return {data: "submits/#{props.myUser._id}/#{props.material._id}"}
+        return {}
 
     timeout: 20 * 1000
 
+myUserOptions =
+    urls: (props) ->
+        return {"myUser"}
 
+    timeout: 20 * 1000
 
-export default ConnectedComponent(SubmitList, options)
+export default ConnectedComponent(ConnectedComponent(SubmitList, options), myUserOptions)
