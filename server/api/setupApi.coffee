@@ -126,6 +126,14 @@ export default setupApi = (app) ->
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
 
+    app.get '/api/userResults/:userId', wrap (req, res) ->
+        results = (await Result.findByUser(req.params.userId))
+        json = {}
+        for r in results
+            r = r.toObject()
+            json[r._id] = r
+        res.json(json)
+
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).send('No permissions')

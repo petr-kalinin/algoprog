@@ -13,6 +13,7 @@ import SubmitForm from './SubmitForm'
 import SubmitListTable from './SubmitListTable'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withMyUser from '../lib/withMyUser'
 
 import outcomeToText from '../lib/outcomeToText'
 
@@ -76,10 +77,4 @@ options =
 
     timeout: 20 * 1000
 
-myUserOptions =
-    urls: (props) ->
-        return {"myUser"}
-
-    timeout: 20 * 1000
-
-export default ConnectedComponent(ConnectedComponent(SubmitList, options), myUserOptions)
+export default withMyUser(ConnectedComponent(SubmitList, options))
