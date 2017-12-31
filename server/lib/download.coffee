@@ -9,7 +9,7 @@ export default download = (href, jar, options) ->
     if not jar
         jar = request.jar()
     delay = 5
-    for i in [1..10]
+    for i in [1..8]
         try
             page = await request({
                 options...,
