@@ -1,18 +1,18 @@
 deepcopy = require("deepcopy")
 React = require('react')
-tinycolor = require("tinycolor2")
 import { Link } from 'react-router-dom'
 import { Nav, NavItem } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 
+FontAwesome = require('react-fontawesome')
+
 import styles from "./Tree.css"
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withMyResults from '../lib/withMyResults'
 
 MAX_GLOBAL_DEPTH = 0
 MAX_LOCAL_DEPTH = 0
-BASE_COLOR = tinycolor({r: 100, g:100, b: 255})
-ACTIVE_COLOR = "#fdf6e3"
 
 getHref = (material) ->
     if material.type == "link"
@@ -40,21 +40,58 @@ markNeeded = (tree, id, path, globalDepth, localDepth) ->
             m.needed = true
     return tree.needed
 
-colorByIndent = (indent) ->
-    return BASE_COLOR.clone().lighten(indent * 8).toHex()
+ColorBox = ({colorStyle, name}) ->
+    <div className={styles.colorBox + " " + colorStyle}>
+        <div className={styles.colorBox_inner}>
+            {
+            if name
+                <FontAwesome name={name} />
+            else
+                " "
+            }
+        </div>
+    </div>
+
+ProblemMark = ({result}) ->
+    if result.solved == 1
+        <ColorBox colorStyle={styles.full} name={"check"}/>
+    else if result.ok == 1
+        <ColorBox colorStyle={styles.ok} name={"circle"}/>
+    else if result.ignored == 1
+        <ColorBox colorStyle={styles.ignored} name={"repeat"}/>
+    else if result.attempts > 0
+        <ColorBox colorStyle={styles.wa} name={"times"}/>
+    else
+        null
+
+SolutionMark_ = (props) ->
+    result = props.myResults?[props.myUser?._id + "::" + props.id]
+    if not result?.total?
+        return null
+    if result.total == 1
+        return <ProblemMark result={result}/>
+    if result.solved == result.total
+        <ColorBox colorStyle={styles.full} checked={true}/>
+    else if result.solved > result.total / 2 # TODO
+        <ColorBox colorStyle={styles.done} checked={true}/>
+    else if result.solved > 0 or result.ok > 0 or result.attempts > 0
+        <ColorBox colorStyle={styles.started} />
+    else
+        null
+
+SolutionMark = withMyResults(SolutionMark_)
 
 recTree = (tree, id, indent) ->
     res = []
     a = (el) -> res.push(el)
     for m in tree.materials
         if m.needed and m.title
-            if m._id == id
-                color = ACTIVE_COLOR
-            else
-                color = colorByIndent(indent)
-            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "")} eventKey={getHref(m)} href={getHref(m)}>
-                <div style={"paddingLeft": 15*indent + "px"}>
-                    {m.title}
+            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "") + " " + styles.levelNav} eventKey={getHref(m)} href={getHref(m)}>
+                <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
+                    <div className={styles.levelName}>
+                        {m.title}
+                    </div>
+                    <SolutionMark id={m._id}/>
                 </div>
             </NavItem>
             res = res.concat(recTree(m, id, indent + 1))
@@ -73,6 +110,6 @@ Tree = (props) ->
 
 options =
     urls: ->
-        tree: "material/tree" 
+        tree: "material/tree"
 
 export default ConnectedComponent(withRouter(Tree), options)

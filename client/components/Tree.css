@@ -1,6 +1,51 @@
+.levelNav {
+    margin-top: 0px !important;
+}
+.levelNav a {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-right: 0px !important;
+}
 .navitem a {
     color: black !important;
 }
 .tree {
     padding-top: 2ex;
+}
+.levelRow {
+    display: flex;
+}
+.levelName {
+    flex: 1;
+}
+.colorBox {
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.colorBox_inner {
+}
+.full {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+.done {
+    background-color: #009900;
+}
+.started {
+    background-color: #cccccc;
+}
+.ignored {
+    background-color: #c4e3f3;
+    color: #31708f;
+}
+.wa {
+    background-color: #ebcccc;
+    color: #a94442;
+}
+.ok {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    font-size: 40%;
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
-import withMyUser from '../lib/withMyUser'
+import withMyResults from '../lib/withMyResults'
 
 getClass = (result) ->
     switch
@@ -34,13 +34,4 @@ Contest = (props) ->
         </ListGroup>
     </div>
 
-options =
-    urls: (props) ->
-        if props.myUser?._id
-            "myResults": "userResults/#{props.myUser._id}"
-        else
-            {}
-
-    timeout: 20000
-
-export default withMyUser(ConnectedComponent(Contest, options))
+export default withMyResults(Contest)
