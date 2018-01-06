@@ -40,8 +40,9 @@ markNeeded = (tree, id, path, globalDepth, localDepth) ->
             m.needed = true
     return tree.needed
 
-ColorBox = ({colorStyle, name}) ->
-    <div className={styles.colorBox + " " + colorStyle}>
+colorBox = (indent, colorStyle, name) ->
+    width = "15px"
+    <div className={styles.colorBox + " " + colorStyle} style={{width}}>
         <div className={styles.colorBox_inner}>
             {
             if name
@@ -52,30 +53,32 @@ ColorBox = ({colorStyle, name}) ->
         </div>
     </div>
 
-ProblemMark = ({result}) ->
+problemMark = (indent, result) ->
     if result.solved == 1
-        <ColorBox colorStyle={styles.full} name={"check"}/>
+        colorBox(indent, styles.full, "check")
     else if result.ok == 1
-        <ColorBox colorStyle={styles.ok} name={"circle"}/>
+        colorBox(indent, styles.ok, "circle")
     else if result.ignored == 1
-        <ColorBox colorStyle={styles.ignored} name={"repeat"}/>
+        colorBox(indent, styles.ignored, "repeat")
     else if result.attempts > 0
-        <ColorBox colorStyle={styles.wa} name={"times"}/>
+        colorBox(indent, styles.wa, "times")
     else
         null
 
 SolutionMark_ = (props) ->
     result = props.myResults?[props.myUser?._id + "::" + props.id]
+    indent = props.indent
     if not result?.total?
         return null
     if result.total == 1
-        return <ProblemMark result={result}/>
+        return problemMark(indent, result)
+
     if result.solved == result.total
-        <ColorBox colorStyle={styles.full} checked={true}/>
+        colorBox(indent, styles.full, "check")
     else if result.solved > result.total / 2 # TODO
-        <ColorBox colorStyle={styles.done} checked={true}/>
+        colorBox(indent, styles.done, "check")
     else if result.solved > 0 or result.ok > 0 or result.attempts > 0
-        <ColorBox colorStyle={styles.started} />
+        colorBox(indent, styles.started)
     else
         null
 
@@ -91,7 +94,7 @@ recTree = (tree, id, indent) ->
                     <div className={styles.levelName}>
                         {m.title}
                     </div>
-                    <SolutionMark id={m._id}/>
+                    <SolutionMark id={m._id} indent={indent}/>
                 </div>
             </NavItem>
             res = res.concat(recTree(m, id, indent + 1))
