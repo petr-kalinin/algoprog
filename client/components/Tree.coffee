@@ -10,6 +10,7 @@ import styles from "./Tree.css"
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyResults from '../lib/withMyResults'
+import requiredProblemsByLevel from '../lib/requiredProblemsByLevel'
 
 MAX_GLOBAL_DEPTH = 0
 MAX_LOCAL_DEPTH = 0
@@ -40,9 +41,9 @@ markNeeded = (tree, id, path, globalDepth, localDepth) ->
             m.needed = true
     return tree.needed
 
-colorBox = (indent, colorStyle, name) ->
+colorBox = (indent, colorStyle, name, title) ->
     width = "15px"
-    <div className={styles.colorBox + " " + colorStyle} style={{width}}>
+    <div className={styles.colorBox + " " + colorStyle} style={{width}} title={title}>
         <div className={styles.colorBox_inner}>
             {
             if name
@@ -53,17 +54,34 @@ colorBox = (indent, colorStyle, name) ->
         </div>
     </div>
 
+isLevelDone = (levelId, userId, results) ->
+    for subLevel in ["А", "Б", "В", "Г"]
+        if levelId.endsWith(subLevel)
+            result = results?[userId + "::" + levelId]
+            return result.solved >= requiredProblemsByLevel(levelId, result.total or 0)
+    if +levelId in [1..10]
+        subLevels = ["А", "Б", "В"]
+        if levelId == "1"
+            subLevels.push("Г")
+        done = true
+        for subLevel in subLevels
+            result = results?[userId + "::" + levelId + subLevel]
+            done = done and result.solved >= requiredProblemsByLevel(levelId + subLevel, result.total or 0)
+        return done
+    result = results?[userId + "::" + levelId]
+    return result.solved and result.solved == result.total
+
 problemMark = (indent, result) ->
     if result.solved == 1
-        colorBox(indent, styles.full, "check")
+        colorBox(indent, styles.full, "check", "Зачтено")
     else if result.ok == 1
-        colorBox(indent, styles.ok, "circle")
+        colorBox(indent, styles.ok, "circle", "OK")
     else if result.ignored == 1
-        colorBox(indent, styles.ignored, "repeat")
+        colorBox(indent, styles.ignored, "repeat", "Проигнорировано")
     else if result.attempts > 0
-        colorBox(indent, styles.wa, "times")
+        colorBox(indent, styles.wa, "times", "Неполное решение")
     else
-        null
+        colorBox(indent, styles.null)
 
 SolutionMark_ = (props) ->
     result = props.myResults?[props.myUser?._id + "::" + props.id]
@@ -74,13 +92,13 @@ SolutionMark_ = (props) ->
         return problemMark(indent, result)
 
     if result.solved == result.total
-        colorBox(indent, styles.full, "check")
-    else if result.solved > result.total / 2 # TODO
-        colorBox(indent, styles.done, "check")
+        colorBox(indent, styles.full, "check", "Решены все задачи")
+    else if isLevelDone(props.id, props.myUser?._id, props.myResults)
+        colorBox(indent, styles.done, "check", "Уровень пройден")
     else if result.solved > 0 or result.ok > 0 or result.attempts > 0
-        colorBox(indent, styles.started)
+        colorBox(indent, styles.started, undefined, "Уровень начат")
     else
-        null
+        colorBox(indent, styles.null)
 
 SolutionMark = withMyResults(SolutionMark_)
 

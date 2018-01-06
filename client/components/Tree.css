@@ -28,11 +28,12 @@
 .colorBox_inner {
 }
 .full {
-    background-color: #dff0d8;
+    background-color: #acf090;
     color: #3c763d;
 }
 .done {
-    background-color: #009900;
+    background-color: #dff0d8;
+    color: #3c763d;
 }
 .started {
     background-color: #cccccc;
@@ -49,4 +50,6 @@
     background-color: #fcf8e3;
     color: #8a6d3b;
     font-size: 40%;
+}
+.null {
 }
