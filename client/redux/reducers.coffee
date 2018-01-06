@@ -5,6 +5,8 @@ import {reducer as notifications} from 'react-notification-system-redux';
 
 import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
 
+import { equalUrl } from './getters'
+
 MAX_DATA_ITEMS = 100
 
 data = (state=[], action) ->
@@ -13,7 +15,7 @@ data = (state=[], action) ->
             updateTime = if window? then new Date() else undefined
             switch action.type
                 when "#{GET_DATA}_#{PENDING}"
-                    newValue = (x for x in state when x.url == action.meta.url)[0] || {}
+                    newValue = (x for x in state when equalUrl(x.url, action.meta.url))[0] || {}
                     delete newValue.rejected
                     newValue.pending = true
                 when "#{GET_DATA}_#{FULFILLED}"
@@ -21,13 +23,13 @@ data = (state=[], action) ->
                 when "#{GET_DATA}_#{REJECTED}"
                     newValue = {rejected: true}
             a = [{newValue..., url: action.meta.url, updateTime}]
-            b = (x for x in state when x.url != action.meta.url)
+            b = (x for x in state when !equalUrl(x.url, action.meta.url))
             result = a.concat(b)
             if result.length > MAX_DATA_ITEMS
                 result.pop()
             return result
         when INVALIDATE_DATA
-            result = (x for x in state when x.url != action.meta.url)
+            result = (x for x in state when not equalUrl(x.url, action.meta.url))
             return result
         when INVALIDATE_ALL_DATA
             return []
