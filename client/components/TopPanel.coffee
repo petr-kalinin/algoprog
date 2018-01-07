@@ -55,6 +55,7 @@ class TopPanel extends React.Component
                 </Navbar.Form>
                 <Navbar.Header>
                     <Navbar.Brand>
+                        {@props.me?.admin && <span className={styles.adminhash}><FontAwesome name="hashtag"/></span>}
                         {
                         if @props.myUser?.name
                             <span>
