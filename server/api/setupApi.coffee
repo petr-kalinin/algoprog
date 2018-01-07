@@ -77,6 +77,7 @@ export default setupApi = (app) ->
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
@@ -106,11 +107,13 @@ export default setupApi = (app) ->
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         res.json(await RegisteredUser.find({}))
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).send('No permissions')
+            return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
         submits = submits.map(expandSubmit)
@@ -137,6 +140,7 @@ export default setupApi = (app) ->
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).send('No permissions')
+            return
         submit = (await Submit.findById(req.params.id)).toObject()
         submit = expandSubmit(submit)
         res.json(submit)
@@ -144,16 +148,19 @@ export default setupApi = (app) ->
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.informaticsId
             res.status(403).send('No permissions')
+            return
         res.json(await SubmitComment.findLastNotViewedByUser(req.user?.informaticsId))
 
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         res.json(await SubmitComment.findLastByProblem(req.params.problem))
 
     app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         setOutcome(req, res)
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
@@ -161,6 +168,7 @@ export default setupApi = (app) ->
         console.log "Set comment viewed ", req.params.commentId, ""+req.user?.informaticsId, "" + comment?.userId
         if ""+req.user?.informaticsId != "" + comment?.userId
             res.status(403).send('No permissions')
+            return
         comment.viewed = true
         await comment.save()
         res.send('OK')
@@ -168,36 +176,42 @@ export default setupApi = (app) ->
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         await User.updateUser(req.params.user)
         res.send('OK')
 
     app.get '/api/updateAllResults', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         User.updateAllUsers()
         res.send('OK')
 
     app.get '/api/downloadMaterials', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         downloadMaterials()
         res.send('OK')
 
     app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         downloadContests.run()
         res.send('OK')
 
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         await downloadSubmits.runForUser(req.params.user, 100, 1e9)
         res.send('OK')
 
     app.get '/api/downloadAllSubmits', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
+            return
         downloadSubmits.runAll()
         res.send('OK')
 
