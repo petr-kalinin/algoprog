@@ -1,5 +1,6 @@
 React = require('react')
 moment = require('moment')
+FontAwesome = require('react-fontawesome')
 
 import Table from 'react-bootstrap/lib/Table'
 
@@ -15,6 +16,9 @@ export default SubmitListTable = (props) ->
                     <th>Время</th>
                     <th>Результат</th>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                  </tr>
             </thead>
             <tbody>
@@ -26,6 +30,7 @@ export default SubmitListTable = (props) ->
                         <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>{submit.language}</td>
+                        <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
                         <td><a onClick={props.handleSubmitClick(submit)} href="#">Подробнее</a></td>
                     </tr>
                 ).reverse()}
