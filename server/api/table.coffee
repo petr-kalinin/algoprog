@@ -35,7 +35,7 @@ needUser = (userId, tables) ->
 recurseResults = (user, tableId, depth) ->
     table = await Table.findById(tableId)
     tableResults = []
-    total = null
+    total = undefined
     if depth > 0
         for subtableId in table.tables
             subtableResults = await recurseResults(user, subtableId, depth-1)
@@ -59,7 +59,7 @@ recurseResults = (user, tableId, depth) ->
 getUserResult = (user, tables, depth) ->
     if not await needUser(user._id, tables)
         return null
-    total = null
+    total = undefined
     results = []
     for tableId in tables
         tableResults = await recurseResults(user, tableId, depth)

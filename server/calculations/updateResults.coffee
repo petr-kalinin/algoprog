@@ -2,6 +2,10 @@ import User from '../models/user'
 import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
+
+import addTotal from '../../client/lib/addTotal'
+import isContestRequired from '../../client/lib/isContestRequired'
+
 import logger from '../log'
 
 updateResultsForTable = (userId, tableId, dirtyResults) ->
@@ -9,41 +13,25 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
         result = await Result.findByUserAndTable(userId, tableId)
         if result
             return result
-    total = 0
-    solved = 0
-    ok = 0
-    attempts = 0
-    lastSubmitId = undefined
-    lastSubmitTime = undefined
 
-    processRes = (res) ->
-        total += res.total
-        solved += res.solved
-        ok += res.ok
-        attempts += res.attempts
-        if (!lastSubmitId) or (res.lastSubmitId and res.lastSubmitTime > lastSubmitTime)
-            lastSubmitId = res.lastSubmitId
-            lastSubmitTime = res.lastSubmitTime
-
+    total = {}
     table = await Table.findById(tableId)
     for child in table.tables
         res = await updateResultsForTable(userId, child, dirtyResults)
-        processRes(res)
+        fullChild = await Table.findById(child)
+        if not isContestRequired(fullChild?.name)
+            res.required = 0
+        total = addTotal(total, res, true)
     for prob in table.problems
         res = await updateResultsForProblem(userId, prob, dirtyResults)
-        processRes(res)
+        total = addTotal(total, res, true)
 
-    logger.debug "updated result ", userId, tableId, total, solved, ok, attempts, lastSubmitTime
-    result = new Result(
+    logger.debug "updated result ", userId, tableId, total
+    result = new Result({
+        total...,
         user: userId,
-        table: tableId,
-        total: total,
-        solved: solved,
-        ok: ok,
-        attempts: attempts,
-        lastSubmitId: lastSubmitId,
-        lastSubmitTime: lastSubmitTime
-    )
+        table: tableId
+    })
     await result.upsert()
     return result
 
@@ -88,6 +76,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         user: userId,
         table: problemId,
         total: 1,
+        required: 1,
         solved: solved,
         ok: ok,
         attempts: attempts,
@@ -99,7 +88,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
 
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
-    updateResultsForTable(user, Table.main, dirtyResults)
+    await updateResultsForTable(user, Table.main, dirtyResults)
     logger.info "updated results for user ", user
 
 export updateAllResults = () ->

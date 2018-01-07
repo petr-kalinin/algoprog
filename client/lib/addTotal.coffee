@@ -1,18 +1,21 @@
-accountAttempts = (result) ->
-    if result.solved or result.ok
-        result.attempts
+accountAttempts = (result, countUnsolvedAttempts) ->
+    if countUnsolvedAttempts or result?.solved or result?.ok
+        result?.attempts || 0
     else
         0
 
-export default addTotal = (a, b) ->
-    if not a
-        return b
-    else if not b
-        return a
-    return
-        solved: a.solved + b.solved
-        ok: a.ok + b.ok
-        ignored: a.ignored + b.ignored
-        attempts: accountAttempts(a) + accountAttempts(b)
-        total: a.total + b.total
+export default addTotal = (a, b, countUnsolvedAttempts = false) ->
+    SIMPLE_KEYS = ["total", "required", "solved", "ok", "ignored"]
 
+    result = {}
+    for key in SIMPLE_KEYS
+        result[key] = (a?[key] || 0) + (b?[key] || 0)
+    result.attempts = accountAttempts(a, countUnsolvedAttempts) + accountAttempts(b, countUnsolvedAttempts)
+    result.lastSubmitId = a?.lastSubmitId
+    result.lastSubmitTime = a?.lastSubmitTime
+
+    if (!a?.lastSubmitId) or (b?.lastSubmitId and b.lastSubmitTime > a.lastSubmitTime)
+        result.lastSubmitId = b?.lastSubmitId
+        result.lastSubmitTime = b?.lastSubmitTime
+
+    return result

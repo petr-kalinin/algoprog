@@ -1,6 +1,7 @@
 import Table from '../models/table'
 import Result from '../models/result'
 import logger from '../log'
+import isContestRequired from '../lib/isContestRequired'
 
 export default calculateLevel = (user, baseLevel, lastDate) ->
     for bigLevel in [1..10]
@@ -17,7 +18,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
                 if not subTable
                     continue
                 for prob in subTable.problems
-                    if subTable.name[4] != "*"
+                    if isContestRequired(subTable.name)
                         probNumber++
                     result = await Result.findByUserAndTable(user, prob)
                     if not result
@@ -37,4 +38,3 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
                 logger.debug "calculated level", user, level
                 return level
     return "inf"
-    

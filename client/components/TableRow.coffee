@@ -55,7 +55,7 @@ totalResultClass = (result) ->
     if result.total == result.solved
         return "full"
     else
-        needed = result.total
+        needed = result.required
         if result.problemName.slice(-1) == "В"
             needed = Math.ceil(needed / 2)
         else if result.problemName.slice(-1) == "Г"
@@ -83,7 +83,7 @@ TotalResult = (props) ->
             else
                 ("" + props.result.solved +
                  (if props.result.ok then " + " + props.result.ok else "") +
-                " / " + props.result.total)
+                " / " + props.result.required)
             }
         </td>
 
@@ -99,7 +99,7 @@ Attempts = (props) ->
     </td>
 
 export default TableRow = (props) ->
-    total = null
+    total = undefined
     h = props.header
     return
         <tr>
