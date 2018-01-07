@@ -1,5 +1,6 @@
 React = require('react')
 moment = require('moment');
+FontAwesome = require('react-fontawesome')
 import {Link} from 'react-router-dom'
 
 import styles from './Result.css'
@@ -24,6 +25,8 @@ export default Result = (props) ->
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to="/reviewResult/#{r._id}">{moment(r.lastSubmitTime).format('YYYY-MM-DD HH:mm:ss')}</Link>
                 {" "}[ x {r.attempts} ]
+                {" "}
+                {r.fullSubmit?.comments?.length && <FontAwesome name="comment"/>|| ""}
             </td>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to={userHref}>{userName}</Link>

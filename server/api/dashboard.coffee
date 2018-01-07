@@ -2,6 +2,7 @@ connectEnsureLogin = require('connect-ensure-login')
 
 import User from '../models/user'
 import Result from '../models/result'
+import Submit from '../models/submit'
 import Problem from '../models/problem'
 import Table from '../models/table'
 import CfResult from '../models/cfResult'
@@ -13,6 +14,8 @@ expandResult = (result) ->
         return undefined
     res.fullUser = res.fullUser.toObject()
     res.fullTable = (await Problem.findById(result.table)).toObject()
+    if res.lastSubmitId
+        res.fullSubmit = (await Submit.findById(result.lastSubmitId))
     tableNamePromises = []
     for table in res.fullTable.tables
         tableNamePromises.push(Table.findById(table))
