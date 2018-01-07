@@ -1,7 +1,7 @@
 import Table from '../models/table'
 import Result from '../models/result'
 import logger from '../log'
-import isContestRequired from '../lib/isContestRequired'
+import isContestRequired from '../../client/lib/isContestRequired'
 
 export default calculateLevel = (user, baseLevel, lastDate) ->
     for bigLevel in [1..10]
