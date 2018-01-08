@@ -1,6 +1,7 @@
 import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits"
 import * as downloadContests from "./downloadContests"
+import * as downloadBlog from './downloadBlog'
 import updateCf from "./updateCf"
 import logger from '../log'
 import User from '../models/user'
@@ -27,4 +28,6 @@ jobCf = new Cron.CronJob('0 0 * * * *', updateCf, null, true);
 
 jobUpdateResults = new Cron.CronJob('45 46 ' + (nightHour + 1) + ' * * *', User.updateAllUsers, null, true);
 
-export default [jobAll, jobUntilIgnored, jobLast, jobContests, jobCf, jobUpdateResults]
+jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run, null, true)
+
+export default [jobAll, jobUntilIgnored, jobLast, jobContests, jobCf, jobUpdateResults, jobUpdateBlog]

@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet"
 
 import Tree from './Tree'
 import News from './News'
+import BlogPosts from './BlogPosts'
 import CommentList from './CommentList'
 import TopPanel from './TopPanel'
 
@@ -148,6 +149,7 @@ export default class Sceleton extends React.Component
                         </ColWrapper>
                         <ColWrapper size={newsSize}>
                             <News/>
+                            <BlogPosts/>
                             <CommentList />
                         </ColWrapper>
                     </Row>

@@ -33,6 +33,7 @@
     "express": "*",
     "express-exceptions": "0.0.7",
     "express-session": "^1.15.4",
+    "feedparser-promised": "^1.5.0",
     "gulp": "*",
     "gulp-babel": "*",
     "gulp-coffee": "*",

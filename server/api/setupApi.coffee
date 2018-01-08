@@ -9,6 +9,7 @@ import Table from '../models/table'
 import SubmitComment from '../models/SubmitComment'
 import RegisteredUser from '../models/registeredUser'
 import Material from '../models/Material'
+import BlogPost from '../models/BlogPost'
 
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
@@ -121,6 +122,9 @@ export default setupApi = (app) ->
 
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
+
+    app.get '/api/lastBlogPosts', wrap (req, res) ->
+        res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
 
     app.get '/api/result/:id', wrap (req, res) ->
         result = (await Result.findById(req.params.id)).toObject()
