@@ -102,6 +102,7 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
             logger.info("Updated 30 users, continuing")
             promises = []
     await Promise.all(promises)
+    logger.info("Updated all users")
 
 usersSchema.index
     userList: 1
