@@ -51,16 +51,18 @@ BottomPanel = (props) ->
     <div className={styles.footer}>
         <Grid fluid>
             <Row>
-                <Col xs={12} sm={6} md={6} lg={6}>
+                <Col xs={12} sm={9} md={9} lg={9}>
                     <div className="text-muted">
                         <Link to="/">algoprog.ru</Link>
                         {" © Петр Калинин, GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
                         <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
+                        {" | "}
+                        <a href="http://blog.algoprog.ru" target="_blank">Блог</a>
                     </div>
                 </Col>
-                <Col xs={12} sm={6} md={6} lg={6}>
+                <Col xs={12} sm={3} md={3} lg={3}>
                     <div className={styles.right + " text-muted"}>
                         <Link to="/pay">
                             {

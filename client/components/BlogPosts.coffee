@@ -10,7 +10,7 @@ class BlogPosts extends React.Component
         if not @props.posts.length
             return null
         <div>
-            <h4>Последние записи в <a href="http://blog.algoprog.ru" target="_blank">блоге</a></h4>
+            <h4>Последние записи в блоге</h4>
             <PanelGroup>
                 {
                 @props.posts.map((post) =>
