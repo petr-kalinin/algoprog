@@ -39,6 +39,9 @@ problemsSchema.methods.updateLevel = ->
         @level = undefined
     @update({$set: {level: @level}})
 
+problemsSchema.statics.findByLevel = (level) ->
+    return Problem.find
+        level: level
 
 Problem = mongoose.model('Problems', problemsSchema);
 

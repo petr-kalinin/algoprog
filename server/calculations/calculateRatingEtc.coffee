@@ -1,5 +1,6 @@
 import Submit from '../models/submit'
 import Problem from '../models/problem'
+import Result from '../models/result'
 
 import {startDayForWeeks, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
 
@@ -41,55 +42,66 @@ activityScore = (level, date) ->
 
 export default calculateRatingEtc = (user) ->
     thisStart = new Date(startDayForWeeks[user.userList])
+
+    weekByTime = (time) ->
+        submitDate = new Date(time)
+        return Math.floor((submitDate - thisStart) / MSEC_IN_WEEK)
+    inc = (dict, key, add=1) ->
+        if not (key of dict)
+            dict[key] = 0
+        dict[key] += add
+
     submits = await Submit.findByUser(user._id)
-    probSolved = {}
+    results = await Result.findByUser(user._id)
     weekSolved = {}
     weekOk = {}
     wasSubmits = {}
     rating = 0
     activity = 0
+    probSolved = {}
+
     for s in submits
-        if probSolved[s.problem]
-            continue
         level = await findProblemLevel(s.problem)
         if not level
             continue
-        submitDate = new Date(s.time)
-        week = Math.floor((submitDate - thisStart) / MSEC_IN_WEEK)
-        wasSubmits[week] = true
-        if s.outcome == "AC"
-            probSolved[s.problem] = true
-            if !weekSolved[week]
-                weekSolved[week] = 0
-            weekSolved[week]++
+        wasSubmits[weekByTime(s.time)] = true
+
+    for r in results
+        level = await findProblemLevel(r.table)
+        if not level  # this will happen, in particular, if this is not a problem result
+            continue
+        week = weekByTime(r.lastSubmitTime)
+        if r.solved == 1
+            inc(weekSolved, week)
             rating += levelScore(level)
-            activity += activityScore(level, submitDate)
-        else if s.outcome == "OK"
-            if !weekOk[week]
-                weekOk[week] = 0
-            weekOk[week]++
-        else if s.outcome == "DQ"
-            if !weekSolved[week]
-                weekSolved[week] = 0
-            weekSolved[week] -= 2
+            activity += activityScore(level, r.lastSubmitTime)
+            probSolved[r.table] = true
+        else if r.solved < 0  # DQ
+            inc(weekSolved, week, -2)
             rating -= 2 * levelScore(level)
             activity -= 2 * activityScore(level, submitDate)
+        else if r.ok == 1
+            inc(weekOk, week)
+
     for level in ["1А", "1Б"]
-        if (!user.baseLevel) or (level >= user.baseLevel)
+        if (!user.level.base) or (level >= user.level.base)
             break
         for prob in await Problem.findByLevel(level)
             if probSolved[prob._id]
                 continue
             rating += levelScore(level)
+
     for week of wasSubmits
         if !weekSolved[week]
             weekSolved[week] = 0.5
+
     for w of weekSolved
         if w<0
             delete weekSolved[w]
     for w of weekOk
         if w<0
             delete weekOk[w]
+
     activity *= (1 - WEEK_ACTIVITY_EXP) # make this averaged
     return {
         byWeek: {
