@@ -49,7 +49,7 @@ class CommentList extends React.Component
 
     componentDidUpdate: (prevProps) ->
         # do not show anything if we do not have comments or we were not logged in
-        if (not @props.data) || (not prevProps.myUser?._id)
+        if (not @props.data?.length) || (not prevProps.data?.length)
             return
         viewedComments = {}
         for comment in prevProps.data || []
