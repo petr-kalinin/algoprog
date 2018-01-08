@@ -2,6 +2,8 @@ React = require('react')
 moment = require('moment')
 
 import Panel from 'react-bootstrap/lib/Panel'
+import PanelGroup from 'react-bootstrap/lib/PanelGroup'
+
 import {bootstrapUtils} from 'react-bootstrap/lib/utils'
 import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -72,23 +74,25 @@ class CommentList extends React.Component
             return null
         <div>
             <h4>Последние комментарии</h4>
-            {
-            if @props.data?.length
-                @props.data.map((comment) =>
-                    cl = commentPanelClass(comment)
-                    title =
-                        <span>
-                            {comment.problemName}
-                            <button type="button" className="close" onClick={@markAsViewed(comment._id)}>
-                                <span>&times;</span>
-                            </button>
-                        </span>
-                    <Panel collapsible key={comment._id} header={title} bsStyle={cl}>
-                        <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
-                        <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
-                    </Panel>
-                )
-            }
+            <PanelGroup>
+                {
+                if @props.data?.length
+                    @props.data.map((comment) =>
+                        cl = commentPanelClass(comment)
+                        title =
+                            <span>
+                                {comment.problemName}
+                                <button type="button" className="close" onClick={@markAsViewed(comment._id)}>
+                                    <span>&times;</span>
+                                </button>
+                            </span>
+                        <Panel collapsible key={comment._id} header={title} bsStyle={cl}>
+                            <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
+                            <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
+                        </Panel>
+                    )
+                }
+            </PanelGroup>
         </div>
 
 mapStateToProps = () -> {}

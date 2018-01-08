@@ -3,6 +3,7 @@ moment = require('moment')
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import Panel from 'react-bootstrap/lib/Panel'
+import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 class BlogPosts extends React.Component
     render:  () ->
@@ -10,13 +11,15 @@ class BlogPosts extends React.Component
             return null
         <div>
             <h4>Последние записи в <a href="http://blog.algoprog.ru" target="_blank">блоге</a></h4>
-            {
-            @props.posts.map((post) =>
-                header = <a href={post.link} target="_blank">{moment(post.date).format('DD.MM.YYYY') + ": " + post.title}</a>
-                <Panel key={post._id} header={header}>
-                </Panel>
-            )
-            }
+            <PanelGroup>
+                {
+                @props.posts.map((post) =>
+                    header = <a href={post.link} target="_blank">{moment(post.date).format('DD.MM.YYYY') + ": " + post.title}</a>
+                    <Panel key={post._id} header={header}>
+                    </Panel>
+                )
+                }
+            </PanelGroup>
         </div>
 
 options = {

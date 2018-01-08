@@ -8,13 +8,15 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 News = (props) ->
     <div>
         <h4>Новости</h4>
-        {
-        res = []
-        a = (el) -> res.push(el)
-        for m, i in props.news.materials
-            a <Panel collapsible header={m.header} key={i}><div dangerouslySetInnerHTML={{__html: m.content}}/></Panel>
-        res
-        }
+        <PanelGroup>
+            {
+            res = []
+            a = (el) -> res.push(el)
+            for m, i in props.news.materials
+                a <Panel collapsible header={m.header} key={i} eventKey={i}><div dangerouslySetInnerHTML={{__html: m.content}}/></Panel>
+            res
+            }
+        </PanelGroup>
     </div>
 
 options =
