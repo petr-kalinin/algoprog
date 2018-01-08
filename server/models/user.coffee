@@ -9,6 +9,8 @@ import logger from '../log'
 
 import updateResults from '../calculations/updateResults'
 
+import sleep from '../lib/sleep'
+
 SEMESTER_START = "2016-06-01"
 
 usersSchema = new mongoose.Schema
@@ -103,6 +105,15 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
             promises = []
     await Promise.all(promises)
     logger.info("Updated all users")
+
+usersSchema.statics.updateAllCf = () ->
+    logger.info "Updating cf ratings"
+    for u in await User.findAll()
+        if u.cf.login
+            await u.updateCfRating()
+            await sleep(500)  # don't hit CF request limit
+    logger.info "Updated cf ratings"
+
 
 usersSchema.index
     userList: 1

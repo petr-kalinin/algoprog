@@ -1,8 +1,7 @@
-import logger from '../log'
 request = require('request-promise-native')
 
-sleep = (milliseconds) ->
-    return new Promise((resolve) -> setTimeout(resolve, milliseconds))
+import logger from '../log'
+import sleep from './sleep'
 
 export default download = (href, jar, options) ->
     logger.debug "Downloading", href

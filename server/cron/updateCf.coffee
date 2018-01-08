@@ -1,6 +1,5 @@
 import User from '../models/user'
 import logger from '../log'
-
 running = false
 
 wrapRunning = (callable) ->
@@ -15,7 +14,4 @@ wrapRunning = (callable) ->
             running = false
 
 export default run = wrapRunning ->
-    logger.info "Updating cf ratings"
-    for u in await User.findAll()
-        await u.updateCfRating()
-    logger.info "Done updating cf ratings"
+    User.updateAllCf()
