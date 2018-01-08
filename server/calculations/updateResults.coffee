@@ -91,9 +91,3 @@ export default updateResults = (user, dirtyResults) ->
     await updateResultsForTable(user, Table.main, dirtyResults)
     logger.info "updated results for user ", user
 
-export updateAllResults = () ->
-    users = await User.find({})
-    promises = []
-    for user in users
-        promises.push(updateResults(user._id))
-    Promise.all(promises)

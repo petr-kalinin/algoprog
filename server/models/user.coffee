@@ -96,6 +96,9 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
     promises = []
     for u in users
         promises.push(User.updateUser(u._id))
+        if promises.length > 30
+            await Promise.all(promises)
+            promises = []
     await Promise.all(promises)
 
 usersSchema.index

@@ -1,7 +1,6 @@
 import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits"
 import * as downloadContests from "./downloadContests"
-import {updateAllResults} from '../calculations/updateResults'
 import updateCf from "./updateCf"
 import logger from '../log'
 import User from '../models/user'

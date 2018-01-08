@@ -17,7 +17,6 @@ import setOutcome from './setOutcome'
 
 import logger from '../log'
 
-import updateResults, {updateAllResults} from '../calculations/updateResults'
 import downloadMaterials from '../cron/downloadMaterials'
 import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"

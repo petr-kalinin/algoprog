@@ -47,8 +47,5 @@ port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 app.listen port, () ->
   logger.info 'App listening on port ', port
 
-#import {updateAllResults} from './calculations/updateResults'
-#updateAllResults()
-
 #import downloadMaterials from './cron/downloadMaterials'
 #downloadMaterials()
