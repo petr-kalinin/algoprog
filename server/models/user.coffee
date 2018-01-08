@@ -97,7 +97,9 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
     for u in users
         promises.push(User.updateUser(u._id))
         if promises.length > 30
+            logger.info("Updating 30 users, waiting for completion")
             await Promise.all(promises)
+            logger.info("Updated 30 users, continuing")
             promises = []
     await Promise.all(promises)
 

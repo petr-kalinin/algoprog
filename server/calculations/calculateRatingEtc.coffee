@@ -79,7 +79,7 @@ export default calculateRatingEtc = (user) ->
         else if r.solved < 0  # DQ
             inc(weekSolved, week, -2)
             rating -= 2 * levelScore(level)
-            activity -= 2 * activityScore(level, submitDate)
+            activity -= 2 * activityScore(level, r.lastSubmitTime)
         else if r.ok == 1
             inc(weekOk, week)
 
