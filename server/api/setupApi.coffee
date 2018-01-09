@@ -181,8 +181,13 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
         adminUser = await InformaticsUser.findAdmin()
         await groups.moveUserToGroup(adminUser, req.params.userId, req.params.groupName)
+        await user.setUserList(req.params.groupName)
         res.send('OK')
 
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->

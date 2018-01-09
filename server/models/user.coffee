@@ -77,6 +77,11 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     @cf.login = cfLogin
     @updateCfRating()
 
+usersSchema.methods.setUserList = (userList) ->
+    logger.info "setting userList ", @_id, userList
+    await @update({$set: {"userList": userList}})
+    @userList = userList
+
 
 usersSchema.statics.findByList = (list) ->
     User.find({userList: list}).sort({active: -1, "level.current": -1, ratingSort: -1})

@@ -21,7 +21,8 @@ class GroupSelector extends React.Component
 
     handleMove: (name) ->
         () =>
-            callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
+            await callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
+            await @props.handleReload()
 
     render: () ->
         <div>
