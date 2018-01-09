@@ -1,7 +1,9 @@
 React = require('react')
 deepcopy = require("deepcopy")
 
-import { Grid } from 'react-bootstrap'
+import Grid from 'react-bootstrap/lib/Grid'
+import Button from 'react-bootstrap/lib/Button'
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 
 import callApi from '../lib/callApi'
 
@@ -10,11 +12,37 @@ import UserName from './UserName'
 
 import styles from './UserBadge.css'
 
+import { GROUPS } from '../lib/informaticsGroups'
 
-export default class UserBadge extends React.Component 
+class GroupSelector extends React.Component
     constructor: (props) ->
         super(props)
-        @state = 
+        @handleMove = @handleMove.bind(this)
+
+    handleMove: (name) ->
+        () =>
+            callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
+
+    render: () ->
+        <div>
+            {"Переместить в группу: "}
+            <ButtonGroup>
+                {
+                res = []
+                a = (el) -> res.push(el)
+                for name, id of GROUPS
+                    a <Button key={name} active={name==@props.user.userList} onClick={@handleMove(name)}>
+                        {name}
+                    </Button>
+                res
+                }
+            </ButtonGroup>
+        </div>
+
+export default class UserBadge extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
             baseLevel: props.user.level.base || '',
             cfLogin: @props.user.cf?.login || ''
         @handleChange = @handleChange.bind(this)
@@ -22,20 +50,20 @@ export default class UserBadge extends React.Component
         @handleCfChange = @handleCfChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
-        
+
     handleChange: (field, event) ->
         newState = deepcopy(@state)
         newState[field] = event.target.value
         @setState(newState)
-        
+
     handleBlChange: (event) ->
         @handleChange("baseLevel", event)
 
     handleCfChange: (event) ->
         @handleChange("cfLogin", event)
-        
+
     handleSubmit: (event) ->
-        await callApi('user/' + @props.user._id + '/set', 
+        await callApi('user/' + @props.user._id + '/set',
             level:
                 base: @state.baseLevel
             cf:
@@ -46,7 +74,7 @@ export default class UserBadge extends React.Component
     handleKeyPressed: (e) ->
         if e.key == "Enter"
             @handleSubmit(e)
-    
+
     render: () ->
         <div>
             <h1>
@@ -54,40 +82,41 @@ export default class UserBadge extends React.Component
             </h1>
             <blockquote>
                 <div>Уровень: {@props.user.level.current}</div>
-                { @props.me?.admin && 
-                    <div> 
+                { @props.me?.admin &&
+                    <div>
                         Уровень на начало полугодия: {@props.user.level.start}
                     </div> }
                 <div>Рейтинг: {@props.user.rating}</div>
                 <div>Активность: {@props.user.activity.toFixed(1)}</div>
-                { 
-                if @props.user.cf?.rating 
-                    <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div> 
+                {
+                if @props.user.cf?.rating
+                    <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
                 else if @props.explain
                     <div>Логин на codeforces неизвестен. Если вы зарегистированы, сообщите логин мне.</div>
                 }
-                
-                { @props.me?.admin && 
+
+                { @props.me?.admin &&
                     <form className={styles.form} onSubmit={@handleSubmit}>
-                        <div> 
-                            Базовый уровень: <input 
-                                type="text" 
-                                name="newLevel" 
-                                value={@state.baseLevel} 
+                        <div>
+                            Базовый уровень: <input
+                                type="text"
+                                name="newLevel"
+                                value={@state.baseLevel}
                                 size="3"
                                 onChange={@handleBlChange}
-                                onKeyPress={@handleKeyPressed} /> 
-                        </div> 
-                        <div> 
-                            Cf login: <input 
-                                type="text" 
-                                name="newLogin" 
-                                value={@state.cfLogin} 
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
+                        <div>
+                            Cf login: <input
+                                type="text"
+                                name="newLogin"
+                                value={@state.cfLogin}
                                 size="20"
                                 onChange={@handleCfChange}
-                                onKeyPress={@handleKeyPressed} /> 
-                        </div> 
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
                     </form> }
+                { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
             </blockquote>
             { @props.explain &&
                 <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }

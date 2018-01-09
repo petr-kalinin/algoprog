@@ -14,7 +14,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import logger from '../log'
 import download from '../lib/download'
 
-UNKNOWN_GROUP = '7647'
+import * as groups from '../informatics/informaticsGroups'
 
 class AllSubmitDownloader
 
@@ -114,14 +114,7 @@ class AllSubmitDownloader
         return result
 
     removeUserFromUnknownGroup: (uid) ->
-        href = "http://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=delete"
-        body = 'deleteParam={"id":"' + uid + '"}&group_id=&session_sid='
-        await @adminUser.download(href, {
-            method: 'POST',
-            headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-            body: body,
-            followAllRedirects: true
-        })
+        await groups.removeUserFromGroup(@adminUser, uid, "unknown")
 
     processSubmit: (uid, name, pid, runid, prob, date, language, outcome) ->
         logger.debug "Found submit ", uid, pid, runid, prob, date, language, outcome
@@ -262,33 +255,13 @@ class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
         r = !((res == "AC") || (res == "IG"))
         return r
 
-lic40url = (page, submitsPerPage) ->
-        'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7248&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
-
-zaochUrl = (page, submitsPerPage) ->
-    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7247&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
+url = (group) -> (page, submitsPerPage) ->
+        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{group}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
 
 
-studUrl = (page, submitsPerPage) ->
-    'http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=7170&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=' + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
-
-
-unknownUrl = (page, submitsPerPage) ->
-    "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{UNKNOWN_GROUP}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=" + submitsPerPage + '&with_comment=&page=' + page + '&action=getHTMLTable'
-
-userUrl = (userId) ->
-    (page, submitsPerPage) ->
-        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
-
-userProblemUrl = (userId, problemId) ->
-    (page, submitsPerPage) ->
-        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
-
-urls =
-    'lic40': lic40url,
-    'zaoch': zaochUrl,
-    'stud': studUrl,
-    'unknown': unknownUrl
+urls = {}
+for group, infGroup of groups.GROUPS
+    urls[group] = url(infGroup)
 
 running = false
 

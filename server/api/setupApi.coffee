@@ -21,6 +21,7 @@ import logger from '../log'
 import downloadMaterials from '../cron/downloadMaterials'
 import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
+import * as groups from '../informatics/informaticsGroups'
 
 import InformaticsUser from '../informatics/InformaticsUser'
 
@@ -174,6 +175,14 @@ export default setupApi = (app) ->
             return
         comment.viewed = true
         await comment.save()
+        res.send('OK')
+
+    app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        adminUser = await InformaticsUser.findAdmin()
+        await groups.moveUserToGroup(adminUser, req.params.userId, req.params.groupName)
         res.send('OK')
 
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
