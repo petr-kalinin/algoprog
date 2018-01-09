@@ -489,7 +489,8 @@ class MaterialsDownloader
 
         groups =
             lic40: "Лицей 40",
-            zaoch: "ННГУ и другие школьники",
+            zaoch: "Нижегородские школьники",
+            notnnov: "Остальные школьники"
             stud: "Студенты и старше"
         tables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "main", "reg", "byWeek"]
         materials = []
