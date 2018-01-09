@@ -21,6 +21,7 @@ export default RegisteredUsers = (props) ->
                         {user.aboutme}
                     </td>
                     <td>
+                        <a href={"http://informatics.mccme.ru/user/view.php?id=#{user.informaticsId}&course=1"}>{"#"}</a>
                         <a href={"http://informatics.mccme.ru/user/editadvanced.php?id=#{user.informaticsId}"}>{"#"}</a>
                     </td>
                 </tr>
