@@ -255,14 +255,19 @@ class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
         r = !((res == "AC") || (res == "IG"))
         return r
 
+userProblemUrl = (userId, problemId) ->
+    (page, submitsPerPage) ->
+        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+
+
 url = (group) -> (page, submitsPerPage) ->
         "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{group}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
-
 
 urls = {}
 for group, infGroup of groups.GROUPS
     urls[group] = url(infGroup)
 
+    
 running = false
 
 wrapRunning = (callable) ->
