@@ -56,6 +56,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",
+    "promise-file-reader": "^1.0.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.1",
     "react-css-loaders": "0.0.5",

@@ -44,6 +44,21 @@ expandSubmit = (submit) ->
     submit.fullProblem.tables = tableNames
     return submit
 
+createDraftSubmit = (problemId, userId, language, code) ->
+    time = new Date
+    timeStr = +time
+    submit = new Submit
+        _id: "#{userId}r#{timeStr}#{problemId}" ,
+        time: time,
+        user: userId,
+        problem: problemId,
+        outcome: "DR"
+        source: code
+        language: language
+        comments: []
+        results: []
+        force: false
+    await submit.upsert()
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -63,6 +78,10 @@ export default setupApi = (app) ->
             informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
         finally
             await downloadSubmits.runForUser(req.user.informaticsId, 5, 1)
+        res.json({submit: true})
+
+    app.post '/api/submit/:problemId/draft', ensureLoggedIn, wrap (req, res) ->
+        await createDraftSubmit("p" + req.params.problemId, req.user.informaticsId, req.body.language, req.body.code)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->

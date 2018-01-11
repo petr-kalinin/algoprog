@@ -61,6 +61,8 @@ export default calculateRatingEtc = (user) ->
     probSolved = {}
 
     for s in submits
+        if s.outcome == "DR"
+            continue
         level = await findProblemLevel(s.problem)
         if not level
             continue

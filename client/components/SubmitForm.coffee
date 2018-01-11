@@ -1,4 +1,7 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
+PromiseFileReader = require('promise-file-reader')
+
 import { CometSpinLoader } from 'react-css-loaders';
 import { connect } from 'react-redux'
 
@@ -11,11 +14,14 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
 
-import {callApiWithBody} from '../lib/callApi'
+
+import callApi, {callApiWithBody} from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+
+import styles from './SubmitForm.css'
 
 LANGUAGES = [
     [27, "Python 3.4.3", "py", "py3"]
@@ -40,7 +46,9 @@ class SubmitForm extends React.Component
         super(props)
         @state =
             lang_id: ""
+            draft: false
         @setField = @setField.bind(this)
+        @toggleDraft = @toggleDraft.bind(this)
         @submit = @submit.bind(this)
 
     setField: (field, value) ->
@@ -55,6 +63,10 @@ class SubmitForm extends React.Component
             newState[field] = value
         @setState(newState)
 
+    toggleDraft: () ->
+        newState = {draft: !@state.draft}
+        @setState(newState)
+
     submit: (event) ->
         event.preventDefault()
         newState = {
@@ -64,8 +76,20 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            formData = new FormData(document.getElementById("submitForm"))
-            data = await callApiWithBody "submit/#{@props.problemId}", 'POST', {}, formData
+            if @state.draft
+                fileName = document.getElementById("file").files[0]
+                fileText = await PromiseFileReader.readAsText(fileName)
+                languageName = undefined
+                for lang in LANGUAGES
+                    if @state.lang_id == lang[0]
+                        languageName = lang[1]
+                dataToSend =
+                    language: languageName
+                    code: fileText
+                data = await callApi "submit/#{@props.problemId}/draft", dataToSend
+            else
+                formData = new FormData(document.getElementById("submitForm"))
+                data = await callApiWithBody "submit/#{@props.problemId}", 'POST', {}, formData
             if data.submit
                 data =
                     submit:
@@ -110,6 +134,10 @@ class SubmitForm extends React.Component
                     )}
                 </FieldGroup>
                 {" "}
+                <span onClick={@toggleDraft} className={if @state.draft then styles.draftEnabled else styles.draftDisabled} title="Не тестировать, отправить как черновик">
+                    <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
+                </span>
+                {" "}
                 {
                 if @state.submit?.loading
                     <div style={display: "inline-block", position: "relative", top: "72px", marginTop: "-144px", width: "30px"}>
@@ -120,6 +148,15 @@ class SubmitForm extends React.Component
                     Отправить
                 </Button>
             </Form>
+            {
+            if @state.draft
+                <Alert bsStyle="info">
+                    Решение будет отправлено как черновик. Оно будет сохранено на сервере и доступно в списке посылок,
+                    но не будет протестировано и не будет влиять на результаты по этой задаче.
+                    Например, это вам может быть полезно, если вы хотите продолжить работу над задачей
+                    с другого компьютера.
+                </Alert>
+            }
             {
             if @state.submit?.result
                 <Alert bsStyle="success">

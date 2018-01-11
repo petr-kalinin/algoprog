@@ -6,6 +6,8 @@ export default outcomeToText = (outcome) ->
     switch outcome
         when "Частичное решение"
             message = "Неполное решение"
+        when "DR"
+            message = "Черновик"
         when "AC"
             cl = "success"
             message = "Зачтено"

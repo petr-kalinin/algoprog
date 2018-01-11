@@ -1,0 +1,7 @@
+.draftEnabled {
+    cursor: hand;
+    text-shadow: 0 0 5px red;
+}
+.draftDisabled {
+    cursor: hand;
+}

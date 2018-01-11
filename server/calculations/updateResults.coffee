@@ -48,6 +48,8 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     lastSubmitId = undefined
     lastSubmitTime = undefined
     for submit in submits
+        if submit.outcome == "DR"
+            continue
         lastSubmitId = submit._id
         lastSubmitTime = submit.time
         if submit.outcome == "IG"
@@ -90,4 +92,3 @@ export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
     await updateResultsForTable(user, Table.main, dirtyResults)
     logger.info "updated results for user ", user
-
