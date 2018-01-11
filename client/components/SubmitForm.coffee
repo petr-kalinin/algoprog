@@ -78,7 +78,8 @@ class SubmitForm extends React.Component
         try
             if @state.draft
                 fileName = document.getElementById("file").files[0]
-                fileText = await PromiseFileReader.readAsText(fileName)
+                fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
+                fileText = Array.from(new Uint8Array(fileText))
                 languageName = undefined
                 for lang in LANGUAGES
                     if @state.lang_id == lang[0]

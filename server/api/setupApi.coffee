@@ -1,5 +1,6 @@
 connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
+iconv = require('iconv-lite')
 
 import User from '../models/user'
 import Submit from '../models/submit'
@@ -45,6 +46,7 @@ expandSubmit = (submit) ->
     return submit
 
 createDraftSubmit = (problemId, userId, language, code) ->
+    code = iconv.decode(new Buffer(code), "latin1")
     time = new Date
     timeStr = +time
     submit = new Submit
