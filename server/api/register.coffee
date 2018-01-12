@@ -7,9 +7,7 @@ import logger from '../log'
 UNKNOWN_GROUP = '7647'
 
 addUserToUnknownGroup = (uid) ->
-    admin = await RegisteredUser.findAdmin()
-    adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
-    await adminUser.doLogin()
+    adminUser = await InformaticsUser.findAdmin()
 
     href = "http://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
     body = 'addParam={"id":"' + uid + '"}&group_id=&session_sid='
@@ -24,7 +22,7 @@ export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
     {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin} = req.body
 
-    informaticsUser = new InformaticsUser(informaticsUsername, informaticsPassword)
+    informaticsUser = await InformaticsUser.getUser(informaticsUsername, informaticsPassword)
     informaticsData = await informaticsUser.getData()
 
     oldUser = await User.findById(informaticsData.id)

@@ -34,28 +34,28 @@ getGraduateYear = (cl) ->
     graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
     return new Date(graduateDate).getFullYear()
 
-adminUser = undefined
+userCache = {}
 
 export default class InformaticsUser
+    @getUser: (username, password) ->
+        key = username + "::" + password
+        if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
+            logger.info "Creating new InformaticsUser ", username
+            newUser = new InformaticsUser(username, password)
+            await newUser.doLogin()
+            userCache[key] =
+                user: newUser
+                loginTime: new Date()
+        return userCache[key].user
+
+    @findAdmin: () ->
+        admin = await RegisteredUser.findAdmin()
+        return @getUser(admin.informaticsUsername, admin.informaticsPassword)
+
     constructor: (@username, @password) ->
         @jar = request.jar()
         @requests = 0
         @promises = []
-
-    @_findAdmin: () ->
-        admin = await RegisteredUser.findAdmin()
-        _adminUser = new InformaticsUser(admin.informaticsUsername, admin.informaticsPassword)
-        await _adminUser.doLogin()
-        return _adminUser
-
-    @findAdmin: () ->
-        if not adminUser or (new Date() - adminUser.loginTime > 1000 * 60 * 60)
-            logger.info("Creating new adminUser")
-            newAdminUser =
-                user: await InformaticsUser._findAdmin()
-                loginTime: new Date()
-            adminUser = newAdminUser
-        return adminUser.user
 
     doLogin: () ->
         page = await download("http://informatics.mccme.ru/login/index.php", @jar, {
@@ -97,7 +97,6 @@ export default class InformaticsUser
         return result
 
     getData: () ->
-        await @doLogin()
         page = await download("http://informatics.mccme.ru/user/edit.php?id=#{@id}", @jar)
         document = (new JSDOM(page)).window.document
         fields = ["id_lastname",
@@ -135,7 +134,6 @@ export default class InformaticsUser
             currentYearStart: getCurrentYearStart()
 
     submit: (problemId, contentType, body) ->
-        await @doLogin()
         page = await download("http://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
             method: 'POST',
             headers: {'Content-Type': contentType},
