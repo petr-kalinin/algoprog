@@ -1,6 +1,7 @@
 connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
 iconv = require('iconv-lite')
+Entities = require('html-entities').XmlEntities
 
 import User from '../models/user'
 import Submit from '../models/submit'
@@ -27,6 +28,7 @@ import * as groups from '../informatics/informaticsGroups'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
+entities = new Entities()
 
 wrap = (fn) ->
     (args...) ->
@@ -47,6 +49,7 @@ expandSubmit = (submit) ->
 
 createDraftSubmit = (problemId, userId, language, code) ->
     code = iconv.decode(new Buffer(code), "latin1")
+    code = entities.encode(code)
     time = new Date
     timeStr = +time
     submit = new Submit
