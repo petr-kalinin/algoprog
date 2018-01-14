@@ -5,6 +5,8 @@ import csshook from 'css-modules-require-hook/preset'
 express = require('express')
 passport = require('passport')
 compression = require('compression')
+responseTime = require('response-time')
+StatsD = require('node-statsd')
 
 import logger from './log'
 import renderOnServer from './ssr/renderOnServer'
@@ -22,12 +24,25 @@ requireHTTPS = (req, res, next) ->
     if !req.secure and !req.headers.host.startsWith("127.0.0.1")  # the latter is to avoid inner api requests
         return res.redirect 'https://' + req.headers.host + req.url
     next()
+    
+stats = new StatsD()
+stats.socket.on 'error',  (error) ->
+    logger.error(error)
 
 app = express()
 app.enable('trust proxy')
 
+if process.env["ENABLE_METRICS"]
+    app.use(responseTime((req, res, time) ->
+        stat = (req.method + req.url).toLowerCase()
+            .replace(/[:.]/g, '')
+            .replace(/\//g, '_')
+        stats.timing(stat, time)
+    ))
+
 if process.env["FORCE_HTTPS"]
     app.use(requireHTTPS)
+    
 app.use(compression())
 
 configurePassport(app, db)
