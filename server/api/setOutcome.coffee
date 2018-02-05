@@ -50,7 +50,8 @@ storeToDatabase = (req, res) ->
     if req.body.result in ["AC", "IG", "DQ"]
         submit.outcome = req.body.result
         submit.force = true
-    if req.body.comment
+    if req.body.comment and not (req.body.comment in submit.comments)
+        logger.info("Force-storing to database comment for #{req.params.submitId}")
         rndId = Math.floor(Math.random() * 1000000)
         newComment = new SubmitComment
             _id: "_#{rndId}r#{runId}"

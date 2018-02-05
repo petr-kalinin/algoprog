@@ -24,7 +24,7 @@ requireHTTPS = (req, res, next) ->
     if !req.secure and !req.headers.host.startsWith("127.0.0.1")  # the latter is to avoid inner api requests
         return res.redirect 'https://' + req.headers.host + req.url
     next()
-    
+
 stats = new StatsD()
 stats.socket.on 'error',  (error) ->
     logger.error(error)
@@ -42,7 +42,7 @@ if process.env["ENABLE_METRICS"]
 
 if process.env["FORCE_HTTPS"]
     app.use(requireHTTPS)
-    
+
 app.use(compression())
 
 configurePassport(app, db)
