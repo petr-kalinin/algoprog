@@ -167,6 +167,7 @@ class AllSubmitDownloader
 
         if @_forceMetadata and oldSubmit?.force
             newSubmit.outcome = oldSubmit.outcome
+            newSubmit.force = oldSubmit.force
 
         [source, comments, results] = await Promise.all([
             @getSource(runid),
