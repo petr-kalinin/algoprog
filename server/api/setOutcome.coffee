@@ -11,19 +11,6 @@ import logger from '../log'
 postToInformatics = (req, res) ->
     adminUser = await InformaticsUser.findAdmin()
     [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
-    if req.body.comment
-        href = "http://informatics.mccme.ru/py/comment/add"
-        body =
-            run_id: run
-            contest_id: contest
-            comment: req.body.comment
-            lines: ""
-        await adminUser.download(href, {
-            method: 'POST',
-            headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-            form: body,
-            followAllRedirects: true
-        })
     outcomeCode = undefined
     if req.body.result == "AC"
         outcomeCode = 8
@@ -31,9 +18,24 @@ postToInformatics = (req, res) ->
         outcomeCode = 9
     if req.body.result == "DQ"
         outcomeCode = 10
-    if outcomeCode
-        href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
-        await adminUser.download href
+    try
+        if outcomeCode
+            href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
+            await adminUser.download href
+    finally
+        if req.body.comment
+            href = "http://informatics.mccme.ru/py/comment/add"
+            body =
+                run_id: run
+                contest_id: contest
+                comment: req.body.comment
+                lines: ""
+            await adminUser.download(href, {
+                method: 'POST',
+                headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
+                form: body,
+                followAllRedirects: true
+            })
 
 updateData = (req, res) ->
     [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
@@ -64,6 +66,7 @@ storeToDatabase = (req, res) ->
         await newComment.upsert()
         submit.comments.push(req.body.comment)
     await submit.upsert()
+    await updateData(req, res)  # to store comment with proper outcome
     await User.updateUser(submit.user)
 
 export default setOutcome = (req, res) ->
