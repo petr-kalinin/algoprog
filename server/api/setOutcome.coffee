@@ -71,13 +71,18 @@ storeToDatabase = (req, res) ->
     await User.updateUser(submit.user)
 
 export default setOutcome = (req, res) ->
-    success = false
     try
         await postToInformatics(req, res)
+    catch e
+        logger.info "Can't post to informatics ", req.params.submitId
+        logger.info e.message
+    success = false
+    try
         success = await updateData(req, res)
     catch e
         logger.info "Can't update informatics status ", req.params.submitId
         logger.info e.message
+        success = false
     if not success and (req.body.result or req.body.comment)
         await storeToDatabase(req, res)
     res.send('OK')
