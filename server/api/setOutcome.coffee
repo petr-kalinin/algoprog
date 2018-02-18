@@ -21,7 +21,7 @@ postToInformatics = (req, res) ->
     try
         if outcomeCode
             href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
-            await adminUser.download href
+            await adminUser.download(href, {maxAttempts: 1})
     finally
         if req.body.comment
             href = "http://informatics.mccme.ru/py/comment/add"
@@ -35,6 +35,7 @@ postToInformatics = (req, res) ->
                 headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
                 form: body,
                 followAllRedirects: true
+                maxAttempts: 1
             })
 
 updateData = (req, res) ->

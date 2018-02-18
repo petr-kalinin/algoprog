@@ -4,11 +4,12 @@ import logger from '../log'
 import sleep from './sleep'
 
 export default download = (href, jar, options) ->
-    logger.debug "Downloading", href
+    logger.info "Downloading", href
     if not jar
         jar = request.jar()
     delay = 5
-    for i in [1..8]
+    maxAttempts = options?.maxAttempts || 8
+    for i in [1..maxAttempts]
         try
             page = await request({
                 options...,
