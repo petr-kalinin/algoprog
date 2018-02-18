@@ -117,7 +117,7 @@ class AllSubmitDownloader
         await groups.removeUserFromGroup(@adminUser, uid, "unknown")
 
     processSubmit: (uid, name, pid, runid, prob, date, language, outcome) ->
-        logger.debug "Found submit ", uid, pid, runid, prob, date, language, outcome
+        logger.info "Found submit ", uid, pid, runid, prob, date, language, outcome
         res = await @needContinueFromSubmit(runid)
         if (outcome == @CE)
             outcome = "CE"
@@ -157,7 +157,7 @@ class AllSubmitDownloader
                 and oldUser and oldUser.userList == newUser.userList \
                 and oldSubmit.results \
                 and not @_forceMetadata)
-            logger.debug "Submit already in the database #{runid}"
+            logger.info "Submit already in the database #{runid}"
             return res
 
         if oldSubmit and oldSubmit?.force and not @_forceMetadata
@@ -179,7 +179,7 @@ class AllSubmitDownloader
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
 
-        logger.debug "Adding submit", uid, pid, runid
+        logger.info "Adding submit", uid, pid, runid
         await newSubmit.upsert()
         await newUser.upsert()
         if newUser.userList != "unknown" and oldUser.userList == "unknown"
