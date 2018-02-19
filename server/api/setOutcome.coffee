@@ -1,4 +1,4 @@
-Entities = require('html-entities').AllHtmlEntities
+Entities = require('html-entities').XmlEntities
 entities = new Entities()
 
 import User from '../models/user'
