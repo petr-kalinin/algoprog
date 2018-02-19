@@ -291,7 +291,7 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
         user = await User.findById(userId)
         await (new AllSubmitDownloader(userUrl(userId), user.userList, submitsPerPage, 1, maxPages)).run()
     catch e
-        logger.error "Error in AllSubmitDownloader", e
+        logger.error "Error in runForUser", e
 
 export runForUserAndProblem = (userId, problemId) ->
     try
@@ -299,7 +299,7 @@ export runForUserAndProblem = (userId, problemId) ->
         iProblemId = problemId.substr(1)
         await (new AllSubmitDownloader(userProblemUrl(userId, iProblemId), user.userList, 100, 1, 10)).forceMetadata().run()
     catch e
-        logger.error "Error in AllSubmitDownloader", e
+        logger.error "Error in runForUserAndProblem", e
 
 
 export runAll = wrapRunning () ->

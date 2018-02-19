@@ -1,3 +1,6 @@
+Entities = require('html-entities').AllHtmlEntities
+entities = new Entities()
+
 import User from '../models/user'
 import Submit from '../models/submit'
 import Problem from '../models/problem'
@@ -43,7 +46,14 @@ updateData = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     await runForUserAndProblem(submit.user, "p" + problem)
     submit = await Submit.findById(req.params.submitId)
-    return submit.outcome == req.body.result
+    if req.body.result and submit.outcome != req.body.result
+        return false
+    if req.body.comment
+        comment = entities.encode(req.body.comment)
+        if not (comment in submit.comments)
+            return false
+    return true
+
 
 storeToDatabase = (req, res) ->
     logger.info("Force-storing to database result #{req.params.submitId}")
@@ -53,19 +63,21 @@ storeToDatabase = (req, res) ->
     if req.body.result in ["AC", "IG", "DQ"]
         submit.outcome = req.body.result
         submit.force = true
-    if req.body.comment and not (req.body.comment in submit.comments)
-        logger.info("Force-storing to database comment for #{req.params.submitId}")
-        rndId = Math.floor(Math.random() * 1000000)
-        newComment = new SubmitComment
-            _id: "_#{rndId}r#{runId}"
-            problemId: problemId
-            problemName: problem.name
-            userId: submit.user
-            text: req.body.comment
-            time: new Date()
-            outcome: submit.outcome
-        await newComment.upsert()
-        submit.comments.push(req.body.comment)
+    if req.body.comment
+        comment = entities.encode(req.body.comment)
+        if not (comment in submit.comments)
+            logger.info("Force-storing to database comment for #{req.params.submitId}")
+            rndId = Math.floor(Math.random() * 1000000)
+            newComment = new SubmitComment
+                _id: "_#{rndId}r#{runId}"
+                problemId: problemId
+                problemName: problem.name
+                userId: submit.user
+                text: comment
+                time: new Date()
+                outcome: submit.outcome
+            await newComment.upsert()
+            submit.comments.push(comment)
     await submit.upsert()
     await updateData(req, res)  # to store comment with proper outcome
     await User.updateUser(submit.user)
