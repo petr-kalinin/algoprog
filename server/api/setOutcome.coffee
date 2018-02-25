@@ -56,16 +56,16 @@ updateData = (req, res) ->
 
 
 storeToDatabase = (req, res) ->
-    logger.info("Force-storing to database result #{req.params.submitId}")
     [fullSubmitId, runId, problemId] = req.params.submitId.match(/(\d+r\d+)(p\d+)/)
     submit = await Submit.findById(req.params.submitId)
     problem = await Problem.findById(problemId)
     if req.body.result in ["AC", "IG", "DQ"]
+        logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
         submit.force = true
     if req.body.comment
-        comment = entities.encode(req.body.comment)
-        if not (comment in submit.comments)
+        if not (req.body.comment in submit.comments.map(entities.decode))
+            comment = entities.encode(req.body.comment)
             logger.info("Force-storing to database comment for #{req.params.submitId}")
             rndId = Math.floor(Math.random() * 1000000)
             newComment = new SubmitComment
