@@ -78,11 +78,18 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
+        fullProblemId = "p" + req.params.problemId
         try
-            informaticsUser = await InformaticsUser.getUser(req.user.informaticsUsername, req.user.informaticsPassword)
-            informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
-        finally
-            await downloadSubmits.runForUser(req.user.informaticsId, 5, 1)
+            oldSubmits = await Submit.findByUserAndProblem(req.user.informaticsId, fullProblemId)
+            try
+                informaticsUser = await InformaticsUser.getUser(req.user.informaticsUsername, req.user.informaticsPassword)
+                informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
+            finally
+                await downloadSubmits.runForUser(req.user.informaticsId, 5, 1)
+        catch e
+            newSubmits = await Submit.findByUserAndProblem(req.user.informaticsId, fullProblemId)
+            if oldSubmits.length == newSubmits.length
+                throw e
         res.json({submit: true})
 
     app.post '/api/submit/:problemId/draft', ensureLoggedIn, wrap (req, res) ->
