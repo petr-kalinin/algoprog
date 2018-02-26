@@ -218,7 +218,8 @@ export default setupApi = (app) ->
             return
         adminUser = await InformaticsUser.findAdmin()
         await groups.moveUserToGroup(adminUser, req.params.userId, req.params.groupName)
-        await user.setUserList(req.params.groupName)
+        if req.params.groupName != "none"
+            await user.setUserList(req.params.groupName)
         res.send('OK')
 
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->

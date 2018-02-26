@@ -35,6 +35,7 @@ class GroupSelector extends React.Component
                     a <Button key={name} active={name==@props.user.userList} onClick={@handleMove(name)}>
                         {name}
                     </Button>
+                a <Button key={"none"} onClick={@handleMove("none")}>—</Button>
                 res
                 }
             </ButtonGroup>

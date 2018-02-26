@@ -23,4 +23,5 @@ export moveUserToGroup = (adminUser, userId, groupName) ->
     for name, id of GROUPS
         if name != groupName
             await removeUserFromGroup(adminUser, userId, name)
-    await addUserToGroup(adminUser, userId, groupName)
+        else
+            await addUserToGroup(adminUser, userId, name)
