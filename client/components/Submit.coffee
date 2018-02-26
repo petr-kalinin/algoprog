@@ -104,7 +104,14 @@ export default class Submit extends React.Component
                 </Tab>
                 <Tab eventKey={3} title="Результаты">
                     <h4>Вывод компилятора</h4>
-                    <pre dangerouslySetInnerHTML={{__html: @props.submit.results?.compiler_output}}></pre>
+                    {
+                    if @props.submit.results?.compiler_output
+                        <pre dangerouslySetInnerHTML={{__html: @props.submit.results?.compiler_output}}/>
+                    else
+                        <pre>
+                            {@props.submit.results?.protocol}
+                        </pre>
+                    }
                     <Table striped bordered condensed hover responsive>
                         <thead>
                             <tr>
