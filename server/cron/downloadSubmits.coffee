@@ -152,6 +152,7 @@ class AllSubmitDownloader
             newSubmit.source = oldSubmit.source
             newSubmit.results = oldSubmit.results
             newSubmit.comments = oldSubmit.comments
+            newSubmit.quality = oldSubmit.quality
         # we can't compare oldUser and newUser because they will have different rating, etc
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldUser and oldUser.userList == newUser.userList \

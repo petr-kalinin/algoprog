@@ -2,6 +2,8 @@ React = require('react')
 moment = require('moment');
 Entities = require('html-entities').XmlEntities;
 entities = new Entities();
+FontAwesome = require('react-fontawesome')
+deepEqual = require('deep-equal')
 
 import {Link} from 'react-router-dom'
 
@@ -21,6 +23,8 @@ import SubmitListTable from './SubmitListTable'
 import callApi from '../lib/callApi'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+
+import styles from './ReviewResult.css'
 
 TAIL_TEXTS = ["Решение проигнорировано", "Решение зачтено"]
 
@@ -53,6 +57,7 @@ class ReviewResult extends React.Component
         @setField = @setField.bind this
         @setComment = @setComment.bind this
         @setCurrentSubmit = @setCurrentSubmit.bind this
+        @setQuality = @setQuality.bind this
 
     setResult: (result) ->
         callApi "setOutcome/#{@state.currentSubmit._id}", {
@@ -66,6 +71,15 @@ class ReviewResult extends React.Component
             @setState
                 commentText: ""
                 currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
+        else
+            newState =
+                commentText: @state.commentText
+                currentSubmit: null
+            for submit in @props.data
+                if submit._id == @state.currentSubmit._id
+                    newState.currentSubmit = submit
+            if not deepEqual(newState, @state)
+                @setState(newState)
 
     accept: () ->
         @setResult("AC")
@@ -78,6 +92,12 @@ class ReviewResult extends React.Component
 
     comment: () ->
         @setResult(null)
+
+
+    setQuality: (quality) ->
+        () =>
+            await callApi "setQuality/#{@state.currentSubmit._id}/#{quality}", {}
+            @props.handleReload()
 
     setComment: (comment) ->
         () =>
@@ -112,6 +132,14 @@ class ReviewResult extends React.Component
                         <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
                         {
                         admin && <div>
+                            <div className={styles.stars}>
+                                <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
+                                {(<FontAwesome
+                                    name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
+                                    key={x}
+                                    onClick={@setQuality(x)}/> \
+                                    for x in [1..5])}
+                            </div>
                             <FieldGroup
                                     id="commentText"
                                     label="Комментарий"

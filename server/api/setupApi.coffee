@@ -192,11 +192,35 @@ export default setupApi = (app) ->
             return
         res.json(await SubmitComment.findLastByProblem(req.params.problem))
 
+    app.get '/api/bestSubmits/:problem', ensureLoggedIn, wrap (req, res) ->
+        allowed = false
+        if req.user?.admin
+            allowed = true
+        else if req.user?.informaticsId
+            result = await Result.findByUserAndTable(req.user?.informaticsId, req.params.problem)
+            allowed = result && result.solved > 0
+        if not allowed
+            res.status(403).send('No permissions')
+            return
+        res.json(await Submit.findBestByProblem(req.params.problem, 5))
+
     app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
         setOutcome(req, res)
+
+    app.post '/api/setQuality/:submitId/:quality', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        submit = await Submit.findById(req.params.submitId)
+        if not submit
+            res.status(404).send('Submit not found')
+            return
+        submit.quality = req.params.quality
+        await submit.save()
+        res.send('OK')
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)

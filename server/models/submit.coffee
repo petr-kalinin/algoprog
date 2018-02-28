@@ -11,6 +11,7 @@ submitsSchema = new mongoose.Schema
     comments: [String]
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },
+    quality: { type: Number, default: 0 },
 
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true})
@@ -25,10 +26,20 @@ submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
         problem: problemId
     }).sort({time: 1})
 
+submitsSchema.statics.findBestByProblem = (problemId, limit) ->
+    Submit.find({
+        problem: problemId,
+        quality: {$gt: 0}
+    })
+        .sort({quality: -1, time: -1})
+        .select({results: 0, comments: 0, force: 0})
+        .limit(limit)
+
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })
 submitsSchema.index({ outcome : 1, time : 1 })
 submitsSchema.index({ time : 1 })
+submitsSchema.index({ problem: 1, quality : -1, time: -1 })
 
 Submit = mongoose.model('Submits', submitsSchema);
 
