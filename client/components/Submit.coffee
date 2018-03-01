@@ -14,28 +14,25 @@ import UserName from './UserName'
 
 import outcomeToText from '../lib/outcomeToText'
 
-LANGUAGES =
-    "Python 3.4.3": "Python",
-    "Free Pascal 2.6.4": "Delphi",
-    "PascalABC 3.1.0.1198": "Delphi",
-    "GNU C++ 5.3.1": "cpp",
-    "GNU C 5.3.1": "cpp",
-    "Borland Delphi 6 - 14.5": "Delphi",
-    "Java JDK 1.8": "Java"
-    "PHP 5.6.19": "PHP",
-    "Python 2.7.10": "Python",
-    "Perl 5.22.1": "Perl",
-    "Mono C# 4.0.5": "cs",
-    "Ruby 2.2.4": "Ruby",
-    "Haskell GHC 7.8.4": "Haskell",
-    "FreeBASIC 1.05.0": "Basic",
-    "GNU C++ 5.3.1 + sanitizer": "cpp"
+LANGUAGE_TO_HIGHLIGHT_STYLE =
+    "Python": "python",
+    "Pascal": "delphi",
+    "C++": "cpp",
+    " C": "cpp",  # space important
+    "Delphi": "delphi",
+    "Java": "java"
+    "PHP": "php",
+    "Perl": "perl",
+    "C#": "cs",
+    "Ruby": "ruby",
+    "Haskell": "haskell",
+    "BASIC": "basic",
 
 langClass = (lang) ->
-    if lang of LANGUAGES
-        return LANGUAGES[lang]
-    else
-        return ""
+    for l, style of LANGUAGE_TO_HIGHLIGHT_STYLE
+        if lang.includes(l)
+            return style
+    return ""
 
 convert = (source, encoding) ->
     buf = Buffer.from(source, "latin1")
