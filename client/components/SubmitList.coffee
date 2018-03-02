@@ -11,6 +11,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Submit from './Submit'
 import SubmitForm from './SubmitForm'
 import SubmitListTable from './SubmitListTable'
+import BestSubmits from './BestSubmits'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
@@ -36,9 +37,10 @@ problemId = (props) ->
 class SubmitList extends React.Component
     constructor: (props) ->
         super(props)
-        @state = {}
+        @state = {bestSubmits: false}
         @openSubmit = @openSubmit.bind(this)
         @closeSubmit = @closeSubmit.bind(this)
+        @toggleBestSubmits = @toggleBestSubmits.bind this
 
     openSubmit: (submit) ->
         (e) =>
@@ -50,14 +52,27 @@ class SubmitList extends React.Component
         @setState
             openSubmit: null
 
+    toggleBestSubmits: (e) ->
+        if e
+            e.preventDefault()
+        @setState
+            bestSubmits: not @state.bestSubmits
+
     render:  () ->
         if not @props.myUser?._id
             return null
         <div>
+            {
+            if @props.bestSubmits.length
+                <h4><a href="#" onClick={@toggleBestSubmits}>Лучшие решения</a></h4>
+            }
             <SubmitForm problemId={problemId(@props)} reloadSubmitList={@props.handleReload}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
+            }
+            {
+            @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits}/>
             }
             <h4>Попытки <Button onClick={@props.handleReload}>{"\u200B"}<FontAwesome name="refresh"/></Button></h4>
             <p>Не обновляйте страницу; список посылок обновляется автоматически.</p>
@@ -72,7 +87,10 @@ class SubmitList extends React.Component
 options =
     urls: (props) ->
         if props?.myUser?._id
-            return {data: "submits/#{props.myUser._id}/#{props.material._id}"}
+            return
+                data: "submits/#{props.myUser._id}/#{props.material._id}"
+                result: "result/#{props.myUser._id}::#{props.material._id}"
+                bestSubmits: "bestSubmits/#{props.material._id}"
         return {}
 
     timeout: 20 * 1000

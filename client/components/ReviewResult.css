@@ -4,8 +4,3 @@
     padding-bottom: 5px;
     cursor: pointer;
 }
-.submit + .submit {
-    padding-top: 15px;
-    border-top: 1px solid black;
-    margin-top: 15px;
-}

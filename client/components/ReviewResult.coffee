@@ -15,11 +15,11 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import FormControl from 'react-bootstrap/lib/FormControl'
 import FormGroup from 'react-bootstrap/lib/FormGroup'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
-import Modal from 'react-bootstrap/lib/Modal'
 
-import Submit, {SubmitSource} from './Submit'
+import Submit from './Submit'
 import FieldGroup from './FieldGroup'
 import SubmitListTable from './SubmitListTable'
+import BestSubmits from './BestSubmits'
 
 import callApi from '../lib/callApi'
 
@@ -43,28 +43,6 @@ listOptions =
         data: "lastCommentsByProblem/#{props.problemId}"
 
 ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists, listOptions)
-
-
-BestSubmits = (props) ->
-    <Modal show={true} onHide={props.close} dialogClassName={styles.modal}>
-        <Modal.Body>
-            {
-            props.submits.map((submit) ->
-                <div key={submit._id} className={styles.submit}>
-                    <SubmitSource submit={submit}/>
-                    {(<FontAwesome
-                        name={"star" + (if x <= submit.quality then "" else "-o")}
-                        key={x}/> \
-                        for x in [1..5])}
-                </div>
-            )
-            }
-        </Modal.Body>
-
-        <Modal.Footer>
-            <Button bsStyle="primary" onClick={props.close}>Закрыть</Button>
-        </Modal.Footer>
-    </Modal>
 
 
 class ReviewResult extends React.Component
@@ -227,7 +205,7 @@ class ReviewResult extends React.Component
             </Col>
             }
             {
-            admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits}/>
+            admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits} stars/>
             }
         </Grid>
 
