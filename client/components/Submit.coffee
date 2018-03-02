@@ -30,7 +30,7 @@ LANGUAGE_TO_HIGHLIGHT_STYLE =
 
 langClass = (lang) ->
     for l, style of LANGUAGE_TO_HIGHLIGHT_STYLE
-        if lang.includes(l)
+        if lang && lang.includes(l)
             return style
     return ""
 
@@ -40,7 +40,7 @@ convert = (source, encoding) ->
 
 ENCODINGS = ["utf8", "win1251", "cp866"]
 
-export default class Submit extends React.Component
+export class SubmitSource extends React.Component
     constructor: (props) ->
         super(props)
         @state =
@@ -65,6 +65,21 @@ export default class Submit extends React.Component
             hljs.highlightBlock(el)
 
     render: () ->
+        <div>
+            <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            Кодировка:{" "}
+            <ButtonGroup>
+                {
+                ENCODINGS.map (encoding) =>
+                    <Button active={encoding==@state.encoding} onClick={@setEncoding(encoding)} key={encoding}>
+                        {encoding}
+                    </Button>
+                }
+            </ButtonGroup>
+        </div>
+
+export default class Submit extends React.Component
+    render: () ->
         [cl, message] = outcomeToText(@props.submit.outcome)
         admin = @props.me?.admin
         <div>
@@ -80,16 +95,7 @@ export default class Submit extends React.Component
                 </div>}
             <Tabs defaultActiveKey={1} id="submitTabs">
                 <Tab eventKey={1} title="Исходный код">
-                    <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
-                    Кодировка:{" "}
-                    <ButtonGroup>
-                        {
-                        ENCODINGS.map (encoding) =>
-                            <Button active={encoding==@state.encoding} onClick={@setEncoding(encoding)} key={encoding}>
-                                {encoding}
-                            </Button>
-                        }
-                    </ButtonGroup>
+                    <SubmitSource submit={@props.submit} />
                 </Tab>
                 <Tab eventKey={2} title="Комментарии">
                     {

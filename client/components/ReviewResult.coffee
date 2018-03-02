@@ -15,8 +15,9 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import FormControl from 'react-bootstrap/lib/FormControl'
 import FormGroup from 'react-bootstrap/lib/FormGroup'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
+import Modal from 'react-bootstrap/lib/Modal'
 
-import Submit from './Submit'
+import Submit, {SubmitSource} from './Submit'
 import FieldGroup from './FieldGroup'
 import SubmitListTable from './SubmitListTable'
 
@@ -44,12 +45,35 @@ listOptions =
 ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists, listOptions)
 
 
+BestSubmits = (props) ->
+    <Modal show={true} onHide={props.close} dialogClassName={styles.modal}>
+        <Modal.Body>
+            {
+            props.submits.map((submit) ->
+                <div key={submit._id} className={styles.submit}>
+                    <SubmitSource submit={submit}/>
+                    {(<FontAwesome
+                        name={"star" + (if x <= submit.quality then "" else "-o")}
+                        key={x}/> \
+                        for x in [1..5])}
+                </div>
+            )
+            }
+        </Modal.Body>
+
+        <Modal.Footer>
+            <Button bsStyle="primary" onClick={props.close}>Закрыть</Button>
+        </Modal.Footer>
+    </Modal>
+
+
 class ReviewResult extends React.Component
     constructor: (props) ->
         super(props)
         @state =
             commentText: ""
             currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
+            bestSubmits: false
         @accept = @accept.bind this
         @ignore = @ignore.bind this
         @disqualify = @disqualify.bind this
@@ -58,6 +82,7 @@ class ReviewResult extends React.Component
         @setComment = @setComment.bind this
         @setCurrentSubmit = @setCurrentSubmit.bind this
         @setQuality = @setQuality.bind this
+        @toggleBestSubmits = @toggleBestSubmits.bind this
 
     setResult: (result) ->
         callApi "setOutcome/#{@state.currentSubmit._id}", {
@@ -71,10 +96,12 @@ class ReviewResult extends React.Component
             @setState
                 commentText: ""
                 currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
+                bestSubmits: @state.bestSubmits
         else
             newState =
                 commentText: @state.commentText
                 currentSubmit: null
+                bestSubmits: @state.bestSubmits
             for submit in @props.data
                 if submit._id == @state.currentSubmit._id
                     newState.currentSubmit = submit
@@ -98,6 +125,12 @@ class ReviewResult extends React.Component
         () =>
             await callApi "setQuality/#{@state.currentSubmit._id}/#{quality}", {}
             @props.handleReload()
+
+    toggleBestSubmits: (e) ->
+        if e
+            e.preventDefault()
+        @setState
+            bestSubmits: not @state.bestSubmits
 
     setComment: (comment) ->
         () =>
@@ -132,14 +165,30 @@ class ReviewResult extends React.Component
                         <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
                         {
                         admin && <div>
-                            <div className={styles.stars}>
-                                <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
-                                {(<FontAwesome
-                                    name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
-                                    key={x}
-                                    onClick={@setQuality(x)}/> \
-                                    for x in [1..5])}
+                            <div>
+                                {
+                                if @state.currentSubmit.outcome in ["OK", "AC"]
+                                    starsClass = styles.stars
+                                else
+                                    starsClass = ""
+                                <div className={starsClass}>
+                                    <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
+                                    {(<FontAwesome
+                                        name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
+                                        key={x}
+                                        onClick={@setQuality(x)}/> \
+                                        for x in [1..5])}
+                                </div>
+                                }
                             </div>
+                            {
+                            if @props.bestSubmits.length
+                                <span>
+                                    <a href="#" onClick={@toggleBestSubmits}>Лучшие решения</a>
+                                    {" = " + @props.bestSubmits.length}
+                                    {" " + @props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
+                                </span>
+                            }
                             <FieldGroup
                                     id="commentText"
                                     label="Комментарий"
@@ -177,11 +226,15 @@ class ReviewResult extends React.Component
                 <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
             </Col>
             }
+            {
+            admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits}/>
+            }
         </Grid>
 
 options =
     urls: (props) ->
         data: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+        bestSubmits: "bestSubmits/#{props.result.fullTable._id}"
         me: "me"
 
 export default ConnectedComponent(ReviewResult, options)
