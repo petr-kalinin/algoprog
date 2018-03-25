@@ -8,7 +8,7 @@ def marker(line):
         if i != " ":
             break
         result += " "
-    s = "_".join([str(count)] * 10000)
+    s = "_".join([str(count)] * 1000)
     result += "_debug_marker = {{qwe: '{}'}}\n".format(s)
     count += 1
     return result
@@ -20,7 +20,8 @@ def convert(file):
     for line in lines:
         if "await" in line and "noawait" not in line:
             result += marker(line)
-        result += line
+        if "_debug_marker" not in line:
+            result += line
     with open(file, "w", encoding="cp866") as f:
         f.write(result)
             
