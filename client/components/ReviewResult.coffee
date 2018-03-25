@@ -101,7 +101,6 @@ class ReviewResult extends React.Component
 
     setQuality: (quality) ->
         () =>
-            _debug_marker = {qwe: '6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6_6'}
             await callApi "setQuality/#{@state.currentSubmit._id}/#{quality}", {}
             @props.handleReload()
 

@@ -19,7 +19,6 @@ resultsSchema = new mongoose.Schema
 
 resultsSchema.methods.upsert = () ->
     # required: user, table, total, solved, ok, attempts, ignored, lastSubmitId, lastSubmitTime
-    _debug_marker = {qwe: '227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227_227'}
     @userList = (await User.findById(@user)).userList
     @_id = @user + "::" + @table
     @update(this, {upsert: true}).exec()
@@ -28,7 +27,6 @@ resultsSchema.methods.upsert = () ->
 resultsSchema.statics.DQconst = -10
 
 resultsSchema.statics.findByUserListAndTable = (userList, table) ->
-    _debug_marker = {qwe: '228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228_228'}
     tableList = await Table.findById(table).descendandTables()
     return Result.find({
         userList: userList,

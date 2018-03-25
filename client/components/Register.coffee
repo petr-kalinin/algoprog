@@ -51,7 +51,6 @@ class Register extends React.Component
             }
             @setState(newState)
             try
-                _debug_marker = {qwe: '3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3_3'}
                 data = await callApi "informatics/userData", {
                     username: @state.informaticsUsername,
                     password: @state.informaticsPassword
@@ -76,7 +75,6 @@ class Register extends React.Component
         }
         @setState(newState)
         try
-            _debug_marker = {qwe: '4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4_4'}
             data = await callApi "register", {
                 username: @state.username,
                 password: @state.password,
@@ -85,7 +83,6 @@ class Register extends React.Component
                 aboutme: @state.aboutme
             }
             if data.registered.success
-                _debug_marker = {qwe: '5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5_5'}
                 await callApi "login", {
                     username: @state.username,
                     password: @state.password
