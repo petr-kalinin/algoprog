@@ -82,6 +82,7 @@ export default ConnectedComponent = (Component, options) ->
 
         requestDataAndSetTimeout: () ->
             try
+                _debug_marker = {qwe: '15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15_15'}
                 await Promise.all(@requestData(options.timeout))
                 console.log "Updated data", @urls()
             catch e

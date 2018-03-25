@@ -39,6 +39,7 @@ class Login extends React.Component
         }
         @setState(newState)
         try
+            _debug_marker = {qwe: '2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2'}
             data = await callApi "login", {
                 username: @state.username,
                 password: @state.password,

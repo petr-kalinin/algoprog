@@ -78,6 +78,7 @@ class SubmitForm extends React.Component
         try
             if @state.draft
                 fileName = document.getElementById("file").files[0]
+                _debug_marker = {qwe: '7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7_7'}
                 fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
                 fileText = Array.from(new Uint8Array(fileText))
                 languageName = undefined
@@ -87,9 +88,11 @@ class SubmitForm extends React.Component
                 dataToSend =
                     language: languageName
                     code: fileText
+                _debug_marker = {qwe: '8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8_8'}
                 data = await callApi "submit/#{@props.problemId}/draft", dataToSend
             else
                 formData = new FormData(document.getElementById("submitForm"))
+                _debug_marker = {qwe: '9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9'}
                 data = await callApiWithBody "submit/#{@props.problemId}", 'POST', {}, formData
             if data.submit
                 data =
