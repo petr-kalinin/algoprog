@@ -4,7 +4,7 @@ import logger from '../log'
 import sleep from './sleep'
 
 export default download = (href, jar, options) ->
-    logger.debug "Downloading", href
+    logger.info "Downloading", href
     if not jar
         jar = request.jar()
     delay = 5
