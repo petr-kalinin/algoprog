@@ -19,7 +19,7 @@ export default download = (href, jar, options) ->
                 gzip: true,
                 timeout: options?.timeout || 7 * 1000
             })
-            extract = page.substring(0, 50) 
+            extract = page.substring(0, 500) 
             logger.info "Downloaded #{href} -> `#{extract}...`"
             return page
         catch e
