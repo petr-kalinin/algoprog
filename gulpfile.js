@@ -150,22 +150,22 @@ gulp.task('server:js', function() {
     .pipe(gulp.dest('./build/server'));
 });
 
-gulp.task('server:bundle', ['server:coffee', 'client:coffee', 'server:js', 'client:css']);
+gulp.task('server:bundle',  gulp.parallel('server:coffee', 'client:coffee', 'server:js', 'client:css'));
 
 gulp.task('server:watch', function() {
-    gulp.watch('client/**/*.coffee', ['client:coffee']);
-    gulp.watch('client/**/*.css', ['client:css']);
-    gulp.watch('server/**/*.coffee', ['server:coffee']);
-    gulp.watch('server/**/*.js', ['server:js']);
+    gulp.watch('client/**/*.coffee', gulp.series('client:coffee'));
+    gulp.watch('client/**/*.css', gulp.series('client:css'));
+    gulp.watch('server/**/*.coffee', gulp.series('server:coffee'));
+    gulp.watch('server/**/*.js', gulp.series('server:js'));
 });
 
-gulp.task( 'server:start', ['server:bundle'], function() {
+gulp.task( 'server:start', gulp.series('server:bundle', function() {
     server.listen( { path: './build/server/server.js', execArgv: ["--inspect=0.0.0.0:4040"] } );
-});
+}));
 
-gulp.task( 'server:restart', ['server:start'], function() {
+gulp.task( 'server:restart', gulp.series('server:start', function() {
     gulp.watch( [ './build/server/**/*' ], server.restart );
     gulp.watch( [ './build/client/**/*' ], server.restart );
-});
+}));
 
-gulp.task('default', ['assets:js:watch', 'server:watch', 'server:restart']);
+gulp.task('default',  gulp.parallel('assets:js:watch', 'server:watch', 'server:restart'));

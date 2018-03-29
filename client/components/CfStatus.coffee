@@ -15,8 +15,7 @@ export default class CfStatus extends React.Component
         else if cf.progress < -10
             cfProgressColor = "#aa0000"
 
-        return
-            <span>
+        return <span>
                 <a href={"http://codeforces.com/profile/" + cf.login}>
                     <span className={styles.color} style={color: cf.color}>
                         {cf.rating}

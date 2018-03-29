@@ -11,15 +11,19 @@ class BlogPosts extends React.Component
             return null
         <div>
             <h4>Последние записи в блоге</h4>
-            <PanelGroup>
+            <PanelGroup id="blogPosts">
                 {
                 @props.posts.map((post) =>
                     header = <a href={post.link} target="_blank">{moment(post.date).format('DD.MM.YYYY') + ": " + post.title}</a>
-                    <Panel key={post._id} header={header}>
+                    <Panel key={post._id}>
+                        <Panel.Heading>
+                            <Panel.Title>{header}</Panel.Title>
+                        </Panel.Heading>
                     </Panel>
                 )
                 }
             </PanelGroup>
+            <a href="//blog.algoprog.ru" target="_blank">Все записи</a>
         </div>
 
 options = {

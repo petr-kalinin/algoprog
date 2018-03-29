@@ -21,7 +21,7 @@ preloadedState = window.__PRELOADED_STATE__
 delete window.__PRELOADED_STATE__
 window.store = createStore(preloadedState)
 
-ReactDOM.render(
+ReactDOM.hydrate(
     <Provider store={window.store}>
         <div>
             <DefaultHelmet/>
