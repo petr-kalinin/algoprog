@@ -246,7 +246,6 @@ class AllSubmitDownloader
                 logger.warn "No outcome found `#{data[8]}`"
                 continue
             outcome = outcome[1]
-            logger.info "Submit found"
             resultPromises.push(@processSubmit(uid, name, pid, runid, prob, date, language, outcome))
             wasSubmit = true
         results = await Promise.all(resultPromises)

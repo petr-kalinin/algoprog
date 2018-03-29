@@ -4,7 +4,7 @@ import logger from '../log'
 import sleep from './sleep'
 
 export default download = (href, jar, options) ->
-    logger.info "Downloading", href
+    #logger.info "Downloading", href
     if not jar
         jar = request.jar()
     delay = 5
@@ -18,8 +18,8 @@ export default download = (href, jar, options) ->
                 gzip: true,
                 timeout: options?.timeout || 7 * 1000
             })
-            extract = page.substring(0, 500) 
-            logger.info "Downloaded #{href} -> `#{extract}...`"
+            extract = page.substring(0, 500)
+            #logger.info "Downloaded #{href} -> `#{extract}...`"
             return page
         catch e
             logger.info "Error downloading " + href + " " + i + " will re-download"
