@@ -80,7 +80,7 @@ export default class InformaticsUser
         @name = a.innerHTML
         if not id or id.length < 2
             throw "Can't detect id, href=" + a.href + " username=" + @username
-        logger.info "Logged in user #{username} href=#{a.href}"
+        logger.info "Logged in user #{@username} href=#{a.href}"
         @id = id[1]
         return
             id: @id,
