@@ -19,6 +19,8 @@ export default download = (href, jar, options) ->
                 gzip: true,
                 timeout: options?.timeout || 7 * 1000
             })
+            extract = page.substring(0, 50) 
+            logger.info "Downloaded #{href} -> `#{extract}...`"
             return page
         catch e
             logger.info "Error downloading " + href + " " + i + " will re-download"
