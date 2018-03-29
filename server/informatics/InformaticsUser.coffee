@@ -58,8 +58,6 @@ export default class InformaticsUser
         @promises = []
 
     doLogin: () ->
-        console.log "jar", @jar
-        await download("http://informatics.mccme.ru/", @jar)
         page = await download("http://informatics.mccme.ru/login/index.php", @jar, {
             method: 'POST',
             form: {
@@ -69,7 +67,6 @@ export default class InformaticsUser
             followAllRedirects: true,
             timeout: 30 * 1000
         })
-        console.log "jar", @jar
         document = (new JSDOM(page)).window.document
         el = document.getElementsByClassName("logininfo")
         if el.length == 0 or el[0].children.length == 0
@@ -87,13 +84,11 @@ export default class InformaticsUser
 
     download: (href, options) ->
         if @requests >= REQUESTS_LIMIT
-            console.log "Waiting for requests"
             await new Promise((resolve) => @promises.push(resolve))
         if @requests >= REQUESTS_LIMIT
             throw "Too many requests"
         @requests++
         try
-            console.log "jar in download", @jar
             result = await download(href, @jar, options)
         finally
             @requests--

@@ -183,7 +183,7 @@ class AllSubmitDownloader
         logger.debug "Adding submit", uid, pid, runid
         await newSubmit.upsert()
         await newUser.upsert()
-        if newUser.userList != "unknown" and oldUser.userList == "unknown"
+        if newUser.userList != "unknown" and oldUser and oldUser.userList == "unknown"
             await @removeUserFromUnknownGroup(uid)
         @addedUsers[uid] = uid
         await @setDirty(uid, "p"+pid)
@@ -196,9 +196,42 @@ class AllSubmitDownloader
         wasSubmit = false
         resultPromises = []
         for row in submitsRows
-            re = new RegExp '<td>[^<]*</td>\\s*<td><a href="/moodle/user/view.php\\?id=(\\d+)">([^<]*)</a></td>\\s*<td><a href="/moodle/mod/statements/view3.php\\?chapterid=(\\d+)&run_id=([0-9r]+)">([^<]*)</a></td>\\s*<td>([^<]*)</td>\\s*<td>([^<]*)</td>\\s*<td>([^<]*)</td>', 'gm'
+            ###
+            <td>104-4934</td>
+            <td><a href="/moodle/user/view.php?id=26405">Катя Дедович</a></td>
+            <td><a href="/moodle/mod/statements/view3.php?chapterid=585&run_id=104r4934">585. Фонтан</a></td>
+            <td>2018-03-23 17:12:28</td>
+            <td>GNU C++ 7.2.0</td>
+            <td>                <select name="5abd38fda24ee" class="round_sb" onChange="rejudgeRun(104, 4934, this)">
+<option value="0" disabled>---</option>
+<option value="r0"  >OK</option>
+<option value="r99"  >Перетестировать</option>
+<option value="r8"  >Зачтено/Принято</option>
+<option value="r14"  >Ошибка оформления кода</option>
+<option value="r9"  >Проигнорировано</option>
+<option value="r1"  >Ошибка компиляции</option>
+<option value="r10"  >Дисквалифицировано</option>
+<option value="r7" selected="selected" >Частичное решение</option>
+<option value="r11"  >Ожидает проверки</option>
+<option value="r2"   disabled >Ошибка во время выполнения программы</option>
+<option value="r3"   disabled >Превышено максимальное время работы</option>
+<option value="r4"   disabled >Неправильный формат вывода</option>
+<option value="r5"   disabled >Неправильный ответ</option>
+<option value="r6"   disabled >Ошибка проверки,<br/>обратитесь к администраторам</option>
+<option value="r12"   disabled >Превышение лимита памяти</option>
+<option value="r13"   disabled >Security error</option>
+<option value="r96"   disabled >Тестирование...</option>
+<option value="r98"   disabled >Компилирование...</option>
+</select>             </td>
+            <td>6</td>
+            <td>6</td>
+            <td><a onclick="loadSourceWindow(104, 4934, '1');return false;" href="/moodle/ajax/ajax_file.php?objectName=source&contest_id=104&run_id=4934">Подробнее</a></td>
+            ###
+            re = new RegExp '<td>[^<]*</td>\\s*<td><a href="/moodle/user/view.php\\?id=(\\d+)">([^<]*)</a></td>\\s*<td><a href="/moodle/mod/statements/view3.php\\?chapterid=(\\d+)&run_id=([0-9r]+)">([^<]*)</a></td>\\s*<td>([^<]*)</td>\\s*<td>([^<]*)</td>\\s*<td>([^]*?)</td>', 'gm'
+            outcomeRe = new RegExp '<option value="[^"]*" selected="selected" >([^<]*)</option>', 'gm'
             data = re.exec row
             if not data
+                logger.warn "Submit not found in line"
                 continue
             uid = data[1]
             name = data[2]
@@ -207,7 +240,13 @@ class AllSubmitDownloader
             prob = data[5]
             date = data[6]
             language = data[7]
-            outcome = data[8].trim()
+            outcome = data[8]
+            outcome = outcomeRe.exec outcome
+            if not outcome
+                logger.warn "No outcome found `#{data[8]}`"
+                continue
+            outcome = outcome[1]
+            logger.info "Submit found"
             resultPromises.push(@processSubmit(uid, name, pid, runid, prob, date, language, outcome))
             wasSubmit = true
         results = await Promise.all(resultPromises)
