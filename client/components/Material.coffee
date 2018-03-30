@@ -9,15 +9,15 @@ Page = (props) ->
     </div>
 
 MaterialProper = (props) ->
-    if props.material.type == 'page'
+    if props.material?.type == 'page'
         `<Page {...props} />`
-    else if props.material.type == 'level'
+    else if props.material?.type == 'level'
         `<Level {...props} />`
-    else if props.material.type == 'contest'
+    else if props.material?.type == 'contest'
         `<Contest {...props} />`
-    else if props.material.type == 'epigraph'
+    else if props.material?.type == 'epigraph'
         `<Page {...props} />`
-    else if props.material.type == 'problem'
+    else if props.material?.type == 'problem'
         `<Problem {...props} />`
     else
         <div>Unknown material type</div>

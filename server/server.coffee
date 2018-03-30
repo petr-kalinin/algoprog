@@ -64,3 +64,6 @@ app.listen port, () ->
 
 #import downloadMaterials from './cron/downloadMaterials'
 #downloadMaterials()
+
+#import * as downloadSubmits from "./cron/downloadSubmits"
+#downloadSubmits.runLast()

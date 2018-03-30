@@ -18,8 +18,8 @@ def convert(file):
         lines = f.readlines()
     result = ""
     for line in lines:
-        if "await" in line and "noawait" not in line:
-            result += marker(line)
+        #if "await" in line and "noawait" not in line:
+        #    result += marker(line)
         if "_debug_marker" not in line:
             result += line
     with open(file, "w", encoding="cp866") as f:
