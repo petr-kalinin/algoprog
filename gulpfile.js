@@ -156,6 +156,7 @@ gulp.task('server:watch', function() {
     gulp.watch('client/**/*.coffee', gulp.series('client:coffee'));
     gulp.watch('client/**/*.css', gulp.series('client:css'));
     gulp.watch('server/**/*.coffee', gulp.series('server:coffee'));
+    gulp.watch('client/**/*.coffee', gulp.series('server:coffee'));
     gulp.watch('server/**/*.js', gulp.series('server:js'));
 });
 

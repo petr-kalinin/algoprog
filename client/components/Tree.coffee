@@ -21,10 +21,6 @@ getHref = (material) ->
     else
         return "/material/#{material._id}"
 
-goTo = (history) ->
-    (href) ->
-        history.push(href)
-
 markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
         tree.needed = true
@@ -107,7 +103,7 @@ recTree = (tree, id, indent) ->
     a = (el) -> res.push(el)
     for m in tree.materials
         if m.needed and m.title
-            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "") + " " + styles.levelNav} eventKey={getHref(m)} href={getHref(m)}>
+            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "") + " " + styles.levelNav} eventKey={getHref(m)} href={getHref(m)} onClick={window.goto(getHref(m))}>
                 <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
                     <div className={styles.levelName}>
                         {m.title}
@@ -124,7 +120,7 @@ Tree = (props) ->
     tree = deepcopy(props.tree)
     markNeeded(tree, props.id, (p._id for p in props.path), 0, 100)
     <div className={styles.tree}>
-        <Nav bsStyle="pills" stacked onSelect={goTo(props.history)}>
+        <Nav bsStyle="pills" stacked>
             {recTree(tree, props.id, 0)}
         </Nav>
     </div>
