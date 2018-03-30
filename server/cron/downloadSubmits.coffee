@@ -228,7 +228,7 @@ class AllSubmitDownloader
             <td><a onclick="loadSourceWindow(104, 4934, '1');return false;" href="/moodle/ajax/ajax_file.php?objectName=source&contest_id=104&run_id=4934">Подробнее</a></td>
             ###
             re = new RegExp '<td>[^<]*</td>\\s*<td><a href="/moodle/user/view.php\\?id=(\\d+)">([^<]*)</a></td>\\s*<td><a href="/moodle/mod/statements/view3.php\\?chapterid=(\\d+)&run_id=([0-9r]+)">([^<]*)</a></td>\\s*<td>([^<]*)</td>\\s*<td>([^<]*)</td>\\s*<td>([^]*?)</td>', 'gm'
-            outcomeRe = new RegExp '<option value="[^"]*" selected="selected"[^>]*>([^<]*)</option>', 'gm'
+            outcomeRe = new RegExp '<option value="[^"]*" selected="selected"[^>]*>([^<]*)<', 'gm'
             data = re.exec row
             if not data
                 logger.warn "Submit not found in line"
