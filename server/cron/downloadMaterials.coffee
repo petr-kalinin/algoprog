@@ -3,6 +3,8 @@ import { JSDOM } from 'jsdom'
 import Material from "../models/Material"
 import download from '../lib/download'
 
+download 'http://olympiads.nnov.ru/qwerty'
+
 import logger from '../log'
 
 url = 'http://informatics.mccme.ru/course/view.php?id=1135'
