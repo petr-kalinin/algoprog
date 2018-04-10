@@ -26,4 +26,4 @@ export default download = (href, jar, options) ->
             logger.info e.message
             await sleep(delay)
             delay *= 2
-    throw "Can't download"
+    throw "Can't download " + href
