@@ -27,6 +27,7 @@ import * as groups from '../informatics/informaticsGroups'
 
 import InformaticsUser from '../informatics/InformaticsUser'
 
+import download from '../lib/download'
 import {getStats} from '../lib/download'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
@@ -308,4 +309,7 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        res.json(getStats())
+        stats = getStats()
+        console.log "stats", stats
+        stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
+        res.json(stats)
