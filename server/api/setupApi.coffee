@@ -310,6 +310,5 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         stats = getStats()
-        console.log "stats", stats
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
