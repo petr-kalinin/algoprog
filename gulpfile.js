@@ -160,7 +160,8 @@ gulp.task('server:watch', function() {
 });
 
 gulp.task( 'server:start', ['server:bundle'], function() {
-    server.listen( { path: './build/server/server.js', execArgv: ["--inspect=0.0.0.0:4040"] } );
+    //server.listen( { path: './build/server/server.js', execArgv: ["--inspect=0.0.0.0:4040"] } );
+    server.listen( { path: './build/server/server.js' } );
 });
 
 gulp.task( 'server:restart', ['server:start'], function() {
