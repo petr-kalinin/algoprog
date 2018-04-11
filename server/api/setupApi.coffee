@@ -27,6 +27,8 @@ import * as groups from '../informatics/informaticsGroups'
 
 import InformaticsUser from '../informatics/InformaticsUser'
 
+import {getStats} from '../lib/download'
+
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
@@ -301,3 +303,9 @@ export default setupApi = (app) ->
         user = await InformaticsUser.getUser(username, password)
         result = await user.getData()
         res.json(result)
+
+    app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        res.json(getStats())

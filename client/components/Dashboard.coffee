@@ -9,6 +9,23 @@ import Result from './Result'
 
 import styles from './Result.css'
 
+import ConnectedComponent from '../lib/ConnectedComponent'
+
+
+Stats = (props) ->
+    <span>{"Downloads: ok #{props.stats.ok.toFixed(2)}, failed #{props.stats.fail.toFixed(2)}"}</span>
+
+options = {
+    urls: (props) ->
+        return
+            stats: "downloadingStats"
+
+    timeout: 20000
+}
+
+ConnectedStats = ConnectedComponent(Stats, options)
+
+
 
 export default class Dashboard extends React.Component
     constructor: (props) ->
@@ -23,6 +40,7 @@ export default class Dashboard extends React.Component
 
     render: () ->
         <div>
+            <h4><ConnectedStats/></h4>
             <Checkbox checked={@state.showUnknown} onClick={@toggleUnknown}>
                 Показывать unknown
             </Checkbox>

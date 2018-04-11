@@ -3,6 +3,20 @@ request = require('request-promise-native')
 import logger from '../log'
 import sleep from './sleep'
 
+statistics =
+    ok: 0
+    fail: 0
+
+STATS_MULTIPLIER = 1 - 1.0/100
+
+addStats = (type) ->
+    statistics[type] += 1
+    for t of statistics
+        statistics[t] *= STATS_MULTIPLIER
+
+export getStats = () ->
+    return statistics
+
 export default download = (href, jar, options) ->
     #logger.info "Downloading", href
     if not jar
@@ -20,10 +34,12 @@ export default download = (href, jar, options) ->
             })
             extract = page.substring(0, 500)
             #logger.info "Downloaded #{href} -> `#{extract}...`"
+            addStats("ok")
             return page
         catch e
             logger.info "Error downloading " + href + " " + i + " will re-download"
             logger.info e.message
             await sleep(delay)
             delay *= 2
+    addStats("fail")
     throw "Can't download"
