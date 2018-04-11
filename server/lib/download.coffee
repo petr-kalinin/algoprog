@@ -42,4 +42,4 @@ export default download = (href, jar, options) ->
             await sleep(delay)
             delay *= 2
     addStats("fail")
-    throw "Can't download"
+    throw "Can't download " + href
