@@ -10,9 +10,9 @@ statistics =
 STATS_MULTIPLIER = 1 - 1.0/100
 
 addStats = (type) ->
-    statistics[type] += 1
     for t of statistics
         statistics[t] *= STATS_MULTIPLIER
+    statistics[type] += 1
 
 export getStats = () ->
     return statistics
