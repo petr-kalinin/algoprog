@@ -17,6 +17,8 @@ import callApi from '../lib/callApi'
 import globalStyles from './global.css'
 
 bootstrapUtils.addStyle(Panel, 'dq_text');
+bootstrapUtils.addStyle(Panel, 'success');
+bootstrapUtils.addStyle(Panel, 'info');
 
 commentClass = (comment) ->
     switch comment.outcome
@@ -74,7 +76,7 @@ class CommentList extends React.Component
             return null
         <div>
             <h4>Последние комментарии</h4>
-            <PanelGroup>
+            <PanelGroup id="comments">
                 {
                 if @props.data?.length
                     @props.data.map((comment) =>
@@ -86,9 +88,16 @@ class CommentList extends React.Component
                                     <span>&times;</span>
                                 </button>
                             </span>
-                        <Panel collapsible key={comment._id} header={title} bsStyle={cl}>
-                            <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
-                            <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
+                        <Panel key={comment._id} bsStyle={cl}>
+                            <Panel.Heading>
+                                <Panel.Title toggle>{title}</Panel.Title>
+                            </Panel.Heading>
+                            <Panel.Collapse>
+                                <Panel.Body>
+                                    <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
+                                    <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
+                                </Panel.Body>
+                            </Panel.Collapse>
                         </Panel>
                     )
                 }
