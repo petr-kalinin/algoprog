@@ -20,8 +20,7 @@ export default Result = (props) ->
     problemName = r.fullTable.name
     contests = r.fullTable.tables
     userName = makeUserName(r.fullUser)
-    return
-        <tr>
+    return <tr>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to="/reviewResult/#{r._id}">{moment(r.lastSubmitTime).format('YYYY-MM-DD HH:mm:ss')}</Link>
                 {" "}[ x {r.attempts} ]

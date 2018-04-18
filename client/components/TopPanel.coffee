@@ -85,15 +85,6 @@ class TopPanel extends React.Component
                     {
                     if @props.me?._id
                         <ButtonGroup>
-                            {
-                            ###
-                            <LinkContainer to="/profile" isActive={() -> false}>
-                                <Button bsStyle="primary">
-                                    <FontAwesome name="cog"/> Профиль
-                                </Button>
-                            </LinkContainer>
-                            ###
-                            }
                             <Button bsStyle="success" onClick={@props.logout}>
                                 <FontAwesome name="sign-out"/> Выход
                             </Button>

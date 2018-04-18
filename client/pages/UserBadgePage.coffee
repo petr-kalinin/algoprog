@@ -22,8 +22,7 @@ Explanation =
 
 class UserBadgePage extends React.Component
     render:  () ->
-        return
-            <Grid fluid>
+        return <Grid fluid>
                 <Helmet>
                     <title>{@props.data.name}</title>
                 </Helmet>

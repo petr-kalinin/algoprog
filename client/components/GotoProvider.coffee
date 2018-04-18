@@ -9,6 +9,7 @@ class GotoProvider extends React.Component
                 if e
                     e.preventDefault()
                 @props.history.push(url)
+                return false
 
     render: ->
         this.props.children

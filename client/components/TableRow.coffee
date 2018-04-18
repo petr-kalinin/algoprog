@@ -76,8 +76,7 @@ TotalResult = (props) ->
             style += " " + styles[s]
         if props.result.problemName
             title = props.user.name + ": " + props.result.problemName
-    return
-        <td className={style} title={title}>
+    return <td className={style} title={title}>
             {if props.header
                 "="
             else
@@ -101,8 +100,7 @@ Attempts = (props) ->
 export default TableRow = (props) ->
     total = undefined
     h = props.header
-    return
-        <tr>
+    return <tr>
             <td className={globalStyles.border} />
             {
             res = []

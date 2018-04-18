@@ -11,7 +11,7 @@ weekSet = (userList) ->
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
     [0..nowWeek]
-    
+
 bgColor = (number) ->
     if !number
         "#ffffff"
@@ -21,16 +21,16 @@ bgColor = (number) ->
         "#bbffbb"
     else if number<=8
         "#88ff88"
-    else 
+    else
         "#22ff22"
-        
-        
+
+
 weekHeader = (weekNumber, userList) ->
     thisStart = new Date(startDayForWeeks[userList])
     startDay = new Date(+thisStart + MSEC_IN_WEEK * weekNumber)
     endDay = new Date(+startDay + MSEC_IN_WEEK - 1)
     startDay.getUTCDate() + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
-    
+
 Header = (props) ->
     cl = props.headerClass || "h1"
     H = React.createElement(cl, {}, 'Сданные задачи по неделям');
@@ -40,7 +40,7 @@ Header = (props) ->
             Количество зачтенных посылок за неделю; 0.5, если посылки были, но ни одной зачтенной
         </p>
     </div>
-    
+
 
 SolvedByWeekRow = (props) ->
     <tr>
@@ -53,25 +53,26 @@ SolvedByWeekRow = (props) ->
         data = props.user.byWeek
         for w in props.weeks
             if props.header
-                a <td className={globalStyles.mainTable_td} key={w}> 
+                a <td className={globalStyles.mainTable_td} key={w}>
                     {weekHeader(w, props.userList)}
                 </td>
-                continue
-            text = ""
-            if data?.solved and w of data.solved
-                text = data.solved[w]
-                style = 
-                    backgroundColor: bgColor(data.solved[w])
             else
-                text = "0"
-                style = 
-                    bgColor: bgColor(undefined)
-            if data?.ok and w of data.ok
-                text += " + " + data.ok[w]
-            a <td className={globalStyles.mainTable_td} key={w} style={style}> 
-                {text}
-            </td>
-        res}
+                text = ""
+                if data?.solved and w of data.solved
+                    text = data.solved[w]
+                    style =
+                        backgroundColor: bgColor(data.solved[w])
+                else
+                    text = "0"
+                    style =
+                        bgColor: bgColor(undefined)
+                if data?.ok and w of data.ok
+                    text += " + " + data.ok[w]
+                a <td className={globalStyles.mainTable_td} key={w} style={style}>
+                    {text}
+                </td>
+        res
+        }
         <td className={globalStyles.border} />
     </tr>
 
@@ -79,7 +80,7 @@ export default SolvedByWeek = (props) ->
     if not props.users?.length
         return <table className={globalStyles.mainTable}/>
     weeks = weekSet(props.userList)
-    
+
     <div>
         <Header headerClass={props.headerClass} />
         <table className={globalStyles.mainTable}>

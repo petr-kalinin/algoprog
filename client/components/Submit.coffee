@@ -35,6 +35,8 @@ langClass = (lang) ->
     return ""
 
 convert = (source, encoding) ->
+    if not source
+        return ""
     buf = Buffer.from(source, "latin1")
     return iconv.decode(buf, encoding)
 
