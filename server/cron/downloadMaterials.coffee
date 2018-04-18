@@ -22,11 +22,12 @@ finalizeMaterialsList = (materials) ->
     return materials
 
 getIndent = (activity) ->
-    spacers = activity.getElementsByClassName('spacer')
     indent = 0
-    for s in spacers
-        indent += s.width
-        s.parentElement.removeChild(s)
+    while true
+        spacers = activity.getElementsByClassName('spacer')
+        if spacers.length == 0
+            break
+        spacers[0].parentElement.removeChild(spacers[0])
     if indent > 0
         indent -= 20
     return indent
@@ -38,9 +39,11 @@ getPageContent = (href) ->
         logger.error("Can't find content for page " + href)
         return undefined
 
-    mod = data.getElementsByClassName('modified')
-    for m in mod
-        m.parentElement.removeChild(m)
+    while true
+        mod = data.getElementsByClassName('modified')
+        if mod.length == 0
+            break
+        mod[0].parentElement.removeChild(mod[0])
 
     return data.innerHTML
 
@@ -383,14 +386,18 @@ class MaterialsDownloader
         @addNews(headerText, element)
 
     parseSection: (section, id) ->
-        hidden = section.getElementsByClassName('algoprog-hidden')
-        for h in hidden
-            h.parentElement.removeChild(h)
+        while true
+            h = section.getElementsByClassName('algoprog-hidden')
+            if h.length == 0
+                break
+            h[0].parentElement.removeChild(h[0])
 
-        news = section.getElementsByClassName('algoprog-news')
-        for h in news
-            @parseNews(h)
-            h.parentElement.removeChild(h)
+        while true
+            news = section.getElementsByClassName('algoprog-news')
+            if news.length == 0
+                break
+            @parseNews(news[0])
+            news[0].parentElement.removeChild(news[0])
 
         activities = section.getElementsByClassName('activity')
         materials = []
