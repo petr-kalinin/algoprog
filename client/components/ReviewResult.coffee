@@ -213,28 +213,30 @@ class ReviewResult extends React.Component
                         }
                     </div>
                 else  # not @state.currentSubmit
-                    diffText = JsDiff.createTwoFilesPatch(
-                        @state.currentDiff[1]._id,
-                        @state.currentDiff[0]._id,
-                        @state.currentDiff[1].source,
-                        @state.currentDiff[0].source)
-                    diffText = diffText.split("\n")
-                    diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
-                    diffText = diffText.join("\n")
-                    files = parseDiff(diffText, {nearbySequences: "zip"})
+                    if @state.currentDiff[1].source == @state.currentDiff[0].source
+                        <div>
+                            <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
+                            <pre>Нет изменений</pre>
+                        </div>
+                    else
+                        diffText = JsDiff.createTwoFilesPatch(
+                            @state.currentDiff[1]._id,
+                            @state.currentDiff[0]._id,
+                            @state.currentDiff[1].source,
+                            @state.currentDiff[0].source)
+                        diffText = diffText.split("\n")
+                        diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
+                        diffText = diffText.join("\n")
+                        files = parseDiff(diffText, {nearbySequences: "zip"})
 
-                    markEdits = markWordEdits({threshold: 30, markLongDistanceDiff: true});
+                        markEdits = markWordEdits({threshold: 30, markLongDistanceDiff: true});
 
-                    <div>
-                        <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                        <pre>
-                            {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split" markEdits={markEdits}/>)}
-                        </pre>
-                    </div>
-                    #<DiffLines
-                    #    from={@state.currentDiff[1].source}
-                    #    to={@state.currentDiff[0].source}
-                    #/>
+                        <div>
+                            <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
+                            <pre>
+                                {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split" markEdits={markEdits}/>)}
+                            </pre>
+                        </div>
                 }
             </Col>
             <Col xs={12} sm={12} md={4} lg={4}>
