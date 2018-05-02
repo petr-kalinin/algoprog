@@ -51,6 +51,7 @@ class ReviewResult extends React.Component
         @state =
             commentText: ""
             currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
+            currentDiff: [undefined, undefined]
             bestSubmits: false
         @accept = @accept.bind this
         @ignore = @ignore.bind this
@@ -59,6 +60,7 @@ class ReviewResult extends React.Component
         @setField = @setField.bind this
         @setComment = @setComment.bind this
         @setCurrentSubmit = @setCurrentSubmit.bind this
+        @setCurrentDiff = @setCurrentDiff.bind this
         @setQuality = @setQuality.bind this
         @toggleBestSubmits = @toggleBestSubmits.bind this
 
@@ -75,13 +77,15 @@ class ReviewResult extends React.Component
                 commentText: ""
                 currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
                 bestSubmits: @state.bestSubmits
+                currentDiff: @state.currentDiff
         else
             newState =
                 commentText: @state.commentText
                 currentSubmit: null
                 bestSubmits: @state.bestSubmits
+                currentDiff: @state.currentDiff
             for submit in @props.data
-                if submit._id == @state.currentSubmit._id
+                if submit._id == @state.currentSubmit?._id
                     newState.currentSubmit = submit
             if not deepEqual(newState, @state)
                 @setState(newState)
@@ -132,6 +136,18 @@ class ReviewResult extends React.Component
             e.preventDefault()
             @setState
                 currentSubmit: submit
+                currentDiff: [undefined, undefined]
+
+    setCurrentDiff: (i, submit) ->
+        (e) =>
+            e.preventDefault()
+            newDiff = @state.currentDiff
+            newDiff[i] = submit
+            if not newDiff[1-i]
+                newDiff[1-i] = @state.currentSubmit
+            @setState
+                currentSubmit: undefined
+                currentDiff: newDiff
 
     render:  () ->
         admin = @props.me?.admin
@@ -194,10 +210,22 @@ class ReviewResult extends React.Component
                             </div>
                         }
                     </div>
+                else  # not @state.currentSubmit
+                    <span/>
+                    #<DiffLines
+                    #    from={@state.currentDiff[1].source}
+                    #    to={@state.currentDiff[0].source}
+                    #/>
                 }
+
             </Col>
             <Col xs={12} sm={12} md={4} lg={4}>
-                <SubmitListTable submits={@props.data} handleSubmitClick={@setCurrentSubmit} activeId={@state.currentSubmit?._id}/>
+                <SubmitListTable
+                    submits={@props.data}
+                    handleSubmitClick={@setCurrentSubmit}
+                    handleDiffClick={@setCurrentDiff}
+                    activeId={@state.currentSubmit?._id}
+                    activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
             </Col>
             {
             admin && <Col xs={12} sm={12} md={12} lg={12}>

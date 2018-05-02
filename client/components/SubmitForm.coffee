@@ -18,10 +18,9 @@ import Button from 'react-bootstrap/lib/Button'
 import callApi, {callApiWithBody} from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
+import ShadowedSwitch from './ShadowedSwitch'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
-
-import styles from './SubmitForm.css'
 
 LANGUAGES = [
     [27, "Python 3.6.4", "py", "py3"]
@@ -135,8 +134,10 @@ class SubmitForm extends React.Component
                     )}
                 </FieldGroup>
                 {" "}
-                <span onClick={@toggleDraft} className={if @state.draft then styles.draftEnabled else styles.draftDisabled} title="Не тестировать, отправить как черновик">
-                    <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
+                <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
+                    <ShadowedSwitch on={@state.draft}>
+                        <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
+                    </ShadowedSwitch>
                 </span>
                 {" "}
                 {

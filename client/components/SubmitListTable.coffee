@@ -4,6 +4,8 @@ FontAwesome = require('react-fontawesome')
 
 import Table from 'react-bootstrap/lib/Table'
 
+import ShadowedSwitch from './ShadowedSwitch'
+
 import outcomeToText from '../lib/outcomeToText'
 
 import styles from './SubmitListTable.css'
@@ -19,6 +21,9 @@ export default SubmitListTable = (props) ->
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
+                    {if props.handleDiffClick
+                        <th>&nbsp;</th>
+                    }
                  </tr>
             </thead>
             <tbody>
@@ -32,6 +37,20 @@ export default SubmitListTable = (props) ->
                         <td>{submit.language}</td>
                         <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
                         <td><a onClick={props.handleSubmitClick(submit)} href="#">Подробнее</a></td>
+                        {if props.handleDiffClick
+                            <td>
+                                <span onClick={props.handleDiffClick(0, submit)} href="#">
+                                    <ShadowedSwitch on={props.activeDiffId[0] == submit._id}>
+                                        <FontAwesome name="plus"/>
+                                    </ShadowedSwitch>
+                                </span>
+                                <span onClick={props.handleDiffClick(1, submit)} href="#">
+                                    <ShadowedSwitch on={props.activeDiffId[1] == submit._id}>
+                                        <FontAwesome name="minus"/>
+                                    </ShadowedSwitch>
+                                </span>
+                            </td>
+                        }
                     </tr>
                 ).reverse()}
             </tbody>
