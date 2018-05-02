@@ -13,7 +13,7 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 
 
 Stats = (props) ->
-    <span>{"Downloads: ok #{props.stats.ok.toFixed(2)}, failed #{props.stats.fail.toFixed(2)}, ip #{props.stats.ip}"}</span>
+    <span>{props.stats.ok && "Downloads: ok #{props.stats.ok.toFixed(2)}, failed #{props.stats.fail.toFixed(2)}, ip #{props.stats.ip}"}</span>
 
 options = {
     urls: (props) ->
