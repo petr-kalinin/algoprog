@@ -67,7 +67,7 @@ function browserifyTransform(b) {
     return b
         .plugin(require('css-modulesify'), {
             rootDir: __dirname,
-            output: './build/assets/bundle.css',
+            output: './build/assets/bundle.css'
         })
         .transform(coffeescriptTransform)
         .transform('babelify', {
