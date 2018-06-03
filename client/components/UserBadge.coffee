@@ -44,14 +44,19 @@ class GroupSelector extends React.Component
 export default class UserBadge extends React.Component
     constructor: (props) ->
         super(props)
-        @state =
-            baseLevel: props.user.level.base || '',
-            cfLogin: @props.user.cf?.login || ''
+        @state = @startState()
         @handleChange = @handleChange.bind(this)
         @handleBlChange = @handleBlChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
+        @handlePaidTillChange = @handlePaidTillChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
+
+    startState: () ->
+        return
+            baseLevel: @props.user.level.base || '',
+            cfLogin: @props.user.cf?.login || ''
+            paidTill: @props.user.paidTill || ''
 
     handleChange: (field, event) ->
         newState = deepcopy(@state)
@@ -64,12 +69,16 @@ export default class UserBadge extends React.Component
     handleCfChange: (event) ->
         @handleChange("cfLogin", event)
 
+    handlePaidTillChange: (event) ->
+        @handleChange("paidTill", event)
+
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
             level:
                 base: @state.baseLevel
             cf:
                 login: @state.cfLogin
+            paidTill: @state.paidTill
         )
         @props.handleReload()
 
@@ -115,6 +124,15 @@ export default class UserBadge extends React.Component
                                 value={@state.cfLogin}
                                 size="20"
                                 onChange={@handleCfChange}
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
+                        <div>
+                            Paid till (YYYY-MM-DD): <input
+                                type="text"
+                                name="newPaidTill"
+                                value={@state.paidTill}
+                                size="20"
+                                onChange={@handlePaidTillChange}
                                 onKeyPress={@handleKeyPressed} />
                         </div>
                     </form> }

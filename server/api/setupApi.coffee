@@ -116,9 +116,14 @@ export default setupApi = (app) ->
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
+        paidTill = new Date(req.body.paidTill)
+        if isNaN(paidTill)
+            paidTill = undefined
+        console.log "paidTill: ", paidTill
         User.findOne({_id: req.params.id}, (err, record) ->
             await record.setBaseLevel req.body.level.base
             await record.setCfLogin cfLogin
+            await record.setPaidTill paidTill
             res.send('OK')
         )
 
