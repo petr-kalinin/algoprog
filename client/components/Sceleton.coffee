@@ -1,5 +1,6 @@
 React = require('react')
 FontAwesome = require('react-fontawesome')
+moment = require('moment')
 
 import Row from 'react-bootstrap/lib/Row'
 import Col from 'react-bootstrap/lib/Col'
@@ -12,11 +13,15 @@ import { Link } from 'react-router-dom'
 
 import { Helmet } from "react-helmet"
 
+import ConnectedComponent from '../lib/ConnectedComponent'
+
 import Tree from './Tree'
 import News from './News'
 import BlogPosts from './BlogPosts'
 import CommentList from './CommentList'
 import TopPanel from './TopPanel'
+
+import isPaid from '../lib/isPaid'
 
 import styles from './Sceleton.css'
 
@@ -47,11 +52,30 @@ ColWrapper = (props) ->
             subProps[size] = props.size[size]
     `<Col {...subProps}>{props.children}</Col>`
 
+class PaidTill extends React.Component
+    render: () ->
+        console.log "myuser=", @props.myUser
+        if @props.myUser?.userList == "stud"
+            if @props.myUser?.paidTill && isPaid(@props.myUser)
+                "Занятия оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY")
+            else if @props.myUser?.paidTill
+                "Занятия были оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + ", вы можете продлить"
+            else
+                "Занятия не оплачены, вы можете оплатить"
+        else
+            "Поддержать занятия"
+
+paidTillOptions =
+    urls: (props) ->
+        myUser: "myUser"
+
+PaidTillConnected = ConnectedComponent(PaidTill, paidTillOptions)
+
 BottomPanel = (props) ->
     <div className={styles.footer}>
         <Grid fluid>
             <Row>
-                <Col xs={12} sm={9} md={9} lg={9}>
+                <Col xs={12} sm={12} md={8} lg={8}>
                     <div className="text-muted">
                         <Link to="/">algoprog.ru</Link>
                         {" © Петр Калинин, GNU AGPL, "}
@@ -62,15 +86,11 @@ BottomPanel = (props) ->
                         <a href="http://blog.algoprog.ru" target="_blank">Блог</a>
                     </div>
                 </Col>
-                <Col xs={12} sm={3} md={3} lg={3}>
+                <Col xs={12} sm={12} md={4} lg={4}>
                     <div className={styles.right + " text-muted"}>
                         <Link to="/pay">
-                            {
-                            if props.myUser?.userList == "stud"
-                                "Оплатить занятия "
-                            else
-                                "Поддержать занятия "
-                            }
+                            <PaidTillConnected/>
+                            {" "}
                             <FontAwesome name="cc-visa"/>
                             {" "}
                             <FontAwesome name="cc-mastercard"/>
