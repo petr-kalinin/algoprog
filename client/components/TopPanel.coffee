@@ -1,5 +1,8 @@
 React = require('react')
 FontAwesome = require('react-fontawesome')
+moment = require('moment')
+deepEqual = require('deep-equal')
+
 import { connect } from 'react-redux'
 
 import { LinkContainer } from 'react-router-bootstrap'
@@ -17,6 +20,7 @@ import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
+import isPaid from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './TopPanel.css'
@@ -24,13 +28,66 @@ import styles from './TopPanel.css'
 needCfWarning = (user) ->
     (not user.cf?.login?) and (user.level.current >= "1В")
 
+needUnpaidWarning = (user) ->
+    (user?.userList == "stud") and (user?.paidTill) && (not isPaid(user))
+
+UnknownWarning = (props) ->
+    <div className="static-modal">
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Учетная запись не активирована</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <div>
+                    <p>Ваша учетная запись еще не активирована. Вы можете сдавать задачи, но напишите мне,
+                    чтобы я активировал вашу учетную запись. Мои контакты — на страничке
+                    {" "}<Link to="/material/0">О курсе</Link>.</p>
+                </div>
+            </Modal.Body>
+
+            <Modal.Footer>
+                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
+            </Modal.Footer>
+
+        </Modal.Dialog>
+    </div>
+
+UnpaidWarning = (props) ->
+    <div className="static-modal">
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Занятия не оплачены</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <div>
+                    <p>Ваши занятия оплачены только до {moment(props.myUser.paidTill).format("DD.MM.YYYY")}.
+                    Вы можете пока решать задачи, но
+                    {" "}<Link to="/pay">продлите оплату</Link> в ближайшее время.</p>
+                    <p>Если вы на самом деле оплачивали занятия, или занятия для вас должны быть бесплатными,
+                    свяжитесь со мной.</p>
+                </div>
+            </Modal.Body>
+
+            <Modal.Footer>
+                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
+            </Modal.Footer>
+
+        </Modal.Dialog>
+    </div>
+
+
 class TopPanel extends React.Component
     constructor: (props) ->
         super(props)
         @state =
             showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
+            showUnpaid: (not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)
         @closeWarning = @closeWarning.bind(this)
         @openWarning = @openWarning.bind(this)
+        @closeUnpaid = @closeUnpaid.bind(this)
+        @openUnpaid = @openUnpaid.bind(this)
 
     closeWarning: ->
         @props.setUnknownWarningShown()
@@ -41,10 +98,20 @@ class TopPanel extends React.Component
         @setState
             showWarning: true
 
+    closeUnpaid: ->
+        @props.setUnpaidWarningShown()
+        @setState
+            showUnpaid: false
+
+    openUnpaid: ->
+        @setState
+            showUnpaid: true
+
     componentDidUpdate: (prevProps, prevState) ->
         newState =
             showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
-        if newState.showWarning != prevState.showWarning
+            showUnpaid: (not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)
+        if !deepEqual(newState, prevState)
             @setState(newState)
 
     render: ->
@@ -74,7 +141,9 @@ class TopPanel extends React.Component
                                         <span className={styles.separator}/>
                                     </span>}
                                 {needUnknownWarning(@props.myUser) &&
-                                    <span title="Учетная запись не активирована, напишите мне" className="text-danger" onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
+                                    <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
+                                {needUnpaidWarning(@props.myUser) &&
+                                    <span title="Занятия не оплачены" className={"text-danger " + styles.warning} onClick={@openUnpaid}><FontAwesome name="exclamation-triangle"/></span>}
                             </span>
                         else
                             "Неизвестный пользователь"
@@ -106,27 +175,10 @@ class TopPanel extends React.Component
                 </Navbar.Form>
             </Navbar>
             {
-            @state.showWarning &&
-            <div className="static-modal">
-                <Modal.Dialog>
-                    <Modal.Header>
-                        <Modal.Title>Учетная запись не активирована</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <div>
-                            <p>Ваша учетная запись еще не активирована. Вы можете сдавать задачи, но напишите мне,
-                            чтобы я активировал вашу учетную запись. Мои контакты — на страничке
-                            {" "}<Link to="/material/0">О курсе</Link>.</p>
-                        </div>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button bsStyle="primary" onClick={@closeWarning}>OK</Button>
-                    </Modal.Footer>
-
-                </Modal.Dialog>
-            </div>
+            @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
+            }
+            {
+            @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} myUser={@props.myUser}/>
             }
         </div>
 
@@ -141,10 +193,12 @@ ConnectedTopPanel = ConnectedComponent(TopPanel, options)
 mapStateToProps = (state) ->
     return
         unknownWarningShown: state.unknownWarningShown
+        unpaidWarningShown: state.unpaidWarningShown
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
         logout: () -> dispatch(actions.logout())
         setUnknownWarningShown: () -> dispatch(actions.setUnknownWarningShown())
+        setUnpaidWarningShown: () -> dispatch(actions.setUnpaidWarningShown())
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectedTopPanel)

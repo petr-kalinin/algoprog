@@ -3,7 +3,7 @@ import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN } from './actions'
 
 import { equalUrl } from './getters'
 
@@ -48,11 +48,18 @@ unknownWarningShown = (state = false, action) ->
     else
         return state
 
+unpaidWarningShown = (state = false, action) ->
+    if action.type == SET_UNPAID_WARNING_SHOWN
+        return true
+    else
+        return state
+
 
 export default rootReducer =
     combineReducers {
         data,
         dataPromises,
         unknownWarningShown,
+        unpaidWarningShown,
         notifications
     }

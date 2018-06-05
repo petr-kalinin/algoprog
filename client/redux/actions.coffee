@@ -9,6 +9,7 @@ export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 export LOGIN = 'POST_LOGIN'
 export SET_UNKNOWN_WARNING_SHOWN = 'SET_UNKNOWN_WARNING_SHOWN'
+export SET_UNPAID_WARNING_SHOWN = 'SET_UNPAID_WARNING_SHOWN'
 
 export updateData = (url, minAgeToUpdate) ->
     (dispatch, getState) ->
@@ -50,3 +51,7 @@ export logout = () ->
 export setUnknownWarningShown = () ->
     return
         type: SET_UNKNOWN_WARNING_SHOWN
+
+export setUnpaidWarningShown = () ->
+    return
+        type: SET_UNPAID_WARNING_SHOWN

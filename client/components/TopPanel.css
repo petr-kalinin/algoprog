@@ -4,3 +4,6 @@
 .adminhash {
     padding-right: 0.5em;
 }
+.warning {
+    cursor: hand;
+}
