@@ -54,16 +54,30 @@ ColWrapper = (props) ->
 
 class PaidTill extends React.Component
     render: () ->
-        console.log "myuser=", @props.myUser
         if @props.myUser?.userList == "stud"
             if @props.myUser?.paidTill && isPaid(@props.myUser)
-                "Занятия оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY")
+                preLink = "Занятия оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + " "
+                inLink = "Продлить"
             else if @props.myUser?.paidTill
-                "Занятия были оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + ", вы можете продлить"
+                preLink = "Занятия были оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + " "
+                inLink = "Продлить"
             else
-                "Занятия не оплачены, вы можете оплатить"
+                preLink = ""
+                inLink = "Оплатить занятия"
         else
-            "Поддержать занятия"
+            preLink = ""
+            inLink = "Поддержать занятия"
+        <span>
+            {preLink}
+            <Link to="/pay">
+                {inLink}
+                {" "}
+                <FontAwesome name="cc-visa"/>
+                {" "}
+                <FontAwesome name="cc-mastercard"/>
+            </Link>
+        </span>
+
 
 paidTillOptions =
     urls: (props) ->
@@ -88,13 +102,7 @@ BottomPanel = (props) ->
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>
                     <div className={styles.right + " text-muted"}>
-                        <Link to="/pay">
-                            <PaidTillConnected/>
-                            {" "}
-                            <FontAwesome name="cc-visa"/>
-                            {" "}
-                            <FontAwesome name="cc-mastercard"/>
-                        </Link>
+                        <PaidTillConnected/>
                     </div>
                 </Col>
             </Row>
