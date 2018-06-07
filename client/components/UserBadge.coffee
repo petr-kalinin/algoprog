@@ -55,7 +55,7 @@ export default class UserBadge extends React.Component
     startState: () ->
         return
             baseLevel: @props.user.level.base || '',
-            cfLogin: @props.user.cf?.login || ''
+            cfLogin: @props.user.cf?.login || '',
             paidTill: @props.user.paidTill || ''
 
     handleChange: (field, event) ->

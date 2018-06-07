@@ -118,7 +118,7 @@ export fullUser = (userId) ->
     results = await Promise.all(results)
     results = (r.results for r in results when r)
     return
-        user: user
+        user: user.toObject()
         results: results
 
     console.log tables

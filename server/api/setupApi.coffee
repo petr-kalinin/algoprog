@@ -4,6 +4,7 @@ iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 
 import User from '../models/user'
+import UserPrivate from '../models/UserPrivate'
 import Submit from '../models/submit'
 import Result from '../models/result'
 import Problem from '../models/problem'
@@ -105,9 +106,10 @@ export default setupApi = (app) ->
         res.json user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
-        User.findOne({_id: req.user.informaticsId}, (err, record) ->
-            res.json(record)
-        )
+        id = req.user.informaticsId
+        user = (await User.findById(id))?.toObject() || {}
+        userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        res.json({user..., userPrivate...})
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
@@ -119,18 +121,27 @@ export default setupApi = (app) ->
         paidTill = new Date(req.body.paidTill)
         if isNaN(paidTill)
             paidTill = undefined
-        console.log "paidTill: ", paidTill
-        User.findOne({_id: req.params.id}, (err, record) ->
-            await record.setBaseLevel req.body.level.base
-            await record.setCfLogin cfLogin
-            await record.setPaidTill paidTill
-            res.send('OK')
-        )
+        user = await User.findById(req.params.id)
+        await user.setBaseLevel req.body.level.base
+        await user.setCfLogin cfLogin
+        userPrivate = await UserPrivate.findById(req.params.id)
+        console.log "userPrivate = ", userPrivate
+        if paidTill
+            if not userPrivate
+                console.log "Creating new userPrivate"
+                userPrivate = new UserPrivate({_id: req.params.id})
+                await userPrivate.upsert()
+                userPrivate = await UserPrivate.findById(req.params.id)
+            await userPrivate.setPaidTill paidTill
+        res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
-        User.findOne({_id: req.params.id}, (err, record) ->
-            res.json(record)
-        )
+        id = req.user.informaticsId
+        user = (await User.findById(id))?.toObject() || {}
+        userPrivate = {}
+        if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.id
+            userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
         res.json(await dashboard())
@@ -139,7 +150,13 @@ export default setupApi = (app) ->
         res.json(await table(req.params.userList, req.params.table))
 
     app.get '/api/fullUser/:id', wrap (req, res) ->
-        res.json(await tableApi.fullUser(req.params.id))
+        id = req.params.id
+        result = await tableApi.fullUser(id)
+        userPrivate = {}
+        if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.id
+            userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        result.user = {result.user..., userPrivate...}
+        res.json(result)
 
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))

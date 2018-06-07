@@ -33,7 +33,6 @@ usersSchema = new mongoose.Schema
         color: String,
         activity: Number,
         progress: Number
-    paidTill: Date
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -77,11 +76,6 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     await @update({$set: {"cf.login": cfLogin}})
     @cf.login = cfLogin
     @updateCfRating()
-
-usersSchema.methods.setPaidTill = (paidTill) ->
-    logger.info "setting paidTill login ", @_id, paidTill
-    await @update({$set: {"paidTill": paidTill}})
-    @paidTill = paidTill
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
