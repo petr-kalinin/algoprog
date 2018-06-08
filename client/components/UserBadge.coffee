@@ -1,5 +1,7 @@
 React = require('react')
 deepcopy = require("deepcopy")
+moment = require('moment')
+deepEqual = require('deep-equal')
 
 import Grid from 'react-bootstrap/lib/Grid'
 import Button from 'react-bootstrap/lib/Button'
@@ -44,7 +46,7 @@ class GroupSelector extends React.Component
 export default class UserBadge extends React.Component
     constructor: (props) ->
         super(props)
-        @state = @startState()
+        @state = @startState(props)
         @handleChange = @handleChange.bind(this)
         @handleBlChange = @handleBlChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
@@ -52,11 +54,17 @@ export default class UserBadge extends React.Component
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
 
-    startState: () ->
+    startState: (props) ->
         return
-            baseLevel: @props.user.level.base || '',
-            cfLogin: @props.user.cf?.login || '',
-            paidTill: @props.user.paidTill || ''
+            baseLevel: props.user.level.base || '',
+            cfLogin: props.user.cf?.login || '',
+            paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
+
+    componentDidUpdate: (prevProps, prevState) ->
+        newState = @startState(@props)
+        oldStartState = @startState(prevProps)
+        if !deepEqual(newState, oldStartState)
+            @setState(newState)
 
     handleChange: (field, event) ->
         newState = deepcopy(@state)
@@ -134,6 +142,7 @@ export default class UserBadge extends React.Component
                                 size="20"
                                 onChange={@handlePaidTillChange}
                                 onKeyPress={@handleKeyPressed} />
+                            {" (сейчас: "}{if @props.user.paidTill then moment(@props.user.paidTill).format("YYYY-MM-DD")})
                         </div>
                     </form> }
                 { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }

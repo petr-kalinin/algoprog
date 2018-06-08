@@ -126,13 +126,12 @@ export default setupApi = (app) ->
         await user.setCfLogin cfLogin
         userPrivate = await UserPrivate.findById(req.params.id)
         console.log "userPrivate = ", userPrivate
-        if paidTill
-            if not userPrivate
-                console.log "Creating new userPrivate"
-                userPrivate = new UserPrivate({_id: req.params.id})
-                await userPrivate.upsert()
-                userPrivate = await UserPrivate.findById(req.params.id)
-            await userPrivate.setPaidTill paidTill
+        if not userPrivate
+            console.log "Creating new userPrivate"
+            userPrivate = new UserPrivate({_id: req.params.id})
+            await userPrivate.upsert()
+            userPrivate = await UserPrivate.findById(req.params.id)
+        await userPrivate.setPaidTill paidTill
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
