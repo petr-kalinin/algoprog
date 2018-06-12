@@ -58,7 +58,7 @@ export default class InformaticsUser
         @promises = []
 
     doLogin: () ->
-        page = await download("http://informatics.mccme.ru/login/index.php", @jar, {
+        page = await download("https://informatics.mccme.ru/login/index.php", @jar, {
             method: 'POST',
             form: {
                 username: @username,
