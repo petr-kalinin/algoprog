@@ -59,7 +59,7 @@ class AllSubmitDownloader
     getSource: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "http://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}"
+            href = "https://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}"
             page = await @adminUser.download(href, {encoding: 'latin1'})
             document = (new JSDOM(page)).window.document
             source = document.getElementById("source-textarea").innerHTML
@@ -71,7 +71,7 @@ class AllSubmitDownloader
     getComments: (problemId, userId, runid, outcome) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "http://informatics.mccme.ru/py/comment/get/#{contest}/#{run}"
+            href = "https://informatics.mccme.ru/py/comment/get/#{contest}/#{run}"
             data = await @adminUser.download(href)
             comments = JSON.parse(data).comments
             if not comments
@@ -98,7 +98,7 @@ class AllSubmitDownloader
     getResults: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "http://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}"
+            href = "https://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}"
             data = await @adminUser.download(href)
             return JSON.parse(data)
         catch
@@ -297,14 +297,14 @@ class UntilIgnoredSubmitDownloader extends AllSubmitDownloader
 
 userProblemUrl = (userId, problemId) ->
     (page, submitsPerPage) ->
-        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+        "https://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
 
 userUrl = (userId) ->
     (page, submitsPerPage) ->
-        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+        "https://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=0&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
 
 url = (group) -> (page, submitsPerPage) ->
-        "http://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{group}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+        "https://informatics.mccme.ru/moodle/ajax/ajax.php?problem_id=0&group_id=#{group}&user_id=0&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
 
 urls = {}
 for group, infGroup of groups.GROUPS

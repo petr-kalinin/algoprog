@@ -8,8 +8,8 @@ import logger from '../log'
 import download from '../lib/download'
 
 class ContestDownloader
-    url: 'http://informatics.mccme.ru/course/view.php?id=1135'
-    baseUrl: 'http://informatics.mccme.ru/mod/statements/'
+    url: 'https://informatics.mccme.ru/course/view.php?id=1135'
+    baseUrl: 'https://informatics.mccme.ru/mod/statements/'
 
     constructor: ->
         @jar = request.jar()
@@ -56,7 +56,7 @@ class ContestDownloader
 
     run: ->
         text = await download(@url, @jar)
-        re = new RegExp '<a title="Условия задач"\\s*href="(http://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
+        re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
         promises = []
         text.replace re, (a,b,c,d,e) =>
@@ -76,7 +76,7 @@ class RegionContestDownloader extends ContestDownloader
         '2016': ['18805', '18806']
         '2017': ['24702', '24703']
 
-    contestBaseUrl: 'http://informatics.mccme.ru/mod/statements/view.php?id='
+    contestBaseUrl: 'https://informatics.mccme.ru/mod/statements/view.php?id='
 
     run: ->
         levels = []

@@ -4,7 +4,7 @@ export { GROUPS }
 
 makeRequest = (adminUser, userId, groupName, urlAction, bodyAction) ->
     groupId = GROUPS[groupName]
-    href = "http://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{groupId}&selectedName=users&action=#{urlAction}"
+    href = "https://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{groupId}&selectedName=users&action=#{urlAction}"
     body = "#{bodyAction}={\"id\":\"#{userId}\"}&group_id=&session_sid="
     await adminUser.download(href, {
         method: 'POST',

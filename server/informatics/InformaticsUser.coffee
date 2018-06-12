@@ -98,7 +98,7 @@ export default class InformaticsUser
         return result
 
     getData: () ->
-        page = await download("http://informatics.mccme.ru/user/edit.php?id=#{@id}", @jar)
+        page = await download("https://informatics.mccme.ru/user/edit.php?id=#{@id}", @jar)
         document = (new JSDOM(page)).window.document
         fields = ["id_lastname",
                   "id_firstname",
@@ -135,7 +135,7 @@ export default class InformaticsUser
             currentYearStart: getCurrentYearStart()
 
     submit: (problemId, contentType, body) ->
-        page = await download("http://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
+        page = await download("https://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
             method: 'POST',
             headers: {'Content-Type': contentType},
             body,

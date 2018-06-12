@@ -6,7 +6,7 @@ problemId = (props) ->
     props.material._id.substring(1)
 
 export default Problem = (props) ->
-    href = "http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=" + problemId(props)
+    href = "https://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=" + problemId(props)
     <div>
         <div dangerouslySetInnerHTML={{__html: props.material.content}}>
         </div>

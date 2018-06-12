@@ -23,11 +23,11 @@ postToInformatics = (req, res) ->
         outcomeCode = 10
     try
         if outcomeCode
-            href = "http://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
+            href = "https://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
             await adminUser.download(href, {maxAttempts: 1})
     finally
         if req.body.comment
-            href = "http://informatics.mccme.ru/py/comment/add"
+            href = "https://informatics.mccme.ru/py/comment/add"
             body =
                 run_id: run
                 contest_id: contest

@@ -9,7 +9,7 @@ UNKNOWN_GROUP = '7647'
 addUserToUnknownGroup = (uid) ->
     adminUser = await InformaticsUser.findAdmin()
 
-    href = "http://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
+    href = "https://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
     body = 'addParam={"id":"' + uid + '"}&group_id=&session_sid='
     await adminUser.download(href, {
         method: 'POST',

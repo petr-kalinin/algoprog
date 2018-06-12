@@ -5,7 +5,7 @@ import download from '../lib/download'
 
 import logger from '../log'
 
-url = 'http://informatics.mccme.ru/course/view.php?id=1135'
+url = 'https://informatics.mccme.ru/course/view.php?id=1135'
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
@@ -58,7 +58,7 @@ getProblemsHrefsFromStatements = (href) ->
     hrefs = []
     tags = toc.getElementsByTagName("a")
     for tag in tags
-        if tag.href.startsWith("http://informatics.mccme.ru/mod/statements/view3.php")
+        if tag.href.startsWith("https://informatics.mccme.ru/mod/statements/view3.php")
             hrefs.push(tag.href)
         else
             logger.error("Strange link in statements toc: " + tag.href + " " + href)
@@ -570,7 +570,7 @@ class MaterialsDownloader
     correctInternalLinksInMaterial: (material) ->
         if not (material.type in ["page", "label", "epigraph", "problem", "news"])
             return
-        document = (new JSDOM(material.content, {url: "http://informatics.mccme.ru"})).window.document
+        document = (new JSDOM(material.content, {url: "https://informatics.mccme.ru"})).window.document
         links = document.getElementsByTagName("a")
         subpath = [{_id: "main", title: "/"}]
         if material.path and material._id
