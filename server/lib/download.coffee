@@ -43,3 +43,21 @@ export default download = (href, jar, options) ->
             delay *= 2
     addStats("fail")
     throw "Can't download " + href
+
+requests = 0
+promises = []
+REQUESTS_LIMIT = 30
+export downloadLimited = (href, jar, options) ->
+        if requests >= REQUESTS_LIMIT
+            await new Promise((resolve) => promises.push(resolve))
+        if requests >= REQUESTS_LIMIT
+            throw "Too many requests"
+        requests++
+        try
+            result = await download(href, jar, options)
+        finally
+            requests--
+            if promises.length
+                promise = promises.shift()
+                promise(0)  # resolve
+        return result

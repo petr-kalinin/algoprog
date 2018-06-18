@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom'
 
 import Material from "../models/Material"
-import download from '../lib/download'
+import {downloadLimited} from '../lib/download'
 
 import logger from '../log'
 
@@ -11,7 +11,7 @@ clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
 downloadAndParse = (href) ->
-    page = await download(href)
+    page = await downloadLimited(href, {timeout: 15 * 1000})
     document = (new JSDOM(page, {url: href})).window.document
     return document
 
@@ -45,7 +45,7 @@ getPageContent = (href) ->
             break
         mod[0].parentElement.removeChild(mod[0])
 
-    return data.innerHTML
+    return data
 
 getProblemsHrefsFromStatements = (href) ->
     document = await downloadAndParse(href)
@@ -117,6 +117,24 @@ class MaterialsDownloader
             type: "news"
             content: element.innerHTML
 
+    makePageMaterial: (href, id, order, type, indent, title, path) ->
+        data = await getPageContent(href)  # noawait
+        id_el = data.getElementsByClassName('algoprog-id')
+        if id_el.length
+            id_el = id_el[0]
+            id = id_el.name
+            id_el.parentElement.removeChild(id_el)
+
+        return new Material
+            _id: id,
+            order: order,
+            type: type
+            indent: indent
+            content: data.innerHTML
+            title: title,
+            path: path
+            materials: []
+
     parseLink: (a, id, order, keepResourcesInTree, indent, icon, type, path) ->
         material = undefined
         if icon?.src?.endsWith("pdf.gif")
@@ -150,16 +168,7 @@ class MaterialsDownloader
                 path: path
                 materials: []
         else
-            # await
-            material = new Material
-                _id: id,
-                order: order,
-                type: type || "page",
-                indent: indent
-                content: await getPageContent(a.href)  # noawait
-                title: a.textContent,
-                path: path
-                materials: []
+            material = await @makePageMaterial(a.href, id, order, type || "page", indent, a.textContent, path)
         @addMaterial(material)
         tree = null
         if keepResourcesInTree and material.type == "page"

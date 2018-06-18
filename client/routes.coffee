@@ -20,11 +20,14 @@ import ReviewPage from './pages/ReviewPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
-import PayPage from './pages/PayPage'
 
 class NoMatch extends React.Component
     render: () ->
         return <h2>404 Not found</h2>
+
+class PayPage extends React.Component
+    render: () ->
+        return <Redirect to="/material/pay" />
 
 export default [
     {
