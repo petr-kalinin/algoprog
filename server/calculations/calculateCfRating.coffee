@@ -2,8 +2,8 @@ request = require('request-promise-native')
 import CfResult from '../models/cfResult'
 import logger from '../log'
 
-colors = [[0, "gray"], [1200, "green"], [1400, "#03A89E"], [1600, "blue"], 
-         [1900, "#a0a"], [2200, "#bb0"], [2300, "#FF8C00"], [2400, "red"]];
+colors = [[0, "gray"], [1200, "green"], [1400, "#03A89E"], [1600, "blue"],
+         [1900, "#a0a"], [2100, "#bb0"], [2300, "#FF8C00"], [2400, "red"]];
 
 getRating = (user) ->
     href = "http://codeforces.com/api/user.info?handles=" + user.cf.login
@@ -27,15 +27,15 @@ getActivityAndProgress = (user) ->
     change = 0
     contests = 0
     first = true
-    
+
     for elem in data
         thisDate = new Date(elem["ratingUpdateTimeSeconds"] * 1000)
         await new CfResult(
-            userId: user._id, 
-            contestId: elem["contestId"], 
-            time: thisDate, 
-            place: elem["rank"], 
-            oldRating: elem["oldRating"], 
+            userId: user._id,
+            contestId: elem["contestId"],
+            time: thisDate,
+            place: elem["rank"],
+            oldRating: elem["oldRating"],
             newRating: elem["newRating"]
         ).upsert()
         if (not first)  # very first contest has no meaning as start rating is 1500
@@ -61,10 +61,8 @@ export default calculateCfRating = (user) ->
         return {}
     color = colorByRating(rating)
     activityAndProgress = await getActivityAndProgress(user)
-    return 
-        rating: rating, 
-        color: color, 
-        activity: activityAndProgress.activity, 
+    return
+        rating: rating,
+        color: color,
+        activity: activityAndProgress.activity,
         progress: activityAndProgress.progress
-    
-    
