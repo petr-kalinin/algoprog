@@ -3,7 +3,7 @@ import CfResult from '../models/cfResult'
 import logger from '../log'
 
 colors = [[0, "gray"], [1200, "green"], [1400, "#03A89E"], [1600, "blue"],
-         [1900, "#a0a"], [2100, "#bb0"], [2300, "#FF8C00"], [2400, "red"]];
+         [1900, "#a0a"], [2100, "#FF8C00"], [2400, "red"]];
 
 getRating = (user) ->
     href = "http://codeforces.com/api/user.info?handles=" + user.cf.login
