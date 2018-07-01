@@ -283,7 +283,7 @@ export default setupApi = (app) ->
 
         users = await User.findAll()
         for user in users
-            if user.userList == "stud" or user.userList == "unknown"
+            if user.userList == "stud"
                 continue
             runForUser(user)
         res.send('OK')
