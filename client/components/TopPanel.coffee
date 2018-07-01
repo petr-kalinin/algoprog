@@ -29,7 +29,7 @@ needCfWarning = (user) ->
     (not user.cf?.login?) and (user.level.current >= "1В")
 
 needUnpaidWarning = (user) ->
-    (user?.userList == "stud") and (user?.paidTill) && (not isPaid(user))
+    (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (not isPaid(user))
 
 UnknownWarning = (props) ->
     <div className="static-modal">
