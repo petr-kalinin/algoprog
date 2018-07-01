@@ -276,8 +276,8 @@ export default setupApi = (app) ->
             return
         adminUser = await InformaticsUser.findAdmin()
 
-        runForUser = (userId) ->
-            await groups.moveUserToGroup(adminUser, userId, "unknown")
+        runForUser = (user) ->
+            await groups.moveUserToGroup(adminUser, user._id, "unknown")
             await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
@@ -285,7 +285,7 @@ export default setupApi = (app) ->
         for user in users
             if user.userList == "stud" or user.userList == "unknown"
                 continue
-            runForUser(user._id)
+            runForUser(user)
         res.send('OK')
 
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
