@@ -278,8 +278,7 @@ export default setupApi = (app) ->
 
         runForUser = (userId) ->
             await groups.moveUserToGroup(adminUser, userId, "unknown")
-            if req.params.groupName != "none"
-                await user.setUserList("unknown")
+            await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
         users = await User.findAll()
