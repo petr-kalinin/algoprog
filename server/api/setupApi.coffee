@@ -270,6 +270,25 @@ export default setupApi = (app) ->
             await user.setUserList(req.params.groupName)
         res.send('OK')
 
+    app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        adminUser = await InformaticsUser.findAdmin()
+
+        runForUser = (userId) ->
+            await groups.moveUserToGroup(adminUser, userId, "unknown")
+            if req.params.groupName != "none"
+                await user.setUserList("unknown")
+            logger.info("Moved user #{user._id} to unknown group")
+
+        users = await User.findAll()
+        for user in users
+            if user.userList == "stud" or user.userList == "unknown"
+                continue
+            runForUser(user._id)
+        res.send('OK')
+
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
