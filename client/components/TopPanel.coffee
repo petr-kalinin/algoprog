@@ -20,7 +20,7 @@ import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
-import isPaid from '../lib/isPaid'
+import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './TopPanel.css'
@@ -54,6 +54,8 @@ UnknownWarning = (props) ->
     </div>
 
 UnpaidWarning = (props) ->
+    if not props.myUser
+        return null
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
@@ -62,16 +64,24 @@ UnpaidWarning = (props) ->
 
             <Modal.Body>
                 <div>
-                    <p>Ваши занятия оплачены только до {moment(props.myUser.paidTill).format("DD.MM.YYYY")}.
-                    Вы можете пока решать задачи, но
-                    {" "}<Link to="/pay">продлите оплату</Link> в ближайшее время.</p>
+                    <p>Ваши занятия оплачены только до {moment(props.myUser.paidTill).format("DD.MM.YYYY")}.</p>
+                    {if props.blocked
+                        <p>
+                            <b>Ваш аккаунт заблокирован до <Link to="/pay">полной оплаты</Link>.</b>
+                        </p>
+                    else
+                        <p>
+                            Вы можете пока решать задачи, но
+                            {" "}<Link to="/pay">продлите оплату</Link> в ближайшее время.
+                        </p>
+                    }
                     <p>Если вы на самом деле оплачивали занятия, или занятия для вас должны быть бесплатными,
                     свяжитесь со мной.</p>
                 </div>
             </Modal.Body>
 
             <Modal.Footer>
-                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
+                <Button bsStyle="primary" onClick={if props.blocked then props.doLogout else props.handleClose}>OK</Button>
             </Modal.Footer>
 
         </Modal.Dialog>
@@ -83,7 +93,7 @@ class TopPanel extends React.Component
         super(props)
         @state =
             showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
-            showUnpaid: (not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)
+            showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         @closeWarning = @closeWarning.bind(this)
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
@@ -110,7 +120,7 @@ class TopPanel extends React.Component
     componentDidUpdate: (prevProps, prevState) ->
         newState =
             showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
-            showUnpaid: (not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)
+            showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         if !deepEqual(newState, prevState)
             @setState(newState)
 
@@ -178,7 +188,7 @@ class TopPanel extends React.Component
             @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
             }
             {
-            @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} myUser={@props.myUser}/>
+            @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} doLogout={@props.logout} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
             }
         </div>
 
@@ -195,9 +205,14 @@ mapStateToProps = (state) ->
         unknownWarningShown: state.unknownWarningShown
         unpaidWarningShown: state.unpaidWarningShown
 
+doLogout = (dispatch) ->
+    dispatch(actions.logout())
+    dispatch(actions.setUnknownWarningShown(false))
+    dispatch(actions.setUnpaidWarningShown(false))
+
 mapDispatchToProps = (dispatch, ownProps) ->
     return
-        logout: () -> dispatch(actions.logout())
+        logout: () -> doLogout(dispatch)
         setUnknownWarningShown: () -> dispatch(actions.setUnknownWarningShown())
         setUnpaidWarningShown: () -> dispatch(actions.setUnpaidWarningShown())
 

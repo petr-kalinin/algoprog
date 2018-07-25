@@ -48,10 +48,12 @@ export logout = () ->
         await callApi 'logout'
         dispatch(invalidateAllData())
 
-export setUnknownWarningShown = () ->
+export setUnknownWarningShown = (value=true) ->
     return
         type: SET_UNKNOWN_WARNING_SHOWN
+        value: value
 
-export setUnpaidWarningShown = () ->
+export setUnpaidWarningShown = (value=true) ->
     return
         type: SET_UNPAID_WARNING_SHOWN
+        value: value

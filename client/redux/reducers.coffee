@@ -44,13 +44,13 @@ dataPromises = (state=[], action) ->
 
 unknownWarningShown = (state = false, action) ->
     if action.type == SET_UNKNOWN_WARNING_SHOWN
-        return true
+        return action.value
     else
         return state
 
 unpaidWarningShown = (state = false, action) ->
     if action.type == SET_UNPAID_WARNING_SHOWN
-        return true
+        return action.value
     else
         return state
 
