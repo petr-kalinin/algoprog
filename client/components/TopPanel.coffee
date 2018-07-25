@@ -67,7 +67,7 @@ UnpaidWarning = (props) ->
                     <p>Ваши занятия оплачены только до {moment(props.myUser.paidTill).format("DD.MM.YYYY")}.</p>
                     {if props.blocked
                         <p>
-                            <b>Ваш аккаунт заблокирован до <Link to="/pay">полной оплаты</Link>.</b>
+                            Оплата просрочена более чем на 3 дня. <b>Ваш аккаунт заблокирован до <Link to="/pay">полной оплаты</Link>.</b>
                         </p>
                     else
                         <p>

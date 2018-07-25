@@ -31,6 +31,8 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import download from '../lib/download'
 import {getStats} from '../lib/download'
 
+import {unpaidBlocked} from '../../client/lib/isPaid'
+
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
@@ -82,6 +84,11 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
+        userPrivate = await UserPrivate.findById(req.user.informaticsId)
+        user = await User.findById(req.user.informaticsId)
+        if unpaidBlocked({user.toObject()..., userPrivate.toObject()...})
+            res.json({unpaid: true})
+            return
         fullProblemId = "p" + req.params.problemId
         try
             oldSubmits = await Submit.findByUserAndProblem(req.user.informaticsId, fullProblemId)
