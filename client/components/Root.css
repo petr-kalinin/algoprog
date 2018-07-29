@@ -22,3 +22,37 @@
     padding-top: 2ex;
     padding-bottom: 1ex;
 }
+.img {
+    box-shadow: 0 0 5px black;
+    width: 190px;
+}
+@media (min-width: 767px) {
+.howitworks_row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.howitworks_row div {
+    padding: 10px;
+}
+.reverse {
+    flex-direction: row-reverse;
+}
+.howitworks_text {
+    flex: 1;
+    font-size: 21px;
+}
+}
+@media (max-width: 766px) {
+.howitworks_row div {
+    padding: 10px;
+    width: 100%;
+}
+.howitworks_img {
+    text-align: center;
+}
+.howitworks_text {
+    flex: 1;
+    font-size: 16px;
+}
+}
