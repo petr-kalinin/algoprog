@@ -91,6 +91,48 @@ getSublevel = (material) ->
 getTopic = (material) ->
     getLevelHeader(material, 'h4', '(.*)')
 
+parseProblem = (id, href, order) ->
+    document = await downloadAndParse(href)
+    submit = document.getElementById('submit')
+    if submit
+        submit.parentElement.removeChild(submit)
+
+    data = document.getElementsByClassName("problem-statement")
+    if not data or data.length == 0
+        logger.error("Can't find statement for problem " + href)
+        return undefined
+
+    name = document.getElementsByTagName("title")[0]
+    name = name.innerHTML
+
+    re = new RegExp '^.*?\\((.*)\\)$'
+    res = re.exec name
+    name = res[1]
+    if not name
+        logger.error("Can't find name for problem " + href)
+        return undefined
+
+    text = "<h1>" + name + "</h1>"
+    for tag in data
+        need = true
+        pred = tag.parentElement
+        while pred
+            if pred.classList.contains("problem-statement")
+                need = false
+                break
+            pred = pred.parentElement
+        if need
+            text += "<div>" + tag.innerHTML + "</div>"
+
+    return new Material
+        _id: "p" + id,
+        order: order,
+        type: "problem",
+        title: name,
+        content: text,
+        materials: []
+
+
 class MaterialsDownloader
     constructor: ->
         @materials = {}
@@ -233,49 +275,17 @@ class MaterialsDownloader
         return @parseLink(a, activity.id, order, keepResourcesInTree, indent, icon)
 
     getProblem: (href, order) ->
-        document = await downloadAndParse(href)
-        submit = document.getElementById('submit')
-        if submit
-            submit.parentElement.removeChild(submit)
-
-        data = document.getElementsByClassName("problem-statement")
-        if not data or data.length == 0
-            logger.error("Can't find statement for problem " + href)
-            return undefined
-
         re = new RegExp '.*view3.php\\?id=\\d+&chapterid=(\\d+)'
         res = re.exec href
         id = res[1]
 
-        name = document.getElementsByTagName("title")[0]
-        name = name.innerHTML
-
-        re = new RegExp '^.*?\\((.*)\\)$'
-        res = re.exec name
-        name = res[1]
-        if not name
-            logger.error("Can't find name for problem " + href)
-            return undefined
-
-        text = "<h1>" + name + "</h1>"
-        for tag in data
-            need = true
-            pred = tag.parentElement
-            while pred
-                if pred.classList.contains("problem-statement")
-                    need = false
-                    break
-                pred = pred.parentElement
-            if need
-                text += "<div>" + tag.innerHTML + "</div>"
-
-        material = new Material
-            _id: "p" + id,
-            order: order,
-            type: "problem",
-            title: name,
-            content: text,
-            materials: []
+        oldMaterial = await Material.findById("p#{id}")
+        if oldMaterial?.force
+            logger.info("Will not overwrite a forced material #{id}")
+            material = oldMaterial
+        else
+            material = await parseProblem(id, href, order)
+                
         @addMaterial(material)
         @urlToMaterial[@getUrlKey(href)] = material._id
         tree = clone(material)
@@ -455,6 +465,8 @@ class MaterialsDownloader
         path = path.concat
             _id: material._id
             title: material.title
+        if not material.materials
+            logger.error("Have no submaterials #{material}")
         for m in material.materials
             @fillPaths(@materials[m._id], path)
 

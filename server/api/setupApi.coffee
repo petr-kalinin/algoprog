@@ -285,6 +285,7 @@ export default setupApi = (app) ->
         logger.info("Updating material #{material._id}")
         material.content = req.body.content
         material.title = req.body.title
+        material.force = true
         await material.upsert()
         res.send('OK')
 
