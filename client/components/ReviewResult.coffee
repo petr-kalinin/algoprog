@@ -180,7 +180,7 @@ class ReviewResult extends React.Component
                             {
                             if @props.bestSubmits.length
                                 <span>
-                                    <a href="#" onClick={@toggleBestSubmits}>Лучшие решения</a>
+                                    <a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a>
                                     {" = " + @props.bestSubmits.length}
                                     {" " + @props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
                                 </span>

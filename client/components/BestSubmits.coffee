@@ -11,7 +11,7 @@ import styles from './BestSubmits.css'
 export default BestSubmits = (props) ->
     <Modal show={true} onHide={props.close} dialogClassName={styles.modal}>
         <Modal.Body>
-            <h2>Лучшие решения</h2>
+            <h2>Хорошие решения</h2>
             {
             props.submits.map((submit) ->
                 <div key={submit._id} className={styles.submit}>
