@@ -24,5 +24,5 @@ MaterialProper = (props) ->
 
 export default Material = (props) ->
     <div>
-        <MaterialProper material={props.material} />
+        <MaterialProper material={props.material} handleReload={props.handleReload}/>
     </div>

@@ -277,6 +277,17 @@ export default setupApi = (app) ->
             await user.setUserList(req.params.groupName)
         res.send('OK')
 
+    app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        material = await Material.findById(req.params.id)
+        logger.info("Updating material #{material._id}")
+        material.content = req.body.content
+        material.title = req.body.title
+        await material.upsert()
+        res.send('OK')
+
     app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
