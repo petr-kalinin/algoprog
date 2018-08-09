@@ -5,41 +5,21 @@ import User from '../models/user'
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 import SubmitComment from '../models/SubmitComment'
-import InformaticsUser from '../informatics/InformaticsUser'
+
+import getTestSystem from '../testSystems/TestSystemRegistry'
 
 import {runForUserAndProblem} from '../cron/downloadSubmits'
 
 import logger from '../log'
 
 postToInformatics = (req, res) ->
-    adminUser = await InformaticsUser.findAdmin()
-    [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
-    outcomeCode = undefined
-    if req.body.result == "AC"
-        outcomeCode = 8
-    if req.body.result == "IG"
-        outcomeCode = 9
-    if req.body.result == "DQ"
-        outcomeCode = 10
-    try
-        if outcomeCode
-            href = "https://informatics.mccme.ru/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
-            await adminUser.download(href, {maxAttempts: 1})
-    finally
-        if req.body.comment
-            href = "https://informatics.mccme.ru/py/comment/add"
-            body =
-                run_id: run
-                contest_id: contest
-                comment: req.body.comment
-                lines: ""
-            await adminUser.download(href, {
-                method: 'POST',
-                headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-                form: body,
-                followAllRedirects: true
-                maxAttempts: 1
-            })
+    submitId = req.params.submitId
+    outcome = req.body.result
+    comment = req.body.comment
+
+    informatics = getTestSystem("informatics")
+    informatics.setOutcome(submitId, outcome, comment)
+
 
 updateData = (req, res) ->
     [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
@@ -97,4 +77,3 @@ export default setOutcome = (req, res) ->
         success = false
     if not success and (req.body.result or req.body.comment)
         await storeToDatabase(req, res)
-    res.send('OK')

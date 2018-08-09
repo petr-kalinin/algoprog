@@ -1,19 +1,90 @@
+import { JSDOM } from 'jsdom'
+request = require('request-promise-native')
+
 import TestSystem, {TestSystemUser} from './TestSystem'
+
+import RegisteredUser from '../models/registeredUser'
+
+import download from '../lib/download'
+import logger from '../log'
+
+REQUESTS_LIMIT = 20
+
 
 class InformaticsUser extends TestSystemUser
     constructor: (@id) ->
+        super()
 
     profileLink: () ->
         "https://informatics.mccme.ru/user/view.php?id=#{@id}&course=1"
 
-class Informatics extends TestSystem
+
+userCache = {}
+
+class LoggedInformaticsUser
+    @getUser: (username, password) ->
+        key = username + "::" + password
+        if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
+            logger.info "Creating new InformaticsUser ", username
+            newUser = new LoggedInformaticsUser(username, password)
+            await newUser._login()
+            userCache[key] =
+                user: newUser
+                loginTime: new Date()
+        return userCache[key].user
+
+    constructor: (@username, @password) ->
+        @jar = request.jar()
+        @requests = 0
+        @promises = []
+
+    _login: () ->
+        page = await download("https://informatics.mccme.ru/login/index.php", @jar, {
+            method: 'POST',
+            form: {
+                username: @username,
+                password: @password
+            },
+            followAllRedirects: true,
+            timeout: 30 * 1000
+        })
+        document = (new JSDOM(page)).window.document
+        el = document.getElementsByClassName("logininfo")
+        if el.length == 0 or el[0].children.length == 0
+            throw "Can't log user #{username} in"
+        a = el[0].children[0]
+        id = a.href.match(/view.php\?id=(\d+)/)
+        @name = a.innerHTML
+        if not id or id.length < 2
+            throw "Can't detect id, href=#{a.href} username=#{@username}"
+        logger.info "Logged in user #{@username} href=#{a.href}"
+        @id = id[1]
+
+    download: (href, options) ->
+        if @requests >= REQUESTS_LIMIT
+            await new Promise((resolve) => @promises.push(resolve))
+        if @requests >= REQUESTS_LIMIT
+            throw "Too many requests"
+        @requests++
+        try
+            result = await download(href, @jar, options)
+        finally
+            @requests--
+            if @promises.length
+                promise = @promises.shift()
+                promise(0)  # resolve
+        return result
+
+
+export default class Informatics extends TestSystem
     BASE_URL = "https://informatics.mccme.ru"
 
     _informaticsProblemId: (problemId) ->
         problemId.substring(1)
 
     _getAdmin: () ->
-        throw "not implemented"
+        admin = await RegisteredUser.findAdmin()
+        return LoggedInformaticsUser.getUser(admin.informaticsUsername, admin.informaticsPassword)
 
     problemLink: (problemId) ->
         id = @_informaticsProblemId(problemId)
@@ -24,7 +95,7 @@ class Informatics extends TestSystem
         "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{userId}"
 
     setOutcome: (submitId, outcome, comment) ->
-        adminUser = await _getAdmin()
+        adminUser = await @_getAdmin()
         [fullSubmitId, contest, run, problem] = submitId.match(/(\d+)r(\d+)p(\d+)/)
         outcomeCode = switch outcome
             when "AC" then 8
@@ -37,12 +108,12 @@ class Informatics extends TestSystem
                 href = "#{BASE_URL}/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
                 await adminUser.download(href, {maxAttempts: 1})
         finally
-            if req.body.comment
+            if comment
                 href = "#{BASE_URL}/py/comment/add"
                 body =
                     run_id: run
                     contest_id: contest
-                    comment: req.body.comment
+                    comment: comment
                     lines: ""
                 await adminUser.download(href, {
                     method: 'POST',
@@ -51,4 +122,4 @@ class Informatics extends TestSystem
                     followAllRedirects: true
                     maxAttempts: 1
                 })
-
+        logger.info "Successfully set outcome for #{submitId}"
