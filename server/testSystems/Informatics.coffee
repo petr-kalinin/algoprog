@@ -1,12 +1,17 @@
 import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
 
-import TestSystem, {TestSystemUser} from './TestSystem'
+import { GROUPS } from '../../client/lib/informaticsGroups'
 
 import RegisteredUser from '../models/registeredUser'
 
 import download from '../lib/download'
 import logger from '../log'
+
+import TestSystem, {TestSystemUser} from './TestSystem'
+
+import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownloader'
+
 
 REQUESTS_LIMIT = 20
 
@@ -123,3 +128,12 @@ export default class Informatics extends TestSystem
                     maxAttempts: 1
                 })
         logger.info "Successfully set outcome for #{submitId}"
+
+    submitDownloader: (userId, userList, problemId, submitsPerPage) ->
+        problemId = problemId || 0
+        userList = userList
+        userId = userId || 0
+        groupId = if userList of GROUPS then GROUPS[userList] else 0
+        url = (page) ->
+            "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+        return InformaticsSubmitDownloader(await @_getAdmin(), url)
