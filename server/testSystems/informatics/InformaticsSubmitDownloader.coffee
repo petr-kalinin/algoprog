@@ -1,12 +1,15 @@
 moment = require('moment')
 import { JSDOM } from 'jsdom'
 
+import TestSystemSubmitDownloader from '../TestSystem'
+
 import Submit from '../../models/submit'
 
 import logger from '../../log'
 
-export default class InformaticsSubmitDownloader
+export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
     constructor: (@adminUser, @baseUrl) ->
+        super()
 
     AC: 'Зачтено/Принято'
     IG: 'Проигнорировано'
@@ -29,7 +32,7 @@ export default class InformaticsSubmitDownloader
             logger.warn "Can't download source ", runid, href, e
             return ""
 
-    getComments: (problemId, userId, runid, outcome) ->
+    getComments: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
             href = "https://informatics.mccme.ru/py/comment/get/#{contest}/#{run}"
@@ -40,9 +43,9 @@ export default class InformaticsSubmitDownloader
             result = []
             for c in comments
                 result.push
-                    "text": c.comment
-                    "time": new Date(moment(c.date + "+03"))
-                    "id": c.id
+                    text: c.comment
+                    time: new Date(moment(c.date + "+03"))
+                    id: c.id
             return result
         catch e
             logger.warn "Can't download comments ", runid, href, e.stack
@@ -60,7 +63,6 @@ export default class InformaticsSubmitDownloader
             return {failed: true}
 
     processSubmit: (uid, name, pid, runid, prob, date, language, outcome) ->
-        res = await @needContinueFromSubmit(runid)
         if (outcome == @CE)
             outcome = "CE"
         if (outcome == @AC)
@@ -72,7 +74,7 @@ export default class InformaticsSubmitDownloader
 
         date = new Date(moment(date + "+03"))
 
-        @submits.push new Submit(
+        return new Submit(
             _id: runid,
             time: date,
             user: uid,
@@ -80,13 +82,12 @@ export default class InformaticsSubmitDownloader
             outcome: outcome
             language: language
         )
-        return res
 
     parseSubmits: (submitsTable) ->
         submitsRows = submitsTable.split("<tr>")
         result = true
         wasSubmit = false
-        resultPromises = []
+        result = []
         rowI = 0
         for row in submitsRows
             rowI++
@@ -141,11 +142,12 @@ export default class InformaticsSubmitDownloader
                 logger.warn "No outcome found `#{data[8]}`"
                 continue
             outcome = outcome[1]
-            resultPromises.push(@processSubmit(uid, name, pid, runid, prob, date, language, outcome))
-        return Promise.all(resultPromises)
+            result.push(@processSubmit(uid, name, pid, runid, prob, date, language, outcome))
+        return result
 
     getSubmitsFromPage: (page) ->
         submitsUrl = @baseUrl(page)
+        logger.info "submitsUrl=", submitsUrl
         submits = await @adminUser.download submitsUrl
         submits = JSON.parse(submits)["result"]["text"]
         result = await @parseSubmits(submits)

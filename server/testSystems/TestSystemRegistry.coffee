@@ -1,6 +1,6 @@
 import Informatics from './Informatics'
 
-REGISTRY = 
+export REGISTRY = 
     "informatics": new Informatics()
 
 export default getTestSystem = (id) ->

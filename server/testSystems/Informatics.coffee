@@ -130,10 +130,12 @@ export default class Informatics extends TestSystem
         logger.info "Successfully set outcome for #{submitId}"
 
     submitDownloader: (userId, userList, problemId, submitsPerPage) ->
-        problemId = problemId || 0
-        userList = userList
-        userId = userId || 0
+        problemId = if problemId then @_informaticsProblemId(problemId) else 0
         groupId = if userList of GROUPS then GROUPS[userList] else 0
+        if userId
+            groupId = 0
+        else
+            userId = 0
         url = (page) ->
             "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
-        return InformaticsSubmitDownloader(await @_getAdmin(), url)
+        return new InformaticsSubmitDownloader(await @_getAdmin(), url)

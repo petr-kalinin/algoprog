@@ -1,6 +1,21 @@
+export class TestSystemSubmitDownloader
+    getSource: (runid) ->
+        throw "not implemented"
+
+    getComments: (runid) ->
+        throw "not implemented"
+
+    getResults: (runid) ->
+        throw "not implemented"
+
+    getSubmitsFromPage: (page) ->
+        throw "not implemented"
+
+
 export class TestSystemUser
     profileLink: ->
         throw "not implemented"
+
 
 export default class TestSystem
     problemLink: (problemId) ->
