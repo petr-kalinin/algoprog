@@ -180,7 +180,7 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
             if group != user.userList
                 return
             systemDownloader = await system.submitDownloader(userId, user.userList, undefined, submitsPerPage)
-            await (new SubmitDownloader(systemDownloader, 1, maxPages, false)).run()
+            await (new SubmitDownloader(systemDownloader, 1, maxPages, true)).run()
     catch e
         logger.error "Error in runForUser", e
 
