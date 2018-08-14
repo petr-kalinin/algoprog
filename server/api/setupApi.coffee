@@ -244,7 +244,8 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        setOutcome(req, res)
+        await setOutcome(req, res)
+        res.send('OK')
 
     app.post '/api/setQuality/:submitId/:quality', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
