@@ -18,6 +18,9 @@ export class TestSystemUser
 
 
 export default class TestSystem
+    id: () ->
+        throw "not implemented"
+
     problemLink: (problemId) ->
         throw "not implemented"
 

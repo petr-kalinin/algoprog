@@ -147,7 +147,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
 
     getSubmitsFromPage: (page) ->
         submitsUrl = @baseUrl(page)
-        logger.info "submitsUrl=", submitsUrl
+        logger.debug "submitsUrl=", submitsUrl
         submits = await @adminUser.download submitsUrl
         submits = JSON.parse(submits)["result"]["text"]
         result = await @parseSubmits(submits)
