@@ -103,7 +103,10 @@ class SubmitDownloader
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
 
         logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
-        await newSubmit.upsert()
+        try
+            await newSubmit.upsert()
+        catch e
+            logger.warning "Could not upsert submit", newSubmit._id, newSubmit.user, newSubmit.problem, e
         await @setDirty(newSubmit)
         logger.debug "Done submit", newSubmit._id, newSubmit.user, newSubmit.problem
         res
@@ -179,8 +182,10 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
         await forAllUserListsAndTestSystems (group, system) ->
             if group != user.userList
                 return
+            logger.info "runForUser", system.id(), userId
             systemDownloader = await system.submitDownloader(userId, user.userList, undefined, submitsPerPage)
             await (new SubmitDownloader(systemDownloader, 1, maxPages, true)).run()
+            logger.info "Done runForUser", system.id(), group
     catch e
         logger.error "Error in runForUser", e
 
@@ -190,8 +195,10 @@ export runForUserAndProblem = (userId, problemId) ->
         await forAllUserListsAndTestSystems (group, system) ->
             if group != user.userList
                 return
+            logger.info "runForUserAndProblem", system.id(), userId, problemId
             systemDownloader = await system.submitDownloader(userId, user.userList, problemId, 100)
             await (new SubmitDownloader(systemDownloader, 1, 10, true)).run()
+            logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
         logger.error "Error in runForUserAndProblem", e
 
@@ -199,23 +206,32 @@ export runForUserAndProblem = (userId, problemId) ->
 export runAll = wrapRunning () ->
     try
         await forAllUserListsAndTestSystems (group, system) ->
+            logger.info "runAll", system.id(), group
             systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
             await (new SubmitDownloader(systemDownloader, 1, 1e9, false)).run()
+            logger.info "Done runAll", system.id(), group
     catch e
         logger.error "Error in SubmitDownloader", e
 
 export runUntilIgnored = wrapRunning () ->
     try
         await forAllUserListsAndTestSystems (group, system) ->
+            if group == "unknown"
+                # there will be no ignored
+                return
+            logger.info "runUntilIgnored", system.id(), group
             systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
             await (new UntilIgnoredSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
+            logger.info "Done runUntilIgnored", system.id(), group
     catch e
         logger.error "Error in UntilIgnoredSubmitDownloader", e
 
 export runLast = wrapRunning () ->
     try
         await forAllUserListsAndTestSystems (group, system) ->
+            logger.info "runLast", system.id(), group
             systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
             await (new LastSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
+            logger.info "Done runLast", system.id(), group
     catch e
         logger.error "Error in LastSubmitDownloader", e

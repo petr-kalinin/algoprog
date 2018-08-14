@@ -91,6 +91,9 @@ export default class Informatics extends TestSystem
         admin = await RegisteredUser.findAdmin()
         return LoggedInformaticsUser.getUser(admin.informaticsUsername, admin.informaticsPassword)
 
+    id: () ->
+        return "informatics"
+
     problemLink: (problemId) ->
         id = @_informaticsProblemId(problemId)
         "#{BASE_URL}/moodle/mod/statements/view3.php?chapterid=#{id}"
