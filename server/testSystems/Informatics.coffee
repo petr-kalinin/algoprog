@@ -4,6 +4,7 @@ request = require('request-promise-native')
 import { GROUPS } from '../../client/lib/informaticsGroups'
 
 import RegisteredUser from '../models/registeredUser'
+import Submit from '../models/submit'
 
 import download from '../lib/download'
 import logger from '../log'
@@ -11,6 +12,7 @@ import logger from '../log'
 import TestSystem, {TestSystemUser} from './TestSystem'
 
 import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownloader'
+import * as downloadSubmits from '../cron/downloadSubmits'
 
 
 REQUESTS_LIMIT = 20
@@ -80,6 +82,17 @@ class LoggedInformaticsUser
                 promise(0)  # resolve
         return result
 
+    submit: (problemId, contentType, body) ->
+        page = await download("https://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
+            method: 'POST',
+            headers: {'Content-Type': contentType},
+            body,
+            followAllRedirects: true
+        })
+        res = JSON.parse(page)
+        if res.res != "ok"
+            throw "Can't submit"
+
 
 export default class Informatics extends TestSystem
     BASE_URL = "https://informatics.mccme.ru"
@@ -142,3 +155,20 @@ export default class Informatics extends TestSystem
         url = (page) ->
             "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
         return new InformaticsSubmitDownloader(await @_getAdmin(), url)
+
+    submitNeedsFormData: () ->
+        true
+
+    submitWithFormData: (user, problemId, contentType, data) ->
+        informaticsProblemId = @_informaticsProblemId(problemId)
+        try
+            oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
+            try
+                informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
+                informaticsData = await informaticsUser.submit(informaticsProblemId, contentType, data)
+            finally
+                await downloadSubmits.runForUser(user.informaticsId, 5, 1)
+        catch e
+            newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
+            if oldSubmits.length == newSubmits.length
+                throw e

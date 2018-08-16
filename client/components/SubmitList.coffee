@@ -31,9 +31,6 @@ OpenSubmit = (props) ->
         </Modal.Footer>
     </Modal>
 
-problemId = (props) ->
-    props.material._id.substring(1)
-
 class SubmitList extends React.Component
     constructor: (props) ->
         super(props)
@@ -66,7 +63,7 @@ class SubmitList extends React.Component
             if @props.bestSubmits.length
                 <h4><a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a></h4>
             }
-            <SubmitForm problemId={problemId(@props)} reloadSubmitList={@props.handleReload}/>
+            <SubmitForm problemId={@props.material._id} reloadSubmitList={@props.handleReload}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>

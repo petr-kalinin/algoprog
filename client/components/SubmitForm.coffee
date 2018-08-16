@@ -14,7 +14,6 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
 
-
 import callApi, {callApiWithBody} from '../lib/callApi'
 
 import FieldGroup from './FieldGroup'
@@ -75,7 +74,11 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            if @state.draft
+            needForm = not @state.draft
+            if needForm
+                formData = new FormData(document.getElementById("submitForm"))
+                data = await callApiWithBody "submit/#{@props.problemId}", 'POST', {}, formData
+            else
                 fileName = document.getElementById("file").files[0]
                 fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
                 fileText = Array.from(new Uint8Array(fileText))
@@ -86,10 +89,11 @@ class SubmitForm extends React.Component
                 dataToSend =
                     language: languageName
                     code: fileText
-                data = await callApi "submit/#{@props.problemId}/draft", dataToSend
-            else
-                formData = new FormData(document.getElementById("submitForm"))
-                data = await callApiWithBody "submit/#{@props.problemId}", 'POST', {}, formData
+                url = "submit/#{@props.problemId}"
+                if @state.draft
+                    url += "/draft"
+                data = await callApi url, dataToSend
+
             if data.submit
                 data =
                     submit:

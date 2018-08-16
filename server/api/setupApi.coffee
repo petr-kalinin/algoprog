@@ -14,6 +14,8 @@ import RegisteredUser from '../models/registeredUser'
 import Material from '../models/Material'
 import BlogPost from '../models/BlogPost'
 
+import getTestSystem from '../../server/testSystems/TestSystemRegistry'
+
 import dashboard from './dashboard'
 import table, * as tableApi from './table'
 import register from './register'
@@ -89,22 +91,12 @@ export default setupApi = (app) ->
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
-        fullProblemId = "p" + req.params.problemId
-        try
-            oldSubmits = await Submit.findByUserAndProblem(req.user.informaticsId, fullProblemId)
-            try
-                informaticsUser = await InformaticsUser.getUser(req.user.informaticsUsername, req.user.informaticsPassword)
-                informaticsData = await informaticsUser.submit(req.params.problemId, req.get('Content-Type'), req.body)
-            finally
-                await downloadSubmits.runForUser(req.user.informaticsId, 5, 1)
-        catch e
-            newSubmits = await Submit.findByUserAndProblem(req.user.informaticsId, fullProblemId)
-            if oldSubmits.length == newSubmits.length
-                throw e
+        testSystem = await getTestSystem("informatics")
+        await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
     app.post '/api/submit/:problemId/draft', ensureLoggedIn, wrap (req, res) ->
-        await createDraftSubmit("p" + req.params.problemId, req.user.informaticsId, req.body.language, req.body.code)
+        await createDraftSubmit(req.params.problemId, req.user.informaticsId, req.body.language, req.body.code)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->

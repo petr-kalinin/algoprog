@@ -32,3 +32,13 @@ export default class TestSystem
 
     submitDownloader: (userId, userList, problemId, submitsPerPage) ->
         throw "not implemented"
+
+    submitNeedsFormData: () ->
+        throw "not implemented"
+    
+    submitWithFormData: (userId, problemId, contentType, data) ->
+        throw "not implemented"
+
+    submitWithObject: (user, problemId, data) ->
+        throw "not implemented"
+
