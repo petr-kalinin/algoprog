@@ -2,6 +2,8 @@ import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
 
+import { REGISTRY } from '../testSystems/TestSystemRegistry'
+
 import logger from '../log'
 
 UNKNOWN_GROUP = '7647'
@@ -43,7 +45,8 @@ export default register = (req, res, next) ->
         await newUser.updateRatingEtc()
 
         # do not await, this can happen asynchronously
-        addUserToUnknownGroup(informaticsData.id)
+        for _, system of REGISTRY
+            system.registerUser(newUser)
     else
         logger.info "Table User already registered"
 

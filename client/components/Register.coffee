@@ -184,7 +184,7 @@ class Register extends React.Component
                 исправьте данные </span>
                 {
                 if @state.informaticsData?.id
-                    <a href={"https://informatics.mccme.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"}>в вашем профиле там.</a>
+                    <a href={"https://informatics.mccme.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"} target="_blank">в вашем профиле там.</a>
                 else
                     <span>в вашем профиле там.</span>
                 }

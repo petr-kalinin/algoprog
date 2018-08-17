@@ -42,3 +42,5 @@ export default class TestSystem
     submitWithObject: (user, problemId, data) ->
         throw "not implemented"
 
+    registerUser: (user) ->
+        throw "not implemented"

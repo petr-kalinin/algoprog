@@ -16,6 +16,7 @@ import * as downloadSubmits from '../cron/downloadSubmits'
 
 
 REQUESTS_LIMIT = 20
+UNKNOWN_GROUP = '7647'
 
 
 class InformaticsUser extends TestSystemUser
@@ -172,3 +173,16 @@ export default class Informatics extends TestSystem
             newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
             if oldSubmits.length == newSubmits.length
                 throw e
+
+    registerUser: (user) ->
+        logger.info "Moving user #{user._id} to unknown group"
+        adminUser = await @_getAdmin()
+
+        href = "#{BASE_URL}/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
+        body = 'addParam={"id":"' + user._id + '"}&group_id=&session_sid='
+        await adminUser.download(href, {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
+            body: body,
+            followAllRedirects: true
+        })
