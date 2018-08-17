@@ -163,7 +163,12 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        res.json(await RegisteredUser.find({}))
+        result = []
+        for user in await RegisteredUser.find({})
+            user = user.toObject()
+            delete user.informaticsPassword
+            result.push(user)
+        res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
@@ -231,7 +236,8 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        setOutcome(req, res)
+        await setOutcome(req, res)
+        res.send('OK')
 
     app.post '/api/setQuality/:submitId/:quality', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
