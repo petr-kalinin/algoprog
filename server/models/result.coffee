@@ -1,6 +1,7 @@
 mongoose = require('mongoose')
 
 import User from './user'
+import logger from '../log'
 
 resultsSchema = new mongoose.Schema
     _id: String
@@ -19,7 +20,11 @@ resultsSchema = new mongoose.Schema
 
 resultsSchema.methods.upsert = () ->
     # required: user, table, total, solved, ok, attempts, ignored, lastSubmitId, lastSubmitTime
-    @userList = (await User.findById(@user)).userList
+    user = await User.findById(@user)
+    if not user
+        logger.warning "Unknown user #{@user} in Result.upsert, result id #{@_id}"
+        return
+    @userList = user.userList
     @_id = @user + "::" + @table
     @update(this, {upsert: true}).exec()
 
