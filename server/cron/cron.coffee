@@ -28,6 +28,6 @@ jobCf = new Cron.CronJob('0 0 * * * *', updateCf, null, true);
 
 jobUpdateResults = new Cron.CronJob('45 46 ' + (nightHour + 1) + ' * * *', User.updateAllUsers, null, true);
 
-jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run, null, true)
+#jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run, null, true)
 
 export default [jobAll, jobUntilIgnored, jobLast, jobContests, jobCf, jobUpdateResults, jobUpdateBlog]
