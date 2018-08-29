@@ -1,7 +1,8 @@
-import Informatics from './Informatics'
+#import Informatics from './Informatics'
+import Ejudge from './Ejudge'
 
 export REGISTRY = 
-    "informatics": new Informatics()
+    "ejudge": new Ejudge('ejudge.algoprog.ru')
 
 export default getTestSystem = (id) ->
     REGISTRY[id]
