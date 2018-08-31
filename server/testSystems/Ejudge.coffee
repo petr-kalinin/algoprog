@@ -1,6 +1,7 @@
 request = require('request-promise-native')
+import { JSDOM } from 'jsdom'
 
-import download from '../lib/download'
+import {downloadLimited} from '../lib/download'
 import logger from '../log'
 
 import TestSystem, {TestSystemUser} from './TestSystem'
@@ -29,9 +30,10 @@ class LoggedEjudgeUser
         @jar = request.jar()
         @requests = 0
         @promises = []
+        @sid = undefined
 
     _login: () ->
-        page = await download("#{@server}/cgi-bin/new-client", @jar, {
+        page = await downloadLimited("#{@server}/cgi-bin/new-client", @jar, {
             method: 'POST',
             form: {
                 login: @username,
@@ -49,18 +51,11 @@ class LoggedEjudgeUser
         logger.info "Logged in user #{@username}, sid=#{@sid}"
 
     download: (href, options) ->
-        if @requests >= REQUESTS_LIMIT
-            await new Promise((resolve) => @promises.push(resolve))
-        if @requests >= REQUESTS_LIMIT
-            throw "Too many requests"
-        @requests++
-        try
-            result = await download(href, @jar, options)
-        finally
-            @requests--
-            if @promises.length
-                promise = @promises.shift()
-                promise(0)  # resolve
+        if @sid
+            if not href.includes('?')
+                href = href + "?"
+            href = href + "&SID=#{@sid}"
+        result = await downloadLimited(href, @jar, options)
         return result
 
 
@@ -74,5 +69,37 @@ export default class Ejudge extends TestSystem
     getAdmin: (contestId) ->
         admin = await RegisteredUser.findAdmin()
         return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword)
+
+    parseProblem: (admin, problemHref) ->
+        page = await admin.download(problemHref)
+        document = (new JSDOM(page, {url: problemHref})).window.document
+        el = document.getElementById("probNavTaskArea-ins")
+        for tag in ["h2", "form"]
+            subels = el.getElementsByTagName(tag)
+            for subel in subels
+                subel.parentElement.removeChild(subel)
+        header = el.getElementsByTagName("h3")[0]
+        return {
+            name: header.innerHTML
+            text: el.innerHTML
+        }
+
+    downloadContestProblems: (contestId) ->
+        admin = await @getAdmin(contestId)
+        href = "#{@server}/cgi-bin/new-client"
+        page = await admin.download(href)
+        document = (new JSDOM(page, {url: href})).window.document
+        tab = document.getElementById("probNavTopList")
+        problemElements = tab.getElementsByClassName("tab")
+        result = []
+        for el in problemElements
+            probHref = el.href
+            id = el.innerHTML
+            problem = await @parseProblem(admin, probHref)
+            problem._id = "p#{contestId}p#{id}"
+            problem.letter = id
+            result.push(problem)
+            logger.info "Found problem ", problem
+        return result
 
 

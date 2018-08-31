@@ -44,3 +44,6 @@ export default class TestSystem
 
     selfTest: () ->
         throw "not implemented"
+
+    downloadContestProblems: (contestId) ->
+        throw "not implemented"

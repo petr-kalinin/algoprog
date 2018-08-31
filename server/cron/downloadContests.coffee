@@ -7,6 +7,7 @@ import User from "../models/user"
 import logger from '../log'
 import {downloadLimited} from '../lib/download'
 import awaitAll from '../../client/lib/awaitAll'
+import getTestSystem from '../testSystems/TestSystemRegistry'
 
 export REGION_CONTESTS = 
     '2009': ['894', '895']
@@ -35,19 +36,6 @@ export ROI_CONTESTS =
 
 
 class ContestDownloader
-    url: 'https://informatics.msk.ru/course/view.php?id=1135'
-    baseUrl: 'https://informatics.msk.ru/mod/statements/'
-
-    constructor: ->
-        @jar = request.jar()
-
-    makeProblem: (fullText, href, pid, letter, name) ->
-        {
-            _id: "p"+pid
-            letter: letter
-            name: name
-        }
-
     addContest: (order, cid, name, level, problems) ->
         problemIds = []
         for prob in problems
@@ -66,8 +54,8 @@ class ContestDownloader
             order: order*100
         ).upsert()
 
-    getFirstProblem: (text) ->
-        idRe = new RegExp '<a title="Print This Problem" href="print3.php(\\?id=\\d+&amp;chapterid=(\\d+))"'
+    processContest: (order, cid, name, level, testSystem) ->
+        problems = await testSystem.downloadContestProblems(cid)
         idRes = idRe.exec text
         id = idRes[2]
         href = "view3.php?#{idRes[1]}"
@@ -79,58 +67,27 @@ class ContestDownloader
 
         return @makeProblem(nameRes[0], href, id, letter, name)
 
-    processContest: (order, fullText, href, cid, name, level) ->
-        text = await downloadLimited(href, @jar)
-
-        firstProblem = @getFirstProblem(text)
-        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
-        problems = []
-        text.replace re, (res, a, b, c, d) =>
-            problems.push(@makeProblem(res, a, b, c, d))
-        problems.splice(0, 0, firstProblem);
         await @addContest(order, cid, name, level, problems)
 
-    run: ->
-        logger.info "Downloading base contests"
-        text = await downloadLimited(@url, @jar)
         re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.msk.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
-        order = 0
-        promises = []
-        text.replace re, (a,b,c,d,e) =>
-            order++
-            promises.push(@processContest(order,a,b,c,d,e))
-        await awaitAll(promises)
         logger.info "Done downloading base contests"
 
-class RegionContestDownloader extends ContestDownloader
-    contestBaseUrl: 'https://informatics.msk.ru/mod/statements/view.php?id='
-
-    constructor: (@contests, @prefix, @name, @name2, @order)->
-        super()
+class ShadContestDownloader extends ContestDownloader
+    contests: ['1']
         @jar = request.jar()
 
     run: ->
         logger.info "Downloading #{@prefix} contests"
         levels = []
-        promises = []
-        for year, cont of @contests
-            if cont.length == 2
-                fullText = " тур #{@name2} олимпиады #{year} года"
-                promises.push @processContest(@order + year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, @prefix + year)
-                promises.push @processContest(@order + year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, @prefix + year)
+        for cont, i in @contests
+            fullText = "ДЗ #{cont}"
+            ejudge = getTestSystem("ejudge")
+            @processContest(i * 10 + 1, cont, fullText, "main", ejudge)
             else
                 fullText = "#{@name} олимпиада #{year} года"
                 promises.push @processContest(@order + year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], fullText, @prefix + year)
             levels.push(@prefix + year)
         await awaitAll(promises)
-        #id, name, tables, problems, parent, order
-        await (new Table(
-            _id: @prefix
-            name: @prefix,
-            tables: levels,
-            parent: "main",
-            order: @order
-        ).upsert())
         logger.info "Done downloading #{@prefix} contests"
 
 running = false
@@ -148,11 +105,15 @@ wrapRunning = (callable) ->
 
 export run = wrapRunning () ->
     logger.info "Downloading contests"
-    await (new ContestDownloader().run())
-    #(@contests, @prefix, @name, @name2, @order)
+    await (new ShadContestDownloader().run())
     await (new RegionContestDownloader(REGION_CONTESTS, "reg", "Региональная", "региональной", 20000).run())
     await (new RegionContestDownloader(ROI_CONTESTS, "roi", "Всероссийская", "всероссийской", 40000).run())
     await Table.removeDuplicateChildren()
     logger.info "Will update users"
     User.updateAllUsers()
     logger.info "Done downloading contests"
+
+###
+export run = () ->
+    admin = await (getTestSystem("ejudge")).getAdmin(1)
+###
