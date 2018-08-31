@@ -78,7 +78,10 @@ export default class Ejudge extends TestSystem
             subels = el.getElementsByTagName(tag)
             for subel in subels
                 subel.parentElement.removeChild(subel)
-        header = el.getElementsByTagName("h3")[0]
+        headers = el.getElementsByTagName("h3")
+        submitHeader = headers[headers.length - 1]
+        submitHeader.parentElement.removeChild(submitHeader)
+        header = headers[0]
         return {
             name: header.innerHTML
             text: el.innerHTML
