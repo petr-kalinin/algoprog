@@ -333,10 +333,12 @@ export default setupApi = (app) ->
         downloadMaterials()
         res.send('OK')
 
-    app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
+    app.get '/api/downloadContests', wrap (req, res) ->
+        ###
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
+        ###
         downloadContests.run()
         res.send('OK')
 

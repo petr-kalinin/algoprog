@@ -14,7 +14,7 @@ import db from './mongo/mongo'
 import configurePassport from './passport'
 import setupApi from './api/setupApi'
 
-import jobs from './cron/cron'
+#import jobs from './cron/cron'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -67,3 +67,9 @@ app.listen port, () ->
 
 #import * as downloadSubmits from "./cron/downloadSubmits"
 #downloadSubmits.runLast()
+
+import * as downloadContests from './cron/downloadContests'
+try
+    downloadContests.run()
+catch e
+    console.log e
