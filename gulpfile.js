@@ -154,10 +154,11 @@ gulp.task('server:bundle',  gulp.parallel('server:coffee', 'client:coffee', 'ser
 
 var listening = false;
 
-function restartIfListening() {
+function restartIfListening(cb) {
     if (listening) {
         server.restart(logServerRestarted);
     }
+    cb();
 }
 
 gulp.task('server:watch', function() {
