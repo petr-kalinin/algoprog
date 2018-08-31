@@ -6,21 +6,9 @@ import User from "../models/user"
 
 import logger from '../log'
 import download from '../lib/download'
+import getTestSystem from '../testSystems/TestSystemRegistry'
 
 class ContestDownloader
-    url: 'https://informatics.mccme.ru/course/view.php?id=1135'
-    baseUrl: 'https://informatics.mccme.ru/mod/statements/'
-
-    constructor: ->
-        @jar = request.jar()
-
-    makeProblem: (fullText, href, pid, letter, name) ->
-        {
-            _id: "p"+pid
-            letter: letter
-            name: name
-        }
-
     addContest: (order, cid, name, level, problems) ->
         problemIds = []
         for prob in problems
@@ -39,60 +27,20 @@ class ContestDownloader
             order: order*100
         ).upsert()
 
-    processContest: (order, fullText, href, cid, name, level) ->
-        text = await download(href, @jar)
-        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>'
-        secondProbRes = re.exec text
-        secondProbHref = secondProbRes[1].replace('&amp;','&')
-        secondProb = @makeProblem(secondProbRes[0], secondProbRes[1], secondProbRes[2], secondProbRes[3], secondProbRes[4])
-
-        text = await download(@baseUrl + secondProbHref, @jar)
-        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
-        problems = []
-        text.replace re, (res, a, b, c, d) =>
-            problems.push(@makeProblem(res, a, b, c, d))
-        problems.splice(1, 0, secondProb);
+    processContest: (order, cid, name, level, testSystem) ->
+        problems = await testSystem.downloadContestProblems(cid)
         @addContest(order, cid, name, level, problems)
 
-    run: ->
-        text = await download(@url, @jar)
-        re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
-        order = 0
-        promises = []
-        text.replace re, (a,b,c,d,e) =>
-            order++
-            promises.push(@processContest(order,a,b,c,d,e))
-        Promise.all(promises)
 
-class RegionContestDownloader extends ContestDownloader
-    contests:
-        '2009': ['894', '895']
-        '2010': ['1540', '1541']
-        '2011': ['2748', '2780']
-        '2012': ['4345', '4361']
-        '2013': ['6667', '6670']
-        '2014': ['10372', '10376']
-        '2015': ['14482', '14483']
-        '2016': ['18805', '18806']
-        '2017': ['24702', '24703']
-
-    contestBaseUrl: 'https://informatics.mccme.ru/mod/statements/view.php?id='
+class ShadContestDownloader extends ContestDownloader
+    contests: ['1']
 
     run: ->
         levels = []
-        for year, cont of @contests
-            fullText = ' тур региональной олимпиады ' + year + ' года'
-            @processContest(year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
-            @processContest(year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)
-            levels.push('reg' + year)
-        #id, name, tables, problems, parent, order
-        await (new Table(
-            _id: "reg"
-            name: "reg",
-            tables: levels,
-            parent: "main",
-            order: 200000
-        ).upsert())
+        for cont, i in @contests
+            fullText = "ДЗ #{cont}"
+            ejudge = getTestSystem("ejudge")
+            @processContest(i * 10 + 1, cont, fullText, "main", ejudge)
         users = await User.findAll()
         promises = []
         for user in users
@@ -114,7 +62,11 @@ wrapRunning = (callable) ->
 
 export run = wrapRunning () ->
     logger.info "Downloading contests"
-    await (new ContestDownloader().run())
-    await (new RegionContestDownloader().run())
+    await (new ShadContestDownloader().run())
     await Table.removeDuplicateChildren()
     logger.info "Done downloading contests"
+
+###
+export run = () ->
+    admin = await (getTestSystem("ejudge")).getAdmin(1)
+###
