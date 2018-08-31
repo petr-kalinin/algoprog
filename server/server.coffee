@@ -80,7 +80,7 @@ start = () ->
 
 start()
 
-import * as downloadContests from './cron/downloadContests'
+import * as downloadContests from './cron/downloadContestsAndMaterials'
 try
     downloadContests.run()
 catch e
