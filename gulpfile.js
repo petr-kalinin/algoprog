@@ -153,10 +153,19 @@ gulp.task('server:js', function() {
 gulp.task('server:bundle',  gulp.parallel('server:coffee', 'client:coffee', 'server:js', 'client:css'));
 
 var listening = false;
+var timeout = undefined
 
 function restartIfListening(cb) {
     if (listening) {
-        server.restart(logServerRestarted);
+        if (timeout) {
+            logger.warn("Clearing timeout")
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(function() {
+            timeout = undefined
+            logger.warn("Restarting server")
+            server.restart(logServerRestarted)
+        }, 3000);
     }
     cb();
 }
