@@ -68,8 +68,10 @@ app.listen port, () ->
 #import * as downloadSubmits from "./cron/downloadSubmits"
 #downloadSubmits.runLast()
 
+###
 import * as downloadContests from './cron/downloadContestsAndMaterials'
 try
     downloadContests.run()
 catch e
     console.log e
+###

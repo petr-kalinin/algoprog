@@ -6,58 +6,40 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 
 import logger from '../log'
 
-UNKNOWN_GROUP = '7647'
 
-addUserToUnknownGroup = (uid) ->
-    adminUser = await InformaticsUser.findAdmin()
+registerInSystems = (user, registeredUser, password) ->
+    for _, system of REGISTRY
+        await system.registerUser(user, registeredUser, password)
+    await user.upsert()
+    await registeredUser.upsert()
 
-    href = "https://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
-    body = 'addParam={"id":"' + uid + '"}&group_id=&session_sid='
-    await adminUser.download(href, {
-        method: 'POST',
-        headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-        body: body,
-        followAllRedirects: true
-    })
+
 
 export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
-    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin} = req.body
+    {username, password, name} = req.body
 
-    informaticsUser = await InformaticsUser.getUser(informaticsUsername, informaticsPassword)
-    informaticsData = await informaticsUser.getData()
-
-    oldUser = await User.findById(informaticsData.id)
+    oldUser = await User.findById(username)
     if not oldUser
-        logger.info "Register new Table User", informaticsData.id
+        logger.info "Register new Table User", username
         newUser = new User(
-            _id: informaticsData.id,
-            name: informaticsData.name,
-            userList: "unknown",
+            _id: username,
+            name: name,
+            userList: "all",
         )
-        if cfLogin
-            newUser.cf =
-                login: cfLogin
         await newUser.upsert()
-        if cfLogin
-            await newUser.updateCfRating()
         await newUser.updateLevel()
         await newUser.updateRatingEtc()
 
-        # do not await, this can happen asynchronously
-        for _, system of REGISTRY
-            system.registerUser(newUser)
     else
         logger.info "Table User already registered"
 
     newRegisteredUser = new RegisteredUser({
-        username,
-        informaticsId: informaticsData.id,
-        informaticsUsername,
-        informaticsPassword,
-        aboutme,
+        username: username,
+        ejudgeUsername: username,
         admin: false
     })
+
     RegisteredUser.register newRegisteredUser, req.body.password, (err) ->
         if (err)
             logger.error("Cant register user", err)
@@ -66,5 +48,6 @@ export default register = (req, res, next) ->
                     error: true
                     message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
         else
+            registerInSystems(newUser, newRegisteredUser, req.body.password)
             logger.info("Registered user")
             res.json({registered: {success: true}})

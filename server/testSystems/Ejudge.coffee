@@ -30,10 +30,15 @@ class LoggedEjudgeUser
         @jar = request.jar()
         @requests = 0
         @promises = []
-        @sid = undefined
+        @sid = {}
 
     _login: () ->
-        page = await downloadLimited("#{@server}/cgi-bin/new-client", @jar, {
+        await @_loginToProg("new-client")
+        await @_loginToProg("serve-control")
+        logger.info "Logged in user #{@username}, sid=#{@sid}"
+
+    _loginToProg: (prog) ->
+        page = await downloadLimited("#{@server}/cgi-bin/#{prog}", @jar, {
             method: 'POST',
             form: {
                 login: @username,
@@ -43,24 +48,23 @@ class LoggedEjudgeUser
             followAllRedirects: true,
             timeout: 30 * 1000
         })
-        if not page.includes("Logout [")
+        if not page.includes("Logout")
             console.log page
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
-        @sid = sidString[1]
-        logger.info "Logged in user #{@username}, sid=#{@sid}"
+        @sid[prog] = sidString[1]
 
-    download: (href, options) ->
-        if @sid
+    download: (href, options, prog="new-client") ->
+        if @sid["prog"]
             if not href.includes('?')
                 href = href + "?"
-            href = href + "&SID=#{@sid}"
+            href = href + "&SID=#{@sid['prog']}"
         result = await downloadLimited(href, @jar, options)
         return result
 
 
 export default class Ejudge extends TestSystem
-    constructor: (@server) ->
+    constructor: (@server, @baseContest) ->
         super()
 
     id: () ->
@@ -69,6 +73,40 @@ export default class Ejudge extends TestSystem
     getAdmin: (contestId) ->
         admin = await RegisteredUser.findAdmin()
         return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword)
+
+    registerUser: (user, registeredUser, password) ->
+        adminUser = await @getAdmin(@baseContest)
+
+        registeredUser.ejudgePassword = password
+
+        href = "#{@server}/cgi-bin/serve-control"
+        form =
+            SID: adminUser.sid["serve-control"]
+            contest_id: @baseContest
+            group_id: ""
+            other_login: registeredUser.ejudgeUsername
+            other_email: ""
+            reg_password1: registeredUser.ejudgePassword
+            reg_password2: registeredUser.ejudgePassword
+            reg_random: ""
+            field_9: 1
+            reg_cnts_create: 1
+            other_contest_id_1: @baseContest
+            other_contest_id_2: @baseContest
+            cnts_status: 0
+            cnts_password1: ""
+            cnts_password2: ""
+            cnts_random: ""
+            cnts_name: ""
+            other_group_id: ""
+            action_73: "Create a user"
+
+        res = await adminUser.download(href, {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded"},
+            form: form,
+            followAllRedirects: true
+        }, "serve-control")
 
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)
