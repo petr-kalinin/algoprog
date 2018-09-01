@@ -167,7 +167,7 @@ export default setupApi = (app) ->
         res.json user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
-        id = req.user.informaticsId
+        id = req.user.ejudgeUsername
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
