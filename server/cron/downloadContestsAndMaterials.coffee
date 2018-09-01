@@ -73,7 +73,7 @@ class MaterialAdder
         mainPageMaterial = new Material
             _id: "main"
             order: 0
-            type: "main"
+            type: "level"
             title: "/"
             materials: (m.material for m in @contests)
         @addMaterial(mainPageMaterial)

@@ -82,12 +82,10 @@ class Register extends React.Component
             data = await callApi "register", {
                 username: @state.username
                 password: @state.password
-                informaticsUsername: @state.informaticsUsername
-                informaticsPassword: @state.informaticsPassword
+                name: @state.name,
                 promo: @state.promo
                 whereFrom: @state.whereFrom
                 contact: @state.contact
-                aboutme: @state.aboutme
             }
             if data.registered.success
                 await callApi "login", {
@@ -114,14 +112,6 @@ class Register extends React.Component
             @props.history.push("/")
 
     render: () ->
-        validationState = null
-        if @state.informaticsData?.name
-            validationState = 'success'
-        else if @state.informaticsData?.error
-            validationState = 'error'
-        else if @state.informaticsData?.loading
-            validationState = 'warning'
-
         passwordValidationState = null
         passwordError = null
         if @state.password and @state.password == @state.password2
@@ -170,100 +160,11 @@ class Register extends React.Component
                     setField={@setField}
                     state={@state}
                     validationState={passwordValidationState}/>
-                <h3>Ваш аккаунт на informatics.msk.ru</h3>
-                <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.msk.ru" target="_blank">informatics.msk.ru</a>;
-                ваши программы будут реально проверяться именно там. Если у вас еще нет аккаунта на
-                informatics, <a href="https://informatics.msk.ru/login/signup.php" target="_blank">зарегистрируйтесь сейчас</a>.</p>
-
-                <p>Ниже вы должны будете указать логин и пароль от informatics. Пароль будет храниться на algoprog.ru.
-                Он нужен, чтобы отправлять решения задач от вашего имени.
-                Если вы используете этот же пароль на других сайтах, не вводите его ниже
-                — сначала смените пароль на informatics, и только потом продолжайте.
-                Если вы не хотите, чтобы я имел доступ к вашему аккаунту на informatics,
-                просто зарегистрируйте новый аккаунт там и укажите ниже именно его.</p>
-
-                <p>Укажите в аккаунте на informatics свои настоящие данные.
-                Если вы уже закончили школу, то не заполняйте поле "класс".</p>
-
                 <FieldGroup
-                    id="informaticsUsername"
-                    label="Ваш логин на informatics"
+                    id="name"
+                    label="Имя, фамилия"
                     type="text"
                     setField={@setField}
-                    state={@state}
-                    onBlur={@updateInformatics}
-                    validationState={validationState}/>
-                <FieldGroup
-                    id="informaticsPassword"
-                    label="Ваш пароль на informatics"
-                    type="password"
-                    setField={@setField}
-                    state={@state}
-                    onBlur={@updateInformatics}
-                    validationState={validationState}/>
-
-                <h2>Личная информация</h2>
-                <p><span>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
-                исправьте данные </span>
-                {
-                if @state.informaticsData?.id
-                    <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"} target="_blank">в вашем профиле там.</a>
-                else
-                    <span>в вашем профиле там.</span>
-                }
-                </p>
-                {
-                @state.informaticsData?.loading && <div>
-                    <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
-                    <Loader />
-                </div>}
-                {
-                @state.informaticsData?.error &&
-                <FormGroup>
-                    <FormControl.Static>
-                    Не удалось получить данные с informatics. Проверьте логин и пароль выше.
-                    </FormControl.Static>
-                </FormGroup>
-                }
-                {@state.informaticsData && !@state.informaticsData.loading &&
-                <FormGroup>
-                    <Button onClick={@updateInformatics}>
-                        Обновить информацию
-                    </Button>
-                </FormGroup>
-                }
-                {
-                (@state.informaticsData?.name or not @state.informaticsData)&&
-                <div>
-                    <FieldGroup
-                        id="informaticsName"
-                        label="Имя"
-                        type="text"
-                        value={@state.informaticsData?.name || ""}
-                        disabled/>
-                    <FieldGroup
-                        id="informaticsClass"
-                        label={"Класс" + (@state.informaticsData &&
-                        " в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году" || "")}
-                        type="text"
-                        value={@state.informaticsData?.class || ""}
-                        disabled/>
-                    <FieldGroup
-                        id="informaticsSchool"
-                        label="Школа"
-                        type="text"
-                        value={@state.informaticsData?.school || ""}
-                        disabled/>
-                    <FieldGroup
-                        id="informaticsCity"
-                        label="Город"
-                        type="text"
-                        value={@state.informaticsData?.city || ""}
-                        disabled/>
-                </div>
-                }
-
-                <h2>О себе (все поля ниже не обязательны)</h2>
                 <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
                 а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
                 можете не писать ничего.</p>
@@ -298,26 +199,7 @@ class Register extends React.Component
                         setField={@setField}
                         state={@state}/>
                 </FormGroup>
-
-                <p>Укажите свой логин на codeforces, если он у вас есть. Если вы там не зарегистрированы — не страшно,
-                просто не заполняйте поле ниже.</p>
-                <FieldGroup
-                    id="cfLogin"
-                    label=""
-                    type="text"
-                    setField={@setField}
                     state={@state}/>
-
-                <p>Промокод</p>
-
-                <FormGroup controlId="promo">
-                    <FieldGroup
-                        id="promo"
-                        label=""
-                        componentClass="input"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
 
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
                     Зарегистрироваться

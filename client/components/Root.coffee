@@ -12,12 +12,14 @@ import NavItem from 'react-bootstrap/lib/NavItem'
 import { Link } from 'react-router-dom'
 
 import Sceleton from './Sceleton'
+import ConnectedComponent from '../lib/ConnectedComponent'
+import Material from '../components/Material'
 
 import globalStyles from './global.css'
 import Tree from './Tree'
 import styles from './Root.css'
 
-Inner = (props) ->
+Root = (props) ->
     <div>
         <Grid fluid>
             <Row>
@@ -126,10 +128,6 @@ Inner = (props) ->
         }
         <h2 className={styles.whatitis}>Как начать заниматься?</h2>
         <p className="lead"><Link to="/register">Зарегистрируйтесь</Link> на сайте и напишите мне (контактная информация в разделе <Link to="/material/0">О курсе</Link>).</p>
-    </div>
-
-export default Root = (props) ->
-    <div>
         <Grid fluid>
             <PageHeader>
                 <div className={styles.mainHeader}>Алгоритмическое программирование</div>
@@ -138,5 +136,11 @@ export default Root = (props) ->
         </Grid>
         {
         sceletonProps = {props..., location: {path: [], _id: "main"}, showNews: "hide", hideBread:true}
-        `<Sceleton {...sceletonProps}><Inner match={props.match}/></Sceleton>`}
+        `<Sceleton {...sceletonProps}><Material material={props.data}/></Sceleton>`}
     </div>
+
+options =
+    urls: (props) ->
+        data: "material/main"
+
+export default ConnectedComponent(Root, options)

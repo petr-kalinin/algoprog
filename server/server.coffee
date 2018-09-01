@@ -80,8 +80,10 @@ start = () ->
 
 start()
 
+###
 import * as downloadContests from './cron/downloadContestsAndMaterials'
 try
     downloadContests.run()
 catch e
     console.log e
+###
