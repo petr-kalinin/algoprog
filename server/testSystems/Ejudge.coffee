@@ -55,10 +55,10 @@ class LoggedEjudgeUser
         @sid[prog] = sidString[1]
 
     download: (href, options, prog="new-client") ->
-        if @sid["prog"]
+        if @sid[prog]
             if not href.includes('?')
                 href = href + "?"
-            href = href + "&SID=#{@sid['prog']}"
+            href = href + "&SID=#{@sid[prog]}"
         result = await downloadLimited(href, @jar, options)
         return result
 

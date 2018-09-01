@@ -470,8 +470,6 @@ export default setupApi = (app) ->
         if not user
             res.status(400).send("User not found")
             return
-        newGroup = req.params.groupName
-        if newGroup != "none"
             await user.setUserList(newGroup)
         res.send('OK')
 
