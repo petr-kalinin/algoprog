@@ -25,6 +25,8 @@ import BestSubmits from './BestSubmits'
 
 import callApi from '../lib/callApi'
 
+import isPaid, { isMuchUnpaid } from '../lib/isPaid'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './ReviewResult.css'
@@ -151,115 +153,129 @@ class ReviewResult extends React.Component
                 currentSubmit: undefined
                 currentDiff: newDiff
 
+    paidStyle: () ->
+        user = @props.user
+        if (!user?.paidTill)
+            styles.nonpaid
+        else if isPaid(user)
+            styles.paid
+        else if !isMuchUnpaid(user)
+            styles.unpaid
+        else
+            styles.muchUnpaid
+
     render:  () ->
         admin = @props.me?.admin
-        <Grid fluid>
-            <Col xs={12} sm={12} md={8} lg={8}>
-                {
-                if @state.currentSubmit
-                    <div>
-                        <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
-                        {
-                        admin && <div>
-                            <div>
-                                {
-                                if @state.currentSubmit.outcome in ["OK", "AC"]
-                                    starsClass = styles.stars
-                                else
-                                    starsClass = ""
-                                <div className={starsClass}>
-                                    <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
-                                    {(<FontAwesome
-                                        name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
-                                        key={x}
-                                        onClick={@setQuality(x)}/> \
-                                        for x in [1..5])}
-                                </div>
-                                }
-                            </div>
+        <div className={@paidStyle()}>
+            <Grid fluid>
+                <Col xs={12} sm={12} md={8} lg={8}>
+                    {
+                    if @state.currentSubmit
+                        <div>
+                            <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
                             {
-                            if @props.bestSubmits.length
-                                <span>
-                                    <a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a>
-                                    {" = " + @props.bestSubmits.length}
-                                    {" " + @props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
-                                </span>
-                            }
-                            <FieldGroup
-                                    id="commentText"
-                                    label="Комментарий"
-                                    componentClass="textarea"
-                                    setField={@setField}
-                                    style={{ height: 200 }}
-                                    state={@state}/>
-                                <FormGroup>
+                            admin && <div>
+                                <div>
                                     {
-                                    bsSize = null
-                                    bsCommentSize = null
-                                    if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
-                                        bsSize = "xsmall"
-                                    if @props.result.userList == "unknown"
-                                        bsSize = "xsmall"
-                                        bsCommentSize = "xsmall"
-                                    <ButtonGroup>
-                                        <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
-                                        <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
-                                        <Button onClick={@comment}  bsSize={bsCommentSize}>Прокомментировать</Button>
-                                        <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
-                                    </ButtonGroup>
+                                    if @state.currentSubmit.outcome in ["OK", "AC"]
+                                        starsClass = styles.stars
+                                    else
+                                        starsClass = ""
+                                    <div className={starsClass}>
+                                        <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
+                                        {(<FontAwesome
+                                            name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
+                                            key={x}
+                                            onClick={@setQuality(x)}/> \
+                                            for x in [1..5])}
+                                    </div>
                                     }
-                                </FormGroup>
+                                </div>
+                                {
+                                if @props.bestSubmits.length
+                                    <span>
+                                        <a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a>
+                                        {" = " + @props.bestSubmits.length}
+                                        {" " + @props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
+                                    </span>
+                                }
+                                <FieldGroup
+                                        id="commentText"
+                                        label="Комментарий"
+                                        componentClass="textarea"
+                                        setField={@setField}
+                                        style={{ height: 200 }}
+                                        state={@state}/>
+                                    <FormGroup>
+                                        {
+                                        bsSize = null
+                                        bsCommentSize = null
+                                        if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
+                                            bsSize = "xsmall"
+                                        if @props.result.userList == "unknown"
+                                            bsSize = "xsmall"
+                                            bsCommentSize = "xsmall"
+                                        <ButtonGroup>
+                                            <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
+                                            <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
+                                            <Button onClick={@comment}  bsSize={bsCommentSize}>Прокомментировать</Button>
+                                            <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
+                                        </ButtonGroup>
+                                        }
+                                    </FormGroup>
+                                </div>
+                            }
+                        </div>
+                    else  # not @state.currentSubmit
+                        if @state.currentDiff[1].source == @state.currentDiff[0].source
+                            <div>
+                                <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
+                                <pre>Нет изменений</pre>
                             </div>
-                        }
-                    </div>
-                else  # not @state.currentSubmit
-                    if @state.currentDiff[1].source == @state.currentDiff[0].source
-                        <div>
-                            <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                            <pre>Нет изменений</pre>
-                        </div>
-                    else
-                        diffText = JsDiff.createTwoFilesPatch(
-                            @state.currentDiff[1]._id,
-                            @state.currentDiff[0]._id,
-                            @state.currentDiff[1].source,
-                            @state.currentDiff[0].source)
-                        diffText = diffText.split("\n")
-                        diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
-                        diffText = diffText.join("\n")
-                        files = parseDiff(diffText, {nearbySequences: "zip"})
+                        else
+                            diffText = JsDiff.createTwoFilesPatch(
+                                @state.currentDiff[1]._id,
+                                @state.currentDiff[0]._id,
+                                @state.currentDiff[1].source,
+                                @state.currentDiff[0].source)
+                            diffText = diffText.split("\n")
+                            diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
+                            diffText = diffText.join("\n")
+                            files = parseDiff(diffText, {nearbySequences: "zip"})
 
-                        markEdits = markWordEdits({threshold: 30, markLongDistanceDiff: true});
+                            markEdits = markWordEdits({threshold: 30, markLongDistanceDiff: true});
 
-                        <div>
-                            <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                            <pre>
-                                {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split" markEdits={markEdits}/>)}
-                            </pre>
-                        </div>
+                            <div>
+                                <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
+                                <pre>
+                                    {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split" markEdits={markEdits}/>)}
+                                </pre>
+                            </div>
+                    }
+                </Col>
+                <Col xs={12} sm={12} md={4} lg={4}>
+                    <SubmitListTable
+                        submits={@props.data}
+                        handleSubmitClick={@setCurrentSubmit}
+                        handleDiffClick={@setCurrentDiff}
+                        activeId={@state.currentSubmit?._id}
+                        activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
+                </Col>
+                {
+                admin && <Col xs={12} sm={12} md={12} lg={12}>
+                    <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
+                </Col>
                 }
-            </Col>
-            <Col xs={12} sm={12} md={4} lg={4}>
-                <SubmitListTable
-                    submits={@props.data}
-                    handleSubmitClick={@setCurrentSubmit}
-                    handleDiffClick={@setCurrentDiff}
-                    activeId={@state.currentSubmit?._id}
-                    activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
-            </Col>
-            {
-            admin && <Col xs={12} sm={12} md={12} lg={12}>
-                <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
-            </Col>
-            }
-            {
-            admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits} stars/>
-            }
-        </Grid>
+                {
+                admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits} stars/>
+                }
+            </Grid>
+        </div>
 
 options =
     urls: (props) ->
         data: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+        user: "user/#{props.result.fullUser._id}"
         bestSubmits: "bestSubmits/#{props.result.fullTable._id}"
         me: "me"
 

@@ -4,3 +4,14 @@
     padding-bottom: 5px;
     cursor: pointer;
 }
+.paid {
+    background: #ccffcc;
+}
+.unpaid {
+    background: #ffffcc;
+}
+.muchUnpaid {
+    background: #ffcccc
+}
+.nonpaid {
+}

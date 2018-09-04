@@ -6,7 +6,7 @@ export default isPaid = (myUser) ->
     realPaidTill = new Date(ms);
     return new Date() <= realPaidTill
 
-isMuchUnpaid = (myUser) ->
+export isMuchUnpaid = (myUser) ->
     MAX_UNPAID_DAYS = 3
     if !myUser?.paidTill
         return false

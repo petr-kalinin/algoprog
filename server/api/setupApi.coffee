@@ -134,7 +134,7 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
-        id = req.user.informaticsId
+        id = req.params.id
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = {}
         if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.id
