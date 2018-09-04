@@ -142,7 +142,12 @@ export default class UserBadge extends React.Component
                                 size="20"
                                 onChange={@handlePaidTillChange}
                                 onKeyPress={@handleKeyPressed} />
-                            {" (сейчас: "}{if @props.user.paidTill then moment(@props.user.paidTill).format("YYYY-MM-DD")})
+                            {if @props.user.paidTill 
+                                paidTill = moment(@props.user.paidTill).hours(23).minutes(59).seconds(59)
+                                paidTillDate = paidTill.format("YYYY-MM-DD")
+                                timeLeft = Math.floor(paidTill.diff(moment(), 'days', true))
+                                " (на сервере: #{paidTillDate} = #{timeLeft} дней)"
+                            }
                         </div>
                     </form> }
                 { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
