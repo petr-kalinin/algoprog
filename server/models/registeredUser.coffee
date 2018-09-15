@@ -23,6 +23,9 @@ registeredUserSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a registeredUser"
 
+registeredUserSchema.methods.userKey = () ->
+    @ejudgeUsername
+    
 registeredUserSchema.statics.findByKey = (key) ->
     RegisteredUser.findOne({informaticsId: key})
 
@@ -34,9 +37,6 @@ registeredUserSchema.statics.findAllByKey = (key) ->
 
 registeredUserSchema.statics.findByKeyWithPassword = (key) ->
     await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword")
-
-registeredUserSchema.methods.userKey = () ->
-    @informaticsId
     
 registeredUserSchema.plugin(passportLocalMongoose);
 

@@ -144,8 +144,8 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
-        userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
-        user = (await User.findById(req.user.userKey()))?.toObject() || {}
+        userPrivate = (await UserPrivate.findById(req.user.userKey())?.toObject) || {}
+        user = (await User.findById(req.user.userKey())?.toObject) || {}
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
@@ -161,6 +161,7 @@ export default setupApi = (app) ->
         #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
+        await createDraftSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code)
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
         user = JSON.parse(JSON.stringify(req.user))
         delete user.informaticsPassword
@@ -414,6 +415,7 @@ export default setupApi = (app) ->
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
+        console.log "Set comment viewed ", req.params.commentId, ""+req.user?.userKey(), "" + comment?.userId
         if ""+req.user?.userKey() != "" + comment?.userId
             res.status(403).send('No permissions')
             return
