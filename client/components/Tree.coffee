@@ -54,6 +54,8 @@ isLevelDone = (levelId, userId, results) ->
     for subLevel in ["А", "Б", "В", "Г"]
         if levelId.endsWith(subLevel)
             result = results?[userId + "::" + levelId]
+            if not result
+                return false
             return result.solved >= requiredProblemsByLevel(levelId, result.required or 0)
     if +levelId in [1..10]
         subLevels = ["А", "Б", "В"]
@@ -62,6 +64,8 @@ isLevelDone = (levelId, userId, results) ->
         done = true
         for subLevel in subLevels
             result = results?[userId + "::" + levelId + subLevel]
+            if not result
+                return false
             done = done and result.solved >= requiredProblemsByLevel(levelId + subLevel, result.required or 0)
         return done
     result = results?[userId + "::" + levelId]
