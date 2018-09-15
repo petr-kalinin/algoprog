@@ -18,6 +18,9 @@ registeredUserSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a registeredUser"
 
+registeredUserSchema.methods.userKey = () ->
+    @ejudgeUsername
+
 
 registeredUserSchema.plugin(passportLocalMongoose);
 

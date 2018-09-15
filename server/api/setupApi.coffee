@@ -86,8 +86,8 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
-        userPrivate = (await UserPrivate.findById(req.user.informaticsId)?.toObject) || {}
-        user = (await User.findById(req.user.informaticsId)?.toObject) || {}
+        userPrivate = (await UserPrivate.findById(req.user.userKey())?.toObject) || {}
+        user = (await User.findById(req.user.userKey())?.toObject) || {}
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
@@ -96,7 +96,7 @@ export default setupApi = (app) ->
         res.json({submit: true})
 
     app.post '/api/submit/:problemId/draft', ensureLoggedIn, wrap (req, res) ->
-        await createDraftSubmit(req.params.problemId, req.user.informaticsId, req.body.language, req.body.code)
+        await createDraftSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
@@ -134,10 +134,10 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
-        id = req.user.informaticsId
+        id = req.user.userKey()
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = {}
-        if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.id
+        if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
             userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
 
@@ -151,7 +151,7 @@ export default setupApi = (app) ->
         id = req.params.id
         result = await tableApi.fullUser(id)
         userPrivate = {}
-        if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.id
+        if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
             userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         result.user = {result.user..., userPrivate...}
         res.json(result)
@@ -171,7 +171,7 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
@@ -201,7 +201,7 @@ export default setupApi = (app) ->
         res.json(json)
 
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
         submit = (await Submit.findById(req.params.id)).toObject()
@@ -209,10 +209,10 @@ export default setupApi = (app) ->
         res.json(submit)
 
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.informaticsId
+        if not req.user?.userKey()
             res.status(403).send('No permissions')
             return
-        res.json(await SubmitComment.findLastNotViewedByUser(req.user?.informaticsId))
+        res.json(await SubmitComment.findLastNotViewedByUser(req.user?.userKey()))
 
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
@@ -224,8 +224,8 @@ export default setupApi = (app) ->
         allowed = false
         if req.user?.admin
             allowed = true
-        else if req.user?.informaticsId
-            result = await Result.findByUserAndTable(req.user?.informaticsId, req.params.problem)
+        else if req.user?.userKey()
+            result = await Result.findByUserAndTable(req.user?.userKey(), req.params.problem)
             allowed = result && result.solved > 0
         if not allowed
             res.status(403).send('No permissions')
@@ -253,8 +253,8 @@ export default setupApi = (app) ->
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
-        console.log "Set comment viewed ", req.params.commentId, ""+req.user?.informaticsId, "" + comment?.userId
-        if ""+req.user?.informaticsId != "" + comment?.userId
+        console.log "Set comment viewed ", req.params.commentId, ""+req.user?.userKey(), "" + comment?.userId
+        if ""+req.user?.userKey() != "" + comment?.userId
             res.status(403).send('No permissions')
             return
         comment.viewed = true
