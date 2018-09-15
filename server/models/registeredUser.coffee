@@ -12,6 +12,9 @@ registeredUserSchema.statics.findAdmin = (list) ->
     RegisteredUser.findOne({admin: true, username: "pkalinin"})
 
 
+registeredUserSchema.methods.userKey = () ->
+    @informaticsUsername
+
 registeredUserSchema.plugin(passportLocalMongoose);
 
 RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);

@@ -108,7 +108,8 @@ export fullUser = (userId) ->
     for level in [2..10]
         tables.push(((level + ch) for ch in ["А", "Б", "В"]))
     regTables = await Table.findById("reg")
-    tables.push(regTables.tables)
+    if regTables
+        tables.push(regTables.tables)
     user = await User.findById(userId)
     if not user
         return null
