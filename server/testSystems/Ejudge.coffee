@@ -4,9 +4,12 @@ import { JSDOM } from 'jsdom'
 import {downloadLimited} from '../lib/download'
 import logger from '../log'
 
+import EjudgeSubmitDownloader from './ejudge/EjudgeSubmitDownloader'
+
 import TestSystem, {TestSystemUser} from './TestSystem'
 
 import RegisteredUser from '../models/registeredUser'
+import Problem from '../models/problem'
 
 
 REQUESTS_LIMIT = 20
@@ -15,18 +18,18 @@ REQUESTS_LIMIT = 20
 userCache = {}
 
 class LoggedEjudgeUser
-    @getUser: (server, contestId, username, password) ->
+    @getUser: (server, contestId, username, password, isAdmin) ->
         key = "#{server}::#{contestId}::#{username}::#{password}"
         if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
             logger.info "Creating new EjudgeUser ", username, contestId
-            newUser = new LoggedEjudgeUser(server, contestId, username, password)
+            newUser = new LoggedEjudgeUser(server, contestId, username, password, isAdmin)
             await newUser._login()
             userCache[key] =
                 user: newUser
                 loginTime: new Date()
         return userCache[key].user
 
-    constructor: (@server, @contestId, @username, @password) ->
+    constructor: (@server, @contestId, @username, @password, @isAdmin) ->
         @jar = request.jar()
         @requests = 0
         @promises = []
@@ -34,7 +37,9 @@ class LoggedEjudgeUser
 
     _login: () ->
         await @_loginToProg("new-client")
-        await @_loginToProg("serve-control")
+        if @isAdmin
+            await @_loginToProg("new-master")
+            await @_loginToProg("serve-control")
         logger.info "Logged in user #{@username}, sid=#{@sid}"
 
     _loginToProg: (prog) ->
@@ -49,7 +54,6 @@ class LoggedEjudgeUser
             timeout: 30 * 1000
         })
         if not page.includes("Logout")
-            console.log page
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
         @sid[prog] = sidString[1]
@@ -72,7 +76,7 @@ export default class Ejudge extends TestSystem
 
     getAdmin: (contestId) ->
         admin = await RegisteredUser.findAdmin()
-        return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword)
+        return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword, true)
 
     registerUser: (user, registeredUser, password) ->
         adminUser = await @getAdmin(@baseContest)
@@ -143,4 +147,23 @@ export default class Ejudge extends TestSystem
             logger.info "Found problem ", problem
         return result
 
+    submitDownloader: (userId, userList, problemId, submitsPerPage) ->
+        problems = []
+        if problemId
+            problems = [await Problem.findById(problemId)]
+        else
+            problems = await Problem.find({})
+        tables = []
+        for problem in problems
+            for table in problem.tables
+                if not (table in tables)
+                    tables.push(table)
+
+        parameters = await Promise.all(tables.map((table) =>
+            admin: await @getAdmin(table)
+            server: @server
+            table: table
+        ))
+
+        return new EjudgeSubmitDownloader(parameters)
 
