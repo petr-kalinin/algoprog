@@ -93,6 +93,9 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
     u = await User.findById(userId)
+    if not u
+        logger.warn "Unknown user ", userId
+        return
     await u.updateChocos()
     await u.updateRatingEtc()
     await u.updateLevel()
