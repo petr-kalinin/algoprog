@@ -1,5 +1,6 @@
 moment = require('moment')
 xml2js = require('xml2js')
+import { JSDOM } from 'jsdom'
 
 import TestSystemSubmitDownloader from '../TestSystem'
 
@@ -31,14 +32,12 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         result = {}
         for problem in data.runlog.problems[0].problem
             result[problem.$.id] = problem.$.short_name
-        console.log result
         return result
 
     _getLanguageMap: (data) ->
         result = {}
         for lang in data.runlog.languages[0].language
             result[lang.$.id] = lang.$.long_name
-        console.log result
         return result
 
     getSubmitsFromContest: (param) ->
@@ -73,8 +72,39 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         logger.warn "Unknown contest in getSource, runid=#{runid}"
         return ""
 
-    getComments: () ->
-        return []
+    getComments: (runid) ->
+        [contest, run] = @_parseRunId(runid)
+        thisParam = undefined
+        for param in @parameters
+            if param.table == contest
+                thisParam = param
+        if not thisParam
+            logger.warn "Unknown contest in getSource, runid=#{runid}"
+            return []
+        href = "#{param.server}/cgi-bin/new-master?action=36&run_id=#{run}"
+        page = await param.admin.download href, {}, "new-master"
+        document = (new JSDOM(page, {url: href})).window.document
+        elements = document.getElementsByClassName("message-table")
+        result = []
+        index = 0
+        for el in elements
+            rows = Array.from(el.getElementsByTagName("tr"))[1..]
+            for row in rows
+                header = row.getElementsByClassName("profile")?[0]
+                if not header
+                    continue
+                pre = row.getElementsByTagName("pre")?[0]
+                if not pre
+                    continue
+                time = header.innerHTML.match(/\d+\/\d+\/\d+ \d+:\d+:\d+/)
+                if not time
+                    continue
+                result.push
+                    text: pre.innerHTML
+                    time: moment(time, "YYYY/MM/DD HH:mm:ss")
+                    id: index
+                index++
+        return result
 
     getResults: () ->
         return {}
