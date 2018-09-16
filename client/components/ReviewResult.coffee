@@ -71,7 +71,7 @@ class ReviewResult extends React.Component
             result,
             comment: @state.commentText
         }
-        @props.handleDone()
+        @props.handleDone?()
 
     componentDidUpdate: (prevProps, prevState) ->
         if prevProps.result._id != @props.result._id

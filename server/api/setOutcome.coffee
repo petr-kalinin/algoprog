@@ -12,19 +12,19 @@ import {runForUserAndProblem} from '../cron/downloadSubmits'
 
 import logger from '../log'
 
-postToInformatics = (req, res) ->
+postToServer = (req, res) ->
     submitId = req.params.submitId
     outcome = req.body.result
     comment = req.body.comment
 
-    informatics = getTestSystem("informatics")
-    informatics.setOutcome(submitId, outcome, comment)
+    server = getTestSystem("ejudge")
+    server.setOutcome(submitId, outcome, comment)
 
 
 updateData = (req, res) ->
-    [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
+    [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(.+)r(.+)p(.+)/)
     submit = await Submit.findById(req.params.submitId)
-    await runForUserAndProblem(submit.user, "p" + problem)
+    await runForUserAndProblem(submit.user, problem)
     submit = await Submit.findById(req.params.submitId)
     if req.body.result and submit.outcome != req.body.result
         return false
@@ -36,7 +36,7 @@ updateData = (req, res) ->
 
 
 storeToDatabase = (req, res) ->
-    [fullSubmitId, runId, problemId] = req.params.submitId.match(/(\d+r\d+)(p\d+)/)
+    [fullSubmitId, contest, run, problemId] = req.params.submitId.match(/(.+)r(.+)p(.+)/)
     submit = await Submit.findById(req.params.submitId)
     problem = await Problem.findById(problemId)
     if req.body.result in ["AC", "IG", "DQ"]
@@ -44,12 +44,13 @@ storeToDatabase = (req, res) ->
         submit.outcome = req.body.result
         submit.force = true
     if req.body.comment
-        if not (req.body.comment in submit.comments.map(entities.decode))
-            comment = entities.encode(req.body.comment)
+        comment = req.body.comment.trimRight()
+        if not (comment in submit.comments.map(entities.decode))
+            comment = entities.encode(comment)
             logger.info("Force-storing to database comment for #{req.params.submitId}")
             rndId = Math.floor(Math.random() * 1000000)
             newComment = new SubmitComment
-                _id: "_#{rndId}r#{runId}"
+                _id: "_#{rndId}r#{req.params.submitId}"
                 problemId: problemId
                 problemName: problem.name
                 userId: submit.user
@@ -64,15 +65,15 @@ storeToDatabase = (req, res) ->
 
 export default setOutcome = (req, res) ->
     try
-        await postToInformatics(req, res)
+        await postToServer(req, res)
     catch e
-        logger.info "Can't post to informatics ", req.params.submitId
+        logger.info "Can't post to server ", req.params.submitId
         logger.info e.message
     success = false
     try
         success = await updateData(req, res)
     catch e
-        logger.info "Can't update informatics status ", req.params.submitId
+        logger.info "Can't update server status ", req.params.submitId
         logger.info e.message
         success = false
     if not success and (req.body.result or req.body.comment)

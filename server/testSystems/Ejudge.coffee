@@ -60,9 +60,12 @@ class LoggedEjudgeUser
 
     download: (href, options, prog="new-client") ->
         if @sid[prog]
-            if not href.includes('?')
-                href = href + "?"
-            href = href + "&SID=#{@sid[prog]}"
+            if options and ("form" of options)
+                options.form.SID = @sid[prog]
+            else
+                if not href.includes('?')
+                    href = href + "?"
+                href = href + "&SID=#{@sid[prog]}"
         result = await downloadLimited(href, @jar, options)
         return result
 
@@ -141,7 +144,7 @@ export default class Ejudge extends TestSystem
             probHref = el.href
             id = el.innerHTML
             problem = await @parseProblem(admin, probHref)
-            problem._id = "p#{contestId}p#{id}"
+            problem._id = "#{contestId}_#{id}"
             problem.letter = id
             result.push(problem)
             logger.info "Found problem ", problem
@@ -153,6 +156,7 @@ export default class Ejudge extends TestSystem
             problems = [await Problem.findById(problemId)]
         else
             problems = await Problem.find({})
+        console.log problemId, problems
         tables = []
         for problem in problems
             for table in problem.tables
@@ -168,31 +172,36 @@ export default class Ejudge extends TestSystem
         return new EjudgeSubmitDownloader(parameters)
 
     setOutcome: (submitId, outcome, comment) ->
-        [fullMatch, contest, run] = runid.match(/c(\d+)r(\d+)/)
-        adminUser = await @_getAdmin(contest)
+        [fullMatch, contest, run, problem] = submitId.match(/(.+)r(.+)p(.+)/)
+        adminUser = await @getAdmin(contest)
         outcomeCode = switch outcome
-            when "AC" then 8
+            when "AC" then 0
             when "IG" then 9
             when "DQ" then 10
             else undefined
             
         try
-            if outcomeCode
-                href = "#{BASE_URL}/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
-                await adminUser.download(href, {maxAttempts: 1})
+            if outcomeCode?
+                href = "#{@server}/cgi-bin/new-master"
+                options = 
+                    method: "POST"
+                    headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"}
+                    form: 
+                        action: 67
+                        run_id: run
+                        status: outcomeCode
+                    followAllRedirects: true
+                await adminUser.download href, options, "new-master"
         finally
             if comment
-                href = "#{BASE_URL}/py/comment/add"
-                body =
-                    run_id: run
-                    contest_id: contest
-                    comment: comment
-                    lines: ""
-                await adminUser.download(href, {
-                    method: 'POST',
-                    headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-                    form: body,
+                href = "#{@server}/cgi-bin/new-master"
+                options = 
+                    method: "POST"
+                    headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"}
+                    form: 
+                        action_64: "Send run comment"
+                        run_id: run
+                        msg_text: comment
                     followAllRedirects: true
-                    maxAttempts: 1
-                })
+                await adminUser.download href, options, "new-master"
         logger.info "Successfully set outcome for #{submitId}"
