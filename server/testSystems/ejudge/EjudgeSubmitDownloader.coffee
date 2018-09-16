@@ -17,6 +17,19 @@ parseXml = (xml) ->
                 resolve result
 
 export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
+    STATUS_MAP:
+        PR: "OK"
+        OK: "AC"
+        IG: "IG"
+        WA: "Неправильный ответ"
+        TL: "Превышен предел времени"
+        PE: "Нарушение формата выходных данных"
+        RT: "Runtime error (crash)"
+        ML: "Превышен предел памяти"
+        CE: "Ошибка компиляции"
+        DQ: "DQ"
+        PD: "Тестирование..."
+
     constructor: (@parameters) ->
         super()
 
@@ -50,13 +63,16 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         results = []
         for submit in data.runlog.runs[0].run
             submit = submit.$
+            outcome = submit.status
+            if outcome of @STATUS_MAP
+                outcome = @STATUS_MAP[outcome]
             results.push new Submit(
                 _id: "c#{param.table}r#{submit.run_id}",
                 time: startTime.add(submit.time, "minutes"),
                 user: userMap[submit.user_id],
                 problem: "p#{param.table}p#{problemMap[submit.prob_id]}",
-                outcome: submit.status
-                firstFail: if submit.status != "OK" then +submit.test + 1 else undefined
+                outcome: outcome
+                firstFail: if outcome != "OK" and outcome != "AC" and outcome != "IG" then +submit.test + 1 else undefined
                 language: languageMap[submit.lang_id]
             )
         return results

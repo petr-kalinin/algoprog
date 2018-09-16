@@ -167,3 +167,32 @@ export default class Ejudge extends TestSystem
 
         return new EjudgeSubmitDownloader(parameters)
 
+    setOutcome: (submitId, outcome, comment) ->
+        [fullMatch, contest, run] = runid.match(/c(\d+)r(\d+)/)
+        adminUser = await @_getAdmin(contest)
+        outcomeCode = switch outcome
+            when "AC" then 8
+            when "IG" then 9
+            when "DQ" then 10
+            else undefined
+            
+        try
+            if outcomeCode
+                href = "#{BASE_URL}/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
+                await adminUser.download(href, {maxAttempts: 1})
+        finally
+            if comment
+                href = "#{BASE_URL}/py/comment/add"
+                body =
+                    run_id: run
+                    contest_id: contest
+                    comment: comment
+                    lines: ""
+                await adminUser.download(href, {
+                    method: 'POST',
+                    headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
+                    form: body,
+                    followAllRedirects: true
+                    maxAttempts: 1
+                })
+        logger.info "Successfully set outcome for #{submitId}"
