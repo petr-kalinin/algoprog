@@ -56,6 +56,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 user: userMap[submit.user_id],
                 problem: "p#{param.table}p#{problemMap[submit.prob_id]}",
                 outcome: submit.status
+                firstFail: if submit.status != "OK" then +submit.test + 1 else undefined
                 language: languageMap[submit.lang_id]
             )
         return results
@@ -92,6 +93,9 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             for row in rows
                 header = row.getElementsByClassName("profile")?[0]
                 if not header
+                    continue
+                if header.innerHTML.match(/Run Id:/)
+                    # this is a comment for previous run
                     continue
                 pre = row.getElementsByTagName("pre")?[0]
                 if not pre

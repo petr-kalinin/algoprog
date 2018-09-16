@@ -10,6 +10,7 @@ submitsSchema = new mongoose.Schema
     language: String
     comments: [String]
     results: mongoose.Schema.Types.Mixed
+    firstFail: Number
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
 
