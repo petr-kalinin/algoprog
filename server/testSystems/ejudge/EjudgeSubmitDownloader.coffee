@@ -65,21 +65,24 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         [fullMatch, contest, run] = runid.match(/c(\d+)r(\d+)/)
         return [contest, run]    
 
-    getSource: (runid) ->
-        [contest, run] = @_parseRunId(runid)
+    _findParam: (contest) ->
         for param in @parameters
             if param.table == contest
-                return await param.admin.download "#{param.server}/cgi-bin/new-master?action=91&run_id=#{run}", {}, "new-master"
+                return param
+        return undefined
+
+    getSource: (runid) ->
+        [contest, run] = @_parseRunId(runid)
+        param = @_findParam(contest)
+        if param
+            return await param.admin.download "#{param.server}/cgi-bin/new-master?action=91&run_id=#{run}", {}, "new-master"
         logger.warn "Unknown contest in getSource, runid=#{runid}"
         return ""
 
     getComments: (runid) ->
         [contest, run] = @_parseRunId(runid)
-        thisParam = undefined
-        for param in @parameters
-            if param.table == contest
-                thisParam = param
-        if not thisParam
+        param = @_findParam(contest)
+        if not param
             logger.warn "Unknown contest in getSource, runid=#{runid}"
             return []
         href = "#{param.server}/cgi-bin/new-master?action=36&run_id=#{run}"
@@ -110,8 +113,23 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 index++
         return result
 
-    getResults: () ->
-        return {}
+    getResults: (runid) ->
+        [contest, run] = @_parseRunId(runid)
+        param = @_findParam(contest)
+        href = "#{param.server}/cgi-bin/new-master?action=37&run_id=#{run}"
+        page = await param.admin.download href, {}, "new-master"
+        document = (new JSDOM(page, {url: href})).window.document
+        result = {tests: []}
+        table = document.getElementsByClassName("b1")?[0]
+        for row in table.getElementsByTagName("tr")
+            td = Array.from(row.getElementsByTagName("td"))
+            if not td.length
+                continue
+            result.tests.push
+                string_status: td[1].textContent
+                time:  +td[2].textContent * 1000
+                max_memory_used: +td[4].textContent
+        return result
 
     getSubmitsFromPage: (page) ->
         if page != 0
