@@ -66,11 +66,12 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             outcome = submit.status
             if outcome of @STATUS_MAP
                 outcome = @STATUS_MAP[outcome]
+            problem = "#{param.table}_#{problemMap[submit.prob_id]}"
             results.push new Submit(
-                _id: "c#{param.table}r#{submit.run_id}",
+                _id: "#{param.table}r#{submit.run_id}p#{problem}",
                 time: startTime.add(submit.time, "minutes"),
                 user: userMap[submit.user_id],
-                problem: "p#{param.table}p#{problemMap[submit.prob_id]}",
+                problem: problem,
                 outcome: outcome
                 firstFail: if outcome != "OK" and outcome != "AC" and outcome != "IG" then +submit.test + 1 else undefined
                 language: languageMap[submit.lang_id]
@@ -78,8 +79,8 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         return results
 
     _parseRunId: (runid) ->
-        [fullMatch, contest, run] = runid.match(/c(\d+)r(\d+)/)
-        return [contest, run]    
+        [fullMatch, contest, run, problem] = runid.match(/(.+)r(.+)p(.+)/)
+        return [contest, run, problem]
 
     _findParam: (contest) ->
         for param in @parameters
@@ -123,9 +124,9 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 if not time
                     continue
                 result.push
-                    text: pre.innerHTML
+                    text: pre.innerHTML.trimRight()
                     time: moment(time, "YYYY/MM/DD HH:mm:ss")
-                    id: index
+                    id: "#{runid}i#{index}"
                 index++
         return result
 
@@ -137,6 +138,8 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         document = (new JSDOM(page, {url: href})).window.document
         result = {tests: []}
         table = document.getElementsByClassName("b1")?[0]
+        if not table
+            return result
         for row in table.getElementsByTagName("tr")
             td = Array.from(row.getElementsByTagName("td"))
             if not td.length

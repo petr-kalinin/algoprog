@@ -35,12 +35,13 @@ storeToDatabase = (req, res) ->
         submit.force = true
         submit.calculateHashes()
     if req.body.comment
-        if not (req.body.comment in submit.comments.map(entities.decode))
-            comment = entities.encode(req.body.comment)
+        comment = req.body.comment.trimRight()
+        if not (comment in submit.comments.map(entities.decode))
+            comment = entities.encode(comment)
             logger.info("Force-storing to database comment for #{req.params.submitId}")
             rndId = Math.floor(Math.random() * 1000000)
             newComment = new SubmitComment
-                _id: "_#{rndId}r#{runId}"
+                _id: "_#{rndId}r#{req.params.submitId}"
                 problemId: problemId
                 problemName: problem.name
                 userId: submit.user

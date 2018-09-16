@@ -34,8 +34,8 @@ import setOutcome from './setOutcome'
 
 import logger from '../log'
 
-import downloadMaterials from '../cron/downloadMaterials'
-import * as downloadContests from '../cron/downloadContests'
+#import downloadMaterials from '../cron/downloadMaterials'
+import * as downloadContests from '../cron/downloadContestsAndMaterials'
 import * as downloadSubmits from "../cron/downloadSubmits"
 import * as groups from '../informatics/informaticsGroups'
 
@@ -552,11 +552,9 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.get '/api/downloadContests', wrap (req, res) ->
-        ###
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        ###
         downloadContests.run()
         res.send('OK')
 
