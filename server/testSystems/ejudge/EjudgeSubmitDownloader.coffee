@@ -52,7 +52,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         for submit in data.runlog.runs[0].run
             submit = submit.$
             results.push new Submit(
-                _id: "#{param.table}::#{submit.run_id}",
+                _id: "c#{param.table}r#{submit.run_id}",
                 time: startTime.add(submit.time, "minutes"),
                 user: userMap[submit.user_id],
                 problem: "p#{param.table}p#{problemMap[submit.prob_id]}",
@@ -61,7 +61,16 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             )
         return results
 
-    getSource: () ->
+    _parseRunId: (runid) ->
+        [fullMatch, contest, run] = runid.match(/c(\d+)r(\d+)/)
+        return [contest, run]    
+
+    getSource: (runid) ->
+        [contest, run] = @_parseRunId(runid)
+        for param in @parameters
+            if param.table == contest
+                return await param.admin.download "#{param.server}/cgi-bin/new-master?action=91&run_id=#{run}", {}, "new-master"
+        logger.warn "Unknown contest in getSource, runid=#{runid}"
         return ""
 
     getComments: () ->
