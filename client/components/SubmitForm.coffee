@@ -101,8 +101,6 @@ class SubmitForm extends React.Component
                     submit:
                         error: true
                         message: "Ваш аккаунт не активирован"
-            else
-                throw ""
         catch
             data =
                 submit:
@@ -176,7 +174,7 @@ class SubmitForm extends React.Component
             {
             if @state.submit?.error
                 <Alert bsStyle="danger">
-                    Ошибка отправки: {@state.submit.message}
+                    Ошибка отправки: {@state.submit?.message}
                 </Alert>
             }
         </div>
