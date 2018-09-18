@@ -91,8 +91,13 @@ export default setupApi = (app) ->
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
-        testSystem = await getTestSystem("informatics")
-        await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
+        testSystem = await getTestSystem("ejudge")
+        try
+            await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
+        catch e
+            if e.ejudgeError
+                res.json({error: e.ejudgeError})
+                return
         res.json({submit: true})
 
     app.post '/api/submit/:problemId/draft', ensureLoggedIn, wrap (req, res) ->

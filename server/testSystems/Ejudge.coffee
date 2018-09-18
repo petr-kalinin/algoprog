@@ -10,6 +10,9 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 
 import RegisteredUser from '../models/registeredUser'
 import Problem from '../models/problem'
+import Submit from '../models/submit'
+
+import * as downloadSubmits from '../cron/downloadSubmits'
 
 
 REQUESTS_LIMIT = 20
@@ -56,6 +59,7 @@ class LoggedEjudgeUser
         if not page.includes("Logout")
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
+        logger.info "Logger to prog #{prog}, SID=#{sidString[1]}"
         @sid[prog] = sidString[1]
 
     download: (href, options, prog="new-client") ->
@@ -68,6 +72,38 @@ class LoggedEjudgeUser
                 href = href + "&SID=#{@sid[prog]}"
         result = await downloadLimited(href, @jar, options)
         return result
+
+    submit: (problemId, contentType, body) ->
+        [_, boundary] = contentType.match(/boundary=(.*)/)
+        boundary = "--" + boundary
+        body = body.toString()
+        body = """
+            #{boundary}\r
+            Content-Disposition: form-data; name="SID"\r
+            \r
+            #{@sid["new-client"]}\r
+            #{boundary}\r
+            Content-Disposition: form-data; name="prob_id"\r
+            \r
+            #{problemId}\r
+            #{boundary}\r
+            Content-Disposition: form-data; name="action_40"\r
+            \r
+            Send!\r
+            #{body}
+        """
+        href = "#{@server}/cgi-bin/new-client"
+        page = await downloadLimited(href, @jar, {
+            method: 'POST',
+            headers: {'Content-Type': contentType},
+            body,
+            followAllRedirects: true
+        })
+        document = (new JSDOM(page, {url: href})).window.document
+        el = document.getElementsByTagName("title")
+        result = el[0].textContent
+        if result.includes("Error")
+            throw {ejudgeError: result}
 
 
 export default class Ejudge extends TestSystem
@@ -142,7 +178,7 @@ export default class Ejudge extends TestSystem
         result = []
         for el in problemElements
             probHref = el.href
-            id = el.innerHTML
+            [_, id] = el.href.match(/prob_id=(.*)(&|$)/)
             problem = await @parseProblem(admin, probHref)
             problem._id = "#{contestId}_#{id}"
             problem.letter = id
@@ -156,7 +192,6 @@ export default class Ejudge extends TestSystem
             problems = [await Problem.findById(problemId)]
         else
             problems = await Problem.find({})
-        console.log problemId, problems
         tables = []
         for problem in problems
             for table in problem.tables
@@ -205,3 +240,19 @@ export default class Ejudge extends TestSystem
                     followAllRedirects: true
                 await adminUser.download href, options, "new-master"
         logger.info "Successfully set outcome for #{submitId}"
+
+    submitWithFormData: (user, problemId, contentType, data) ->
+        [contest, problem] = problemId.split("_")
+        try
+            oldSubmits = await Submit.findByUserAndProblem(user.userKey(), problemId)
+            try
+                ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, user.ejudgeUsername, user.ejudgePassword, false)
+                ejudgeData = await ejudgeUser.submit(problem, contentType, data)
+            finally
+                await downloadSubmits.runForUser(user.userKey(), 5, 1)
+        catch e
+            logger.error "Can not submit", e
+            newSubmits = await Submit.findByUserAndProblem(user.userKey(), problemId)
+            if oldSubmits.length == newSubmits.length
+                throw e
+            logger.error "Though the submit appeared in submit list..."

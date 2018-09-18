@@ -41,12 +41,6 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             userMap[user.user_id] = user.user_login
         return userMap
 
-    _getProblemMap: (data) ->
-        result = {}
-        for problem in data.runlog.problems[0].problem
-            result[problem.$.id] = problem.$.short_name
-        return result
-
     _getLanguageMap: (data) ->
         result = {}
         for lang in data.runlog.languages[0].language
@@ -57,7 +51,6 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         userMap = await @_getUsers(param)
         data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=153", {}, "new-master"
         data = await parseXml data 
-        problemMap = @_getProblemMap(data)
         languageMap = @_getLanguageMap(data)
         startTime = moment(data.runlog.$.start_time, "YYYY/MM/DD HH:mm:ss")
         results = []
@@ -66,10 +59,10 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             outcome = submit.status
             if outcome of @STATUS_MAP
                 outcome = @STATUS_MAP[outcome]
-            problem = "#{param.table}_#{problemMap[submit.prob_id]}"
+            problem = "#{param.table}_#{submit.prob_id}"
             results.push new Submit(
                 _id: "#{param.table}r#{submit.run_id}p#{problem}",
-                time: startTime.add(submit.time, "minutes"),
+                time: moment(startTime).add(submit.time, "seconds"),
                 user: userMap[submit.user_id],
                 problem: problem,
                 outcome: outcome
