@@ -105,10 +105,5 @@ export default SubmitListTable = (props) ->
                 ).reverse()}
             </tbody>
         </Table>
-        {
-        if props.submits?[0]
-            s = props.submits[props.submits.length - 1]
-            infProblem = s.problem.substr(1)
             <a href={"https://informatics.msk.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{s.user}"} target="_blank">Попытки на информатикс</a>
-        }
     </div>
