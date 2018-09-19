@@ -9,6 +9,7 @@ problemsSchema = new mongoose.Schema
     name: String
     tables: [String]
     level: String
+    points: Number
 
 problemsSchema.methods.add = () ->
     oldProblem = await Problem.findById @_id

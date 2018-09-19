@@ -154,6 +154,9 @@ export default class Ejudge extends TestSystem
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)
         document = (new JSDOM(page, {url: problemHref})).window.document
+        scoreEl = document.getElementsByClassName("line-table-wb")[0]?.getElementsByTagName("tt")[0]?.textContent
+        if isNaN(scoreEl)
+            throw "Can not find score for problem #{problemHref}"
         el = document.getElementById("probNavTaskArea-ins")
         for tag in ["h2", "form"]
             subels = el.getElementsByTagName(tag)
@@ -166,6 +169,7 @@ export default class Ejudge extends TestSystem
         return {
             name: header.innerHTML
             text: el.innerHTML
+            points: +scoreEl
         }
 
     downloadContestProblems: (contestId) ->
