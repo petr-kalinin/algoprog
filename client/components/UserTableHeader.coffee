@@ -12,17 +12,4 @@ export default userTableHeader = (res, props) ->
     a <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user} key="user">
         {if h then "" else <UserName user={props.user} />}
     </td>
-    if props.details
-        a <td className={globalStyles.mainTable_td} key="level" title="Уровень">
-            {if h then "У" else props.user.level?.current}
-        </td>
-        a <td className={globalStyles.mainTable_td} key="rating" title="Рейтинг">
-            {if h then "Р" else props.user.rating}
-        </td>
-        a <td className={globalStyles.mainTable_td} key="activity" title="Активность">
-            {if h then "А" else props.user.activity?.toFixed?(1)}
-        </td>
-        a <td className={globalStyles.mainTable_td} key="cf" title="Codeforces">
-            {if h then "CF" else <CfStatus cf={props.user.cf}/>}
-        </td>
     res

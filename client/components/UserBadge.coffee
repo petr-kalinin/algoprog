@@ -100,19 +100,11 @@ export default class UserBadge extends React.Component
                 <UserName user={@props.user}/>
             </h1>
             <blockquote>
-                <div>Уровень: {@props.user.level.current}</div>
                 { @props.me?.admin &&
                     <div>
                         Уровень на начало полугодия: {@props.user.level.start}
                     </div> }
-                <div>Рейтинг: {@props.user.rating}</div>
-                <div>Активность: {@props.user.activity.toFixed(1)}</div>
-                {
-                if @props.user.cf?.rating
-                    <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
-                else if @props.explain
-                    <div>Логин на codeforces неизвестен. Если вы зарегистированы, сообщите логин мне.</div>
-                }
+                <div>Суммарный балл: 000</div>
 
                 { @props.me?.admin &&
                     <form className={styles.form} onSubmit={@handleSubmit}>
