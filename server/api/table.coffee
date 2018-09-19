@@ -97,14 +97,8 @@ export default table = (userList, table) ->
     return results
 
 export fullUser = (userId) ->
-    tables = [["1А", "1Б"],
-              ["1В", "1Г"]];
-    for level in [2..10]
-        tables.push(((level + ch) for ch in ["А", "Б", "В"]))
-    for reg in ["reg", "roi"]
+    tables = [["main"]]
         regTables = await Table.findById(reg)
-        if regTables
-            tables.push(regTables.tables)
     user = await User.findById(userId)
     if not user
         return null
@@ -116,5 +110,3 @@ export fullUser = (userId) ->
     return
         user: user.toObject()
         results: results
-
-    console.log tables
