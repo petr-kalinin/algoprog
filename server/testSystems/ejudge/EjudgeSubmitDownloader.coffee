@@ -62,7 +62,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             problem = "#{param.table}_#{submit.prob_id}"
             results.push new Submit(
                 _id: "#{param.table}r#{submit.run_id}p#{problem}",
-                time: moment(startTime).add(submit.time, "seconds"),
+                time: moment(startTime).add(submit.time, "seconds").add(1, "hours"),
                 user: userMap[submit.user_id],
                 problem: problem,
                 outcome: outcome
@@ -130,6 +130,8 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         page = await param.admin.download href, {}, "new-master"
         document = (new JSDOM(page, {url: href})).window.document
         result = {tests: []}
+        if page.includes("Compilation error")
+            result.compiler_output = document.getElementsByTagName("pre")[0]?.textContent            
         table = document.getElementsByClassName("b1")?[0]
         if not table
             return result
