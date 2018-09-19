@@ -1,6 +1,6 @@
 export startDayForWeeks =
-    "all": "2017-11-29"
-    "unknown": "2017-12-04"
+    "all": "2018-09-24"
+    "unknown": "2018-09-24"
 
 export WEEK_ACTIVITY_EXP = 0.55
 export LEVEL_RATING_EXP = 2.5
