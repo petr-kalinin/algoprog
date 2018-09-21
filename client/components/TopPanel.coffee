@@ -138,7 +138,7 @@ class TopPanel extends React.Component
                             <span>
                                 <UserName user={@props.myUser}/>
                                 <span className={styles.separator}/>
-                                <span title="Суммарные баллы">000</span>
+                                <span title="Суммарные баллы">{@props.myUser.points}</span>
                                 {needUnknownWarning(@props.myUser) &&
                                     <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
                                 {needUnpaidWarning(@props.myUser) &&

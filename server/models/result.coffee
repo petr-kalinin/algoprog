@@ -13,6 +13,7 @@ resultsSchema = new mongoose.Schema
     solved: Number
     ok: Number
     attempts: Number
+    points: Number
     lastSubmitId: String
     lastSubmitTime: Date
     ignored: Number

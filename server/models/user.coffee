@@ -27,6 +27,7 @@ usersSchema = new mongoose.Schema
     byWeek: {solved: mongoose.Schema.Types.Mixed, ok: mongoose.Schema.Types.Mixed},
     rating: Number,
     activity: Number,
+    points: Number,
     cf:
         login: String,
         rating: Number,

@@ -104,7 +104,7 @@ export default class UserBadge extends React.Component
                     <div>
                         Уровень на начало полугодия: {@props.user.level.start}
                     </div> }
-                <div>Суммарный балл: 000</div>
+                <div>Суммарный балл: {@props.user.points}</div>
 
                 { @props.me?.admin &&
                     <form className={styles.form} onSubmit={@handleSubmit}>

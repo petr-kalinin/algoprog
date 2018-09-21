@@ -63,6 +63,7 @@ export default calculateRatingEtc = (user) ->
     wasSubmits = {}
     rating = 0
     activity = 0
+    points = 0
     probSolved = {}
 
     for s in submits
@@ -74,6 +75,8 @@ export default calculateRatingEtc = (user) ->
         wasSubmits[weekByTime(s.time)] = true
 
     for r in results
+        if r.table == "main"
+            points = r.points
         level = await findProblemLevel(r.table)
         if not level  # this will happen, in particular, if this is not a problem result
             continue
@@ -116,6 +119,7 @@ export default calculateRatingEtc = (user) ->
             ok: weekOk
         },
         rating: Math.floor(rating),
+        points: points,
         activity: activity,
         ratingSort: if activity > ACTIVITY_THRESHOLD then rating else -1/(rating+1),
         active: if activity > ACTIVITY_THRESHOLD then 1 else 0

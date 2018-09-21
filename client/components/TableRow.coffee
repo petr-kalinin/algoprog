@@ -9,15 +9,11 @@ import addTotal from '../lib/addTotal'
 
 ProblemResult = (props) ->
     r = props.result
-    text =
-        if r.ignored < 0  # DQ
-            ""
-        else if r.solved > 0 or r.ok > 0
-            "+" + (if r.attempts > 0 then r.attempts else "")
-        else if r.attempts > 0
-            "-" + r.attempts
-        else
-            " "
+    text1 = r.points
+    text2 = undefined
+    if r.attempts > 0
+        text2 = "(x#{r.attempts})"
+
     className =
         if r.solved > 0
             "ac"
@@ -46,7 +42,9 @@ ProblemResult = (props) ->
 
 
     <td title={props.user.name + " : " + props.result.problemName} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
-        {text}
+        {text1}
+        {if text2 then <br/>}
+        {text2 || ""}
     </td>
 
 totalResultClass = (result) ->
@@ -80,9 +78,7 @@ TotalResult = (props) ->
             {if props.header
                 "="
             else
-                ("" + props.result.solved +
-                 (if props.result.ok then " + " + props.result.ok else "") +
-                " / " + props.result.required)
+                props.result.points
             }
         </td>
 
@@ -125,6 +121,5 @@ export default TableRow = (props) ->
             res}
             <td className={globalStyles.border} />
             <TotalResult header={props.header} result={total}/>
-            <Attempts header={props.header} result={total}/>
             <td className={globalStyles.border} />
         </tr>

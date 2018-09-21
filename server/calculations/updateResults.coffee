@@ -2,6 +2,7 @@ import User from '../models/user'
 import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
+import Problem from '../models/problem'
 
 import addTotal from '../../client/lib/addTotal'
 import isContestRequired from '../../client/lib/isContestRequired'
@@ -40,11 +41,13 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         result = await Result.findByUserAndTable(userId, problemId)
         if result
             return result
+    problem = await Problem.findById(problemId)
     submits = await Submit.findByUserAndProblem(userId, problemId)
     solved = 0
     ok = 0
     attempts = 0
     ignored = 0
+    points = undefined
     lastSubmitId = undefined
     lastSubmitTime = undefined
     for submit in submits
@@ -52,6 +55,10 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
             continue
         lastSubmitId = submit._id
         lastSubmitTime = submit.time
+        if (submit.outcome in ["IG", "OK", "AC"]) and (not (points?))
+            points = problem.points - 7 * attempts
+            if points < 0
+                points = 0
         if submit.outcome == "IG"
             if solved == 0
                 ignored = 1
@@ -71,10 +78,10 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         else if submit.outcome == "OK"
             ok = 1
             continue  # we might have a future AC
-        else if submit.outcome != "CE"
+        else if submit.outcome != "CE" and submit.firstFail != 1
             attempts++
-    logger.debug "updated result ", userId, problemId, solved, ok, attempts, ignored, lastSubmitId
-    result = new Result
+    points = points || 0
+    result =         
         user: userId,
         table: problemId,
         total: 1,
@@ -83,8 +90,12 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         ok: ok,
         attempts: attempts,
         ignored: ignored,
+        points: points
         lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
+
+    logger.debug "updated result ", result
+    result = new Result(result)
     await result.upsert()
     return result
 
