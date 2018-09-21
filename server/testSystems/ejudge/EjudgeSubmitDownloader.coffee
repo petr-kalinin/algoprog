@@ -22,6 +22,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         OK: "AC"
         IG: "IG"
         WA: "Неправильный ответ"
+        PT: "Неправильный ответ"
         TL: "Превышен предел времени"
         PE: "Нарушение формата выходных данных"
         RT: "Runtime error (crash)"
