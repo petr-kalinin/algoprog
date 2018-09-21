@@ -50,7 +50,7 @@ export default class Dashboard extends React.Component
                     <Table striped condensed hover>
                         <tbody>
                             {@props[type].map((result) =>
-                                if result.fullUser.userList != "unknown" or @state.showUnknown
+                                if result.fullUser and result.fullUser.userList != "unknown" or @state.showUnknown
                                     <Result result={result} key={result._id}/>
                                 else
                                     null
