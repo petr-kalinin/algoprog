@@ -117,6 +117,7 @@ export default class Informatics extends TestSystem
         "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{userId}"
 
     setOutcome: (submitId, outcome, comment) ->
+        throw "Will not set outcome on Informatice"
         adminUser = await @_getAdmin()
         [fullSubmitId, contest, run, problem] = submitId.match(/(\d+)r(\d+)p(\d+)/)
         outcomeCode = switch outcome
