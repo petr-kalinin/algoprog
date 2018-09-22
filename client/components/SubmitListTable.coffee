@@ -58,8 +58,6 @@ export default SubmitListTable = (props) ->
             <tbody>
                 {props.submits?.map?((submit) =>
                     [cl, message] = outcomeToText(submit.outcome)
-                    if submit.firstFail
-                        message = "#{message} @ #{submit.firstFail}"
                     if submit._id == props.activeId
                         cl += " " + styles.active
                     time = maxVal(submit, "time")
