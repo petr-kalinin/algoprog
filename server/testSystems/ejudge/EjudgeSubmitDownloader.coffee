@@ -31,7 +31,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         DQ: "DQ"
         PD: "Тестирование..."
 
-    constructor: (@parameters) ->
+    constructor: (@parameters, @options={}) ->
         super()
 
     _getUsers: (param) ->
@@ -61,10 +61,18 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             if outcome of @STATUS_MAP
                 outcome = @STATUS_MAP[outcome]
             problem = "#{param.table}_#{submit.prob_id}"
+            user = userMap[submit.user_id]
+            id = "#{param.table}r#{submit.run_id}p#{problem}"
+            if @options.user and @options.user != user
+                logger.debug "Ignoring submit #{id} because it is from a different user"
+                continue
+            if @options.problem and @options.problem != problem
+                logger.debug "Ignoring submit #{id} because it is for a different problem"
+                continue
             results.push new Submit(
-                _id: "#{param.table}r#{submit.run_id}p#{problem}",
+                _id: id,
                 time: moment(startTime).add(submit.time, "seconds").add(1, "hours"),
-                user: userMap[submit.user_id],
+                user: user,
                 problem: problem,
                 outcome: outcome
                 firstFail: if outcome != "OK" and outcome != "AC" and outcome != "IG" then +submit.test + 1 else undefined

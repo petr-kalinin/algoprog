@@ -7,14 +7,12 @@ import { Link } from 'react-router-dom'
 import {LEVEL_RATING_EXP, ACTIVITY_THRESHOLD} from '../../server/calculations/ratingConstants'
 MAX_ACTIVITY = 7
 MAX_RATING = 10 * (Math.pow(LEVEL_RATING_EXP, 11) - 1) / (LEVEL_RATING_EXP - 1)
+MAX_POINTS = 1600
 
 export color = (user) ->
-    activity = Math.min(user.activity + 1, MAX_ACTIVITY + 1)
-    rating = Math.min(user.rating + 1, MAX_RATING + 1)
-    h = 11/12 * (1 - Math.log(rating) / Math.log(MAX_RATING + 1))
-    v = 0.3 + 0.7 * Math.log(activity) / Math.log(MAX_ACTIVITY + 1)
-    if user.activity < ACTIVITY_THRESHOLD
-        v = 0
+    points = Math.min(user.points + 1, MAX_POINTS + 1)
+    h = 11/12 * (1 - Math.log(points) / Math.log(MAX_RATING + 1))
+    v = 1
     return "#" + tinycolor.fromRatio({h: h, s: 1, v: v}).toHex()
 
 

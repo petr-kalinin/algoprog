@@ -2,6 +2,7 @@ request = require('request-promise-native')
 import { JSDOM } from 'jsdom'
 
 import {downloadLimited} from '../lib/download'
+import sleep from '../lib/sleep'
 import logger from '../log'
 
 import EjudgeSubmitDownloader from './ejudge/EjudgeSubmitDownloader'
@@ -207,8 +208,11 @@ export default class Ejudge extends TestSystem
             server: @server
             table: table
         ))
+        options = 
+            user: userId
+            problem: problemId
 
-        return new EjudgeSubmitDownloader(parameters)
+        return new EjudgeSubmitDownloader(parameters, options)
 
     setOutcome: (submitId, outcome, comment) ->
         [fullMatch, contest, run, problem] = submitId.match(/(.+)r(.+)p(.+)/)
@@ -253,7 +257,8 @@ export default class Ejudge extends TestSystem
                 ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, user.ejudgeUsername, user.ejudgePassword, false)
                 ejudgeData = await ejudgeUser.submit(problem, contentType, data)
             finally
-                await downloadSubmits.runForUser(user.userKey(), 5, 1)
+                await sleep(3000)  # wait for submit to appear in xml
+                await downloadSubmits.runForUserAndProblem(user.userKey(), problemId)
         catch e
             logger.error "Can not submit", e
             newSubmits = await Submit.findByUserAndProblem(user.userKey(), problemId)
