@@ -1,5 +1,6 @@
 moment = require('moment')
 xml2js = require('xml2js')
+parseCsv = require('csv-parse/lib/sync')
 import { JSDOM } from 'jsdom'
 
 import TestSystemSubmitDownloader from '../TestSystem'
@@ -16,6 +17,7 @@ parseXml = (xml) ->
             else
                 resolve result
 
+
 export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
     STATUS_MAP:
         PR: "OK"
@@ -30,39 +32,36 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         CE: "Ошибка компиляции"
         DQ: "DQ"
         PD: "Тестирование..."
+        CG: "Компиляция..."
+        RU: "Тестирование..."
 
     constructor: (@parameters, @options={}) ->
         super()
 
-    _getUsers: (param) ->
-        data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=278", {}, "new-master"
-        data = JSON.parse(data)
-        userMap = {}
-        for user in data.data
-            userMap[user.user_id] = user.user_login
-        return userMap
-
-    _getLanguageMap: (data) ->
-        result = {}
+    _getMaps: (param) ->
+        data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=153", {}, "new-master"
+        data = await parseXml data
+        languageMap = {}
         for lang in data.runlog.languages[0].language
-            result[lang.$.id] = lang.$.long_name
-        return result
+            languageMap[lang.$.id] = lang.$.long_name
+        problemMap = {}
+        for prob in data.runlog.problems[0].problem
+            problemMap[prob.$.short_name] = prob.$.id
+        return {languageMap, problemMap}
 
     getSubmitsFromContest: (param) ->
-        userMap = await @_getUsers(param)
-        data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=153", {}, "new-master"
-        data = await parseXml data 
-        languageMap = @_getLanguageMap(data)
-        startTime = moment(data.runlog.$.start_time, "YYYY/MM/DD HH:mm:ss")
+        {languageMap, problemMap} = await @_getMaps(param)
+        data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=152", {}, "new-master"
+        data = parseCsv data, {delimiter: ";", relax_column_count: true, columns: true}
         results = []
-        for submit in data.runlog.runs[0].run
-            submit = submit.$
-            outcome = submit.status
+        for submit in data
+            outcome = submit.Stat_Short
             if outcome of @STATUS_MAP
                 outcome = @STATUS_MAP[outcome]
-            problem = "#{param.table}_#{submit.prob_id}"
-            user = userMap[submit.user_id]
-            id = "#{param.table}r#{submit.run_id}p#{problem}"
+            probId = problemMap[submit.Prob]
+            problem = "#{param.table}_#{probId}"
+            user = submit.User_Login
+            id = "#{param.table}r#{submit.Run_Id}p#{problem}"
             if @options.user and @options.user != user
                 logger.debug "Ignoring submit #{id} because it is from a different user"
                 continue
@@ -71,12 +70,12 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 continue
             results.push new Submit(
                 _id: id,
-                time: moment(startTime).add(submit.time, "seconds").add(1, "hours"),
+                time: new Date(submit.Time * 1000),
                 user: user,
                 problem: problem,
                 outcome: outcome
-                firstFail: if outcome != "OK" and outcome != "AC" and outcome != "IG" then +submit.test + 1 else undefined
-                language: languageMap[submit.lang_id]
+                firstFail: if outcome != "OK" and outcome != "AC" and outcome != "IG" then +submit.Test + 1 else undefined
+                language: languageMap[submit.Lang]
             )
         return results
 
