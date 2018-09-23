@@ -121,7 +121,8 @@ export default class Ejudge extends TestSystem
     registerUser: (user, registeredUser, password) ->
         adminUser = await @getAdmin(@baseContest)
 
-        registeredUser.ejudgePassword = password
+        ejudgePassword = Math.random().toString(36).substr(2, 8)
+        registeredUser.ejudgePassword = ejudgePassword
 
         href = "#{@server}/cgi-bin/serve-control"
         form =
@@ -130,8 +131,8 @@ export default class Ejudge extends TestSystem
             group_id: ""
             other_login: registeredUser.ejudgeUsername
             other_email: ""
-            reg_password1: registeredUser.ejudgePassword
-            reg_password2: registeredUser.ejudgePassword
+            reg_password1: ejudgePassword
+            reg_password2: ejudgePassword
             reg_random: ""
             field_9: 1
             reg_cnts_create: 1
@@ -145,12 +146,18 @@ export default class Ejudge extends TestSystem
             other_group_id: ""
             action_73: "Create a user"
 
-        res = await adminUser.download(href, {
+        await adminUser.download(href, {
             method: 'POST',
             headers: {'Content-Type': "application/x-www-form-urlencoded"},
             form: form,
             followAllRedirects: true
         }, "serve-control")
+        await adminUser.download("http://ejudge.algoprog.ru/cgi-bin/new-master", {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded"},
+            form: {action_276: "Reload config files for ALL contests"},
+            followAllRedirects: true
+        }, "new-master")
 
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)
