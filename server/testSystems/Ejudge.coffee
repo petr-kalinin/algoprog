@@ -52,12 +52,13 @@ class LoggedEjudgeUser
             form: {
                 login: @username,
                 password: @password,
-                contest_id: @contestId
+                contest_id: @contestId,
+                locale_id: 1
             },
             followAllRedirects: true,
-            timeout: 30 * 1000
+            timeout: 30 * 1000,
         })
-        if not page.includes("Logout")
+        if not page.includes("Logout") and not page.includes("Выйти из системы")
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
         logger.info "Logger to prog #{prog}, SID=#{sidString[1]}"
@@ -164,7 +165,9 @@ export default class Ejudge extends TestSystem
         document = (new JSDOM(page, {url: problemHref})).window.document
         scoreEl = document.getElementsByClassName("line-table-wb")[0]?.getElementsByTagName("tt")[0]?.textContent
         if isNaN(scoreEl)
-            throw "Can not find score for problem #{problemHref}"
+            scoreEl = document.getElementsByClassName("max-score")[0]?.textContent
+        if isNaN(scoreEl)
+            throw "Can not find score for problem #{problemHref}: found #{scoreEl}"
         el = document.getElementById("probNavTaskArea-ins")
         for tag in ["h2", "form"]
             subels = el.getElementsByTagName(tag)
