@@ -269,9 +269,9 @@ export default setupApi = (app) ->
         if not user
             res.status(400).send("User not found")
             return
-        adminUser = await InformaticsUser.findAdmin()
         newGroup = req.params.groupName
         if newGroup in ["none", "unknown"]
+            adminUser = await InformaticsUser.findAdmin()
             await groups.moveUserToGroup(adminUser, req.params.userId, newGroup)
         if newGroup != "none"
             await user.setUserList(newGroup)
