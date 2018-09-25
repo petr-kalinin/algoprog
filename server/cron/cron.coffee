@@ -19,7 +19,7 @@ logger.info "Will set downloadAll to " + nightHour + ":59:58 local time"
 
 jobAll = undefined  #new Cron.CronJob('58 59 ' + nightHour + ' * * *', downloadSubmits.runAll, null, true);
 jobUntilIgnored = undefined  #new Cron.CronJob('59 */3 * * * *', downloadSubmits.runUntilIgnored, null, true);
-jobLast = new Cron.CronJob('0 */5 * * * *', downloadSubmits.runLast, null, true);
+jobLast = new Cron.CronJob('0 * * * * *', downloadSubmits.runLast, null, true);
 
 #jobContests = new Cron.CronJob('0 */10 * * * *', downloadContests.run, null, true);
 jobContests = undefined

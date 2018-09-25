@@ -270,9 +270,11 @@ export default setupApi = (app) ->
             res.status(400).send("User not found")
             return
         adminUser = await InformaticsUser.findAdmin()
-        await groups.moveUserToGroup(adminUser, req.params.userId, req.params.groupName)
-        if req.params.groupName != "none"
-            await user.setUserList(req.params.groupName)
+        newGroup = req.params.groupName
+        if newGroup in ["none", "unknown"]
+            await groups.moveUserToGroup(adminUser, req.params.userId, newGroup)
+        if newGroup != "none"
+            await user.setUserList(newGroup)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
@@ -295,13 +297,13 @@ export default setupApi = (app) ->
 
         runForUser = (user) ->
             await groups.moveUserToGroup(adminUser, user._id, "unknown")
-            await user.setUserList("unknown")
+            #await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
         users = await User.findAll()
         for user in users
-            if user.userList == "stud"
-                continue
+            #if user.userList == "stud"
+            #    continue
             runForUser(user)
         res.send('OK')
 

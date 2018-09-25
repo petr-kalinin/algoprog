@@ -167,36 +167,31 @@ wrapRunning = (callable) ->
         finally
             running = false
 
-forAllUserListsAndTestSystems = (callable) ->
-    for group of groups.GROUPS
-        for _, system of testSystemsRegistry
-            await callable(group, system)
+forAllTestSystems = (callable) ->
+    for _, system of testSystemsRegistry
+        await callable(system)
 
 
 # (@baseDownloader, @minPages, @limitPages, @forceMetadata)
-# submitDownloader: (userId, userList, problemId, submitsPerPage) ->
+# submitDownloader: (userId, problemId, submitsPerPage) ->
 
 export runForUser = (userId, submitsPerPage, maxPages) ->
     try
         user = await User.findById(userId)
-        await forAllUserListsAndTestSystems (group, system) ->
-            if group != user.userList
-                return
+        await forAllTestSystems (system) ->
             logger.info "runForUser", system.id(), userId
-            systemDownloader = await system.submitDownloader(userId, user.userList, undefined, submitsPerPage)
+            systemDownloader = await system.submitDownloader(userId, undefined, submitsPerPage)
             await (new SubmitDownloader(systemDownloader, 1, maxPages, true)).run()
-            logger.info "Done runForUser", system.id(), group
+            logger.info "Done runForUser", system.id()
     catch e
         logger.error "Error in runForUser", e
 
 export runForUserAndProblem = (userId, problemId) ->
     try
         user = await User.findById(userId)
-        await forAllUserListsAndTestSystems (group, system) ->
-            if group != user.userList
-                return
+        await forAllTestSystems (system) ->
             logger.info "runForUserAndProblem", system.id(), userId, problemId
-            systemDownloader = await system.submitDownloader(userId, user.userList, problemId, 100)
+            systemDownloader = await system.submitDownloader(userId, problemId, 100)
             await (new SubmitDownloader(systemDownloader, 1, 10, true)).run()
             logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
@@ -205,33 +200,30 @@ export runForUserAndProblem = (userId, problemId) ->
 
 export runAll = wrapRunning () ->
     try
-        await forAllUserListsAndTestSystems (group, system) ->
-            logger.info "runAll", system.id(), group
-            systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
+        await forAllTestSystems (system) ->
+            logger.info "runAll", system.id()
+            systemDownloader = await system.submitDownloader(undefined, undefined, 1000)
             await (new SubmitDownloader(systemDownloader, 1, 1e9, false)).run()
-            logger.info "Done runAll", system.id(), group
+            logger.info "Done runAll", system.id()
     catch e
         logger.error "Error in SubmitDownloader", e
 
 export runUntilIgnored = wrapRunning () ->
     try
-        await forAllUserListsAndTestSystems (group, system) ->
-            if group == "unknown"
-                # there will be no ignored
-                return
-            logger.info "runUntilIgnored", system.id(), group
-            systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
+        await forAllTestSystems (system) ->
+            logger.info "runUntilIgnored", system.id()
+            systemDownloader = await system.submitDownloader(undefined, undefined, 1000)
             await (new UntilIgnoredSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
-            logger.info "Done runUntilIgnored", system.id(), group
+            logger.info "Done runUntilIgnored", system.id()
     catch e
         logger.error "Error in UntilIgnoredSubmitDownloader", e
 
 export runLast = wrapRunning () ->
     try
-        await forAllUserListsAndTestSystems (group, system) ->
-            logger.info "runLast", system.id(), group
-            systemDownloader = await system.submitDownloader(undefined, group, undefined, 100)
+        await forAllTestSystems (system) ->
+            logger.info "runLast", system.id()
+            systemDownloader = await system.submitDownloader(undefined, undefined, 100)
             await (new LastSubmitDownloader(systemDownloader, 1, 100, false)).run()
-            logger.info "Done runLast", system.id(), group
+            logger.info "Done runLast", system.id()
     catch e
         logger.error "Error in LastSubmitDownloader", e
