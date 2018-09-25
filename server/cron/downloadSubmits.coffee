@@ -127,7 +127,7 @@ class SubmitDownloader
             needContinue = true
             for r in results
                 needContinue = needContinue and r
-            if (page < @minPages) # always load at least minPages pages
+            if (page < @minPages - 1) # always load at least minPages pages
                 needContinue = true
             if not needContinue
                 break
@@ -230,8 +230,8 @@ export runLast = wrapRunning () ->
     try
         await forAllUserListsAndTestSystems (group, system) ->
             logger.info "runLast", system.id(), group
-            systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
-            await (new LastSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
+            systemDownloader = await system.submitDownloader(undefined, group, undefined, 100)
+            await (new LastSubmitDownloader(systemDownloader, 1, 100, false)).run()
             logger.info "Done runLast", system.id(), group
     catch e
         logger.error "Error in LastSubmitDownloader", e

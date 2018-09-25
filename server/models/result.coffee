@@ -22,7 +22,7 @@ resultsSchema.methods.upsert = () ->
     # required: user, table, total, solved, ok, attempts, ignored, lastSubmitId, lastSubmitTime
     user = await User.findById(@user)
     if not user
-        logger.warning "Unknown user #{@user} in Result.upsert, result id #{@_id}"
+        logger.warn "Unknown user #{@user} in Result.upsert, result id #{@_id}"
         return
     @userList = user.userList
     @_id = @user + "::" + @table
