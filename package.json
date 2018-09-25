@@ -82,7 +82,8 @@
     "source-map-support": "^0.5.4",
     "tinycolor2": "^1.4.1",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.0"
+    "watchify": "^3.11.0",
+    "xml2js": "*"
   },
   "devDependencies": {}
 }
