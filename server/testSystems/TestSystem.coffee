@@ -30,7 +30,7 @@ export default class TestSystem
     setOutcome: (submitId, outcome, comment) ->
         throw "not implemented"
 
-    submitDownloader: (userId, problemId, submitsPerPage) ->
+    submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage) ->
         throw "not implemented"
 
     submitNeedsFormData: () ->

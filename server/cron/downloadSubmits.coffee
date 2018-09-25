@@ -180,7 +180,7 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
         user = await User.findById(userId)
         await forAllTestSystems (system) ->
             logger.info "runForUser", system.id(), userId
-            systemDownloader = await system.submitDownloader(userId, undefined, submitsPerPage)
+            systemDownloader = await system.submitDownloader(userId, undefined, undefined, submitsPerPage)
             await (new SubmitDownloader(systemDownloader, 1, maxPages, true)).run()
             logger.info "Done runForUser", system.id()
     catch e
@@ -191,7 +191,7 @@ export runForUserAndProblem = (userId, problemId) ->
         user = await User.findById(userId)
         await forAllTestSystems (system) ->
             logger.info "runForUserAndProblem", system.id(), userId, problemId
-            systemDownloader = await system.submitDownloader(userId, problemId, 100)
+            systemDownloader = await system.submitDownloader(userId, problemId, undefined, 100)
             await (new SubmitDownloader(systemDownloader, 1, 10, true)).run()
             logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
@@ -202,7 +202,7 @@ export runAll = wrapRunning () ->
     try
         await forAllTestSystems (system) ->
             logger.info "runAll", system.id()
-            systemDownloader = await system.submitDownloader(undefined, undefined, 1000)
+            systemDownloader = await system.submitDownloader(undefined, undefined, undefined, 1000)
             await (new SubmitDownloader(systemDownloader, 1, 1e9, false)).run()
             logger.info "Done runAll", system.id()
     catch e
@@ -212,7 +212,7 @@ export runUntilIgnored = wrapRunning () ->
     try
         await forAllTestSystems (system) ->
             logger.info "runUntilIgnored", system.id()
-            systemDownloader = await system.submitDownloader(undefined, undefined, 1000)
+            systemDownloader = await system.submitDownloader(undefined, undefined, undefined, 1000)
             await (new UntilIgnoredSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
             logger.info "Done runUntilIgnored", system.id()
     catch e
@@ -220,9 +220,12 @@ export runUntilIgnored = wrapRunning () ->
 
 export runLast = wrapRunning () ->
     try
+        lastSubmit = await Submit.findLast()
+        fromTimestamp = (+lastSubmit.time) / 1000 - 5 * 60
+        logger.debug "fromTimestamp=#{fromTimestamp}"
         await forAllTestSystems (system) ->
             logger.info "runLast", system.id()
-            systemDownloader = await system.submitDownloader(undefined, undefined, 100)
+            systemDownloader = await system.submitDownloader(undefined, undefined, fromTimestamp, 100)
             await (new LastSubmitDownloader(systemDownloader, 1, 100, false)).run()
             logger.info "Done runLast", system.id()
     catch e

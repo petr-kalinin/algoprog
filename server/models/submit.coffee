@@ -35,6 +35,11 @@ submitsSchema.statics.findBestByProblem = (problemId, limit) ->
         .select({results: 0, comments: 0, force: 0})
         .limit(limit)
 
+submitsSchema.statics.findLast = () ->
+    for submit in await Submit.find({}).sort({time: -1}).limit(1)
+        return submit
+        
+
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })
 submitsSchema.index({ outcome : 1, time : 1 })
