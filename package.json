@@ -28,6 +28,7 @@
     "cron": "^1.3.0",
     "css-modules-require-hook": "^4.2.3",
     "css-modulesify": "^0.28.0",
+    "csv": "*",
     "deep-equal": "^1.0.1",
     "deepcopy": "^0.6.3",
     "diff": "^3.5.0",
