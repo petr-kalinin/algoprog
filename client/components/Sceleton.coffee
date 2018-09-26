@@ -35,7 +35,7 @@ Bread = (props) ->
             href = if p._id != "main" then "/material/" + p._id else "/"
             title = if p._id != "main" then p.title else "/"
             <LinkContainer to={href} key={p._id} isActive={() -> false}>
-                 <Breadcrumb.Item active={p._id==props.id}>
+                 <Breadcrumb.Item active={p._id==props.id} key={p._id}>
                     {title}
                 </Breadcrumb.Item>
             </LinkContainer>

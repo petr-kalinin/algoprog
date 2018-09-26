@@ -123,6 +123,6 @@ submitsSchema.index({ outcome : 1, time : 1 })
 submitsSchema.index({ time : 1 })
 submitsSchema.index({ problem: 1, quality : -1, time: -1 })
 
-Submit = mongoose.model('Submits', submitsSchema);
+Submit = mongoose.model('shadSubmits', submitsSchema);
 
 export default Submit

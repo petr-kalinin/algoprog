@@ -87,7 +87,7 @@ resultsSchema.index
     lastSubmitTime: -1
 
 
-Result = mongoose.model('Results', resultsSchema);
+Result = mongoose.model('shadResults', resultsSchema);
 
 
 export default Result

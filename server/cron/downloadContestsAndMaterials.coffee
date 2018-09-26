@@ -180,12 +180,12 @@ class ContestDownloader
 
 
 class ShadContestDownloader extends ContestDownloader
-    contests: ['1', '2']
+    contests: ['2']
 
     run: ->
         levels = []
         for cont, i in @contests
-            fullText = "ДЗ #{cont}"
+            fullText = "Домашнее задание #{i + 1}"
             ejudge = getTestSystem("ejudge")
             await @processContest(i * 10 + 1, cont, fullText, "main", ejudge)
 
