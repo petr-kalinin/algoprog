@@ -1,6 +1,6 @@
 import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits"
-import * as downloadContests from "./downloadContests"
+#import * as downloadContests from "./downloadContests"
 import * as downloadBlog from './downloadBlog'
 import updateCf from "./updateCf"
 import logger from '../log'
