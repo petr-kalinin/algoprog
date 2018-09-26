@@ -21,6 +21,6 @@ materialsSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a material"
 
-Material = mongoose.model('Materials', materialsSchema);
+Material = mongoose.model('shadMaterials', materialsSchema);
 
 export default Material

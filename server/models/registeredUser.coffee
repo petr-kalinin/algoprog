@@ -24,6 +24,6 @@ registeredUserSchema.methods.userKey = () ->
 
 registeredUserSchema.plugin(passportLocalMongoose);
 
-RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);
+RegisteredUser = mongoose.model('shadRegisteredUser', registeredUserSchema);
 
 export default RegisteredUser

@@ -19,6 +19,6 @@ usersPrivateSchema.methods.setPaidTill = (paidTill) ->
     await @update({$set: {"paidTill": paidTill}})
     @paidTill = paidTill
 
-UserPrivate = mongoose.model('UsersPrivate', usersPrivateSchema);
+UserPrivate = mongoose.model('shadUsersPrivate', usersPrivateSchema);
 
 export default UserPrivate

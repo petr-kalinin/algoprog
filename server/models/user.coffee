@@ -133,6 +133,6 @@ usersSchema.index
 usersSchema.index
     username: 1
 
-User = mongoose.model('Users', usersSchema);
+User = mongoose.model('shadUsers', usersSchema);
 
 export default User

@@ -172,7 +172,7 @@ export default class Ejudge extends TestSystem
         for tag in ["h2", "form"]
             subels = el.getElementsByTagName(tag)
             for subel in subels
-                subel.parentElement.removeChild(subel)
+                subel?.parentElement?.removeChild(subel)
         headers = el.getElementsByTagName("h3")
         submitHeader = headers[headers.length - 1]
         submitHeader.parentElement.removeChild(submitHeader)

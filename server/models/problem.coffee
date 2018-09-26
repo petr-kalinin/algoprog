@@ -44,6 +44,6 @@ problemsSchema.statics.findByLevel = (level) ->
     return Problem.find
         level: level
 
-Problem = mongoose.model('Problems', problemsSchema);
+Problem = mongoose.model('shadProblems', problemsSchema);
 
 export default Problem
