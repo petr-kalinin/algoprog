@@ -68,7 +68,7 @@ export class SubmitSource extends React.Component
 
     render: () ->
         <div>
-            <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            <pre className={"sourcecode " + langClass(@props.submit.language)}>{convert(@props.submit.source, @state.encoding)}</pre>
             Кодировка:{" "}
             <ButtonGroup>
                 {
