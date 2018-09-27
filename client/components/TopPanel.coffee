@@ -92,7 +92,7 @@ class TopPanel extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
+            showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser, @props.me)
             showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         @closeWarning = @closeWarning.bind(this)
         @openWarning = @openWarning.bind(this)
