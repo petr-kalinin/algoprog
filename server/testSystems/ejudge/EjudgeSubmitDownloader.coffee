@@ -34,6 +34,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         PD: "Тестирование..."
         CG: "Компиляция..."
         RU: "Тестирование..."
+        SV: "Нарушение стиля"
 
     constructor: (@parameters, @options={}) ->
         super()
@@ -138,7 +139,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         page = await param.admin.download href, {}, "new-master"
         document = (new JSDOM(page, {url: href})).window.document
         result = {tests: []}
-        if page.includes("Compilation error")
+        if page.includes("Compilation error") or page.includes("Coding style violation")
             result.compiler_output = document.getElementsByTagName("pre")[0]?.textContent            
         table = document.getElementsByClassName("b1")?[0]
         if not table
