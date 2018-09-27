@@ -92,7 +92,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
             continue  # we might have a future AC
         else if submit.outcome == "PS" or submit.outcome == "CT"
             ps = 1
-        else if submit.outcome != "CE"
+        else if submit.outcome != "CE" and submit.outcome != "SV" and submit.firstFail != 1 and (not (points?))
             attempts++
     logger.debug "updated result ", userId, problemId, solved, ok, ps, attempts, ignored, lastSubmitId
     result = new Result
