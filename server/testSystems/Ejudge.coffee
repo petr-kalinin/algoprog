@@ -170,12 +170,16 @@ export default class Ejudge extends TestSystem
             throw "Can not find score for problem #{problemHref}: found #{scoreEl}"
         el = document.getElementById("probNavTaskArea-ins")
         for tag in ["h2", "form"]
-            subels = el.getElementsByTagName(tag)
-            for subel in subels
-                subel?.parentElement?.removeChild(subel)
+            while true            
+                subels = el.getElementsByTagName(tag)
+                if subels.length == 0
+                    break
+                subels[0].parentElement.removeChild(subels[0])
+        for tag in ["h3", "table"]
+            els = el.getElementsByTagName(tag)
+            lastEl = els[els.length - 1]
+            lastEl.parentElement.removeChild(lastEl)
         headers = el.getElementsByTagName("h3")
-        submitHeader = headers[headers.length - 1]
-        submitHeader.parentElement.removeChild(submitHeader)
         header = headers[0]
         return {
             name: header.innerHTML
