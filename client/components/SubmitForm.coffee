@@ -22,7 +22,7 @@ import ShadowedSwitch from './ShadowedSwitch'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 LANGUAGES = [
-    [3, "GNU C++ 6.3.0", "cpp"]
+    [3, "GNU C++ 8.2.0", "cpp"]
 ]
 
 class SubmitForm extends React.Component
