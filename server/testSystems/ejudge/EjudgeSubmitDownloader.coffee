@@ -29,12 +29,10 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         PE: "Нарушение формата выходных данных"
         RT: "Runtime error (crash)"
         ML: "Превышен предел памяти"
-        CE: "Ошибка компиляции"
         DQ: "DQ"
         PD: "Тестирование..."
         CG: "Компиляция..."
         RU: "Тестирование..."
-        SV: "Нарушение стиля"
 
     constructor: (@parameters, @options={}) ->
         super()
