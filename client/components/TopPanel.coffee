@@ -119,7 +119,7 @@ class TopPanel extends React.Component
 
     componentDidUpdate: (prevProps, prevState) ->
         newState =
-            showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
+            showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser, @props.me)
             showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         if !deepEqual(newState, prevState)
             @setState(newState)
@@ -139,7 +139,7 @@ class TopPanel extends React.Component
                                 <UserName user={@props.myUser}/>
                                 <span className={styles.separator}/>
                                 <span title="Суммарные баллы">{@props.myUser.points}</span>
-                                {needUnknownWarning(@props.myUser) &&
+                                {needUnknownWarning(@props.myUser, @props.me) &&
                                     <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
                                 {needUnpaidWarning(@props.myUser) &&
                                     <span title="Занятия не оплачены" className={"text-danger " + styles.warning} onClick={@openUnpaid}><FontAwesome name="exclamation-triangle"/></span>}
