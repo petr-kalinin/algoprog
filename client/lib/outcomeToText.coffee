@@ -18,6 +18,8 @@ export default outcomeToText = (outcome) ->
             cl = "warning"
         when "CE"
             message = "Ошибка компиляции"
+        when "SV"
+            message = "Нарушение стиля"
         when "DQ"
             cl = globalStyles.dq_text
             message = "Дисквалифицировано"
