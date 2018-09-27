@@ -78,7 +78,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         else if submit.outcome == "OK"
             ok = 1
             continue  # we might have a future AC
-        else if submit.outcome != "CE" and submit.firstFail != 1 and (not (points?))
+        else if submit.outcome != "CE" and submit.outcome != "SV" and submit.firstFail != 1 and (not (points?))
             attempts++
     points = points || 0
     if solved > 0
