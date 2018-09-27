@@ -90,6 +90,12 @@ sortByLevel = (a, b) ->
     return 0
 
 
+sortByPoints = (a, b) ->
+    if a.user.points != b.user.points
+        return if a.user.points > b.user.points then -1 else 1
+    return 0
+
+
 export default table = (userList, table) ->
     data = []
     users = await User.findByList(userList)
@@ -99,7 +105,7 @@ export default table = (userList, table) ->
         data.push(getUserResult(user, tables, 1))
     results = await Promise.all(data)
     results = (r for r in results when r)
-    results = results.sort(if table == "main" then sortByLevel else sortBySolved)
+    results = results.sort(sortByPoints)
     return results
 
 export fullUser = (userId) ->
