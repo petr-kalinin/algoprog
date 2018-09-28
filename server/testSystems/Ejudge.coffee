@@ -104,7 +104,7 @@ class LoggedEjudgeUser
         document = (new JSDOM(page, {url: href})).window.document
         el = document.getElementsByTagName("title")
         result = el[0].textContent
-        if result.includes("Error")
+        if result.includes("Error") or result.includes("Ошибка")
             throw {ejudgeError: result}
 
 
@@ -258,6 +258,7 @@ export default class Ejudge extends TestSystem
         logger.info "Successfully set outcome for #{submitId}"
 
     submitWithFormData: (user, problemId, contentType, data) ->
+        logger.info "Submitting: #{user}, #{problemId}"
         [contest, problem] = problemId.split("_")
         try
             oldSubmits = await Submit.findByUserAndProblem(user.userKey(), problemId)
