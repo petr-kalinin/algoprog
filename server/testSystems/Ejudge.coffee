@@ -264,7 +264,7 @@ export default class Ejudge extends TestSystem
         logger.info "Successfully set outcome for #{submitId}"
 
     submitWithFormData: (user, problemId, contentType, data) ->
-        logger.info "Submitting: #{user}, #{problemId}"
+        logger.info "Submitting: #{user.username}, #{problemId}"
         [contest, problem] = problemId.split("_")
         try
             oldSubmits = await Submit.findByUserAndProblem(user.userKey(), problemId)
