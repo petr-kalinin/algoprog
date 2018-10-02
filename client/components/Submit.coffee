@@ -42,7 +42,7 @@ langClass = (lang) ->
 convert = (source, encoding) ->
     if not source
         return ""
-    buf = Buffer.from(source, "latin1")
+    buf = Buffer.from(source, "utf8")
     return iconv.decode(buf, encoding)
 
 ENCODINGS = ["utf8", "win1251", "cp866"]
