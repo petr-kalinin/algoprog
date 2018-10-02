@@ -213,6 +213,8 @@ export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
 export runAll = wrapRunning () ->
     try
         await forAllTestSystems (system) ->
+            if group != "all"
+                return
             logger.info "runAll", system.id()
             systemDownloader = await system.submitDownloader(undefined, undefined, undefined, 1000)
             await (new SubmitDownloader(systemDownloader, 1, 1e9, false)).run()
@@ -233,6 +235,8 @@ export runUntilIgnored = wrapRunning () ->
 export runLast = wrapRunning () ->
     try
         lastSubmit = await Submit.findLastNotCT()
+            if group != "all"
+                return
         fromTimestamp = (+lastSubmit.time) / 1000 - 5 * 60
         logger.info "fromTimestamp=#{fromTimestamp}"
         await forAllTestSystems (system) ->

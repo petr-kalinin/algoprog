@@ -42,7 +42,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         data = await parseXml data
         languageMap = {}
         for lang in data.runlog.languages[0].language
-            languageMap[lang.$.id] = lang.$.long_name
+            languageMap[lang.$.short_name] = lang.$.long_name
         problemMap = {}
         for prob in data.runlog.problems[0].problem
             problemMap[prob.$.short_name] = prob.$.id
