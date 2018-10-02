@@ -180,7 +180,7 @@ class ContestDownloader
 
 
 class ShadContestDownloader extends ContestDownloader
-    contests: ['1', '2']
+    contests: ['1', '2', '3']
 
     run: ->
         levels = []
