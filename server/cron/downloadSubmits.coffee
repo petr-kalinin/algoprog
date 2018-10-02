@@ -206,6 +206,8 @@ export runForUserAndProblem = (userId, problemId) ->
 export runAll = wrapRunning () ->
     try
         await forAllUserListsAndTestSystems (group, system) ->
+            if group != "all"
+                return
             logger.info "runAll", system.id(), group
             systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
             await (new SubmitDownloader(systemDownloader, 1, 1e9, false)).run()
@@ -229,6 +231,8 @@ export runUntilIgnored = wrapRunning () ->
 export runLast = wrapRunning () ->
     try
         await forAllUserListsAndTestSystems (group, system) ->
+            if group != "all"
+                return
             logger.info "runLast", system.id(), group
             systemDownloader = await system.submitDownloader(undefined, group, undefined, 1000)
             await (new LastSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
