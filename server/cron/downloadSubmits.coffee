@@ -64,7 +64,7 @@ class SubmitDownloader
         return result
 
     processSubmit: (newSubmit) ->
-        logger.debug "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem
+        logger.info "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem
         res = await @needContinueFromSubmit(newSubmit)
 
         oldSubmit = (await Submit.findById(newSubmit._id))?.toObject()
@@ -77,7 +77,7 @@ class SubmitDownloader
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and not @forceMetadata)
-            logger.debug "Submit already in the database #{newSubmit._id}"
+            logger.info "Submit already in the database #{newSubmit._id}"
             return res
 
         for k of oldSubmit
