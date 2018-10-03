@@ -79,6 +79,13 @@ class SubmitDownloader
                 and not @forceMetadata)
             logger.debug "Submit already in the database #{newSubmit._id}"
             return res
+            
+        for k of oldSubmit
+            if not deepEqual(oldSubmit[k], newSubmit.toObject()[k])
+             logger.info k, oldSubmit[k], newSubmit.toObject()[k]
+        for k of newSubmit.toObject()
+            if not deepEqual(oldSubmit[k], newSubmit.toObject()[k])
+             logger.info k, oldSubmit[k], newSubmit.toObject()[k]
 
         if oldSubmit?.force and not @forceMetadata
             logger.info("Will not overwrite a forced submit #{newSubmit._id}")
