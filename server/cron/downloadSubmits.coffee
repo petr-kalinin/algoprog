@@ -80,10 +80,10 @@ class SubmitDownloader
 
         for k of oldSubmit
             if not deepEqual(oldSubmit[k], newSubmit.toObject()[k])
-             logger.info oldSubmit._id, k, oldSubmit[k], newSubmit.toObject()[k]
+                logger.info oldSubmit._id, k, oldSubmit?[k], newSubmit?.toObject()?[k]
         for k of newSubmit.toObject()
             if not deepEqual(oldSubmit[k], newSubmit.toObject()[k])
-             logger.info oldSubmit._id, k, oldSubmit[k], newSubmit.toObject()[k]
+                logger.info oldSubmit._id, k, oldSubmit?[k], newSubmit?.toObject()?[k]
 
         if oldSubmit?.force and not @forceMetadata
             await @onNewSubmit?(newSubmit)
