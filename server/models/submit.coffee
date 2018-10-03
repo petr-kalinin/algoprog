@@ -15,7 +15,7 @@ submitsSchema = new mongoose.Schema
     quality: { type: Number, default: 0 },
 
 submitsSchema.methods.upsert = () ->
-    @update(this, {upsert: true})
+    @update(this, {upsert: true, overwrite: true})
 
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
