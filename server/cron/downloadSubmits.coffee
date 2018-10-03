@@ -70,6 +70,7 @@ class SubmitDownloader
         oldSubmit = (await Submit.findById(newSubmit._id))?.toObject()
 
         if oldSubmit
+            delete oldSubmit.__v
             newSubmit.source = oldSubmit.source
             newSubmit.results = oldSubmit.results
             newSubmit.comments = oldSubmit.comments
