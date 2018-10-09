@@ -163,6 +163,9 @@ export default class Ejudge extends TestSystem
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)
         document = (new JSDOM(page, {url: problemHref})).window.document
+        isReview = document.getElementsByClassName("review-theory")[0]?
+        if isReview
+            scoreEl = "0"
         el = document.getElementById("probNavTaskArea-ins")
         for tag in ["h2", "form"]
             while true            
@@ -179,6 +182,7 @@ export default class Ejudge extends TestSystem
         return {
             name: header.innerHTML
             text: el.innerHTML
+            isReview: isReview
         }
 
     downloadContestProblems: (contestId) ->

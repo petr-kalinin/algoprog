@@ -9,6 +9,7 @@ problemsSchema = new mongoose.Schema
     name: String
     tables: [String]
     level: String
+    isReview: { type: Boolean, default: false }
 
 problemsSchema.methods.add = () ->
     oldProblem = await Problem.findById @_id
