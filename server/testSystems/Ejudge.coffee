@@ -166,6 +166,9 @@ export default class Ejudge extends TestSystem
         scoreEl = document.getElementsByClassName("line-table-wb")[0]?.getElementsByTagName("tt")[0]?.textContent
         if isNaN(scoreEl)
             scoreEl = document.getElementsByClassName("max-score")[0]?.textContent
+        isReview = document.getElementsByClassName("review-theory")[0]?
+        if isReview
+            scoreEl = "0"
         if isNaN(scoreEl)
             throw "Can not find score for problem #{problemHref}: found #{scoreEl}"
         el = document.getElementById("probNavTaskArea-ins")
@@ -185,6 +188,7 @@ export default class Ejudge extends TestSystem
             name: header.innerHTML
             text: el.innerHTML
             points: +scoreEl
+            isReview: isReview
         }
 
     downloadContestProblems: (contestId) ->

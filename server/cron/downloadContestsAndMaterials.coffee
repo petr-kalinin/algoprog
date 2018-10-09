@@ -103,6 +103,7 @@ class MaterialAdder
                 title: problem.name,
                 content: problem.text,
                 materials: []
+                isReview: problem.isReview
                 
         @addMaterial(material)
         tree = clone(material)
@@ -155,6 +156,7 @@ class ProblemsAdder
                 letter: prob.letter,
                 name: prob.name
                 points: prob.points
+                isReview: prob.isReview
             )
             problemIds.push(prob._id)
         @tables.push new Table(
