@@ -183,14 +183,19 @@ class ContestDownloader
 
 
 class ShadContestDownloader extends ContestDownloader
-    contests: ['1', '2', '3', '4']
+    contests:
+        "Домашнее задание 0": '1',
+        "Домашнее задание 1": '2',
+        "Домашнее задание 2": '3', 
+        "Домашнее задание 3": '4',
+        "Ревью": '9'
 
     run: ->
         levels = []
-        for cont, i in @contests
-            fullText = "Домашнее задание #{i}"
+        for fullText, cont of @contests
             ejudge = getTestSystem("ejudge")
-            await @processContest(i * 10 + 1, cont, fullText, "main", ejudge)
+            console.log fullText, cont
+            await @processContest(cont * 10 + 1, cont, fullText, "main", ejudge)
 
         await @finalize()
 

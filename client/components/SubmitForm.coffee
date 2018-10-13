@@ -116,16 +116,18 @@ class SubmitForm extends React.Component
                     type="file"
                     setField={@setField}
                     state={@state}/>
-                <FieldGroup
-                    id="lang_id"
-                    label=""
-                    componentClass="select"
-                    setField={@setField}
-                    state={@state}>
-                    {LANGUAGES.map((lang) =>
-                        <option value={lang[0]} key={lang[0]}>{lang[1]}</option>
-                    )}
-                </FieldGroup>
+                {if !@props.material.isReview
+                    <FieldGroup
+                        id="lang_id"
+                        label=""
+                        componentClass="select"
+                        setField={@setField}
+                        state={@state}>
+                        {LANGUAGES.map((lang) =>
+                            <option value={lang[0]} key={lang[0]}>{lang[1]}</option>
+                        )}
+                    </FieldGroup>
+                }
                 {" "}
                 <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
                     <ShadowedSwitch on={@state.draft}>

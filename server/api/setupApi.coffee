@@ -2,6 +2,7 @@ connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
+fileType = require('file-type')
 
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
@@ -46,6 +47,14 @@ wrap = (fn) ->
             args[2](error)
 
 expandSubmit = (submit) ->
+    MAX_SUBMIT_LENGTH = 100000
+
+    containsBinary = (source) ->
+        for ch in source
+            if ch.charCodeAt(0) < 10
+                return true
+        return false
+
     submit.fullUser = await User.findById(submit.user)
     submit.fullProblem = await Problem.findById(submit.problem)
     tableNamePromises = []
@@ -53,6 +62,8 @@ expandSubmit = (submit) ->
         tableNamePromises.push(Table.findById(t))
     tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
     submit.fullProblem.tables = tableNames
+    if (submit.source.length > MAX_SUBMIT_LENGTH or containsBinary(submit.source))
+        submit.source = "Файл слишком длинный или бинарный"
     return submit
 
 createDraftSubmit = (problemId, userId, language, code) ->
@@ -216,6 +227,16 @@ export default setupApi = (app) ->
         submit = (await Submit.findById(req.params.id)).toObject()
         submit = expandSubmit(submit)
         res.json(submit)
+
+    app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
+        submit = await Submit.findById(req.params.id)
+        if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
+            res.status(403).send('No permissions')
+            return
+        mimeType = fileType(submit.sourceRaw)?.mime
+        if mimeType
+            res.contentType(mimeType)
+        res.send(submit.sourceRaw)
 
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.userKey()

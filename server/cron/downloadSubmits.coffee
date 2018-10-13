@@ -72,6 +72,7 @@ class SubmitDownloader
         if oldSubmit
             delete oldSubmit.__v
             newSubmit.source = oldSubmit.source
+            newSubmit.sourceRaw = oldSubmit.sourceRaw
             newSubmit.results = oldSubmit.results
             newSubmit.comments = oldSubmit.comments
             newSubmit.quality = oldSubmit.quality
@@ -97,16 +98,18 @@ class SubmitDownloader
             newSubmit.outcome = oldSubmit.outcome
             newSubmit.force = oldSubmit.force
 
-        [source, comments, results] = await Promise.all([
+        [sourceRaw, comments, results] = await Promise.all([
             @baseDownloader.getSource(newSubmit._id),
             @baseDownloader.getComments(newSubmit._id),
             @baseDownloader.getResults(newSubmit._id)
         ])
+        source = sourceRaw.toString()
 
         @upsertComments(newSubmit, comments)
         comments = (c.text for c in comments)
 
         newSubmit.source = source
+        newSubmit.sourceRaw = sourceRaw
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
 

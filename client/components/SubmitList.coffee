@@ -63,7 +63,7 @@ class SubmitList extends React.Component
             if @props.bestSubmits.length
                 <h4><a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a></h4>
             }
-            <SubmitForm problemId={@props.material._id} reloadSubmitList={@props.handleReload}/>
+            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>

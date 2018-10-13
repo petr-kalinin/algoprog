@@ -78,6 +78,7 @@ export class SubmitSource extends React.Component
                     </Button>
                 }
             </ButtonGroup>
+            <div><a href={"/api/submitSource/#{@props.submit._id}"}>Скачать</a></div>
         </div>
 
 export SubmitHeader = (props) ->

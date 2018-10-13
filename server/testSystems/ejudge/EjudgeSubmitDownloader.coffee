@@ -21,6 +21,7 @@ parseXml = (xml) ->
 export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
     STATUS_MAP:
         PR: "OK"
+        AC: "OK"
         OK: "AC"
         IG: "IG"
         WA: "Неправильный ответ"
@@ -92,7 +93,10 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         [contest, run] = @_parseRunId(runid)
         param = @_findParam(contest)
         if param
-            return await param.admin.download "#{param.server}/cgi-bin/new-master?action=91&run_id=#{run}", {}, "new-master"
+            return await param.admin.download(
+                "#{param.server}/cgi-bin/new-master?action=91&run_id=#{run}", 
+                {encoding: null}, 
+                "new-master")
         logger.warn "Unknown contest in getSource, runid=#{runid}"
         return ""
 

@@ -1,12 +1,13 @@
 mongoose = require('mongoose')
 
 submitsSchema = new mongoose.Schema
-    _id: String,
-    time: Date,
-    user: String,
-    problem: String,
+    _id: String
+    time: Date
+    user: String
+    problem: String
     outcome: String
     source: String
+    sourceRaw: Buffer
     language: String
     comments: [String]
     results: mongoose.Schema.Types.Mixed
