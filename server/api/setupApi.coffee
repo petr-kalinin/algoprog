@@ -5,6 +5,7 @@ iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 sha256 = require('sha256')
 fileType = require('file-type')
+fileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
@@ -341,6 +342,16 @@ export default setupApi = (app) ->
         submit = hideTests(submit)
         submit = expandSubmit(submit)
         res.json(submit)
+
+    app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
+        submit = await Submit.findById(req.params.id)
+        if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
+            res.status(403).send('No permissions')
+            return
+        mimeType = fileType(submit.sourceRaw)?.mime
+        if mimeType
+            res.contentType(mimeType)
+        res.send(submit.sourceRaw)
 
     app.get '/api/similarSubmits/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

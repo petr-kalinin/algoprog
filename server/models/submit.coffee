@@ -22,7 +22,7 @@ submitsSchema = new mongoose.Schema
     problem: String
     outcome: String
     source: String
-    sourceRaw: String
+    sourceRaw: Buffer
     language: String
     comments: [String]
     results: mongoose.Schema.Types.Mixed
