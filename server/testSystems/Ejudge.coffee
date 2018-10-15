@@ -98,7 +98,7 @@ class LoggedEjudgeUser
         page = await downloadLimited(href, @jar, {
             method: 'POST',
             headers: {'Content-Type': contentType},
-            new Buffer(body, "latin-1"),
+            body: new Buffer(body, "latin-1"),
             followAllRedirects: true
         })
         document = (new JSDOM(page, {url: href})).window.document
