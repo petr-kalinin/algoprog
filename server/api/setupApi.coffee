@@ -13,6 +13,7 @@ import SubmitComment from '../models/SubmitComment'
 import RegisteredUser from '../models/registeredUser'
 import Material from '../models/Material'
 import BlogPost from '../models/BlogPost'
+import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
 
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
 
@@ -260,6 +261,48 @@ export default setupApi = (app) ->
         comment.viewed = true
         await comment.save()
         res.send('OK')
+
+    app.get '/api/checkins', wrap (req, res) ->
+        checkins = (
+            { 
+                checkins: await Checkin.findBySession(i)
+                max: MAX_CHECKIN_PER_SESSION[i]
+            } for i in [0..1])
+        for sessionCheckins in checkins
+            sessionCheckins.checkins = await Promise.all(sessionCheckins.checkins.map((checkin) ->
+                checkin = checkin.toObject()
+                checkin.fullUser = await User.findById(checkin.user)
+                return checkin
+            ))
+        res.json(checkins)
+
+    app.post '/api/checkin', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.informaticsId
+            res.status(403).send('No permissions')
+            return
+        session = req.body.session
+        if session?
+            session = +session
+        user = req.user.informaticsId
+        logger.info "User #{user} checkin for session #{session}"
+        if (session? and session != 0 and session != 1)
+            res.status(400).send("Strange session")
+            return
+        if session?
+            sessionCheckins = await Checkin.findBySession(session)
+            logger.info sessionCheckins
+            if sessionCheckins.length >= MAX_CHECKIN_PER_SESSION[session]        
+                res.status(403).send("No available place")
+                return
+        userCheckins = await Checkin.findByUser(user)
+        for checkin in userCheckins
+            await checkin.markDeleted()
+        if session?
+            checkin = new Checkin
+                user: user
+                session: session
+            await checkin.upsert()
+        res.send("OK")
 
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
