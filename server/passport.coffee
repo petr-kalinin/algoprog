@@ -17,7 +17,7 @@ export default configure = (app, db) ->
     app.use(cookieParser('zdgadf'))
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }))
-    app.use(bodyParser.raw({type: 'multipart/form-data'}))
+    app.use(bodyParser.raw({type: 'multipart/form-data', limit: 16*1024*1024 }))
     app.use(session({secret: 'zdgadf', store: mongoStore, resave: false, saveUninitialized: false}))
     app.use(passport.initialize())
     app.use(passport.session())
