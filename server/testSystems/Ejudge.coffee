@@ -78,7 +78,7 @@ class LoggedEjudgeUser
     submit: (problemId, contentType, body) ->
         [_, boundary] = contentType.match(/boundary=(.*)/)
         boundary = "--" + boundary
-        body = body.toString("latin-1")
+        body = body.toString("latin1")
         body = """
             #{boundary}\r
             Content-Disposition: form-data; name="SID"\r
@@ -98,7 +98,7 @@ class LoggedEjudgeUser
         page = await downloadLimited(href, @jar, {
             method: 'POST',
             headers: {'Content-Type': contentType},
-            body: new Buffer(body, "latin-1"),
+            body: new Buffer(body, "latin1"),
             followAllRedirects: true
         })
         document = (new JSDOM(page, {url: href})).window.document
