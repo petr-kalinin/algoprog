@@ -9,6 +9,7 @@ import {
 import UserBadgePage from './pages/UserBadgePage'
 import FullUserPage from './pages/FullUserPage'
 import DashboardPage from './pages/DashboardPage'
+import CheckinsPage from './pages/CheckinsPage'
 import TablePage from './pages/TablePage'
 import MaterialPage from './pages/MaterialPage'
 import SolvedByWeekPage from './pages/SolvedByWeekPage'
@@ -49,6 +50,11 @@ export default [
         path: '/dashboard',
         key: "dashboard",
         component: DashboardPage,
+    },
+    {
+        path: '/checkins',
+        key: "checkins",
+        component: CheckinsPage,
     },
     {
         path: '/review',

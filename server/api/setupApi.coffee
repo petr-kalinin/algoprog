@@ -278,7 +278,7 @@ export default setupApi = (app) ->
 
     app.post '/api/checkin', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.informaticsId
-            res.status(403).send('No permissions')
+            res.status(403).json({error: 'No permissions'})
             return
         session = req.body.session
         if session?
@@ -286,13 +286,12 @@ export default setupApi = (app) ->
         user = req.user.informaticsId
         logger.info "User #{user} checkin for session #{session}"
         if (session? and session != 0 and session != 1)
-            res.status(400).send("Strange session")
+            res.status(400).json({error: "Strange session"})
             return
         if session?
             sessionCheckins = await Checkin.findBySession(session)
-            logger.info sessionCheckins
             if sessionCheckins.length >= MAX_CHECKIN_PER_SESSION[session]        
-                res.status(403).send("No available place")
+                res.status(403).json({error: "Нет мест"})
                 return
         userCheckins = await Checkin.findByUser(user)
         for checkin in userCheckins
@@ -302,7 +301,7 @@ export default setupApi = (app) ->
                 user: user
                 session: session
             await checkin.upsert()
-        res.send("OK")
+        res.json({ok: "OK"})
 
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
