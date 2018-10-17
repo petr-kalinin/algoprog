@@ -220,9 +220,9 @@ export runUntilIgnored = wrapRunning () ->
 
 export runLast = wrapRunning () ->
     try
-        lastSubmit = await Submit.findLast()
+        lastSubmit = await Submit.findLastNotCT()
         fromTimestamp = (+lastSubmit.time) / 1000 - 5 * 60
-        logger.debug "fromTimestamp=#{fromTimestamp}"
+        logger.info "fromTimestamp=#{fromTimestamp}"
         await forAllTestSystems (system) ->
             logger.info "runLast", system.id()
             systemDownloader = await system.submitDownloader(undefined, undefined, fromTimestamp, 100)

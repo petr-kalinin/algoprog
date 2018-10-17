@@ -15,6 +15,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     IG: 'Проигнорировано'
     DQ: 'Дисквалифицировано'
     CE: 'Ошибка компиляции'
+    CT: ["Тестирование...", "Компиляция...", "Перетестировать"]
 
     parseRunId: (runid) ->
         [fullMatch, contest, run] = runid.match(/(\d+)r(\d+)p(\d+)/)
@@ -71,6 +72,8 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             outcome = "IG"
         if (outcome == @DQ)
             outcome = "DQ"
+        if (outcome in @CT)
+            outcome = "CT"
 
         date = new Date(moment(date + "+03"))
 

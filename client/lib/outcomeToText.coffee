@@ -21,4 +21,6 @@ export default outcomeToText = (outcome) ->
         when "DQ"
             cl = globalStyles.dq_text
             message = "Дисквалифицировано"
+        when "CT"
+            message = "Тестируется..."
     return [cl, message]
