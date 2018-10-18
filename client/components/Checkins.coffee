@@ -141,7 +141,8 @@ export default class Checkins extends React.Component
                         <Button bsStyle="info" onClick={@register(null, @props.myUser?._id)}>Отменить регистрацию</Button>
                     else if !@canRegister()
                         <Alert bsStyle="danger">
-                            Чтобы зарегистрироваться на занятие, вам надо решить минимум одну задачу.
+                            Чтобы зарегистрироваться на занятие, вам надо решить минимум одну задачу. 
+                            Или просто придти на занятие без записи, см. правила выше.
                         </Alert>
                     }
                 </div>
