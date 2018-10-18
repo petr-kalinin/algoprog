@@ -27,6 +27,9 @@ export default class Checkins extends React.Component
             @setState
                 result: result
 
+    canRegister: () ->
+        @props.myUser.rating > 0
+
     render: () ->
         wasme = [false, false]
         <div>
@@ -84,24 +87,31 @@ export default class Checkins extends React.Component
                                 }
                             </tr>
                         }
-                        <tr>
-                            {
-                            for _, i in SESSION_TIMES
-                                <td key={i}>
-                                    {
-                                    if @props.myUser?._id and !wasme[i] and @props.data[i].checkins.length < @props.data[i].max
-                                        <Button bsStyle="primary" onClick={@register(i, @props.myUser?._id)}>
-                                            Зарегистрироваться
-                                        </Button>
-                                    }                                            
-                                </td>
-                            }
-                        </tr>
+                        {
+                        if @canRegister()
+                            <tr>
+                                {
+                                for _, i in SESSION_TIMES
+                                    <td key={i}>
+                                        {
+                                        if @props.myUser?._id and !wasme[i] and @props.data[i].checkins.length < @props.data[i].max
+                                            <Button bsStyle="primary" onClick={@register(i, @props.myUser?._id)}>
+                                                Зарегистрироваться
+                                            </Button>
+                                        }                                            
+                                    </td>
+                                }
+                            </tr>
+                        }
                         </tbody>
                     </Table>
                     {
                     if wasme[0] or wasme[1]
                         <Button bsStyle="info" onClick={@register(null, @props.myUser?._id)}>Отменить регистрацию</Button>
+                    else if !@canRegister()
+                        <Alert bsStyle="danger">
+                            Чтобы зарегистрироваться на занятие, вам надо решить минимум одну задачу.
+                        </Alert>
                     }
                 </div>
             }
