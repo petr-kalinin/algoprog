@@ -16,12 +16,13 @@ class CheckinsPage extends React.Component
             @props...,
             location: {title: "Регистрация на занятие", _id: "checkins"},
         }
-        `<Sceleton {...sceletonProps}><Checkins data={this.props.data} myUser={this.props.myUser} handleReload={this.props.handleReload}/></Sceleton>`
+        `<Sceleton {...sceletonProps}><Checkins data={this.props.data} myUser={this.props.myUser} handleReload={this.props.handleReload} me={this.props.me}/></Sceleton>`
 
 options =
     urls: () ->
         data: "checkins"
         myUser: "myUser"
+        me: "me"
 
     timeout: 20000
 

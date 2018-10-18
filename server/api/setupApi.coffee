@@ -276,14 +276,14 @@ export default setupApi = (app) ->
             ))
         res.json(checkins)
 
-    app.post '/api/checkin', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.informaticsId
+    app.post '/api/checkin/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         session = req.body.session
         if session?
             session = +session
-        user = req.user.informaticsId
+        user = ""+req.params.user
         logger.info "User #{user} checkin for session #{session}"
         if (session? and session != 0 and session != 1)
             res.status(400).json({error: "Strange session"})

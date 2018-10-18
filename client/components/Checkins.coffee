@@ -18,11 +18,11 @@ export default class Checkins extends React.Component
         @state = 
             result: undefined
 
-    register: (i) ->
+    register: (i, userId) ->
         () =>
             @setState
                 result: undefined
-            result = await callApi 'checkin', {session: i}
+            result = await callApi "checkin/#{userId}", {session: i}
             await @props.handleReload()
             @setState
                 result: result
@@ -66,7 +66,17 @@ export default class Checkins extends React.Component
                                         if @props.data[i].checkins[row]
                                             if @props.data[i].checkins[row].user == @props.myUser?._id   
                                                 wasme[i] = true
+                                            <div>
                                             <UserName user={@props.data[i].checkins[row].fullUser}/>
+                                            {
+                                            if @props.me?.admin
+                                                <button type="button" 
+                                                        className="close pull-left"
+                                                        onClick={@register(null, @props.data[i].checkins[row].user)}>
+                                                    <span>&times;&nbsp;</span>
+                                                </button>
+                                            }
+                                            </div>
                                         else if row < @props.data[i].max
                                             <span>(свободно)</span>
                                         }                                            
@@ -80,7 +90,9 @@ export default class Checkins extends React.Component
                                 <td key={i}>
                                     {
                                     if @props.myUser?._id and !wasme[i] and @props.data[i].checkins.length < @props.data[i].max
-                                        <Button bsStyle="primary" onClick={@register(i)}>Зарегистрироваться</Button>
+                                        <Button bsStyle="primary" onClick={@register(i, @props.myUser?._id)}>
+                                            Зарегистрироваться
+                                        </Button>
                                     }                                            
                                 </td>
                             }
@@ -89,7 +101,7 @@ export default class Checkins extends React.Component
                     </Table>
                     {
                     if wasme[0] or wasme[1]
-                        <Button bsStyle="info" onClick={@register(null)}>Отменить регистрацию</Button>
+                        <Button bsStyle="info" onClick={@register(null, @props.myUser?._id)}>Отменить регистрацию</Button>
                     }
                 </div>
             }
