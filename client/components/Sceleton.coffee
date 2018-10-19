@@ -185,5 +185,4 @@ export default class Sceleton extends React.Component
                     </Row>
                 </Grid>
             </div>
-            <BottomPanel myUser={@props.myUser} />
         </div>
