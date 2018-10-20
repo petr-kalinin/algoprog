@@ -69,7 +69,7 @@ class PaidTill extends React.Component
             inLink = "Поддержать занятия"
         <span>
             {preLink}
-            <Link to="/pay">
+            <Link to="/material/pay">
                 {inLink}
                 {" "}
                 <FontAwesome name="cc-visa"/>
