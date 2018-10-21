@@ -18,6 +18,7 @@ import ReviewResultPage from './pages/ReviewResultPage'
 import RootPage from './pages/RootPage'
 import FullNewsPage from './pages/FullNewsPage'
 import ReviewPage from './pages/ReviewPage'
+import PaymentPage from './pages/PaymentPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
@@ -90,6 +91,11 @@ export default [
         path: '/pay',
         key: "pay",
         component: PayPage,
+    },
+    {
+        path: '/payment',
+        key: "payment",
+        component: PaymentPage,
     },
     {
         path: '/registeredUsers',
