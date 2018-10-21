@@ -148,9 +148,9 @@ class Register extends React.Component
                     state={@state}
                     validationState={passwordValidationState}/>
                 <h3>Ваш аккаунт на informatics.mccme.ru</h3>
-                <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.mccme.ru">informatics.mccme.ru</a>;
+                <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.mccme.ru" target="_blank">informatics.mccme.ru</a>;
                 ваши программы будут реально проверяться именно там. Если у вас еще нет аккаунта на
-                informatics, <a href="https://informatics.mccme.ru/login/signup.php">зарегистрируйтесь сейчас</a>.</p>
+                informatics, <a href="https://informatics.mccme.ru/login/signup.php" target="_blank">зарегистрируйтесь сейчас</a>.</p>
 
                 <p>Ниже вы должны будете указать логин и пароль от informatics. Пароль будет храниться на algoprog.ru.
                 Он нужен, чтобы отправлять решения задач от вашего имени.
