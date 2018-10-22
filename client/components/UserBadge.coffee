@@ -42,6 +42,7 @@ class GroupSelector extends React.Component
                 }
             </ButtonGroup>
         </div>
+        
 
 export default class UserBadge extends React.Component
     constructor: (props) ->
