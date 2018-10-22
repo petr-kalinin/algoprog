@@ -51,6 +51,7 @@ export default class UserBadge extends React.Component
         @handleBlChange = @handleBlChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
+        @handlePriceChange = @handlePriceChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
 
@@ -59,6 +60,7 @@ export default class UserBadge extends React.Component
             baseLevel: props.user.level.base || '',
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
+            price: props.user.price || ''
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -80,6 +82,9 @@ export default class UserBadge extends React.Component
     handlePaidTillChange: (event) ->
         @handleChange("paidTill", event)
 
+    handlePriceChange: (event) ->
+        @handleChange("price", event)
+
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
             level:
@@ -87,6 +92,7 @@ export default class UserBadge extends React.Component
             cf:
                 login: @state.cfLogin
             paidTill: @state.paidTill
+            price: @state.price
         )
         @props.handleReload()
 
@@ -147,6 +153,18 @@ export default class UserBadge extends React.Component
                                 paidTillDate = paidTill.format("YYYY-MM-DD")
                                 timeLeft = Math.floor(paidTill.diff(moment(), 'days', true))
                                 " (на сервере: #{paidTillDate} = #{timeLeft} дней)"
+                            }
+                        </div>
+                        <div>
+                            Стоимость: <input
+                                type="text"
+                                name="newPrice"
+                                value={@state.price}
+                                size="20"
+                                onChange={@handlePriceChange}
+                                onKeyPress={@handleKeyPressed} />
+                            {if @props.user.price
+                                " (на сервере: #{@props.user.price})"
                             }
                         </div>
                     </form> }

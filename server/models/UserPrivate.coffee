@@ -4,7 +4,8 @@ import logger from '../log'
 
 usersPrivateSchema = new mongoose.Schema
     _id: String,
-    paidTill: Date
+    paidTill: Date,
+    price: Number
 
 usersPrivateSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -18,6 +19,11 @@ usersPrivateSchema.methods.setPaidTill = (paidTill) ->
     logger.info "setting paidTill id ", @_id, paidTill
     await @update({$set: {"paidTill": paidTill}})
     @paidTill = paidTill
+
+usersPrivateSchema.methods.setPrice = (price) ->
+    logger.info "setting price id ", @_id, price
+    await @update({$set: {"price": price}})
+    @price = price
 
 UserPrivate = mongoose.model('UsersPrivate', usersPrivateSchema);
 

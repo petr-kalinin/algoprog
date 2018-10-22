@@ -121,6 +121,11 @@ export default setupApi = (app) ->
         paidTill = new Date(req.body.paidTill)
         if isNaN(paidTill)
             paidTill = undefined
+        price = req.body.price
+        if price == ""
+            price = undefined
+        else
+            price = +price
         user = await User.findById(req.params.id)
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
@@ -132,6 +137,7 @@ export default setupApi = (app) ->
             await userPrivate.upsert()
             userPrivate = await UserPrivate.findById(req.params.id)
         await userPrivate.setPaidTill paidTill
+        await userPrivate.setPrice price
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
