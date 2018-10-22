@@ -60,7 +60,7 @@ export default class UserBadge extends React.Component
             baseLevel: props.user.level.base || '',
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
-            price: props.user.price || ''
+            price: if props.user.price? then ''+props.user.price else ''
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -163,7 +163,7 @@ export default class UserBadge extends React.Component
                                 size="20"
                                 onChange={@handlePriceChange}
                                 onKeyPress={@handleKeyPressed} />
-                            {if @props.user.price
+                            {if @props.user.price?
                                 " (на сервере: #{@props.user.price})"
                             }
                         </div>
