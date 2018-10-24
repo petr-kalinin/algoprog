@@ -2,6 +2,9 @@ connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
+sha256 = require('sha256')
+deepcopy = require('deepcopy')
+moment = require('moment')
 
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
@@ -13,6 +16,7 @@ import SubmitComment from '../models/SubmitComment'
 import RegisteredUser from '../models/registeredUser'
 import Material from '../models/Material'
 import BlogPost from '../models/BlogPost'
+import Payment from '../models/Payment'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
 
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
@@ -38,6 +42,8 @@ import {unpaidBlocked} from '../../client/lib/isPaid'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
+
+PASSWORD = process.env["TINKOFF_PASSWORD"]
 
 wrap = (fn) ->
     (args...) ->
@@ -418,3 +424,63 @@ export default setupApi = (app) ->
         stats = getStats()
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
+
+    app.post '/api/paymentNotify', wrap (req, res) ->
+        logger.info("paymentNotify #{req.body.OrderId}")
+        data = deepcopy(req.body)
+        token = data.Token
+        delete data.Token
+        data.Password = PASSWORD
+        keys = (key for own key, value of data)
+        keys.sort()
+        str = ""
+        for key in keys
+            str += data[key]
+        hash = sha256(str)
+        if hash != token
+            logger.warn("paymentNotify #{req.body.OrderId}: wrong token")
+            res.status(403).send('Wrong token')
+            return
+
+        [userId, paidTillInOrder] = data.OrderId.split(":")
+        success = data.Status == "CONFIRMED"
+
+        payment = new Payment
+            user: userId
+            orderId: data.OrderId
+            success: success
+            processed: false
+            payload: req.body
+        await payment.upsert()
+
+        if not success
+            logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull")
+            res.send('OK')
+            return
+        user = await User.findById(userId)
+        if not user
+            logger.warn("paymentNotify #{req.body.OrderId}: unknown user")
+            res.status(400).send('Unknown user')
+            return
+
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate
+            userPrivate = new UserPrivate({_id: req.params.id})
+        payment.oldPaidTill = userPrivate.paidTill
+        expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
+        if expectedPaidTill != paidTillInOrder
+            logger.warn("paymentNotify #{req.body.OrderId}: wrong paid till")
+            res.send('OK')
+            return
+        if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
+            newPaidTill = new Date()
+        else
+            newPaidTill = userPrivate.paidTill
+        newPaidTill.add(1, 'months').startOf('day')
+        userPrivate.paidTill = newPaidTill
+        await userPrivate.upsert()
+        payment.processed = true
+        payment.newPaidTill = newPaidTill
+        await payment.upsert()
+        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}")
+        res.send('OK')
