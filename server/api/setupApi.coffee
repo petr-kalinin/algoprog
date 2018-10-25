@@ -454,13 +454,13 @@ export default setupApi = (app) ->
         await payment.upsert()
 
         if not success
-            logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull")
+            logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull (#{data.Status})")
             res.send('OK')
             return
         user = await User.findById(userId)
         if not user
             logger.warn("paymentNotify #{req.body.OrderId}: unknown user")
-            res.status(400).send('Unknown user')
+            res.send('OK')
             return
 
         userPrivate = await UserPrivate.findById(userId)
@@ -469,14 +469,18 @@ export default setupApi = (app) ->
         payment.oldPaidTill = userPrivate.paidTill
         expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
         if expectedPaidTill != paidTillInOrder
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong paid till")
+            logger.warn("paymentNotify #{req.body.OrderId}: wrong paid till (current is #{expectedPaidTill})")
+            res.send('OK')
+            return
+        if +userPrivate.price * 100 != +data.Amount
+            logger.warn("paymentNotify #{req.body.OrderId}: wrong amount (price is #{userPrivate.price}, paid #{data.Amount/100})")
             res.send('OK')
             return
         if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
             newPaidTill = new Date()
         else
             newPaidTill = userPrivate.paidTill
-        newPaidTill.add(1, 'months').startOf('day')
+        newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
         userPrivate.paidTill = newPaidTill
         await userPrivate.upsert()
         payment.processed = true
