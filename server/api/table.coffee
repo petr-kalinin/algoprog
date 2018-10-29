@@ -21,7 +21,7 @@ getTables = (table) ->
 getResult = (userId, tableId, collection) ->
     table = await collection.findById(tableId)
     result = await Result.findByUserAndTable(userId, tableId)
-    result = result.toObject()
+    result = result?.toObject() || {}
     result.problemName = table.name
     return result
 
