@@ -88,7 +88,8 @@ class LoggedInformaticsUser
             method: 'POST',
             headers: {'Content-Type': contentType},
             body,
-            followAllRedirects: true
+            followAllRedirects: true,
+            timeout: 30 * 1000
         })
         res = JSON.parse(page)
         if res.res != "ok"
