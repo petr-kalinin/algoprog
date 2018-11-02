@@ -83,7 +83,7 @@ export default class Payment extends React.Component
             <p>Вы оплачиваете один месяц занятий на algoprog.ru. Стоимость месяца для вас составляет {amount} рублей.</p>
             <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <form name="TinkoffPayForm" onSubmit={@pay} id="payForm">
-                <input type="hidden" name="terminalkey" value="1539978299062DEMO"/>
+                <input type="hidden" name="terminalkey" value="1539978299062"/>
                 <input type="hidden" name="frame" value="true"/>
                 <input type="hidden" name="language" value="ru"/>
                 <input type="hidden" name="order" value={order}/>

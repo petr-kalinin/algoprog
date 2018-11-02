@@ -43,6 +43,8 @@ class ContestDownloader
         text = await download(href, @jar)
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>'
         secondProbRes = re.exec text
+        if not secondProbRes
+            logger.warn("Second problem not found in contest ", href)
         secondProbHref = secondProbRes[1].replace('&amp;','&')
         secondProb = @makeProblem(secondProbRes[0], secondProbRes[1], secondProbRes[2], secondProbRes[3], secondProbRes[4])
 
