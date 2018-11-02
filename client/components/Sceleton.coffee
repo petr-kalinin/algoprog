@@ -54,7 +54,9 @@ ColWrapper = (props) ->
 
 class PaidTill extends React.Component
     render: () ->
+        href = "/pay"
         if @props.myUser?.userList == "stud" or @props.myUser?.userList == "notnnov"
+            href = "/payment"
             if @props.myUser?.paidTill && isPaid(@props.myUser)
                 preLink = "Занятия оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + " "
                 inLink = "Продлить"
@@ -69,7 +71,7 @@ class PaidTill extends React.Component
             inLink = "Поддержать занятия"
         <span>
             {preLink}
-            <Link to="/material/pay">
+            <Link to={href}>
                 {inLink}
                 {" "}
                 <FontAwesome name="cc-visa"/>
