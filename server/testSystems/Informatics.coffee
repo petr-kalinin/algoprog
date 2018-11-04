@@ -89,7 +89,8 @@ class LoggedInformaticsUser
             headers: {'Content-Type': contentType},
             body,
             followAllRedirects: true,
-            timeout: 30 * 1000
+            timeout: 30 * 1000,
+            maxAttempts: 1
         })
         res = JSON.parse(page)
         if res.res != "ok"
@@ -165,17 +166,24 @@ export default class Informatics extends TestSystem
 
     submitWithFormData: (user, problemId, contentType, data) ->
         informaticsProblemId = @_informaticsProblemId(problemId)
-        try
-            oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
+        success = false
+        for i in [1..8]
             try
-                informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
-                informaticsData = await informaticsUser.submit(informaticsProblemId, contentType, data)
-            finally
-                await downloadSubmits.runForUser(user.informaticsId, 5, 1)
-        catch e
+                oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
+                try
+                    informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
+                    informaticsData = await informaticsUser.submit(informaticsProblemId, contentType, data)
+                finally
+                    await downloadSubmits.runForUser(user.informaticsId, 5, 1)
+            catch e
+                logger.info "Error submitting", e.message
             newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
-            if oldSubmits.length == newSubmits.length
-                throw e
+            if oldSubmits.length != newSubmits.length
+                logger.info "However, submit appeared after downloadSubmits"
+                success = true
+                break
+        if not success
+            throw "Can't submit"
 
     registerUser: (user) ->
         logger.info "Moving user #{user._id} to unknown group"
