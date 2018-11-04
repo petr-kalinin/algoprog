@@ -168,6 +168,7 @@ export default class Informatics extends TestSystem
         informaticsProblemId = @_informaticsProblemId(problemId)
         success = false
         for i in [1..8]
+            logger.info "Try submit #{user}, #{problem}, attempt #{i}"
             try
                 oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
                 try
@@ -176,14 +177,14 @@ export default class Informatics extends TestSystem
                 finally
                     await downloadSubmits.runForUser(user.informaticsId, 5, 1)
             catch e
-                logger.info "Error submitting", e.message
+                logger.info "Error submitting #{user} #{problem} attempt #{i}: ", e.message
             newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
             if oldSubmits.length != newSubmits.length
-                logger.info "However, submit appeared after downloadSubmits"
+                logger.info "However, submit #{user} #{problem} appeared after downloadSubmits from attempt #{i}"
                 success = true
                 break
         if not success
-            throw "Can't submit"
+            throw "Can't submit #{user} #{problem}"
 
     registerUser: (user) ->
         logger.info "Moving user #{user._id} to unknown group"
