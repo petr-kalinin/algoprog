@@ -18,6 +18,7 @@ expandResult = (result) ->
         return {}
     if res.lastSubmitId
         res.fullSubmit = (await Submit.findById(result.lastSubmitId))
+        delete res.fullSubmit.sourceRaw
     tableNamePromises = []
     for table in res.fullTable.tables
         tableNamePromises.push(Table.findById(table))
