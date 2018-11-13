@@ -15,8 +15,10 @@ expandResult = (result) ->
     res.fullUser = res.fullUser.toObject()
     res.fullTable = (await Problem.findById(result.table)).toObject()
     if res.lastSubmitId
-        res.fullSubmit = (await Submit.findById(result.lastSubmitId))
+        res.fullSubmit = (await Submit.findById(result.lastSubmitId))?.toObject()
+        delete res.fullSubmit.source
         delete res.fullSubmit.sourceRaw
+        delete res.fullSubmit.results
     tableNamePromises = []
     for table in res.fullTable.tables
         tableNamePromises.push(Table.findById(table))
