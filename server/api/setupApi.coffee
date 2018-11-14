@@ -281,6 +281,18 @@ export default setupApi = (app) ->
         await submit.save()
         res.send('OK')
 
+    app.post '/api/setBonus/:submitId/:bonus', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        submit = await Submit.findById(req.params.submitId)
+        if not submit
+            res.status(404).send('Submit not found')
+            return
+        submit.bonus = req.params.bonus
+        await submit.save()
+        res.send('OK')
+
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
         console.log "Set comment viewed ", req.params.commentId, ""+req.user?.userKey(), "" + comment?.userId

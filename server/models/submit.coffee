@@ -14,6 +14,7 @@ submitsSchema = new mongoose.Schema
     firstFail: Number
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
+    bonus: { type: Number, default: 0 },
 
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})

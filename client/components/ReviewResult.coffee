@@ -16,6 +16,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import FormControl from 'react-bootstrap/lib/FormControl'
 import FormGroup from 'react-bootstrap/lib/FormGroup'
+import Form from 'react-bootstrap/lib/Form'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 
 import Submit, {SubmitHeader} from './Submit'
@@ -55,6 +56,7 @@ class ReviewResult extends React.Component
             currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
             currentDiff: [undefined, undefined]
             bestSubmits: false
+            currentBonus: @defaultBonus(props)
         @accept = @accept.bind this
         @ignore = @ignore.bind this
         @disqualify = @disqualify.bind this
@@ -64,7 +66,16 @@ class ReviewResult extends React.Component
         @setCurrentSubmit = @setCurrentSubmit.bind this
         @setCurrentDiff = @setCurrentDiff.bind this
         @setQuality = @setQuality.bind this
+        @setBonus = @setBonus.bind this
         @toggleBestSubmits = @toggleBestSubmits.bind this
+
+    defaultBonus: (props) ->
+        console.log props.data
+        result = 0
+        for submit in props.data
+            if submit.bonus? and submit.bonus > result
+                result = submit.bonus
+        return result
 
     setResult: (result) ->
         callApi "setOutcome/#{@state.currentSubmit._id}", {
@@ -80,12 +91,14 @@ class ReviewResult extends React.Component
                 currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
                 bestSubmits: @state.bestSubmits
                 currentDiff: @state.currentDiff
+                currentBonus: @defaultBonus(@props)
         else
             newState =
                 commentText: @state.commentText
                 currentSubmit: null
                 bestSubmits: @state.bestSubmits
                 currentDiff: @state.currentDiff
+                currentBonus: @state.currentBonus
             for submit in @props.data
                 if submit._id == @state.currentSubmit?._id
                     newState.currentSubmit = submit
@@ -109,6 +122,13 @@ class ReviewResult extends React.Component
         () =>
             await callApi "setQuality/#{@state.currentSubmit._id}/#{quality}", {}
             @props.handleReload()
+
+    setBonus: () ->
+        (e) =>
+            e.preventDefault()
+            await callApi "setBonus/#{@state.currentSubmit._id}/#{@state.currentBonus}", {}
+            @props.handleReload()
+            return false
 
     toggleBestSubmits: (e) ->
         if e
@@ -167,13 +187,24 @@ class ReviewResult extends React.Component
                                     starsClass = styles.stars
                                 else
                                     starsClass = ""
-                                <div className={starsClass}>
-                                    <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
-                                    {(<FontAwesome
-                                        name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
-                                        key={x}
-                                        onClick={@setQuality(x)}/> \
-                                        for x in [1..5])}
+                                <div>
+                                    <div className={starsClass}>
+                                        <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
+                                        {(<FontAwesome
+                                            name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
+                                            key={x}
+                                            onClick={@setQuality(x)}/> \
+                                            for x in [1..5])}
+                                    </div>
+                                    <Form inline onSubmit={@setBonus()}>
+                                        <FieldGroup
+                                                id="currentBonus"
+                                                label="Бонус&nbsp;"
+                                                setField={@setField}
+                                                state={@state}/>
+                                        {" "}(На сервере: {@defaultBonus(@props)}){" "}
+                                        <Button onClick={@setBonus()} >Ok</Button>
+                                    </Form>
                                 </div>
                                 }
                             </div>
