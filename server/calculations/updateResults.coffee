@@ -50,7 +50,10 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     points = undefined
     lastSubmitId = undefined
     lastSubmitTime = undefined
+    bonus = 0
     for submit in submits
+        if submit.bonus? and submit.bonus > bonus
+            bonus = submit.bonus
         if submit.outcome == "DR"
             continue
         lastSubmitId = submit._id
@@ -83,6 +86,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     points = points || 0
     if solved > 0
         points += problem.points
+    points += problem.points * bonus
     result =         
         user: userId,
         table: problemId,

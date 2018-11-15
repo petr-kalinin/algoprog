@@ -76,6 +76,7 @@ class SubmitDownloader
             newSubmit.results = oldSubmit.results
             newSubmit.comments = oldSubmit.comments
             newSubmit.quality = oldSubmit.quality
+            newSubmit.bonus = oldSubmit.bonus
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and not @forceMetadata)

@@ -291,6 +291,7 @@ export default setupApi = (app) ->
             return
         submit.bonus = req.params.bonus
         await submit.save()
+        await User.updateUser(submit.user)
         res.send('OK')
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
