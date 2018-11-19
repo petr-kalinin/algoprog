@@ -9,36 +9,42 @@ import isContestRequired from '../../client/lib/isContestRequired'
 
 import logger from '../log'
 
-updateResultsForTable = (userId, tableId, dirtyResults) ->
+resultId = (userId, tableId, late) ->
+    lateStr = if late then "::late" else ""
+    return "#{userId}::#{tableId}#{lateStr}"
+
+updateResultsForTable = (userId, tableId, dirtyResults, allowLate) ->
     if dirtyResults and (not ((userId + "::" + tableId) of dirtyResults))
-        result = await Result.findByUserAndTable(userId, tableId)
+        result = await Result.findById(resultId(userId, tableId, allowLate))
         if result
             return result
 
     total = {}
     table = await Table.findById(tableId)
     for child in table.tables
-        res = await updateResultsForTable(userId, child, dirtyResults)
+        res = await updateResultsForTable(userId, child, dirtyResults, allowLate)
         fullChild = await Table.findById(child)
         if not isContestRequired(fullChild?.name)
             res.required = 0
         total = addTotal(total, res, true)
     for prob in table.problems
-        res = await updateResultsForProblem(userId, prob, dirtyResults)
+        res = await updateResultsForProblem(userId, prob, dirtyResults, allowLate)
         total = addTotal(total, res, true)
 
-    logger.debug "updated result ", userId, tableId, total
-    result = new Result({
+    result = {
+        _id: resultId(userId, tableId, allowLate)
         total...,
         user: userId,
         table: tableId
-    })
+    }
+    logger.debug "updated result ", result
+    result = new Result(result)
     await result.upsert()
     return result
 
-updateResultsForProblem = (userId, problemId, dirtyResults) ->
+updateResultsForProblem = (userId, problemId, dirtyResults, allowLate) ->
     if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
-        result = await Result.findByUserAndTable(userId, problemId)
+        result = await Result.findById(resultId(userId, problemId, allowLate))
         if result
             return result
     problem = await Problem.findById(problemId)
@@ -52,6 +58,8 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     lastSubmitTime = undefined
     bonus = 0
     for submit in submits
+        if (submit.time > problem.deadline) and not allowLate
+            break
         if submit.bonus? and submit.bonus > bonus
             bonus = submit.bonus
         if submit.outcome == "DR"
@@ -88,6 +96,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         points += problem.points
     points += problem.points * bonus
     result =         
+        _id: resultId(userId, problemId, allowLate)
         user: userId,
         table: problemId,
         total: 1,
@@ -108,4 +117,5 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
     await updateResultsForTable(user, Table.main, dirtyResults)
+    await updateResultsForTable(user, Table.main, dirtyResults, true)
     logger.info "updated results for user ", user
