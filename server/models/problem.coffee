@@ -11,12 +11,10 @@ problemsSchema = new mongoose.Schema
     level: String
     points: Number
     isReview: { type: Boolean, default: false }
+    deadline: Date
 
 problemsSchema.methods.add = () ->
-    oldProblem = await Problem.findById @_id
-    if oldProblem
-        return
-    @save()
+    @update(this, {upsert: true, overwrite: true})
 
 problemsSchema.methods.addTable = (table) ->
     logger.debug "add table", @name, @tables

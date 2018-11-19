@@ -61,7 +61,7 @@ class LoggedEjudgeUser
         if not page.includes("Logout") and not page.includes("Выйти из системы")
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
-        logger.info "Logger to prog #{prog}, SID=#{sidString[1]}"
+        logger.info "Logged to prog #{prog}, SID=#{sidString[1]}"
         @sid[prog] = sidString[1]
 
     download: (href, options, prog="new-client") ->

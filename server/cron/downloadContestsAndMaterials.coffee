@@ -112,7 +112,7 @@ class MaterialAdder
             material: material
             tree: tree
 
-    addContest: (order, cid, name, level, problems) ->
+    addContest: (order, cid, name, level, problems, deadline) ->
         materials = []
         for prob, i in problems
             materials.push(@processProblem(prob, i))
@@ -148,7 +148,7 @@ class ProblemsAdder
         for table in @tables
             await table.upsert()
 
-    addContest: (order, cid, name, level, problems) ->
+    addContest: (order, cid, name, level, problems, deadline) ->
         problemIds = []
         for prob, i in problems
             @problems.push new Problem(
@@ -157,6 +157,7 @@ class ProblemsAdder
                 name: prob.name
                 points: prob.points
                 isReview: prob.isReview
+                deadline: deadline
             )
             problemIds.push(prob._id)
         @tables.push new Table(
@@ -172,10 +173,10 @@ class ContestDownloader
     constructor: () ->
         @adders = [new ProblemsAdder(), new MaterialAdder()]
 
-    processContest: (order, cid, name, level, testSystem) ->
+    processContest: (order, cid, name, level, testSystem, deadline) ->
         problems = await testSystem.downloadContestProblems(cid)
         for adder in @adders
-            await adder.addContest(order, cid, name, level, problems)
+            await adder.addContest(order, cid, name, level, problems, deadline)
         logger.debug "Downloaded contest ", name
 
     finalize: () ->
@@ -184,21 +185,37 @@ class ContestDownloader
 
 class ShadContestDownloader extends ContestDownloader
     contests:
-        "Домашнее задание 0": '1',
-        "Домашнее задание 1": '2',
-        "Домашнее задание 2": '3', 
-        "Домашнее задание 3": '4',
-        "Домашнее задание 4": '5',
-        "Домашнее задание 5": '6',
-        "Домашнее задание 6": '7',
-        "Ревью": '9'
+        "Домашнее задание 0":
+            id: '1',
+            deadline: '2018-10-30'
+        "Домашнее задание 1": 
+            id: '2'
+            deadline: '2018-11-06'
+        "Домашнее задание 2": 
+            id: '3',
+            deadline: '2018-11-13'
+        "Домашнее задание 3": 
+            id: '4',
+            deadline: '2018-11-20'
+        "Домашнее задание 4": 
+            id: '5',
+            deadline: '2018-11-27'
+        "Домашнее задание 5": 
+            id: '6',
+            deadline: '2018-12-04'
+        "Домашнее задание 6": 
+            id: '7',
+            deadline: '2018-12-11'
+        "Ревью": 
+            id: '9'
+            deadline: '2019-01-01'
 
     run: ->
         levels = []
         for fullText, cont of @contests
             ejudge = getTestSystem("ejudge")
-            console.log fullText, cont
-            await @processContest(cont * 10 + 1, cont, fullText, "main", ejudge)
+            console.log fullText, cont.id
+            await @processContest(cont * 10 + 1, cont.id, fullText, "main", ejudge, cont.deadline)
 
         await @finalize()
 
