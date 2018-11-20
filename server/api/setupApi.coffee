@@ -255,7 +255,7 @@ export default setupApi = (app) ->
         if req.user?.admin
             allowed = true
         else if req.user?.userKey()
-            result = await Result.findByUserAndTable(req.user?.userKey(), req.params.problem)
+            result = await Result.findByUserTableAndLate(req.user?.userKey(), req.params.problem, true)
             allowed = result && result.solved > 0
         if not allowed
             res.status(403).send('No permissions')

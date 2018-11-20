@@ -9,13 +9,9 @@ import isContestRequired from '../../client/lib/isContestRequired'
 
 import logger from '../log'
 
-resultId = (userId, tableId, late) ->
-    lateStr = if late then "::late" else ""
-    return "#{userId}::#{tableId}#{lateStr}"
-
 updateResultsForTable = (userId, tableId, dirtyResults, allowLate) ->
     if dirtyResults and (not ((userId + "::" + tableId) of dirtyResults))
-        result = await Result.findById(resultId(userId, tableId, allowLate))
+        result = await Result.findByUserTableAndLate(userId, tableId, allowLate)
         if result
             return result
 
@@ -32,7 +28,7 @@ updateResultsForTable = (userId, tableId, dirtyResults, allowLate) ->
         total = addTotal(total, res, true)
 
     result = {
-        _id: resultId(userId, tableId, allowLate)
+        _id: Result.getId(userId, tableId, allowLate)
         total...,
         user: userId,
         table: tableId
@@ -44,7 +40,7 @@ updateResultsForTable = (userId, tableId, dirtyResults, allowLate) ->
 
 updateResultsForProblem = (userId, problemId, dirtyResults, allowLate) ->
     if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
-        result = await Result.findById(resultId(userId, problemId, allowLate))
+        result = await Result.findByUserTableAndLate(userId, problemId, allowLate)
         if result
             return result
     problem = await Problem.findById(problemId)
@@ -96,7 +92,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults, allowLate) ->
         points += problem.points
     points += problem.points * bonus
     result =         
-        _id: resultId(userId, problemId, allowLate)
+        _id: Result.getId(userId, problemId, allowLate)
         user: userId,
         table: problemId,
         total: 1,

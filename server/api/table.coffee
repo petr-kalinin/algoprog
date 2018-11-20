@@ -18,35 +18,35 @@ getTables = (table) ->
     table = await Table.findById(tableIds[0])
     return table.tables
 
-getResult = (userId, tableId, collection) ->
+getResult = (userId, tableId, collection, late) ->
     table = await collection.findById(tableId)
-    result = await Result.findByUserAndTable(userId, tableId)
+    result = await Result.findByUserTableAndLate(userId, tableId, late)
     result = result.toObject()
     result.problemName = table.name
     return result
 
 needUser = (userId, tables) ->
     for tableId in tables
-        result = await Result.findByUserAndTable(userId, tableId)
+        result = await Result.findByUserTableAndLate(userId, tableId, true)
         if result and (result.solved > 0 or result.ok > 0 or result.attempts > 0)
             return true
     return false
 
-recurseResults = (user, tableId, depth) ->
+recurseResults = (user, tableId, depth, late) ->
     table = await Table.findById(tableId)
     tableResults = []
     total = undefined
     if depth > 0
         for subtableId in table.tables
-            subtableResults = await recurseResults(user, subtableId, depth-1)
+            subtableResults = await recurseResults(user, subtableId, depth-1, late)
             total = addTotal(total, subtableResults.total)
             delete subtableResults.total
             tableResults.push(subtableResults)
     else
         for subtableId in table.tables
-            tableResults.push(getResult(user._id, subtableId , Table))
+            tableResults.push(getResult(user._id, subtableId, Table, late))
         for subtableId in table.problems
-            tableResults.push(getResult(user._id, subtableId , Problem))
+            tableResults.push(getResult(user._id, subtableId, Problem, late))
         tableResults = await Promise.all(tableResults)
         for r in tableResults
             total = addTotal(total, r)
@@ -56,20 +56,24 @@ recurseResults = (user, tableId, depth) ->
         results: tableResults
         total: total
 
-getUserResult = (user, tables, depth) ->
-    if not await needUser(user._id, tables)
-        return null
+getUserResultsOrLate = (user, tables, depth, late) ->
     total = undefined
     results = []
     for tableId in tables
-        tableResults = await recurseResults(user, tableId, depth)
+        tableResults = await recurseResults(user, tableId, depth, late)
         total = addTotal(total, tableResults.total)
         delete tableResults.total
         results.push tableResults
     return
-        user: user
         results: results
         total: total
+
+getUserResult = (user, tables, depth) ->
+    if not await needUser(user._id, tables)
+        return null
+    {results, total} = await getUserResultsOrLate(user, tables, depth, false)
+    {results: resultsLate, total: totalLate} = await getUserResultsOrLate(user, tables, depth, true)
+    return {user, results, total, resultsLate, totalLate}
 
 sortBySolved = (a, b) ->
     if a.user.active != b.user.active
@@ -89,12 +93,10 @@ sortByLevel = (a, b) ->
         return if a.user.level > b.user.level then -1 else 1
     return 0
 
-
 sortByPoints = (a, b) ->
     if a.user.points != b.user.points
         return if a.user.points > b.user.points then -1 else 1
     return 0
-
 
 export default table = (userList, table) ->
     data = []

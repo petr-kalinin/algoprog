@@ -80,6 +80,9 @@ TotalResult = (props) ->
             else
                 props.result.points
             }
+            {if not props.header and props.result.points != props.resultLate.points
+                <div className="small">[{props.resultLate.points}]</div>
+            }
         </td>
 
 Result = (props) ->
@@ -95,6 +98,7 @@ Attempts = (props) ->
 
 export default TableRow = (props) ->
     total = undefined
+    totalLate = undefined
     h = props.header
     return <tr>
             <td className={globalStyles.border} />
@@ -104,6 +108,7 @@ export default TableRow = (props) ->
             userTableHeader(res, props)
             for table in props.results
                 subTotal = null
+                subTotalLate = null
                 for subtable in table.results
                     a <td className={globalStyles.border} key={subtable._id + "b"}/>
                     if props.header
@@ -111,15 +116,19 @@ export default TableRow = (props) ->
                             {subtable.name}
                         </td>
                     else
-                        for result in subtable.results
-                            a <Result header={props.header} result={result} user={props.user} key={result._id + "::" + subtable._id}/>
+                        for i in [0..subtable.results.length]
+                            result = subtable.results[i]
+                            resultLate = subtable.resultsLate[i]
+                            a <Result header={props.header} result={result} resultLate={resultLate} user={props.user} key={result._id + "::" + subtable._id}/>
                             subTotal = addTotal(subTotal, result)
+                            subTotalLate = addTotal(subTotalLate, result)
                 a <td className={globalStyles.border} key={table._id + "b"} />
                 if props.results.length > 1
-                    a <TotalResult header={props.header} result={subTotal} key={table._id + "t"} />
+                    a <TotalResult header={props.header} result={subTotal} resultLate={subTotalLate} key={table._id + "t"} />
                 total = addTotal(total, subTotal)
+                totalLate = addTotal(totalLate, subTotalLate)
             res}
             <td className={globalStyles.border} />
-            <TotalResult header={props.header} result={total}/>
+            <TotalResult header={props.header} result={total} resultLate={totalLate}/>
             <td className={globalStyles.border} />
         </tr>

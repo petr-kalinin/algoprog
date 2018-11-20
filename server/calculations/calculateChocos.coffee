@@ -64,7 +64,7 @@ export default calculateChocos = (userId) ->
             continue
         results = []
         for problem in table.problems
-            results.push(await Result.findByUserAndTable(userId, problem))
+            results.push(await Result.findByUserTableAndLate(userId, problem, true))
         for calc in chocoCalcs
             await calc.processContest(results)
     res = []

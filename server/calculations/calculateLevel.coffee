@@ -20,7 +20,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
                 for prob in subTable.problems
                     if isContestRequired(subTable.name)
                         probNumber++
-                    result = await Result.findByUserAndTable(user, prob)
+                    result = await Result.findByUserTableAndLate(user, prob, true)
                     if not result
                         continue
                     if result.solved == 0

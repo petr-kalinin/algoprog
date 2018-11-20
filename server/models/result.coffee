@@ -31,6 +31,10 @@ resultsSchema.methods.upsert = () ->
 
 resultsSchema.statics.DQconst = -10
 
+resultsSchema.statics.getId = (userId, tableId, late) ->
+    lateStr = if late then "::late" else ""
+    return "#{userId}::#{tableId}#{lateStr}"
+
 resultsSchema.statics.findByUserListAndTable = (userList, table) ->
     tableList = await Table.findById(table).descendandTables()
     return Result.find({
@@ -47,10 +51,8 @@ resultsSchema.statics.findByUser = (userId) ->
     return Result.find
         user: userId
 
-resultsSchema.statics.findByUserAndTable = (userId, tableId) ->
-    key = userId + "::" + tableId
-    return Result.findOne
-            _id: userId + "::" + tableId
+resultsSchema.statics.findByUserTableAndLate = (userId, tableId, late) ->
+    return Result.findById Result.getId(userId, tableId, late)
 
 resultsSchema.statics.findLastWA = (limit) ->
     return Result.find({
