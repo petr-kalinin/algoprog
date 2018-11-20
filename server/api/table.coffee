@@ -32,48 +32,48 @@ needUser = (userId, tables) ->
             return true
     return false
 
-recurseResults = (user, tableId, depth, late) ->
+recurseResults = (user, tableId, depth) ->
     table = await Table.findById(tableId)
     tableResults = []
+    tableResultsLate = []
     total = undefined
     if depth > 0
         for subtableId in table.tables
-            subtableResults = await recurseResults(user, subtableId, depth-1, late)
+            subtableResults = await recurseResults(user, subtableId, depth-1)
             total = addTotal(total, subtableResults.total)
             delete subtableResults.total
             tableResults.push(subtableResults)
     else
         for subtableId in table.tables
-            tableResults.push(getResult(user._id, subtableId, Table, late))
+            tableResults.push(getResult(user._id, subtableId, Table, false))
+            tableResultsLate.push(getResult(user._id, subtableId, Table, true))
         for subtableId in table.problems
-            tableResults.push(getResult(user._id, subtableId, Problem, late))
+            tableResults.push(getResult(user._id, subtableId, Problem, false))
+            tableResultsLate.push(getResult(user._id, subtableId, Problem, true))
         tableResults = await Promise.all(tableResults)
+        tableResultsLate = await Promise.all(tableResultsLate)
         for r in tableResults
             total = addTotal(total, r)
-    return
+    result = 
         _id: tableId,
         name: table.name
         results: tableResults
         total: total
-
-getUserResultsOrLate = (user, tables, depth, late) ->
-    total = undefined
-    results = []
-    for tableId in tables
-        tableResults = await recurseResults(user, tableId, depth, late)
-        total = addTotal(total, tableResults.total)
-        delete tableResults.total
-        results.push tableResults
-    return
-        results: results
-        total: total
+    if depth == 0
+        result.resultsLate = tableResultsLate
+    return result
 
 getUserResult = (user, tables, depth) ->
     if not await needUser(user._id, tables)
         return null
-    {results, total} = await getUserResultsOrLate(user, tables, depth, false)
-    {results: resultsLate, total: totalLate} = await getUserResultsOrLate(user, tables, depth, true)
-    return {user, results, total, resultsLate, totalLate}
+    total = undefined
+    results = []
+    for tableId in tables
+        tableResults = await recurseResults(user, tableId, depth)
+        total = addTotal(total, tableResults.total)
+        delete tableResults.total
+        results.push tableResults
+    return {user, results, total}
 
 sortBySolved = (a, b) ->
     if a.user.active != b.user.active

@@ -13,6 +13,9 @@ ProblemResult = (props) ->
     text2 = undefined
     if r.attempts > 0
         text2 = "(x#{r.attempts})"
+    text3 = undefined
+    if r.points != props.resultLate.points
+        text3 = <div className="small"  title="После дедлайна">[{props.resultLate.points}]</div>
 
     className =
         if r.solved > 0
@@ -45,6 +48,8 @@ ProblemResult = (props) ->
         {text1}
         {if text2 then <br/>}
         {text2 || ""}
+        {if text3 then <br/>}
+        {text3 || ""}
     </td>
 
 totalResultClass = (result) ->
@@ -81,7 +86,7 @@ TotalResult = (props) ->
                 props.result.points
             }
             {if not props.header and props.result.points != props.resultLate.points
-                <div className="small">[{props.resultLate.points}]</div>
+                <div className="small" title="После дедлайна">[{props.resultLate.points}]</div>
             }
         </td>
 
@@ -116,12 +121,12 @@ export default TableRow = (props) ->
                             {subtable.name}
                         </td>
                     else
-                        for i in [0..subtable.results.length]
+                        for i in [0...subtable.results.length]
                             result = subtable.results[i]
                             resultLate = subtable.resultsLate[i]
                             a <Result header={props.header} result={result} resultLate={resultLate} user={props.user} key={result._id + "::" + subtable._id}/>
                             subTotal = addTotal(subTotal, result)
-                            subTotalLate = addTotal(subTotalLate, result)
+                            subTotalLate = addTotal(subTotalLate, resultLate)
                 a <td className={globalStyles.border} key={table._id + "b"} />
                 if props.results.length > 1
                     a <TotalResult header={props.header} result={subTotal} resultLate={subTotalLate} key={table._id + "t"} />
