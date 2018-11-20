@@ -32,6 +32,7 @@ updateResultsForTable = (userId, tableId, dirtyResults, allowLate) ->
         total...,
         user: userId,
         table: tableId
+        late: allowLate
     }
     logger.debug "updated result ", result
     result = new Result(result)
@@ -104,6 +105,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults, allowLate) ->
         points: points
         lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
+        late: allowLate
 
     logger.debug "updated result ", result
     result = new Result(result)

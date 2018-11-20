@@ -57,13 +57,13 @@ export default calculateRatingEtc = (user) ->
         dict[key] += add
 
     submits = await Submit.findByUser(user._id)
-    results = await Result.findByUser(user._id)
+    results = await Result.findByUserAndLate(user._id, true)
     weekSolved = {}
     weekOk = {}
     wasSubmits = {}
     rating = 0
     activity = 0
-    points = 0
+    points = (await Result.findByUserTableAndLate(user._id, "main", false))?.points || 0
     probSolved = {}
 
     for s in submits
@@ -75,8 +75,6 @@ export default calculateRatingEtc = (user) ->
         wasSubmits[weekByTime(s.time)] = true
 
     for r in results
-        if r.table == "main"
-            points = r.points
         level = await findProblemLevel(r.table)
         if not level  # this will happen, in particular, if this is not a problem result
             continue

@@ -17,6 +17,7 @@ resultsSchema = new mongoose.Schema
     lastSubmitId: String
     lastSubmitTime: Date
     ignored: Number
+    late: Boolean
 
 
 resultsSchema.methods.upsert = () ->
@@ -50,6 +51,11 @@ resultsSchema.statics.findByUserList = (userList) ->
 resultsSchema.statics.findByUser = (userId) ->
     return Result.find
         user: userId
+
+resultsSchema.statics.findByUserAndLate = (userId, late) ->
+    return Result.find
+        user: userId
+        late: late
 
 resultsSchema.statics.findByUserTableAndLate = (userId, tableId, late) ->
     return Result.findById Result.getId(userId, tableId, late)
