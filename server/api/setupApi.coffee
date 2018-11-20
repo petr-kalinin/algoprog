@@ -213,11 +213,11 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.get '/api/userResults/:userId', wrap (req, res) ->
-        results = (await Result.findByUser(req.params.userId))
+        results = (await Result.findByUserAndLate(req.params.userId, true))
         json = {}
         for r in results
             r = r.toObject()
-            json[r._id] = r
+            json[r._id.replace(/::late$/, "")] = r
         res.json(json)
 
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->

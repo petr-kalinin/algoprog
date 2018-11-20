@@ -64,10 +64,10 @@ runCfQuery = (result) ->
 export default dashboard = () ->
     queries =
         # remember that months start from 0
-        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2018, 7, 19)}},
-        wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
-        ig: {ignored: 1},
-        ac: {solved: 1}
+        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2018, 7, 19)}, late: true},
+        wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}, late: true},
+        ig: {ignored: 1, late: true},
+        ac: {solved: 1, late: true}
     result = {}
     promises = []
     for key, query of queries
