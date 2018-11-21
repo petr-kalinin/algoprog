@@ -64,7 +64,7 @@ class Login extends React.Component
         <Grid fluid>
             <h1>Вход в систему</h1>
 
-            <form onSubmit={@tryLogin}>
+            <form onSubmit={@tryLogin} autocomplete="off">
                 {
                 if not @state.loading
                     <div>
