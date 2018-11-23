@@ -9,6 +9,9 @@ export default RegisteredUsers = (props) ->
             {props.users.map?((user) ->
                 <tr key={user.username}>
                     <td>
+                        {user.fullName || "***"}
+                    </td>
+                    <td>
                         {user.username}
                     </td>
                     <td>
@@ -22,7 +25,6 @@ export default RegisteredUsers = (props) ->
                     </td>
                     <td>
                         <a href={"https://informatics.mccme.ru/user/view.php?id=#{user.informaticsId}&course=1"}>{"#"}</a>
-                        <a href={"https://informatics.mccme.ru/user/editadvanced.php?id=#{user.informaticsId}"}>{"#"}</a>
                     </td>
                 </tr>
             )}

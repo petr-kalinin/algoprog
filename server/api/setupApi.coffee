@@ -173,14 +173,21 @@ export default setupApi = (app) ->
         res.json(await User.findByList(req.params.userList))
 
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
+        addUserName = (user) ->
+            fullUser = await User.findById(user.informaticsId)
+            user.fullName = fullUser?.name
+
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
         result = []
+        promises = []
         for user in await RegisteredUser.find({})
             user = user.toObject()
             delete user.informaticsPassword
+            promises.push(addUserName(user))
             result.push(user)
+        await Promise.all(promises)
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
