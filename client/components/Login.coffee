@@ -72,7 +72,7 @@ class Login extends React.Component
                     <div>
                         <FieldGroup
                             id="username"
-                            label="Имя пользователя"
+                            label="Логин"
                             type="text"
                             setField={@setField}
                             state={@state}
