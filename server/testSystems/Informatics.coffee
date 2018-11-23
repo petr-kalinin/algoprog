@@ -7,6 +7,7 @@ import RegisteredUser from '../models/registeredUser'
 import Submit from '../models/submit'
 
 import download from '../lib/download'
+import sleep from '../lib/sleep'
 import logger from '../log'
 
 import TestSystem, {TestSystemUser} from './TestSystem'
@@ -174,6 +175,7 @@ export default class Informatics extends TestSystem
                 try
                     informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
                     informaticsData = await informaticsUser.submit(informaticsProblemId, contentType, data)
+                    await sleep(1000)
                 finally
                     await downloadSubmits.runForUser(user.informaticsId, 5, 1)
             catch e
