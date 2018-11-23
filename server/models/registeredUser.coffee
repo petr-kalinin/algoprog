@@ -13,8 +13,8 @@ registeredUserSchema.statics.findAdmin = (list) ->
 
 
 registeredUserSchema.methods.userKey = () ->
-    @informaticsUsername
-
+    @informaticsId
+    
 registeredUserSchema.plugin(passportLocalMongoose);
 
 RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);
