@@ -6,6 +6,7 @@ deepEqual = require('deep-equal')
 import { connect } from 'react-redux'
 
 import { LinkContainer } from 'react-router-bootstrap'
+import { withRouter } from "react-router"
 
 import Navbar from 'react-bootstrap/lib/Navbar'
 import Button from 'react-bootstrap/lib/Button'
@@ -81,7 +82,7 @@ UnpaidWarning = (props) ->
             </Modal.Body>
 
             <Modal.Footer>
-                <Button bsStyle="primary" onClick={if props.blocked then props.doLogout else props.handleClose}>OK</Button>
+                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
             </Modal.Footer>
 
         </Modal.Dialog>
@@ -93,7 +94,7 @@ class TopPanel extends React.Component
         super(props)
         @state =
             showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser)
-            showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
+            showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or (unpaidBlocked(@props.myUser) and @props.history.location.pathname != "/payment")
         @closeWarning = @closeWarning.bind(this)
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
@@ -112,6 +113,8 @@ class TopPanel extends React.Component
         @props.setUnpaidWarningShown()
         @setState
             showUnpaid: false
+        if unpaidBlocked(@props.myUser)
+            @props.history.push("/payment")
 
     openUnpaid: ->
         @setState
@@ -188,7 +191,7 @@ class TopPanel extends React.Component
             @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
             }
             {
-            @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} doLogout={@props.logout} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
+            @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
             }
         </div>
 
@@ -198,7 +201,7 @@ options =
     timeout: 20000
     allowNotLoaded: true
 
-ConnectedTopPanel = ConnectedComponent(TopPanel, options)
+ConnectedTopPanel = ConnectedComponent(withRouter(TopPanel), options)
 
 mapStateToProps = (state) ->
     return
