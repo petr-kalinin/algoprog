@@ -1,11 +1,14 @@
 moment = require('moment')
 import { JSDOM } from 'jsdom'
+Entities = require('html-entities').XmlEntities
 
 import TestSystemSubmitDownloader from '../TestSystem'
 
 import Submit from '../../models/submit'
 
 import logger from '../../log'
+
+entities = new Entities()
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
     constructor: (@adminUser, @baseUrl) ->
@@ -28,7 +31,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             page = await @adminUser.download(href, {encoding: 'latin1'})
             document = (new JSDOM(page)).window.document
             source = document.getElementById("source-textarea").innerHTML
-            return source
+            return entities.decode(source)
         catch e
             logger.warn "Can't download source ", runid, href, e
             return ""

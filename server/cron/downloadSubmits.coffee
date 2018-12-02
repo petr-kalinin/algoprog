@@ -2,6 +2,7 @@ request = require('request-promise-native')
 deepEqual = require('deep-equal')
 moment = require('moment')
 import { JSDOM } from 'jsdom'
+Entities = require('html-entities').XmlEntities
 
 import Submit from '../models/submit'
 import SubmitComment from '../models/SubmitComment'
@@ -16,6 +17,8 @@ import download from '../lib/download'
 
 import * as groups from '../informatics/informaticsGroups'
 import { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
+
+entities = new Entities()
 
 class SubmitDownloader
     constructor: (@baseDownloader, @minPages, @limitPages, @forceMetadata) ->
@@ -96,7 +99,7 @@ class SubmitDownloader
             @baseDownloader.getComments(newSubmit._id),
             @baseDownloader.getResults(newSubmit._id)
         ])
-        source = sourceRaw.toString()
+        source = entities.encode(sourceRaw.toString())
 
         @upsertComments(newSubmit, comments)
         comments = (c.text for c in comments)

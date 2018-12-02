@@ -73,9 +73,9 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
-createDraftSubmit = (problemId, userId, language, code) ->
-    code = iconv.decode(new Buffer(code), "latin1")
-    code = entities.encode(code)
+createDraftSubmit = (problemId, userId, language, codeRaw) ->
+    codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
+    code = entities.encode(codeRaw)
     time = new Date
     timeStr = +time
     submit = new Submit
@@ -85,6 +85,7 @@ createDraftSubmit = (problemId, userId, language, code) ->
         problem: problemId,
         outcome: "DR"
         source: code
+        sourceRaw: codeRaw
         language: language
         comments: []
         results: []
