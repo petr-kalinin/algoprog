@@ -188,7 +188,7 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
         await forAllTestSystems (system) ->
             logger.info "runForUser", system.id(), userId
             systemDownloader = await system.submitDownloader(userId, undefined, undefined, submitsPerPage)
-            await (new SubmitDownloader(systemDownloader, 1, maxPages, true)).run()
+            await (new SubmitDownloader(systemDownloader, 1, maxPages, false)).run()
             logger.info "Done runForUser", system.id()
     catch e
         logger.error "Error in runForUser", e
@@ -199,7 +199,7 @@ export runForUserAndProblem = (userId, problemId) ->
         await forAllTestSystems (system) ->
             logger.info "runForUserAndProblem", system.id(), userId, problemId
             systemDownloader = await system.submitDownloader(userId, problemId, undefined, 100)
-            await (new SubmitDownloader(systemDownloader, 1, 10, true)).run()
+            await (new SubmitDownloader(systemDownloader, 1, 10, false)).run()
             logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
         logger.error "Error in runForUserAndProblem", e
