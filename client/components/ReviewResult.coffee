@@ -236,8 +236,8 @@ class ReviewResult extends React.Component
                             diffText = JsDiff.createTwoFilesPatch(
                                 @state.currentDiff[1]._id,
                                 @state.currentDiff[0]._id,
-                                @state.currentDiff[1].source,
-                                @state.currentDiff[0].source)
+                                @state.currentDiff[1].sourceRaw,
+                                @state.currentDiff[0].sourceRaw)
                             diffText = diffText.split("\n")
                             diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
                             diffText = diffText.join("\n")
