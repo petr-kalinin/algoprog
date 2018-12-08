@@ -58,7 +58,7 @@ expandSubmit = (submit) ->
 
     containsBinary = (source) ->
         for ch in source
-            if ch.charCodeAt(0) < 10
+            if ch.charCodeAt(0) < 9
                 return true
         return false
 
@@ -245,7 +245,7 @@ export default setupApi = (app) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
             res.status(403).send('No permissions')
             return
-        mimeType = fileType(submit.sourceRaw)?.mime
+        mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime
         if mimeType
             res.contentType(mimeType)
         res.send(submit.sourceRaw)
