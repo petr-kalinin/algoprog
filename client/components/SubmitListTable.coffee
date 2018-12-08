@@ -10,15 +10,24 @@ import outcomeToText from '../lib/outcomeToText'
 
 import styles from './SubmitListTable.css'
 
+maxVal = (submit, field) ->
+    res = -1
+    for index, result of (submit.results?.tests || []) 
+        val = +result[field]
+        if val > res
+            res = val
+    return if res < 0 then undefined else res
+
 export default SubmitListTable = (props) ->
     <div className={styles.outerDiv}>
         <Table responsive striped condensed hover>
             <thead>
                 <tr>
-                    <th>Время</th>
+                    <th>Время попытки</th>
                     <th>Результат</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
+                    <th>Язык</th>
+                    <th>Время</th>
+                    <th>Память</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     {if props.handleDiffClick
@@ -31,10 +40,14 @@ export default SubmitListTable = (props) ->
                     [cl, message] = outcomeToText(submit.outcome)
                     if submit._id == props.activeId
                         cl += " " + styles.active
+                    time = maxVal(submit, "time")
+                    mem = maxVal(submit, "max_memory_used")
                     <tr key={submit._id} className={cl}>
                         <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>{submit.language}</td>
+                        <td>{if time? then time / 1000 else ""}</td>
+                        <td>{mem || ""}</td>
                         <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
                         <td><a onClick={props.handleSubmitClick(submit)} href="#">Подробнее</a></td>
                         {if props.handleDiffClick
