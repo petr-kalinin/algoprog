@@ -7,6 +7,19 @@ import User from "../models/user"
 import logger from '../log'
 import download from '../lib/download'
 
+export REGION_CONTESTS = 
+    '2009': ['894', '895']
+    '2010': ['1540', '1541']
+    '2011': ['2748', '2780']
+    '2012': ['4345', '4361']
+    '2013': ['6667', '6670']
+    '2014': ['10372', '10376']
+    '2015': ['14482', '14483']
+    '2016': ['18805', '18806']
+    '2017': ['24702', '24703']
+    '2018': ['30793', '30794']
+
+
 class ContestDownloader
     url: 'https://informatics.mccme.ru/course/view.php?id=1135'
     baseUrl: 'https://informatics.mccme.ru/mod/statements/'
@@ -67,22 +80,11 @@ class ContestDownloader
         Promise.all(promises)
 
 class RegionContestDownloader extends ContestDownloader
-    contests:
-        '2009': ['894', '895']
-        '2010': ['1540', '1541']
-        '2011': ['2748', '2780']
-        '2012': ['4345', '4361']
-        '2013': ['6667', '6670']
-        '2014': ['10372', '10376']
-        '2015': ['14482', '14483']
-        '2016': ['18805', '18806']
-        '2017': ['24702', '24703']
-
     contestBaseUrl: 'https://informatics.mccme.ru/mod/statements/view.php?id='
 
     run: ->
         levels = []
-        for year, cont of @contests
+        for year, cont of @REGION_CONTESTS
             fullText = ' тур региональной олимпиады ' + year + ' года'
             @processContest(year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
             @processContest(year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)

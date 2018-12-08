@@ -5,6 +5,8 @@ import {downloadLimited} from '../lib/download'
 
 import logger from '../log'
 
+import {REGION_CONTESTS} from './downloadContests'
+
 url = 'https://informatics.mccme.ru/course/view.php?id=1135'
 
 clone = (material) ->
@@ -294,22 +296,10 @@ class MaterialsDownloader
             material: material
             tree: tree
 
-    parseStatements: (activity, order) ->
-        indent = getIndent(activity)
-        if activity.children.length != 2
-            logger.error("Found resource with >2 children " + activity.innerHTML)
-            return undefined
-        a = activity.children[1]
-
-        re = new RegExp 'view.php\\?id=(\\d+)'
-        res = re.exec a.href
-        id = res[1]
-
-        hrefs = await getProblemsHrefsFromStatements(a.href)
+    parseContest: (href, id, name, order, indent) ->
+        hrefs = await getProblemsHrefsFromStatements(href)
         hrefs2 = await getProblemsHrefsFromStatements(hrefs[0])
         hrefs.splice(0, 0, hrefs2[0])
-
-        name = a.innerHTML
 
         materials = []
         for href, i in hrefs
@@ -334,6 +324,19 @@ class MaterialsDownloader
         return
             material: material
             tree: tree
+
+    parseStatements: (activity, order) ->
+        indent = getIndent(activity)
+        if activity.children.length != 2
+            logger.error("Found resource with >2 children " + activity.innerHTML)
+            return undefined
+        a = activity.children[1]
+
+        re = new RegExp 'view.php\\?id=(\\d+)'
+        res = re.exec a.href
+        id = res[1]
+
+        return @parseContest(a.href, id, a.innerHTML, order, indent)
 
     parseActivity: (activity, order, keepResourcesInTree) ->
         if activity.classList.contains("label")
@@ -456,6 +459,70 @@ class MaterialsDownloader
         tree = clone(material)
         delete tree.indent
         tree.materials = (m.tree for m in pendingMaterials when m.tree).concat(trees)
+        return
+            material: material
+            tree: tree
+
+    makeRegContestMaterial: (contest, name, order) ->
+        href =  "https://informatics.mccme.ru/mod/statements/view.php?id=#{contest}"
+        @parseContest(href, contest, name, order, 0)
+
+    makeRegYearMaterial: (year, contests) ->
+        materials = []
+        for contest, i in contests
+            name = "#{year}, #{i+1} тур"
+            parsed = @makeRegContestMaterial(contest, name, i)
+            materials.push(parsed)
+        materials = await finalizeMaterialsList(materials)
+        title = year
+
+        material = new Material
+            _id: "reg#{year}"
+            order: year
+            type: "level"
+            indent: 0
+            title: title
+            content: ""
+            materials: [(await @makeLabelMaterial("reg#{year}head", 0, 0, "<h2>#{title}</h2>")).material]
+        for m in materials
+            mm = clone(m.material)
+            delete mm.materials
+            material.materials.push(mm)
+        @addMaterial(material)
+
+        tree = clone(material)
+        delete tree.indent
+        tree.materials = (m.tree for m in materials)
+        return
+            material: material
+            tree: tree
+
+    makeRegMaterial: () ->
+        materials = []
+        for year, contests of REGION_CONTESTS
+            parsed = @makeRegYearMaterial(year, contests)
+            materials.push(parsed)
+        materials = await finalizeMaterialsList(materials)
+        title = "Региональные олимпиады"
+
+        material = new Material
+            _id: "reg"
+            order: 100
+            type: "level"
+            indent: 0
+            title: title
+            content: ""
+            materials: [(await @makeLabelMaterial("reghead", 0, 0, "<h2>#{title}</h2>")).material]
+        for m in materials
+            mm = clone(m.material)
+            delete mm.materials
+            material.materials.push(mm)
+        @addMaterial(material)
+
+        tree = clone(material)
+        delete tree.indent
+        tree.materials = (m.tree for m in materials)
+        console.log "Returning reg material ", material
         return
             material: material
             tree: tree
@@ -635,6 +702,8 @@ class MaterialsDownloader
             if not section
                 continue
             materials.push(@parseSection(section, sectionId))
+
+        materials.push(@makeRegMaterial())
 
         materials.push(@createTableMaterials())
 
