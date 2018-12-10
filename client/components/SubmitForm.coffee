@@ -62,8 +62,16 @@ class SubmitForm extends React.Component
         @setState(newState)
 
     toggleDraft: () ->
-        newState = {draft: !@state.draft}
+        newState = {
+            draft: !@state.draft
+            submit: undefined
+        }
         @setState(newState)
+
+    componentDidUpdate: (prevProps, prevState) ->
+        if prevProps.problemId != @props.problemId
+            @setState
+                submit: undefined
 
     submit: (event) ->
         event.preventDefault()
@@ -74,25 +82,19 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            needForm = not @state.draft
-            if needForm
-                formData = new FormData(document.getElementById("submitForm"))
-                data = await callApiWithBody "submit/#{@props.problemId}", 'POST', {}, formData
-            else
-                fileName = document.getElementById("file").files[0]
-                fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
-                fileText = Array.from(new Uint8Array(fileText))
-                languageName = undefined
-                for lang in LANGUAGES
-                    if @state.lang_id == lang[0]
-                        languageName = lang[1]
-                dataToSend =
-                    language: languageName
-                    code: fileText
-                url = "submit/#{@props.problemId}"
-                if @state.draft
-                    url += "/draft"
-                data = await callApi url, dataToSend
+            fileName = document.getElementById("file").files[0]
+            fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
+            fileText = Array.from(new Uint8Array(fileText))
+            languageName = undefined
+            for lang in LANGUAGES
+                if @state.lang_id == lang[0]
+                    languageName = lang[1]
+            dataToSend =
+                language: languageName
+                code: fileText
+                draft: @state.draft
+            url = "submit/#{@props.problemId}"
+            data = await callApi url, dataToSend
 
             if data.submit
                 data =

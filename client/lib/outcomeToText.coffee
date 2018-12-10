@@ -23,4 +23,6 @@ export default outcomeToText = (outcome) ->
             message = "Дисквалифицировано"
         when "CT"
             message = "Тестируется..."
+        when "PS"
+            message = "Отправка..."
     return [cl, message]

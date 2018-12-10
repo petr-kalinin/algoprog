@@ -73,7 +73,7 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
-createDraftSubmit = (problemId, userId, language, codeRaw) ->
+createSubmit = (problemId, userId, language, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     code = entities.encode(codeRaw)
     time = new Date
@@ -83,7 +83,7 @@ createDraftSubmit = (problemId, userId, language, codeRaw) ->
         time: time,
         user: userId,
         problem: problemId,
-        outcome: "DR"
+        outcome: if draft then "DR" else "PS"
         source: code
         sourceRaw: codeRaw
         language: language
@@ -110,12 +110,9 @@ export default setupApi = (app) ->
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
-        testSystem = await getTestSystem("informatics")
-        await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
-        res.json({submit: true})
-
-    app.post '/api/submit/:problemId/draft', ensureLoggedIn, wrap (req, res) ->
-        await createDraftSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code)
+        await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+        #testSystem = await getTestSystem("informatics")
+        #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
