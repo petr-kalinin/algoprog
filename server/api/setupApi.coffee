@@ -76,6 +76,11 @@ expandSubmit = (submit) ->
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     code = entities.encode(codeRaw)
+    if not draft
+        allSubmits = await Submit.findByUserAndProblem(userId, problemId)
+        for s in allSubmits
+            if s.outcome != "DR" and s.source == code
+                throw "duplicate"
     time = new Date
     timeStr = +time
     submit = new Submit
@@ -110,7 +115,11 @@ export default setupApi = (app) ->
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
-        await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+        try
+            await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+        catch e
+            res.json({error: e})
+            return
         #testSystem = await getTestSystem("informatics")
         #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})

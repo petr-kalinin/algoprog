@@ -101,6 +101,11 @@ class SubmitForm extends React.Component
                     submit:
                         result: true
                 @props.reloadSubmitList()
+            else if data.error == "duplicate"
+                data = 
+                    submit:
+                        error: true
+                        message: "Вы уже отправляли это код"
             else
                 throw ""
         catch
@@ -176,10 +181,7 @@ class SubmitForm extends React.Component
             {
             if @state.submit?.error
                 <Alert bsStyle="danger">
-                    Ошибка отправки. Возможно, вы уже сдавали это решение, или informatics очень плохо работает.<br/>
-                    Если вы раньше не отправляли это решение, то обновите страницу, чтобы проверить,
-                    что ваше решение действительно не отправилось. Если нет, то, видимо, проблема на стороне informatics&apos;а.
-                    Попробуйте отправить еще раз, если не получается, то подождите несколько часов или до следующего дня.
+                    Ошибка отправки: {@state.submit.message}
                 </Alert>
             }
         </div>
