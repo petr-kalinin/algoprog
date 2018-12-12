@@ -11,6 +11,8 @@ registeredUserSchema = new mongoose.Schema
 registeredUserSchema.statics.findAdmin = (list) ->
     RegisteredUser.findOne({admin: true, username: "pkalinin"})
 
+registeredUserSchema.statics.findByKey = (key) ->
+    RegisteredUser.findOne({informaticsId: key})
 
 registeredUserSchema.methods.userKey = () ->
     @informaticsId

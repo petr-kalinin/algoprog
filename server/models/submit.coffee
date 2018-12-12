@@ -39,6 +39,10 @@ submitsSchema.statics.findBestByProblem = (problemId, limit) ->
 submitsSchema.statics.findLastNotCT = () ->
     for submit in await Submit.find({outcome: {$ne: "CT"}}).sort({time: -1}).limit(1)
         return submit
+
+submitsSchema.statics.findPendingSubmits = (userId) ->
+    Submit.find
+        outcome: "PS"
         
 
 submitsSchema.index({ user : 1, problem: 1, time: 1 })

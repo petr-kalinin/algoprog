@@ -84,11 +84,10 @@ class LoggedInformaticsUser
                 promise(0)  # resolve
         return result
 
-    submit: (problemId, contentType, body) ->
+    _runSubmit: (problemId, addParams) ->
         page = await download("https://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
+            addParams...,
             method: 'POST',
-            headers: {'Content-Type': contentType},
-            body,
             followAllRedirects: true,
             timeout: 30 * 1000,
             maxAttempts: 1
@@ -97,6 +96,25 @@ class LoggedInformaticsUser
         if res.res != "ok"
             throw "Can't submit"
 
+    submit: (problemId, contentType, body) ->
+        @_runSubmit(problemId, {
+            headers: {'Content-Type': contentType},
+            body,
+        })
+
+    submitWithObject: (problemId, data) ->
+        @_runSubmit(problemId, {
+            formData: {
+                lang_id: data.language
+                file: {
+                    value: data.source
+                    options: {
+                        filename: 'a',
+                        contentType: 'text/plain'
+                    }
+                }
+            },
+        })
 
 export default class Informatics extends TestSystem
     BASE_URL = "https://informatics.mccme.ru"
@@ -187,6 +205,26 @@ export default class Informatics extends TestSystem
                 break
         if not success
             throw "Can't submit #{user.username}, #{user.informaticsId} #{problemId}"
+
+    submitWithObject: (user, problemId, data) ->
+        informaticsProblemId = @_informaticsProblemId(problemId)
+        success = false
+        logger.info "Try submit #{user.username}, #{user.informaticsId} #{problemId}"
+        try
+            oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
+            try
+                informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
+                informaticsData = await informaticsUser.submitWithObject(informaticsProblemId, data)
+                await sleep(1000)
+            finally
+                await downloadSubmits.runForUser(user.informaticsId, 5, 1)
+        catch e
+            logger.info "Error submitting #{user.username}, #{user.informaticsId} #{problemId}: ", e.message
+        newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
+        if oldSubmits.length != newSubmits.length
+            logger.info "However, submit #{user.username}, #{user.informaticsId} #{problemId} appeared after downloadSubmits"
+            return
+        throw "Can't submit #{user.username}, #{user.informaticsId} #{problemId}"
 
     registerUser: (user) ->
         logger.info "Moving user #{user._id} to unknown group"
