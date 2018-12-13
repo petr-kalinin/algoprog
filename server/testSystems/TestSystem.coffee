@@ -44,3 +44,6 @@ export default class TestSystem
 
     registerUser: (user) ->
         throw "not implemented"
+
+    selfTest: () ->
+        throw "not implemented"

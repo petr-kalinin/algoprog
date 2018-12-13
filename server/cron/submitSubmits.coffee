@@ -18,7 +18,6 @@ makeTimeouts = () ->
     return result
 
 TIMEOUT_BY_ATTEMPT = makeTimeouts()
-console.log TIMEOUT_BY_ATTEMPT
 
 getLanguage = (lang) ->
     for l in LANGUAGES

@@ -13,6 +13,7 @@ import renderOnServer from './ssr/renderOnServer'
 import db from './mongo/mongo'
 import configurePassport from './passport'
 import setupApi from './api/setupApi'
+import {REGISTRY} from './testSystems/TestSystemRegistry'
 
 import jobs from './cron/cron'
 
@@ -48,6 +49,7 @@ app.use(compression())
 configurePassport(app, db)
 setupApi(app)
 
+
 app.use(express.static('build/assets'))
 
 app.use(express.static('public'))
@@ -59,8 +61,15 @@ app.get '/status', (req, res) ->
 app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
-app.listen port, () ->
-  logger.info 'App listening on port ', port
+
+testPromises = []
+for id, system of REGISTRY
+    testPromises.push(system.selfTest())
+
+Promise.all(testPromises).then(() ->
+    app.listen port, () ->
+    logger.info 'App listening on port ', port
+)
 
 #import downloadMaterials from './cron/downloadMaterials'
 #downloadMaterials()

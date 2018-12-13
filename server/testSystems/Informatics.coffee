@@ -238,3 +238,6 @@ export default class Informatics extends TestSystem
             body: body,
             followAllRedirects: true
         })
+
+    selfTest: () ->
+        await @_getAdmin()
