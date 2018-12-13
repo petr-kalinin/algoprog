@@ -1,0 +1,18 @@
+export default LANGUAGES = [
+    [27, "Python 3.6.4", "py", "py3"]
+    [1, "Free Pascal 3.0.2", "pas"]
+    [30, "PascalABC 3.1.0.1198"]
+    [3, "GNU C++ 7.2.0", "cpp"]
+    [2, "GNU C 7.2.0"]
+    [8, "Borland Delphi 6 - 14.5"]
+    [18, "Java JDK 1.8"]
+    [22, "PHP 7.1.13"]
+    [23, "Python 2.7.10"]
+    [24, "Perl 5.26.1"]
+    [25, "Mono C# 4.8"]
+    [26, "Ruby 2.4.3"]
+    [28, "Haskell GHC 8.0.2"]
+    [29, "FreeBASIC 1.05.0"]
+    [68, "GNU C++ 5.3.1 + sanitizer"]
+]
+
