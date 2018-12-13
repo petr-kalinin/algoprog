@@ -44,6 +44,10 @@ submitsSchema.statics.findPendingSubmits = (userId) ->
     Submit.find
         outcome: "PS"
         
+submitsSchema.statics.findCT = (userId) ->
+    Submit.find
+        outcome: "CT"
+        
 
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })

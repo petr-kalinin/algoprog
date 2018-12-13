@@ -18,7 +18,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     IG: 'Проигнорировано'
     DQ: 'Дисквалифицировано'
     CE: 'Ошибка компиляции'
-    CT: ["Тестирование...", "Компиляция...", "Перетестировать"]
+    CT: ["Тестирование...", "Компилирование...", "Перетестировать"]
 
     parseRunId: (runid) ->
         [fullMatch, contest, run] = runid.match(/(\d+)r(\d+)p(\d+)/)

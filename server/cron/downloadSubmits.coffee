@@ -237,3 +237,21 @@ export runLast = wrapRunning () ->
             logger.info "Done runLast", system.id()
     catch e
         logger.error "Error in LastSubmitDownloader", e
+
+export runForCT = wrapRunning () ->
+    try
+        submits = await Submit.findCT()
+        data = []
+        for submit in submits
+            userId = submit.user
+            problemId = submit.problem
+            unique = true
+            for d in data
+                if d.userId == userId and d.problemId == problemId
+                    unique = false
+                    break
+            if unique
+                data.push {userId, problemId}
+        await Promise.all(data.map((d) -> runForUserAndProblem(d.userId, d.problemId)))
+    catch e
+        logger.error "Error in LastSubmitDownloader", e
