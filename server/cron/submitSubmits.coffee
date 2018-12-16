@@ -52,7 +52,6 @@ submitOneSubmit = (submit) ->
         submitProcess.attempts += 1
         submitProcess.lastAttempt = new Date()
         await submitProcess.upsert()
-        throw e
 
 submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()

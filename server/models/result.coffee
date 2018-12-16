@@ -11,6 +11,7 @@ resultsSchema = new mongoose.Schema
     total: Number
     required: Number  # number of problems from non-star subcontests, not the number of required problems on level
     solved: Number
+    ps: Number
     ok: Number
     attempts: Number
     lastSubmitId: String

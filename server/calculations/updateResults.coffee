@@ -43,6 +43,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     submits = await Submit.findByUserAndProblem(userId, problemId)
     solved = 0
     ok = 0
+    ps = 0
     attempts = 0
     ignored = 0
     lastSubmitId = undefined
@@ -71,6 +72,8 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         else if submit.outcome == "OK"
             ok = 1
             continue  # we might have a future AC
+        else if submit.outcome == "PS" or submit.outcome == "CT"
+            ps = 1
         else if submit.outcome != "CE"
             attempts++
     logger.debug "updated result ", userId, problemId, solved, ok, attempts, ignored, lastSubmitId
