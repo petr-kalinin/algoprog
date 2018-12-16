@@ -18,7 +18,7 @@ export getStats = () ->
     return statistics
 
 export default download = (href, jar, options) ->
-    logger.info "Downloading", href
+    logger.info "Downloading", href, options
     if not jar
         jar = request.jar()
     delay = 5
