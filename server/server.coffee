@@ -15,6 +15,7 @@ import configurePassport from './passport'
 import setupApi from './api/setupApi'
 import {REGISTRY} from './testSystems/TestSystemRegistry'
 import download from './lib/download'
+import jobs from './cron/cron'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -71,6 +72,6 @@ start = () ->
 
     app.listen port, () ->
         logger.info 'App listening on port ', port
-        import jobs from './cron/cron'
+        jobs.map((job) -> job.start())
 
 start()
