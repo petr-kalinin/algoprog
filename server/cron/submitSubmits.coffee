@@ -26,6 +26,7 @@ getLanguage = (lang) ->
     for l in LANGUAGES
         if lang == l[1]
             return l[0]
+    throw "Unknown language " + lang
 
 submitOneSubmit = (submit) ->
     submitProcess = await SubmitProcess.findById(submit._id)
@@ -44,6 +45,15 @@ submitOneSubmit = (submit) ->
         return
 
     logger.info "Try submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
+    if submit.sourceRaw == "" or not submit.language
+        logger.info "Empty source or unknown language, failing"
+        submit.outcome = "Ошибка отправки, переотправьте"
+        await submit.upsert()
+        dirtyResults = {}
+        await setDirty(submit, dirtyResults, {})
+        await User.updateUser(submit.user, dirtyResults)
+        return
+
     try
         testSystem = await getTestSystem("informatics")
         registeredUser = await RegisteredUser.findByKey(submit.user)

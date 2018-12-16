@@ -36,7 +36,7 @@ expandResults = (results) ->
 
 runDashboardQuery = (key, query, result) ->
     limit = 20
-    if key == "ok"
+    if key == "ok" or key == "ps"
         limit = 200
     subResults = await Result.find(query).sort({lastSubmitTime: -1}).limit(limit)
     result[key] = await expandResults(subResults)
