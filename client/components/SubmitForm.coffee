@@ -27,7 +27,7 @@ class SubmitForm extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            lang_id: ""
+            lang_id: LANGUAGES[0][0]
             draft: false
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
