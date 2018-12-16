@@ -30,7 +30,7 @@ class SubmitDownloader
         true
 
     setDirty: (submit) ->
-        await setDirty(submit, @dirtyResults)
+        await setDirty(submit, @dirtyResults, @dirtyUsers)
 
     upsertComments: (submit, comments) ->
         for c in comments
@@ -105,7 +105,7 @@ class SubmitDownloader
         res
 
     processDirty: (uid) ->
-        User.updateUser(uid, @dirtyResults, @dirtyUsers)
+        User.updateUser(uid, @dirtyResults)
 
     run: ->
         logger.info "SubmitDownloader.run ", @minPages, '-', @limitPages
