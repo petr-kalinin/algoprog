@@ -14,6 +14,7 @@ import db from './mongo/mongo'
 import configurePassport from './passport'
 import setupApi from './api/setupApi'
 import {REGISTRY} from './testSystems/TestSystemRegistry'
+import download from './lib/download'
 
 import jobs from './cron/cron'
 
@@ -62,17 +63,15 @@ app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
-testPromises = []
-for id, system of REGISTRY
-    testPromises.push(system.selfTest())
+start = () ->
+    await console.log(JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
+    testPromises = []
+    for id, system of REGISTRY
+        testPromises.push(system.selfTest())
 
-Promise.all(testPromises).then(() ->
+    await Promise.all(testPromises)
+
     app.listen port, () ->
-    logger.info 'App listening on port ', port
-)
+        logger.info 'App listening on port ', port
 
-#import downloadMaterials from './cron/downloadMaterials'
-#downloadMaterials()
-
-#import * as downloadSubmits from "./cron/downloadSubmits"
-#downloadSubmits.runLast()
+start()
