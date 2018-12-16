@@ -59,6 +59,9 @@ submitOneSubmit = (submit) ->
         registeredUser = await RegisteredUser.findByKey(submit.user)
         await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
         await Submit.remove({_id: submit._id})
+        dirtyResults = {}
+        await setDirty(submit, dirtyResults, {})
+        await User.updateUser(submit.user, dirtyResults)
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
     catch e
         logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
