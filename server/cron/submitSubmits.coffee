@@ -1,9 +1,12 @@
 import SubmitProcess from '../models/SubmitProcess'
 import Submit from '../models/submit'
+import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
 
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
 import LANGUAGES from '../../client/lib/languages'
+
+import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
@@ -52,6 +55,10 @@ submitOneSubmit = (submit) ->
         submitProcess.attempts += 1
         submitProcess.lastAttempt = new Date()
         await submitProcess.upsert()
+        dirtyResults = {}
+        await setDirty(submit, dirtyResults, {})
+        await User.updateUser(submit.user, dirtyResults)
+
 
 submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()

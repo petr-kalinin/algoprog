@@ -14,6 +14,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 import logger from '../log'
 import download from '../lib/download'
+import setDirty from '../lib/setDirty'
 
 import * as groups from '../informatics/informaticsGroups'
 import { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
@@ -29,22 +30,7 @@ class SubmitDownloader
         true
 
     setDirty: (submit) ->
-        userId = submit.user
-        probId = submit.problem
-        @dirtyUsers[userId] = 1
-        @dirtyResults[userId + "::" + probId] = 1
-        problem = await Problem.findById(probId)
-        if not problem
-            return
-        for table in problem.tables
-            t = table
-            while true
-                t = await Table.findById(t)
-                if t._id == Table.main
-                    break
-                @dirtyResults[userId + "::" + t._id] = 1
-                t = t.parent
-        @dirtyResults[userId + "::" + Table.main] = 1
+        await setDirty(submit, @dirtyResults)
 
     upsertComments: (submit, comments) ->
         for c in comments
@@ -119,7 +105,7 @@ class SubmitDownloader
         res
 
     processDirty: (uid) ->
-        User.updateUser(uid, @dirtyResults)
+        User.updateUser(uid, @dirtyResults, @dirtyUsers)
 
     run: ->
         logger.info "SubmitDownloader.run ", @minPages, '-', @limitPages

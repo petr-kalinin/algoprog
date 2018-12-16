@@ -76,7 +76,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
             ps = 1
         else if submit.outcome != "CE"
             attempts++
-    logger.debug "updated result ", userId, problemId, solved, ok, attempts, ignored, lastSubmitId
+    logger.debug "updated result ", userId, problemId, solved, ok, ps, attempts, ignored, lastSubmitId
     result = new Result
         user: userId,
         table: problemId,
@@ -84,6 +84,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         required: 1,
         solved: solved,
         ok: ok,
+        ps: ps,
         attempts: attempts,
         ignored: ignored,
         lastSubmitId: lastSubmitId,

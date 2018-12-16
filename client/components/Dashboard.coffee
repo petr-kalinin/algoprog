@@ -44,7 +44,7 @@ export default class Dashboard extends React.Component
             <Checkbox checked={@state.showUnknown} onClick={@toggleUnknown}>
                 Показывать unknown
             </Checkbox>
-            {for type in ['ok', 'wa', 'ig', 'ac']
+            {for type in ['ok', 'ps', 'wa', 'ig', 'ac']
                 <div key={type}>
                     <h1>{type.toUpperCase()}</h1>
                     <Table striped condensed hover>

@@ -18,6 +18,9 @@ ProblemResult = (props) ->
             "-" + r.attempts
         else
             " "
+    if r.ps > 0
+        text += "*"
+        
     className =
         if r.solved > 0
             "ac"

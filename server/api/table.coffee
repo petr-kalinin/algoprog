@@ -28,7 +28,7 @@ getResult = (userId, tableId, collection) ->
 needUser = (userId, tables) ->
     for tableId in tables
         result = await Result.findByUserAndTable(userId, tableId)
-        if result and (result.solved > 0 or result.ok > 0 or result.attempts > 0)
+        if result and (result.solved > 0 or result.ok > 0 or result.attempts > 0 or result.ps > 0)
             return true
     return false
 

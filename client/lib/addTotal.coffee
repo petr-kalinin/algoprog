@@ -5,7 +5,7 @@ accountAttempts = (result, countUnsolvedAttempts) ->
         0
 
 export default addTotal = (a, b, countUnsolvedAttempts = false) ->
-    SIMPLE_KEYS = ["total", "required", "solved", "ok", "ignored"]
+    SIMPLE_KEYS = ["total", "required", "solved", "ok", "ps", "ignored"]
 
     result = {}
     for key in SIMPLE_KEYS
