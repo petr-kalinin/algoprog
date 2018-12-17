@@ -18,7 +18,7 @@ export getStats = () ->
     return statistics
 
 export default download = (href, jar, options) ->
-    logger.info "Downloading", href, options
+    logger.info "Downloading", href
     if not jar
         jar = request.jar()
     delay = 5
@@ -36,7 +36,7 @@ export default download = (href, jar, options) ->
             return page
         catch e
             logger.info "Error downloading " + href + " " + i + " will re-download", e.message
-            logger.info e.stack
+            #logger.info e.stack
             await sleep(delay)
             delay *= 2
     addStats("fail")

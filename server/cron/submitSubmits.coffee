@@ -57,7 +57,6 @@ submitOneSubmit = (submit) ->
     try
         testSystem = await getTestSystem("informatics")
         registeredUser = await RegisteredUser.findByKey(submit.user)
-        logger.info submit, registeredUser
         await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
         await Submit.remove({_id: submit._id})
         dirtyResults = {}

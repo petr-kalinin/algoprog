@@ -19,7 +19,7 @@ ProblemResult = (props) ->
         else
             " "
     if r.ps > 0
-        text += "*"
+        text = "?" + text
         
     className =
         if r.solved > 0

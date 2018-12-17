@@ -68,7 +68,6 @@ isLevelDone = (levelId, userId, results) ->
     return result.solved and result.solved == result.total
 
 problemMark = (indent, result) ->
-    console.log result
     if result.ps == 1
         colorBox(indent, styles.null, "question-circle-o", "Тестируется")
     else if result.solved == 1
