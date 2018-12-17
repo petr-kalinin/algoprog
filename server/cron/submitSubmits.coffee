@@ -65,6 +65,7 @@ submitOneSubmit = (submit) ->
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
     catch e
         logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
+        logger.info e.message, e.stack
         submitProcess.attempts += 1
         submitProcess.lastAttempt = new Date()
         await submitProcess.upsert()
