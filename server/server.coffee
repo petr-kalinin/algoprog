@@ -66,8 +66,8 @@ port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 start = () ->
     await console.log(JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
     testPromises = []
-    for id, system of REGISTRY
-        testPromises.push(system.selfTest())
+    #for id, system of REGISTRY
+    #    testPromises.push(system.selfTest())
 
     await Promise.all(testPromises)
 
