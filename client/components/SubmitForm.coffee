@@ -71,7 +71,7 @@ class SubmitForm extends React.Component
             fileText = Array.from(new Uint8Array(fileText))
             languageName = undefined
             for lang in LANGUAGES
-                if @state.lang_id == lang[0]
+                if ""+@state.lang_id == ""+lang[0]
                     languageName = lang[1]
             dataToSend =
                 language: languageName
