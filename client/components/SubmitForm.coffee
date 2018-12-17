@@ -34,7 +34,6 @@ class SubmitForm extends React.Component
         @submit = @submit.bind(this)
 
     setField: (field, value) ->
-        console.log field, value
         newState = {@state...}
         if field == "file"
             newState.wasFile = true
@@ -59,7 +58,6 @@ class SubmitForm extends React.Component
                 submit: undefined
 
     submit: (event) ->
-        console.log @state
         event.preventDefault()
         newState = {
             @state...
@@ -71,10 +69,8 @@ class SubmitForm extends React.Component
             fileName = document.getElementById("file").files[0]
             fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
             fileText = Array.from(new Uint8Array(fileText))
-            console.log @state
             languageName = undefined
             for lang in LANGUAGES
-                console.log lang
                 if ""+@state.lang_id == ""+lang[0]
                     languageName = lang[1]
             dataToSend =
