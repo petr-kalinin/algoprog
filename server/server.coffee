@@ -65,14 +65,11 @@ port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
 start = () ->
     await console.log(JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
-    testPromises = []
-    #for id, system of REGISTRY
-    #    testPromises.push(system.selfTest())
-
-    await Promise.all(testPromises)
 
     app.listen port, () ->
         logger.info 'App listening on port ', port
         jobs.map((job) -> job.start())
+        for id, system of REGISTRY
+            system.selfTest()
 
 start()
