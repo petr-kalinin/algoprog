@@ -34,6 +34,7 @@ class SubmitForm extends React.Component
         @submit = @submit.bind(this)
 
     setField: (field, value) ->
+        console.log field, value
         newState = {@state...}
         if field == "file"
             newState.wasFile = true
