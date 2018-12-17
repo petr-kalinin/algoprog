@@ -60,6 +60,7 @@ submitOneSubmit = (submit) ->
         logger.info submit, registeredUser
         await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
         await Submit.remove({_id: submit._id})
+        await SubmitProcess.remove({_id: submit._id})
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
         await User.updateUser(submit.user, dirtyResults)
