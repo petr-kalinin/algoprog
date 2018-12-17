@@ -75,7 +75,7 @@ class SubmitForm extends React.Component
             languageName = undefined
             for lang in LANGUAGES
                 console.log lang
-                if @state.lang_id == lang[0]
+                if ""+@state.lang_id == ""+lang[0]
                     languageName = lang[1]
             dataToSend =
                 language: languageName
