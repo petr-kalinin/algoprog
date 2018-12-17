@@ -107,7 +107,7 @@ class LoggedInformaticsUser
             formData: {
                 lang_id: data.language
                 file: {
-                    value: data.source
+                    value: Buffer.from(data.source, "latin1")
                     options: {
                         filename: 'a',
                         contentType: 'text/plain'
