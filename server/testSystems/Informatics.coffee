@@ -217,7 +217,7 @@ export default class Informatics extends TestSystem
                 informaticsData = await informaticsUser.submitWithObject(informaticsProblemId, data)
                 await sleep(1000)
             finally
-                await downloadSubmits.runForUser(user.informaticsId, 5, 1)
+                await downloadSubmits.runForUserAndProblem(user.informaticsId, problemId)
         catch e
             logger.info "Error submitting #{user.username}, #{user.informaticsId} #{problemId}: ", e.message
         newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
