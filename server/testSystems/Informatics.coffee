@@ -48,26 +48,31 @@ class LoggedInformaticsUser
         @promises = []
 
     _login: () ->
-        page = await download("https://informatics.mccme.ru/login/index.php", @jar, {
-            method: 'POST',
-            form: {
-                username: @username,
-                password: @password
-            },
-            followAllRedirects: true,
-            timeout: 30 * 1000
-        })
-        document = (new JSDOM(page)).window.document
-        el = document.getElementsByClassName("logininfo")
-        if el.length == 0 or el[0].children.length == 0
-            throw "Can't log user #{username} in"
-        a = el[0].children[0]
-        id = a.href.match(/view.php\?id=(\d+)/)
-        @name = a.innerHTML
-        if not id or id.length < 2
-            throw "Can't detect id, href=#{a.href} username=#{@username}"
-        logger.info "Logged in user #{@username} href=#{a.href}"
-        @id = id[1]
+        logger.info "Logging in new InformaticsUser ", @username
+        try
+            page = await download("https://informatics.mccme.ru/login/index.php", @jar, {
+                method: 'POST',
+                form: {
+                    username: @username,
+                    password: @password
+                },
+                followAllRedirects: true,
+                timeout: 30 * 1000
+            })
+            document = (new JSDOM(page)).window.document
+            el = document.getElementsByClassName("logininfo")
+            if el.length == 0 or el[0].children.length == 0
+                throw "Can't log user #{username} in"
+            a = el[0].children[0]
+            id = a.href.match(/view.php\?id=(\d+)/)
+            @name = a.innerHTML
+            if not id or id.length < 2
+                throw "Can't detect id, href=#{a.href} username=#{@username}"
+            logger.info "Logged in user #{@username} href=#{a.href}"
+            @id = id[1]
+        catch e
+            logger.error "Can not log in new Informatics user #{@username}", e.message, e
+        
 
     download: (href, options) ->
         if @requests >= REQUESTS_LIMIT
@@ -195,7 +200,7 @@ export default class Informatics extends TestSystem
                     informaticsData = await informaticsUser.submit(informaticsProblemId, contentType, data)
                     await sleep(1000)
                 finally
-                    await downloadSubmits.runForUser(user.informaticsId, 5, 1)
+                    await downloadSubmits.runForUserAndProblem(user.informaticsId, problemId)
             catch e
                 logger.info "Error submitting #{user.username}, #{user.informaticsId} #{problemId} attempt #{i}: ", e.message
             newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
@@ -217,7 +222,7 @@ export default class Informatics extends TestSystem
                 informaticsData = await informaticsUser.submitWithObject(informaticsProblemId, data)
                 await sleep(1000)
             finally
-                await downloadSubmits.runForUser(user.informaticsId, 5, 1)
+                await downloadSubmits.runForUserAndProblem(user.informaticsId, problemId)
         catch e
             logger.info "Error submitting #{user.username}, #{user.informaticsId} #{problemId}: ", e.message
         newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
