@@ -60,6 +60,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             [contest, run] = @parseRunId(runid)
             href = "https://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}"
             data = await @adminUser.download(href)
+            logger.info "results data=", data
             return JSON.parse(data)
         catch e
             logger.warn "Can't download results ", runid, href, e, e.stack
