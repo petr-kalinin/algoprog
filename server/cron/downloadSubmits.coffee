@@ -229,6 +229,13 @@ export runForCT = wrapRunning () ->
         submits = await Submit.findCT()
         data = []
         for submit in submits
+            timeSinceSubmit = new Date() - submit.time
+            timeSinceDownload = new Date() - submit.downloadTime
+            if (timeSinceSubmit > 20 * 60 * 1000 and timeSinceDownload < 20 * 60 * 1000)
+                continue
+            submit.downloadTime = new Date()
+            await submit.upsert()
+
             userId = submit.user
             problemId = submit.problem
             unique = true

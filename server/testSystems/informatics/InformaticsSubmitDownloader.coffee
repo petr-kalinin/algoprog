@@ -33,8 +33,8 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             source = document.getElementById("source-textarea").innerHTML
             return entities.decode(source)
         catch e
-            logger.warn "Can't download source ", runid, href, e
-            return ""
+            logger.warn "Can't download source ", runid, href, e.stack
+            throw e
 
     getComments: (runid) ->
         try
@@ -53,7 +53,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             return result
         catch e
             logger.warn "Can't download comments ", runid, href, e.stack
-            return []
+            throw e
 
     getResults: (runid) ->
         try
@@ -61,10 +61,9 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             href = "https://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}"
             data = await @adminUser.download(href)
             return JSON.parse(data)
-        catch
-            logger.warn "Can't download results ", runid, href
-            # mark so that it will not be re-downloaded
-            return {failed: true}
+        catch e
+            logger.warn "Can't download results ", runid, href, e, e.stack
+            throw e
 
     processSubmit: (uid, name, pid, runid, prob, date, language, outcome) ->
         if (outcome == @CE)

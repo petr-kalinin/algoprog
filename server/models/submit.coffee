@@ -3,6 +3,7 @@ mongoose = require('mongoose')
 submitsSchema = new mongoose.Schema
     _id: String
     time: Date
+    downloadTime: { type: Date, default: new Date(0) }
     user: String
     problem: String
     outcome: String
