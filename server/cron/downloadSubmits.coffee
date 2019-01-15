@@ -86,7 +86,7 @@ class SubmitDownloader
                 @baseDownloader.getComments(newSubmit._id),
                 @baseDownloader.getResults(newSubmit._id)
             ])
-        except e
+        catch e
             if newSubmit.outcome != "CT"
                 throw e
                 
