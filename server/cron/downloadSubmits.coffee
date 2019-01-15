@@ -80,11 +80,20 @@ class SubmitDownloader
             newSubmit.outcome = oldSubmit.outcome
             newSubmit.force = oldSubmit.force
 
-        [sourceRaw, comments, results] = await Promise.all([
-            @baseDownloader.getSource(newSubmit._id),
-            @baseDownloader.getComments(newSubmit._id),
-            @baseDownloader.getResults(newSubmit._id)
-        ])
+        try
+            [sourceRaw, comments, results] = await Promise.all([
+                @baseDownloader.getSource(newSubmit._id),
+                @baseDownloader.getComments(newSubmit._id),
+                @baseDownloader.getResults(newSubmit._id)
+            ])
+        except e
+            if newSubmit.outcome != "CT"
+                throw e
+                
+        sourceRaw = sourceRaw or ""
+        comments = comments or []
+        results = results or {}
+        
         source = entities.encode(sourceRaw.toString())
 
         @upsertComments(newSubmit, comments)
