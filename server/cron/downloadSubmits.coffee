@@ -109,31 +109,32 @@ class SubmitDownloader
 
     run: ->
         logger.info "SubmitDownloader.run ", @minPages, '-', @limitPages
-
-        page = 0
-        while true
-            logger.info("Dowloading submits, page #{page}")
-            submits = await @baseDownloader.getSubmitsFromPage(page)
-            if not submits.length
-                break
-            results = await Promise.all(@processSubmit(submit) for submit in submits)
-            needContinue = true
-            for r in results
-                needContinue = needContinue and r
-            if (page < @minPages - 1) # always load at least minPages pages
+        
+        try
+            page = 0
+            while true
+                logger.info("Dowloading submits, page #{page}")
+                submits = await @baseDownloader.getSubmitsFromPage(page)
+                if not submits.length
+                    break
+                results = await Promise.all(@processSubmit(submit) for submit in submits)
                 needContinue = true
-            if not needContinue
-                break
-            page = page + 1
-            if page > @limitPages
-                break
-
-        tables = await Table.find({})
-        addedPromises = []
-        for uid, tmp of @dirtyUsers
-            logger.debug "Will process dirty user ", uid
-            addedPromises.push(@processDirty(uid))
-        await Promise.all(addedPromises)
+                for r in results
+                    needContinue = needContinue and r
+                if (page < @minPages - 1)  # always load at least minPages pages
+                    needContinue = true
+                if not needContinue
+                    break
+                page = page + 1
+                if page > @limitPages
+                    break
+        finally
+            tables = await Table.find({})
+            addedPromises = []
+            for uid, tmp of @dirtyUsers
+                logger.debug "Will process dirty user ", uid
+                addedPromises.push(@processDirty(uid))
+            await Promise.all(addedPromises)
         logger.info "Finish SubmitDownloader.run ", @minPages, '-', @limitPages
 
 class LastSubmitDownloader extends SubmitDownloader
