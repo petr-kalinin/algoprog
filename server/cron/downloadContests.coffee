@@ -84,7 +84,7 @@ class RegionContestDownloader extends ContestDownloader
 
     run: ->
         levels = []
-        for year, cont of @REGION_CONTESTS
+        for year, cont of REGION_CONTESTS
             fullText = ' тур региональной олимпиады ' + year + ' года'
             @processContest(year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
             @processContest(year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)
