@@ -66,6 +66,10 @@ export default class Checkins extends React.Component
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) -- его могут спросить охранники на входе!                    
             </p>
 
+            <Alert bsStyle="danger">
+                27 января и 10 февраля занятий в ННГУ не будет в связи с проведением, соответственно, областной и городской олимпиад.
+            </Alert>
+            
             {
             if @state.result?.error
                 <Alert bsStyle="danger">
