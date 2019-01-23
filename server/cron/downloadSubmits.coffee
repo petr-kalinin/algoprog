@@ -53,7 +53,7 @@ class SubmitDownloader
         return result
 
     processSubmit: (newSubmit) ->
-        logger.debug "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem
+        logger.info "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem, newSubmit.outcome
         res = await @needContinueFromSubmit(newSubmit)
 
         oldSubmit = (await Submit.findById(newSubmit._id))?.toObject()
@@ -89,6 +89,7 @@ class SubmitDownloader
         catch e
             if newSubmit.outcome != "CT"
                 throw e
+            logger.info "Can't download some data, but submit is CT, that's ok"
                 
         sourceRaw = sourceRaw or ""
         comments = comments or []
