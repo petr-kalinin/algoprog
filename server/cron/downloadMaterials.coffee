@@ -5,7 +5,7 @@ import {downloadLimited} from '../lib/download'
 
 import logger from '../log'
 
-import {REGION_CONTESTS} from './downloadContests'
+import {REGION_CONTESTS, ROI_CONTESTS} from './downloadContests'
 
 url = 'https://informatics.mccme.ru/course/view.php?id=1135'
 
@@ -467,23 +467,26 @@ class MaterialsDownloader
         href =  "https://informatics.mccme.ru/mod/statements/view.php?id=#{contest}"
         @parseContest(href, contest, name, order, 0)
 
-    makeRegYearMaterial: (year, contests) ->
+    makeRegYearMaterial: (prefix, year, contests) ->
         materials = []
         for contest, i in contests
-            name = "#{year}, #{i+1} тур"
+            if contests.length > 1
+                name = "#{year}, #{i+1} тур"
+            else
+                name = "#{year}"
             parsed = @makeRegContestMaterial(contest, name, i)
             materials.push(parsed)
         materials = await finalizeMaterialsList(materials)
         title = year
 
         material = new Material
-            _id: "reg#{year}"
+            _id: "#{prefix}#{year}"
             order: year
             type: "level"
             indent: 0
             title: title
             content: ""
-            materials: [(await @makeLabelMaterial("reg#{year}head", 0, 0, "<h2>#{title}</h2>")).material]
+            materials: [(await @makeLabelMaterial("#{prefix}#{year}head", 0, 0, "<h2>#{title}</h2>")).material]
         for m in materials
             mm = clone(m.material)
             delete mm.materials
@@ -497,22 +500,21 @@ class MaterialsDownloader
             material: material
             tree: tree
 
-    makeRegMaterial: () ->
+    makeRegMaterial: (prefix, all_contests, title, order) ->
         materials = []
-        for year, contests of REGION_CONTESTS
-            parsed = @makeRegYearMaterial(year, contests)
+        for year, contests of all_contests
+            parsed = @makeRegYearMaterial(prefix, year, contests)
             materials.push(parsed)
         materials = await finalizeMaterialsList(materials)
-        title = "Региональные олимпиады"
 
         material = new Material
-            _id: "reg"
-            order: 100
+            _id: prefix
+            order: order
             type: "level"
             indent: 0
             title: title
             content: ""
-            materials: [(await @makeLabelMaterial("reghead", 0, 0, "<h2>#{title}</h2>")).material]
+            materials: [(await @makeLabelMaterial("#{prefix}head", 0, 0, "<h2>#{title}</h2>")).material]
         for m in materials
             mm = clone(m.material)
             delete mm.materials
@@ -703,7 +705,9 @@ class MaterialsDownloader
                 continue
             materials.push(@parseSection(section, sectionId))
 
-        materials.push(@makeRegMaterial())
+        #    makeRegMaterial: (prefix, all_contests, title, order) ->
+        materials.push(@makeRegMaterial("reg", REGION_CONTESTS, "Региональные олимпиады", 100))
+        materials.push(@makeRegMaterial("roi", ROI_CONTESTS, "Всероссийские олимпиады", 200))
 
         materials.push(@createTableMaterials())
 
