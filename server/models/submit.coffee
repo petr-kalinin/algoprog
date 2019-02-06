@@ -18,6 +18,14 @@ submitsSchema = new mongoose.Schema
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
 
+submitsSchema.methods.equivalent = (other) ->
+    return @user == other.user \
+        and @problem == other.problem \
+        and @outcome == other.outcome \
+        and @source == other.source \
+        and @sourceRaw == other.sourceRaw \
+        and @language == other.language
+
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
         user: userId

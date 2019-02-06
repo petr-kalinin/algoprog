@@ -35,11 +35,26 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
     await result.upsert()
     return result
 
+removeDuplicateSubmits = (userId, problemId) ->
+    submits = await Submit.findByUserAndProblem(userId, problemId)
+    seenSubmits = []
+    for submit in submits
+        seen = false
+        for seenSubmit in seenSubmits
+            if seenSubmit.equivalent(submit)
+                seen = true
+                break
+        if seen
+            await submit.remove()
+        else
+            seenSubmits.push(submit)
+
 updateResultsForProblem = (userId, problemId, dirtyResults) ->
     if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
         result = await Result.findByUserAndTable(userId, problemId)
         if result
             return result
+    await removeDuplicateSubmits(userId, problemId)
     submits = await Submit.findByUserAndProblem(userId, problemId)
     solved = 0
     ok = 0
