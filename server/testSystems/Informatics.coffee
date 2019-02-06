@@ -33,14 +33,12 @@ userCache = {}
 class LoggedInformaticsUser
     @getUser: (username, password) ->
         key = username + "::" + password
-        if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
+        if not userCache[key] or not (await userCache[key].getId())
             logger.info "Creating new InformaticsUser ", username
             newUser = new LoggedInformaticsUser(username, password)
             await newUser._login()
-            userCache[key] =
-                user: newUser
-                loginTime: new Date()
-        return userCache[key].user
+            userCache[key] = newUser
+        return userCache[key]
 
     constructor: (@username, @password) ->
         @jar = request.jar()
@@ -59,20 +57,24 @@ class LoggedInformaticsUser
                 followAllRedirects: true,
                 timeout: 30 * 1000
             })
-            document = (new JSDOM(page)).window.document
-            el = document.getElementsByClassName("logininfo")
-            if el.length == 0 or el[0].children.length == 0
-                throw "Can't log user #{username} in"
-            a = el[0].children[0]
-            id = a.href.match(/view.php\?id=(\d+)/)
-            @name = a.innerHTML
-            if not id or id.length < 2
-                throw "Can't detect id, href=#{a.href} username=#{@username}"
-            logger.info "Logged in user #{@username} href=#{a.href}"
-            @id = id[1]
+            @id = await @getId()
+            if not @id
+                throw "Can not log user #{@username} in"
         catch e
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
-        
+
+    getId: () ->
+        page = await download("https://informatics.mccme.ru/", @jar)
+        document = (new JSDOM(page)).window.document
+        el = document.getElementsByClassName("logininfo")
+        if el.length == 0 or el[0].children.length == 0
+            return null
+        a = el[0].children[0]
+        id = a.href.match(/view.php\?id=(\d+)/)
+        @name = a.innerHTML
+        if not id or id.length < 2
+            return null
+        return id[1]
 
     download: (href, options) ->
         if @requests >= REQUESTS_LIMIT
