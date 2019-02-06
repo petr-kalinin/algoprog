@@ -31,6 +31,8 @@ problemsSchema.methods.updateLevel = ->
         level = (await Table.findById(table)).parent
         if (level.slice(0,3) == "reg") and (reg < level)
             reg = level
+        else if (level.slice(0,3) == "roi") and (reg < level)
+            reg = level
         else if level > @level
             @level = level
     if @level == ""

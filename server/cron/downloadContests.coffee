@@ -19,6 +19,18 @@ export REGION_CONTESTS =
     '2017': ['24702', '24703']
     '2018': ['30793', '30794']
 
+export ROI_CONTESTS = 
+    '2009': ['1041']
+    '2010': ['1681']
+    '2011': ['3102']
+    '2012': ['4908']
+    '2013': ['7334', '7513']
+    '2014': ['11347', '11348']
+    '2015': ['15255', '15256']
+    '2016': ['20058', '20059']
+    '2017': ['26245', '26246']
+    '2018': ['32817', '32818']
+
 
 class ContestDownloader
     url: 'https://informatics.mccme.ru/course/view.php?id=1135'
@@ -43,8 +55,8 @@ class ContestDownloader
                 name: prob.name
             ).add()
             problemIds.push(prob._id)
-        logger.debug "Downloaded contest ", name
-        new Table(
+        logger.info "Downloaded contest ", name
+        await new Table(
             _id: cid,
             name: name,
             problems: problemIds,
@@ -67,9 +79,10 @@ class ContestDownloader
         text.replace re, (res, a, b, c, d) =>
             problems.push(@makeProblem(res, a, b, c, d))
         problems.splice(1, 0, secondProb);
-        @addContest(order, cid, name, level, problems)
+        await @addContest(order, cid, name, level, problems)
 
     run: ->
+        logger.info "Downloading base contests"
         text = await download(@url, @jar)
         re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
@@ -77,31 +90,39 @@ class ContestDownloader
         text.replace re, (a,b,c,d,e) =>
             order++
             promises.push(@processContest(order,a,b,c,d,e))
-        Promise.all(promises)
+        await Promise.all(promises)
+        logger.info "Done downloading base contests"
 
 class RegionContestDownloader extends ContestDownloader
     contestBaseUrl: 'https://informatics.mccme.ru/mod/statements/view.php?id='
 
+    constructor: (@contests, @prefix, @name, @name2, @order)->
+        super()
+        @jar = request.jar()
+
     run: ->
+        logger.info "Downloading #{@prefix} contests"
         levels = []
-        for year, cont of REGION_CONTESTS
-            fullText = ' тур региональной олимпиады ' + year + ' года'
-            @processContest(year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, 'reg' + year)
-            @processContest(year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, 'reg' + year)
-            levels.push('reg' + year)
+        promises = []
+        for year, cont of @contests
+            if cont.length == 2
+                fullText = " тур #{@name2} олимпиады #{year} года"
+                promises.push @processContest(@order + year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], 'Первый' + fullText, @prefix + year)
+                promises.push @processContest(@order + year * 10 + 2, '', @contestBaseUrl + cont[1], cont[1], 'Второй' + fullText, @prefix + year)
+            else
+                fullText = "#{@name} олимпиада #{year} года"
+                promises.push @processContest(@order + year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], fullText, @prefix + year)
+            levels.push(@prefix + year)
+        await Promise.all(promises)
         #id, name, tables, problems, parent, order
         await (new Table(
-            _id: "reg"
-            name: "reg",
+            _id: @prefix
+            name: @prefix,
             tables: levels,
             parent: "main",
-            order: 200000
+            order: @order
         ).upsert())
-        users = await User.findAll()
-        promises = []
-        for user in users
-            promises.push(User.updateUser(user._id))
-        await Promise.all(promises)
+        logger.info "Done downloading #{@prefix} contests"
 
 running = false
 
@@ -119,6 +140,14 @@ wrapRunning = (callable) ->
 export run = wrapRunning () ->
     logger.info "Downloading contests"
     await (new ContestDownloader().run())
-    await (new RegionContestDownloader().run())
+    #(@contests, @prefix, @name, @name2, @order)
+    await (new RegionContestDownloader(REGION_CONTESTS, "reg", "Региональная", "региональной", 20000).run())
+    await (new RegionContestDownloader(ROI_CONTESTS, "roi", "Всероссийская", "всероссийской", 40000).run())
     await Table.removeDuplicateChildren()
+    logger.info "Will update users"
+    users = await User.findAll()
+    promises = []
+    for user in users
+        promises.push(User.updateUser(user._id))
+    await Promise.all(promises)
     logger.info "Done downloading contests"
