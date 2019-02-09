@@ -1,5 +1,11 @@
 mongoose = require('mongoose')
 
+outcomeType = (outcome) ->
+    switch outcome
+        when "DR" then "DR"
+        when "PS" then "PS"
+        else "_"
+
 submitsSchema = new mongoose.Schema
     _id: String
     time: Date
@@ -21,7 +27,7 @@ submitsSchema.methods.upsert = () ->
 submitsSchema.methods.equivalent = (other) ->
     return @user == other.user \
         and @problem == other.problem \
-        and @outcome == other.outcome \
+        and outcomeType(@outcome) == outcomeType(other.outcome) \
         and @source == other.source \
         and @sourceRaw == other.sourceRaw \
         and @language == other.language
