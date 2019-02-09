@@ -41,7 +41,7 @@ removeDuplicateSubmits = (userId, problemId) ->
     for submit in submits
         seen = false
         for seenSubmit in seenSubmits
-            if seenSubmit.equivalent(submit)
+            if submit.equivalent(seenSubmit)
                 seen = true
                 break
         if seen

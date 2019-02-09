@@ -25,6 +25,12 @@ submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
 
 submitsSchema.methods.equivalent = (other) ->
+    if @comments.length > 0
+        return false
+    if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
+        return false
+    if @force
+        return false
     return @user == other.user \
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
