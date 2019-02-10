@@ -42,6 +42,7 @@ removeDuplicateSubmits = (userId, problemId) ->
         seen = false
         for seenSubmit in seenSubmits
             if submit.equivalent(seenSubmit)
+                logger.info "Submit #{submit._id} is equivalent to submit #{seenSubmit._id}, will remove"
                 seen = true
                 break
         if seen
