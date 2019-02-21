@@ -31,6 +31,8 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             page = await @adminUser.download(href, {encoding: 'latin1'})
             document = (new JSDOM(page)).window.document
             source = document.getElementById("source-textarea").innerHTML
+            if source.length == 0
+                throw "Source with length 0"
             return entities.decode(source)
         catch e
             logger.warn "Can't download source ", runid, href, e.stack
@@ -61,7 +63,10 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             href = "https://informatics.mccme.ru/py/protocol/get/#{contest}/#{run}"
             data = await @adminUser.download(href)
             logger.info "results data=", data
-            return JSON.parse(data)
+            result = JSON.parse(data)
+            if !result.tests?[1]
+                throw "No results found"
+            return result
         catch e
             logger.warn "Can't download results ", runid, href, e, e.stack
             throw e
