@@ -191,6 +191,9 @@ class ShadContestDownloader extends ContestDownloader
         "Домашнее задание 5": '6',
         "Домашнее задание 6": '7',
         "Ревью": '9'
+        "Домашнее задание 2-1": 
+            id: '10',
+            deadline: '2019-04-02'            
 
     run: ->
         levels = []
