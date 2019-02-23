@@ -24,21 +24,21 @@ getHeader = (results) ->
     return res
 
 Text = (props) ->
-    if props.levels == "main"
-        <div>
-            <Helmet>
-                <title>Общая таблица</title>
-            </Helmet>
-            <h1>Общая таблица</h1>
-            <p>Цвета:{" "}
-                <span className={globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
-                <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
-                <span className={globalStyles.ok + " " + styles.example}>OK</span>{" "}
-                <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
-            </p>
-            <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
-            <p>Двойной щелчок по ячейке таблицы открывает соответствующую задачу и, если по ней были посылки, то последнюю посылку по ней</p>
-        </div>
+    #if props.levels == "main"
+    <div>
+        <Helmet>
+            <title>Общая таблица</title>
+        </Helmet>
+        <h1>Общая таблица</h1>
+        <p>Цвета:{" "}
+            <span className={globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
+            <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
+            <span className={globalStyles.ok + " " + styles.example}>OK</span>{" "}
+            <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
+        </p>
+        <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
+        <p>Двойной щелчок по ячейке таблицы открывает соответствующую задачу и, если по ней были посылки, то последнюю посылку по ней</p>
+    </div>
 
 
 export default Table = (props) ->

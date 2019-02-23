@@ -53,6 +53,8 @@ ProblemResult = (props) ->
     </td>
 
 totalResultClass = (result) ->
+    if not result
+        return undefined
     if not result.problemName
         return undefined
     if result.total == result.solved
@@ -77,16 +79,16 @@ TotalResult = (props) ->
         s = totalResultClass(props.result)
         if s
             style += " " + styles[s]
-        if props.result.problemName
+        if props.result?.problemName
             title = props.user.name + ": " + props.result.problemName
     return <td className={style} title={title}>
             {if props.header
                 "="
             else
-                props.result.points
+                props.result?.points
             }
-            {if not props.header and props.result.points != props.resultLate.points
-                <div className="small" title="После дедлайна">[{props.resultLate.points}]</div>
+            {if not props.header and props.result?.points != props.resultLate?.points
+                <div className="small" title="После дедлайна">[{props.resultLate?.points}]</div>
             }
         </td>
 

@@ -43,12 +43,12 @@ class MaterialAdder
             promises.push(material.upsert())
         await Promise.all(promises)
 
-    addTable: ->
+    addTable: (id, name) ->
         material = new Material
-            _id: "table"
+            _id: id
             type: "table",
-            title: "Сводная таблица"
-            content: "/table/all/main"
+            title: name
+            content: "/table/all/#{id}"
         @addMaterial(material)
 
         tree = clone(material)
@@ -67,7 +67,8 @@ class MaterialAdder
         await material.upsert()
 
     finalize: ->
-        @addTable()
+        @addTable("semester1", "Сводная таблица по семестру 1")
+        @addTable("semester2", "Сводная таблица по семестру 2")
         @contests = await finalizeMaterialsList(@contests)
 
         mainPageMaterial = new Material
@@ -187,30 +188,39 @@ class ShadContestDownloader extends ContestDownloader
     contests:
         "Домашнее задание 0":
             id: '1',
+            table: 'semester1',
             deadline: '2018-10-30'
         "Домашнее задание 1": 
             id: '2'
+            table: 'semester1',
             deadline: '2018-11-06'
         "Домашнее задание 2": 
             id: '3',
+            table: 'semester1',
             deadline: '2018-11-13'
         "Домашнее задание 3": 
             id: '4',
+            table: 'semester1',
             deadline: '2018-11-20'
         "Домашнее задание 4": 
             id: '5',
+            table: 'semester1',
             deadline: '2018-11-27'
         "Домашнее задание 5": 
             id: '6',
+            table: 'semester1',
             deadline: '2018-12-04'
         "Домашнее задание 6": 
             id: '7',
+            table: 'semester1',
             deadline: '2018-12-11'
         "Ревью": 
             id: '9'
+            table: 'semester1',
             deadline: '2019-01-01'
         "Домашнее задание 2-1": 
             id: '10',
+            table: 'semester2',
             deadline: '2019-04-02'            
 
     run: ->
@@ -218,7 +228,7 @@ class ShadContestDownloader extends ContestDownloader
         for fullText, cont of @contests
             ejudge = getTestSystem("ejudge")
             console.log fullText, cont.id
-            await @processContest(cont * 10 + 1, cont.id, fullText, "main", ejudge, cont.deadline)
+            await @processContest(cont * 10 + 1, cont.id, fullText, cont.table, ejudge, cont.deadline)
 
         await @finalize()
 

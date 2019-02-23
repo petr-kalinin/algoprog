@@ -10,6 +10,7 @@ import Table from '../models/table'
 import addTotal from '../../client/lib/addTotal'
 
 getTables = (table) ->
+    return [table]
     if table == "main"
         return ["main"]
     tableIds = table.split(",")
@@ -111,7 +112,7 @@ export default table = (userList, table) ->
     return results
 
 export fullUser = (userId) ->
-    tables = [["main"]]
+    tables = [["semester1"], ["semester2"]]
     user = await User.findById(userId)
     if not user
         return null
