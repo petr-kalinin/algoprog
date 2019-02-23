@@ -38,6 +38,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 import download from '../lib/download'
 import {getStats} from '../lib/download'
+import unix2dos from '../lib/unix2dos'
 
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
@@ -75,6 +76,7 @@ expandSubmit = (submit) ->
 
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
+    codeRaw = unix2dos(codeRaw)
     code = entities.encode(codeRaw)
     if not draft
         allSubmits = await Submit.findByUserAndProblem(userId, problemId)
@@ -251,9 +253,8 @@ export default setupApi = (app) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
             res.status(403).send('No permissions')
             return
-        mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime
-        if mimeType
-            res.contentType(mimeType)
+        mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime || "text/plain"
+        res.contentType(mimeType)
         res.send(submit.sourceRaw)
 
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
