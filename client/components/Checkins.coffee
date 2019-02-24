@@ -94,7 +94,8 @@ export default class Checkins extends React.Component
                         </tr></thead>
                         <tbody>
                         {
-                        rows = Math.max(@props.data[0].max, @props.data[1].max)
+                        #rows = Math.max(@props.data[0].max, @props.data[1].max)
+                        rows = @props.data[0].max
                         for row in [0...rows]
                             <tr key={row}>
                                 {
