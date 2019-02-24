@@ -315,7 +315,7 @@ export default setupApi = (app) ->
             { 
                 checkins: await Checkin.findBySession(i)
                 max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..1])
+            } for i in [0..0])
         for sessionCheckins in checkins
             sessionCheckins.checkins = await Promise.all(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()
