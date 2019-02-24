@@ -22,7 +22,7 @@ import { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegist
 entities = new Entities()
 
 class SubmitDownloader
-    constructor: (@baseDownloader, @minPages, @limitPages, @forceMetadata) ->
+    constructor: (@baseDownloader, @minPages, @limitPages, @forceMetadata, @onNewSubmit) ->
         @dirtyUsers = {}
         @dirtyResults = {}
 
@@ -68,10 +68,12 @@ class SubmitDownloader
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and not @forceMetadata)
+            await @onNewSubmit?(newSubmit)
             logger.debug "Submit already in the database #{newSubmit._id}"
             return res
 
         if oldSubmit?.force and not @forceMetadata
+            await @onNewSubmit?(newSubmit)
             logger.info("Will not overwrite a forced submit #{newSubmit._id}")
             await @setDirty(newSubmit)
             return res
@@ -110,6 +112,7 @@ class SubmitDownloader
             await newSubmit.upsert()
         catch e
             logger.warning "Could not upsert submit", newSubmit._id, newSubmit.user, newSubmit.problem, e
+        await @onNewSubmit?(newSubmit)
         await @setDirty(newSubmit)
         logger.debug "Done submit", newSubmit._id, newSubmit.user, newSubmit.problem
         res
@@ -190,13 +193,13 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
     catch e
         logger.error "Error in runForUser", e
 
-export runForUserAndProblem = (userId, problemId) ->
+export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
     try
         user = await User.findById(userId)
         await forAllTestSystems (system) ->
             logger.info "runForUserAndProblem", system.id(), userId, problemId
             systemDownloader = await system.submitDownloader(userId, problemId, undefined, 100)
-            await (new SubmitDownloader(systemDownloader, 1, 10, false)).run()
+            await (new SubmitDownloader(systemDownloader, 1, 10, false, onNewSubmit)).run()
             logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
         logger.error "Error in runForUserAndProblem", e

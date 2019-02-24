@@ -4,16 +4,13 @@ request = require('request-promise-native')
 import { GROUPS } from '../../client/lib/informaticsGroups'
 
 import RegisteredUser from '../models/registeredUser'
-import Submit from '../models/submit'
 
 import download from '../lib/download'
-import sleep from '../lib/sleep'
 import logger from '../log'
 
 import TestSystem, {TestSystemUser} from './TestSystem'
 
 import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownloader'
-import * as downloadSubmits from '../cron/downloadSubmits'
 
 
 REQUESTS_LIMIT = 20
@@ -190,48 +187,11 @@ export default class Informatics extends TestSystem
     submitNeedsFormData: () ->
         true
 
-    submitWithFormData: (user, problemId, contentType, data) ->
+    submitWithObject: (user, problemId, data, onNewSubmit) ->
         informaticsProblemId = @_informaticsProblemId(problemId)
-        success = false
-        for i in [1..8]
-            logger.info "Try submit #{user.username}, #{user.informaticsId} #{problemId}, attempt #{i}"
-            try
-                oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
-                try
-                    informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
-                    informaticsData = await informaticsUser.submit(informaticsProblemId, contentType, data)
-                    await sleep(1000)
-                finally
-                    await downloadSubmits.runForUserAndProblem(user.informaticsId, problemId)
-            catch e
-                logger.info "Error submitting #{user.username}, #{user.informaticsId} #{problemId} attempt #{i}: ", e.message
-            newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
-            if oldSubmits.length != newSubmits.length
-                logger.info "However, submit #{user.username}, #{user.informaticsId} #{problemId} appeared after downloadSubmits from attempt #{i}"
-                success = true
-                break
-        if not success
-            throw "Can't submit #{user.username}, #{user.informaticsId} #{problemId}"
-
-    submitWithObject: (user, problemId, data) ->
-        informaticsProblemId = @_informaticsProblemId(problemId)
-        success = false
         logger.info "Try submit #{user.username}, #{user.informaticsId} #{problemId}"
-        try
-            oldSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
-            try
-                informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
-                informaticsData = await informaticsUser.submitWithObject(informaticsProblemId, data)
-                await sleep(1000)
-            finally
-                await downloadSubmits.runForUserAndProblem(user.informaticsId, problemId)
-        catch e
-            logger.info "Error submitting #{user.username}, #{user.informaticsId} #{problemId}: ", e.message
-        newSubmits = await Submit.findByUserAndProblem(user.informaticsId, problemId)
-        if oldSubmits.length != newSubmits.length
-            logger.info "However, submit #{user.username}, #{user.informaticsId} #{problemId} appeared after downloadSubmits"
-            return
-        throw "Can't submit #{user.username}, #{user.informaticsId} #{problemId}"
+        informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
+        await informaticsUser.submitWithObject(informaticsProblemId, data)
 
     registerUser: (user) ->
         logger.info "Moving user #{user._id} to unknown group"

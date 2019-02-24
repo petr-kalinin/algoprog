@@ -6,7 +6,10 @@ import RegisteredUser from '../models/registeredUser'
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
 import LANGUAGES from '../../client/lib/languages'
 
+import * as downloadSubmits from '../cron/downloadSubmits'
+
 import setDirty from '../lib/setDirty'
+import sleep from '../lib/sleep'
 
 import logger from '../log'
 
@@ -27,6 +30,30 @@ getLanguage = (lang) ->
         if lang == l[1]
             return l[0]
     throw "Unknown language " + lang
+
+submitToTestSystem = (submit, submitProcess) ->
+    success = false
+
+    onNewSubmit = (newSubmit) ->
+        if newSubmit.sourceRaw != submit.sourceRaw
+            return
+        await Submit.remove({_id: submit._id})
+        await SubmitProcess.remove({_id: submit._id})
+        logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
+        success = true
+
+    testSystem = await getTestSystem("informatics")
+    registeredUser = await RegisteredUser.findByKey(submit.user)
+    try
+        try
+            await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
+            await sleep(1000)
+        finally
+            await downloadSubmits.runForUserAndProblem(registeredUser.userKey(), submit.problem, onNewSubmit)
+    catch e
+        if not success
+            throw e
+
 
 submitOneSubmit = (submit) ->
     submitProcess = await SubmitProcess.findById(submit._id)
@@ -55,15 +82,7 @@ submitOneSubmit = (submit) ->
         return
 
     try
-        testSystem = await getTestSystem("informatics")
-        registeredUser = await RegisteredUser.findByKey(submit.user)
-        await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
-        await Submit.remove({_id: submit._id})
-        await SubmitProcess.remove({_id: submit._id})
-        dirtyResults = {}
-        await setDirty(submit, dirtyResults, {})
-        await User.updateUser(submit.user, dirtyResults)
-        logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
+        await submitToTestSystem(submit, submitProcess)
     catch e
         logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
         logger.info e.message, e.stack
