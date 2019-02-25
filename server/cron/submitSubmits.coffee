@@ -46,6 +46,7 @@ submitToTestSystem = (submit, submitProcess) ->
     registeredUser = await RegisteredUser.findByKey(submit.user)
     try
         try
+            logger.info "Try submitWithObject"
             await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
             await sleep(1000)
         finally
@@ -85,7 +86,7 @@ submitOneSubmit = (submit) ->
         await submitToTestSystem(submit, submitProcess)
     catch e
         logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
-        logger.info e.message, e.stack
+        logger.info e, e.message, e.stack
         submitProcess.attempts += 1
         submitProcess.lastAttempt = new Date()
         await submitProcess.upsert()
