@@ -187,7 +187,7 @@ export default class Informatics extends TestSystem
     submitNeedsFormData: () ->
         true
 
-    submitWithObject: (user, problemId, data, onNewSubmit) ->
+    submitWithObject: (user, problemId, data) ->
         informaticsProblemId = @_informaticsProblemId(problemId)
         logger.info "Try submit #{user.username}, #{user.informaticsId} #{problemId}"
         informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
