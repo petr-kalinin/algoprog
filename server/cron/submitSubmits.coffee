@@ -54,6 +54,8 @@ submitToTestSystem = (submit, submitProcess) ->
     catch e
         if not success
             throw e
+    if not success
+        throw "Can not submit, submit did not appear in submit list..."
 
 
 submitOneSubmit = (submit) ->
