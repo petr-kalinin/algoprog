@@ -65,11 +65,12 @@ class SubmitDownloader
             newSubmit.results = oldSubmit.results
             newSubmit.comments = oldSubmit.comments
             newSubmit.quality = oldSubmit.quality
+            newSubmit.language = oldSubmit.language
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and not @forceMetadata)
             await @onNewSubmit?(newSubmit)
-            logger.debug "Submit already in the database #{newSubmit._id}"
+            logger.info "Submit already in the database #{newSubmit._id}"
             return res
 
         if oldSubmit?.force and not @forceMetadata

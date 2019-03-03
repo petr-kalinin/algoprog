@@ -8,7 +8,7 @@ import Submit from '../../models/submit'
 
 import logger from '../../log'
 
-import unix2dos from '../../lib/unix2dos'
+import normalizeCode from '../../lib/normalizeCode'
 
 entities = new Entities()
 
@@ -35,7 +35,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             source = document.getElementById("source-textarea").innerHTML
             if source.length == 0
                 throw "Source with length 0"
-            return unix2dos(entities.decode(source))
+            return normalizeCode(entities.decode(source))
         catch e
             logger.warn "Can't download source ", runid, href, e.stack
             throw e

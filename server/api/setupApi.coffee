@@ -38,7 +38,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 import download from '../lib/download'
 import {getStats} from '../lib/download'
-import unix2dos from '../lib/unix2dos'
+import normalizeCode from '../lib/normalizeCode'
 
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
@@ -76,7 +76,7 @@ expandSubmit = (submit) ->
 
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
-    codeRaw = unix2dos(codeRaw)
+    codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
     if not draft
         allSubmits = await Submit.findByUserAndProblem(userId, problemId)
