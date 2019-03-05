@@ -66,7 +66,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             data = await @adminUser.download(href)
             logger.info "results data=", data
             result = JSON.parse(data)
-            if not result.tests?[1] and not result.message.includes('status="SV"') and not result.protocol.includes('compile-error="yes"')
+            if not result.tests?[1] and not result.message.includes('status="SV"') and not result.message.includes('status="CE"') and not result.protocol.includes('compile-error="yes"')
                 throw "No results found"
             return result
         catch e
