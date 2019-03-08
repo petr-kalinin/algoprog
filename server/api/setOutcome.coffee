@@ -20,9 +20,17 @@ postToInformatics = (req, res) ->
     informatics = getTestSystem("informatics")
     informatics.setOutcome(submitId, outcome, comment)
 
+parseRunId = (runid) ->
+    if runid.includes("r")
+        [fullSubmitId, contest, run, problem] = runid.match(/(\d+)r(\d+)p(\d+)/)
+    else
+        [fullSubmitId, run, problem] = runid.match(/(\d+)p(\d+)/)
+        contest = undefined
+    return [fullSubmitId, contest, run, problem]
+
 
 updateData = (req, res) ->
-    [fullSubmitId, contest, run, problem] = req.params.submitId.match(/(\d+)r(\d+)p(\d+)/)
+    [fullSubmitId, contest, run, problem] = parseRunId(req.params.submitId)
     submit = await Submit.findById(req.params.submitId)
     await runForUserAndProblem(submit.user, "p" + problem)
     submit = await Submit.findById(req.params.submitId)
@@ -36,7 +44,9 @@ updateData = (req, res) ->
 
 
 storeToDatabase = (req, res) ->
-    [fullSubmitId, runId, problemId] = req.params.submitId.match(/(\d+r\d+)(p\d+)/)
+    [fullSubmitId, contest, runId, problemId] = parseRunId(req.params.submitId)
+    if contest
+        runId = contest + "r" + runId
     submit = await Submit.findById(req.params.submitId)
     problem = await Problem.findById(problemId)
     if req.body.result in ["AC", "IG", "DQ"]
