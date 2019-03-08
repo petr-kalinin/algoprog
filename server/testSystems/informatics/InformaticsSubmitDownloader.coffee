@@ -57,7 +57,8 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             [contest, run] = @parseRunId(runid)
             #href = "https://informatics.mccme.ru/moodle/ajax/ajax_file.php?objectName=source&contest_id=#{contest}&run_id=#{run}"
             href = "https://informatics.mccme.ru/py/problem/run/#{run}/source"
-            page = await @adminUser.download(href, {encoding: 'latin1'})
+            #page = await @adminUser.download(href, {encoding: 'latin1'})
+            page = await @adminUser.download(href)
             source = JSON.parse(page)?.data?.source || ""
             #document = (new JSDOM(page)).window.document
             #source = document.getElementById("source-textarea").innerHTML
@@ -78,7 +79,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             data = await @adminUser.download(href)
             logger.info "results data=", data
             result = JSON.parse(data)
-            if not result.tests?[1] and not result.message.includes('status="SV"') and not result.message.includes('status="CE"') and not result.protocol.includes('compile-error="yes"')
+            if not result.tests?[1] and not result.compiler_output and not result.message.includes('status="SV"') and not result.message.includes('status="CE"') and not result.protocol.includes('compile-error="yes"')
                 throw "No results found"
             return result
         catch e
