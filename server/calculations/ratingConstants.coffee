@@ -1,9 +1,9 @@
 export startDayForWeeks =
-    "lic40": "2018-08-29"
-    "zaoch": "2018-08-26"
-    "stud": "2018-09-03"
-    "notnnov": "2018-09-03"
-    "unknown": "2018-09-03"
+    "lic40": "2019-01-02"
+    "zaoch": "2019-01-06"
+    "stud": "2019-01-07"
+    "notnnov": "2019-01-07"
+    "unknown": "2019-01-07"
 
 export WEEK_ACTIVITY_EXP = 0.55
 export LEVEL_RATING_EXP = 2.5
