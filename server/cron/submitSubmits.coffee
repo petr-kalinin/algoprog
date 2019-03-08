@@ -98,6 +98,7 @@ submitOneSubmit = (submit) ->
 
 
 submitSubmits = () ->
+    return
     pendingSubmits = await Submit.findPendingSubmits()
     await Promise.all(pendingSubmits.map(submitOneSubmit))
 
