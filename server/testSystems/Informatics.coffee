@@ -4,6 +4,7 @@ request = require('request-promise-native')
 import { GROUPS } from '../../client/lib/informaticsGroups'
 
 import RegisteredUser from '../models/registeredUser'
+import User from '../models/user'
 
 import download from '../lib/download'
 import logger from '../log'
@@ -180,9 +181,16 @@ export default class Informatics extends TestSystem
             userId = 0
             groupId = GROUPS["unknown"]
         fromTimestamp = fromTimestamp || 0
+        if userId
+            fullUser = await RegisteredUser.findByKey(userId)
+            user = await LoggedInformaticsUser.getUser(fullUser.informaticsUsername, fullUser.informaticsPassword)
+        else
+            # disable all downloads except for a specific user
+            return
         url = (page) ->
+            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}
             "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&from_timestamp=#{fromTimestamp}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
-        return new InformaticsSubmitDownloader(await @_getAdmin(), url)
+        return new InformaticsSubmitDownloader(user, url)
 
     submitNeedsFormData: () ->
         true
