@@ -84,11 +84,9 @@ class SubmitDownloader
             newSubmit.force = oldSubmit.force
 
         try
-            [sourceRaw, comments, results] = await Promise.all([
-                @baseDownloader.getSource(newSubmit._id),
-                @baseDownloader.getComments(newSubmit._id),
-                @baseDownloader.getResults(newSubmit._id)
-            ])
+            sourceRaw = await @baseDownloader.getSource(newSubmit._id)
+            results = await @baseDownloader.getResults(newSubmit._id)
+            comments = []
         catch e
             if newSubmit.outcome != "CT"
                 throw e
