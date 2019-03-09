@@ -22,9 +22,9 @@ postToInformatics = (req, res) ->
 
 parseRunId = (runid) ->
     if runid.includes("r")
-        [fullSubmitId, contest, run, problem] = runid.match(/(\d+)r(\d+)p(\d+)/)
+        [fullSubmitId, contest, run, problem] = runid.match(/(\d+)r(\d+)(p\d+)/)
     else
-        [fullSubmitId, run, problem] = runid.match(/(\d+)p(\d+)/)
+        [fullSubmitId, run, problem] = runid.match(/(\d+)(p\d+)/)
         contest = undefined
     return [fullSubmitId, contest, run, problem]
 
@@ -32,7 +32,7 @@ parseRunId = (runid) ->
 updateData = (req, res) ->
     [fullSubmitId, contest, run, problem] = parseRunId(req.params.submitId)
     submit = await Submit.findById(req.params.submitId)
-    await runForUserAndProblem(submit.user, "p" + problem)
+    await runForUserAndProblem(submit.user, problem)
     submit = await Submit.findById(req.params.submitId)
     if req.body.result and submit.outcome != req.body.result
         return false
