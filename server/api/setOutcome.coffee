@@ -49,6 +49,7 @@ storeToDatabase = (req, res) ->
         runId = contest + "r" + runId
     submit = await Submit.findById(req.params.submitId)
     problem = await Problem.findById(problemId)
+    logger.info("Store to database #{runId} #{problemId} #{problem._id}")
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
