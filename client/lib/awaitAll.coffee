@@ -1,6 +1,12 @@
 export default awaitAll = (promises) ->
     error = undefined
-    results = await Promise.all(promises.map((p) -> p.catch((e) -> error = e)))
+    tryPromise = (p) ->
+        try
+            await Promise.resolve(p)
+        catch e
+            error = e
+
+    results = await Promise.all(promises.map(tryPromise))
     if error
         throw error
     return results

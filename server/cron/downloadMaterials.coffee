@@ -39,8 +39,7 @@ getPageContent = (href) ->
     document = await downloadAndParse(href)
     data = document.getElementById("content")
     if not data
-        logger.error("Can't find content for page " + href)
-        return undefined
+        throw Error("Can't find content for page " + href)
 
     while true
         mod = data.getElementsByClassName('modified')
@@ -54,8 +53,7 @@ getProblemsHrefsFromStatements = (href) ->
     document = await downloadAndParse(href)
     toc = document.getElementsByClassName("statements_toc_alpha")
     if toc.length > 1
-        logger.error("Found several tocs in statements " + href)
-        return undefined
+        throw Error("Found several tocs in statements " + href)
     toc = toc[0]
 
     hrefs = []
@@ -64,7 +62,20 @@ getProblemsHrefsFromStatements = (href) ->
         if tag.href.startsWith("https://informatics.mccme.ru/mod/statements/view3.php")
             hrefs.push(tag.href)
         else
-            logger.error("Strange link in statements toc: " + tag.href + " " + href)
+            throw Error("Strange link in statements toc: " + tag.href + " " + href)
+
+    allATags = document.getElementsByTagName("a")
+    firstProblemHref = undefined
+    s = ""
+    for tag in allATags 
+        s += tag.title + "\n"
+        if tag.title == "Print This Problem"
+            firstProblemHref = tag.href.replace("print3", "view3")
+
+    if not firstProblemHref
+        throw Error("Can not detect first problem href at #{href} (#{s})")
+
+    hrefs.splice(0, 0, firstProblemHref)
 
     return hrefs
 
@@ -102,18 +113,18 @@ parseProblem = (id, href, order) ->
 
     data = document.getElementsByClassName("problem-statement")
     if not data or data.length == 0
-        logger.error("Can't find statement for problem " + href)
-        return undefined
+        logger.warn("Can't find statement for problem " + href)
+        data = []
 
-    name = document.getElementsByTagName("title")[0]
+    name = document.getElementsByTagName("title")[0] || ""
     name = name.innerHTML
 
     re = new RegExp '^.*?\\((.*)\\)$'
     res = re.exec name
     name = res[1]
     if not name
-        logger.error("Can't find name for problem " + href)
-        return undefined
+        logger.warn Error("Can't find name for problem " + href)
+        name = ""
 
     text = "<h1>" + name + "</h1>"
     for tag in data
@@ -242,8 +253,7 @@ class MaterialsDownloader
     makeSpecialPage: (id, order, indent, element, keepResourcesInTree) ->
         a = element.getElementsByTagName("a")
         if a.length != 1
-            logger.error("Found resource with != 1 children " + element.innerHTML)
-            return undefined
+            throw Error("Found resource with != 1 children " + element.innerHTML)
         type = "page"
         if element.classList?.contains("algoprog-epigraph")
             type = "epigraph"
@@ -272,8 +282,7 @@ class MaterialsDownloader
         indent = getIndent(activity)
         icon = activity.firstChild
         if activity.children.length != 2
-            logger.error("Found resource with >2 children " + activity.innerHTML)
-            return undefined
+            throw Error("Found resource with >2 children " + activity.innerHTML)
         a = activity.children[1]
         return @parseLink(a, activity.id, order, keepResourcesInTree, indent, icon)
 
@@ -299,8 +308,6 @@ class MaterialsDownloader
 
     parseContest: (href, id, name, order, indent) ->
         hrefs = await getProblemsHrefsFromStatements(href)
-        hrefs2 = await getProblemsHrefsFromStatements(hrefs[0])
-        hrefs.splice(0, 0, hrefs2[0])
 
         materials = []
         for href, i in hrefs
@@ -329,8 +336,7 @@ class MaterialsDownloader
     parseStatements: (activity, order) ->
         indent = getIndent(activity)
         if activity.children.length != 2
-            logger.error("Found resource with >2 children " + activity.innerHTML)
-            return undefined
+            throw Error("Found resource with >2 children " + activity.innerHTML)
         a = activity.children[1]
 
         re = new RegExp 'view.php\\?id=(\\d+)'
@@ -403,7 +409,7 @@ class MaterialsDownloader
     parseNews: (element) ->
         header = element.getElementsByClassName('algoprog-header')
         if header.length != 1
-            logger.error("Missing or several headers for news " + element.innerHTML)
+            throw Error("Missing or several headers for news " + element.innerHTML)
         headerText = header[0].innerHTML
         header[0].parentElement.removeChild(header[0])
         @addNews(headerText, element)
@@ -536,7 +542,7 @@ class MaterialsDownloader
             _id: material._id
             title: material.title
         if not material.materials
-            logger.error("Have no submaterials #{material}")
+            throw Error("Have no submaterials #{material}")
         for m in material.materials
             @fillPaths(@materials[m._id], path)
 
@@ -677,7 +683,7 @@ class MaterialsDownloader
             if not (key of @urlToMaterial)
                 await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
             if not (key of @urlToMaterial)
-                logger.error("Found internal link without a material: #{href}")
+                throw Error("Found internal link without a material: #{href}")
                 continue
             newhref = "/material/#{@urlToMaterial[key]}"
             a.href = newhref
