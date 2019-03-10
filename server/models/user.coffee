@@ -103,10 +103,16 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updated user", userId
 
 usersSchema.statics.updateAllUsers = (dirtyResults) ->
+    tryUpdate = (id) ->
+        try
+            await User.updateUser(id)
+        catch e
+            logger.warn("Error while updating user: ", e.message || e, e.stack)
+
     users = await User.find {}
     promises = []
     for u in users
-        promises.push(User.updateUser(u._id))
+        promises.push(tryUpdate(u._id))
         if promises.length > 10
             logger.info("Updating 10 users, waiting for completion")
             await awaitAll(promises)
