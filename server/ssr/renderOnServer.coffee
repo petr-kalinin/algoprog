@@ -13,6 +13,7 @@ import DefaultHelmet from '../../client/components/DefaultHelmet'
 import ConnectedNotifications from '../../client/components/ConnectedNotifications'
 
 import createStore from '../../client/redux/store'
+import awaitAll from '../../client/lib/awaitAll'
 
 import logger from '../log'
 
@@ -113,7 +114,7 @@ export default renderOnServer = (req, res, next) =>
             </Provider>
 
         html = renderToString(wrappedElement)
-        await Promise.all(store.getState().dataPromises)
+        await awaitAll(store.getState().dataPromises)
 
         wrappedElement = <Provider store={store}>
                 <div>

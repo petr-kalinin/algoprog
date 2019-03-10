@@ -7,6 +7,8 @@ import Problem from '../models/problem'
 import Table from '../models/table'
 import CfResult from '../models/cfResult'
 
+import awaitAll from '../../client/lib/awaitAll'
+
 expandResult = (result) ->
     res = result.toObject()
     res.fullUser = (await User.findById(result.user))
@@ -22,7 +24,7 @@ expandResult = (result) ->
     tableNamePromises = []
     for table in res.fullTable.tables
         tableNamePromises.push(Table.findById(table))
-    tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
+    tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
     res.fullTable.tables = tableNames
     return res
 
@@ -30,7 +32,7 @@ expandResults = (results) ->
     promises = []
     for result in results
         promises.push(expandResult(result))
-    res = await Promise.all(promises)
+    res = await awaitAll(promises)
     res = (r for r in res when r)
     return res
 
@@ -56,7 +58,7 @@ runCfQuery = (result) ->
     result["cf"] = []
     for r in cfr
         result["cf"].push(expandCfResult(r))
-    result["cf"] = await Promise.all(result["cf"])
+    result["cf"] = await awaitAll(result["cf"])
     result["cf"] = (r for r in result["cf"] when r)
 
 export default dashboard = () ->
@@ -74,5 +76,5 @@ export default dashboard = () ->
         query["userList"] = {$ne: "unknown"}
         promises.push(runDashboardQuery(key, query, result))
     promises.push(runCfQuery(result))
-    await Promise.all(promises)
+    await awaitAll(promises)
     return result

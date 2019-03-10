@@ -41,6 +41,7 @@ import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 
 import {unpaidBlocked} from '../../client/lib/isPaid'
+import awaitAll from '../../client/lib/awaitAll'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
@@ -68,7 +69,7 @@ expandSubmit = (submit) ->
     tableNamePromises = []
     for t in submit.fullProblem.tables
         tableNamePromises.push(Table.findById(t))
-    tableNames = (await Promise.all(tableNamePromises)).map((table) -> table.name)
+    tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
     submit.fullProblem.tables = tableNames
     if (submit.source.length > MAX_SUBMIT_LENGTH or containsBinary(submit.source))
         submit.source = "Файл слишком длинный или бинарный"
@@ -207,7 +208,7 @@ export default setupApi = (app) ->
             delete user.informaticsPassword
             promises.push(addUserName(user))
             result.push(user)
-        await Promise.all(promises)
+        await awaitAll(promises)
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
@@ -217,7 +218,7 @@ export default setupApi = (app) ->
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
         submits = submits.map(expandSubmit)
-        submits = await Promise.all(submits)
+        submits = await awaitAll(submits)
         res.json(submits)
 
     app.get '/api/material/:id', wrap (req, res) ->
@@ -317,7 +318,7 @@ export default setupApi = (app) ->
                 max: MAX_CHECKIN_PER_SESSION[i]
             } for i in [0..0])
         for sessionCheckins in checkins
-            sessionCheckins.checkins = await Promise.all(sessionCheckins.checkins.map((checkin) ->
+            sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()
                 checkin.fullUser = await User.findById(checkin.user)
                 return checkin

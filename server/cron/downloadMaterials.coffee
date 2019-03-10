@@ -4,6 +4,7 @@ import Material from "../models/Material"
 import {downloadLimited} from '../lib/download'
 
 import logger from '../log'
+import awaitAll from '../../client/lib/awaitAll'
 
 import {REGION_CONTESTS, ROI_CONTESTS} from './downloadContests'
 
@@ -19,7 +20,7 @@ downloadAndParse = (href) ->
 
 finalizeMaterialsList = (materials) ->
     materials = (m for m in materials when m)
-    materials = await Promise.all(materials)
+    materials = await awaitAll(materials)
     materials = (m for m in materials when m)
     return materials
 
@@ -543,7 +544,7 @@ class MaterialsDownloader
         promises = []
         for id, material of @materials
             promises.push(material.upsert())
-        await Promise.all(promises)
+        await awaitAll(promises)
 
     saveNews: ->
         material = new Material
@@ -692,7 +693,7 @@ class MaterialsDownloader
                 promises.push(@correctInternalLinksInMaterial(m))
         for n in @news
             promises.push(@correctInternalLinksInMaterial(n))
-        await Promise.all(promises)
+        await awaitAll(promises)
 
     run: ->
         document = await downloadAndParse(url)

@@ -8,6 +8,7 @@ import Problem from '../models/problem'
 import Table from '../models/table'
 
 import addTotal from '../../client/lib/addTotal'
+import awaitAll from '../../client/lib/awaitAll'
 
 getTables = (table) ->
     if table == "main"
@@ -47,7 +48,7 @@ recurseResults = (user, tableId, depth) ->
             tableResults.push(getResult(user._id, subtableId , Table))
         for subtableId in table.problems
             tableResults.push(getResult(user._id, subtableId , Problem))
-        tableResults = await Promise.all(tableResults)
+        tableResults = await awaitAll(tableResults)
         for r in tableResults
             total = addTotal(total, r)
     return
@@ -94,10 +95,10 @@ export default table = (userList, table) ->
     data = []
     users = await User.findByList(userList)
     tables = await getTables(table)
-    #[users, tables] = await Promise.all([users, tables])
+    #[users, tables] = await awaitAll([users, tables])
     for user in users
         data.push(getUserResult(user, tables, 1))
-    results = await Promise.all(data)
+    results = await awaitAll(data)
     results = (r for r in results when r)
     results = results.sort(if table == "main" then sortByLevel else sortBySolved)
     return results
@@ -117,7 +118,7 @@ export fullUser = (userId) ->
     results = []
     for t in tables
         results.push(getUserResult(user, t, 1))
-    results = await Promise.all(results)
+    results = await awaitAll(results)
     results = (r.results for r in results when r)
     return
         user: user.toObject()

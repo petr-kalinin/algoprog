@@ -10,6 +10,7 @@ import logger from '../log'
 import updateResults from '../calculations/updateResults'
 
 import sleep from '../lib/sleep'
+import awaitAll from '../../client/lib/awaitAll'
 
 SEMESTER_START = "2016-06-01"
 
@@ -108,10 +109,10 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
         promises.push(User.updateUser(u._id))
         if promises.length > 10
             logger.info("Updating 10 users, waiting for completion")
-            await Promise.all(promises)
+            await awaitAll(promises)
             logger.info("Updated 10 users, continuing")
             promises = []
-    await Promise.all(promises)
+    await awaitAll(promises)
     logger.info("Updated all users")
 
 usersSchema.statics.updateAllCf = () ->

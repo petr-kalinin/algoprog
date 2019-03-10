@@ -2,6 +2,7 @@ feedparser = require('feedparser-promised')
 
 import BlogPost from "../models/BlogPost"
 import logger from '../log'
+import awaitAll from '../../client/lib/awaitAll'
 
 URL = "http://blog.algoprog.ru/feed.xml"
 
@@ -23,7 +24,7 @@ download = () ->
         if not realIds[oldPost._id]
             promises.push(oldPost.remove())
 
-    await Promise.all(promises)
+    await awaitAll(promises)
 
 
 running = false

@@ -10,6 +10,7 @@ import * as downloadSubmits from '../cron/downloadSubmits'
 
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
+import awaitAll from '../../client/lib/awaitAll'
 
 import logger from '../log'
 
@@ -99,7 +100,7 @@ submitOneSubmit = (submit) ->
 
 submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()
-    await Promise.all(pendingSubmits.map(submitOneSubmit))
+    await awaitAll(pendingSubmits.map(submitOneSubmit))
 
 running = false
 

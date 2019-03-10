@@ -7,6 +7,8 @@ import { CometSpinLoader } from 'react-css-loaders';
 import * as actions from '../redux/actions'
 import * as getters from '../redux/getters'
 
+import awaitAll from '../lib/awaitAll'
+
 export default ConnectedComponent = (Component, options) ->
     class Result extends React.Component
         constructor: (props) ->
@@ -82,7 +84,7 @@ export default ConnectedComponent = (Component, options) ->
 
         requestDataAndSetTimeout: () ->
             try
-                await Promise.all(@requestData(options.timeout))
+                await awaitAll(@requestData(options.timeout))
                 console.log "Updated data", @urls()
             catch e
                 console.log "Can't reload data", @urls(), e

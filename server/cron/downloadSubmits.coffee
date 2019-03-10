@@ -16,6 +16,8 @@ import logger from '../log'
 import download from '../lib/download'
 import setDirty from '../lib/setDirty'
 
+import awaitAll from '../../client/lib/awaitAll'
+
 import * as groups from '../informatics/informaticsGroups'
 import { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
 
@@ -130,7 +132,7 @@ class SubmitDownloader
                 submits = await @baseDownloader.getSubmitsFromPage(page)
                 if not submits.length
                     break
-                results = await Promise.all(@processSubmit(submit) for submit in submits)
+                results = await awaitAll(@processSubmit(submit) for submit in submits)
                 needContinue = true
                 for r in results
                     needContinue = needContinue and r
@@ -147,7 +149,7 @@ class SubmitDownloader
             for uid, tmp of @dirtyUsers
                 logger.debug "Will process dirty user ", uid
                 addedPromises.push(@processDirty(uid))
-            await Promise.all(addedPromises)
+            await awaitAll(addedPromises)
         logger.info "Finish SubmitDownloader.run ", @minPages, '-', @limitPages
 
 class LastSubmitDownloader extends SubmitDownloader
@@ -259,6 +261,6 @@ export runForCT = wrapRunning () ->
                     break
             if unique
                 data.push {userId, problemId}
-        await Promise.all(data.map((d) -> runForUserAndProblem(d.userId, d.problemId)))
+        await awaitAll(data.map((d) -> runForUserAndProblem(d.userId, d.problemId)))
     catch e
         logger.error "Error in LastSubmitDownloader", e

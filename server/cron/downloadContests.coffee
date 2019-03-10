@@ -6,6 +6,7 @@ import User from "../models/user"
 
 import logger from '../log'
 import download from '../lib/download'
+import awaitAll from '../../client/lib/awaitAll'
 
 export REGION_CONTESTS = 
     '2009': ['894', '895']
@@ -90,7 +91,7 @@ class ContestDownloader
         text.replace re, (a,b,c,d,e) =>
             order++
             promises.push(@processContest(order,a,b,c,d,e))
-        await Promise.all(promises)
+        await awaitAll(promises)
         logger.info "Done downloading base contests"
 
 class RegionContestDownloader extends ContestDownloader
@@ -113,7 +114,7 @@ class RegionContestDownloader extends ContestDownloader
                 fullText = "#{@name} олимпиада #{year} года"
                 promises.push @processContest(@order + year * 10 + 1, '', @contestBaseUrl + cont[0], cont[0], fullText, @prefix + year)
             levels.push(@prefix + year)
-        await Promise.all(promises)
+        await awaitAll(promises)
         #id, name, tables, problems, parent, order
         await (new Table(
             _id: @prefix
@@ -149,5 +150,5 @@ export run = wrapRunning () ->
     promises = []
     for user in users
         promises.push(User.updateUser(user._id))
-    await Promise.all(promises)
+    await awaitAll(promises)
     logger.info "Done downloading contests"
