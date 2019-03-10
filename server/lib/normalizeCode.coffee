@@ -1,4 +1,7 @@
 export default normalizeCode = (string) ->
+    # remove bom, see https://ejudge.ru/wiki/index.php/Serve.cfg:global:ignore_bom
+    if string.startsWith("\xEF\xBB\xBF")
+        string = string.substring(3)
     # Informatics trims spaces in source, at least at the beginning
     string = string.trim()
     # normalize end-of-lines, including mixed ones
