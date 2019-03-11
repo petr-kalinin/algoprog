@@ -1,4 +1,5 @@
 moment = require('moment')
+iconv = require('iconv-lite')
 import { JSDOM } from 'jsdom'
 Entities = require('html-entities').XmlEntities
 
@@ -57,8 +58,10 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             [contest, run] = @parseRunId(runid)
             href = "https://informatics.mccme.ru/py/problem/run/#{run}/source"
             #page = await @adminUser.download(href, {encoding: 'latin1'})
-            page = await @adminUser.download(href)
+            page = await @adminUser.download(href, {encoding: 'utf8'})
             source = JSON.parse(page)?.data?.source || ""
+            buf = Buffer.from(source, "utf8")
+            source = iconv.decode(buf, "latin1")
             #if source.length == 0
             #    throw "Source with length 0"
             return normalizeCode(entities.decode(source))
