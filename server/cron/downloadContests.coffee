@@ -65,21 +65,28 @@ class ContestDownloader
             order: order*100
         ).upsert()
 
+    getFirstProblem: (text) ->
+        idRe = new RegExp '<a title="Print This Problem" href="print3.php(\\?id=\\d+&amp;chapterid=(\\d+))"'
+        idRes = idRe.exec text
+        id = idRes[2]
+        href = "view3.php?#{idRes[1]}"
+
+        nameRe = new RegExp '<li><strong><B>Задача ([^.]+)\\.</B> ([^<]+)</strong></li>'
+        nameRes = nameRe.exec text
+        name = nameRes[2]
+        letter = nameRes[1]
+
+        return @makeProblem(nameRes[0], href, id, letter, name)
+
     processContest: (order, fullText, href, cid, name, level) ->
         text = await download(href, @jar)
-        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>'
-        secondProbRes = re.exec text
-        if not secondProbRes
-            logger.warn("Second problem not found in contest ", href)
-        secondProbHref = secondProbRes[1].replace('&amp;','&')
-        secondProb = @makeProblem(secondProbRes[0], secondProbRes[1], secondProbRes[2], secondProbRes[3], secondProbRes[4])
 
-        text = await download(@baseUrl + secondProbHref, @jar)
+        firstProblem = @getFirstProblem(text)
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
         problems = []
         text.replace re, (res, a, b, c, d) =>
             problems.push(@makeProblem(res, a, b, c, d))
-        problems.splice(1, 0, secondProb);
+        problems.splice(0, 0, firstProblem);
         await @addContest(order, cid, name, level, problems)
 
     run: ->
@@ -146,9 +153,5 @@ export run = wrapRunning () ->
     await (new RegionContestDownloader(ROI_CONTESTS, "roi", "Всероссийская", "всероссийской", 40000).run())
     await Table.removeDuplicateChildren()
     logger.info "Will update users"
-    users = await User.findAll()
-    promises = []
-    for user in users
-        promises.push(User.updateUser(user._id))
-    await awaitAll(promises)
+    User.updateAllUsers()
     logger.info "Done downloading contests"
