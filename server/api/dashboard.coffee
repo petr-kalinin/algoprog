@@ -15,7 +15,7 @@ expandResult = (result) ->
     if not res.fullUser
         return undefined
     res.fullUser = res.fullUser.toObject()
-    res.fullTable = (await Problem.findById(result.table)).toObject()
+    res.fullTable = (await Problem.findById(result.table))?.toObject() || {}
     if res.lastSubmitId
         res.fullSubmit = (await Submit.findById(result.lastSubmitId))?.toObject() or {}
         delete res.fullSubmit.source
