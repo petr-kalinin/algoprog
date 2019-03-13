@@ -34,6 +34,6 @@ export default Result = (props) ->
                 <Link to={problemHref}>{problemName}</Link>
             </td>
             <td className={styles.td} style={{whiteSpace: "pre-wrap"}}>
-                {contests.join("\n")}
+                {contests?.join("\n")}
             </td>
         </tr>
