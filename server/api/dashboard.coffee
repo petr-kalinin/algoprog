@@ -22,10 +22,11 @@ expandResult = (result) ->
         delete res.fullSubmit.sourceRaw
         delete res.fullSubmit.results
     tableNamePromises = []
-    for table in res.fullTable.tables
-        tableNamePromises.push(Table.findById(table))
-    tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
-    res.fullTable.tables = tableNames
+    if res.fullTable
+        for table in res.fullTable.tables
+            tableNamePromises.push(Table.findById(table))
+        tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
+        res.fullTable.tables = tableNames
     return res
 
 expandResults = (results) ->
