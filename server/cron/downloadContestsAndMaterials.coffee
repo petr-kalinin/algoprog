@@ -226,6 +226,10 @@ class ShadContestDownloader extends ContestDownloader
             id: '11',
             table: 'semester2',
             deadline: '2019-04-09'            
+        "Домашнее задание 2-3": 
+            id: '12',
+            table: 'semester3',
+            deadline: '2019-04-16'            
 
     run: ->
         levels = []
