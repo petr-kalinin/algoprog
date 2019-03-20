@@ -231,7 +231,7 @@ class ShadContestDownloader extends ContestDownloader
             table: 'semester2',
             deadline: '2019-04-16'            
         "Домашнее задание 2-4": 
-            id: '12',
+            id: '13',
             table: 'semester2',
             deadline: '2019-04-23'            
 
