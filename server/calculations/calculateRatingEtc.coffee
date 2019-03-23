@@ -1,12 +1,16 @@
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 import Result from '../models/result'
+import logger from '../log'
 
 import {startDayForWeeks, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
 
 levelVersion = (level) ->
     if (level.slice(0,3) == "reg")
         major = 3
+        minor = 'А'
+    else if (level.slice(0,3) == "roi")
+        major = 6
         minor = 'А'
     else
         major = parseInt(level.slice(0, -1))
@@ -26,6 +30,7 @@ levelScore = (level) ->
         res *= minorExp
     if v.minor >= 'Г'
         res *= minorExp
+    logger.debug "level #{level} res=#{res}"
     return res
 
 findProblemLevel = (problemId) ->

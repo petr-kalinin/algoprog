@@ -564,6 +564,8 @@ class MaterialsDownloader
         getTableTitle = (table) ->
             if table == "reg"
                 return "Сводная таблица по региональным олимпиадам"
+            else if table == "roi"
+                return "Сводная таблица по всероссийским олимпиадам"
             else if table == "main"
                 return "Сводная таблица по всем уровням"
             else if table == "byWeek"
@@ -577,6 +579,8 @@ class MaterialsDownloader
         getTreeTitle = (table) ->
             if table == "reg"
                 return "Региональные олимпиады"
+            else if table == "reg"
+                return "Всероссийские олимпиады"
             else if table == "main"
                 return "Все уровни"
             else if table == "byWeek"
@@ -597,7 +601,7 @@ class MaterialsDownloader
             zaoch: "Нижегородские школьники",
             notnnov: "Остальные школьники"
             stud: "Студенты и старше"
-        tables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "main", "reg", "byWeek"]
+        tables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "main", "reg", "roi", "byWeek"]
         materials = []
         trees = []
         globalHeaderMaterial = new Material
