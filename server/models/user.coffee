@@ -95,7 +95,7 @@ sortByLevelAndRating = (a, b) ->
     if a.active != b.active
         return if a.active then -1 else 1
     if a.level.current != b.level.current
-        return if a.level.current > b.level.current then -1 else 1
+        return compareLevels(a.level.current, b.level.current)
     if a.rating != b.rating
         return if a.rating > b.rating then -1 else 1
     return 0
