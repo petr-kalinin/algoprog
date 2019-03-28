@@ -83,9 +83,28 @@ usersSchema.methods.setUserList = (userList) ->
     await @update({$set: {"userList": userList}})
     @userList = userList
 
+compareLevels = (a, b) ->
+    if a.length != b.length
+        return if a.length > b.length then -1 else 1
+    if a != b
+        return if a > b then -1 else 1
+    return 0
+
+
+sortByLevelAndRating = (a, b) ->
+    if a.active != b.active
+        return if a.active then -1 else 1
+    if a.level.current != b.level.current
+        return if a.level.current > b.level.current then -1 else 1
+    if a.rating != b.rating
+        return if a.rating > b.rating then -1 else 1
+    return 0
+
+usersSchema.statics.sortByLevelAndRating = sortByLevelAndRating
 
 usersSchema.statics.findByList = (list) ->
-    User.find({userList: list}).sort({active: -1, "level.current": -1, ratingSort: -1})
+    result = await User.find({userList: list})
+    return result.sort(sortByLevelAndRating)
 
 usersSchema.statics.findAll = (list) ->
     User.find {}

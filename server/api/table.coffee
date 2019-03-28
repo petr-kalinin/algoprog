@@ -81,15 +81,8 @@ sortBySolved = (a, b) ->
         return a.total.attempts - b.total.attempts
     return 0
 
-sortByLevel = (a, b) ->
-    if a.user.active != b.user.active
-        return if a.user.active then -1 else 1
-    if a.user.level.current != b.user.level.current
-        return if a.user.level.current > b.user.level.current then -1 else 1
-    if a.user.level != b.user.level
-        return if a.user.level > b.user.level then -1 else 1
-    return 0
-
+sortByLevelAndRating = (a, b) ->
+    return User.sortByLevelAndRating(a.user, b.user)
 
 export default table = (userList, table) ->
     data = []
@@ -100,7 +93,7 @@ export default table = (userList, table) ->
         data.push(getUserResult(user, tables, 1))
     results = await awaitAll(data)
     results = (r for r in results when r)
-    results = results.sort(if table == "main" then sortByLevel else sortBySolved)
+    results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
     return results
 
 export fullUser = (userId) ->
