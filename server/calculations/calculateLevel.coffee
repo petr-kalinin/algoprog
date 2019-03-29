@@ -28,7 +28,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
                     submitDate = new Date(result.lastSubmitTime)
                     if submitDate >= lastDate
                         continue
-                    probAc++
+                    probAc += result.solved
             needProblem = probNumber
             if smallLevel == "В"
                 needProblem = probNumber * 0.5
