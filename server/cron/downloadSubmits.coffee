@@ -55,7 +55,7 @@ class SubmitDownloader
         return result
 
     processSubmit: (newSubmit) ->
-        logger.info "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem
+        #logger.info "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem
         res = await @needContinueFromSubmit(newSubmit)
 
         oldSubmit = (await Submit.findById(newSubmit._id))?.toObject()
@@ -74,16 +74,16 @@ class SubmitDownloader
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
                 and not @forceMetadata)
-            logger.info "Submit already in the database #{newSubmit._id}"
+            #logger.info "Submit already in the database #{newSubmit._id}"
             logger.info "Submit already in the database #{newSubmit._id}"
             return res
 
         for k of oldSubmit
             if not deepEqual(oldSubmit?[k], newSubmit?.toObject?()?[k])
-                logger.info newSubmit?._id, k, oldSubmit?[k], newSubmit?.toObject?()?[k]
+                #logger.info newSubmit?._id, k, oldSubmit?[k], newSubmit?.toObject?()?[k]
         for k of newSubmit.toObject()
             if not deepEqual(oldSubmit?[k], newSubmit?.toObject?()?[k])
-                logger.info newSubmit?._id, k, oldSubmit?[k], newSubmit?.toObject?()?[k]
+                #logger.info newSubmit?._id, k, oldSubmit?[k], newSubmit?.toObject?()?[k]
 
         if oldSubmit?.force and not @forceMetadata
             await @onNewSubmit?(newSubmit)
