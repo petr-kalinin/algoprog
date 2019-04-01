@@ -200,7 +200,7 @@ export default class Ejudge extends TestSystem
             problem._id = "#{contestId}_#{id}"
             problem.letter = id
             result.push(problem)
-            logger.info "Found problem ", problem
+            #logger.info "Found problem ", problem
         return result
 
     submitDownloader: (userId, userList, problemId, submitsPerPage) ->
