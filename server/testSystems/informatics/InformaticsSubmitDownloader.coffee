@@ -56,7 +56,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     getSource: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "https://informatics.mccme.ru/py/problem/run/#{run}/source"
+            href = "https://informatics.msk.ru/py/problem/run/#{run}/source"
             #page = await @adminUser.download(href, {encoding: 'latin1'})
             page = await @adminUser.download(href, {encoding: 'utf8'})
             source = JSON.parse(page)?.data?.source || ""
@@ -75,7 +75,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     getResults: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "https://informatics.mccme.ru/py/protocol/get/#{run}"
+            href = "https://informatics.msk.ru/py/protocol/get/#{run}"
             data = await @adminUser.download(href)
             logger.info "results data=", data
             result = JSON.parse(data)
