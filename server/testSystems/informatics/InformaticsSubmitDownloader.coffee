@@ -33,6 +33,7 @@ EJUDGE_STATUS_TO_OUTCOME =
     13: "Security error",
     96: "Тестирование...",
     98: "Компилирование..."
+    377: "Задача в очереди на тестирование"
 
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
@@ -43,7 +44,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     IG: 'Проигнорировано'
     DQ: 'Дисквалифицировано'
     CE: 'Ошибка компиляции'
-    CT: ["Тестирование...", "Компилирование...", "Перетестировать"]
+    CT: ["Тестирование...", "Компилирование...", "Перетестировать", "Задача в очереди на тестирование"]
 
     parseRunId: (runid) ->
         if runid.includes("r")
