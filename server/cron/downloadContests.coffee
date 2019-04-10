@@ -35,8 +35,8 @@ export ROI_CONTESTS =
 
 
 class ContestDownloader
-    url: 'https://informatics.msk.ru/course/view.php?id=1135'
-    baseUrl: 'https://informatics.msk.ru/mod/statements/'
+    url: 'https://informatics.mccme.ru/course/view.php?id=1135'
+    baseUrl: 'https://informatics.mccme.ru/mod/statements/'
 
     constructor: ->
         @jar = request.jar()
@@ -93,7 +93,7 @@ class ContestDownloader
     run: ->
         logger.info "Downloading base contests"
         text = await download(@url, @jar)
-        re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.msk.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
+        re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.mccme.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
         promises = []
         text.replace re, (a,b,c,d,e) =>
@@ -103,7 +103,7 @@ class ContestDownloader
         logger.info "Done downloading base contests"
 
 class RegionContestDownloader extends ContestDownloader
-    contestBaseUrl: 'https://informatics.msk.ru/mod/statements/view.php?id='
+    contestBaseUrl: 'https://informatics.mccme.ru/mod/statements/view.php?id='
 
     constructor: (@contests, @prefix, @name, @name2, @order)->
         super()
