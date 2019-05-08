@@ -2,7 +2,7 @@
 import Ejudge from './Ejudge'
 
 export REGISTRY = 
-    "ejudge": new Ejudge('http://ejudge.algoprog.ru', 2)
+    "ejudge": new Ejudge('http://ejudge1.algoprog.ru', 2)
 
 export default getTestSystem = (id) ->
     REGISTRY[id]
