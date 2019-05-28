@@ -682,19 +682,12 @@ class MaterialsDownloader
         for a in links
             href = a.href
             key = @getUrlKey(href)
-            string = "https://algoprog.ru"
-            string1 = "http://algoprog.ru/"
-            f = false
-            newhref = href.slice(0,19)
-            lengthhref = href.length
-            if newhref is string
-              f = true
-              newhref = href.slice(19,lengthhref)
-            if newhref is string1
-              f = true
-              newhref = href.slice(18,lengthhref)
-            if f is false
-              if (not key)
+            if href.startsWith.("https://algoprog.ru")
+              newhref = href.slice(19)
+            else
+              newhref = href.slice(18)
+            if  href.startsWith.("https://algoprog.ru") == false and href.startsWith.("http://algoprog.ru") == false
+              if not key
                  continue
               if not (key of @urlToMaterial)
                   await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
@@ -704,8 +697,9 @@ class MaterialsDownloader
               newhref = "/material/#{@urlToMaterial[key]}"
             a.href = newhref
             a.setAttribute("onclick", "window.goto('#{newhref}')();return false;")
-        body = document.getElementsByTagName("body")[0]
-        material.content = body.innerHTML
+         body = document.getElementsByTagName("body")[0]
+         material.content = body.innerHTML
+        
     correctInternalLinks: ->
         promises = []
         for id, material of @materials
