@@ -682,19 +682,30 @@ class MaterialsDownloader
         for a in links
             href = a.href
             key = @getUrlKey(href)
-            if not key
-                continue
-            if not (key of @urlToMaterial)
-                await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
-            if not (key of @urlToMaterial)
-                throw Error("Found internal link without a material: #{href}")
-                continue
-            newhref = "/material/#{@urlToMaterial[key]}"
+            string = "https://algoprog.ru"
+            string1 = "http://algoprog.ru/"
+            f = false
+            newhref = href.slice(0,19)
+            lengthhref = href.length
+            if newhref is string
+              f = true
+              newhref = href.slice(19,lengthhref)
+            if newhref is string1
+              f = true
+              newhref = href.slice(18,lengthhref)
+            if f is false
+              if (not key)
+                 continue
+              if not (key of @urlToMaterial)
+                  await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
+              if not (key of @urlToMaterial)
+                  throw Error("Found internal link without a material: #{href}")
+                  continue
+              newhref = "/material/#{@urlToMaterial[key]}"
             a.href = newhref
             a.setAttribute("onclick", "window.goto('#{newhref}')();return false;")
         body = document.getElementsByTagName("body")[0]
         material.content = body.innerHTML
-
     correctInternalLinks: ->
         promises = []
         for id, material of @materials
