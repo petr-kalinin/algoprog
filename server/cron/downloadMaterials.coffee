@@ -698,8 +698,7 @@ class MaterialsDownloader
             a.href = newhref
             a.setAttribute("onclick", "window.goto('#{newhref}')();return false;")
         body = document.getElementsByTagName("body")[0]
-        material.content = body.innerHTML
-        
+        material.content = body.innerHTML        
     correctInternalLinks: ->
         promises = []
         for id, material of @materials
