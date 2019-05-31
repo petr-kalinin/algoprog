@@ -682,11 +682,9 @@ class MaterialsDownloader
         for a in links
             href = a.href
             key = @getUrlKey(href)
-            if href.startsWith("https://algoprog.ru")
-              newhref = href.slice("https://algoprog.ru".length)
-            else if href.startsWith("http://algoprog.ru")
-              newhref = href.slice("http://algoprog.ru".length)
-            else
+            regexp = href.match(/^https?:\/\/algoprog.ru(.*)$/)
+            newhref = regexp[1]
+            if newhref == null
               if not key
                  continue
               if not (key of @urlToMaterial)
