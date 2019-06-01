@@ -682,9 +682,10 @@ class MaterialsDownloader
         for a in links
             href = a.href
             key = @getUrlKey(href)
-            regexp = href.match(/^https?:\/\/algoprog.ru(.*)$/)
-            newhref = regexp[1]
-            if newhref == null
+            match = href.match(/^https?:\/\/algoprog.ru(.*)$/)
+            if match
+              newhref = match[1]
+            else
               if not key
                  continue
               if not (key of @urlToMaterial)
@@ -697,6 +698,7 @@ class MaterialsDownloader
             a.setAttribute("onclick", "window.goto('#{newhref}')();return false;")
         body = document.getElementsByTagName("body")[0]
         material.content = body.innerHTML
+        
     correctInternalLinks: ->
         promises = []
         for id, material of @materials
