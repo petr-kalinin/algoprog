@@ -1,5 +1,4 @@
 require('source-map-support').install()
-
 import csshook from 'css-modules-require-hook/preset'
 
 express = require('express')

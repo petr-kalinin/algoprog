@@ -668,6 +668,7 @@ class MaterialsDownloader
             title: "Новости"
             materials: []
 
+
     correctInternalLinksInMaterial: (material) ->
         if not (material.type in ["page", "label", "epigraph", "problem", "news"])
             return
@@ -682,14 +683,18 @@ class MaterialsDownloader
         for a in links
             href = a.href
             key = @getUrlKey(href)
-            if not key
-                continue
-            if not (key of @urlToMaterial)
-                await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
-            if not (key of @urlToMaterial)
-                throw Error("Found internal link without a material: #{href}")
-                continue
-            newhref = "/material/#{@urlToMaterial[key]}"
+            match = href.match(/^https?:\/\/algoprog.ru(.*)$/)
+            if match
+              newhref = match[1]
+            else
+              if not key
+                 continue
+              if not (key of @urlToMaterial)
+                  await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
+              if not (key of @urlToMaterial)
+                  throw Error("Found internal link without a material: #{href}")
+                  continue
+              newhref = "/material/#{@urlToMaterial[key]}"
             a.href = newhref
             a.setAttribute("onclick", "window.goto('#{newhref}')();return false;")
         body = document.getElementsByTagName("body")[0]
@@ -738,7 +743,7 @@ class MaterialsDownloader
 
         trees = (m.tree for m in materials)
         trees.splice(1, 0, @createNewsTree())
-
+         
         treeMaterial = new Material
             _id: "tree",
             materials: trees

@@ -426,6 +426,13 @@ export default setupApi = (app) ->
         downloadMaterials()
         res.send('OK')
 
+    app.get '/api/updateAllGraduateYears', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        User.updateAllGraduateYears()
+        res.send('OK')
+
     app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -525,3 +532,5 @@ export default setupApi = (app) ->
         await payment.upsert()
         logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}")
         res.send('OK')
+
+

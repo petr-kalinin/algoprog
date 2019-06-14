@@ -42,6 +42,7 @@ ProblemResult = (props) ->
     ctrlDbClickUrl = "/reviewResult/#{props.user._id}::#{r.table}"
 
     dbClickHandler = (event) ->
+        console.log("dbClickHandler")
         if event.ctrlKey
             window.goto(ctrlDbClickUrl)()
         else
@@ -53,6 +54,7 @@ ProblemResult = (props) ->
     </td>
 
 totalResultClass = (result) ->
+    console.log("totalResultClass")
     if not result.problemName
         return undefined
     if result.total == result.solved
@@ -71,6 +73,7 @@ totalResultClass = (result) ->
             return "none"
 
 TotalResult = (props) ->
+    console.log("TotalResult")
     style = globalStyles.mainTable_td
     title = ""
     if not props.header
@@ -90,17 +93,20 @@ TotalResult = (props) ->
         </td>
 
 Result = (props) ->
+    console.log("Result")
     if props.result.total > 1
         `<TotalResult {...props}/>`
     else
         `<ProblemResult {...props}/>`
 
 Attempts = (props) ->
+    console.log("Attempts")
     return <td className={globalStyles.mainTable_td}>
         {if props.header then "Попыток" else props.result.attempts}
     </td>
 
 export default TableRow = (props) ->
+    console.log("TableRow")
     total = undefined
     h = props.header
     return <tr>
@@ -120,6 +126,7 @@ export default TableRow = (props) ->
                     else
                         for result in subtable.results
                             a <Result header={props.header} result={result} user={props.user} key={result._id + "::" + subtable._id}/>
+                            console.log("props.user = ",props.user)
                             subTotal = addTotal(subTotal, result)
                 a <td className={globalStyles.border} key={table._id + "b"} />
                 if props.results.length > 1
