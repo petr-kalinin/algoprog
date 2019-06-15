@@ -25,4 +25,7 @@ export default userTableHeader = (res, props) ->
         a <td className={globalStyles.mainTable_td} key="cf" title="Codeforces">
             {if h then "CF" else <CfStatus cf={props.user.cf}/>}
         </td>
+        a <td className={globalStyles.mainTable_td} key="graduateYear" title="Класс">
+            {if h then "К" else props.user.graduateYear}
+        </td>
     res

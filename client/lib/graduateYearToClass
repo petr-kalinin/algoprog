@@ -1,0 +1,9 @@
+
+getClass = (year, thresholdDate) ->
+    graduateDate = new Date(year, 6, 1)  # 1 june
+    now = new Date()
+    time = graduateDate - now
+    if time < 0
+        return null
+    else
+        return 11 - Math.floor(time / MS_PER_YEAR)
