@@ -49,6 +49,7 @@ export default class UserBadge extends React.Component
         super(props)
         @state = @startState(props)
         @handleChange = @handleChange.bind(this)
+        @handlegraduateYearChange = @handlegraduateYearChange.bind(this)
         @handleBlChange = @handleBlChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
@@ -58,6 +59,8 @@ export default class UserBadge extends React.Component
 
     startState: (props) ->
         return
+            graduateYear: props.user.graduateYear || '',
+            console.log("graduateYear = ",graduateYear),
             baseLevel: props.user.level.base || '',
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
@@ -74,6 +77,9 @@ export default class UserBadge extends React.Component
         newState[field] = event.target.value
         @setState(newState)
 
+    handlegraduateYearChange: (event) ->
+        @handleChange("graduateYear", event)
+
     handleBlChange: (event) ->
         @handleChange("baseLevel", event)
 
@@ -88,6 +94,7 @@ export default class UserBadge extends React.Component
 
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
+            graduateYear: @state.graduateYear
             level:
                 base: @state.baseLevel
             cf:
@@ -123,6 +130,15 @@ export default class UserBadge extends React.Component
 
                 { @props.me?.admin &&
                     <form className={styles.form} onSubmit={@handleSubmit}>
+                        <div>
+                            Год выпуска: <input
+                                type="text"
+                                name="newgraduateYear"
+                                value={@state.graduateYear}
+                                size="3"
+                                onChange={@handlegraduateYearChange}
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
                         <div>
                             Базовый уровень: <input
                                 type="text"

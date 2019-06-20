@@ -7,18 +7,11 @@ import download from '../lib/download'
 
 import logger from '../log'
 
+import getClass from '../../client/lib/graduateYearToClass'
+
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 REQUESTS_LIMIT = 20
-
-getClass = (year) ->
-    graduateDate = new Date(year, 7, 31)  # 31 august
-    now = new Date()
-    time = graduateDate - now
-    if time < 0
-        return null
-    else
-        return 11 - Math.floor(time / MS_PER_YEAR)
 
 getCurrentYearStart = () ->
     baseDate = new Date(1990, 7, 31)

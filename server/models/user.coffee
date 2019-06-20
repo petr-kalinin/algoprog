@@ -76,6 +76,11 @@ usersSchema.methods.updateGraduateYears = ->
     data = await informaticsUser.getData()
     @update({$set: {graduateYear: data.graduateYear}})
 
+usersSchema.methods.setgraduateYear = (graduateYear) ->
+    logger.info "setting graduateYear id ", @_id, graduateYear
+    await @update({$set: {"graduateYear": graduateYear}})
+    @graduateYear = graduateYear
+
 usersSchema.methods.setBaseLevel = (level) ->
     await @update({$set: {"level.base": level}})
     @level.base = level

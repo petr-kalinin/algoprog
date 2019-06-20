@@ -43,6 +43,7 @@ import normalizeCode from '../lib/normalizeCode'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 import awaitAll from '../../client/lib/awaitAll'
 
+
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
@@ -154,6 +155,7 @@ export default setupApi = (app) ->
         else
             price = +price
         user = await User.findById(req.params.id)
+        await user.setgraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         userPrivate = await UserPrivate.findById(req.params.id)

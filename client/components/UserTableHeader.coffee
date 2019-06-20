@@ -10,7 +10,7 @@ import getClass from '../../client/lib/graduateYearToClass'
 export default userTableHeader = (res, props) ->
     h = props.header
     if h then "К" else
-     cls = getClass(new Date(props.user.graduateYear, 6, 1)) # 1 june
+        cls = getClass(new Date(props.user.graduateYear, 6, 1)) # 1 june
     a = (el) -> res.push(el)
     a <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user} key="user">
         {if h then "" else <UserName user={props.user} />}
