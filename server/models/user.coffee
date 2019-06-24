@@ -70,7 +70,7 @@ usersSchema.methods.updateCfRating = ->
     res.login = @cf.login
     @update({$set: {cf: res}})
 
-usersSchema.methods.updateGraduateYears = ->
+usersSchema.methods.updateGraduateYear = ->
     id = await RegisteredUser.find({informaticsId: @_id})
     informaticsUser = await InformaticsUser.getUser(id[0].informaticsUsername, id[0].informaticsPassword)
     data = await informaticsUser.getData()
@@ -97,7 +97,6 @@ usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     await @update({$set: {"userList": userList}})
     @userList = userList
-
 
 compareLevels = (a, b) ->
     if a.length != b.length
@@ -167,9 +166,11 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updated cf ratings"
 
 usersSchema.statics.updateAllGraduateYears = () ->
+   promises = []
    for u in await User.findAll()
-        await u.updateGraduateYears()
-        await sleep(500)
+      if !u.graduateYear
+        promises.append(u.updateGraduateYear())
+   awaitAll promises
    logger.info "Updated graduateYear"
 
 usersSchema.index
