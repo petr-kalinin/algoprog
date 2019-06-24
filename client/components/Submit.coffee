@@ -11,6 +11,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import {Link} from 'react-router-dom'
 
 import UserName from './UserName'
+import getClass from '../../client/lib/graduateYearToClass'
 
 import outcomeToText from '../lib/outcomeToText'
 
@@ -86,7 +87,7 @@ export SubmitHeader = (props) ->
     <div>
         <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
         <h1><UserName user={props.submit.fullUser}/>
-            {props.admin && " (#{props.submit.fullUser.level.current}, #{props.submit.fullUser.userList}), " || ", "}
+            {props.admin && " (#{getClass(new Date(@props.submit.fullUser.graduateYear, 6, 1))}, #{props.submit.fullUser.level.current}, #{props.submit.fullUser.userList}), " || ", "}
             <Link to={"/material/#{props.submit.problem}"}>{props.submit.fullProblem.name}</Link>{": "}
             {message}
         </h1>

@@ -43,7 +43,6 @@ import normalizeCode from '../lib/normalizeCode'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 import awaitAll from '../../client/lib/awaitAll'
 
-
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
@@ -534,5 +533,3 @@ export default setupApi = (app) ->
         await payment.upsert()
         logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}")
         res.send('OK')
-
-

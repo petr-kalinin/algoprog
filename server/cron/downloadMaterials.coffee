@@ -668,7 +668,6 @@ class MaterialsDownloader
             title: "Новости"
             materials: []
 
-
     correctInternalLinksInMaterial: (material) ->
         if not (material.type in ["page", "label", "epigraph", "problem", "news"])
             return
