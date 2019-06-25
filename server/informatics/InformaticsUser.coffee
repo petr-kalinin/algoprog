@@ -7,7 +7,7 @@ import download from '../lib/download'
 
 import logger from '../log'
 
-import getClass from '../../client/lib/graduateYearToClass'
+import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
 
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
@@ -113,7 +113,7 @@ export default class InformaticsUser
             @class = null
         if @class
             @graduateYear = getGraduateYear(@class)
-            @class = getClass(@graduateYear)
+            @class = getClassStartingFromJuly(@graduateYear)
         else
             @graduateYear = data.id_profile_field_graduateyear
 

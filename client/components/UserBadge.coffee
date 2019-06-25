@@ -16,7 +16,7 @@ import styles from './UserBadge.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
 
-import getClass from '../../client/lib/graduateYearToClass'
+import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
 
 class GroupSelector extends React.Component
     constructor: (props) ->
@@ -115,6 +115,7 @@ export default class UserBadge extends React.Component
                 <UserName user={@props.user}/>
             </h1>
             <blockquote>
+                <div>Класс: {getClassStartingFromJuly(@props.user.graduateYear)}</div>
                 <div>Уровень: {@props.user.level.current}</div>
                 { @props.me?.admin &&
                     <div>
@@ -139,10 +140,6 @@ export default class UserBadge extends React.Component
                                 size="3"
                                 onChange={@handlegraduateYearChange}
                                 onKeyPress={@handleKeyPressed} />
-                            {if @props.user.graduateYear
-                                newcls =  getClass(new Date(@props.user.graduateYear, 6, 1))
-                                " (#{newcls} класс)"
-                            }
                         </div>
                         <div>
                             Базовый уровень: <input

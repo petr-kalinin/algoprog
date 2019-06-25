@@ -19,7 +19,7 @@ import * as actions from '../redux/actions'
 
 import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
-import getClass from '../../client/lib/graduateYearToClass'
+import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
@@ -88,7 +88,7 @@ UnpaidWarning = (props) ->
 
         </Modal.Dialog>
     </div>
-
+    
 
 class TopPanel extends React.Component
     constructor: (props) ->
@@ -142,9 +142,9 @@ class TopPanel extends React.Component
                             <span>
                                 <UserName user={@props.myUser}/>
                                 <span className={styles.separator}/>
-                                <span title="Уровень">{@props.myUser.level.current}</span>
+                                <span title="Класс">{getClassStartingFromJuly(@props.myUser.graduateYear)}</span>
                                 <span className={styles.separator}/>
-                                <span title="Класс">{getClass(new Date(@props.myUser.graduateYear, 6, 1))}</span>
+                                <span title="Уровень">{@props.myUser.level.current}</span>
                                 <span className={styles.separator}/>
                                 <span title="Рейтинг" style={color: color(@props.myUser)}>{@props.myUser.rating}</span>
                                 {" / "}

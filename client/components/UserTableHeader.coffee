@@ -4,13 +4,13 @@ import globalStyles from './global.css'
 
 import UserName from './UserName'
 import CfStatus from './CfStatus'
-import getClass from '../../client/lib/graduateYearToClass'
+import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
 
 # this is not a react element, as we can not return an array
 export default userTableHeader = (res, props) ->
     h = props.header
     cls = if h then "К" else
-        getClass(new Date(props.user.graduateYear, 6, 1)) # 1 june
+        getClassStartingFromJuly(props.user.graduateYear) # 1 june
     a = (el) -> res.push(el)
     a <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user} key="user">
         {if h then "" else <UserName user={props.user} />}
