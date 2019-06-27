@@ -19,7 +19,7 @@ import * as actions from '../redux/actions'
 
 import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
-import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
@@ -88,7 +88,7 @@ UnpaidWarning = (props) ->
 
         </Modal.Dialog>
     </div>
-    
+
 
 class TopPanel extends React.Component
     constructor: (props) ->

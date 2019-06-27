@@ -1,9 +1,9 @@
 
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 
-export default getClassStartingFromJuly = (year) -> return getClass(new Date(year, 6, 1))
+export getClassStartingFromJuly = (year) -> return getClass(new Date(year, 6, 1))
 
-export getClass = (graduateDate) ->
+export default getClass = (graduateDate) ->
     now = new Date()
     time = graduateDate - now
     if time < 0

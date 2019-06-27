@@ -16,7 +16,7 @@ import styles from './UserBadge.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
 
-import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
 class GroupSelector extends React.Component
     constructor: (props) ->

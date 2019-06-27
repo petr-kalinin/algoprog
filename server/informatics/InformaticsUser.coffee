@@ -7,7 +7,7 @@ import download from '../lib/download'
 
 import logger from '../log'
 
-import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25

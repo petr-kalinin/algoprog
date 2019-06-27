@@ -11,7 +11,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import {Link} from 'react-router-dom'
 
 import UserName from './UserName'
-import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
 import outcomeToText from '../lib/outcomeToText'
 

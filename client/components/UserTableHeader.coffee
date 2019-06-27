@@ -4,7 +4,7 @@ import globalStyles from './global.css'
 
 import UserName from './UserName'
 import CfStatus from './CfStatus'
-import getClassStartingFromJuly from '../../client/lib/graduateYearToClass'
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
 # this is not a react element, as we can not return an array
 export default userTableHeader = (res, props) ->

@@ -166,12 +166,12 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updated cf ratings"
 
 usersSchema.statics.updateAllGraduateYears = () ->
-   promises = []
-   for u in await User.findAll()
-      if !u.graduateYear
-        promises.append(u.updateGraduateYear())
-   awaitAll promises
-   logger.info "Updated graduateYear"
+    promises = []
+    for u in await User.findAll()
+        if !u.graduateYear
+            promises.append(u.updateGraduateYear())
+    awaitAll promises
+    logger.info "Updated graduateYear"
 
 usersSchema.index
     userList: 1
