@@ -20,6 +20,7 @@ import * as actions from '../redux/actions'
 import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
+import ThemeSwitch from './ThemeSwitch'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
@@ -100,7 +101,7 @@ class TopPanel extends React.Component
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
         @openUnpaid = @openUnpaid.bind(this)
-
+   
     closeWarning: ->
         @props.setUnknownWarningShown()
         @setState
@@ -167,6 +168,8 @@ class TopPanel extends React.Component
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Form pullRight>
+                    <ThemeSwitch /> 
+                    <span className={styles.separator}/>
                     {
                     if @props.me?._id
                         <ButtonGroup>
