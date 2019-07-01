@@ -352,8 +352,7 @@ export default setupApi = (app) ->
             await checkin.upsert()
         res.json({ok: "OK"})
 
-    app.post '/api/
-/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
