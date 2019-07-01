@@ -352,7 +352,8 @@ export default setupApi = (app) ->
             await checkin.upsert()
         res.json({ok: "OK"})
 
-    app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/
+/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
@@ -388,7 +389,7 @@ export default setupApi = (app) ->
 
         runForUser = (user) ->
             await groups.moveUserToGroup(adminUser, user._id, "unknown")
-            #await user.setUserList("unknown")
+            await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
         users = await User.findAll()
