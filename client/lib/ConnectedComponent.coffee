@@ -10,6 +10,28 @@ import * as getters from '../redux/getters'
 import awaitAll from '../lib/awaitAll'
 
 export default ConnectedComponent = (Component, options) ->
+       `class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null, errorInfo: null };
+  }
+  
+  componentDidCatch(error, errorInfo) {
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    })
+  }
+  
+  render() {
+    if (this.state.errorInfo) {
+      return (
+        <h1><FontAwesome name="exclamation-circle"/></h1>
+      );
+    }
+    return this.props.children;
+  }  
+}`
     class Result extends React.Component
         constructor: (props) ->
             super(props)
@@ -48,7 +70,7 @@ export default ConnectedComponent = (Component, options) ->
                 delete componentProps.saveDataPromises
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
-                return `<Component  {...componentProps}/>`
+                return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
 
         componentWillMount: ->
             if not window?
