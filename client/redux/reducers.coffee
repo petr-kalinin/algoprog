@@ -54,7 +54,7 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
-themeswitch =(state=[], action) ->
+theme = (state="light", action) ->
     if action.type == THEME_SWITCH
         return action.value
     else
@@ -66,6 +66,6 @@ export default rootReducer =
         dataPromises,
         unknownWarningShown,
         unpaidWarningShown,
-        themeswitch,
+        theme,
         notifications
     }
