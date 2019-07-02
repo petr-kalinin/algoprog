@@ -7,16 +7,21 @@ import Button from 'react-bootstrap/lib/Button'
 import * as actions from '../redux/actions'
 
 export ThemeSwitch = (props) ->
-    return <Button onClick={props.themeswitch}>
-                <FontAwesome name="sun-o"/>
-            </Button>
+    return if props.theme == "light"
+                <Button onClick={()->props.themeswitch("dark")}>
+                    <FontAwesome name="sun-o"/>
+                </Button>
+           else 
+                <Button onClick={()->props.themeswitch("light")}>
+                    <FontAwesome name="moon-o"/>
+                </Button>
 
 mapStateToProps = (state) ->
     return
-        themeswitch: state.themeswitch
+        theme: state.theme
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
-        themeswitch: () -> dispatch(actions.themeswitch())
+        themeswitch: (Switch) -> dispatch(actions.themeswitch(Switch))
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThemeSwitch)
