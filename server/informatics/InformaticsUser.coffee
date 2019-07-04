@@ -23,7 +23,7 @@ getCurrentYearStart = () ->
 
 getGraduateYear = (cl) ->
     yearStart = getCurrentYearStart()
-    yearStartDate = new Date(yearStart, 7, 31)
+    yearStartDate = new Date(yearStart, 6, 1)
     graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
     return new Date(graduateDate).getFullYear()
 

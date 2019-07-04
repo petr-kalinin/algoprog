@@ -71,7 +71,9 @@ usersSchema.methods.updateCfRating = ->
     @update({$set: {cf: res}})
 
 usersSchema.methods.updateGraduateYear = ->
-    id = await RegisteredUser.find({informaticsId: @_id})
+    id = await RegisteredUser.findByKey(@_id)
+    if not id 
+        return
     informaticsUser = await InformaticsUser.getUser(id[0].informaticsUsername, id[0].informaticsPassword)
     data = await informaticsUser.getData()
     @update({$set: {graduateYear: data.graduateYear}})
@@ -166,11 +168,12 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updated cf ratings"
 
 usersSchema.statics.updateAllGraduateYears = () ->
+    logger.info "Updated graduateYear"
     promises = []
     for u in await User.findAll()
         if !u.graduateYear
-            promises.append(u.updateGraduateYear())
-    awaitAll promises
+            promises.push(u.updateGraduateYear())
+    await awaitAll promises
     logger.info "Updated graduateYear"
 
 usersSchema.index
