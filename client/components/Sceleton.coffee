@@ -2,6 +2,7 @@ React = require('react')
 FontAwesome = require('react-fontawesome')
 moment = require('moment')
 
+import { connect } from 'react-redux'
 import Row from 'react-bootstrap/lib/Row'
 import Col from 'react-bootstrap/lib/Col'
 import Grid from 'react-bootstrap/lib/Grid'
@@ -9,7 +10,6 @@ import Breadcrumb from 'react-bootstrap/lib/Breadcrumb'
 import Navbar from 'react-bootstrap/lib/Navbar'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
-
 
 import { Helmet } from "react-helmet"
 
@@ -146,6 +146,18 @@ getSizes = (props) ->
 
     return {treeSize, newsSize, selfSize}
 
+ThemeSelector = (props) ->
+    return if props.theme == "light"
+               <link rel="stylesheet" href="/bootstrap.min.css" />
+           else 
+               <link rel="stylesheet" href="/bootstrapdark.min.css" />
+               
+mapStateToProps = (state) ->
+    return
+        theme: state.theme
+
+Theme = connect(mapStateToProps)(ThemeSelector)
+
 export default class Sceleton extends React.Component
     constructor: (props) ->
         super(props)
@@ -188,4 +200,5 @@ export default class Sceleton extends React.Component
                 </Grid>
             </div>
             <BottomPanel myUser={@props.myUser} />
+            <Theme />
         </div>
