@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="711eb0ae-6bbb-4e1f-bac1-9ee25fd486fc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/components/ReviewResult.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/ReviewResult.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/lib/ConnectedComponent.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/client/lib/ConnectedComponent.coffee" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pages/ReviewResultPage.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/client/pages/ReviewResultPage.coffee" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -28,16 +26,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/lib/ConnectedComponent.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-153">
-              <caret line="58" selection-start-line="58" selection-end-line="58" />
+            <state relative-caret-position="204">
+              <caret line="64" selection-start-line="64" selection-end-line="64" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/components/ReviewResult.coffee">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1">
@@ -83,8 +81,8 @@
       <list>
         <option value="$PROJECT_DIR$/server/api/setupApi.coffee" />
         <option value="$PROJECT_DIR$/client/pages/ReviewResultPage.coffee" />
-        <option value="$PROJECT_DIR$/client/lib/ConnectedComponent.coffee" />
         <option value="$PROJECT_DIR$/client/components/ReviewResult.coffee" />
+        <option value="$PROJECT_DIR$/client/lib/ConnectedComponent.coffee" />
       </list>
     </option>
   </component>
@@ -153,6 +151,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -182,12 +181,12 @@
       <updated>1562339084139</updated>
       <workItem from="1562339089346" duration="10066000" />
       <workItem from="1562419637473" duration="840000" />
-      <workItem from="1562421673031" duration="789000" />
+      <workItem from="1562421673031" duration="1031000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11695000" />
+    <option name="totallyTimeSpent" value="11937000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -231,13 +230,6 @@
     <entry file="file://$PROJECT_DIR$/client/pages/ReviewPage.coffee">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/lib/ConnectedComponent.coffee">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-153">
-          <caret line="58" selection-start-line="58" selection-end-line="58" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/pages/ReviewResultPage.coffee">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -249,6 +241,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1">
           <caret line="271" column="19" selection-start-line="271" selection-start-column="19" selection-end-line="271" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/lib/ConnectedComponent.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
         </state>
       </provider>
     </entry>

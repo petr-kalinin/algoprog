@@ -63,9 +63,6 @@ export default ConnectedComponent = (Component, options) ->
                 console.log "Clearing timeout"
                 clearTimeout(@timeout)
 
-        shouldComponentUpdate: (prevProps, prevState)->
-                return true
-
         componentDidUpdate: (prevProps, prevState) ->
             if not deepEqual(options.urls(prevProps), options.urls(@props))
                 @requestData(options.timeout)
