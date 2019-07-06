@@ -4,7 +4,6 @@ moment = require('moment')
 deepEqual = require('deep-equal')
 
 import { connect } from 'react-redux'
-
 import { LinkContainer } from 'react-router-bootstrap'
 import { withRouter } from "react-router"
 
@@ -147,7 +146,7 @@ class TopPanel extends React.Component
                                 <span className={styles.separator}/>
                                 <span title="Уровень">{@props.myUser.level.current}</span>
                                 <span className={styles.separator}/>
-                                <span title="Рейтинг" style={color: color(@props.myUser)}>{@props.myUser.rating}</span>
+                                <span title="Рейтинг" style={color: color(@props.myUser,@props.theme)}>{@props.myUser.rating}</span>
                                 {" / "}
                                 <span title="Активность">{@props.myUser.activity.toFixed(1)}</span>
                                 <span className={styles.separator}/>
@@ -211,6 +210,7 @@ ConnectedTopPanel = ConnectedComponent(withRouter(TopPanel), options)
 
 mapStateToProps = (state) ->
     return
+        theme: state.theme
         unknownWarningShown: state.unknownWarningShown
         unpaidWarningShown: state.unpaidWarningShown
 

@@ -23,8 +23,14 @@
 .ac {
     background: #44ff44;
 }
+.darkac {
+    background: #00cf00;
+}
 .ok {
     background: #ffff00;
+}
+.darkok {
+    background: #d1d100;
 }
 .wa {
     background: #ff4444;
