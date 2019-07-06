@@ -7,6 +7,8 @@ import userTableHeader from './UserTableHeader'
 
 import addTotal from '../lib/addTotal'
 
+import { connect } from 'react-redux'
+
 ProblemResult = (props) ->
     r = props.result
     text =
@@ -23,11 +25,17 @@ ProblemResult = (props) ->
         
     className =
         if r.solved > 0
-            "ac"
+            if props.theme == "light"
+                "ac"
+            else 
+                "darkac"
         else if r.ignored > 0
             "ig"
         else if r.ok > 0
-            "ok"
+            if props.theme == "light"
+                "ok"
+            else 
+                "darkok"
         else if r.ignored < 0
             "dq"
         else if r.attempts > 0
@@ -93,7 +101,7 @@ Result = (props) ->
     if props.result.total > 1
         `<TotalResult {...props}/>`
     else
-        `<ProblemResult {...props}/>`
+        `<Theme {...props}/>`
 
 Attempts = (props) ->
     return <td className={globalStyles.mainTable_td}>
@@ -131,3 +139,9 @@ export default TableRow = (props) ->
             <Attempts header={props.header} result={total}/>
             <td className={globalStyles.border} />
         </tr>
+
+mapStateToProps = (state) ->
+    return
+        theme: state.theme
+
+Theme = connect(mapStateToProps)(ProblemResult)

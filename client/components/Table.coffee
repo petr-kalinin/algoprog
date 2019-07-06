@@ -1,6 +1,7 @@
 React = require('react')
 
 import { Helmet } from "react-helmet";
+import { connect } from 'react-redux'
 
 import TableRow from './TableRow'
 
@@ -40,9 +41,9 @@ Text = (props) ->
             </Helmet>
             <h1>Сводная таблица по уровням {props.levels}</h1>
             <p>Цвета:{" "}
-                <span className={globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
+                <span className={ if props.theme == "light" then globalStyles.ac else globalStyles.darkac + " " + styles.example}>Зачтено/Принято</span>{" "}
                 <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
-                <span className={globalStyles.ok + " " + styles.example}>OK</span>{" "}
+                <span className={ if props.theme == "light" then globalStyles.ok else globalStyles.darkok + " " + styles.example}>OK</span>{" "}
                 <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
             </p>
             <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
@@ -59,7 +60,7 @@ export default Table = (props) ->
     levels = (r._id for r in header).join(", ")
 
     <div>
-        {props.headerText && <Text levels={levels} /> }
+        {props.headerText && <Theme levels={levels} /> }
         <table className={globalStyles.mainTable}>
             <tbody>
                 <TableRow details={props.details} header={true} results={header}/>
@@ -72,3 +73,9 @@ export default Table = (props) ->
             </tbody>
         </table>
     </div>
+
+mapStateToProps = (state) ->
+    return
+        theme: state.theme
+
+Theme = connect(mapStateToProps)(Text)

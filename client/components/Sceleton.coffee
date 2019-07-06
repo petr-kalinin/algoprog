@@ -150,7 +150,11 @@ ThemeSelector = (props) ->
     return if props.theme == "light"
                <link rel="stylesheet" href="/bootstrap.min.css" />
            else 
-               <link rel="stylesheet" href="/bootstrapdark.min.css" />
+                <div>
+                   <link rel="stylesheet" href="/bootstrapdark.min.css" />
+                   <link rel="stylesheet" href="/additional_dark.css" />
+                </div>
+
                
 mapStateToProps = (state) ->
     return
