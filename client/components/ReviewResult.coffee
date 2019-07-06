@@ -278,5 +278,6 @@ options =
         user: "user/#{props.result.fullUser._id}"
         bestSubmits: "bestSubmits/#{props.result.fullTable._id}"
         me: "me"
+    timeout: 0
 
 export default ConnectedComponent(ReviewResult, options)
