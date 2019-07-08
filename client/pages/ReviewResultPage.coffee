@@ -14,15 +14,14 @@ class ReviewResultPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Результат #{@props.match.params.id}", _id: "submit"},
-            showNews: "hide",
-            showTree: "hide"
+        location: {title: "Результат #{@props.match.params.id}", _id: "submit"},
+        showNews: "hide",
+        showTree: "hide"
         }
-        `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data} me={this.props.me}/></Sceleton>`
+        `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data} handleDone={this.props.handleReload} me={this.props.me}/></Sceleton>`
 
 options =
     urls: (props) ->
         data: "result/#{props.match.params.id}"
-    timeout: 0
 
 export default ConnectedComponent(ReviewResultPage, options)
