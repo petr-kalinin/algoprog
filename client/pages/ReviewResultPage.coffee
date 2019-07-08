@@ -23,5 +23,6 @@ class ReviewResultPage extends React.Component
 options =
     urls: (props) ->
         data: "result/#{props.match.params.id}"
+    timeout: 0
 
 export default ConnectedComponent(ReviewResultPage, options)
