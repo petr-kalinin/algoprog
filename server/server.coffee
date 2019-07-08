@@ -65,7 +65,10 @@ port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
 
 start = () ->
-    await logger.info("My ip is " + JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
+    try
+        await logger.info("My ip is " + JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
+    catch
+        logger.error("Can not determine my ip")
 
     app.listen port, () ->
         logger.info 'App listening on port ', port

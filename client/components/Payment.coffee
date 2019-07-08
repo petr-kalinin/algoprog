@@ -70,7 +70,7 @@ export default class Payment extends React.Component
                 Tax: "none" 
             }]
         if @props.myUser?.paidTill
-            paidTill = moment(@props.myUser.paidTill).format("YYYYMMDD")
+            paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"
         else
             order = ""
