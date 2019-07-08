@@ -69,11 +69,11 @@ class ReviewResult extends React.Component
         @toggleBestSubmits = @toggleBestSubmits.bind this
 
     setResult: (result) ->
-        callApi "setOutcome/#{@state.currentSubmit._id}", {
+        await callApi "setOutcome/#{@state.currentSubmit._id}", {
             result,
             comment: @state.commentText
         }
-        @props.handleDone()
+        @props.handleReload()
 
     componentDidUpdate: (prevProps, prevState) ->
         if prevProps.result._id != @props.result._id
