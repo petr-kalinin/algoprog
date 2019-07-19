@@ -88,7 +88,7 @@ paidTillOptions =
 PaidTillConnected = ConnectedComponent(PaidTill, paidTillOptions)
 
 BottomPanel = (props) ->
-    <div className={styles.footer}>
+    <div className={ if props.theme == "light" then styles.footer else styles.footer_dark}>
         <Grid fluid>
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8}>
@@ -153,6 +153,7 @@ ThemeSelector = (props) ->
                 <div>
                    <link rel="stylesheet" href="/bootstrapdark.min.css" />
                    <link rel="stylesheet" href="/additional_dark.css" />
+                   <link rel="stylesheet" href="/darklight.css" />
                 </div>
 
                
@@ -161,6 +162,7 @@ mapStateToProps = (state) ->
         theme: state.theme
 
 Theme = connect(mapStateToProps)(ThemeSelector)
+BottomPanel = connect(mapStateToProps)(BottomPanel)
 
 export default class Sceleton extends React.Component
     constructor: (props) ->
