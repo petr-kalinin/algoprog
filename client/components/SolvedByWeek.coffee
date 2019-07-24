@@ -6,6 +6,8 @@ import userTableHeader from './UserTableHeader'
 
 import {startDayForWeeks, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
 
+import { connect } from 'react-redux'
+
 weekSet = (userList) ->
     thisStart = new Date(startDayForWeeks["" + userList])
     now = new Date()
@@ -24,6 +26,17 @@ bgColor = (number) ->
     else
         "#22ff22"
 
+bgColorDark = (number) ->
+    if !number
+        "#ffffff"
+    else if number<=2
+        "#a2e8a2"
+    else if number<=5
+        "#8ce58c"
+    else if number<=8
+        "#47cc47"
+    else
+        "#1ee51e"
 
 weekHeader = (weekNumber, userList) ->
     thisStart = new Date(startDayForWeeks[userList])
@@ -60,8 +73,12 @@ SolvedByWeekRow = (props) ->
                 text = ""
                 if data?.solved and w of data.solved
                     text = data.solved[w]
-                    style =
-                        backgroundColor: bgColor(data.solved[w])
+                    if props.theme == "light"
+                        style =
+                            backgroundColor: bgColor(data.solved[w])
+                    else  
+                        style =
+                            backgroundColor: bgColorDark(data.solved[w])
                 else
                     text = "0"
                     style =
@@ -88,10 +105,16 @@ export default SolvedByWeek = (props) ->
                 {
                 res = []
                 a = (el) -> res.push(el)
-                a <SolvedByWeekRow header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
+                a <Theme header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
                 for user in props.users
-                    a <SolvedByWeekRow details={props.details} user={user} weeks={weeks} key={user._id}/>
+                    a <Theme details={props.details} user={user} weeks={weeks} key={user._id}/>
                 res}
             </tbody>
         </table>
     </div>
+
+mapStateToProps = (state) ->
+    return
+        theme: state.theme
+
+Theme = connect(mapStateToProps)(SolvedByWeekRow)
