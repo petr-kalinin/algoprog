@@ -7,6 +7,8 @@ import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET
 
 import { equalUrl } from './getters'
 
+import Cookies from 'universal-cookie'
+
 MAX_DATA_ITEMS = 100
 
 data = (state=[], action) ->
@@ -54,7 +56,20 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
-theme = (state="light", action) ->
+ defaultTheme = () ->
+    cookies = new Cookies
+    cookie = cookies.get('Theme')
+    if not window? 
+        return null
+    if (cookie == "dark") || (cookie == "light")
+        return cookie
+    else 
+        cookie = "light"
+        return cookie
+
+theme = (state = defaultTheme(), action) ->
+    if state == null
+        state =  defaultTheme()
     if action.type == THEME_SWITCH
         return action.value
     else

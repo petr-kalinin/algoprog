@@ -25,6 +25,8 @@ import isPaid from '../lib/isPaid'
 
 import styles from './Sceleton.css'
 
+import Cookies from 'universal-cookie'
+
 SIZES = ["xs", "sm", "md", "lg"]
 DEFAULT_PATH = [{_id: "main", title: "/"}]
 
@@ -155,14 +157,20 @@ ThemeSelector = (props) ->
                    <link rel="stylesheet" href="/additional_dark.css" />
                    <link rel="stylesheet" href="/darklight.css" />
                 </div>
-
-               
+            
+ThemeCookies = (props) ->
+    cookies =  new Cookies
+    cookies.set('Theme', props.theme)
+    cookie = cookies.get('Theme')
+    return null
+    
 mapStateToProps = (state) ->
     return
         theme: state.theme
 
 Theme = connect(mapStateToProps)(ThemeSelector)
 BottomPanel = connect(mapStateToProps)(BottomPanel)
+ThemeCookies = connect(mapStateToProps)(ThemeCookies)
 
 export default class Sceleton extends React.Component
     constructor: (props) ->
@@ -205,6 +213,7 @@ export default class Sceleton extends React.Component
                     </Row>
                 </Grid>
             </div>
+            <ThemeCookies />
             <BottomPanel myUser={@props.myUser} />
             <Theme />
         </div>
