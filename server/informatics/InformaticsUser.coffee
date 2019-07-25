@@ -14,7 +14,7 @@ MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 REQUESTS_LIMIT = 20
 
 getCurrentYearStart = () ->
-    baseDate = new Date(1990, 7, 31)
+    baseDate = new Date(1990, 6, 1)
     now = new Date()
     baseTime = now - baseDate
     baseYears = Math.floor(baseTime / MS_PER_YEAR)
@@ -115,7 +115,8 @@ export default class InformaticsUser
             @graduateYear = getGraduateYear(@class)
             @class = getClassStartingFromJuly(@graduateYear)
         else
-            @graduateYear = data.id_profile_field_graduateyear
+            year = parseInt(data.id_profile_field_graduateyear, 10)
+            @graduateYear = year + 2014
 
         return
             id: @id
