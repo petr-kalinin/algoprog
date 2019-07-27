@@ -10,22 +10,18 @@ import * as getters from '../redux/getters'
 import awaitAll from '../lib/awaitAll'
 
 class ErrorBoundary extends React.Component 
-    constructor:(props) ->
+    constructor: (props) ->
         super(props)
-        this.state = { error: null, errorInfo: null };
-  
-  
-    componentDidCatch:(error, errorInfo) ->
-        this.setState({
+        this.state = { error: null, errorInfo: null }
+
+    componentDidCatch: (error, errorInfo) ->
+        this.setState
             error: error,
             errorInfo: errorInfo
-        })
-  
-  
+
     render: () ->
         if this.state.errorInfo 
             return <h1><FontAwesome name="exclamation-circle"/></h1>     
-    
         return this.props.children;
 
 export default ConnectedComponent = (Component, options) ->
