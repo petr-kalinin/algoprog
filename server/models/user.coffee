@@ -11,6 +11,9 @@ import updateResults from '../calculations/updateResults'
 
 import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
+import RegisteredUser from '../models/registeredUser'
+import InformaticsUser from '../informatics/InformaticsUser'
+
 
 SEMESTER_START = "2016-06-01"
 
@@ -33,7 +36,8 @@ usersSchema = new mongoose.Schema
         rating: Number,
         color: String,
         activity: Number,
-        progress: Number
+        progress: Number,
+    graduateYear: Number
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -65,6 +69,19 @@ usersSchema.methods.updateCfRating = ->
         return
     res.login = @cf.login
     @update({$set: {cf: res}})
+
+usersSchema.methods.updateGraduateYear = ->
+    registeredUser = await RegisteredUser.findByKey(@_id)
+    if not registeredUser
+        return
+    informaticsUser = await InformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
+    data = await informaticsUser.getData()
+    @update({$set: {graduateYear: data.graduateYear}})
+
+usersSchema.methods.setGraduateYear = (graduateYear) ->
+    logger.info "setting graduateYear id ", @_id, graduateYear
+    await @update({$set: {"graduateYear": graduateYear}})
+    @graduateYear = graduateYear
 
 usersSchema.methods.setBaseLevel = (level) ->
     await @update({$set: {"level.base": level}})
@@ -150,6 +167,14 @@ usersSchema.statics.updateAllCf = () ->
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 
+usersSchema.statics.updateAllGraduateYears = () ->
+    logger.info "Updated graduateYear"
+    promises = []
+    for u in await User.findAll()
+        if u.graduateYear
+            promises.push(u.updateGraduateYear())
+    await awaitAll promises
+    logger.info "Updated graduateYear"
 
 usersSchema.index
     userList: 1

@@ -7,21 +7,14 @@ import download from '../lib/download'
 
 import logger from '../log'
 
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
+
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 REQUESTS_LIMIT = 20
 
-getClass = (year) ->
-    graduateDate = new Date(year, 7, 31)  # 31 august
-    now = new Date()
-    time = graduateDate - now
-    if time < 0
-        return null
-    else
-        return 11 - Math.floor(time / MS_PER_YEAR)
-
 getCurrentYearStart = () ->
-    baseDate = new Date(1990, 7, 31)
+    baseDate = new Date(1990, 6, 1)
     now = new Date()
     baseTime = now - baseDate
     baseYears = Math.floor(baseTime / MS_PER_YEAR)
@@ -30,7 +23,7 @@ getCurrentYearStart = () ->
 
 getGraduateYear = (cl) ->
     yearStart = getCurrentYearStart()
-    yearStartDate = new Date(yearStart, 7, 31)
+    yearStartDate = new Date(yearStart, 6, 1)
     graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
     return new Date(graduateDate).getFullYear()
 
@@ -120,9 +113,10 @@ export default class InformaticsUser
             @class = null
         if @class
             @graduateYear = getGraduateYear(@class)
-            @class = getClass(@graduateYear)
+            @class = getClassStartingFromJuly(@graduateYear)
         else
-            @graduateYear = data.id_profile_field_graduateyear
+            @graduateYear = +data.id_profile_field_graduateyear + 2014
+            @class = getClassStartingFromJuly(@graduateYear)
 
         return
             id: @id

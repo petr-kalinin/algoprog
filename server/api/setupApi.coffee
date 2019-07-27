@@ -154,6 +154,7 @@ export default setupApi = (app) ->
         else
             price = +price
         user = await User.findById(req.params.id)
+        await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         userPrivate = await UserPrivate.findById(req.params.id)
@@ -424,6 +425,13 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         downloadMaterials()
+        res.send('OK')
+
+    app.get '/api/updateAllGraduateYears', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        User.updateAllGraduateYears()
         res.send('OK')
 
     app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->

@@ -33,6 +33,7 @@ export default register = (req, res, next) ->
         newUser = new User(
             _id: informaticsData.id,
             name: informaticsData.name,
+            graduateYear: informaticsData.graduateYear,
             userList: "unknown",
         )
         if cfLogin

@@ -742,7 +742,7 @@ class MaterialsDownloader
 
         trees = (m.tree for m in materials)
         trees.splice(1, 0, @createNewsTree())
-
+        
         treeMaterial = new Material
             _id: "tree",
             materials: trees

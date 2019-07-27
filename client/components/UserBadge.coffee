@@ -16,6 +16,8 @@ import styles from './UserBadge.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
 
+import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
+
 class GroupSelector extends React.Component
     constructor: (props) ->
         super(props)
@@ -49,6 +51,7 @@ export default class UserBadge extends React.Component
         super(props)
         @state = @startState(props)
         @handleChange = @handleChange.bind(this)
+        @handleGraduateYearChange = @handleGraduateYearChange.bind(this)
         @handleBlChange = @handleBlChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
@@ -58,6 +61,7 @@ export default class UserBadge extends React.Component
 
     startState: (props) ->
         return
+            graduateYear: props.user.graduateYear || '',
             baseLevel: props.user.level.base || '',
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
@@ -74,6 +78,9 @@ export default class UserBadge extends React.Component
         newState[field] = event.target.value
         @setState(newState)
 
+    handleGraduateYearChange: (event) ->
+        @handleChange("graduateYear", event)
+
     handleBlChange: (event) ->
         @handleChange("baseLevel", event)
 
@@ -88,6 +95,7 @@ export default class UserBadge extends React.Component
 
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
+            graduateYear: @state.graduateYear
             level:
                 base: @state.baseLevel
             cf:
@@ -102,11 +110,13 @@ export default class UserBadge extends React.Component
             @handleSubmit(e)
 
     render: () ->
+        cls = getClassStartingFromJuly(@props.user.graduateYear)
         <div>
             <h1>
                 <UserName user={@props.user}/>
             </h1>
             <blockquote>
+                {cls && <div>Класс: {cls}</div>}
                 <div>Уровень: {@props.user.level.current}</div>
                 { @props.me?.admin &&
                     <div>
@@ -123,6 +133,15 @@ export default class UserBadge extends React.Component
 
                 { @props.me?.admin &&
                     <form className={styles.form} onSubmit={@handleSubmit}>
+                        <div>
+                            Год выпуска: <input
+                                type="text"
+                                name="newgraduateYear"
+                                value={@state.graduateYear}
+                                size="4"
+                                onChange={@handleGraduateYearChange}
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
                         <div>
                             Базовый уровень: <input
                                 type="text"
