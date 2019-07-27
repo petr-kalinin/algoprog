@@ -107,16 +107,23 @@ export default class InformaticsUser
         @city = data.id_city
         @country = data.id_country
         @school = data.id_profile_field_School
-        # 'values' for class select are inverted and start from 0 for 11 class
-        @class = 11 - data.id_profile_field_class
-        if @class <= 2
-            @class = null
-        if @class
-            @graduateYear = getGraduateYear(@class)
+        @class = data.id_profile_field_class
+        @graduateYear = data.id_profile_field_graduateyear
+        if @class?
+            # 'values' for class select are inverted and start from 0 for 11 class
+            @class = 11 - @class
+            if @class <= 2
+                @class = null
+                @graduateYear = null
+            else
+                @graduateYear = getGraduateYear(@class)
+                @class = getClassStartingFromJuly(@graduateYear)
+        else if @graduateYear
+            @graduateYear = @graduateYear + 2014
             @class = getClassStartingFromJuly(@graduateYear)
         else
-            @graduateYear = +data.id_profile_field_graduateyear + 2014
-            @class = getClassStartingFromJuly(@graduateYear)
+            @class = null
+            @graduateYear = null
 
         return
             id: @id
