@@ -115,8 +115,8 @@ export default class InformaticsUser
             @graduateYear = getGraduateYear(@class)
             @class = getClassStartingFromJuly(@graduateYear)
         else
-            year = parseInt(data.id_profile_field_graduateyear, 10)
-            @graduateYear = year + 2014
+            @graduateYear = +data.id_profile_field_graduateyear + 2014
+            @class = getClassStartingFromJuly(@graduateYear)
 
         return
             id: @id
