@@ -147,28 +147,17 @@ getSizes = (props) ->
             selfSize[size] = 12
 
     return {treeSize, newsSize, selfSize}
-
-ThemeSelector = (props) ->
-    return if props.theme == "light"
-               <link rel="stylesheet" href="/bootstrap.min.css" />
-           else 
-                <div>
-                   <link rel="stylesheet" href="/bootstrapdark.min.css" />
-                   <link rel="stylesheet" href="/additional_dark.css" />
-                   <link rel="stylesheet" href="/darklight.css" />
-                </div>
             
 ThemeCookies = (props) ->
     cookies =  new Cookies
     cookies.set('Theme', props.theme)
     cookie = cookies.get('Theme')
     return null
-    
+
 mapStateToProps = (state) ->
     return
         theme: state.theme
-
-Theme = connect(mapStateToProps)(ThemeSelector)
+        
 BottomPanel = connect(mapStateToProps)(BottomPanel)
 ThemeCookies = connect(mapStateToProps)(ThemeCookies)
 
@@ -215,5 +204,4 @@ export default class Sceleton extends React.Component
             </div>
             <ThemeCookies />
             <BottomPanel myUser={@props.myUser} />
-            <Theme />
         </div>
