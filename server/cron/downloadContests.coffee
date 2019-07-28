@@ -35,7 +35,7 @@ export ROI_CONTESTS =
 
 
 class ContestDownloader
-    url: 'https://informatics.msk.ru/course/view.php?id=1135'
+    url: 'https://informatics.msk.ru/course/view.php?id=3034'
     baseUrl: 'https://informatics.msk.ru/mod/statements/'
 
     constructor: ->

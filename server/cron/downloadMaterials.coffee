@@ -8,7 +8,7 @@ import awaitAll from '../../client/lib/awaitAll'
 
 import {REGION_CONTESTS, ROI_CONTESTS} from './downloadContests'
 
-url = 'https://informatics.msk.ru/course/view.php?id=1135'
+url = 'https://informatics.msk.ru/course/view.php?id=3034'
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
