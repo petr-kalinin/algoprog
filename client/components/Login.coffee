@@ -1,5 +1,4 @@
 React = require('react')
-import { CometSpinLoader } from 'react-css-loaders';
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 
@@ -10,6 +9,8 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
+
+import Loader from '../components/Loader'
 
 import callApi from '../lib/callApi'
 
@@ -86,7 +87,7 @@ class Login extends React.Component
                             validationState={@state.error && 'error'}/>
                     </div>
                 else
-                    <CometSpinLoader/>
+                    <Loader/>
                 }
                 {
                 @state.message &&

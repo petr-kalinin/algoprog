@@ -16,6 +16,7 @@ import ScrollToTop from './components/ScrollToTop'
 import YaMetrikaHit from './components/YaMetrikaHit'
 import DefaultHelmet from './components/DefaultHelmet'
 import ConnectedNotifications from './components/ConnectedNotifications'
+import Theme from './components/ThemeSelector'
 
 preloadedState = window.__PRELOADED_STATE__
 delete window.__PRELOADED_STATE__
@@ -25,6 +26,7 @@ ReactDOM.hydrate(
     <Provider store={window.store}>
         <div>
             <DefaultHelmet/>
+            <Theme/>
             <BrowserRouter>
                 <div>
                     <ScrollToTop>
