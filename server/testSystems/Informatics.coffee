@@ -36,6 +36,7 @@ class LoggedInformaticsUser
             newUser = new LoggedInformaticsUser(username, password)
             await newUser._login()
             userCache[key] = newUser
+            logger.info "Created new InformaticsUser ", username
         return userCache[key]
 
     constructor: (@username, @password) ->
@@ -58,6 +59,7 @@ class LoggedInformaticsUser
             @id = await @getId()
             if not @id
                 throw "Can not log user #{@username} in"
+            logger.info "Logged in new InformaticsUser ", @username
         catch e
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
 
