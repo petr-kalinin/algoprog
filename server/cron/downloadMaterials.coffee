@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom'
 
 import Material from "../models/Material"
-import {downloadLimited} from '../lib/download'
+import Informatics from '../testSystems/Informatics'
 
 import logger from '../log'
 import awaitAll from '../../client/lib/awaitAll'
@@ -12,11 +12,6 @@ url = 'https://informatics.msk.ru/course/view.php?id=3034'
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
-
-downloadAndParse = (href) ->
-    page = await downloadLimited(href, {timeout: 15 * 1000})
-    document = (new JSDOM(page, {url: href})).window.document
-    return document
 
 finalizeMaterialsList = (materials) ->
     materials = (m for m in materials when m)
@@ -34,50 +29,6 @@ getIndent = (activity) ->
     if indent > 0
         indent -= 20
     return indent
-
-getPageContent = (href) ->
-    document = await downloadAndParse(href)
-    data = document.getElementById("content")
-    if not data
-        throw Error("Can't find content for page " + href)
-
-    while true
-        mod = data.getElementsByClassName('modified')
-        if mod.length == 0
-            break
-        mod[0].parentElement.removeChild(mod[0])
-
-    return data
-
-getProblemsHrefsFromStatements = (href) ->
-    document = await downloadAndParse(href)
-    toc = document.getElementsByClassName("statements_toc_alpha")
-    if toc.length > 1
-        throw Error("Found several tocs in statements " + href)
-    toc = toc[0]
-
-    hrefs = []
-    tags = toc.getElementsByTagName("a")
-    for tag in tags
-        if tag.href.startsWith("https://informatics.msk.ru/mod/statements/view3.php")
-            hrefs.push(tag.href)
-        else
-            throw Error("Strange link in statements toc: " + tag.href + " " + href)
-
-    allATags = document.getElementsByTagName("a")
-    firstProblemHref = undefined
-    s = ""
-    for tag in allATags 
-        s += tag.title + "\n"
-        if tag.title == "Print This Problem"
-            firstProblemHref = tag.href.replace("print3", "view3")
-
-    if not firstProblemHref
-        throw Error("Can not detect first problem href at #{href} (#{s})")
-
-    hrefs.splice(0, 0, firstProblemHref)
-
-    return hrefs
 
 getLevelHeader = (material, header, nameRegex) ->
     if material.type != "label"
@@ -105,53 +56,102 @@ getSublevel = (material) ->
 getTopic = (material) ->
     getLevelHeader(material, 'h4', '(.*)')
 
-parseProblem = (id, href, order) ->
-    document = await downloadAndParse(href)
-    submit = document.getElementById('submit')
-    if submit
-        submit.parentElement.removeChild(submit)
-
-    data = document.getElementsByClassName("problem-statement")
-    if not data or data.length == 0
-        logger.warn("Can't find statement for problem " + href)
-        data = []
-
-    name = document.getElementsByTagName("title")[0] || ""
-    name = name.innerHTML
-
-    re = new RegExp '^.*?\\((.*)\\)$'
-    res = re.exec name
-    name = res[1]
-    if not name
-        logger.warn Error("Can't find name for problem " + href)
-        name = ""
-
-    text = "<h1>" + name + "</h1>"
-    for tag in data
-        need = true
-        pred = tag.parentElement
-        while pred
-            if pred.classList.contains("problem-statement")
-                need = false
-                break
-            pred = pred.parentElement
-        if need
-            text += "<div>" + tag.innerHTML + "</div>"
-
-    return new Material
-        _id: "p" + id,
-        order: order,
-        type: "problem",
-        title: name,
-        content: text,
-        materials: []
-
 
 class MaterialsDownloader
     constructor: ->
         @materials = {}
         @news = []
         @urlToMaterial = {}
+
+    downloadAndParse: (href) ->
+        page = await @admin.download(href, {timeout: 15 * 1000})
+        document = (new JSDOM(page, {url: href})).window.document
+        return document
+
+    getPageContent: (href) ->
+        document = await @downloadAndParse(href)
+        data = document.getElementById("content")
+        if not data
+            throw Error("Can't find content for page " + href)
+
+        while true
+            mod = data.getElementsByClassName('modified')
+            if mod.length == 0
+                break
+            mod[0].parentElement.removeChild(mod[0])
+
+        return data
+
+    getProblemsHrefsFromStatements: (href) ->
+        document = await @downloadAndParse(href)
+        toc = document.getElementsByClassName("statements_toc_alpha")
+        if toc.length > 1
+            throw Error("Found several tocs in statements " + href)
+        toc = toc[0]
+
+        hrefs = []
+        tags = toc.getElementsByTagName("a")
+        for tag in tags
+            if tag.href.startsWith("https://informatics.msk.ru/mod/statements/view3.php")
+                hrefs.push(tag.href)
+            else
+                throw Error("Strange link in statements toc: " + tag.href + " " + href)
+
+        allATags = document.getElementsByTagName("a")
+        firstProblemHref = undefined
+        s = ""
+        for tag in allATags 
+            s += tag.title + "\n"
+            if tag.title == "Print This Problem"
+                firstProblemHref = tag.href.replace("print3", "view3")
+
+        if not firstProblemHref
+            throw Error("Can not detect first problem href at #{href} (#{s})")
+
+        hrefs.splice(0, 0, firstProblemHref)
+
+        return hrefs
+
+    parseProblem: (id, href, order) ->
+        document = await @downloadAndParse(href)
+        submit = document.getElementById('submit')
+        if submit
+            submit.parentElement.removeChild(submit)
+
+        data = document.getElementsByClassName("problem-statement")
+        if not data or data.length == 0
+            logger.warn("Can't find statement for problem " + href)
+            data = []
+
+        name = document.getElementsByTagName("title")[0] || ""
+        name = name.innerHTML
+
+        re = new RegExp '^.*?\\((.*)\\)$'
+        res = re.exec name
+        name = res[1]
+        if not name
+            logger.warn Error("Can't find name for problem " + href)
+            name = ""
+
+        text = "<h1>" + name + "</h1>"
+        for tag in data
+            need = true
+            pred = tag.parentElement
+            while pred
+                if pred.classList.contains("problem-statement")
+                    need = false
+                    break
+                pred = pred.parentElement
+            if need
+                text += "<div>" + tag.innerHTML + "</div>"
+
+        return new Material
+            _id: "p" + id,
+            order: order,
+            type: "problem",
+            title: name,
+            content: text,
+            materials: []
 
     getUrlKey: (url) ->
         res = /mod\/resource\/view\.php\?id=(\d+)/.exec(url)
@@ -174,7 +174,7 @@ class MaterialsDownloader
             content: element.innerHTML
 
     makePageMaterial: (href, id, order, type, indent, title, path) ->
-        data = await getPageContent(href)  # noawait
+        data = await @getPageContent(href)  # noawait
         id_el = data.getElementsByClassName('algoprog-id')
         if id_el.length
             id_el = id_el[0]
@@ -296,7 +296,7 @@ class MaterialsDownloader
             logger.info("Will not overwrite a forced material #{id}")
             material = oldMaterial
         else
-            material = await parseProblem(id, href, order)
+            material = await @parseProblem(id, href, order)
                 
         @addMaterial(material)
         @urlToMaterial[@getUrlKey(href)] = material._id
@@ -307,7 +307,7 @@ class MaterialsDownloader
             tree: tree
 
     parseContest: (href, id, name, order, indent) ->
-        hrefs = await getProblemsHrefsFromStatements(href)
+        hrefs = await @getProblemsHrefsFromStatements(href)
 
         materials = []
         for href, i in hrefs
@@ -361,7 +361,7 @@ class MaterialsDownloader
         currentTree = undefined
         order = 0
         pendingMaterials = []
-        title = ''
+        title = '???'
         currentTopics = []
         for m in materials
             level = getLevel(m.material)
@@ -531,7 +531,6 @@ class MaterialsDownloader
         tree = clone(material)
         delete tree.indent
         tree.materials = (m.tree for m in materials)
-        console.log "Returning reg material ", material
         return
             material: material
             tree: tree
@@ -710,7 +709,8 @@ class MaterialsDownloader
         await awaitAll(promises)
 
     run: ->
-        document = await downloadAndParse(url)
+        @admin = await Informatics.getAdmin()
+        document = await @downloadAndParse(url)
 
         materials = []
 
