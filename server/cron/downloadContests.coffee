@@ -5,7 +5,7 @@ import Table from "../models/table"
 import User from "../models/user"
 
 import logger from '../log'
-import download from '../lib/download'
+import Informatics from '../testSystems/Informatics'
 import awaitAll from '../../client/lib/awaitAll'
 
 export REGION_CONTESTS = 
@@ -39,7 +39,6 @@ class ContestDownloader
     baseUrl: 'https://informatics.msk.ru/mod/statements/'
 
     constructor: ->
-        @jar = request.jar()
 
     makeProblem: (fullText, href, pid, letter, name) ->
         {
@@ -80,7 +79,7 @@ class ContestDownloader
         return @makeProblem(nameRes[0], href, id, letter, name)
 
     processContest: (order, fullText, href, cid, name, level) ->
-        text = await download(href, @jar)
+        text = await @admin.download(href)
 
         firstProblem = @getFirstProblem(text)
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
@@ -92,7 +91,8 @@ class ContestDownloader
 
     run: ->
         logger.info "Downloading base contests"
-        text = await download(@url, @jar)
+        @admin = await Informatics.getAdmin()
+        text = await @admin.download(@url)
         re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.msk.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
         promises = []
@@ -107,10 +107,10 @@ class RegionContestDownloader extends ContestDownloader
 
     constructor: (@contests, @prefix, @name, @name2, @order)->
         super()
-        @jar = request.jar()
 
     run: ->
         logger.info "Downloading #{@prefix} contests"
+        @admin = await Informatics.getAdmin()
         levels = []
         promises = []
         for year, cont of @contests

@@ -18,6 +18,9 @@ export class TestSystemUser
 
 
 export default class TestSystem
+    getAdmin: () ->
+        throw "not implemented"
+
     id: () ->
         throw "not implemented"
 

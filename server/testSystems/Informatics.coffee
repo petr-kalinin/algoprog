@@ -129,7 +129,7 @@ export default class Informatics extends TestSystem
     _informaticsProblemId: (problemId) ->
         problemId.substring(1)
 
-    _getAdmin: () ->
+    @getAdmin: () ->
         admin = await RegisteredUser.findAdmin()
         return LoggedInformaticsUser.getUser(admin.informaticsUsername, admin.informaticsPassword)
 
@@ -146,7 +146,7 @@ export default class Informatics extends TestSystem
 
     setOutcome: (submitId, outcome, comment) ->
         throw "Will not set outcome on Informatice"
-        adminUser = await @_getAdmin()
+        adminUser = await Informatics.getAdmin()
         [fullSubmitId, contest, run, problem] = submitId.match(/(\d+)r(\d+)p(\d+)/)
         outcomeCode = switch outcome
             when "AC" then 8
@@ -205,7 +205,7 @@ export default class Informatics extends TestSystem
 
     registerUser: (user) ->
         logger.info "Moving user #{user._id} to unknown group"
-        adminUser = await @_getAdmin()
+        adminUser = await Informatics.getAdmin()
 
         href = "#{BASE_URL}/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
         body = 'addParam={"id":"' + user._id + '"}&group_id=&session_sid='
@@ -217,4 +217,4 @@ export default class Informatics extends TestSystem
         })
 
     selfTest: () ->
-        await @_getAdmin()
+        await Informatics.getAdmin()
