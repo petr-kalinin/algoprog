@@ -53,7 +53,7 @@ ProblemResult = (props) ->
     </td>
 
 totalResultClass = (result) ->
-    if not result.problemName
+    if not result?.problemName
         return undefined
     if result.total == result.solved
         return "full"
@@ -77,11 +77,13 @@ TotalResult = (props) ->
         s = totalResultClass(props.result)
         if s
             style += " " + styles[s]
-        if props.result.problemName
-            title = props.user.name + ": " + props.result.problemName
+        if props.result?.problemName
+            title = props.user.name + ": " + props.result?.problemName
     return <td className={style} title={title}>
             {if props.header
                 "="
+            else if not props.result
+                ""
             else
                 ("" + props.result.solved +
                  (if props.result.ok then " + " + props.result.ok else "") +
@@ -90,7 +92,7 @@ TotalResult = (props) ->
         </td>
 
 Result = (props) ->
-    if props.result.total > 1
+    if props.result?.total > 1
         `<TotalResult {...props}/>`
     else
         `<ProblemResult {...props}/>`

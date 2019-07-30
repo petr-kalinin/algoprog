@@ -37,7 +37,6 @@ recurseResults = (user, tableId, depth) ->
     table = await Table.findById(tableId)
     tableResults = []
     total = undefined
-    console.log tableId, table
     if depth > 0
         for subtableId in table?.tables || []
             subtableResults = await recurseResults(user, subtableId, depth-1)
@@ -54,7 +53,7 @@ recurseResults = (user, tableId, depth) ->
             total = addTotal(total, r)
     return
         _id: tableId,
-        name: table.name
+        name: table?.name || ""
         results: tableResults
         total: total
 
