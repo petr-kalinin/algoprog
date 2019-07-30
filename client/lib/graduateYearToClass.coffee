@@ -1,4 +1,3 @@
-
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 
 export getClassStartingFromJuly = (year) -> return getClass(new Date(year, 6, 1))
