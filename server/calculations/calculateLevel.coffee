@@ -4,6 +4,8 @@ import logger from '../log'
 import isContestRequired from '../../client/lib/isContestRequired'
 
 export default calculateLevel = (user, baseLevel, lastDate) ->
+    # level calculations disabled on adina branch
+    return
     for bigLevel in [1..10]
         for smallLevel in ["А", "Б", "В", "Г"]
             tableId = bigLevel + smallLevel

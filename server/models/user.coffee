@@ -57,6 +57,8 @@ usersSchema.methods.updateRatingEtc = ->
     @update({$set: res})
 
 usersSchema.methods.updateLevel = ->
+    # level calculations are disabled
+    return
     @level.current = await calculateLevel @_id, @level.base, new Date("2100-01-01")
     @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
@@ -83,8 +85,8 @@ usersSchema.methods.setGraduateYear = (graduateYear) ->
     await @update({$set: {"graduateYear": graduateYear}})
     @graduateYear = graduateYear
 
-usersSchema.methods.setBaseLevel = (level) ->
-    await @update({$set: {"level.base": level}})
+usersSchema.methods.setLevel = (level) ->
+    await @update({$set: {"level.current": level}})
     @level.base = level
     await @updateLevel()
     @updateRatingEtc()

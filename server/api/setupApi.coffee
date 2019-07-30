@@ -155,7 +155,7 @@ export default setupApi = (app) ->
             price = +price
         user = await User.findById(req.params.id)
         await user.setGraduateYear req.body.graduateYear
-        await user.setBaseLevel req.body.level.base
+        await user.setLevel req.body.level.current
         await user.setCfLogin cfLogin
         userPrivate = await UserPrivate.findById(req.params.id)
         console.log "userPrivate = ", userPrivate

@@ -97,7 +97,7 @@ export default class UserBadge extends React.Component
         await callApi('user/' + @props.user._id + '/set',
             graduateYear: @state.graduateYear
             level:
-                base: @state.baseLevel
+                current: @state.baseLevel
             cf:
                 login: @state.cfLogin
             paidTill: @state.paidTill
@@ -118,10 +118,6 @@ export default class UserBadge extends React.Component
             <blockquote>
                 {cls && <div>Класс: {cls}</div>}
                 <div>Уровень: {@props.user.level.current}</div>
-                { @props.me?.admin &&
-                    <div>
-                        Уровень на начало полугодия: {@props.user.level.start}
-                    </div> }
                 <div>Рейтинг: {@props.user.rating}</div>
                 <div>Активность: {@props.user.activity.toFixed(1)}</div>
                 {
@@ -143,7 +139,7 @@ export default class UserBadge extends React.Component
                                 onKeyPress={@handleKeyPressed} />
                         </div>
                         <div>
-                            Базовый уровень: <input
+                            Уровень: <input
                                 type="text"
                                 name="newLevel"
                                 value={@state.baseLevel}
