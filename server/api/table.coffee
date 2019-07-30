@@ -17,7 +17,7 @@ getTables = (table) ->
     if tableIds.length != 1
         return tableIds
     table = await Table.findById(tableIds[0])
-    return table.tables
+    return table?.tables || []
 
 getResult = (userId, tableId, collection) ->
     table = await collection.findById(tableId)
@@ -39,13 +39,13 @@ recurseResults = (user, tableId, depth) ->
     total = undefined
     console.log tableId, table
     if depth > 0
-        for subtableId in table?.tables
+        for subtableId in table?.tables || []
             subtableResults = await recurseResults(user, subtableId, depth-1)
             total = addTotal(total, subtableResults.total)
             delete subtableResults.total
             tableResults.push(subtableResults)
     else
-        for subtableId in table.tables
+        for subtableId in table?.tables || []
             tableResults.push(getResult(user._id, subtableId , Table))
         for subtableId in table.problems
             tableResults.push(getResult(user._id, subtableId , Problem))
@@ -104,7 +104,7 @@ export fullUser = (userId) ->
         tables.push(((level + ch) for ch in ["А", "Б", "В"]))
     for reg in ["reg", "roi"]
         regTables = await Table.findById(reg)
-        if regTables
+        if regTables?.tables
             tables.push(regTables.tables)
     user = await User.findById(userId)
     if not user
