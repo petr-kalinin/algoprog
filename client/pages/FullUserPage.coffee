@@ -14,7 +14,7 @@ class FullUserPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: @props.data.user.name, _id: "user" + @props.data.user._id},
+            location: {title: @props.data.user?.name, _id: "user" + @props.data.user?._id},
             showNews: "hide",
             showTree: "hide"
         }
