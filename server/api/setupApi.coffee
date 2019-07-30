@@ -223,7 +223,13 @@ export default setupApi = (app) ->
         res.json(submits)
 
     app.get '/api/material/:id', wrap (req, res) ->
-        res.json(await Material.findById(req.params.id))
+        id = req.user?.userKey()
+        user = await User.findById(id)
+        material = await Material.findById(req.params.id)
+        if material.level and (not user or user.level.current < material.level)
+            res.json({"error": "level"})
+        else
+            res.json(material)
 
     app.get '/api/lastBlogPosts', wrap (req, res) ->
         res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))

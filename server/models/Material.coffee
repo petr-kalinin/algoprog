@@ -9,6 +9,7 @@ materialsSchema = new mongoose.Schema
     indent: Number
     title: String
     content: String
+    level: String
     path: [{_id: String, title: String}]
     materials: [mongoose.Schema.Types.Mixed]  # will always be an array of dictionaries
     force: { type: Boolean, default: false }

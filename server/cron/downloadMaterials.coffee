@@ -545,6 +545,13 @@ class MaterialsDownloader
         for m in material.materials
             @fillPaths(@materials[m._id], path)
 
+    fillLevel: (material, level) ->
+        if material.type == "level" or material.type == "table"
+            level = material._id
+        material.level = level
+        for m in material.materials
+            @fillLevel(@materials[m._id], level)
+
     save: ->
         promises = []
         for id, material of @materials
@@ -613,7 +620,7 @@ class MaterialsDownloader
             thisMaterials = []
             thisTrees = []
             headerMaterial = new Material
-                _id: "table:#{group}:header"
+                _id: "!table:#{group}:header"
                 type: "label",
                 content: "<h1>#{groupName}: сводные таблицы</h1>"
             @addMaterial(headerMaterial)
@@ -621,7 +628,7 @@ class MaterialsDownloader
 
             for table in tables
                 subMaterial = new Material
-                    _id: "table:" + group + ":" + table
+                    _id: "!table:#{group}:#{table}"
                     type: "table",
                     title: getTableTitle(table)
                     content: getTableLink(group, table)
@@ -634,7 +641,7 @@ class MaterialsDownloader
                 thisTrees.push(subTree)
 
             material = new Material
-                _id: "tables:#{group}"
+                _id: "!tables:#{group}"
                 type: "level"
                 title: groupName
                 materials: thisMaterials
@@ -646,7 +653,7 @@ class MaterialsDownloader
             trees.push(tree)
 
         material = new Material
-            _id: "tables"
+            _id: "!tables"
             type: "level"
             title: "Сводные таблицы"
             materials: ({_id: m._id, title: m.title, type: m.type, content: m.content} for m in materials)
@@ -737,6 +744,7 @@ class MaterialsDownloader
         @addMaterial(mainPageMaterial)
 
         @fillPaths(mainPageMaterial, [])
+        @fillLevel(mainPageMaterial, "")
         await @correctInternalLinks()
         @save()
 

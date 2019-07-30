@@ -1,4 +1,5 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
 
 import Problem from './Problem'
 import Level from './Level'
@@ -9,6 +10,11 @@ Page = (props) ->
     </div>
 
 MaterialProper = (props) ->
+    if props.material.error
+        return if props.material.error == 'level'
+            <h1><FontAwesome name="ban"/> У вас нет прав на просмотр этого материала</h1>
+        else
+            <h1><FontAwesome name="ban"/>Неизвестная ошибка</h1>
     if props.material?.type == 'page'
         `<Page {...props} />`
     else if props.material?.type == 'level'
