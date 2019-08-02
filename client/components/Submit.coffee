@@ -43,6 +43,13 @@ convert = (source, encoding) ->
 
 ENCODINGS = ["utf8", "win1251", "cp866"]
 
+Comment = (props) ->
+    if props.comment.text
+        text = "#{props.comment.text}\n-- #{props.comment.reviewer}"
+    else    
+        text = props.comment
+    <pre dangerouslySetInnerHTML={{__html: text}}></pre>
+
 export class SubmitSource extends React.Component
     constructor: (props) ->
         super(props)
@@ -109,7 +116,7 @@ export default class Submit extends React.Component
                     res = []
                     a = (el) -> res.push(el)
                     for comment, index in (@props.submit?.comments || [])
-                        a <pre key={index} dangerouslySetInnerHTML={{__html: comment}}></pre>
+                        a <Comment key={index} comment={comment}/>
                     res}
                 </Tab>
                 <Tab eventKey={3} title="Результаты">

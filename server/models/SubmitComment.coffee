@@ -11,6 +11,7 @@ submitCommentsSchema = new mongoose.Schema
     time: Date
     outcome: String
     viewed: { type: Boolean, default: false }
+    reviewer: String
 
 submitCommentsSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
