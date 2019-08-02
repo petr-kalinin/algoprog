@@ -170,17 +170,19 @@ class TopPanel extends React.Component
                     {
                     if @props.me?._id
                         <ButtonGroup>
+                            {if @props.me?.admin
+                                <LinkContainer to="/register" isActive={() -> false}>
+                                    <Button bsStyle="primary">
+                                        <FontAwesome name="user-plus"/> Регистрация
+                                    </Button>
+                                </LinkContainer>
+                            }
                             <Button bsStyle="success" onClick={@props.logout}>
                                 <FontAwesome name="sign-out"/> Выход
                             </Button>
                         </ButtonGroup>
                     else
                         <ButtonGroup>
-                            <LinkContainer to="/register" isActive={() -> false}>
-                                <Button bsStyle="primary">
-                                    <FontAwesome name="user-plus"/> Регистрация
-                                </Button>
-                            </LinkContainer>
                             <LinkContainer to="/login" isActive={() -> false}>
                                 <Button bsStyle="success">
                                     <FontAwesome name="sign-in"/> Вход

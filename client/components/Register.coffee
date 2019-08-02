@@ -82,12 +82,14 @@ class Register extends React.Component
                 informaticsPassword: @state.informaticsPassword
                 aboutme: @state.aboutme
             }
+            ###
             if data.registered.success
                 await callApi "login", {
                     username: @state.username,
                     password: @state.password
                 }
                 @props.reloadMyData()
+            ###
         catch
             data =
                 registered:

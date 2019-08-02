@@ -34,6 +34,7 @@ export default register = (req, res, next) ->
             _id: informaticsData.id,
             name: informaticsData.name,
             graduateYear: informaticsData.graduateYear,
+            level: {current: "1А"}
             userList: "unknown",
         )
         if cfLogin
