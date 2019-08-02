@@ -46,6 +46,9 @@ generateMsg = (lang, result, problemName, problemHref) ->
 
     return msg
 
+decodeComment = (comment) ->
+    entities.decode(comment.text || comment)
+
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     problemId = submit.problem
@@ -65,7 +68,8 @@ storeToDatabase = (req, res) ->
             c.outcome = submit.outcome
             await c.upsert()
     if req.body.comment
-        if not (req.body.comment in submit.comments.map(entities.decode))
+        reviewer = await User.findById(req.user.userKey())
+        if not (req.body.comment in submit.comments.map(decodeComment))
             comment = entities.encode(req.body.comment)
             logger.info("Force-storing to database comment for #{req.params.submitId}")
             rndId = Math.floor(Math.random() * 1000000)
@@ -78,8 +82,9 @@ storeToDatabase = (req, res) ->
                 text: comment
                 time: new Date()
                 outcome: submit.outcome
+                reviewer: reviewer?.name
             await newComment.upsert()
-            submit.comments.push(comment)
+            submit.comments.push({text: comment, reviewer: reviewer?.name})
             msg += "\n" + comment
 
     await submit.upsert()

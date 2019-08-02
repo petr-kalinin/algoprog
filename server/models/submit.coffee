@@ -27,7 +27,7 @@ submitsSchema = new mongoose.Schema
     source: String
     sourceRaw: String
     language: String
-    comments: [String]
+    comments: [mongoose.Schema.Types.Mixed]
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
