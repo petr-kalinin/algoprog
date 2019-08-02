@@ -177,6 +177,9 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
         res.json(await dashboard())
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->

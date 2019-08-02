@@ -49,7 +49,7 @@ export default class Dashboard extends React.Component
                     <h1>{type.toUpperCase()}</h1>
                     <Table striped condensed hover>
                         <tbody>
-                            {@props[type].map((result) =>
+                            {@props[type] && @props[type].map((result) =>
                                 if result.fullUser.userList != "unknown" or @state.showUnknown
                                     <Result result={result} key={result._id}/>
                                 else
@@ -63,7 +63,7 @@ export default class Dashboard extends React.Component
                 <h1>CF</h1>
                 <Table striped condensed hover>
                     <tbody>
-                        {@props["cf"].map((result) ->
+                        {@props["cf"] && @props["cf"].map((result) ->
                             <tr key={result._id}>
                                 <td className={styles.td}>{moment(result.time).format('YYYY-MM-DD kk:mm:ss')}</td>
                                 <td className={styles.td}><Link to={"/user/" + result.fullUser._id}>{result.fullUser.name}</Link></td>
