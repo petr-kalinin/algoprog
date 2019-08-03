@@ -67,7 +67,7 @@ export default ConnectedComponent = (Component, options) ->
 
         componentWillMount: ->
             if not window?
-                promises = @requestData(0)
+                promises = @requestData(1000)  # allow pre-fill of state
                 @props.saveDataPromises(promises)
 
         componentDidMount: ->
