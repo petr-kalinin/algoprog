@@ -54,6 +54,8 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
+clientCookie = (state = null, action) -> state
+
 
 export default rootReducer =
     combineReducers {
@@ -61,5 +63,6 @@ export default rootReducer =
         dataPromises,
         unknownWarningShown,
         unpaidWarningShown,
-        notifications
+        notifications,
+        clientCookie
     }

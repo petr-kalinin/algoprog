@@ -99,7 +99,8 @@ export default renderOnServer = (req, res, next) =>
                 success: true
                 updateTime: new Date()
                 url: "myUser"},
-            ]
+            ],
+            clientCookie: req.headers.cookie
         store = createStore(initialState)
 
         component = undefined
