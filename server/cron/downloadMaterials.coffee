@@ -131,7 +131,7 @@ class MaterialsDownloader
         name = res[1]
         if not name
             logger.warn Error("Can't find name for problem " + href)
-            name = ""
+            name = "???"
 
         text = "<h1>" + name + "</h1>"
         for tag in data
