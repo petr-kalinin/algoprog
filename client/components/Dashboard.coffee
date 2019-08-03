@@ -30,30 +30,17 @@ ConnectedStats = ConnectedComponent(Stats, options)
 export default class Dashboard extends React.Component
     constructor: (props) ->
         super(props)
-        @toggleUnknown = @toggleUnknown.bind(this)
-        @state =
-            showUnknown: false
-
-    toggleUnknown: () ->
-        @setState
-            showUnknown: !@state.showUnknown
 
     render: () ->
         <div>
             <h4><ConnectedStats/></h4>
-            <Checkbox checked={@state.showUnknown} onClick={@toggleUnknown}>
-                Показывать unknown
-            </Checkbox>
             {for type in ['ok', 'ps', 'wa', 'ig', 'ac']
                 <div key={type}>
                     <h1>{type.toUpperCase()}</h1>
                     <Table striped condensed hover>
                         <tbody>
                             {@props[type] && @props[type].map((result) =>
-                                if result.fullUser.userList != "unknown" or @state.showUnknown
-                                    <Result result={result} key={result._id}/>
-                                else
-                                    null
+                                <Result result={result} key={result._id}/>
                             )}
                         </tbody>
                     </Table>

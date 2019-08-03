@@ -61,13 +61,14 @@ export default ConnectedComponent = (Component, options) ->
                 delete componentProps.hasData
                 delete componentProps.updateData
                 delete componentProps.saveDataPromises
+                delete componentProps.clientCookies
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
                 return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
 
         componentWillMount: ->
             if not window?
-                promises = @requestData(0)
+                promises = @requestData(1000)  # allow pre-fill of state
                 @props.saveDataPromises(promises)
 
         componentDidMount: ->
@@ -86,7 +87,7 @@ export default ConnectedComponent = (Component, options) ->
                 @requestData()
 
         requestData: (timeout) ->
-            promises = (@props.updateData(url, timeout) for key, url of @urls())
+            promises = (@props.updateData(url, timeout, @props.clientCookie) for key, url of @urls())
             return promises
 
         invalidateData: () ->
@@ -112,11 +113,12 @@ export default ConnectedComponent = (Component, options) ->
             data: (url) -> getters.getData(state, url)
             hasData: (url) -> getters.hasData(state, url)
             isDataRejected: (url) -> getters.isDataRejected(state, url)
+            clientCookie: state.clientCookie
 
     mapDispatchToProps = (dispatch, ownProps) ->
         return
             invalidateData: (url) -> dispatch(actions.invalidateData(url))
-            updateData: (url, timeout) -> dispatch(actions.updateData(url, timeout))
+            updateData: (url, timeout, cookies) -> dispatch(actions.updateData(url, timeout, cookies))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)
