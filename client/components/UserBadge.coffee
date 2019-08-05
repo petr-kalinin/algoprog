@@ -12,7 +12,7 @@ import callApi from '../lib/callApi'
 import CfStatus from './CfStatus'
 import UserName from './UserName'
 
-import styles from './UserBadge.css'
+import styles from './UserBadge.css' 
 
 import { GROUPS } from '../lib/informaticsGroups'
 
@@ -135,7 +135,7 @@ export default class UserBadge extends React.Component
                     <form className={styles.form} onSubmit={@handleSubmit}>
                         <div>
                             Год выпуска: <input
-                                type="text"
+                                type="text"                      
                                 name="newgraduateYear"
                                 value={@state.graduateYear}
                                 size="4"

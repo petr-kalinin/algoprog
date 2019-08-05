@@ -2,27 +2,13 @@ React = require('react')
 FontAwesome = require('react-fontawesome')
 deepEqual = require('deep-equal')
 import { connect } from 'react-redux'
-import { CometSpinLoader } from 'react-css-loaders';
+
+import Loader from '../components/Loader'
 
 import * as actions from '../redux/actions'
 import * as getters from '../redux/getters'
 
 import awaitAll from '../lib/awaitAll'
-
-class ErrorBoundary extends React.Component 
-    constructor: (props) ->
-        super(props)
-        this.state = { error: null, errorInfo: null }
-
-    componentDidCatch: (error, errorInfo) ->
-        this.setState
-            error: error,
-            errorInfo: errorInfo
-
-    render: () ->
-        if this.state.errorInfo 
-            return <h1><FontAwesome name="exclamation-circle"/></h1>     
-        return this.props.children;
 
 export default ConnectedComponent = (Component, options) ->
     class Result extends React.Component
@@ -53,7 +39,7 @@ export default ConnectedComponent = (Component, options) ->
                     Placeholder = options.Placeholder
                     return <Placeholder/>
                 else
-                    return <CometSpinLoader/>
+                    return <Loader/>
             else
                 componentProps = {@props...}
                 componentProps.handleReload = @handleReload
@@ -61,14 +47,13 @@ export default ConnectedComponent = (Component, options) ->
                 delete componentProps.hasData
                 delete componentProps.updateData
                 delete componentProps.saveDataPromises
-                delete componentProps.clientCookies
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
-                return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
+                return `<Component  {...componentProps}/>`
 
         componentWillMount: ->
             if not window?
-                promises = @requestData(1000)  # allow pre-fill of state
+                promises = @requestData(0)
                 @props.saveDataPromises(promises)
 
         componentDidMount: ->
@@ -87,7 +72,7 @@ export default ConnectedComponent = (Component, options) ->
                 @requestData()
 
         requestData: (timeout) ->
-            promises = (@props.updateData(url, timeout, @props.clientCookie) for key, url of @urls())
+            promises = (@props.updateData(url, timeout) for key, url of @urls())
             return promises
 
         invalidateData: () ->
@@ -113,12 +98,11 @@ export default ConnectedComponent = (Component, options) ->
             data: (url) -> getters.getData(state, url)
             hasData: (url) -> getters.hasData(state, url)
             isDataRejected: (url) -> getters.isDataRejected(state, url)
-            clientCookie: state.clientCookie
 
     mapDispatchToProps = (dispatch, ownProps) ->
         return
             invalidateData: (url) -> dispatch(actions.invalidateData(url))
-            updateData: (url, timeout, cookies) -> dispatch(actions.updateData(url, timeout, cookies))
+            updateData: (url, timeout) -> dispatch(actions.updateData(url, timeout))
             saveDataPromises: (promise) -> dispatch(actions.saveDataPromises(promise))
 
     return connect(mapStateToProps, mapDispatchToProps)(Result)

@@ -10,6 +10,8 @@ import outcomeToText from '../lib/outcomeToText'
 
 import styles from './SubmitListTable.css'
 
+import {ABBREVIATED_LANGUAGES} from '../lib/languages'
+
 maxVal = (submit, field) ->
     res = -1
     for index, result of (submit.results?.tests || []) 
@@ -26,8 +28,8 @@ export default SubmitListTable = (props) ->
                     <th>Время попытки</th>
                     <th>Результат</th>
                     <th>Язык</th>
-                    <th>Время</th>
-                    <th>Память</th>
+                    <th><span title="(сек)">Время</span></th>
+                    <th><span title="ОЗУ(МБ)">Память</span></th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     {if props.handleDiffClick
@@ -41,15 +43,36 @@ export default SubmitListTable = (props) ->
                     if submit._id == props.activeId
                         cl += " " + styles.active
                     time = maxVal(submit, "time")
-                    mem = maxVal(submit, "max_memory_used")
+                    mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
+                    mem = mem.toFixed(2)
+                    languageabbreviate = 
+                        "Python 3" : "Py3"
+                        "Free Pascal 3" : "FreePas"
+                        "PascalABC 3" : "PasABC"
+                        "GNU C++" : "C++"
+                        "GNU C" : "C"
+                        "Borland Delphi" : "Delphi"
+                        "Java JDK" : "Java"
+                        "PHP": "PHP"
+                        "Python 2" : "Py2"
+                        "Perl" : "Perl"
+                        "Mono C#" : "C#"
+                        "Ruby" : "Ruby"
+                        "Haskell GHC" : "Haskell"
+                        "FreeBASIC" : "FreeBASIC"
+                        "GNU C++ / sanitizer" : "C++/sanitizer"
+
                     <tr key={submit._id} className={cl}>
-                        <td>{moment(submit.time).format('YYYY-MM-DD HH:mm:ss')}</td>
+                        <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
-                        <td>{submit.language}</td>
+                        <td>
+                            <div className='visible-xs visible-sm'>{languageabbreviate[submit.language]}</div>
+                            <div className='hidden-xs hidden-sm'>{submit.language}</div>
+                        </td>
                         <td>{if time? then time / 1000 else ""}</td>
-                        <td>{mem || ""}</td>
+                        <td>{if mem >= 0 then mem else ""}</td>
                         <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
-                        <td><a onClick={props.handleSubmitClick(submit)} href="#">Подробнее</a></td>
+                        <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
                         {if props.handleDiffClick
                             <td>
                                 <span onClick={props.handleDiffClick(0, submit)} href="#">
@@ -71,6 +94,6 @@ export default SubmitListTable = (props) ->
         {
         if props.submits?[0]
             infProblem = props.submits[0].problem.substr(1)
-            <a href={"https://informatics.msk.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{props.submits[0].user}"} target="_blank">Попытки на информатикс</a>
+            <a href={"https://informatics.mccme.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{props.submits[0].user}"} target="_blank">Попытки на информатикс</a>
         }
     </div>

@@ -3,6 +3,7 @@ React = require('react')
 import { Link } from 'react-router-dom'
 import { Nav, NavItem } from 'react-bootstrap'
 import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
 
 FontAwesome = require('react-fontawesome')
 
@@ -100,12 +101,12 @@ SolutionMark_ = (props) ->
 
 SolutionMark = withMyResults(SolutionMark_)
 
-recTree = (tree, id, indent) ->
+recTree = (tree, id, indent, theme) ->
     res = []
     a = (el) -> res.push(el)
     for m in tree.materials
         if m.needed and m.title
-            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then styles.navitem else "") + " " + styles.levelNav} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
+            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then if theme == "light" then styles.navitem else if theme == "dark" then styles.navitemdark else "") + " " + styles.levelNav} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
                 <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
                     <div className={styles.levelName}>
                         {m.title}
@@ -113,7 +114,7 @@ recTree = (tree, id, indent) ->
                     <SolutionMark id={m._id} indent={indent}/>
                 </div>
             </NavItem>
-            res = res.concat(recTree(m, id, indent + 1))
+            res = res.concat(recTree(m, id, indent + 1, theme))
     return res
 
 Tree = (props) ->
@@ -123,7 +124,7 @@ Tree = (props) ->
     markNeeded(tree, props.id, (p._id for p in props.path), 0, 100)
     <div className={styles.tree}>
         <Nav bsStyle="pills" stacked>
-            {recTree(tree, props.id, 0)}
+            {recTree(tree, props.id, 0, props.theme)}
         </Nav>
     </div>
 
@@ -131,4 +132,10 @@ options =
     urls: ->
         tree: "material/tree"
 
-export default ConnectedComponent(withRouter(Tree), options)
+ConnectedTree = ConnectedComponent(withRouter(Tree), options)
+
+mapStateToProps = (state) ->
+    return
+        theme: state.theme
+
+export default connect(mapStateToProps)(ConnectedTree)

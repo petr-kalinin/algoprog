@@ -75,7 +75,7 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
-createSubmit = (problemId, userId, language, codeRaw, draft) ->
+createSubmit = (problemId, userId, language, languageabbreviate, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
@@ -95,6 +95,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         source: code
         sourceRaw: codeRaw
         language: language
+        languageabbreviate: languageabbreviate
         comments: []
         results: []
         force: false
@@ -119,7 +120,7 @@ export default setupApi = (app) ->
             res.json({unpaid: true})
             return
         try
-            await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+            await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.languageabbreviate, req.body.code, req.body.draft)
         catch e
             res.json({error: e})
             return
@@ -389,7 +390,7 @@ export default setupApi = (app) ->
 
         runForUser = (user) ->
             await groups.moveUserToGroup(adminUser, user._id, "unknown")
-            await user.setUserList("unknown")
+            #await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
         users = await User.findAll()

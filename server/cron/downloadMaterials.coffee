@@ -8,7 +8,7 @@ import awaitAll from '../../client/lib/awaitAll'
 
 import {REGION_CONTESTS, ROI_CONTESTS} from './downloadContests'
 
-url = 'https://informatics.msk.ru/course/view.php?id=1135'
+url = 'https://informatics.mccme.ru/course/view.php?id=1135'
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
@@ -59,7 +59,7 @@ getProblemsHrefsFromStatements = (href) ->
     hrefs = []
     tags = toc.getElementsByTagName("a")
     for tag in tags
-        if tag.href.startsWith("https://informatics.msk.ru/mod/statements/view3.php")
+        if tag.href.startsWith("https://informatics.mccme.ru/mod/statements/view3.php")
             hrefs.push(tag.href)
         else
             throw Error("Strange link in statements toc: " + tag.href + " " + href)
@@ -124,7 +124,7 @@ parseProblem = (id, href, order) ->
     name = res[1]
     if not name
         logger.warn Error("Can't find name for problem " + href)
-        name = "???"
+        name = ""
 
     text = "<h1>" + name + "</h1>"
     for tag in data
@@ -471,7 +471,7 @@ class MaterialsDownloader
             tree: tree
 
     makeRegContestMaterial: (contest, name, order) ->
-        href =  "https://informatics.msk.ru/mod/statements/view.php?id=#{contest}"
+        href =  "https://informatics.mccme.ru/mod/statements/view.php?id=#{contest}"
         @parseContest(href, contest, name, order, 0)
 
     makeRegYearMaterial: (prefix, year, contests) ->
@@ -671,7 +671,7 @@ class MaterialsDownloader
     correctInternalLinksInMaterial: (material) ->
         if not (material.type in ["page", "label", "epigraph", "problem", "news"])
             return
-        document = (new JSDOM(material.content, {url: "https://informatics.msk.ru"})).window.document
+        document = (new JSDOM(material.content, {url: "https://informatics.mccme.ru"})).window.document
         links = document.getElementsByTagName("a")
         subpath = [{_id: "main", title: "/"}]
         if material.path and material._id

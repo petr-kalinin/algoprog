@@ -1,5 +1,4 @@
 React = require('react')
-import { CometSpinLoader } from 'react-css-loaders';
 import { withRouter } from 'react-router'
 
 import Grid from 'react-bootstrap/lib/Grid'
@@ -10,6 +9,8 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
 import Modal from 'react-bootstrap/lib/Modal'
+
+import Loader from '../components/Loader'
 
 import { Link } from 'react-router-dom'
 
@@ -147,10 +148,10 @@ class Register extends React.Component
                     setField={@setField}
                     state={@state}
                     validationState={passwordValidationState}/>
-                <h3>Ваш аккаунт на informatics.msk.ru</h3>
-                <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.msk.ru" target="_blank">informatics.msk.ru</a>;
+                <h3>Ваш аккаунт на informatics.mccme.ru</h3>
+                <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.mccme.ru" target="_blank">informatics.mccme.ru</a>;
                 ваши программы будут реально проверяться именно там. Если у вас еще нет аккаунта на
-                informatics, <a href="https://informatics.msk.ru/login/signup.php" target="_blank">зарегистрируйтесь сейчас</a>.</p>
+                informatics, <a href="https://informatics.mccme.ru/login/signup.php" target="_blank">зарегистрируйтесь сейчас</a>.</p>
 
                 <p>Ниже вы должны будете указать логин и пароль от informatics. Пароль будет храниться на algoprog.ru.
                 Он нужен, чтобы отправлять решения задач от вашего имени.
@@ -184,7 +185,7 @@ class Register extends React.Component
                 исправьте данные </span>
                 {
                 if @state.informaticsData?.id
-                    <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"} target="_blank">в вашем профиле там.</a>
+                    <a href={"https://informatics.mccme.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"} target="_blank">в вашем профиле там.</a>
                 else
                     <span>в вашем профиле там.</span>
                 }
@@ -192,7 +193,7 @@ class Register extends React.Component
                 {
                 @state.informaticsData?.loading && <div>
                     <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
-                    <CometSpinLoader />
+                    <Loader />
                 </div>}
                 {
                 @state.informaticsData?.error &&
@@ -278,7 +279,7 @@ class Register extends React.Component
                     </Modal.Header>
 
                     <Modal.Body>
-                        {@state.registered.loading && <CometSpinLoader />}
+                        {@state.registered.loading && <Loader />}
                         {@state.registered.error && "Ошибка: " + @state.registered.message}
                         {@state.registered.success &&
                             <div>

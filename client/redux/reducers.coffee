@@ -3,9 +3,11 @@ import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, THEME_SWITCH } from './actions'
 
 import { equalUrl } from './getters'
+
+import Cookies from 'universal-cookie'
 
 MAX_DATA_ITEMS = 100
 
@@ -54,8 +56,24 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
-clientCookie = (state = null, action) -> state
+ defaultTheme = () ->
+    cookies = new Cookies
+    cookie = cookies.get('Theme')
+    if not window? 
+        return null
+    if (cookie == "dark") || (cookie == "light")
+        return cookie
+    else 
+        cookie = "light"
+        return cookie
 
+theme = (state = defaultTheme(), action) ->
+    if state == null
+        state =  defaultTheme()
+    if action.type == THEME_SWITCH
+        return action.value
+    else
+        return state
 
 export default rootReducer =
     combineReducers {
@@ -63,6 +81,6 @@ export default rootReducer =
         dataPromises,
         unknownWarningShown,
         unpaidWarningShown,
-        notifications,
-        clientCookie
+        theme,
+        notifications
     }

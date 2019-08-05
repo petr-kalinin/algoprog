@@ -2,6 +2,7 @@ React = require('react')
 FontAwesome = require('react-fontawesome')
 moment = require('moment')
 
+import { connect } from 'react-redux'
 import Row from 'react-bootstrap/lib/Row'
 import Col from 'react-bootstrap/lib/Col'
 import Grid from 'react-bootstrap/lib/Grid'
@@ -9,7 +10,6 @@ import Breadcrumb from 'react-bootstrap/lib/Breadcrumb'
 import Navbar from 'react-bootstrap/lib/Navbar'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
-
 
 import { Helmet } from "react-helmet"
 
@@ -24,6 +24,8 @@ import TopPanel from './TopPanel'
 import isPaid from '../lib/isPaid'
 
 import styles from './Sceleton.css'
+
+import Cookies from 'universal-cookie'
 
 SIZES = ["xs", "sm", "md", "lg"]
 DEFAULT_PATH = [{_id: "main", title: "/"}]
@@ -88,7 +90,7 @@ paidTillOptions =
 PaidTillConnected = ConnectedComponent(PaidTill, paidTillOptions)
 
 BottomPanel = (props) ->
-    <div className={styles.footer}>
+    <div className={ if props.theme == "light" then styles.footer else styles.footer_dark}>
         <Grid fluid>
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8}>
@@ -145,6 +147,19 @@ getSizes = (props) ->
             selfSize[size] = 12
 
     return {treeSize, newsSize, selfSize}
+            
+ThemeCookies = (props) ->
+    cookies =  new Cookies
+    cookies.set('Theme', props.theme)
+    cookie = cookies.get('Theme')
+    return null
+
+mapStateToProps = (state) ->
+    return
+        theme: state.theme
+        
+BottomPanel = connect(mapStateToProps)(BottomPanel)
+ThemeCookies = connect(mapStateToProps)(ThemeCookies)
 
 export default class Sceleton extends React.Component
     constructor: (props) ->
@@ -187,5 +202,6 @@ export default class Sceleton extends React.Component
                     </Row>
                 </Grid>
             </div>
+            <ThemeCookies />
             <BottomPanel myUser={@props.myUser} />
         </div>
