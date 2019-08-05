@@ -94,6 +94,6 @@ export default SubmitListTable = (props) ->
         {
         if props.submits?[0]
             infProblem = props.submits[0].problem.substr(1)
-            <a href={"https://informatics.mccme.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{props.submits[0].user}"} target="_blank">Попытки на информатикс</a>
+            <a href={"https://informatics.msk.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{props.submits[0].user}"} target="_blank">Попытки на информатикс</a>
         }
     </div>

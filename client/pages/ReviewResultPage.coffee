@@ -18,10 +18,11 @@ class ReviewResultPage extends React.Component
             showNews: "hide",
             showTree: "hide"
         }
-        `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data} me={this.props.me}/></Sceleton>`
+        `<Sceleton {...sceletonProps}><ReviewResult result={this.props.data} me={this.props.me} syncHandleDone={this.props.handleReload} /></Sceleton>`
 
 options =
     urls: (props) ->
         data: "result/#{props.match.params.id}"
+    timeout: 0
 
 export default ConnectedComponent(ReviewResultPage, options)
