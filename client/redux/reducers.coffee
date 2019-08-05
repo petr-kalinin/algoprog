@@ -77,7 +77,6 @@ theme = (state = defaultTheme(), action) ->
 
 clientCookie = (state = null, action) -> state
 
-
 export default rootReducer =
     combineReducers {
         data,
