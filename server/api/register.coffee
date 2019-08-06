@@ -11,7 +11,7 @@ UNKNOWN_GROUP = '7647'
 addUserToUnknownGroup = (uid) ->
     adminUser = await InformaticsUser.findAdmin()
 
-    href = "https://informatics.mccme.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
+    href = "https://informatics.msk.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
     body = 'addParam={"id":"' + uid + '"}&group_id=&session_sid='
     await adminUser.download(href, {
         method: 'POST',
@@ -33,6 +33,7 @@ export default register = (req, res, next) ->
         newUser = new User(
             _id: informaticsData.id,
             name: informaticsData.name,
+            graduateYear: informaticsData.graduateYear,
             userList: "unknown",
         )
         if cfLogin

@@ -56,6 +56,7 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
+
  defaultTheme = () ->
     cookies = new Cookies
     cookie = cookies.get('Theme')
@@ -75,6 +76,8 @@ theme = (state = defaultTheme(), action) ->
     else
         return state
 
+clientCookie = (state = null, action) -> state
+
 export default rootReducer =
     combineReducers {
         data,
@@ -83,4 +86,5 @@ export default rootReducer =
         unpaidWarningShown,
         theme,
         notifications
+        clientCookie
     }

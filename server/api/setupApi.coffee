@@ -154,7 +154,7 @@ export default setupApi = (app) ->
         else
             price = +price
         user = await User.findById(req.params.id)
-        await user.setgraduateYear req.body.graduateYear
+        await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         userPrivate = await UserPrivate.findById(req.params.id)
@@ -389,7 +389,7 @@ export default setupApi = (app) ->
 
         runForUser = (user) ->
             await groups.moveUserToGroup(adminUser, user._id, "unknown")
-            #await user.setUserList("unknown")
+            await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
         users = await User.findAll()
