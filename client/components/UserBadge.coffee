@@ -134,7 +134,7 @@ export default class UserBadge extends React.Component
                     <form className={styles.form} onSubmit={@handleSubmit}>
                         <div>
                             Год выпуска: <input
-                                type="text"                      
+                                type="text"
                                 name="newgraduateYear"
                                 value={@state.graduateYear}
                                 size="3"

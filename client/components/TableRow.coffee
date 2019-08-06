@@ -6,8 +6,7 @@ import globalStyles from './global.css'
 import userTableHeader from './UserTableHeader'
 
 import addTotal from '../lib/addTotal'
-
-import { connect } from 'react-redux'
+import withTheme from '../lib/withTheme'
 
 ProblemResult = (props) ->
     r = props.result
@@ -140,8 +139,4 @@ export default TableRow = (props) ->
             <td className={globalStyles.border} />
         </tr>
 
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-Theme = connect(mapStateToProps)(ProblemResult)
+Theme = withTheme(ProblemResult)

@@ -4,9 +4,9 @@ import globalStyles from './global.css'
 
 import userTableHeader from './UserTableHeader'
 
-import {startDayForWeeks, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
+import withTheme from '../lib/withTheme'
 
-import { connect } from 'react-redux'
+import {startDayForWeeks, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
 
 weekSet = (userList) ->
     thisStart = new Date(startDayForWeeks["" + userList])
@@ -74,11 +74,9 @@ SolvedByWeekRow = (props) ->
                 if data?.solved and w of data.solved
                     text = data.solved[w]
                     if props.theme == "light"
-                        style =
-                            backgroundColor: bgColor(data.solved[w])
+                        style = backgroundColor: bgColor(data.solved[w])
                     else  
-                        style =
-                            backgroundColor: bgColorDark(data.solved[w])
+                        style = backgroundColor: bgColorDark(data.solved[w])
                 else
                     text = "0"
                     style =
@@ -93,6 +91,8 @@ SolvedByWeekRow = (props) ->
         <td className={globalStyles.border} />
     </tr>
 
+SolvedByWeekRowWithTheme = withTheme(SolvedByWeekRow)
+
 export default SolvedByWeek = (props) ->
     if not props.users?.length
         return <table className={globalStyles.mainTable}/>
@@ -105,16 +105,10 @@ export default SolvedByWeek = (props) ->
                 {
                 res = []
                 a = (el) -> res.push(el)
-                a <Theme header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
+                a <SolvedByWeekRowWithTheme header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
                 for user in props.users
-                    a <Theme details={props.details} user={user} weeks={weeks} key={user._id}/>
+                    a <SolvedByWeekRowWithTheme details={props.details} user={user} weeks={weeks} key={user._id}/>
                 res}
             </tbody>
         </table>
     </div>
-
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-Theme = connect(mapStateToProps)(SolvedByWeekRow)

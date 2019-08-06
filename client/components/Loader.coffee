@@ -1,20 +1,15 @@
 React = require('react')
-import { connect } from 'react-redux'
+import withTheme from '../lib/withTheme'
 import { CometSpinLoader } from 'react-css-loaders';
 
 Loader = (props) ->
     return if props.theme == "light"
         <div>
-            <CometSpinLoader/>
+            <CometSpinLoader {...props}/>
         </div>
     else 
         <div>
-            <CometSpinLoader color={'#F8F6D9'}/>
+            <CometSpinLoader {...props} color={'#F8F6D9'}/>
         </div>
 
-
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-export default Loader = connect(mapStateToProps)(Loader)
+export default withTheme(Loader)

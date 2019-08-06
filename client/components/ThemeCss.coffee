@@ -1,7 +1,11 @@
 React = require('react')
-import { connect } from 'react-redux'
+import Cookies from 'universal-cookie'
+import withTheme from '../lib/withTheme'
 
-ThemeSelector = (props) ->
+ThemeCss = (props) ->
+    cookies =  new Cookies
+    cookies.set('Theme', props.theme)
+    cookie = cookies.get('Theme')
     return if props.theme == "light"
                <link rel="stylesheet" href="/bootstrap.min.css" />
            else 
@@ -11,8 +15,4 @@ ThemeSelector = (props) ->
                    <link rel="stylesheet" href="/darklight.css" />
                 </div>
 
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-export default Theme = connect(mapStateToProps)(ThemeSelector)
+export default withTheme(ThemeCss)

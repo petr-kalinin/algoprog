@@ -1,12 +1,12 @@
 React = require('react')
 
 import { Helmet } from "react-helmet";
-import { connect } from 'react-redux'
 
 import TableRow from './TableRow'
 
 import globalStyles from './global.css'
 import styles from './Table.css'
+import withTheme from '../lib/withTheme'
 
 getHeader = (results) ->
     if not results
@@ -60,7 +60,7 @@ export default Table = (props) ->
     levels = (r._id for r in header).join(", ")
 
     <div>
-        {props.headerText && <Theme levels={levels} /> }
+        {props.headerText && <TableTheme levels={levels} /> }
         <table className={globalStyles.mainTable}>
             <tbody>
                 <TableRow details={props.details} header={true} results={header}/>
@@ -74,8 +74,4 @@ export default Table = (props) ->
         </table>
     </div>
 
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-Theme = connect(mapStateToProps)(Text)
+TableTheme = withTheme(Text)

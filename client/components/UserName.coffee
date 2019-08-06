@@ -3,7 +3,7 @@ tinycolor = require("tinycolor2")
 
 import styles from './UserName.css'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import withTheme from '../lib/withTheme'
 
 import {LEVEL_RATING_EXP, ACTIVITY_THRESHOLD} from '../../server/calculations/ratingConstants'
 MAX_ACTIVITY = 7
@@ -30,8 +30,4 @@ UserName = (props) ->
         </span>
     </Link>
 
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-export default connect(mapStateToProps)(UserName)
+export default withTheme(UserName)

@@ -3,7 +3,6 @@ React = require('react')
 import { Link } from 'react-router-dom'
 import { Nav, NavItem } from 'react-bootstrap'
 import { withRouter } from 'react-router'
-import { connect } from 'react-redux'
 
 FontAwesome = require('react-fontawesome')
 
@@ -12,6 +11,7 @@ import styles from "./Tree.css"
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyResults from '../lib/withMyResults'
 import requiredProblemsByLevel from '../lib/requiredProblemsByLevel'
+import withTheme from '../lib/withTheme'
 
 MAX_GLOBAL_DEPTH = 0
 MAX_LOCAL_DEPTH = 0
@@ -106,7 +106,8 @@ recTree = (tree, id, indent, theme) ->
     a = (el) -> res.push(el)
     for m in tree.materials
         if m.needed and m.title
-            a <NavItem key={m._id} active={m._id==id} className={(if indent>=2 then "small" else "") + " " + (if m._id!=id then if theme == "light" then styles.navitem else if theme == "dark" then styles.navitemdark else "") + " " + styles.levelNav} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
+            className=(if indent>=2 then "small" else "") + " " + (if m._id!=id then if theme == "light" then styles.navitem else if theme == "dark" then styles.navitemDark else "") + " " + styles.levelNav
+            a <NavItem key={m._id} active={m._id==id} className={className} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
                 <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
                     <div className={styles.levelName}>
                         {m.title}
@@ -132,10 +133,4 @@ options =
     urls: ->
         tree: "material/tree"
 
-ConnectedTree = ConnectedComponent(withRouter(Tree), options)
-
-mapStateToProps = (state) ->
-    return
-        theme: state.theme
-
-export default connect(mapStateToProps)(ConnectedTree)
+export default ConnectedComponent(withTheme(withRouter(Tree)), options)

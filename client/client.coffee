@@ -16,7 +16,7 @@ import ScrollToTop from './components/ScrollToTop'
 import YaMetrikaHit from './components/YaMetrikaHit'
 import DefaultHelmet from './components/DefaultHelmet'
 import ConnectedNotifications from './components/ConnectedNotifications'
-import Theme from './components/ThemeSelector'
+import Theme from './components/ThemeCss'
 
 preloadedState = window.__PRELOADED_STATE__
 delete window.__PRELOADED_STATE__

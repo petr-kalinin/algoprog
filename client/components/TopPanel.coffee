@@ -146,7 +146,7 @@ class TopPanel extends React.Component
                                 <span className={styles.separator}/>
                                 <span title="Уровень">{@props.myUser.level.current}</span>
                                 <span className={styles.separator}/>
-                                <span title="Рейтинг" style={color: color(@props.myUser,@props.theme)}>{@props.myUser.rating}</span>
+                                <span title="Рейтинг" style={color: color(@props.myUser, @props.theme)}>{@props.myUser.rating}</span>
                                 {" / "}
                                 <span title="Активность">{@props.myUser.activity.toFixed(1)}</span>
                                 <span className={styles.separator}/>

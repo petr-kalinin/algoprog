@@ -3,7 +3,7 @@ import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, THEME_SWITCH } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, SWITCH_THEME } from './actions'
 
 import { equalUrl } from './getters'
 
@@ -61,16 +61,15 @@ unpaidWarningShown = (state = false, action) ->
     cookie = cookies.get('Theme')
     if not window? 
         return null
-    if (cookie == "dark") || (cookie == "light")
+    if cookie
         return cookie
     else 
-        cookie = "light"
-        return cookie
+        return "light"
 
 theme = (state = defaultTheme(), action) ->
     if state == null
-        state =  defaultTheme()
-    if action.type == THEME_SWITCH
+        state = defaultTheme()
+    if action.type == SWITCH_THEME
         return action.value
     else
         return state
