@@ -74,11 +74,8 @@ theme = (state = defaultTheme(), action) ->
         return action.value
     else
         return state
-<<<<<<< HEAD
 
 clientCookie = (state = null, action) -> state
-=======
->>>>>>> temp_branch
 
 export default rootReducer =
     combineReducers {
@@ -87,11 +84,6 @@ export default rootReducer =
         unknownWarningShown,
         unpaidWarningShown,
         theme,
-<<<<<<< HEAD
         notifications,
         clientCookie
     }
-=======
-        notifications
-    }
->>>>>>> temp_branch
