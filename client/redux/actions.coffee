@@ -1,4 +1,4 @@
-import {callApiWithBody} from '../lib/callApi'
+import callApi from '../lib/callApi'
 
 import {getRawData} from './getters'
 
@@ -12,7 +12,7 @@ export SET_UNKNOWN_WARNING_SHOWN = 'SET_UNKNOWN_WARNING_SHOWN'
 export SET_UNPAID_WARNING_SHOWN = 'SET_UNPAID_WARNING_SHOWN'
 export THEME_SWITCH = 'THEME_SWITCH'
 
-export updateData = (url, minAgeToUpdate, cookies) ->
+export updateData = (url, minAgeToUpdate) ->
     (dispatch, getState) ->
         existingData = getRawData(getState(), url)
         existingDataTime = existingData?.updateTime
@@ -24,7 +24,7 @@ export updateData = (url, minAgeToUpdate, cookies) ->
                 return
         dispatch
             type: GET_DATA
-            payload: callApiWithBody url, 'GET', if cookies then {"Cookie": cookies} else {}
+            payload: callApi url
             meta:
                 url: url
 

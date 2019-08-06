@@ -12,7 +12,7 @@ News = (props) ->
             {
             res = []
             a = (el) -> res.push(el)
-            for m, i in props.news?.materials || []
+            for m, i in props.news.materials
                 a <Panel key={i}>
                     <Panel.Heading>
                         <Panel.Title toggle>{m.header}</Panel.Title>

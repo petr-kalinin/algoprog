@@ -15,7 +15,6 @@ import ConnectedNotifications from '../../client/components/ConnectedNotificatio
 import createStore from '../../client/redux/store'
 import awaitAll from '../../client/lib/awaitAll'
 
-import User from '../models/user'
 import logger from '../log'
 
 renderFullPage = (html, data, helmet) ->
@@ -87,23 +86,11 @@ renderFullPage = (html, data, helmet) ->
         </html>'
 
 export default renderOnServer = (req, res, next) =>
-    try
-        initialState = 
-            data: [
-                {data: req.user
-                success: true
-                updateTime: new Date()
-                url: "me"},
-                {data: await User.findById(req.user?.userKey())
-                success: true
-                updateTime: new Date()
-                url: "myUser"},
-            ],
-            clientCookie: req.headers.cookie
-        store = createStore(initialState)
+    component = undefined
+    foundMatch = undefined
+    store = createStore()
 
-        component = undefined
-        foundMatch = undefined
+    try
         Routes.some((route) ->
             match = matchPath(req.path, route)
             if (match)
