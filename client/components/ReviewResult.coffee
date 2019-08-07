@@ -69,11 +69,16 @@ class ReviewResult extends React.Component
         @toggleBestSubmits = @toggleBestSubmits.bind this
 
     setResult: (result) ->
-        callApi "setOutcome/#{@state.currentSubmit._id}", {
+        @syncSetOutcome(result)
+        @props.handleDone()
+
+    syncSetOutcome: (result) ->
+        await callApi "setOutcome/#{@state.currentSubmit._id}", {
             result,
             comment: @state.commentText
         }
-        @props.handleDone()
+        @props.syncHandleDone()
+        @props.handleReload()
 
     componentDidUpdate: (prevProps, prevState) ->
         if prevProps.result._id != @props.result._id
@@ -278,5 +283,6 @@ options =
         user: "user/#{props.result.fullUser._id}"
         bestSubmits: "bestSubmits/#{props.result.fullTable._id}"
         me: "me"
+    timeout: 0
 
 export default ConnectedComponent(ReviewResult, options)

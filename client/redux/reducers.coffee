@@ -74,6 +74,8 @@ theme = (state = defaultTheme(), action) ->
     else
         return state
 
+clientCookie = (state = null, action) -> state
+
 export default rootReducer =
     combineReducers {
         data,
@@ -81,5 +83,6 @@ export default rootReducer =
         unknownWarningShown,
         unpaidWarningShown,
         theme,
-        notifications
+        notifications,
+        clientCookie
     }

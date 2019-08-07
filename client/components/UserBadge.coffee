@@ -51,7 +51,7 @@ export default class UserBadge extends React.Component
         super(props)
         @state = @startState(props)
         @handleChange = @handleChange.bind(this)
-        @handlegraduateYearChange = @handlegraduateYearChange.bind(this)
+        @handleGraduateYearChange = @handleGraduateYearChange.bind(this)
         @handleBlChange = @handleBlChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
@@ -78,7 +78,7 @@ export default class UserBadge extends React.Component
         newState[field] = event.target.value
         @setState(newState)
 
-    handlegraduateYearChange: (event) ->
+    handleGraduateYearChange: (event) ->
         @handleChange("graduateYear", event)
 
     handleBlChange: (event) ->
@@ -110,12 +110,13 @@ export default class UserBadge extends React.Component
             @handleSubmit(e)
 
     render: () ->
+        cls = getClassStartingFromJuly(@props.user.graduateYear)
         <div>
             <h1>
                 <UserName user={@props.user}/>
             </h1>
             <blockquote>
-                <div>Класс: {getClassStartingFromJuly(@props.user.graduateYear)}</div>
+                {cls && <div>Класс: {cls}</div>}
                 <div>Уровень: {@props.user.level.current}</div>
                 { @props.me?.admin &&
                     <div>
@@ -137,8 +138,8 @@ export default class UserBadge extends React.Component
                                 type="text"
                                 name="newgraduateYear"
                                 value={@state.graduateYear}
-                                size="3"
-                                onChange={@handlegraduateYearChange}
+                                size="4"
+                                onChange={@handleGraduateYearChange}
                                 onKeyPress={@handleKeyPressed} />
                         </div>
                         <div>
