@@ -15,3 +15,4 @@ export default LANGUAGES = [
     [29, "FreeBASIC", "bas"]
     [68, "GNU C++ / sanitizer"]
 ]
+

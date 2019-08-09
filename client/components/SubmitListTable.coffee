@@ -10,7 +10,23 @@ import outcomeToText from '../lib/outcomeToText'
 
 import styles from './SubmitListTable.css'
 
-import {ABBREVIATED_LANGUAGES} from '../lib/languages'
+LANGUAGE_ABBREVIATED = 
+    "Python 3" : "Py3"
+    "Free Pascal 3" : "FreePas"
+    "PascalABC 3" : "PasABC"
+    "GNU C++" : "C++"
+    "GNU C" : "C"
+    "Borland Delphi" : "Delphi"
+    "Java JDK" : "Java"
+    "PHP": "PHP"
+    "Python 2" : "Py2"
+    "Perl" : "Perl"
+    "Mono C#" : "C#"
+    "Ruby" : "Ruby"
+    "Haskell GHC" : "Haskell"
+    "FreeBASIC" : "FreeBASIC"
+    "GNU C++ / sanitizer" : "C++/sanitizer"
+
 
 maxVal = (submit, field) ->
     res = -1
@@ -45,28 +61,11 @@ export default SubmitListTable = (props) ->
                     time = maxVal(submit, "time")
                     mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
                     mem = mem.toFixed(2)
-                    languageabbreviate = 
-                        "Python 3" : "Py3"
-                        "Free Pascal 3" : "FreePas"
-                        "PascalABC 3" : "PasABC"
-                        "GNU C++" : "C++"
-                        "GNU C" : "C"
-                        "Borland Delphi" : "Delphi"
-                        "Java JDK" : "Java"
-                        "PHP": "PHP"
-                        "Python 2" : "Py2"
-                        "Perl" : "Perl"
-                        "Mono C#" : "C#"
-                        "Ruby" : "Ruby"
-                        "Haskell GHC" : "Haskell"
-                        "FreeBASIC" : "FreeBASIC"
-                        "GNU C++ / sanitizer" : "C++/sanitizer"
-
                     <tr key={submit._id} className={cl}>
                         <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>
-                            <div className='visible-xs visible-sm'>{languageabbreviate[submit.language]}</div>
+                            <div className='visible-xs visible-sm'>{LANGUAGE_ABBREVIATED[submit.language]}</div>
                             <div className='hidden-xs hidden-sm'>{submit.language}</div>
                         </td>
                         <td>{if time? then time / 1000 else ""}</td>
