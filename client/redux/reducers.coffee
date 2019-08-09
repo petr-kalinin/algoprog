@@ -54,31 +54,8 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
-<<<<<<< HEAD
 clientCookie = (state = null, action) -> state
 
-=======
- defaultTheme = () ->
-    cookies = new Cookies
-    cookie = cookies.get('Theme')
-    if not window? 
-        return null
-    if (cookie == "dark") || (cookie == "light")
-        return cookie
-    else 
-        cookie = "light"
-        return cookie
-
-theme = (state = defaultTheme(), action) ->
-    if state == null
-        state =  defaultTheme()
-    if action.type == THEME_SWITCH
-        return action.value
-    else
-        return state
-
-clientCookie = (state = null, action) -> state
->>>>>>> 07ff30b... Fixed files
 
 export default rootReducer =
     combineReducers {
@@ -86,10 +63,6 @@ export default rootReducer =
         dataPromises,
         unknownWarningShown,
         unpaidWarningShown,
-<<<<<<< HEAD
-=======
-        theme,
->>>>>>> 07ff30b... Fixed files
         notifications,
         clientCookie
     }
