@@ -1,4 +1,3 @@
-
 React = require('react')
 FontAwesome = require('react-fontawesome')
 

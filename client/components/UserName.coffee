@@ -9,7 +9,7 @@ import {LEVEL_RATING_EXP, ACTIVITY_THRESHOLD} from '../../server/calculations/ra
 MAX_ACTIVITY = 7
 MAX_RATING = 10 * (Math.pow(LEVEL_RATING_EXP, 11) - 1) / (LEVEL_RATING_EXP - 1)
 
-export color = (user,theme) ->
+export color = (user, theme) ->
     activity = Math.min(user.activity + 1, MAX_ACTIVITY + 1)
     rating = Math.min(user.rating + 1, MAX_RATING + 1)
     h = 11/12 * (1 - Math.log(rating) / Math.log(MAX_RATING + 1))

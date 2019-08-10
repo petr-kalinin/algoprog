@@ -12,7 +12,7 @@ import callApi from '../lib/callApi'
 import CfStatus from './CfStatus'
 import UserName from './UserName'
 
-import styles from './UserBadge.css' 
+import styles from './UserBadge.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
 

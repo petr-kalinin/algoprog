@@ -106,7 +106,14 @@ recTree = (tree, id, indent, theme) ->
     a = (el) -> res.push(el)
     for m in tree.materials
         if m.needed and m.title
-            className=(if indent>=2 then "small" else "") + " " + (if m._id!=id then if theme == "light" then styles.navitem else if theme == "dark" then styles.navitemDark else "") + " " + styles.levelNav
+            className = styles.levelNav
+            if indent >= 2
+                className += " small"
+            if m._id != id
+                if theme == "light"
+                    className += " " + styles.navitem
+                else
+                    className += " " + styles.navitemDark
             a <NavItem key={m._id} active={m._id==id} className={className} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
                 <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
                     <div className={styles.levelName}>

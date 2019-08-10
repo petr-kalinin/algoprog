@@ -4,8 +4,7 @@ import withTheme from '../lib/withTheme'
 
 ThemeCss = (props) ->
     cookies =  new Cookies
-    cookies.set('Theme', props.theme)
-    cookie = cookies.get('Theme')
+    cookies.set('theme', props.theme)
     return if props.theme == "light"
                <link rel="stylesheet" href="/bootstrap.min.css" />
            else 

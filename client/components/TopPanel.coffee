@@ -4,6 +4,7 @@ moment = require('moment')
 deepEqual = require('deep-equal')
 
 import { connect } from 'react-redux'
+
 import { LinkContainer } from 'react-router-bootstrap'
 import { withRouter } from "react-router"
 

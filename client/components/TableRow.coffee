@@ -96,11 +96,13 @@ TotalResult = (props) ->
             }
         </td>
 
+ResultTheme = withTheme(ProblemResult)
+
 Result = (props) ->
     if props.result.total > 1
         `<TotalResult {...props}/>`
     else
-        `<Theme {...props}/>`
+        `<ResultTheme {...props}/>`
 
 Attempts = (props) ->
     return <td className={globalStyles.mainTable_td}>
@@ -138,5 +140,3 @@ export default TableRow = (props) ->
             <Attempts header={props.header} result={total}/>
             <td className={globalStyles.border} />
         </tr>
-
-Theme = withTheme(ProblemResult)

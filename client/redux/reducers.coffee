@@ -58,7 +58,7 @@ unpaidWarningShown = (state = false, action) ->
 
  defaultTheme = () ->
     cookies = new Cookies
-    cookie = cookies.get('Theme')
+    cookie = cookies.get('theme')
     if not window? 
         return null
     if cookie

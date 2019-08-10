@@ -51,6 +51,7 @@ Text = (props) ->
             <p>Имена школьников — ссылки на странички с результатами каждого конкретного школьника</p>
         </div>
 
+Text = withTheme(Text)
 
 export default Table = (props) ->
     if not props.data?.length
@@ -60,7 +61,7 @@ export default Table = (props) ->
     levels = (r._id for r in header).join(", ")
 
     <div>
-        {props.headerText && <TableTheme levels={levels} /> }
+        {props.headerText && <Text levels={levels} /> }
         <table className={globalStyles.mainTable}>
             <tbody>
                 <TableRow details={props.details} header={true} results={header}/>
@@ -73,5 +74,3 @@ export default Table = (props) ->
             </tbody>
         </table>
     </div>
-
-TableTheme = withTheme(Text)
