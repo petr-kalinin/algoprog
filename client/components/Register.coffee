@@ -30,6 +30,9 @@ class Register extends React.Component
             password2: ""
             informaticsUsername: ""
             informaticsPassword: ""
+            promo: ""
+            contact: ""
+            whereFrom: ""
             aboutme: ""
             cfLogin: ""
         @setField = @setField.bind(this)
@@ -76,10 +79,13 @@ class Register extends React.Component
         @setState(newState)
         try
             data = await callApi "register", {
-                username: @state.username,
-                password: @state.password,
-                informaticsUsername: @state.informaticsUsername,
+                username: @state.username
+                password: @state.password
+                informaticsUsername: @state.informaticsUsername
                 informaticsPassword: @state.informaticsPassword
+                promo: @state.promo
+                whereFrom: @state.whereFrom
+                contact: @state.contact
                 aboutme: @state.aboutme
             }
             if data.registered.success
@@ -240,7 +246,41 @@ class Register extends React.Component
                 </div>
                 }
 
-                <h2>Аккаунт на codeforces</h2>
+                <h2>О себе (все поля ниже не обязательны)</h2>
+                <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
+                а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
+                можете не писать ничего.</p>
+
+                <FormGroup controlId="aboutme">
+                    <FieldGroup
+                        id="aboutme"
+                        label=""
+                        componentClass="textarea"
+                        setField={@setField}
+                        state={@state}/>
+                </FormGroup>
+
+                <p>Откуда вы узнали про курс?</p>
+
+                <FormGroup controlId="whereFrom">
+                    <FieldGroup
+                        id="whereFrom"
+                        label=""
+                        componentClass="input"
+                        setField={@setField}
+                        state={@state}/>
+                </FormGroup>
+
+                <p>Укажите какие-нибудь контактные данные (email, профиль во вКонтакте и т.п., не обязательно)</p>
+
+                <FormGroup controlId="contact">
+                    <FieldGroup
+                        id="contact"
+                        label=""
+                        componentClass="input"
+                        setField={@setField}
+                        state={@state}/>
+                </FormGroup>
 
                 <p>Укажите свой логин на codeforces, если он у вас есть. Если вы там не зарегистрированы — не страшно,
                 просто не заполняйте поле ниже.</p>
@@ -251,16 +291,13 @@ class Register extends React.Component
                     setField={@setField}
                     state={@state}/>
 
-                <h2>О себе</h2>
-                <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
-                а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
-                можете не писать ничего.</p>
+                <p>Промокод</p>
 
-                <FormGroup controlId="aboutme">
+                <FormGroup controlId="promo">
                     <FieldGroup
-                        id="aboutme"
+                        id="promo"
                         label=""
-                        componentClass="textarea"
+                        componentClass="input"
                         setField={@setField}
                         state={@state}/>
                 </FormGroup>

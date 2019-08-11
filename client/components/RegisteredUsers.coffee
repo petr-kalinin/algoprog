@@ -24,6 +24,15 @@ export default RegisteredUsers = (props) ->
                         {user.aboutme}
                     </td>
                     <td>
+                        {user.promo}
+                    </td>
+                    <td>
+                        {user.contact}
+                    </td>
+                    <td>
+                        {user.whereFrom}
+                    </td>
+                    <td>
                         <a href={"https://informatics.msk.ru/user/view.php?id=#{user.informaticsId}&course=1"}>{"#"}</a>
                     </td>
                 </tr>
