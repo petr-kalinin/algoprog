@@ -1,4 +1,4 @@
-import {callApiWithBody} from '../lib/callApi'
+import callApi, {callApiWithBody} from '../lib/callApi'
 
 import {getRawData} from './getters'
 

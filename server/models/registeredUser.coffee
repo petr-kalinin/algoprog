@@ -6,6 +6,9 @@ registeredUserSchema = new mongoose.Schema
     informaticsUsername: String
     informaticsPassword: String
     informaticsId: Number
+    promo: String
+    contact: String
+    whereFrom: String
     aboutme: String
 
 registeredUserSchema.statics.findAdmin = (list) ->
