@@ -74,7 +74,8 @@ export default dashboard = () ->
     promises = []
     for key, query of queries
         query["total"] = 1
-        query["userList"] = {$ne: "unknown"}
+        if key != "ps"
+            query["userList"] = {$ne: "unknown"}
         promises.push(runDashboardQuery(key, query, result))
     promises.push(runCfQuery(result))
     await awaitAll(promises)
