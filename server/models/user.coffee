@@ -38,6 +38,7 @@ usersSchema = new mongoose.Schema
         activity: Number,
         progress: Number,
     graduateYear: Number
+    achieves: [String]
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -94,6 +95,11 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     await @update({$set: {"cf.login": cfLogin}})
     @cf.login = cfLogin
     @updateCfRating()
+
+usersSchema.methods.setAchieves = (achieves) ->
+    logger.info "setting achieves login ", @_id, achieves
+    await @update({$set: {"achieves": achieves}})
+    @achieves = achieves
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
