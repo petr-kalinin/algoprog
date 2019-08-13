@@ -61,7 +61,7 @@ export default ConnectedComponent = (Component, options) ->
                 delete componentProps.hasData
                 delete componentProps.updateData
                 delete componentProps.saveDataPromises
-                delete componentProps.clientCookies
+                delete componentProps.clientCookie
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
                 return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
