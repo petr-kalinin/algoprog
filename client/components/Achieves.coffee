@@ -18,8 +18,15 @@ export Achieves = (props) ->
     if not props.achieves
         return null
     achieves = props.achieves.map(expandAchieve)
+    className = styles.achieve
+    if props.big
+        className += " " + styles.big
+    else
+        achieves.sort((a, b) -> b.score - a.score)
+        achieves = achieves[..2]
     <div>
-        {achieves.map((achieve) -> <span title={achieve.title} className={styles.achieve} style={{background: achieve.color}} key={achieve.key}>{achieve.text}</span>)}
+        {achieves.map((achieve) -> <div title={achieve.title} className={className} style={{background: achieve.color}} key={achieve.key}>{achieve.text}</div>)}
     </div>
 
-export BigAchieves = Achieves
+export BigAchieves = (props) ->
+    `<Achieves {...props} big={true}/>`

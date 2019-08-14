@@ -4,6 +4,8 @@ tinycolor = require("tinycolor2")
 import styles from './UserName.css'
 import { Link } from 'react-router-dom'
 
+import {Achieves} from './Achieves'
+
 import {LEVEL_RATING_EXP, ACTIVITY_THRESHOLD} from '../../server/calculations/ratingConstants'
 MAX_ACTIVITY = 7
 MAX_RATING = 10 * (Math.pow(LEVEL_RATING_EXP, 11) - 1) / (LEVEL_RATING_EXP - 1)
@@ -19,8 +21,11 @@ export color = (user) ->
 
 
 export default UserName = (props) ->
-    <Link to={"/user/" + props.user._id}>
-        <span className={styles.name} style={ {color:  color(props.user)} }>
-            {props.user.name}
-        </span>
-    </Link>
+    <span>
+        <Link to={"/user/" + props.user._id}>
+            <span className={styles.name} style={ {color:  color(props.user)} }>
+                {props.user.name}
+            </span>
+        </Link>
+        {props.noachieves || <Achieves achieves={props.user.achieves} />}
+    </span>

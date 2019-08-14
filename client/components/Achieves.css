@@ -1,3 +1,14 @@
 .achieve {
+    display: inline-block;
+    font-size: 70%;
+    margin: 2px;
+    padding: 2px;
+    border-radius: 4px;
+}
 
+.achieve.big {
+    font-size: 200%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
 }

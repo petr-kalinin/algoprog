@@ -120,7 +120,7 @@ export default class UserBadge extends React.Component
         cls = getClassStartingFromJuly(@props.user.graduateYear)
         <div>
             <h1>
-                <UserName user={@props.user}/>
+                <UserName user={@props.user} noachieves={true}/>
             </h1>
             <BigAchieves achieves={@props.user.achieves} />
             <blockquote>
