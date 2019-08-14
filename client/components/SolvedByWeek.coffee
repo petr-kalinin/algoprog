@@ -73,10 +73,10 @@ SolvedByWeekRow = (props) ->
                 text = ""
                 if data?.solved and w of data.solved
                     text = data.solved[w]
-                    if props.theme == "light"
-                        style = backgroundColor: bgColor(data.solved[w])
-                    else  
+                    if props.theme == "dark"
                         style = backgroundColor: bgColorDark(data.solved[w])
+                    else
+                        style = backgroundColor: bgColor(data.solved[w])
                 else
                     text = "0"
                     style =

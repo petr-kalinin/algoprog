@@ -56,19 +56,7 @@ unpaidWarningShown = (state = false, action) ->
     else
         return state
 
- defaultTheme = () ->
-    cookies = new Cookies
-    cookie = cookies.get('theme')
-    if not window? 
-        return null
-    if cookie
-        return cookie
-    else 
-        return "light"
-
-theme = (state = defaultTheme(), action) ->
-    if state == null
-        state = defaultTheme()
+theme = (state = null , action) ->
     if action.type == SWITCH_THEME
         return action.value
     else

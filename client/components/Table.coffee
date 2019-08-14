@@ -41,9 +41,9 @@ Text = (props) ->
             </Helmet>
             <h1>Сводная таблица по уровням {props.levels}</h1>
             <p>Цвета:{" "}
-                <span className={ if props.theme == "light" then globalStyles.ac else globalStyles.darkac + " " + styles.example}>Зачтено/Принято</span>{" "}
+                <span className={ if props.theme == "dark" then globalStyles.darkac else globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
                 <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
-                <span className={ if props.theme == "light" then globalStyles.ok else globalStyles.darkok + " " + styles.example}>OK</span>{" "}
+                <span className={ if props.theme == "dark" then globalStyles.darkok else globalStyles.ok + " " + styles.example}>OK</span>{" "}
                 <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
             </p>
             <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>

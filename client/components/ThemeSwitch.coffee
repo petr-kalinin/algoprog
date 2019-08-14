@@ -7,16 +7,16 @@ import withTheme from '../lib/withTheme'
 import * as actions from '../redux/actions'
 
 export ThemeSwitch = (props) ->
-    return if props.theme == "light"
-                <span title="Темная тема">
-                    <Button onClick={()->props.switchTheme("dark")}>
-                        <FontAwesome name="moon-o"/>
-                    </Button>
-                </span>
-           else 
+    return if props.theme == "dark"
                 <span title="Светлая тема">
                     <Button onClick={()->props.switchTheme("light")}>
                             <FontAwesome name="sun-o"/>
+                    </Button>
+                </span>
+           else 
+                <span title="Темная тема">
+                    <Button onClick={()->props.switchTheme("dark")}>
+                        <FontAwesome name="moon-o"/>
                     </Button>
                 </span>
 

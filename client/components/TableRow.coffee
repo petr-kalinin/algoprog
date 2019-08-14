@@ -24,17 +24,17 @@ ProblemResult = (props) ->
         
     className =
         if r.solved > 0
-            if props.theme == "light"
-                "ac"
-            else 
+            if props.theme == "dark"
                 "darkac"
+            else 
+                "ac"
         else if r.ignored > 0
             "ig"
         else if r.ok > 0
-            if props.theme == "light"
-                "ok"
-            else 
+            if props.theme == "dark"
                 "darkok"
+            else 
+                "ok"
         else if r.ignored < 0
             "dq"
         else if r.attempts > 0

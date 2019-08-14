@@ -110,10 +110,10 @@ recTree = (tree, id, indent, theme) ->
             if indent >= 2
                 className += " small"
             if m._id != id
-                if theme == "light"
-                    className += " " + styles.navitem
-                else
+                if theme == "dark"
                     className += " " + styles.navitemDark
+                else
+                    className += " " + styles.navitem
             a <NavItem key={m._id} active={m._id==id} className={className} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
                 <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
                     <div className={styles.levelName}>

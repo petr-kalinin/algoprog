@@ -18,6 +18,10 @@ import awaitAll from '../../client/lib/awaitAll'
 import User from '../models/user'
 import logger from '../log'
 
+import ThemeCss from '../../client/components/ThemeCss'
+
+import Cookies from 'universal-cookie'
+
 renderFullPage = (html, data, helmet) ->
     return '
         <html>
@@ -86,6 +90,14 @@ renderFullPage = (html, data, helmet) ->
         </body>
         </html>'
 
+ defaultTheme = (ThemeCookie) ->
+    cookies = new Cookies(ThemeCookie)
+    cookie = cookies.get('theme')
+    if cookie
+        return cookie
+    else
+        return "light"
+
 export default renderOnServer = (req, res, next) =>
     try
         initialState = 
@@ -99,7 +111,8 @@ export default renderOnServer = (req, res, next) =>
                 updateTime: new Date()
                 url: "myUser"},
             ],
-            clientCookie: req.headers.cookie
+            clientCookie: req.headers.cookie,
+            theme: defaultTheme(req.headers.cookie)
         store = createStore(initialState)
 
         component = undefined
@@ -134,6 +147,7 @@ export default renderOnServer = (req, res, next) =>
                     <StaticRouter context={context}>
                         <div>
                             {element}
+                            <ThemeCss/>
                             <ConnectedNotifications/>
                         </div>
                     </StaticRouter>

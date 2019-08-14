@@ -88,7 +88,7 @@ paidTillOptions =
 PaidTillConnected = ConnectedComponent(PaidTill, paidTillOptions)
 
 BottomPanel = (props) ->
-    <div className={ if props.theme == "light" then styles.footer else styles.footer_dark}>
+    <div className={ if props.theme == "dark" then styles.footer_dark else styles.footer}>
         <Grid fluid>
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8}>
