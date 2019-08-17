@@ -62,7 +62,7 @@ export default class UserBadge extends React.Component
     startState: (props) ->
         return
             graduateYear: props.user.graduateYear || '',
-            baseLevel: props.user.level.base || '',
+            baseLevel: props.user.level.current || '',
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
             price: if props.user.price? then ''+props.user.price else ''
