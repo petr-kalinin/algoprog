@@ -15,7 +15,7 @@ import Problem from '../models/problem'
 import Table from '../models/table'
 import SubmitComment from '../models/SubmitComment'
 import RegisteredUser from '../models/registeredUser'
-import Material from '../models/Material'
+import Material, {isLevelAllowedForUser} from '../models/Material'
 import BlogPost from '../models/BlogPost'
 import Payment from '../models/Payment'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
@@ -183,7 +183,12 @@ export default setupApi = (app) ->
         res.json(await dashboard())
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
-        res.json(await table(req.params.userList, req.params.table))
+        id = req.user?.userKey()
+        user = await User.findById(id)
+        if not isLevelAllowedForUser(req.params.table, user) or user?.userList != req.params.userList
+            res.json({"error": "level"})
+        else
+            res.json(await table(req.params.userList, req.params.table))
 
     app.get '/api/fullUser/:id', wrap (req, res) ->
         id = req.params.id

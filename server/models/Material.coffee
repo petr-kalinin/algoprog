@@ -22,15 +22,19 @@ materialsSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a material"
 
-materialsSchema.methods.allowedForUser = (user) ->
-    if not @level
+export isLevelAllowedForUser = (level, user) ->
+    if not level
         return true
     if not user?.level?.current?
         return false
-    effectiveLevel = @level
-    if @level.startsWith("reg") or @level.startsWith("roi")
+    effectiveLevel = level
+    if level.startsWith("reg") or level.startsWith("roi")
         effectiveLevel = "2"
     return user.level.current >= effectiveLevel
+
+
+materialsSchema.methods.allowedForUser = (user) ->
+    return isLevelAllowedForUser(@level, user)
 
 
 Material = mongoose.model('Materials', materialsSchema);

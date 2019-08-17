@@ -1,4 +1,5 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
 
 import { Helmet } from "react-helmet";
 
@@ -52,6 +53,12 @@ Text = (props) ->
 
 
 export default Table = (props) ->
+    if props.data.error
+        return if props.data.error == 'level'
+            <h1><FontAwesome name="ban"/> У вас нет прав на просмотр этой таблицы</h1>
+        else
+            <h1><FontAwesome name="ban"/>Неизвестная ошибка</h1>
+
     if not props.data?.length
         return <table className={globalStyles.mainTable}/>
 
