@@ -431,11 +431,18 @@ class MaterialsDownloader
         activities = section.getElementsByClassName('activity')
         materials = []
 
+        level = -1
+
         for activity, i in activities
             parsed = @parseActivity(activity, i, id==0)
             materials.push(parsed)
         materials = await finalizeMaterialsList(materials)
         materials = [].concat.apply([], materials);  # flatten
+
+        for m in materials
+            thisLevel = getLevel(m.material)
+            if thisLevel
+                level = thisLevel
 
         split = @splitLevel(materials)
         materials = split.levels
@@ -453,8 +460,8 @@ class MaterialsDownloader
             @addMaterial(m)
 
         material = new Material
-            _id: id
-            order: id
+            _id: level
+            order: level
             type: "level"
             indent: 0
             title: title
