@@ -29,6 +29,7 @@ export default class Payment extends React.Component
         return false
 
     render: () ->
+        return null
         canSubmit = true
         if not @props.myUser?._id
             amount = 1500

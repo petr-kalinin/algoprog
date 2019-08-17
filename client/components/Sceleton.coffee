@@ -54,6 +54,7 @@ ColWrapper = (props) ->
 
 class PaidTill extends React.Component
     render: () ->
+        return null
         href = "/pay"
         if @props.myUser?.userList == "stud" or @props.myUser?.userList == "notnnov"
             href = "/payment"
@@ -91,20 +92,14 @@ BottomPanel = (props) ->
     <div className={styles.footer}>
         <Grid fluid>
             <Row>
-                <Col xs={12} sm={12} md={8} lg={8}>
+                <Col xs={12} sm={12} md={12} lg={12}>
                     <div className="text-muted">
-                        <Link to="/">algoprog.ru</Link>
-                        {" © Петр Калинин, GNU AGPL, "}
+                        {" Движок сайта © Петр Калинин, GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
                         <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
                         {" | "}
                         <a href="http://blog.algoprog.ru" target="_blank">Блог</a>
-                    </div>
-                </Col>
-                <Col xs={12} sm={12} md={4} lg={4}>
-                    <div className={styles.right + " text-muted"}>
-                        <PaidTillConnected/>
                     </div>
                 </Col>
             </Row>
