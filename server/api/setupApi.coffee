@@ -229,7 +229,7 @@ export default setupApi = (app) ->
         id = req.user?.userKey()
         user = await User.findById(id)
         material = await Material.findById(req.params.id)
-        if material.level and (not user or user.level.current < material.level)
+        if not material.allowedForUser(user)
             res.json({"error": "level"})
         else
             res.json(material)
