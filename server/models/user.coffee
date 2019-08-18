@@ -13,7 +13,7 @@ import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
 import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
-
+import Result from '../../server/models/result'
 
 SEMESTER_START = "2016-06-01"
 
@@ -37,7 +37,8 @@ usersSchema = new mongoose.Schema
         color: String,
         activity: Number,
         progress: Number,
-    graduateYear: Number
+    graduateYear: Number,
+    dormant: Boolean
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -61,6 +62,14 @@ usersSchema.methods.updateLevel = ->
     @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
 
+usersSchema.methods.updateDormant = ->
+    table = await Result.findByUserAndTable(@_id, "main")
+    date = new Date();
+    if date-table.lastSubmitTime > 7776000000
+        @dormant = true
+    else @dormant = false
+    @update({$set: {dormant: @dormant}})
+
 usersSchema.methods.updateCfRating = ->
     logger.debug "Updating cf rating ", @name
     res = await calculateCfRating this
@@ -69,7 +78,7 @@ usersSchema.methods.updateCfRating = ->
         return
     res.login = @cf.login
     @update({$set: {cf: res}})
-
+    
 usersSchema.methods.updateGraduateYear = ->
     registeredUser = await RegisteredUser.findByKey(@_id)
     if not registeredUser
@@ -99,6 +108,11 @@ usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     await @update({$set: {"userList": userList}})
     @userList = userList
+
+usersSchema.methods.setDormant = (dormant) ->
+    logger.info "setting dormant ", @_id, dormant
+    await @update({$set: {"dormant": dormant}})
+    @dormant = dormant
 
 compareLevels = (a, b) ->
     if a.length != b.length
@@ -136,6 +150,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateChocos()
     await u.updateRatingEtc()
     await u.updateLevel()
+    await u.updateDormant()
     logger.info "Updated user", userId
 
 usersSchema.statics.updateAllUsers = (dirtyResults) ->
