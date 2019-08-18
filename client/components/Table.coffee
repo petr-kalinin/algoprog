@@ -6,6 +6,7 @@ import TableRow from './TableRow'
 
 import globalStyles from './global.css'
 import styles from './Table.css'
+import withTheme from '../lib/withTheme'
 
 getHeader = (results) ->
     if not results
@@ -40,9 +41,9 @@ Text = (props) ->
             </Helmet>
             <h1>Сводная таблица по уровням {props.levels}</h1>
             <p>Цвета:{" "}
-                <span className={globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
+                <span className={ if props.theme == "dark" then globalStyles.darkac else globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
                 <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
-                <span className={globalStyles.ok + " " + styles.example}>OK</span>{" "}
+                <span className={ if props.theme == "dark" then globalStyles.darkok else globalStyles.ok + " " + styles.example}>OK</span>{" "}
                 <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
             </p>
             <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
@@ -50,6 +51,7 @@ Text = (props) ->
             <p>Имена школьников — ссылки на странички с результатами каждого конкретного школьника</p>
         </div>
 
+Text = withTheme(Text)
 
 export default Table = (props) ->
     if not props.data?.length

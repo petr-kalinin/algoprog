@@ -1,5 +1,4 @@
 React = require('react')
-import { CometSpinLoader } from 'react-css-loaders';
 import { withRouter } from 'react-router'
 
 import Grid from 'react-bootstrap/lib/Grid'
@@ -10,6 +9,8 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
 import Modal from 'react-bootstrap/lib/Modal'
+
+import Loader from '../components/Loader'
 
 import { Link } from 'react-router-dom'
 
@@ -198,7 +199,7 @@ class Register extends React.Component
                 {
                 @state.informaticsData?.loading && <div>
                     <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
-                    <CometSpinLoader />
+                    <Loader />
                 </div>}
                 {
                 @state.informaticsData?.error &&
@@ -315,7 +316,7 @@ class Register extends React.Component
                     </Modal.Header>
 
                     <Modal.Body>
-                        {@state.registered.loading && <CometSpinLoader />}
+                        {@state.registered.loading && <Loader />}
                         {@state.registered.error && "Ошибка: " + @state.registered.message}
                         {@state.registered.success &&
                             <div>

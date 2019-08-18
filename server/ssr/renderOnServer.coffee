@@ -18,6 +18,10 @@ import awaitAll from '../../client/lib/awaitAll'
 import User from '../models/user'
 import logger from '../log'
 
+import ThemeCss from '../../client/components/ThemeCss'
+
+import Cookies from 'universal-cookie'
+
 renderFullPage = (html, data, helmet) ->
     return '
         <html>
@@ -27,7 +31,6 @@ renderFullPage = (html, data, helmet) ->
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/bundle.css"/>
-            <link rel="stylesheet" href="/bootstrap.min.css"/>
             <link rel="stylesheet" href="/react-diff-view.css"/>
             <link rel="stylesheet" href="/informatics.css"/>
             <link rel="stylesheet" href="/highlight.css"/>
@@ -87,6 +90,14 @@ renderFullPage = (html, data, helmet) ->
         </body>
         </html>'
 
+ defaultTheme = (reqCookies) ->
+    cookies = new Cookies(reqCookies)
+    cookie = cookies.get('theme')
+    if cookie
+        return cookie
+    else
+        return "light"
+
 export default renderOnServer = (req, res, next) =>
     try
         initialState = 
@@ -100,7 +111,8 @@ export default renderOnServer = (req, res, next) =>
                 updateTime: new Date()
                 url: "myUser"},
             ],
-            clientCookie: req.headers.cookie
+            clientCookie: req.headers.cookie,
+            theme: defaultTheme(req.headers.cookie)
         store = createStore(initialState)
 
         component = undefined
@@ -134,6 +146,7 @@ export default renderOnServer = (req, res, next) =>
                     <DefaultHelmet/>
                     <StaticRouter context={context}>
                         <div>
+                            <ThemeCss/>
                             {element}
                             <ConnectedNotifications/>
                         </div>

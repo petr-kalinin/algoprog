@@ -10,6 +10,7 @@ export LOGOUT = 'LOGOUT'
 export LOGIN = 'POST_LOGIN'
 export SET_UNKNOWN_WARNING_SHOWN = 'SET_UNKNOWN_WARNING_SHOWN'
 export SET_UNPAID_WARNING_SHOWN = 'SET_UNPAID_WARNING_SHOWN'
+export SWITCH_THEME = 'SWITCH_THEME'
 
 export updateData = (url, minAgeToUpdate, cookies) ->
     (dispatch, getState) ->
@@ -57,3 +58,8 @@ export setUnpaidWarningShown = (value=true) ->
     return
         type: SET_UNPAID_WARNING_SHOWN
         value: value
+        
+export switchTheme = (newTheme) ->
+    return 
+        type: SWITCH_THEME
+        value: newTheme
