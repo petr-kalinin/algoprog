@@ -61,7 +61,7 @@ export default SubmitListTable = (props) ->
                     time = maxVal(submit, "time")
                     mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
                     mem = mem.toFixed(2)
-                    <tr key={submit._id} className={cl} onClick={props.handleSubmitClick(submit)} cursor="hand">
+                    <tr key={submit._id} className={cl} onClick={props.handleSubmitClick(submit)} style={cursor: "hand"}>
                         <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>
