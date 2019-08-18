@@ -10,10 +10,10 @@ import Navbar from 'react-bootstrap/lib/Navbar'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
 
-
 import { Helmet } from "react-helmet"
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withTheme from '../lib/withTheme'
 
 import Tree from './Tree'
 import News from './News'
@@ -89,7 +89,7 @@ paidTillOptions =
 PaidTillConnected = ConnectedComponent(PaidTill, paidTillOptions)
 
 BottomPanel = (props) ->
-    <div className={styles.footer}>
+    <div className={ if props.theme == "dark" then styles.footer_dark else styles.footer}>
         <Grid fluid>
             <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
@@ -140,6 +140,8 @@ getSizes = (props) ->
             selfSize[size] = 12
 
     return {treeSize, newsSize, selfSize}
+
+BottomPanel = withTheme(BottomPanel)
 
 export default class Sceleton extends React.Component
     constructor: (props) ->

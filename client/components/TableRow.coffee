@@ -6,6 +6,7 @@ import globalStyles from './global.css'
 import userTableHeader from './UserTableHeader'
 
 import addTotal from '../lib/addTotal'
+import withTheme from '../lib/withTheme'
 
 ProblemResult = (props) ->
     r = props.result
@@ -23,11 +24,17 @@ ProblemResult = (props) ->
         
     className =
         if r.solved > 0
-            "ac"
+            if props.theme == "dark"
+                "darkac"
+            else 
+                "ac"
         else if r.ignored > 0
             "ig"
         else if r.ok > 0
-            "ok"
+            if props.theme == "dark"
+                "darkok"
+            else 
+                "ok"
         else if r.ignored < 0
             "dq"
         else if r.attempts > 0
@@ -91,11 +98,13 @@ TotalResult = (props) ->
             }
         </td>
 
+ResultTheme = withTheme(ProblemResult)
+
 Result = (props) ->
     if props.result?.total > 1
         `<TotalResult {...props}/>`
     else
-        `<ProblemResult {...props}/>`
+        `<ResultTheme {...props}/>`
 
 Attempts = (props) ->
     return <td className={globalStyles.mainTable_td}>

@@ -20,6 +20,7 @@ import * as actions from '../redux/actions'
 import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
+import ThemeSwitch from './ThemeSwitch'
 
 import needUnknownWarning from '../lib/needUnknownWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
@@ -100,7 +101,7 @@ class TopPanel extends React.Component
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
         @openUnpaid = @openUnpaid.bind(this)
-
+   
     closeWarning: ->
         @props.setUnknownWarningShown()
         @setState
@@ -146,7 +147,7 @@ class TopPanel extends React.Component
                                 <span className={styles.separator}/>
                                 <span title="Уровень">{@props.myUser.level.current}</span>
                                 <span className={styles.separator}/>
-                                <span title="Рейтинг" style={color: color(@props.myUser)}>{@props.myUser.rating}</span>
+                                <span title="Рейтинг" style={color: color(@props.myUser, @props.theme)}>{@props.myUser.rating}</span>
                                 {" / "}
                                 <span title="Активность">{@props.myUser.activity.toFixed(1)}</span>
                                 <span className={styles.separator}/>
@@ -167,6 +168,8 @@ class TopPanel extends React.Component
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Form pullRight>
+                    <ThemeSwitch /> 
+                    <span className={styles.separator}/>
                     {
                     if @props.me?._id
                         <ButtonGroup>
@@ -210,6 +213,7 @@ ConnectedTopPanel = ConnectedComponent(withRouter(TopPanel), options)
 
 mapStateToProps = (state) ->
     return
+        theme: state.theme
         unknownWarningShown: state.unknownWarningShown
         unpaidWarningShown: state.unpaidWarningShown
 
