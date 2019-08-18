@@ -137,5 +137,6 @@ export default renderOnServer = (req, res, next) =>
 
     state = store.getState()
     delete state.dataPromises
+    delete state.clientCookie
 
     res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, state, helmet))

@@ -1,3 +1,5 @@
+iconv = require('iconv-lite')
+
 import SubmitProcess from '../models/SubmitProcess'
 import Submit from '../models/submit'
 import User from '../models/user'
@@ -26,6 +28,20 @@ makeTimeouts = () ->
 
 TIMEOUT_BY_ATTEMPT = makeTimeouts()
 
+convert = (source, encoding) ->
+    if not source
+        return ""
+    buf = Buffer.from(source, "latin1")
+    return iconv.decode(buf, encoding)
+
+compareSources = (newSource, oldSource) ->
+    newEncoded = convert(newSource, "utf8")
+    for encoding in ["cp866", "cp1251", "utf8"]
+        oldEncoded = convert(oldSource, encoding)
+        if oldEncoded == newEncoded
+            return true
+    return false
+
 getLanguage = (lang) ->
     for l in LANGUAGES
         if lang == l[1]
@@ -36,7 +52,7 @@ submitToTestSystem = (submit, submitProcess) ->
     success = false
 
     onNewSubmit = (newSubmit) ->
-        if newSubmit.sourceRaw != submit.sourceRaw
+        if not compareSources(newSubmit.sourceRaw, submit.sourceRaw)
             return
         await Submit.remove({_id: submit._id})
         await SubmitProcess.remove({_id: submit._id})
