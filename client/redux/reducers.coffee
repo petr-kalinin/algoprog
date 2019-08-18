@@ -7,8 +7,6 @@ import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET
 
 import { equalUrl } from './getters'
 
-import Cookies from 'universal-cookie'
-
 MAX_DATA_ITEMS = 100
 
 data = (state=[], action) ->

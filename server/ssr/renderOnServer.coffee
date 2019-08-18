@@ -90,8 +90,8 @@ renderFullPage = (html, data, helmet) ->
         </body>
         </html>'
 
- defaultTheme = (ThemeCookie) ->
-    cookies = new Cookies(ThemeCookie)
+ defaultTheme = (reqCookies) ->
+    cookies = new Cookies(reqCookies)
     cookie = cookies.get('theme')
     if cookie
         return cookie
@@ -146,8 +146,8 @@ export default renderOnServer = (req, res, next) =>
                     <DefaultHelmet/>
                     <StaticRouter context={context}>
                         <div>
-                            {element}
                             <ThemeCss/>
+                            {element}
                             <ConnectedNotifications/>
                         </div>
                     </StaticRouter>
