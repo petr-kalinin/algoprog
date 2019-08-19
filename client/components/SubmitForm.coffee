@@ -2,7 +2,6 @@ React = require('react')
 FontAwesome = require('react-fontawesome')
 PromiseFileReader = require('promise-file-reader')
 
-import { CometSpinLoader } from 'react-css-loaders';
 import { connect } from 'react-redux'
 
 import Alert from 'react-bootstrap/lib/Alert'
@@ -13,6 +12,8 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
+
+import Loader from '../components/Loader'
 
 import callApi, {callApiWithBody} from '../lib/callApi'
 
@@ -140,7 +141,7 @@ class SubmitForm extends React.Component
                 {
                 if @state.submit?.loading
                     <div style={display: "inline-block", position: "relative", top: "72px", marginTop: "-144px", width: "30px"}>
-                        <CometSpinLoader size={10} />
+                        <Loader size={10} />
                     </div>
                 }
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>

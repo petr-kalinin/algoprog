@@ -9,6 +9,9 @@
 .navitem a {
     color: black !important;
 }
+.navitemDark a {
+    color: #F8F6D9 !important;
+}
 .tree {
     padding-top: 2ex;
 }

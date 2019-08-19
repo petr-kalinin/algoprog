@@ -22,7 +22,7 @@ addUserToUnknownGroup = (uid) ->
 
 export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
-    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin} = req.body
+    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin, promo, contact, whereFrom} = req.body
 
     informaticsUser = await InformaticsUser.getUser(informaticsUsername, informaticsPassword)
     informaticsData = await informaticsUser.getData()
@@ -57,6 +57,9 @@ export default register = (req, res, next) ->
         informaticsUsername,
         informaticsPassword,
         aboutme,
+        promo,
+        contact,
+        whereFrom
         admin: false
     })
     RegisteredUser.register newRegisteredUser, req.body.password, (err) ->

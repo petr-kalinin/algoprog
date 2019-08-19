@@ -2,7 +2,8 @@ React = require('react')
 FontAwesome = require('react-fontawesome')
 deepEqual = require('deep-equal')
 import { connect } from 'react-redux'
-import { CometSpinLoader } from 'react-css-loaders';
+
+import Loader from '../components/Loader'
 
 import * as actions from '../redux/actions'
 import * as getters from '../redux/getters'
@@ -53,7 +54,7 @@ export default ConnectedComponent = (Component, options) ->
                     Placeholder = options.Placeholder
                     return <Placeholder/>
                 else
-                    return <CometSpinLoader/>
+                    return <Loader/>
             else
                 componentProps = {@props...}
                 componentProps.handleReload = @handleReload
@@ -61,7 +62,7 @@ export default ConnectedComponent = (Component, options) ->
                 delete componentProps.hasData
                 delete componentProps.updateData
                 delete componentProps.saveDataPromises
-                delete componentProps.clientCookies
+                delete componentProps.clientCookie
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
                 return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
