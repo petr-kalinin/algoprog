@@ -38,6 +38,7 @@ usersSchema = new mongoose.Schema
         activity: Number,
         progress: Number,
     graduateYear: Number,
+    lastActivated: Number,
     dormant: Boolean
 
 usersSchema.methods.upsert = () ->
@@ -62,10 +63,13 @@ usersSchema.methods.updateLevel = ->
     @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
 
+usersSchema.methods.updateLastActivated = ->
+    @lastActivated = Date.now()
+    @update({$set: {lastActivated: @lastActivated}})
+
 usersSchema.methods.updateDormant = ->
-    table = await Result.findByUserAndTable(@_id, "main")
     date = new Date();
-    if date-table.lastSubmitTime > 7776000000
+    if await @userList=="unknown" && date-await @lastActivated > 7776000000
         @dormant = true
     else @dormant = false
     @update({$set: {dormant: @dormant}})
@@ -78,7 +82,7 @@ usersSchema.methods.updateCfRating = ->
         return
     res.login = @cf.login
     @update({$set: {cf: res}})
-    
+
 usersSchema.methods.updateGraduateYear = ->
     registeredUser = await RegisteredUser.findByKey(@_id)
     if not registeredUser

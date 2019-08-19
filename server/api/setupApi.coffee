@@ -368,6 +368,7 @@ export default setupApi = (app) ->
         if newGroup != "none"
             await user.setUserList(newGroup)
             await user.setDormant("false")
+            await user.updateLastActivated()
         res.send('OK')
 
     app.get '/api/dormant/:userId/:dormant', ensureLoggedIn, wrap (req, res) ->
@@ -380,20 +381,6 @@ export default setupApi = (app) ->
             return
         dormant = req.params.dormant
         await user.setDormant(dormant)
-        res.send('OK')
-
-    app.get '/api/updateDormant/:userId', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            console.log("not req.user?.admin")
-            return
-        user = await User.findById(req.params.userId)
-        if not user
-            res.status(400).send("User not found")
-            console.log("not user")
-            return
-        console.log("updateDormant")
-        await user.updateDormant()
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
