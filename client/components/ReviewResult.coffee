@@ -150,6 +150,7 @@ class ReviewResult extends React.Component
     setCurrentDiff: (i, submit) ->
         (e) =>
             e.preventDefault()
+            e.stopPropagation()
             newDiff = @state.currentDiff
             newDiff[i] = submit
             if not newDiff[1-i]
