@@ -62,7 +62,7 @@ export default class UserBadge extends React.Component
     startState: (props) ->
         return
             graduateYear: props.user.graduateYear || '',
-            baseLevel: props.user.level.current || '',
+            baseLevel: props.user.level?.current || '',
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
             price: if props.user.price? then ''+props.user.price else ''
@@ -117,7 +117,7 @@ export default class UserBadge extends React.Component
             </h1>
             <blockquote>
                 {cls && <div>Класс: {cls}</div>}
-                <div>Уровень: {@props.user.level.current}</div>
+                <div>Уровень: {@props.user.level?.current || "—"}</div>
                 <div>Рейтинг: {@props.user.rating}</div>
                 <div>Активность: {@props.user.activity.toFixed(1)}</div>
                 {
