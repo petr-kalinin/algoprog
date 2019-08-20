@@ -29,7 +29,7 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import styles from './TopPanel.css'
 
 needCfWarning = (user) ->
-    (not user.cf?.login?) and (user.level.current >= "1В")
+    (not user.cf?.login?) and (user.level?.current and user.level.current >= "1В")
 
 needUnpaidWarning = (user) ->
     (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (not isPaid(user))
@@ -145,7 +145,7 @@ class TopPanel extends React.Component
                                 <span className={styles.separator}/>
                                 <span title="Класс">{getClassStartingFromJuly(@props.myUser.graduateYear)}</span>
                                 <span className={styles.separator}/>
-                                <span title="Уровень">{@props.myUser.level.current}</span>
+                                <span title="Уровень">{@props.myUser.level?.current || "—"}</span>
                                 <span className={styles.separator}/>
                                 <span title="Рейтинг" style={color: color(@props.myUser, @props.theme)}>{@props.myUser.rating}</span>
                                 {" / "}
