@@ -90,6 +90,7 @@ export default calculateRatingEtc = (user) ->
         else if r.ok == 1
             inc(weekOk, week)
 
+    ###
     for level in ["1А", "1Б"]
         if (!user.level.base) or (level >= user.level.base)
             break
@@ -97,6 +98,7 @@ export default calculateRatingEtc = (user) ->
             if probSolved[prob._id]
                 continue
             rating += levelScore(level)
+    ###
 
     for week of wasSubmits
         if !weekSolved[week]
