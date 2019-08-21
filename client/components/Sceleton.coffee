@@ -96,10 +96,6 @@ BottomPanel = (props) ->
                     <div className="text-muted">
                         {" Движок сайта © Петр Калинин, GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
-                        {" | "}
-                        <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
-                        {" | "}
-                        <a href="http://blog.algoprog.ru" target="_blank">Блог</a>
                     </div>
                 </Col>
             </Row>
@@ -178,7 +174,6 @@ export default class Sceleton extends React.Component
                         </ColWrapper>
                         <ColWrapper size={newsSize}>
                             <News/>
-                            <BlogPosts/>
                             <CommentList />
                         </ColWrapper>
                     </Row>
