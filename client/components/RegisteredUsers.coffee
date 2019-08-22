@@ -1,4 +1,5 @@
 React = require('react')
+moment = require('moment')
 
 import { Link } from 'react-router-dom'
 import { Table } from 'react-bootstrap'
@@ -13,6 +14,9 @@ export default RegisteredUsers = (props) ->
                     </td>
                     <td>
                         {user.username}
+                    </td>
+                    <td>
+                        {user.registerDate && moment(user.registerDate).format('YYYY-MM-DD kk:mm:ss') || "—"}
                     </td>
                     <td>
                         <Link to={"/user/#{user.informaticsId}"}>{user.informaticsId}</Link>
