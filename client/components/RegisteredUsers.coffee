@@ -16,6 +16,9 @@ export default RegisteredUsers = (props) ->
                         {user.username}
                     </td>
                     <td>
+                        {user.userList}
+                    </td>
+                    <td>
                         {user.registerDate && moment(user.registerDate).format('YYYY-MM-DD kk:mm:ss') || "—"}
                     </td>
                     <td>
