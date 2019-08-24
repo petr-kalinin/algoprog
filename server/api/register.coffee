@@ -36,6 +36,7 @@ export default register = (req, res, next) ->
             graduateYear: informaticsData.graduateYear,
             level: {current: "0A"}
             userList: "unknown",
+            registerDate: new Date()
         )
         if cfLogin
             newUser.cf =

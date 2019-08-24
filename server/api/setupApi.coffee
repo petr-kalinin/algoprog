@@ -206,6 +206,8 @@ export default setupApi = (app) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
             user.fullName = fullUser?.name
+            user.registerDate = fullUser?.registerDate
+            user.userList = fullUser?.userList
 
         if not req.user?.admin
             res.status(403).send('No permissions')

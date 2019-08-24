@@ -38,6 +38,7 @@ usersSchema = new mongoose.Schema
         activity: Number,
         progress: Number,
     graduateYear: Number
+    registerDate: Date
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
