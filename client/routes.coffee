@@ -6,6 +6,7 @@ import {
   Redirect
 } from 'react-router-dom'
 
+import AchievesPage from './pages/AchievesPage'
 import UserBadgePage from './pages/UserBadgePage'
 import FullUserPage from './pages/FullUserPage'
 import DashboardPage from './pages/DashboardPage'
@@ -107,6 +108,11 @@ export default [
         path: '/registeredUsers',
         key: "registeredUsers",
         component: RegisteredUsersPage,
+    },
+    {
+        path: '/achieves',
+        key: "achieves",
+        component: AchievesPage,
     },
     {
         path: '/login',

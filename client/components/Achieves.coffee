@@ -19,14 +19,23 @@ export Achieves = (props) ->
         return null
     achieves = props.achieves.map(expandAchieve)
     className = styles.achieve
+    achieves.sort((a, b) -> b.score - a.score)
+    if props.inverse
+        achieves.reverse()
     if props.big
         className += " " + styles.big
     else
-        achieves.sort((a, b) -> b.score - a.score)
         achieves = achieves[..2]
     <div>
-        {achieves.map((achieve) -> <div title={achieve.title} className={className} style={{background: achieve.color}} key={achieve.key}>{achieve.text}</div>)}
+        {achieves.map((achieve) -> <div title={"(#{achieve.score}) #{achieve.title}"} className={className} style={{background: achieve.color}} key={achieve.key}>{achieve.text}</div>)}
     </div>
 
 export BigAchieves = (props) ->
     `<Achieves {...props} big={true}/>`
+
+export AllAchieves = (props) ->
+    allAchieves = []
+    for key, value of ACHIEVES
+        if key != "unknown"
+            allAchieves.push(key)
+    <Achieves achieves={allAchieves} inverse={true} big={true}/>
