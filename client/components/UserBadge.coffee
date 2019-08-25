@@ -60,6 +60,7 @@ export default class UserBadge extends React.Component
         @handleAchievesChange = @handleAchievesChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
+        @updateResults = @updateResults.bind(this)
 
     startState: (props) ->
         return
@@ -115,6 +116,10 @@ export default class UserBadge extends React.Component
     handleKeyPressed: (e) ->
         if e.key == "Enter"
             @handleSubmit(e)
+
+    updateResults: (e) ->
+        await callApi('updateResults/' + @props.user._id)
+        @props.handleReload()
 
     render: () ->
         cls = getClassStartingFromJuly(@props.user.graduateYear)
@@ -206,6 +211,7 @@ export default class UserBadge extends React.Component
                         </div>
                     </form> }
                 { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
+                { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
             </blockquote>
             { @props.explain &&
                 <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
