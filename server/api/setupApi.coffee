@@ -153,7 +153,7 @@ export default setupApi = (app) ->
             price = undefined
         else
             price = +price
-        achieves = req.body.achieves.split(" ")
+        achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
         user = await User.findById(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base

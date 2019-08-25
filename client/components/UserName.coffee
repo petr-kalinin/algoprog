@@ -32,7 +32,7 @@ UserName = (props) ->
                 {props.user.name}
             </span>
         </Link>
-        {props.noachieves || <Achieves achieves={props.user.achieves} />}
+        {props.noachieves || <span><span className={styles.sep}/> <Achieves achieves={props.user.achieves} /></span>}
     </span>
 
 export default withTheme(UserName)
