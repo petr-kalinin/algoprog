@@ -29,6 +29,7 @@ achievesConditions = (user) ->
 
 export default calculateAchieves = (user) ->
     result = user?.achieves || []
+    return result
     conditions = achievesConditions(user)
     for prefix, c of conditions
         suffixScore = (suffix) ->
