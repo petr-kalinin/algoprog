@@ -5,6 +5,8 @@ import styles from './UserName.css'
 import { Link } from 'react-router-dom'
 import withTheme from '../lib/withTheme'
 
+import {Achieves} from './Achieves'
+
 import {LEVEL_RATING_EXP, ACTIVITY_THRESHOLD} from '../../server/calculations/ratingConstants'
 MAX_ACTIVITY = 7
 MAX_RATING = 10 * (Math.pow(LEVEL_RATING_EXP, 11) - 1) / (LEVEL_RATING_EXP - 1)
@@ -24,10 +26,13 @@ export color = (user, theme) ->
     return "#" + tinycolor.fromRatio({h: h, s: s, v: v}).toHex()
 
 UserName = (props) ->
-    <Link to={"/user/" + props.user._id}>
-        <span className={styles.name} style={ {color:  color(props.user,props.theme)} }>
-            {props.user.name}
-        </span>
-    </Link>
+    <span>
+        <Link to={"/user/" + props.user._id}>
+            <span className={styles.name} style={ {color:  color(props.user,props.theme)} }>
+                {props.user.name}
+            </span>
+        </Link>
+        {props.noachieves || <span><span className={styles.sep}/> <Achieves achieves={props.user.achieves} /></span>}
+    </span>
 
 export default withTheme(UserName)
