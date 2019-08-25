@@ -153,10 +153,12 @@ export default setupApi = (app) ->
             price = undefined
         else
             price = +price
+        achieves = req.body.achieves.split(" ")
         user = await User.findById(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
+        await user.setAchieves achieves
         userPrivate = await UserPrivate.findById(req.params.id)
         console.log "userPrivate = ", userPrivate
         if not userPrivate
