@@ -195,7 +195,7 @@ export default ACHIEVES =
         score: 350
 
     #--------------------
-    
+
     "git:1":
         text: "git"
         title: "Автор части кода на алгопроге (есть хотя бы один коммит в git)"
@@ -224,14 +224,14 @@ export default ACHIEVES =
         title: "Три полностью решенных контеста"
         color: PARTICIPANT_COLOR
         score: 15
-    "fullcontests:7":
+    "fullcontests:6":
         text: "full"
-        title: "Семь полностью решенных контестов"
+        title: "Шесть полностью решенных контестов"
         color: BRONZE_COLOR
         score: 33
-    "fullcontests:16":
+    "fullcontests:15":
         text: "full"
-        title: "Шестнадцать полностью решенных контеста"
+        title: "Пятнадцать полностью решенных контеста"
         color: SILVER_COLOR
         score: 57
     "fullcontests:30":

@@ -4,6 +4,7 @@ import calculateChocos from '../calculations/calculateChocos'
 import calculateRatingEtc from '../calculations/calculateRatingEtc'
 import calculateLevel from '../calculations/calculateLevel'
 import calculateCfRating from '../calculations/calculateCfRating'
+import calculateAchieves from '../calculations/calculateAchieves'
 
 import logger from '../log'
 
@@ -70,6 +71,11 @@ usersSchema.methods.updateCfRating = ->
         return
     res.login = @cf.login
     @update({$set: {cf: res}})
+
+usersSchema.methods.updateAchieves = (achieves) ->
+    logger.info "updating achieves login ", @_id, achieves
+    @achieves = await calculateAchieves(this)
+    await @update({$set: {"achieves": @achieves}})
 
 usersSchema.methods.updateGraduateYear = ->
     registeredUser = await RegisteredUser.findByKey(@_id)
@@ -142,6 +148,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateChocos()
     await u.updateRatingEtc()
     await u.updateLevel()
+    await u.updateAchieves()
     logger.info "Updated user", userId
 
 usersSchema.statics.updateAllUsers = (dirtyResults) ->
