@@ -1,11 +1,12 @@
 import ACHIEVES from '../../client/lib/achieves'
 
 achievesConditions = (user) ->
+    chocos0 = (user.chocos?[0] || 0) - 1
     fullcontests:
-        30: 3 * user.chocos?[0] >= 30
-        15: 3 * user.chocos?[0] >= 15
-        6: 3 * user.chocos?[0] >= 6
-        3: 3 * user.chocos?[0] >= 3
+        30: 3 * chocos0 >= 30
+        15: 3 * chocos0 >= 15
+        6: 3 * chocos0 >= 6
+        3: 3 * chocos0 >= 3
     clearcontests:
         7: user.chocos?[1] >= 7
         4: user.chocos?[1] >= 4
