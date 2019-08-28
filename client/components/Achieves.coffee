@@ -27,7 +27,9 @@ export Achieves = (props) ->
     else
         achieves = achieves[..2]
     <div className={styles.achieves}>
-        {achieves.map((achieve) -> <div title={(if props.score then "(#{achieve.score}) " else "") + achieve.title} className={className} style={{background: achieve.color}} key={achieve.key}>{achieve.text}</div>)}
+        {achieves.map((achieve, index) -> 
+            <div title={(if props.score then "(#{achieve.score}) " else "") + achieve.title} className={className} style={{background: achieve.color}} key={achieve.key + index}>{achieve.text}</div>
+        )}
     </div>
 
 export BigAchieves = (props) ->
