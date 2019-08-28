@@ -26,6 +26,8 @@ achievesConditions = (user) ->
         6: user.activity >= 6 and user.level.current >= "1Б"
         10: user.activity >= 10 and user.level.current >= "2"
         15: user.activity >= 15 and user.level.current >= "3"
+        options:
+            doNoRevoke: true
 
 export default calculateAchieves = (user) ->
     result = user?.achieves || []
@@ -34,9 +36,15 @@ export default calculateAchieves = (user) ->
         suffixScore = (suffix) ->
             ACHIEVES["#{prefix}:#{suffix}"]?.score
 
-        result = (r for r in result when not (r.startsWith(prefix + ":")))
         bestSuffix = undefined
+        if  c.options?.doNoRevoke
+            oldAchieves = (r for r in result when (r.startsWith(prefix + ":")))
+            if oldAchieves.length
+                bestSuffix = oldAchieves[0].split(":")[1]
+        result = (r for r in result when not (r.startsWith(prefix + ":")))
         for suffix, condition of c
+            if suffix == "options"
+                continue
             if not condition
                 continue
             if not bestSuffix
