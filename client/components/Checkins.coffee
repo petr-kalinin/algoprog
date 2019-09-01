@@ -30,7 +30,7 @@ export default class Checkins extends React.Component
                 result: result
 
     canRegister: () ->
-        @props.myUser.rating > 0
+        @props.myUser && @props.myUser.rating > 0
 
     render: () ->
         wasme = [false, false]
