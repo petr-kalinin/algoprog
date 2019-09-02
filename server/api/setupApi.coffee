@@ -179,7 +179,7 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
-        res.json(await dashboard())
+        res.json(await dashboard(req.user))
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
         res.json(await table(req.params.userList, req.params.table))

@@ -3,6 +3,8 @@ passportLocalMongoose = require('passport-local-mongoose')
 
 registeredUserSchema = new mongoose.Schema
     admin: Boolean
+    adminData:
+        defaultUserLists: [String]
     informaticsUsername: String
     informaticsPassword: String
     informaticsId: Number
