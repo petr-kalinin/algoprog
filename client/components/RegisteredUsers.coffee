@@ -6,7 +6,7 @@ import { Table } from 'react-bootstrap'
 
 import callApi from '../lib/callApi'
 
-export default class RegisteredUsers extends React.Component 
+export default class RegisteredUsers extends React.Component
     constructor: (props) ->
         super(props)
         @state = @startState(props)
@@ -38,7 +38,6 @@ export default class RegisteredUsers extends React.Component
         newState = await callApi "searchUser", {searchUser: @state.searchUser}
         console.log("newState = ",newState)
         @setState({foundUser: newState})
-        
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"
@@ -52,7 +51,7 @@ export default class RegisteredUsers extends React.Component
                         type="text"
                         name="search"
                         size="10"
-                        onChange={@handleSearchUserChange} 
+                        onChange={@handleSearchUserChange}
                         onKeyPress={@handleKeyPressed} />
                 </div>
             </form>

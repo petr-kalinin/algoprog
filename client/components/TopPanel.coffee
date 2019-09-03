@@ -98,7 +98,7 @@ BlockedUser = (props) ->
 
             <Modal.Body>
                 <div>
-                    <p>Вы слишком долго не писали. Напишите, чтобы дальше решать задачи. 
+                    <p>Вы слишком долго не писали. Напишите, чтобы дальше решать задачи.
                 </p>
                 </div>
             </Modal.Body>
@@ -211,7 +211,7 @@ class TopPanel extends React.Component
             </Navbar>
             {
             if @props.myUser
-                if @props.myUser.dormant == true 
+                if @props.myUser.dormant == true
                     <BlockedUser/>
             }
             {

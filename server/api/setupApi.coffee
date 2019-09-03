@@ -214,7 +214,7 @@ export default setupApi = (app) ->
             user = foundUser.toObject()
             if f == true
                 users = await RegisteredUser.findByKey(user._id)
-            else 
+            else
                 users = foundUser
             users = users.toObject()
             promises.push(addUserName(users))
@@ -222,7 +222,7 @@ export default setupApi = (app) ->
             result.push(users)
         await awaitAll(promises)
         res.json(result)
-        
+
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
