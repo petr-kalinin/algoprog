@@ -138,16 +138,17 @@ sortByLevelAndRating = (a, b) ->
 usersSchema.statics.sortByLevelAndRating = sortByLevelAndRating
 
 usersSchema.statics.findByList = (list) ->
-    result = await User.find({userList: list})
+    result = await User.find({userList: list, dormant: false})
     return result.sort(sortByLevelAndRating)
 
 usersSchema.statics.findAll = (list) ->
-    User.find {}
+    User.find {dormant: false}
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
     u = await User.findById(userId)
+
     if not u
         logger.warn "Unknown user ", userId
         return
@@ -164,7 +165,7 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
         catch e
             logger.warn("Error while updating user: ", e.message || e, e.stack)
 
-    users = await User.find {}
+    users = await User.find {dormant: false}
     promises = []
     count = 0
     for u in users

@@ -58,7 +58,7 @@ export setUnpaidWarningShown = (value=true) ->
     return
         type: SET_UNPAID_WARNING_SHOWN
         value: value
-        
+
 export switchTheme = (newTheme) ->
     return 
         type: SWITCH_THEME

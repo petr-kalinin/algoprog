@@ -194,10 +194,43 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
+    app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
+        addUserName = (users) ->
+            fullUser = await User.findById(users.informaticsId)
+            users.fullName = fullUser?.name
+
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        promises = []
+        result = []
+        users = []
+        f = false
+        findUser = await RegisteredUser.find({$or: [{username: {$regex: req.body.searchUser, $options: 'i'}}, {informaticsUsername: {$regex: req.body.searchUser, $options: 'i'}}]})
+        if findUser.length == 0
+            f = true
+            findUser = await User.find({$or: [{name: {$regex: req.body.searchUser, $options: 'i'}}, {_id: {$regex: req.body.searchUser, $options: 'i'}}]})
+        for foundUser in findUser
+            user = foundUser.toObject()
+            if f == true
+                users = await RegisteredUser.findByKey(user._id)
+            else 
+                users = foundUser
+            users = users.toObject()
+            promises.push(addUserName(users))
+            i = i + 1
+            result.push(users)
+        await awaitAll(promises)
+        res.json(result)
+        
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
             user.fullName = fullUser?.name
+            user.fullDormant = fullUser?.dormant
+
+        Filter = (user) ->
+            return user.fullDormant == false || user.fullDormant == undefined
 
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -210,7 +243,8 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
-        res.json(result)
+        not_dormant_result = result.filter(Filter)
+        res.json(not_dormant_result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user

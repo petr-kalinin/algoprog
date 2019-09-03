@@ -21,7 +21,6 @@ import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 import ThemeSwitch from './ThemeSwitch'
-
 import needUnknownWarning from '../lib/needUnknownWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
@@ -90,6 +89,23 @@ UnpaidWarning = (props) ->
         </Modal.Dialog>
     </div>
 
+BlockedUser = (props) ->
+    <div className="static-modal">
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Вторжение инопланетян!</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <div>
+                    <p>Вы слишком долго не писали. Напишите, чтобы дальше решать задачи. 
+                </p>
+                </div>
+            </Modal.Body>
+
+        </Modal.Dialog>
+    </div>
+
 
 class TopPanel extends React.Component
     constructor: (props) ->
@@ -101,7 +117,7 @@ class TopPanel extends React.Component
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
         @openUnpaid = @openUnpaid.bind(this)
-   
+
     closeWarning: ->
         @props.setUnknownWarningShown()
         @setState
@@ -193,6 +209,11 @@ class TopPanel extends React.Component
                     }
                 </Navbar.Form>
             </Navbar>
+            {
+            if @props.myUser
+                if @props.myUser.dormant == true 
+                    <BlockedUser/>
+            }
             {
             @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
             }
