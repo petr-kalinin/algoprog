@@ -4,6 +4,7 @@ import calculateChocos from '../calculations/calculateChocos'
 import calculateRatingEtc from '../calculations/calculateRatingEtc'
 import calculateLevel from '../calculations/calculateLevel'
 import calculateCfRating from '../calculations/calculateCfRating'
+import calculateAchieves from '../calculations/calculateAchieves'
 
 import logger from '../log'
 
@@ -40,6 +41,9 @@ usersSchema = new mongoose.Schema
     graduateYear: Number,
     lastActivated: Number,
     dormant: Boolean
+    graduateYear: Number
+    registerDate: Date
+    achieves: [String]
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -83,6 +87,11 @@ usersSchema.methods.updateCfRating = ->
     res.login = @cf.login
     @update({$set: {cf: res}})
 
+usersSchema.methods.updateAchieves = (achieves) ->
+    logger.info "updating achieves login ", @_id, achieves
+    @achieves = await calculateAchieves(this)
+    await @update({$set: {"achieves": @achieves}})
+
 usersSchema.methods.updateGraduateYear = ->
     registeredUser = await RegisteredUser.findByKey(@_id)
     if not registeredUser
@@ -107,6 +116,11 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     await @update({$set: {"cf.login": cfLogin}})
     @cf.login = cfLogin
     @updateCfRating()
+
+usersSchema.methods.setAchieves = (achieves) ->
+    logger.info "setting achieves login ", @_id, achieves
+    await @update({$set: {"achieves": achieves}})
+    @achieves = achieves
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
@@ -156,6 +170,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateRatingEtc()
     await u.updateLevel()
     await u.updateDormant()
+    await u.updateAchieves()
     logger.info "Updated user", userId
 
 usersSchema.statics.updateAllUsers = (dirtyResults) ->

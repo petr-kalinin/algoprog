@@ -598,6 +598,7 @@ class MaterialsDownloader
 
         groups =
             lic40: "Лицей 40",
+            lic87: "Лицей 87",
             zaoch: "Нижегородские школьники",
             notnnov: "Остальные школьники"
             stud: "Студенты и старше"

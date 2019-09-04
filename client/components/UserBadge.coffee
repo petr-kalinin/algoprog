@@ -11,6 +11,7 @@ import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
 import UserName from './UserName'
+import {BigAchieves} from './Achieves'
 
 import styles from './UserBadge.css'
 
@@ -62,8 +63,10 @@ export default class UserBadge extends React.Component
         @handleCfChange = @handleCfChange.bind(this)
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
         @handlePriceChange = @handlePriceChange.bind(this)
+        @handleAchievesChange = @handleAchievesChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
+        @updateResults = @updateResults.bind(this)
 
     startState: (props) ->
         return
@@ -72,6 +75,7 @@ export default class UserBadge extends React.Component
             cfLogin: props.user.cf?.login || '',
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
             price: if props.user.price? then ''+props.user.price else ''
+            achieves: (props.user.achieves || []).join(' ')
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -99,6 +103,9 @@ export default class UserBadge extends React.Component
     handlePriceChange: (event) ->
         @handleChange("price", event)
 
+    handleAchievesChange: (event) ->
+        @handleChange("achieves", event)
+
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
             graduateYear: @state.graduateYear
@@ -108,6 +115,7 @@ export default class UserBadge extends React.Component
                 login: @state.cfLogin
             paidTill: @state.paidTill
             price: @state.price
+            achieves: @state.achieves
         )
         @props.handleReload()
 
@@ -115,12 +123,17 @@ export default class UserBadge extends React.Component
         if e.key == "Enter"
             @handleSubmit(e)
 
+    updateResults: (e) ->
+        await callApi('updateResults/' + @props.user._id)
+        @props.handleReload()
+
     render: () ->
         cls = getClassStartingFromJuly(@props.user.graduateYear)
         <div>
             <h1>
-                <UserName user={@props.user}/>
+                <UserName user={@props.user} noachieves={true}/>
             </h1>
+            <BigAchieves achieves={@props.user.achieves} />
             <blockquote>
                 {cls && <div>Класс: {cls}</div>}
                 <div>Уровень: {@props.user.level.current}</div>
@@ -193,8 +206,18 @@ export default class UserBadge extends React.Component
                                 " (на сервере: #{@props.user.price})"
                             }
                         </div>
+                        <div>
+                            Ачивки: <input
+                                type="text"
+                                name="achieves"
+                                value={@state.achieves}
+                                size="20"
+                                onChange={@handleAchievesChange}
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
                     </form> }
                 { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
+                { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
             </blockquote>
             { @props.explain &&
                 <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }

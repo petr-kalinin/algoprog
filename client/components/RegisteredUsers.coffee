@@ -1,5 +1,6 @@
 React = require('react')
 deepcopy = require("deepcopy")
+moment = require('moment')
 
 import { Link } from 'react-router-dom'
 import { Table } from 'react-bootstrap'
@@ -63,7 +64,13 @@ export default class RegisteredUsers extends React.Component
                                 {user.fullName || "***"}
                             </td>
                             <td>
-                            {user.username}
+                                {user.username}
+                            </td>
+                            <td>
+                                {user.userList}
+                            </td>
+                            <td>
+                                {user.registerDate && moment(user.registerDate).format('YYYY-MM-DD kk:mm:ss') || "—"}
                             </td>
                             <td>
                                 <Link to={"/user/#{user.informaticsId}"}>{user.informaticsId}</Link>
@@ -72,7 +79,7 @@ export default class RegisteredUsers extends React.Component
                                 {user.informaticsUsername}
                             </td>
                             <td>
-                            {user.aboutme}
+                                {user.aboutme}
                             </td>
                             <td>
                                 {user.promo}

@@ -153,10 +153,12 @@ export default setupApi = (app) ->
             price = undefined
         else
             price = +price
+        achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
         user = await User.findById(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
+        await user.setAchieves achieves
         userPrivate = await UserPrivate.findById(req.params.id)
         console.log "userPrivate = ", userPrivate
         if not userPrivate
@@ -177,7 +179,7 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
-        res.json(await dashboard())
+        res.json(await dashboard(req.user))
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
         res.json(await table(req.params.userList, req.params.table))
@@ -198,6 +200,8 @@ export default setupApi = (app) ->
         addUserName = (users) ->
             fullUser = await User.findById(users.informaticsId)
             users.fullName = fullUser?.name
+            user.registerDate = fullUser?.registerDate
+            user.userList = fullUser?.userList
 
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -228,6 +232,8 @@ export default setupApi = (app) ->
             fullUser = await User.findById(user.informaticsId)
             user.fullName = fullUser?.name
             user.fullDormant = fullUser?.dormant
+            user.registerDate = fullUser?.registerDate
+            user.userList = fullUser?.userList
 
         Filter = (user) ->
             return user.fullDormant == false || user.fullDormant == undefined
@@ -351,7 +357,7 @@ export default setupApi = (app) ->
             { 
                 checkins: await Checkin.findBySession(i)
                 max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..0])
+            } for i in [0..1])
         for sessionCheckins in checkins
             sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()
