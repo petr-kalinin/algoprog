@@ -187,7 +187,7 @@ export default setupApi = (app) ->
     app.get '/api/table/:userList/:table', wrap (req, res) ->
         id = req.user?.userKey()
         user = await User.findById(id)
-        if not isLevelAllowedForUser(req.params.table, user) or user?.userList != req.params.userList
+        if (not req.user?.admin) and (not isLevelAllowedForUser(req.params.table, user) or user?.userList != req.params.userList)
             res.json({"error": "level"})
         else
             res.json(await table(req.params.userList, req.params.table))
