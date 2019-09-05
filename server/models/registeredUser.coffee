@@ -19,6 +19,9 @@ registeredUserSchema.statics.findAdmin = (list) ->
 registeredUserSchema.statics.findByKey = (key) ->
     RegisteredUser.findOne({informaticsId: key})
 
+registeredUserSchema.statics.findAllByKey = (key) ->
+    RegisteredUser.find({informaticsId: key})
+
 registeredUserSchema.methods.userKey = () ->
     @informaticsId
     
