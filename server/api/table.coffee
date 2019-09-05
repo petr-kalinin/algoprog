@@ -97,10 +97,8 @@ export default table = (userList, table) ->
     return results
 
 export fullUser = (userId) ->
-    tables = [["1А", "1Б"],
-              ["1В", "1Г"]];
-    for level in [2..10]
-        tables.push(((level + ch) for ch in ["А", "Б", "В"]))
+    for level in [0..10]
+        tables.push(((level + ch) for ch in ["A", "B"]))
     for reg in ["reg", "roi"]
         regTables = await Table.findById(reg)
         if regTables?.tables
