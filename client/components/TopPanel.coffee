@@ -89,19 +89,24 @@ UnpaidWarning = (props) ->
         </Modal.Dialog>
     </div>
 
-BlockedUser = (props) ->
+DormantUser = (props) ->
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
-                <Modal.Title>Вторжение инопланетян!</Modal.Title>
+                <Modal.Title>Учетная запись не активирована</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <div>
-                    <p>Вы слишком долго не писали. Напишите, чтобы дальше решать задачи.
-                </p>
+                    <p>Ваша учетная запись еще не активирована. Если вы хотите заниматься, напишите мне,
+                    чтобы я активировал вашу учетную запись. Мои контакты — на страничке
+                    {" "}<Link to="/material/0">О курсе</Link>.</p>
                 </div>
             </Modal.Body>
+
+            <Modal.Footer>
+                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
+            </Modal.Footer>
 
         </Modal.Dialog>
     </div>
@@ -210,9 +215,7 @@ class TopPanel extends React.Component
                 </Navbar.Form>
             </Navbar>
             {
-            if @props.myUser
-                if @props.myUser.dormant == true
-                    <BlockedUser/>
+            @props.myUser?.dormant && <DormantUser handleClose={@props.logout}/>
             }
             {
             @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>

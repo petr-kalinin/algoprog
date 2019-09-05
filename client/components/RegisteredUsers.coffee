@@ -11,34 +11,22 @@ export default class RegisteredUsers extends React.Component
     constructor: (props) ->
         super(props)
         @state = @startState(props)
-        @handleChange = @handleChange.bind(this)
-        @handleSearchUserChange = @handleSearchUserChange.bind(this)
-        @handlefoundUserChange = @handlefoundUserChange.bind(this)
+        @handleSearchStringChange = @handleSearchStringChange.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
 
     startState: (props) ->
         return
-            searchUser: props.searchUser || '',
-            foundUser: props.foundUser || props.users
+            searchString: props.searchString || '',
+            foundUsers: props.users
 
-    handleChange: (field, event) ->
-        newState = deepcopy(@state)
-        newState[field] = event.target.value
-        @setState(newState)
-
-    handleSearchUserChange: (event) ->
-        @handleChange("searchUser", event)
-
-    handlefoundUserChange: (event) ->
-        @handleChange("foundUser", event)
+    handleSearchStringChange: (event) ->
+        @setState({searchString: event.target.value})
 
     handleSubmit: (event) ->
         event.preventDefault()
-        console.log("111@state.foundUser = ",@state.foundUser)
-        newState = await callApi "searchUser", {searchUser: @state.searchUser}
-        console.log("newState = ",newState)
-        @setState({foundUser: newState})
+        newState = await callApi "searchString", {searchString: @state.searchString}
+        @setState({foundUsers: newState})
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"
@@ -51,14 +39,14 @@ export default class RegisteredUsers extends React.Component
                     Поиск: <input
                         type="text"
                         name="search"
-                        size="10"
-                        onChange={@handleSearchUserChange}
+                        size="35"
+                        onChange={@handleSearchStringChange}
                         onKeyPress={@handleKeyPressed} />
                 </div>
             </form>
             <Table striped condensed hover>
                 <tbody>
-                    {@state.foundUser.map?((user) ->
+                    {@state.foundUsers.map?((user) ->
                         <tr key={user.username}>
                             <td>
                                 {user.fullName || "***"}

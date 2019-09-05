@@ -14,9 +14,10 @@ import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
 import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
-import Result from '../../server/models/result'
+import Result from './result'
 
 SEMESTER_START = "2016-06-01"
+THREE_MONTHS = 1000*60*60*24*90
 
 usersSchema = new mongoose.Schema
     _id: String,
@@ -39,10 +40,9 @@ usersSchema = new mongoose.Schema
         activity: Number,
         progress: Number,
     graduateYear: Number,
-    lastActivated: Number,
-    dormant: Boolean
-    graduateYear: Number
-    registerDate: Date
+    lastActivated: Date,
+    dormant: Boolean,
+    registerDate: Date,
     achieves: [String]
 
 usersSchema.methods.upsert = () ->
@@ -67,15 +67,10 @@ usersSchema.methods.updateLevel = ->
     @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
 
-usersSchema.methods.updateLastActivated = ->
-    @lastActivated = Date.now()
-    @update({$set: {lastActivated: @lastActivated}})
-
 usersSchema.methods.updateDormant = ->
-    date = new Date();
-    if await @userList=="unknown" && date-await @lastActivated > 7776000000
+    date = new Date()
+    if @userList=="unknown" && date-@lastActivated > THREE_MONTHS
         @dormant = true
-    else @dormant = false
     @update({$set: {dormant: @dormant}})
 
 usersSchema.methods.updateCfRating = ->
@@ -124,6 +119,8 @@ usersSchema.methods.setAchieves = (achieves) ->
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
+    @lastActivated = Date.now()
+    @update({$set: {lastActivated: @lastActivated}})
     await @update({$set: {"userList": userList}})
     @userList = userList
 
@@ -139,7 +136,6 @@ compareLevels = (a, b) ->
         return if a > b then -1 else 1
     return 0
 
-
 sortByLevelAndRating = (a, b) ->
     if a.active != b.active
         return if a.active then -1 else 1
@@ -152,8 +148,11 @@ sortByLevelAndRating = (a, b) ->
 usersSchema.statics.sortByLevelAndRating = sortByLevelAndRating
 
 usersSchema.statics.findByList = (list) ->
-    result = await User.find({userList: list, dormant: false})
+    result = await User.find({dormant: false})
     return result.sort(sortByLevelAndRating)
+
+usersSchema.statics.search = (searchString) ->
+    await User.find({$or: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$regex: searchString, $options: 'i'}}]})
 
 usersSchema.statics.findAll = (list) ->
     User.find {dormant: false}
@@ -162,7 +161,6 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
     u = await User.findById(userId)
-
     if not u
         logger.warn "Unknown user ", userId
         return
@@ -180,7 +178,7 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
         catch e
             logger.warn("Error while updating user: ", e.message || e, e.stack)
 
-    users = await User.find {dormant: false}
+    users = await User.findAll()
     promises = []
     count = 0
     for u in users

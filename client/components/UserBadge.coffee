@@ -23,16 +23,16 @@ class GroupSelector extends React.Component
     constructor: (props) ->
         super(props)
         @handleMove = @handleMove.bind(this)
-        @handleDormant = @handleDormant.bind(this)
+        @setDormant = @setDormant.bind(this)
 
     handleMove: (name) ->
         () =>
             await callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
             await @props.handleReload()
     
-    handleDormant: (name) ->
+    setDormant: () ->
         () =>
-            await callApi "dormant/#{@props.user._id}/#{name}"
+            await callApi "dormant/#{@props.user._id}", {}
             await @props.handleReload()
 
     render: () ->
@@ -46,7 +46,7 @@ class GroupSelector extends React.Component
                     a <Button key={name} active={name==@props.user.userList} onClick={@handleMove(name)}>
                         {name}
                     </Button>
-                a <Button key={"dormant"} active={@props.user.dormant} onClick={@handleDormant(true)}>dormant</Button>
+                a <Button key={"dormant"} active={@props.user.dormant} onClick={@setDormant()}>dormant</Button>
                 res
                 }
             </ButtonGroup>

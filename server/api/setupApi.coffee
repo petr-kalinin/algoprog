@@ -196,7 +196,7 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
-    app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/searchString', ensureLoggedIn, wrap (req, res) ->
         addUserName = (users) ->
             fullUser = await User.findById(users.informaticsId)
             users.fullName = fullUser?.name
@@ -208,22 +208,16 @@ export default setupApi = (app) ->
             return
         promises = []
         result = []
-        users = []
-        f = false
-        findUser = await RegisteredUser.find({$or: [{username: {$regex: req.body.searchUser, $options: 'i'}}, {informaticsUsername: {$regex: req.body.searchUser, $options: 'i'}}]})
-        if findUser.length == 0
-            f = true
-            findUser = await User.find({$or: [{name: {$regex: req.body.searchUser, $options: 'i'}}, {_id: {$regex: req.body.searchUser, $options: 'i'}}]})
-        for foundUser in findUser
-            user = foundUser.toObject()
-            if f == true
-                users = await RegisteredUser.findByKey(user._id)
-            else
-                users = foundUser
-            users = users.toObject()
-            promises.push(addUserName(users))
-            i = i + 1
-            result.push(users)
+        findUser = []
+        for user in await User.search(req.body.searchString)
+            user = user.toObject()
+            findUser.push(await RegisteredUser.findByKey(user._id))
+        findRegisteredUser = await RegisteredUser.search(req.body.searchString)
+        foundUsers = findUser.concat(findRegisteredUser)
+        for user in foundUsers
+            user = user.toObject()
+            promises.push(addUserName(user))
+            result.push(user)
         await awaitAll(promises)
         res.json(result)
 
@@ -231,12 +225,9 @@ export default setupApi = (app) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
             user.fullName = fullUser?.name
-            user.fullDormant = fullUser?.dormant
+            user.dormant = fullUser?.dormant
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
-
-        Filter = (user) ->
-            return user.fullDormant == false || user.fullDormant == undefined
 
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -249,8 +240,8 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
-        not_dormant_result = result.filter(Filter)
-        res.json(not_dormant_result)
+        result = result.filter((user) -> not user.dormant)
+        res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
@@ -402,16 +393,12 @@ export default setupApi = (app) ->
             res.status(400).send("User not found")
             return
         newGroup = req.params.groupName
-        #if newGroup in ["none", "unknown"]
-            #adminUser = await InformaticsUser.findAdmin()
-           # await groups.moveUserToGroup(adminUser, req.params.userId, newGroup)
         if newGroup != "none"
             await user.setUserList(newGroup)
-            await user.setDormant("false")
-            await user.updateLastActivated()
+            await user.setDormant(false)
         res.send('OK')
 
-    app.get '/api/dormant/:userId/:dormant', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/dormant/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
@@ -419,8 +406,7 @@ export default setupApi = (app) ->
         if not user
             res.status(400).send("User not found")
             return
-        dormant = req.params.dormant
-        await user.setDormant(dormant)
+        await user.setDormant(true)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
