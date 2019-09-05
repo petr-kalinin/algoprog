@@ -97,6 +97,7 @@ export default table = (userList, table) ->
     return results
 
 export fullUser = (userId) ->
+    tables = []
     for level in [0..10]
         tables.push(((level + ch) for ch in ["A", "B"]))
     for reg in ["reg", "roi"]
