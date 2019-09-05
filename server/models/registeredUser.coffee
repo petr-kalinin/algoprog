@@ -22,6 +22,9 @@ registeredUserSchema.statics.findByKey = (key) ->
 registeredUserSchema.statics.search = (searchString) ->
     RegisteredUser.find({$or: [{username: {$regex: searchString, $options: 'i'}}, {informaticsUsername: {$regex: searchString, $options: 'i'}}]})
 
+registeredUserSchema.statics.findAllByKey = (key) ->
+    RegisteredUser.find({informaticsId: key})
+
 registeredUserSchema.methods.userKey = () ->
     @informaticsId
     

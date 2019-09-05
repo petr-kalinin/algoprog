@@ -153,21 +153,26 @@ export default setupApi = (app) ->
             price = undefined
         else
             price = +price
+        password = req.body.password
         achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
         user = await User.findById(req.params.id)
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         await user.setAchieves achieves
         userPrivate = await UserPrivate.findById(req.params.id)
-        console.log "userPrivate = ", userPrivate
         if not userPrivate
-            console.log "Creating new userPrivate"
             userPrivate = new UserPrivate({_id: req.params.id})
             await userPrivate.upsert()
             userPrivate = await UserPrivate.findById(req.params.id)
         await userPrivate.setPaidTill paidTill
         await userPrivate.setPrice price
+        if password != ""
+            for registeredUser in registeredUsers
+                logger.info "Set user password", registeredUser.userKey()
+                await registeredUser.setPassword(password)
+                await registeredUser.save()
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
