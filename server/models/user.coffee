@@ -146,7 +146,7 @@ sortByLevelAndRating = (a, b) ->
 usersSchema.statics.sortByLevelAndRating = sortByLevelAndRating
 
 usersSchema.statics.findByList = (list) ->
-    result = await User.find({dormant: false})
+    result = await User.find({{userList: list, dormant: false})
     return result.sort(sortByLevelAndRating)
 
 usersSchema.statics.search = (searchString) ->
