@@ -89,7 +89,7 @@ UnpaidWarning = (props) ->
         </Modal.Dialog>
     </div>
 
-DormantUser = (props) ->
+DormantWarning = (props) ->
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
@@ -215,7 +215,7 @@ class TopPanel extends React.Component
                 </Navbar.Form>
             </Navbar>
             {
-            @props.myUser?.dormant && <DormantUser handleClose={@props.logout}/>
+            @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
             }
             {
             @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>

@@ -25,8 +25,11 @@ export default class RegisteredUsers extends React.Component
 
     handleSubmit: (event) ->
         event.preventDefault()
-        newState = await callApi "searchString", {searchString: @state.searchString}
-        @setState({foundUsers: newState})
+        if not @state.searchString
+            foundUsers = await callApi "registeredUsers",
+        else
+            foundUsers = await callApi "searchUser", {searchString: @state.searchString}
+        @setState({foundUsers: foundUsers})
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"

@@ -14,10 +14,9 @@ import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
 import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
-import Result from './result'
 
 SEMESTER_START = "2016-06-01"
-THREE_MONTHS = 1000*60*60*24*90
+THREE_MONTHS = 1000 * 60 * 60 * 24 * 90
 
 usersSchema = new mongoose.Schema
     _id: String,
@@ -120,8 +119,7 @@ usersSchema.methods.setAchieves = (achieves) ->
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     @lastActivated = Date.now()
-    @update({$set: {lastActivated: @lastActivated}})
-    await @update({$set: {"userList": userList}})
+    await @update({$set: {lastActivated: @lastActivated}},{$set: {"userList": userList}})
     @userList = userList
 
 usersSchema.methods.setDormant = (dormant) ->
@@ -152,9 +150,9 @@ usersSchema.statics.findByList = (list) ->
     return result.sort(sortByLevelAndRating)
 
 usersSchema.statics.search = (searchString) ->
-    await User.find({$or: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$regex: searchString, $options: 'i'}}]})
+    await User.find({$or: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$regex: searchString, $options: 'i'}}, {userList: {$regex: searchString, $options: 'i'}}]})
 
-usersSchema.statics.findAll = (list) ->
+usersSchema.statics.findAll = () ->
     User.find {dormant: false}
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->

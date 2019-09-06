@@ -32,7 +32,7 @@ class GroupSelector extends React.Component
     
     setDormant: () ->
         () =>
-            await callApi "dormant/#{@props.user._id}", {}
+            await callApi "setDormant/#{@props.user._id}", {}
             await @props.handleReload()
 
     render: () ->

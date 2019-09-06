@@ -201,10 +201,10 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
-    app.post '/api/searchString', ensureLoggedIn, wrap (req, res) ->
-        addUserName = (users) ->
-            fullUser = await User.findById(users.informaticsId)
-            users.fullName = fullUser?.name
+    app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
+        addUserName = (user) ->
+            fullUser = await User.findById(user.informaticsId)
+            user.fullName = fullUser?.name
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
 
@@ -213,13 +213,13 @@ export default setupApi = (app) ->
             return
         promises = []
         result = []
-        findUser = []
+        users = []
         for user in await User.search(req.body.searchString)
             user = user.toObject()
-            findUser.push(await RegisteredUser.findByKey(user._id))
-        findRegisteredUser = await RegisteredUser.search(req.body.searchString)
-        foundUsers = findUser.concat(findRegisteredUser)
-        for user in foundUsers
+            users = users.concat(await RegisteredUser.findAllByKey(user._id))
+        registeredUsers = await RegisteredUser.search(req.body.searchString)
+        users = users.concat(registeredUsers)
+        for user in users
             user = user.toObject()
             promises.push(addUserName(user))
             result.push(user)
@@ -403,7 +403,7 @@ export default setupApi = (app) ->
             await user.setDormant(false)
         res.send('OK')
 
-    app.post '/api/dormant/:userId', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
