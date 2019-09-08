@@ -400,7 +400,6 @@ export default setupApi = (app) ->
         newGroup = req.params.groupName
         if newGroup != "none"
             await user.setUserList(newGroup)
-            await user.setDormant(false)
         res.send('OK')
 
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->

@@ -68,7 +68,7 @@ usersSchema.methods.updateLevel = ->
 
 usersSchema.methods.updateDormant = ->
     date = new Date()
-    if @userList=="unknown" && date-@lastActivated > THREE_MONTHS
+    if @userList=="unknown" && @lastActivated && date-@lastActivated > THREE_MONTHS
         @dormant = true
     @update({$set: {dormant: @dormant}})
 
@@ -119,7 +119,7 @@ usersSchema.methods.setAchieves = (achieves) ->
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     @lastActivated = Date.now()
-    await @update({$set: {lastActivated: @lastActivated}},{$set: {"userList": userList}})
+    await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "dormant": false}})
     @userList = userList
 
 usersSchema.methods.setDormant = (dormant) ->
