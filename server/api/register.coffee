@@ -35,6 +35,7 @@ export default register = (req, res, next) ->
             name: informaticsData.name,
             graduateYear: informaticsData.graduateYear,
             userList: "unknown",
+            lastActivated: new Date()
             registerDate: new Date()
         )
         if cfLogin
