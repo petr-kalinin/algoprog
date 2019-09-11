@@ -40,7 +40,7 @@ usersSchema = new mongoose.Schema
         progress: Number,
     graduateYear: Number,
     lastActivated: Date,
-    dormant: Boolean,
+    dormant: { type: Boolean, default: false },
     registerDate: Date,
     achieves: [String]
 
