@@ -208,12 +208,14 @@ usersSchema.statics.updateAllGraduateYears = () ->
     logger.info "Updated graduateYear"
 
 usersSchema.index
+    dormant: 1
     userList: 1
     active: -1
     level: -1
     ratingSort: -1
 
 usersSchema.index
+    dormant: 1
     username: 1
 
 User = mongoose.model('Users', usersSchema);
