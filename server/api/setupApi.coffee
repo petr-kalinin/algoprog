@@ -201,10 +201,36 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
+    app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
+        addUserName = (user) ->
+            fullUser = await User.findById(user.informaticsId)
+            user.fullName = fullUser?.name
+            user.registerDate = fullUser?.registerDate
+            user.userList = fullUser?.userList
+
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        promises = []
+        result = []
+        users = []
+        for user in await User.search(req.body.searchString)
+            user = user.toObject()
+            users = users.concat(await RegisteredUser.findAllByKey(user._id))
+        registeredUsers = await RegisteredUser.search(req.body.searchString)
+        users = users.concat(registeredUsers)
+        for user in users
+            user = user.toObject()
+            promises.push(addUserName(user))
+            result.push(user)
+        await awaitAll(promises)
+        res.json(result)
+
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
             user.fullName = fullUser?.name
+            user.dormant = fullUser?.dormant
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
 
@@ -219,6 +245,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
+        result = result.filter((user) -> not user.dormant)
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
@@ -371,11 +398,19 @@ export default setupApi = (app) ->
             res.status(400).send("User not found")
             return
         newGroup = req.params.groupName
-        if newGroup in ["none", "unknown"]
-            adminUser = await InformaticsUser.findAdmin()
-            await groups.moveUserToGroup(adminUser, req.params.userId, newGroup)
         if newGroup != "none"
             await user.setUserList(newGroup)
+        res.send('OK')
+
+    app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        await user.setDormant(true)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
