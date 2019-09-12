@@ -4,6 +4,7 @@ export startDayForWeeks =
     "zaoch": "2019-01-06"
     "stud": "2019-01-07"
     "notnnov": "2019-01-07"
+    "graduated": "2019-01-07"
     "unknown": "2019-01-07"
 
 export WEEK_ACTIVITY_EXP = 0.55
