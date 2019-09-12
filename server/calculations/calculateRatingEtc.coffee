@@ -22,7 +22,7 @@ levelVersion = (level) ->
 
 levelScore = (level) ->
     v = levelVersion(level)
-    res = Math.pow(LEVEL_RATING_EXP, v.major)
+    res = Math.pow(LEVEL_RATING_EXP, (v.major + 1))
     minorExp = Math.pow(LEVEL_RATING_EXP, 0.25)
     if v.minor >= 'Б'
         res *= minorExp
@@ -43,7 +43,7 @@ timeScore = (date) ->
 
 activityScore = (level, date) ->
     v = levelVersion(level)
-    return Math.sqrt(v.major) * timeScore(date)
+    return Math.sqrt(v.major + 1) * timeScore(date)
 
 export default calculateRatingEtc = (user) ->
     thisStart = new Date(startDayForWeeks[user.userList])
