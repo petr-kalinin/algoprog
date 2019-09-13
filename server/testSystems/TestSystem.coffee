@@ -27,9 +27,6 @@ export default class TestSystem
     submitsListLink: (problemId, userId) ->
         throw "not implemented"
 
-    setOutcome: (submitId, outcome, comment) ->
-        throw "not implemented"
-
     submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage) ->
         throw "not implemented"
 

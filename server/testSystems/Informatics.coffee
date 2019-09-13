@@ -144,37 +144,6 @@ export default class Informatics extends TestSystem
         id = @_informaticsProblemId(problemId)
         "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{userId}"
 
-    setOutcome: (submitId, outcome, comment) ->
-        throw "Will not set outcome on Informatice"
-        adminUser = await @_getAdmin()
-        [fullSubmitId, contest, run, problem] = submitId.match(/(\d+)r(\d+)p(\d+)/)
-        outcomeCode = switch outcome
-            when "AC" then 8
-            when "IG" then 9
-            when "DQ" then 10
-            else undefined
-            
-        try
-            if outcomeCode
-                href = "#{BASE_URL}/py/run/rejudge/#{contest}/#{run}/#{outcomeCode}"
-                await adminUser.download(href, {maxAttempts: 1})
-        finally
-            if comment
-                href = "#{BASE_URL}/py/comment/add"
-                body =
-                    run_id: run
-                    contest_id: contest
-                    comment: comment
-                    lines: ""
-                await adminUser.download(href, {
-                    method: 'POST',
-                    headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-                    form: body,
-                    followAllRedirects: true
-                    maxAttempts: 1
-                })
-        logger.info "Successfully set outcome for #{submitId}"
-
     submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage) ->
         problemId = if problemId then @_informaticsProblemId(problemId) else 0
         if userId or problemId
