@@ -23,10 +23,16 @@ class GroupSelector extends React.Component
     constructor: (props) ->
         super(props)
         @handleMove = @handleMove.bind(this)
+        @setDormant = @setDormant.bind(this)
 
     handleMove: (name) ->
         () =>
             await callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
+            await @props.handleReload()
+    
+    setDormant: () ->
+        () =>
+            await callApi "setDormant/#{@props.user._id}", {}
             await @props.handleReload()
 
     render: () ->
@@ -40,7 +46,7 @@ class GroupSelector extends React.Component
                     a <Button key={name} active={name==@props.user.userList} onClick={@handleMove(name)}>
                         {name}
                     </Button>
-                a <Button key={"none"} onClick={@handleMove("none")}>—</Button>
+                a <Button key={"dormant"} active={@props.user.dormant} onClick={@setDormant()}>dormant</Button>
                 res
                 }
             </ButtonGroup>
@@ -58,6 +64,7 @@ export default class UserBadge extends React.Component
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
         @handlePriceChange = @handlePriceChange.bind(this)
         @handleAchievesChange = @handleAchievesChange.bind(this)
+        @handlePasswordChange = @handlePasswordChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
         @updateResults = @updateResults.bind(this)
@@ -70,6 +77,7 @@ export default class UserBadge extends React.Component
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
             price: if props.user.price? then ''+props.user.price else ''
             achieves: (props.user.achieves || []).join(' ')
+            password: ''
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -100,6 +108,9 @@ export default class UserBadge extends React.Component
     handleAchievesChange: (event) ->
         @handleChange("achieves", event)
 
+    handlePasswordChange: (event) ->
+        @handleChange("password", event)
+
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
             graduateYear: @state.graduateYear
@@ -110,6 +121,7 @@ export default class UserBadge extends React.Component
             paidTill: @state.paidTill
             price: @state.price
             achieves: @state.achieves
+            password: @state.password
         )
         @props.handleReload()
 
@@ -203,6 +215,15 @@ export default class UserBadge extends React.Component
                                 value={@state.achieves}
                                 size="20"
                                 onChange={@handleAchievesChange}
+                                onKeyPress={@handleKeyPressed} />
+                        </div>
+                        <div>
+                            Пароль: <input
+                                type="text"
+                                name="password"
+                                value={@state.password}
+                                size="20"
+                                onChange={@handlePasswordChange}
                                 onKeyPress={@handleKeyPressed} />
                         </div>
                     </form> }

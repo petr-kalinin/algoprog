@@ -21,7 +21,6 @@ import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 import ThemeSwitch from './ThemeSwitch'
-
 import needUnknownWarning from '../lib/needUnknownWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
@@ -90,6 +89,28 @@ UnpaidWarning = (props) ->
         </Modal.Dialog>
     </div>
 
+DormantWarning = (props) ->
+    <div className="static-modal">
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Учетная запись не активирована</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <div>
+                    <p>Ваша учетная запись еще не активирована. Если вы хотите заниматься, напишите мне,
+                    чтобы я активировал вашу учетную запись. Мои контакты — на страничке
+                    {" "}<Link to="/material/0">О курсе</Link>.</p>
+                </div>
+            </Modal.Body>
+
+            <Modal.Footer>
+                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
+            </Modal.Footer>
+
+        </Modal.Dialog>
+    </div>
+
 
 class TopPanel extends React.Component
     constructor: (props) ->
@@ -101,7 +122,7 @@ class TopPanel extends React.Component
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
         @openUnpaid = @openUnpaid.bind(this)
-   
+
     closeWarning: ->
         @props.setUnknownWarningShown()
         @setState
@@ -195,6 +216,9 @@ class TopPanel extends React.Component
                     }
                 </Navbar.Form>
             </Navbar>
+            {
+            @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
+            }
             {
             @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
             }

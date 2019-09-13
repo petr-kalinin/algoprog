@@ -10,8 +10,8 @@ import UserName from './UserName'
 import callApi from '../lib/callApi'
 
 
-#SESSION_TIMES = ["14:00", "15:30"]
-SESSION_TIMES = ["14:00"]
+SESSION_TIMES = ["14:00", "15:30"]
+#SESSION_TIMES = ["14:00"]
 
 export default class Checkins extends React.Component
     constructor: (props) ->
@@ -30,7 +30,7 @@ export default class Checkins extends React.Component
                 result: result
 
     canRegister: () ->
-        @props.myUser.rating > 0
+        @props.myUser && @props.myUser.rating > 0
 
     render: () ->
         wasme = [false, false]
@@ -42,7 +42,8 @@ export default class Checkins extends React.Component
             </p>
 
             <p>
-            <b>Новичкам (кто не решил в курсе ни одной задачи) приходить на занятие нельзя</b>.
+            <b>Новичкам (кто не решил в курсе ни одной задачи) приходить на занятие нельзя</b> 
+            (за исключением занятия 22 сентября).
             Надо начать сдавать задачи заочно — 
             если хотя бы одну решите, можете записываться и приходить уже не как новички.
             </p>
@@ -85,8 +86,8 @@ export default class Checkins extends React.Component
                         </tr></thead>
                         <tbody>
                         {
-                        #rows = Math.max(@props.data[0].max, @props.data[1].max)
-                        rows = @props.data[0].max
+                        rows = Math.max(@props.data[0].max, @props.data[1].max)
+                        #rows = @props.data[0].max
                         for row in [0...rows]
                             <tr key={row}>
                                 {

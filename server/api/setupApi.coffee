@@ -153,21 +153,26 @@ export default setupApi = (app) ->
             price = undefined
         else
             price = +price
+        password = req.body.password
         achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
         user = await User.findById(req.params.id)
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setLevel req.body.level.current
         await user.setCfLogin cfLogin
         await user.setAchieves achieves
         userPrivate = await UserPrivate.findById(req.params.id)
-        console.log "userPrivate = ", userPrivate
         if not userPrivate
-            console.log "Creating new userPrivate"
             userPrivate = new UserPrivate({_id: req.params.id})
             await userPrivate.upsert()
             userPrivate = await UserPrivate.findById(req.params.id)
         await userPrivate.setPaidTill paidTill
         await userPrivate.setPrice price
+        if password != ""
+            for registeredUser in registeredUsers
+                logger.info "Set user password", registeredUser.userKey()
+                await registeredUser.setPassword(password)
+                await registeredUser.save()
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
@@ -182,7 +187,7 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        res.json(await dashboard())
+        res.json(await dashboard(req.user))
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
         id = req.user?.userKey()
@@ -204,10 +209,36 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
+    app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
+        addUserName = (user) ->
+            fullUser = await User.findById(user.informaticsId)
+            user.fullName = fullUser?.name
+            user.registerDate = fullUser?.registerDate
+            user.userList = fullUser?.userList
+
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        promises = []
+        result = []
+        users = []
+        for user in await User.search(req.body.searchString)
+            user = user.toObject()
+            users = users.concat(await RegisteredUser.findAllByKey(user._id))
+        registeredUsers = await RegisteredUser.search(req.body.searchString)
+        users = users.concat(registeredUsers)
+        for user in users
+            user = user.toObject()
+            promises.push(addUserName(user))
+            result.push(user)
+        await awaitAll(promises)
+        res.json(result)
+
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
             user.fullName = fullUser?.name
+            user.dormant = fullUser?.dormant
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
 
@@ -222,6 +253,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
+        result = result.filter((user) -> not user.dormant)
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
@@ -335,7 +367,7 @@ export default setupApi = (app) ->
             { 
                 checkins: await Checkin.findBySession(i)
                 max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..0])
+            } for i in [0..1])
         for sessionCheckins in checkins
             sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()
@@ -380,11 +412,19 @@ export default setupApi = (app) ->
             res.status(400).send("User not found")
             return
         newGroup = req.params.groupName
-        if newGroup in ["none", "unknown"]
-            adminUser = await InformaticsUser.findAdmin()
-            await groups.moveUserToGroup(adminUser, req.params.userId, newGroup)
         if newGroup != "none"
             await user.setUserList(newGroup)
+        res.send('OK')
+
+    app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        await user.setDormant(true)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->

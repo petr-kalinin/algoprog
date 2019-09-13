@@ -3,6 +3,8 @@ passportLocalMongoose = require('passport-local-mongoose')
 
 registeredUserSchema = new mongoose.Schema
     admin: Boolean
+    adminData:
+        defaultUserLists: [String]
     informaticsUsername: String
     informaticsPassword: String
     informaticsId: Number
@@ -16,6 +18,12 @@ registeredUserSchema.statics.findAdmin = (list) ->
 
 registeredUserSchema.statics.findByKey = (key) ->
     RegisteredUser.findOne({informaticsId: key})
+
+registeredUserSchema.statics.search = (searchString) ->
+    RegisteredUser.find({$or: [{username: {$regex: searchString, $options: 'i'}}, {informaticsUsername: {$regex: searchString, $options: 'i'}}]})
+
+registeredUserSchema.statics.findAllByKey = (key) ->
+    RegisteredUser.find({informaticsId: key})
 
 registeredUserSchema.methods.userKey = () ->
     @informaticsId

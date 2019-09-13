@@ -10,15 +10,9 @@ import getTestSystem from '../testSystems/TestSystemRegistry'
 
 import {runForUserAndProblem} from '../cron/downloadSubmits'
 
+import setDirty from '../lib/setDirty'
+
 import logger from '../log'
-
-postToInformatics = (req, res) ->
-    submitId = req.params.submitId
-    outcome = req.body.result
-    comment = req.body.comment
-
-    informatics = getTestSystem("informatics")
-    informatics.setOutcome(submitId, outcome, comment)
 
 parseRunId = (runid) ->
     if runid.includes("r")
@@ -28,23 +22,8 @@ parseRunId = (runid) ->
         contest = undefined
     return [fullSubmitId, contest, run, problem]
 
-
-updateData = (req, res) ->
-    [fullSubmitId, contest, run, problem] = parseRunId(req.params.submitId)
-    submit = await Submit.findById(req.params.submitId)
-    await runForUserAndProblem(submit.user, problem)
-    submit = await Submit.findById(req.params.submitId)
-    if req.body.result and submit.outcome != req.body.result
-        return false
-    if req.body.comment
-        comment = entities.encode(req.body.comment)
-        if not (comment in submit.comments)
-            return false
-    return true
-
 decodeComment = (comment) ->
     entities.decode(comment.text || comment)
-
 storeToDatabase = (req, res) ->
     [fullSubmitId, contest, runId, problemId] = parseRunId(req.params.submitId)
     if contest
@@ -74,21 +53,11 @@ storeToDatabase = (req, res) ->
             await newComment.upsert()
             submit.comments.push({text: comment, reviewer: reviewer?.name})
     await submit.upsert()
-    await updateData(req, res)  # to store comment with proper outcome
-    await User.updateUser(submit.user)
+    dirtyResults = {}
+    dirtyUsers = {}
+    await setDirty(submit, dirtyResults, dirtyUsers)
+    await User.updateUser(submit.user, dirtyResults)
 
 export default setOutcome = (req, res) ->
-    try
-        await postToInformatics(req, res)
-    catch e
-        logger.info "Can't post to informatics ", req.params.submitId
-        logger.info e.message
-    success = false
-    try
-        success = await updateData(req, res)
-    catch e
-        logger.info "Can't update informatics status ", req.params.submitId
-        logger.info e.message
-        success = false
-    if not success and (req.body.result or req.body.comment)
+    if req.body.result or req.body.comment
         await storeToDatabase(req, res)

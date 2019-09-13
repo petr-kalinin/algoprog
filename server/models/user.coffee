@@ -15,8 +15,8 @@ import awaitAll from '../../client/lib/awaitAll'
 import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
 
-
 SEMESTER_START = "2016-06-01"
+THREE_MONTHS = 1000 * 60 * 60 * 24 * 90
 
 usersSchema = new mongoose.Schema
     _id: String,
@@ -38,8 +38,10 @@ usersSchema = new mongoose.Schema
         color: String,
         activity: Number,
         progress: Number,
-    graduateYear: Number
-    registerDate: Date
+    graduateYear: Number,
+    lastActivated: Date,
+    dormant: { type: Boolean, default: false },
+    registerDate: Date,
     achieves: [String]
 
 usersSchema.methods.upsert = () ->
@@ -65,6 +67,12 @@ usersSchema.methods.updateLevel = ->
     @level.current = await calculateLevel @_id, @level.base, new Date("2100-01-01")
     @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
+
+usersSchema.methods.updateDormant = ->
+    date = new Date()
+    if @userList=="unknown" && @lastActivated && date-@lastActivated > THREE_MONTHS
+        @dormant = true
+    @update({$set: {dormant: @dormant}})
 
 usersSchema.methods.updateCfRating = ->
     logger.debug "Updating cf rating ", @name
@@ -112,8 +120,14 @@ usersSchema.methods.setAchieves = (achieves) ->
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
-    await @update({$set: {"userList": userList}})
+    @lastActivated = Date.now()
+    await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "dormant": false}})
     @userList = userList
+
+usersSchema.methods.setDormant = (dormant) ->
+    logger.info "setting dormant ", @_id, dormant
+    await @update({$set: {"dormant": dormant}})
+    @dormant = dormant
 
 compareLevels = (a, b) ->
     if a.length != b.length
@@ -121,7 +135,6 @@ compareLevels = (a, b) ->
     if a != b
         return if a > b then -1 else 1
     return 0
-
 
 sortByLevelAndRating = (a, b) ->
     if a.active != b.active
@@ -135,11 +148,14 @@ sortByLevelAndRating = (a, b) ->
 usersSchema.statics.sortByLevelAndRating = sortByLevelAndRating
 
 usersSchema.statics.findByList = (list) ->
-    result = await User.find({userList: list})
+    result = await User.find({userList: list, dormant: false})
     return result.sort(sortByLevelAndRating)
 
-usersSchema.statics.findAll = (list) ->
-    User.find {}
+usersSchema.statics.search = (searchString) ->
+    await User.find({$or: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$regex: searchString, $options: 'i'}}, {userList: {$regex: searchString, $options: 'i'}}]})
+
+usersSchema.statics.findAll = () ->
+    User.find {dormant: false}
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
@@ -151,6 +167,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateChocos()
     await u.updateRatingEtc()
     await u.updateLevel()
+    await u.updateDormant()
     await u.updateAchieves()
     logger.info "Updated user", userId
 
@@ -161,7 +178,7 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
         catch e
             logger.warn("Error while updating user: ", e.message || e, e.stack)
 
-    users = await User.find {}
+    users = await User.findAll()
     promises = []
     count = 0
     for u in users
@@ -193,12 +210,14 @@ usersSchema.statics.updateAllGraduateYears = () ->
     logger.info "Updated graduateYear"
 
 usersSchema.index
+    dormant: 1
     userList: 1
     active: -1
     level: -1
     ratingSort: -1
 
 usersSchema.index
+    dormant: 1
     username: 1
 
 User = mongoose.model('Users', usersSchema);
