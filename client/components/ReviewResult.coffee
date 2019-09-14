@@ -249,12 +249,10 @@ class ReviewResult extends React.Component
                             diffText = diffText.join("\n")
                             files = parseDiff(diffText, {nearbySequences: "zip"})
 
-                            markEdits = markWordEdits({threshold: 30, markLongDistanceDiff: true});
-
                             <div>
                                 <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
                                 <pre>
-                                    {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split" markEdits={markEdits}/>)}
+                                    {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split"/>)}
                                 </pre>
                             </div>
                     }
