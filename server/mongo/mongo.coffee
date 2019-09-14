@@ -8,7 +8,7 @@ url = process.env.MONGODB_ADDON_URI || (
 )
 
 ( () ->
-    await mongoose.connect(url)
+    await mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true })
 )().catch((error) ->
     logger.error error
     process.exit(1)
