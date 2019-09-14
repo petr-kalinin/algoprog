@@ -77,7 +77,7 @@ class ReviewResult extends React.Component
             result,
             comment: @state.commentText
         }
-        @props.syncHandleDone()
+        @props.syncHandleDone?()
         @props.handleReload()
 
     componentDidUpdate: (prevProps, prevState) ->
