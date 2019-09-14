@@ -5,4 +5,4 @@ import ReduxThunk from 'redux-thunk'
 import rootReducer from './reducers'
 
 export default createMyStore = (state) ->
-    createStore(rootReducer, state, applyMiddleware(promiseMiddleware(), ReduxThunk))
+    createStore(rootReducer, state, applyMiddleware(promiseMiddleware, ReduxThunk))
