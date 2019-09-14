@@ -224,6 +224,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
+        result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
@@ -246,6 +247,7 @@ export default setupApi = (app) ->
             result.push(user)
         await awaitAll(promises)
         result = result.filter((user) -> not user.dormant)
+        result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
