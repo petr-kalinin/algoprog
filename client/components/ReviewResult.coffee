@@ -70,7 +70,7 @@ class ReviewResult extends React.Component
 
     setResult: (result) ->
         @syncSetOutcome(result)
-        @props.handleDone()
+        @props.handleDone?()
 
     syncSetOutcome: (result) ->
         await callApi "setOutcome/#{@state.currentSubmit._id}", {

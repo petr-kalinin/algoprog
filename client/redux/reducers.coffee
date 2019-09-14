@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
+import { ActionType } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
@@ -11,16 +11,16 @@ MAX_DATA_ITEMS = 100
 
 data = (state=[], action) ->
     switch action.type
-        when "#{GET_DATA}_#{PENDING}", "#{GET_DATA}_#{FULFILLED}", "#{GET_DATA}_#{REJECTED}"
+        when "#{GET_DATA}_#{ActionType.Pending}", "#{GET_DATA}_#{ActionType.Fulfilled}", "#{GET_DATA}_#{ActionType.Rejected}"
             updateTime = if window? then new Date() else undefined
             switch action.type
-                when "#{GET_DATA}_#{PENDING}"
+                when "#{GET_DATA}_#{ActionType.Pending}"
                     newValue = (x for x in state when equalUrl(x.url, action.meta.url))[0] || {}
                     delete newValue.rejected
                     newValue.pending = true
-                when "#{GET_DATA}_#{FULFILLED}"
+                when "#{GET_DATA}_#{ActionType.Fulfilled}"
                     newValue = {data: action.payload, success: true}
-                when "#{GET_DATA}_#{REJECTED}"
+                when "#{GET_DATA}_#{ActionType.Rejected}"
                     newValue = {rejected: true}
             a = [{newValue..., url: action.meta.url, updateTime}]
             b = (x for x in state when !equalUrl(x.url, action.meta.url))

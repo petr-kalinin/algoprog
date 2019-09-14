@@ -30,6 +30,9 @@ export default ConnectedComponent = (Component, options) ->
         constructor: (props) ->
             super(props)
             @handleReload = @handleReload.bind(this)
+            if not window?
+                promises = @requestData(1000)  # allow pre-fill of state
+                @props.saveDataPromises(promises)
 
         urls: () ->
             options.urls(@props)
@@ -66,11 +69,6 @@ export default ConnectedComponent = (Component, options) ->
                 for key, url of @urls()
                     componentProps[key] = @props.data(url)
                 return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
-
-        componentWillMount: ->
-            if not window?
-                promises = @requestData(1000)  # allow pre-fill of state
-                @props.saveDataPromises(promises)
 
         componentDidMount: ->
             @requestDataAndSetTimeout()
