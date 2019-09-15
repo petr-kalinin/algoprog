@@ -10,7 +10,7 @@ import UserName from './UserName'
 import callApi from '../lib/callApi'
 
 
-SESSION_TIMES = ["14:00", "15:30"]
+SESSION_TIMES = ["15:00", "16:00"]
 #SESSION_TIMES = ["14:00"]
 
 export default class Checkins extends React.Component
@@ -58,6 +58,10 @@ export default class Checkins extends React.Component
 
             <p>
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) -- его могут спросить охранники на входе!                    
+            </p>
+            
+            <p>
+            <b>22 сентября особое расписание занятий: в 14.00 занятие только для новичков, для всех остальных занятия в 15.00 и 16.00.</b>
             </p>
 
            
