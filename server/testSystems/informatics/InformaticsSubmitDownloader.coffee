@@ -60,7 +60,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             href = "https://informatics.msk.ru/py/problem/run/#{run}/source"
             #page = await @adminUser.download(href, {encoding: 'latin1'})
             page = await @adminUser.download(href, {encoding: 'utf8'})
-            logger.info "Source for run #{runid}: #{page}"
+            logger.info "Source for run #{runid} (url #{href}): #{page}"
             source = JSON.parse(page)?.data?.source || ""
             buf = Buffer.from(source, "utf8")
             source = iconv.decode(buf, "latin1")
