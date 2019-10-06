@@ -373,7 +373,7 @@ export default setupApi = (app) ->
             session = +session
         user = ""+req.params.user
         logger.info "User #{user} checkin for session #{session}"
-        if (session? and session != 0 and session != 1)
+        if (session? and session != 0 and session != 1 and session != 2 and session != 3)
             res.status(400).json({error: "Strange session"})
             return
         if session?
