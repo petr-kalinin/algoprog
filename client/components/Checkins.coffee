@@ -10,8 +10,8 @@ import UserName from './UserName'
 import callApi from '../lib/callApi'
 
 
-SESSION_TIMES = ["12:00", "13:00", "14:00", "15:00"]
-#SESSION_TIMES = ["14:00", "15:30"]
+#SESSION_TIMES = ["12:00", "13:00", "14:00", "15:00"]
+SESSION_TIMES = ["14:00", "15:30"]
 #SESSION_TIMES = ["14:00"]
 
 export default class Checkins extends React.Component
@@ -34,7 +34,7 @@ export default class Checkins extends React.Component
         @props.myUser && @props.myUser.rating > 0
 
     render: () ->
-        wasme = [false, false, false, false]
+        wasme = [false, false]
         <div>
             <h1>Регистрация на занятие</h1>
             <p>
@@ -60,10 +60,6 @@ export default class Checkins extends React.Component
             <p>
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) -- его могут спросить охранники на входе!                    
             </p>
-
-            <Alert bsStyle="danger">
-                13 октября будет нестандартное расписание занятий: вместо двух занятий с большим количеством мест записи будут 4 занятия с небольшим количеством мест записи.
-            </Alert>
 
             {
             if @state.result?.error
@@ -138,7 +134,7 @@ export default class Checkins extends React.Component
                         </tbody>
                     </Table>
                     {
-                    if wasme[0] or wasme[1] or wasme[2] or wasme[3]
+                    if wasme[0] or wasme[1]
                         <Button bsStyle="info" onClick={@register(null, @props.myUser?._id)}>Отменить регистрацию</Button>
                     else if !@canRegister()
                         <Alert bsStyle="danger">
