@@ -355,7 +355,7 @@ export default setupApi = (app) ->
             { 
                 checkins: await Checkin.findBySession(i)
                 max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..3])
+            } for i in [0..2])
         for sessionCheckins in checkins
             sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()
@@ -373,7 +373,7 @@ export default setupApi = (app) ->
             session = +session
         user = ""+req.params.user
         logger.info "User #{user} checkin for session #{session}"
-        if (session? and session != 0 and session != 1 and session != 2 and session != 3)
+        if (session? and session != 0 and session != 1)
             res.status(400).json({error: "Strange session"})
             return
         if session?
