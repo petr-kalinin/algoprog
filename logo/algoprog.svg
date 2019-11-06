@@ -25,14 +25,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="331.1127"
-     inkscape:cy="685.61823"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="1095.8676"
+     inkscape:cy="535.72548"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="2560"
-     inkscape:window-height="1381"
+     inkscape:window-height="1367"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -52,51 +52,6 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="42.62949"
-       y="92.102997"
-       id="text823"
-       inkscape:export-xdpi="310"
-       inkscape:export-ydpi="310"><tspan
-         sodipodi:role="line"
-         id="tspan821"
-         x="42.62949"
-         y="92.102997"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">algoprog</tspan></text>
-    <g
-       id="g857"
-       transform="translate(1.7208328)"
-       inkscape:export-xdpi="310"
-       inkscape:export-ydpi="310">
-      <path
-         d="m 62.006531,78.800831 -10.554397,-6.093584 -10e-7,-12.187168 10.554397,-6.093584 10.554398,6.093583 0,12.187168 z"
-         inkscape:randomized="0"
-         inkscape:rounded="0"
-         inkscape:flatsided="true"
-         sodipodi:arg2="2.0943951"
-         sodipodi:arg1="1.5707963"
-         sodipodi:r2="10.554397"
-         sodipodi:r1="12.187168"
-         sodipodi:cy="66.613663"
-         sodipodi:cx="62.006531"
-         sodipodi:sides="6"
-         id="path819"
-         style="fill:#d32c2c;fill-opacity:1;stroke:#d32c2c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         sodipodi:type="star" />
-      <g
-         transform="matrix(1.3059832,0,0,1.3059832,-18.379224,-20.029736)"
-         id="text846"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.20259321px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         aria-label="A">
-        <path
-           inkscape:connector-curvature="0"
-           id="path851"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;stroke-width:0.20259321px"
-           d="m 63.859072,72.894508 -0.613834,-3.026833 h -3.492499 l -0.592667,3.026833 h -2.709333 q 0.931333,-3.8735 1.883833,-7.048499 0.9525,-3.196167 1.8415,-6.053667 h 2.836333 q 0.931333,2.878667 1.8415,6.117167 0.931333,3.217333 1.799167,6.984999 z M 61.530738,62.332342 q -0.211666,0.740833 -0.402166,1.418167 -0.169333,0.656166 -0.338667,1.312333 -0.148166,0.635 -0.296333,1.291167 -0.127,0.656166 -0.254,1.354666 h 2.561166 q -0.127,-0.6985 -0.254,-1.354666 -0.127,-0.656167 -0.296333,-1.291167 -0.148167,-0.656167 -0.338667,-1.312333 -0.169333,-0.677334 -0.381,-1.418167 z" />
-      </g>
-    </g>
     <text
        id="text861"
        y="129.67003"
@@ -143,5 +98,141 @@
            inkscape:connector-curvature="0" />
       </g>
     </g>
+    <rect
+       id="rect3785"
+       width="192"
+       height="108"
+       x="164.37076"
+       y="35.720921"
+       style="stroke:none;stroke-width:0.88456362;fill:#ffffff"
+       inkscape:export-xdpi="254"
+       inkscape:export-ydpi="254" />
+    <g
+       id="g3793"
+       transform="matrix(1.601841,0,0,1.7243876,-118.1489,-64.047311)"
+       inkscape:export-xdpi="254"
+       inkscape:export-ydpi="254">
+      <text
+         inkscape:export-ydpi="310"
+         inkscape:export-xdpi="310"
+         id="text823"
+         y="107.8719"
+         x="207.26752"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
+           y="107.8719"
+           x="207.26752"
+           id="tspan821"
+           sodipodi:role="line">algoprog.ru</tspan></text>
+      <g
+         inkscape:export-ydpi="310"
+         inkscape:export-xdpi="310"
+         transform="translate(174.29636,15.768902)"
+         id="g857">
+        <path
+           sodipodi:type="star"
+           style="fill:#d32c2c;fill-opacity:1;stroke:#d32c2c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path819"
+           sodipodi:sides="6"
+           sodipodi:cx="62.006531"
+           sodipodi:cy="66.613663"
+           sodipodi:r1="12.187168"
+           sodipodi:r2="10.554397"
+           sodipodi:arg1="1.5707963"
+           sodipodi:arg2="2.0943951"
+           inkscape:flatsided="true"
+           inkscape:rounded="0"
+           inkscape:randomized="0"
+           d="m 62.006531,78.800831 -10.554397,-6.093584 -10e-7,-12.187168 10.554397,-6.093584 10.554398,6.093583 0,12.187168 z" />
+        <g
+           aria-label="A"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.20259321px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text846"
+           transform="matrix(1.3059832,0,0,1.3059832,-18.379224,-20.029736)">
+          <path
+             d="m 63.859072,72.894508 -0.613834,-3.026833 h -3.492499 l -0.592667,3.026833 h -2.709333 q 0.931333,-3.8735 1.883833,-7.048499 0.9525,-3.196167 1.8415,-6.053667 h 2.836333 q 0.931333,2.878667 1.8415,6.117167 0.931333,3.217333 1.799167,6.984999 z M 61.530738,62.332342 q -0.211666,0.740833 -0.402166,1.418167 -0.169333,0.656166 -0.338667,1.312333 -0.148166,0.635 -0.296333,1.291167 -0.127,0.656166 -0.254,1.354666 h 2.561166 q -0.127,-0.6985 -0.254,-1.354666 -0.127,-0.656167 -0.296333,-1.291167 -0.148167,-0.656167 -0.338667,-1.312333 -0.169333,-0.677334 -0.381,-1.418167 z"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;stroke-width:0.20259321px"
+             id="path851"
+             inkscape:connector-curvature="0" />
+        </g>
+      </g>
+    </g>
+    <text
+       inkscape:export-ydpi="310"
+       inkscape:export-xdpi="310"
+       id="text3797"
+       y="84.321869"
+       x="15.853143"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.58934212px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.43973356px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"
+       transform="scale(0.96381184,1.0375469)"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.58934212px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.43973356px"
+         y="84.321869"
+         x="15.853143"
+         id="tspan3795"
+         sodipodi:role="line">algoprog.ru</tspan></text>
+    <path
+       d="m 62.006531,78.800831 -10.554397,-6.093584 -10e-7,-12.187168 10.554397,-6.093584 10.554398,6.093583 0,12.187168 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="true"
+       sodipodi:arg2="2.0943951"
+       sodipodi:arg1="1.5707963"
+       sodipodi:r2="10.554397"
+       sodipodi:r1="12.187168"
+       sodipodi:cy="66.613663"
+       sodipodi:cx="62.006531"
+       sodipodi:sides="6"
+       id="path3799"
+       style="fill:#d32c2c;fill-opacity:1;stroke:#d32c2c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="star"
+       transform="matrix(1.601841,0,0,1.7243876,-37.535104,-71.333381)" />
+    <g
+       transform="matrix(2.0919774,0,0,2.2520212,-66.975699,-105.87241)"
+       id="g3803"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.20259321px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       aria-label="A">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3801"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;stroke-width:0.20259321px"
+         d="m 63.859072,72.894508 -0.613834,-3.026833 h -3.492499 l -0.592667,3.026833 h -2.709333 q 0.931333,-3.8735 1.883833,-7.048499 0.9525,-3.196167 1.8415,-6.053667 h 2.836333 q 0.931333,2.878667 1.8415,6.117167 0.931333,3.217333 1.799167,6.984999 z M 61.530738,62.332342 q -0.211666,0.740833 -0.402166,1.418167 -0.169333,0.656166 -0.338667,1.312333 -0.148166,0.635 -0.296333,1.291167 -0.127,0.656166 -0.254,1.354666 h 2.561166 q -0.127,-0.6985 -0.254,-1.354666 -0.127,-0.656167 -0.296333,-1.291167 -0.148167,-0.656167 -0.338667,-1.312333 -0.169333,-0.677334 -0.381,-1.418167 z" />
+    </g>
+    <rect
+       inkscape:export-ydpi="254"
+       inkscape:export-xdpi="254"
+       style="fill:#ffffff;stroke:none;stroke-width:0.88456362"
+       y="148.77592"
+       x="169.18161"
+       height="108"
+       width="192"
+       id="rect3809" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="264.51767"
+       y="199.94633"
+       id="text3813"
+       inkscape:export-xdpi="254"
+       inkscape:export-ydpi="254"><tspan
+         sodipodi:role="line"
+         x="264.51767"
+         y="199.94633"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan3817">Far Manager</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d32c2c;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="238.56236"
+       y="232.06708"
+       id="text3821"
+       inkscape:export-xdpi="254"
+       inkscape:export-ydpi="254"><tspan
+         sodipodi:role="line"
+         id="tspan3819"
+         x="238.56236"
+         y="232.06708"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#d32c2c;stroke-width:0.26458332">Петр Калинин, 27.10.2019</tspan></text>
   </g>
 </svg>
