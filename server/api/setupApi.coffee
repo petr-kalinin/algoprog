@@ -82,7 +82,7 @@ hideTests = (submit) ->
             res[field] = test[field]
         return res
 
-    if submit.results.tests
+    if submit.results?.tests
         for key, test of submit.results.tests
             submit.results.tests[key] = hideOneTest(test)
     return submit
