@@ -44,7 +44,7 @@ export default download = (href, jar, options) ->
 
 requests = 0
 promises = []
-REQUESTS_LIMIT = 15
+REQUESTS_LIMIT = 10
 export downloadLimited = (href, jar, options) ->
         if requests >= REQUESTS_LIMIT
             await new Promise((resolve) => promises.push(resolve))

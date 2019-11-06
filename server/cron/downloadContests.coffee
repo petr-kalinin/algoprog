@@ -5,7 +5,7 @@ import Table from "../models/table"
 import User from "../models/user"
 
 import logger from '../log'
-import download from '../lib/download'
+import {downloadLimited} from '../lib/download'
 import awaitAll from '../../client/lib/awaitAll'
 
 export REGION_CONTESTS = 
@@ -80,7 +80,7 @@ class ContestDownloader
         return @makeProblem(nameRes[0], href, id, letter, name)
 
     processContest: (order, fullText, href, cid, name, level) ->
-        text = await download(href, @jar)
+        text = await downloadLimited(href, @jar)
 
         firstProblem = @getFirstProblem(text)
         re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
@@ -92,7 +92,7 @@ class ContestDownloader
 
     run: ->
         logger.info "Downloading base contests"
-        text = await download(@url, @jar)
+        text = await downloadLimited(@url, @jar)
         re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.msk.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
         order = 0
         promises = []
