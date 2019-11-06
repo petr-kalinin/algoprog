@@ -75,6 +75,18 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
+hideTests = (submit) ->
+    hideOneTest = (test) ->
+        res = {}
+        for field in ["string_status", "status", "max_memory_used", "time", "real_time"]
+            res[field] = test[field]
+        return res
+
+    if submit.results.tests
+        for key, test of submit.results.tests
+            submit.results.tests[key] = hideOneTest(test)
+    return submit
+
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
@@ -256,6 +268,7 @@ export default setupApi = (app) ->
             return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
+        submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
         res.json(submits)
@@ -285,6 +298,7 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         submit = (await Submit.findById(req.params.id)).toObject()
+        submit = hideTests(submit)
         submit = expandSubmit(submit)
         res.json(submit)
 
