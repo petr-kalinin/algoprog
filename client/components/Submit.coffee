@@ -132,6 +132,8 @@ class TestResult extends React.Component
                         Stderr:
                         <pre>{@props.result.error_output}</pre>
                     </Col>
+                </Grid>
+                <Grid fluid>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Output:
                         <pre>{@props.result.output}</pre>
