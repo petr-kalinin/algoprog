@@ -1,0 +1,10 @@
+.toggling {
+    cursor: hand;
+}
+.pre {
+    overflow: scroll;
+}
+.td {
+    /* strange hack */
+    max-width: 10px;
+}

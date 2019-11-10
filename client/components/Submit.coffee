@@ -7,6 +7,8 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import Table from 'react-bootstrap/lib/Table'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
+import Grid from 'react-bootstrap/lib/Grid'
+import Col from 'react-bootstrap/lib/Col'
 
 import {Link} from 'react-router-dom'
 
@@ -14,6 +16,8 @@ import UserName from './UserName'
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
 import outcomeToText from '../lib/outcomeToText'
+
+import styles from './Submit.css'
 
 LANGUAGE_TO_HIGHLIGHT_STYLE =
     "Python": "python",
@@ -94,6 +98,54 @@ export SubmitHeader = (props) ->
         <h4>{props.submit.fullProblem.tables.join("\n")}</h4>
     </div>
 
+class TestResult extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state = 
+            open: false
+        @toggle = @toggle.bind(this)
+
+    toggle: () ->
+        @setState
+            open: not @state.open
+
+    render: () ->
+        canToggle = "input" of @props.result
+        res = []
+        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1">
+            <td>{@props.index}</td>
+            <td>{@props.result.string_status}</td>
+            <td>{@props.result.time/1000}</td>
+            <td>{@props.result.max_memory_used}</td>
+        </tr>
+        if canToggle and @state.open
+            res.push <tr key="2"><td colSpan="4" className={styles.td}>
+                <Grid fluid>
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                        Input:
+                        <pre className={styles.pre}>{@props.result.input}</pre>
+                        {@props.result.big_input && "..."}
+                    </Col>
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                        Checker:
+                        <pre class={styles.pre}>{@props.result.checker_output}</pre>
+                        Stderr:
+                        <pre>{@props.result.error_output}</pre>
+                    </Col>
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                        Output:
+                        <pre>{@props.result.output}</pre>
+                        {@props.result.big_output && "..."}
+                    </Col>
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                        Answer:
+                        <pre>{@props.result.corr}</pre>
+                        {@props.result.big_corr && "..."}
+                    </Col>
+                </Grid>
+            </td></tr>
+        return res
+
 export default class Submit extends React.Component
     render: () ->
         [cl, message] = outcomeToText(@props.submit.outcome)
@@ -136,12 +188,7 @@ export default class Submit extends React.Component
                             res = []
                             a = (el) -> res.push(el)
                             for index, result of (@props.submit.results?.tests || [])
-                                a <tr key={index}>
-                                    <td>{index}</td>
-                                    <td>{result.string_status}</td>
-                                    <td>{result.time/1000}</td>
-                                    <td>{result.max_memory_used}</td>
-                                </tr>
+                                a <TestResult key={index} result={result} index={index}/>
                             res}
                         </tbody>
                     </Table>

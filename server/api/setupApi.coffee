@@ -75,7 +75,7 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
-hideTests = (submit) ->
+hideTests = (submit, reqUser) ->
     hideOneTest = (test) ->
         res = {}
         for field in ["string_status", "status", "max_memory_used", "time", "real_time"]
@@ -268,7 +268,8 @@ export default setupApi = (app) ->
             return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
-        submits = submits.map(hideTests)
+        if not req.user?.admin
+            submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
         res.json(submits)
@@ -294,6 +295,8 @@ export default setupApi = (app) ->
         res.json(json)
 
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
+        res.status(404).send("Not found")
+        return
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
