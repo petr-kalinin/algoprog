@@ -75,6 +75,18 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
+hideTests = (submit, reqUser) ->
+    hideOneTest = (test) ->
+        res = {}
+        for field in ["string_status", "status", "max_memory_used", "time", "real_time"]
+            res[field] = test[field]
+        return res
+
+    if submit.results?.tests
+        for key, test of submit.results.tests
+            submit.results.tests[key] = hideOneTest(test)
+    return submit
+
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
@@ -232,6 +244,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
+        result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
@@ -254,6 +267,7 @@ export default setupApi = (app) ->
             result.push(user)
         await awaitAll(promises)
         result = result.filter((user) -> not user.dormant)
+        result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
@@ -262,6 +276,8 @@ export default setupApi = (app) ->
             return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
+        if not req.user?.admin
+            submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
         res.json(submits)
@@ -293,10 +309,13 @@ export default setupApi = (app) ->
         res.json(json)
 
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
+        res.status(404).send("Not found")
+        return
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
         submit = (await Submit.findById(req.params.id)).toObject()
+        submit = hideTests(submit)
         submit = expandSubmit(submit)
         res.json(submit)
 
@@ -367,7 +386,7 @@ export default setupApi = (app) ->
             { 
                 checkins: await Checkin.findBySession(i)
                 max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..1])
+            } for i in [0..2])
         for sessionCheckins in checkins
             sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()

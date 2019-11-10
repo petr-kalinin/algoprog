@@ -60,6 +60,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             href = "https://informatics.msk.ru/py/problem/run/#{run}/source"
             #page = await @adminUser.download(href, {encoding: 'latin1'})
             page = await @adminUser.download(href, {encoding: 'utf8'})
+            logger.info "Source for run #{runid} (url #{href}): #{page}"
             source = JSON.parse(page)?.data?.source || ""
             buf = Buffer.from(source, "utf8")
             source = iconv.decode(buf, "latin1")
@@ -76,11 +77,11 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     getResults: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "https://informatics.msk.ru/py/protocol/get/#{run}"
+            href = "https://informatics.msk.ru/py/protocol/get-full/#{run}"
             data = await @adminUser.download(href)
-            logger.info "results data=", data
+            logger.info "results data for runid #{runid}: ", data
             result = JSON.parse(data)
-            if not result.tests?[1] and not result.compiler_output and not result.message.includes('status="SV"') and not result.message.includes('status="CE"') and not result.protocol.includes('compile-error="yes"')
+            if not result.tests?[1] and not result.compiler_output and not result.message?.includes('status="SV"') and not result.message?.includes('status="CE"') and not result.protocol?.includes('compile-error="yes"')
                 throw "No results found"
             return result
         catch e

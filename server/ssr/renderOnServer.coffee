@@ -117,6 +117,9 @@ export default renderOnServer = (req, res, next) =>
                 component = route.component
             return match
         )
+        if not component
+            res.set('Content-Type', 'text/html').status(200).end('')
+            return
         element = React.createElement(component, {match: foundMatch})
         context = {}
 

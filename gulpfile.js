@@ -71,8 +71,8 @@ function browserifyTransform(b) {
         })
         .transform(coffeescriptTransform)
         .transform('babelify', {
-            presets: ['env', 'react'],
-            plugins: ['react-css-modules'],
+            presets: ['@babel/preset-react', ["@babel/preset-env", {useBuiltIns: 'usage', corejs: 3}]],
+            plugins: [],
             extensions: [".coffee", ".css", '.js']
         });
 }
@@ -123,7 +123,7 @@ gulp.task('client:coffee', function() {
     .pipe(plumb())
     .pipe(coffee({bare: true, coffee: require('coffeescript')}))
     .pipe(babel({
-       presets: ['import-export', 'react']
+       presets: ['@babel/preset-react', ["@babel/preset-env", {useBuiltIns: 'usage', corejs: 3}]]
     }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('./build/client'));
@@ -135,7 +135,7 @@ gulp.task('server:coffee', function() {
     .pipe(plumb())
     .pipe(coffee({bare: true, coffee: require('coffeescript')}))
     .pipe(babel({
-       presets: ['import-export', 'react']
+       presets: ['@babel/preset-react', ["@babel/preset-env", {useBuiltIns: 'usage', corejs: 3}]]
     }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('./build/server'));
@@ -145,7 +145,7 @@ gulp.task('server:js', function() {
   return gulp.src('server/**/*.js')
     .pipe(plumb())
     .pipe(babel({
-        presets: ['import-export', 'react']
+        presets: ['@babel/preset-react', ["@babel/preset-env", {useBuiltIns: 'usage', corejs: 3}]]
     }))
     .pipe(gulp.dest('./build/server'));
 });
@@ -184,8 +184,8 @@ gulp.task( 'server:start', gulp.series('server:bundle', function() {
 }));
 
 gulp.task( 'server:restart', gulp.parallel('server:start', function() {
-    gulp.watch('./build/server/**/*', restartIfListening );
-    gulp.watch('./build/client/**/*', restartIfListening );
+    //gulp.watch('./build/server/**/*', restartIfListening );
+    //gulp.watch('./build/client/**/*', restartIfListening );
 }));
 
 gulp.task('default',  gulp.parallel('assets:js:watch', 'server:watch', 'server:restart'));

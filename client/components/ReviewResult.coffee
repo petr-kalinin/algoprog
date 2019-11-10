@@ -70,14 +70,14 @@ class ReviewResult extends React.Component
 
     setResult: (result) ->
         @syncSetOutcome(result)
-        @props.handleDone()
+        @props.handleDone?()
 
     syncSetOutcome: (result) ->
         await callApi "setOutcome/#{@state.currentSubmit._id}", {
             result,
             comment: @state.commentText
         }
-        @props.syncHandleDone()
+        @props.syncHandleDone?()
         @props.handleReload()
 
     componentDidUpdate: (prevProps, prevState) ->
@@ -249,12 +249,10 @@ class ReviewResult extends React.Component
                             diffText = diffText.join("\n")
                             files = parseDiff(diffText, {nearbySequences: "zip"})
 
-                            markEdits = markWordEdits({threshold: 30, markLongDistanceDiff: true});
-
                             <div>
                                 <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
                                 <pre>
-                                    {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split" markEdits={markEdits}/>)}
+                                    {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split"/>)}
                                 </pre>
                             </div>
                     }

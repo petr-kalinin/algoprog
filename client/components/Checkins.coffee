@@ -10,6 +10,7 @@ import UserName from './UserName'
 import callApi from '../lib/callApi'
 
 
+#SESSION_TIMES = ["12:00", "13:00", "14:00", "15:00"]
 SESSION_TIMES = ["14:00", "15:30"]
 #SESSION_TIMES = ["14:00"]
 
@@ -60,7 +61,10 @@ export default class Checkins extends React.Component
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) -- его могут спросить охранники на входе!                    
             </p>
 
-           
+            <Alert bsStyle="danger">
+                10 ноября занятия не будет. Ниже запись на 17 ноября.
+            </Alert>
+
             {
             if @state.result?.error
                 <Alert bsStyle="danger">
