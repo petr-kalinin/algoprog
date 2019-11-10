@@ -184,8 +184,8 @@ gulp.task( 'server:start', gulp.series('server:bundle', function() {
 }));
 
 gulp.task( 'server:restart', gulp.parallel('server:start', function() {
-    gulp.watch('./build/server/**/*', restartIfListening );
-    gulp.watch('./build/client/**/*', restartIfListening );
+    //gulp.watch('./build/server/**/*', restartIfListening );
+    //gulp.watch('./build/client/**/*', restartIfListening );
 }));
 
 gulp.task('default',  gulp.parallel('assets:js:watch', 'server:watch', 'server:restart'));
