@@ -155,7 +155,7 @@ export default class Informatics extends TestSystem
         if userId
             fullUser = await RegisteredUser.findByKey(userId)
             user = LoggedInformaticsUser.getUser(fullUser.informaticsUsername, fullUser.informaticsPassword)
-            adminUser = await @_getAdmin()
+            adminUser = await Informatics.getAdmin()
         else
             # disable all downloads except for a specific user
             return
