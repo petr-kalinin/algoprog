@@ -23,6 +23,7 @@ usersSchema = new mongoose.Schema
     name: String,
     userList: String,
     chocos: [Number],
+    chocosGot: [Number],
     level:
         current: String,
         start: String,
@@ -115,6 +116,11 @@ usersSchema.methods.setAchieves = (achieves) ->
     logger.info "setting achieves login ", @_id, achieves
     await @update({$set: {"achieves": achieves}})
     @achieves = achieves
+
+usersSchema.methods.setChocosGot = (chocosGot) ->
+    logger.info "setting chocosGot ", @_id, chocosGot 
+    await @update({$set: {"chocosGot": chocosGot}})
+    @chocosGot = chocosGot
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList

@@ -6,6 +6,8 @@ import Table from './Table'
 
 import { Badge } from 'react-bootstrap'
 
+import callApi from '../lib/callApi'
+
 import globalStyles from './global.css'
 import styles from './FullUser.css'
 
@@ -27,7 +29,7 @@ Chocos = (props) ->
                         <td className={styles.chocos_td}>
                             {
                             if number
-                                (<img src="/choco.png" key={n}/> for n in [1..number])
+                                (<img src="/choco.png" key={n} onClick={props.onClick(ci, n)}/> for n in [1..number])
                             else
                                 <img src="/choco-strut.png"/>
                             }
@@ -43,19 +45,34 @@ Chocos = (props) ->
         </table>
     </div>
 
-export default FullUser = (props) ->
-    <div>
-        {`<UserBadge {...props}/>`}
-        {props.user.userList == "lic40" && <Chocos chocos={props.user.chocos}/> }
-        <SolvedByWeek users={[props.user]} userList={props.user.userList} details={false} headerClass="h2"/>
-        <h2>Результаты</h2>
-        {
-        res = []
-        a =  (el) -> res.push(el)
-        for result in props.results
-            data =
-                user: props.user
-                results: result
-            a <Table data={[data]} details={false} me={props.me} headerText={false} key={result[0]._id}/>
-        res}
-    </div>
+export default class FullUser extends React.Component
+    constructor: (props) ->
+        super(props)
+        @setChocosGot = @setChocosGot.bind this
+
+    setChocosGot: (index, count) ->
+        () =>
+            chocosGot = (0 for c in @props.user.chocos)
+            # support chocosGot == []
+            for c, i in @props.user.chocosGot
+                chocosGot[i] = c
+            chocosGot[index] = count
+            await callApi "user/#{@props.user._id}/setChocosGot", {chocosGot}
+            @props.handleReload()
+
+    render: () ->
+        <div>
+            {`<UserBadge {...this.props}/>`}
+            {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} onClick={@setChocosGot}/> }
+            <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
+            <h2>Результаты</h2>
+            {
+            res = []
+            a =  (el) -> res.push(el)
+            for result in @props.results
+                data =
+                    user: @props.user
+                    results: result
+                a <Table data={[data]} details={false} me={@props.me} headerText={false} key={result[0]._id}/>
+            res}
+        </div>
