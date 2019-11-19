@@ -28,14 +28,22 @@ Chocos = (props) ->
                     a <tr key={ci}>
                         <td className={styles.chocos_td}>
                             {
+                            rres = []
+                            aa = (el) -> rres.push(el)
                             if number
-                                (<img src="/choco.png" key={n} onClick={props.onClick(ci, n)}/> for n in [1..number])
+                                for n in [1..number]
+                                    suffix = ""
+                                    if n <= props.chocosGot[ci]
+                                        suffix = "-light"
+                                    aa <img src={"/choco#{suffix}.png"} key={n} onClick={props.onClick(ci, n)}/>
                             else
-                                <img src="/choco-strut.png"/>
+                                aa <img src="/choco-strut.png"/>
+                            rres
                             }
                         </td>
-                        <td>
+                        <td onClick={props.onClick(ci, 0)}>
                             <Badge>
+                                {if props.chocosGot[ci] < number then " #{number - props.chocosGot[ci]} / " else null}
                                 {number}
                             </Badge>
                         </td>
@@ -63,7 +71,7 @@ export default class FullUser extends React.Component
     render: () ->
         <div>
             {`<UserBadge {...this.props}/>`}
-            {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} onClick={@setChocosGot}/> }
+            {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
             <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
             <h2>Результаты</h2>
             {

@@ -192,7 +192,6 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         chocosGot = req.body.chocosGot
-        console.log "will set chocosgot"
         user = await User.findById(req.params.id)
         await user.setChocosGot chocosGot
         res.send('OK')
