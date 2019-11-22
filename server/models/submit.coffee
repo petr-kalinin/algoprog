@@ -1,5 +1,7 @@
 mongoose = require('mongoose')
 
+import calculateHashes from '../hashes/calculateHashes'
+
 outcomeType = (outcome) ->
     switch outcome
         when "DR" then "DR"
@@ -20,6 +22,7 @@ submitsSchema = new mongoose.Schema
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
+    hashes: [{window: Number, hash: String}]
 
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
@@ -37,6 +40,9 @@ submitsSchema.methods.equivalent = (other) ->
         and @source == other.source \
         and @sourceRaw == other.sourceRaw \
         and @language == other.language
+
+submitsSchema.methods.calculateHashes = () ->
+    @hashes = calculateHashes(@sourceRaw.toString())
 
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
