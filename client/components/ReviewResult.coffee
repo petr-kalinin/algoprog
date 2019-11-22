@@ -67,6 +67,7 @@ class ReviewResult extends React.Component
         @setCurrentDiff = @setCurrentDiff.bind this
         @setQuality = @setQuality.bind this
         @toggleBestSubmits = @toggleBestSubmits.bind this
+        @downloadSubmits = @downloadSubmits.bind this
 
     setResult: (result) ->
         @syncSetOutcome(result)
@@ -98,6 +99,10 @@ class ReviewResult extends React.Component
                     newState.currentSubmit = submit
             if not deepEqual(newState, @state)
                 @setState(newState)
+
+    downloadSubmits: () ->
+        await callApi "downloadSubmitsForUserAndProblem/#{@props.user._id}/#{@props.result.fullTable._id}"
+        @props.handleReload()
 
     accept: () ->
         @setResult("AC")
@@ -229,6 +234,7 @@ class ReviewResult extends React.Component
                                         </ButtonGroup>
                                         }
                                     </FormGroup>
+                                    <Button onClick={@downloadSubmits} bsSize="xsmall">re-download sumits</Button>
                                 </div>
                             }
                         </div>
