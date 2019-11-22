@@ -34,6 +34,7 @@ EJUDGE_STATUS_TO_OUTCOME =
     96: "Тестирование...",
     98: "Компилирование..."
     377: "Задача в очереди на тестирование"
+    520: "Ошибка проверки, переотправьте"
 
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
