@@ -39,6 +39,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import download from '../lib/download'
 import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
+import setDirty from '../lib/setDirty'
 
 import {unpaidBlocked} from '../../client/lib/isPaid'
 import awaitAll from '../../client/lib/awaitAll'
@@ -111,6 +112,10 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         results: []
         force: false
     await submit.upsert()
+    dirtyResults = {}
+    await setDirty(submit, dirtyResults, {})
+    await User.updateUser(submit.user, dirtyResults)
+
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
