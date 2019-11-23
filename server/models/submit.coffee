@@ -1,6 +1,11 @@
 mongoose = require('mongoose')
 
+import Hash from './Hash'
+
 import calculateHashes from '../hashes/calculateHashes'
+
+import awaitAll from '../../client/lib/awaitAll'
+import logger from '../log'
 
 outcomeType = (outcome) ->
     switch outcome
@@ -27,6 +32,20 @@ submitsSchema = new mongoose.Schema
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
 
+submitsSchema.methods.calculateHashes = () ->
+    logger.info("calculating hashes for submit #{@_id}")
+    @hashes = calculateHashes(@sourceRaw.toString())
+    logger.info("calculating hashes for submit #{@_id}, have #{@hashes.length} hashes")
+    for h in @hashes
+        hash = new Hash
+            _id: "#{h.hash}:#{@_id}"
+            hash: h.hash
+            submit: @_id
+            user: @_user
+            window: h.window
+        await hash.upsert()
+    await @upsert()
+
 submitsSchema.methods.equivalent = (other) ->
     if @comments.length > 0
         return false
@@ -40,9 +59,6 @@ submitsSchema.methods.equivalent = (other) ->
         and @source == other.source \
         and @sourceRaw == other.sourceRaw \
         and @language == other.language
-
-submitsSchema.methods.calculateHashes = () ->
-    @hashes = calculateHashes(@sourceRaw.toString())
 
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
@@ -74,7 +90,21 @@ submitsSchema.statics.findPendingSubmits = (userId) ->
 submitsSchema.statics.findCT = (userId) ->
     Submit.find
         outcome: "CT"
-        
+
+submitsSchema.statics.calculateAllHashes = () ->
+    submits = await Submit.find({})
+    promises = []
+    count = 0
+    for s in submits
+        promises.push(s.calculateHashes())
+        count++
+        if promises.length >= 10
+            logger.info("Calculating 10 hashes, waiting for completion (#{count} / #{submits.length})")
+            await awaitAll(promises)
+            logger.info("Calculated 10 hashes, continuing (#{count} / #{submits.length})")
+            promises = []
+    await awaitAll(promises)
+    logger.info("Calculates all hashes")
 
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })

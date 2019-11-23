@@ -534,6 +534,13 @@ export default setupApi = (app) ->
         downloadSubmits.runAll()
         res.send('OK')
 
+    app.get '/api/calculateAllHashes', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        Submit.calculateAllHashes()
+        res.send('OK')
+
     app.post '/api/informatics/userData', wrap (req, res) ->
         username = req.body.username
         password = req.body.password

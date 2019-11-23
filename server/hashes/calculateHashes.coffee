@@ -63,10 +63,17 @@ selectHashesAfterPreprocess = (tokens) ->
                 hashes.push(getHash(cur))
                 cur.splice(0, 1)
         hashes.sort()
-        for h in hashes[...MAX_HASHES_FOR_WINDOW]
-            result.push
-                window: window
-                hash: h
+        was = {}
+        count = 0
+        for h in hashes
+            if not (h of was)
+                was[h] = true
+                count += 1
+                result.push
+                    window: window
+                    hash: h
+                if count == MAX_HASHES_FOR_WINDOW
+                    break
     return result
 
 export default calculateHashes = (source) ->
