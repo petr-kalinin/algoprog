@@ -68,6 +68,7 @@ class SubmitDownloader
             newSubmit.comments = oldSubmit.comments
             newSubmit.quality = oldSubmit.quality
             newSubmit.language = oldSubmit.language
+            newSubmit.downloadTime = oldSubmit.downloadTime
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
