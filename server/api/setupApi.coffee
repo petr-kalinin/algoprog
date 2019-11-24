@@ -76,7 +76,7 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
-hideTests = (submit, reqUser) ->
+hideTests = (submit) ->
     hideOneTest = (test) ->
         res = {}
         for field in ["string_status", "status", "max_memory_used", "time", "real_time"]
@@ -112,9 +112,13 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         results: []
         force: false
     await submit.upsert()
-    dirtyResults = {}
-    await setDirty(submit, dirtyResults, {})
-    await User.updateUser(submit.user, dirtyResults)
+
+    update = () ->
+        dirtyResults = {}
+        await setDirty(submit, dirtyResults, {})
+        await User.updateUser(submit.user, dirtyResults)
+    update()  # do this async
+    return undefined
 
 
 export default setupApi = (app) ->
