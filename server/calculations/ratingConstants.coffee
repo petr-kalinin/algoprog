@@ -2,6 +2,7 @@ export startDayForWeeks =
     "lic40": "2019-09-04"
     "lic87": "2019-08-31"
     "zaoch": "2019-09-01"
+    "vega": "2019-12-04"
     "stud": "2019-09-02"
     "notnnov": "2019-09-02"
     "graduated": "2019-09-02"
