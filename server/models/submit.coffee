@@ -27,7 +27,7 @@ submitsSchema = new mongoose.Schema
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
-    hashes: [{window: Number, hash: String}]
+    hashes: [{window: Number, hash: String, score: Number}]
 
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
@@ -41,8 +41,10 @@ submitsSchema.methods.calculateHashes = () ->
             _id: "#{h.hash}:#{@_id}"
             hash: h.hash
             submit: @_id
-            user: @_user
+            user: @user
+            problem: @problem
             window: h.window
+            score: h.score
         await hash.upsert()
     await @upsert()
 

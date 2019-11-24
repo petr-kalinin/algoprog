@@ -52,7 +52,7 @@ getHash = (tokens) ->
     str = tokens.join(' ')
     return crypto.createHash('md5').update(str).digest('hex');
 
-selectHashesAfterPreprocess = (tokens) ->
+selectHashesAfterPreprocess = (tokens, score) ->
     result = []
     for window in WINDOWS
         hashes = []
@@ -72,6 +72,7 @@ selectHashesAfterPreprocess = (tokens) ->
                 result.push
                     window: window
                     hash: h
+                    score: score
                 if count == MAX_HASHES_FOR_WINDOW
                     break
     return result
@@ -81,8 +82,8 @@ export default calculateHashes = (source) ->
         return ( {window: w, hash: NO_HASH} for w in WINDOWS)
     tokens = tokenize(source)
     hashes = []
-    for preprocessor in [dummyPreprocessor, inOrderPreprocessor, frequencyPreprocessor]
-        p = preprocessor(tokens)
-        hashes = hashes.concat(selectHashesAfterPreprocess(p))
+    for preprocessor in [[dummyPreprocessor, 2], [inOrderPreprocessor, 1], [frequencyPreprocessor, 1]]
+        p = preprocessor[0](tokens)
+        hashes = hashes.concat(selectHashesAfterPreprocess(p, preprocessor[1]))
     return hashes
 

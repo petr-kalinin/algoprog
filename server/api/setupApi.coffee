@@ -41,6 +41,8 @@ import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import setDirty from '../lib/setDirty'
 
+import findSimilarSubmits from '../hashes/findSimilarSubmits'
+
 import {unpaidBlocked} from '../../client/lib/isPaid'
 import awaitAll from '../../client/lib/awaitAll'
 
@@ -111,6 +113,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         comments: []
         results: []
         force: false
+    await submit.calculateHashes()
     await submit.upsert()
     dirtyResults = {}
     await setDirty(submit, dirtyResults, {})
@@ -318,6 +321,27 @@ export default setupApi = (app) ->
         submit = hideTests(submit)
         submit = expandSubmit(submit)
         res.json(submit)
+
+    app.get '/api/similarSubmits/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        submit = (await Submit.findById(req.params.id)).toObject()
+        similar = await findSimilarSubmits(submit, 5)
+        similar = similar.map((submit) -> submit.toObject())
+        similar = similar.map(expandSubmit)
+        similar = await awaitAll(similar)
+        similar = similar.map (submit) ->
+            return
+                _id: submit._id
+                time: submit.time
+                user: submit.user
+                problem: submit.problem
+                source: submit.source
+                sourceRaw: submit.sourceRaw
+                fullUser: submit.fullUser
+                fullProblem: submit.fullProblem
+        res.json(similar)
 
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
