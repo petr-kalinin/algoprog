@@ -234,7 +234,7 @@ class ReviewResult extends React.Component
                                         </ButtonGroup>
                                         }
                                     </FormGroup>
-                                    <Button onClick={@downloadSubmits} bsSize="xsmall">re-download sumits</Button>
+                                    <Button onClick={@downloadSubmits} bsSize="xsmall">re-download submits</Button>
                                 </div>
                             }
                         </div>
