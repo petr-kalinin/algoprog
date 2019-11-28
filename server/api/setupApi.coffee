@@ -345,6 +345,8 @@ export default setupApi = (app) ->
                 sourceRaw: submit.sourceRaw
                 fullUser: submit.fullUser
                 fullProblem: submit.fullProblem
+                outcome: submit.outcome
+                language: submit.language
         res.json(similar)
 
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->

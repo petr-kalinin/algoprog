@@ -9,7 +9,14 @@ export default findSimilarSubmits = (submit, limit) ->
     candidates.sort (a, b) ->
         scoreA = a.window * a.score
         scoreB = b.window * b.score
-        return scoreB - scoreA
+        if scoreB != scoreA 
+            return scoreB - scoreA
+        if a._id < b._id
+            return 1
+        else if a._id > b._id
+            return -1
+        else
+            return 0
     result = []
     seenIds = {}
     for candidate in candidates

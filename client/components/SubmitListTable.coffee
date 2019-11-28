@@ -37,6 +37,7 @@ maxVal = (submit, field) ->
     return if res < 0 then undefined else res
 
 export default SubmitListTable = (props) ->
+    wasNotSimilar = false
     <div className={styles.outerDiv}>
         <Table responsive striped condensed hover>
             <thead>
@@ -61,7 +62,8 @@ export default SubmitListTable = (props) ->
                     time = maxVal(submit, "time")
                     mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
                     mem = mem.toFixed(2)
-                    <tr key={submit._id} className={cl} onClick={props.handleSubmitClick(submit)} style={cursor: "hand"}>
+                    res = []
+                    res.push <tr key={submit._id} className={cl} onClick={props.handleSubmitClick(submit)} style={cursor: "hand"}>
                         <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>
@@ -87,6 +89,14 @@ export default SubmitListTable = (props) ->
                             </td>
                         }
                     </tr>
+                    if not wasNotSimilar and not submit.similar
+                        wasNotSimilar = true
+                        res.push <tr key="similarHeader">
+                            <td colSpan={if props.handleDiffClick then 8 else 7}>
+                                Похожие сабмиты
+                            </td>
+                        </tr>
+                    res
                 ).reverse()}
             </tbody>
         </Table>
