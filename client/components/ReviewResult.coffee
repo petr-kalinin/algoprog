@@ -302,7 +302,7 @@ options =
 
 optionsForSimilar = 
     urls: (props) ->
-        if props.submits
+        if props.submits and props.me?.admin
             similar: "similarSubmits/#{props.submits[props.submits.length - 1]._id}"
         else
             {}

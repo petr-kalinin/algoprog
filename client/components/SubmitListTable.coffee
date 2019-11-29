@@ -38,6 +38,7 @@ maxVal = (submit, field) ->
 
 export default SubmitListTable = (props) ->
     wasNotSimilar = false
+    wasSimilar = false
     <div className={styles.outerDiv}>
         <Table responsive striped condensed hover>
             <thead>
@@ -89,11 +90,13 @@ export default SubmitListTable = (props) ->
                             </td>
                         }
                     </tr>
-                    if not wasNotSimilar and not submit.similar
+                    if submit.similar
+                        wasSimilar = true
+                    if not wasNotSimilar and wasSimilar and not submit.similar
                         wasNotSimilar = true
                         res.push <tr key="similarHeader">
                             <td colSpan={if props.handleDiffClick then 8 else 7}>
-                                Похожие сабмиты
+                                <b>Похожие сабмиты</b>
                             </td>
                         </tr>
                     res
