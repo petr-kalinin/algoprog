@@ -69,6 +69,7 @@ class SubmitDownloader
             newSubmit.quality = oldSubmit.quality
             newSubmit.language = oldSubmit.language
             newSubmit.downloadTime = oldSubmit.downloadTime
+            newSubmit.hashes = oldSubmit.hashes
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
@@ -109,6 +110,7 @@ class SubmitDownloader
         newSubmit.sourceRaw = sourceRaw
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
+        await newSubmit.calculateHashes()
 
         logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
         try

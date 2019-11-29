@@ -54,7 +54,7 @@ class ReviewResult extends React.Component
         super(props)
         @state =
             commentText: ""
-            currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
+            currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
             currentDiff: [undefined, undefined]
             bestSubmits: false
         @accept = @accept.bind this
@@ -85,7 +85,7 @@ class ReviewResult extends React.Component
         if prevProps.result._id != @props.result._id
             @setState
                 commentText: ""
-                currentSubmit: if @props.data then @props.data[@props.data.length - 1] else null
+                currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
                 bestSubmits: @state.bestSubmits
                 currentDiff: @state.currentDiff
         else
@@ -94,7 +94,7 @@ class ReviewResult extends React.Component
                 currentSubmit: null
                 bestSubmits: @state.bestSubmits
                 currentDiff: @state.currentDiff
-            for submit in @props.data
+            for submit in @props.submits
                 if submit._id == @state.currentSubmit?._id
                     newState.currentSubmit = submit
             if not deepEqual(newState, @state)
@@ -185,7 +185,7 @@ class ReviewResult extends React.Component
                         <div>
                             <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
                             {
-                            admin && <div>
+                            admin and not @state.currentSubmit.similar and <div>
                                 <div>
                                     {
                                     if @state.currentSubmit.outcome in ["OK", "AC"]
@@ -238,7 +238,7 @@ class ReviewResult extends React.Component
                                 </div>
                             }
                         </div>
-                    else  # not @state.currentSubmit
+                    else if @state.currentDiff[1] and @state.currentDiff[0]
                         if @state.currentDiff[1].source == @state.currentDiff[0].source
                             <div>
                                 <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
@@ -265,14 +265,14 @@ class ReviewResult extends React.Component
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>
                     <SubmitListTable
-                        submits={@props.data}
+                        submits={@props.submits}
                         handleSubmitClick={@setCurrentSubmit}
                         handleDiffClick={@setCurrentDiff}
                         activeId={@state.currentSubmit?._id}
                         activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
                 </Col>
                 {
-                admin && <Col xs={12} sm={12} md={12} lg={12}>
+                admin and @state.currentSubmit and not @state.currentSubmit.similar and <Col xs={12} sm={12} md={12} lg={12}>
                     <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
                 </Col>
                 }
@@ -282,12 +282,29 @@ class ReviewResult extends React.Component
             </Grid>
         </div>
 
+SubmitsAndSimilarMerger = (props) ->
+    for submit in props.submits
+        submit.similar = false
+    newSubmits = props.submits
+    if props.similar
+        for submit in props.similar
+            submit.similar = true
+        newSubmits = props.similar.reverse().concat(props.submits)
+    `<ReviewResult  {...props} submits={newSubmits}/>`
+
 options =
     urls: (props) ->
-        data: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+        submits: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
         user: "user/#{props.result.fullUser._id}"
         bestSubmits: "bestSubmits/#{props.result.fullTable._id}"
         me: "me"
     timeout: 0
 
-export default ConnectedComponent(ReviewResult, options)
+optionsForSimilar = 
+    urls: (props) ->
+        if props.submits and props.me?.admin
+            similar: "similarSubmits/#{props.submits[props.submits.length - 1]._id}"
+        else
+            {}
+
+export default ConnectedComponent(ConnectedComponent(SubmitsAndSimilarMerger, optionsForSimilar), options)
