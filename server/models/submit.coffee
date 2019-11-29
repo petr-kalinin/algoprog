@@ -1,6 +1,7 @@
 mongoose = require('mongoose')
 
 import Hash from './Hash'
+import User from './user'
 
 import calculateHashes from '../hashes/calculateHashes'
 
@@ -94,19 +95,22 @@ submitsSchema.statics.findCT = (userId) ->
         outcome: "CT"
 
 submitsSchema.statics.calculateAllHashes = () ->
-    submits = await Submit.find({})
-    promises = []
-    count = 0
-    for s in submits
-        promises.push(s.calculateHashes())
-        count++
-        if promises.length >= 10
-            logger.info("Calculating 10 hashes, waiting for completion (#{count} / #{submits.length})")
-            await awaitAll(promises)
-            logger.info("Calculated 10 hashes, continuing (#{count} / #{submits.length})")
-            promises = []
-    await awaitAll(promises)
-    logger.info("Calculates all hashes")
+    users = await User.find({})
+    for u, userI in users
+        submits = await Submit.findByUser(u._id)
+        promises = []
+        count = 0
+        for s in submits
+            promises.push(s.calculateHashes())
+            count++
+            if promises.length >= 10
+                logger.info("Calculating 10 hashes, waiting for completion (#{count} / #{submits.length}  | #{userI} / #{users.length})")
+                await awaitAll(promises)
+                logger.info("Calculated 10 hashes, continuing (#{count} / #{submits.length}  | #{userI} / #{users.length})")
+                promises = []
+        await awaitAll(promises)
+        logger.info("Calculated all hashes for user #{userI} / #{users.length}")
+    logger.info("Calculated all hashes for all users")
 
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })
