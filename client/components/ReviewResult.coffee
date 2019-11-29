@@ -286,7 +286,7 @@ SubmitsAndSimilarMerger = (props) ->
     for submit in props.submits
         submit.similar = false
     newSubmits = props.submits
-    if props.similar
+    if props.similar and Array.isArray(props.similar)
         for submit in props.similar
             submit.similar = true
         newSubmits = props.similar.reverse().concat(props.submits)
