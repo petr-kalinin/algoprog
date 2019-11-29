@@ -35,7 +35,7 @@ submitsSchema.methods.upsert = () ->
 
 submitsSchema.methods.calculateHashes = () ->
     logger.info("calculating hashes for submit #{@_id}")
-    @hashes = calculateHashes(@sourceRaw.toString())
+    @hashes = calculateHashes((@sourceRaw or @source).toString())
     logger.info("calculating hashes for submit #{@_id}, have #{@hashes.length} hashes")
     for h in @hashes
         hash = new Hash
