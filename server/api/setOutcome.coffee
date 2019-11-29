@@ -33,6 +33,7 @@ storeToDatabase = (req, res) ->
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
         submit.force = true
+        submit.calculateHashes()
     if req.body.comment
         if not (req.body.comment in submit.comments.map(entities.decode))
             comment = entities.encode(req.body.comment)

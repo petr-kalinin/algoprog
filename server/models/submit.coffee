@@ -38,6 +38,10 @@ submitsSchema.methods.calculateHashes = () ->
     @hashes = calculateHashes((@sourceRaw or @source).toString())
     logger.info("calculating hashes for submit #{@_id}, have #{@hashes.length} hashes")
     for h in @hashes
+        if @outcome in ['OK', 'IG']
+            h.score *= 2
+        if @outcome == 'AC'
+            h.score *= 3
         hash = new Hash
             _id: "#{h.hash}:#{@_id}"
             hash: h.hash

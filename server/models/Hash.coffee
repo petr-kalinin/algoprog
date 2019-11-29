@@ -6,7 +6,7 @@ hashSchema = new mongoose.Schema
     submit: String
     user: String
     problem: String
-    window: Number 
+    window: Number
     score: Number
 
 hashSchema.methods.upsert = () ->
