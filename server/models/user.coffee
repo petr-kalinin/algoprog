@@ -127,6 +127,8 @@ usersSchema.methods.setUserList = (userList) ->
     @lastActivated = Date.now()
     await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "dormant": false}})
     @userList = userList
+    User.updateUser(@_id)
+    return undefined
 
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
