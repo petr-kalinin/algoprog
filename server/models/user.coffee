@@ -203,6 +203,7 @@ usersSchema.statics.updateAllCf = () ->
     for u in await User.findAll()
         if u.cf.login
             await u.updateCfRating()
+            await User.updateUser(u._id, {})
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 

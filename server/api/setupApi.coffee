@@ -197,6 +197,7 @@ export default setupApi = (app) ->
                 logger.info "Set user password", registeredUser.userKey()
                 await registeredUser.setPassword(password)
                 await registeredUser.save()
+        await User.updateUser(user._id, {})
         res.send('OK')
 
     app.post '/api/user/:id/setChocosGot', ensureLoggedIn, wrap (req, res) ->
