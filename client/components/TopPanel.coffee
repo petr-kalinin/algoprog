@@ -218,10 +218,10 @@ class TopPanel extends React.Component
             @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
             }
             {
-            @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
+            not @props.myUser?.dormant and @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
             }
             {
-            @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
+            not @props.myUser?.dormant and @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
             }
         </div>
 
