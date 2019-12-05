@@ -96,6 +96,9 @@ export default ConnectedComponent = (Component, options) ->
             if force
                 @invalidateData()
             @requestData(0)
+            if options.propogateReload
+                @props.handleReload?()
+
 
         requestDataAndSetTimeout: () ->
             try

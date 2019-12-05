@@ -306,5 +306,6 @@ optionsForSimilar =
             similar: "similarSubmits/#{props.submits[props.submits.length - 1]._id}"
         else
             {}
+    propogateReload: true
 
 export default ConnectedComponent(ConnectedComponent(SubmitsAndSimilarMerger, optionsForSimilar), options)
