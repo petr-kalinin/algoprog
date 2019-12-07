@@ -127,7 +127,7 @@ class Register extends React.Component
         if @state.password and @state.password == @state.password2
             if @state.password.startsWith(' ') or @state.password.endsWith(' ')
                 passwordValidationState = 'error'
-                passwordError = 'Пароль не может начинаться или заканчиваться на пробел'
+                passwordError = 'Пароль не может начинаться с пробела или заканчиваться на него'
             passwordValidationState = 'success'
         else if @state.password and @state.password2
             passwordValidationState = 'error'
@@ -139,7 +139,7 @@ class Register extends React.Component
             loginValidationState = 'error'
         else if @state.username.startsWith(' ') or @state.username.endsWith(' ')
             loginValidationState = 'error'
-            loginError = 'Логин не может начинаться или заканчиваться на пробел'
+            loginError = 'Логин не может начинаться с пробела или заканчиваться на него'
 
         canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
 
