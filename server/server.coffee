@@ -75,5 +75,7 @@ start = () ->
         if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == 0)
             logger.info("Starting jobs")
             jobs.map((job) -> job.start())
+        else
+            logger.info("Will not start jobs")
 
 start()
