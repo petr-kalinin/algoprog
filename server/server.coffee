@@ -34,12 +34,9 @@ stats.socket.on 'error',  (error) ->
 app = express()
 app.enable('trust proxy')
 
-if process.env["ENABLE_METRICS"]
+if process.env["LOG_REQUESTS"]
     app.use(responseTime((req, res, time) ->
-        stat = (req.method + req.url).toLowerCase()
-            .replace(/[:.]/g, '')
-            .replace(/\//g, '_')
-        stats.timing(stat, time)
+        logger.info "Request to ", req.path, " user ", req.user?.informaticsId, " time=", time
     ))
 
 if process.env["FORCE_HTTPS"]
