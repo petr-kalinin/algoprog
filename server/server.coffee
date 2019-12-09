@@ -70,7 +70,7 @@ start = () ->
         for id, system of REGISTRY
             system.selfTest()
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped
-        if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == 0)
+        if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == "0")
             logger.info("Starting jobs ", process.env["INSTANCE_NUMBER"])
             jobs.map((job) -> job.start())
         else
