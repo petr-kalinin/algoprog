@@ -17,6 +17,7 @@ import {REGISTRY} from './testSystems/TestSystemRegistry'
 import download from './lib/download'
 import jobs from './cron/cron'
 import sleep from './lib/sleep'
+import setupMetrics from './metrics/metrics'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -34,10 +35,7 @@ stats.socket.on 'error',  (error) ->
 app = express()
 app.enable('trust proxy')
 
-if process.env["LOG_REQUESTS"]
-    app.use(responseTime((req, res, time) ->
-        logger.info "Request to ", req.path, " user ", req.user?.informaticsId, " time=", time
-    ))
+setupMetrics(app)
 
 if process.env["FORCE_HTTPS"]
     app.use(requireHTTPS)
@@ -73,9 +71,9 @@ start = () ->
             system.selfTest()
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped
         if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == 0)
-            logger.info("Starting jobs")
+            logger.info("Starting jobs ", process.env["INSTANCE_NUMBER"])
             jobs.map((job) -> job.start())
         else
-            logger.info("Will not start jobs")
+            logger.info("Will not start jobs", process.env["INSTANCE_NUMBER"])
 
 start()
