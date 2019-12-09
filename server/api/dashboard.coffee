@@ -63,7 +63,6 @@ runCfQuery = (result) ->
     result["cf"] = (r for r in result["cf"] when r)
 
 export default dashboard = (registeredUser) ->
-    return {}
     userLists = registeredUser?.adminData?.defaultUserLists
     queries =
         # remember that months start from 0
