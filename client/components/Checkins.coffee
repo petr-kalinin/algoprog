@@ -62,7 +62,7 @@ export default class Checkins extends React.Component
             </p>
 
             <Alert bsStyle="danger">
-                На 12 декабря запись есть только на одно занятие, см. новости.
+                На 15 декабря запись есть только на одно занятие, см. новости.
             </Alert>
 
             {
