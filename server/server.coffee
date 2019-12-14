@@ -18,6 +18,7 @@ import download from './lib/download'
 import jobs from './cron/cron'
 import sleep from './lib/sleep'
 import setupMetrics from './metrics/metrics'
+import sendToGraphite from './metrics/graphite'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -67,6 +68,7 @@ start = () ->
 
     app.listen port, () ->
         logger.info 'App listening on port ', port
+        sendToGraphite {}
         for id, system of REGISTRY
             system.selfTest()
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped

@@ -1,4 +1,5 @@
 import logger from '../log'
+import send from './graphite'
 responseTime = require('response-time')
 
 logRequest = (req, res, time) ->
@@ -11,6 +12,16 @@ counts = {}
 totalCounts = 0
 totalTime = 0
 lastAccumulateTime = new Date()
+
+sendToGraphite = (passed) ->
+    metrics = 
+        "rps.all": totalCounts / (passed / 1000)
+        "avg.all": totalTime / totalCounts
+    for path of times
+        correctedPath = path.substr(1).replace("/", ".")
+        metrics["rps._.#{correctedPath}"] = counts[path] / (passed / 1000)
+        metrics["avg._.#{correctedPath}"] = times[path] / counts[path]
+    send(metrics)
 
 accumulateRequests = (req, rs, time) ->
     if not (req.path of times)
@@ -27,6 +38,7 @@ accumulateRequests = (req, rs, time) ->
         logger.info "Request statistics for #{passed/1000} s: #{totalCounts} requests, #{totalTime} time, #{totalTime / totalCounts} avg"
         for path of times
             logger.info "Request statistics for #{passed/1000} s for path #{path}: #{counts[path]} requests, #{times[path]} time, #{times[path] / counts[path]} avg"
+        sendToGraphite(passed)
         times = {}
         counts = {}
         totalTime = 0
