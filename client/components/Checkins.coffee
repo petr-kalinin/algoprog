@@ -11,8 +11,8 @@ import callApi from '../lib/callApi'
 
 
 #SESSION_TIMES = ["12:00", "13:00", "14:00", "15:00"]
-SESSION_TIMES = ["14:00", "15:30"]
-#SESSION_TIMES = ["14:00"]
+#SESSION_TIMES = ["14:00", "15:30"]
+SESSION_TIMES = ["14:00"]
 
 export default class Checkins extends React.Component
     constructor: (props) ->
@@ -37,10 +37,6 @@ export default class Checkins extends React.Component
         wasme = [false, false]
         <div>
             <h1>Регистрация на занятие</h1>
-            <p>
-            Можно записываться на одно любое занятие, занятия ничем не отличаются.
-            Если вы записались, но прийти не сможете — удалите себя из списка.
-            </p>
 
             <p>
             <b>Новичкам (кто не решил в курсе ни одной задачи) приходить на занятие нельзя</b> 
@@ -62,7 +58,7 @@ export default class Checkins extends React.Component
             </p>
 
             <Alert bsStyle="danger">
-                Занятий 24 ноября и 1 декабря не будет. Ниже запись на 8 декабря.
+                На 15 декабря запись есть только на одно занятие, см. новости.
             </Alert>
 
             {
@@ -81,16 +77,16 @@ export default class Checkins extends React.Component
                     <Table condensed>
                         <thead><tr>
                         {
-                        for time, i in SESSION_TIMES
-                            <th key={time}>
-                                <h2>Занятие в {time}</h2>
-                                <p>Всего мест: {@props.data[i].max}</p>
-                            </th>
+                        #for time, i in SESSION_TIMES
+                        #    <th key={time}>
+                        #        <h2>Занятие в {time}</h2>
+                        #        <p>Всего мест: {@props.data[i].max}</p>
+                        #    </th>
                         }
                         </tr></thead>
                         <tbody>
                         {
-                        rows = Math.max(@props.data[0].max, @props.data[1].max)
+                        rows = Math.max(@props.data[0].max)
                         #rows = @props.data[0].max
                         for row in [0...rows]
                             <tr key={row}>
@@ -138,7 +134,7 @@ export default class Checkins extends React.Component
                         </tbody>
                     </Table>
                     {
-                    if wasme[0] or wasme[1]
+                    if wasme[0] #or wasme[1]
                         <Button bsStyle="info" onClick={@register(null, @props.myUser?._id)}>Отменить регистрацию</Button>
                     else if !@canRegister()
                         <Alert bsStyle="danger">
