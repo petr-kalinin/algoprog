@@ -7,6 +7,7 @@ instance_number = process.env["INSTANCE_NUMBER"] || "0"
 enabled = process.env["GRAPHITE"]
 
 export default send = (metrics) ->
+    console.log "Got metrics ", metrics
     if not enabled
         return
 

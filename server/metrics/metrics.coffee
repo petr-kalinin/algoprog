@@ -5,7 +5,7 @@ responseTime = require('response-time')
 logRequest = (req, res, time) ->
     logger.info "Request to ", req.path, " user ", req.user?.informaticsId, " time=", time
 
-PERIOD = 300
+PERIOD = 30
 
 times = {}
 counts = {}
