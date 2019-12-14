@@ -16,4 +16,5 @@ export default send = (metrics) ->
     metricsWithPrefix = {}
     for key, value of metrics
         metricsWithPrefix["#{prefix}.#{key}"] = value
+    console.log "Sending metrics ", metricsWithPrefix
     client.write(metricsWithPrefix, (err) -> if err? then logger.error("Can't send metrics to graphite: #{err}"))
