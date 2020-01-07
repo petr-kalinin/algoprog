@@ -62,7 +62,7 @@ submitToTestSystem = (submit, submitProcess) ->
         success = true
 
     testSystem = await getTestSystem("informatics")
-    registeredUser = await RegisteredUser.findByKey(submit.user)
+    registeredUser = await RegisteredUser.findByKeyWithPassword(submit.user)
     try
         try
             logger.info "Try submitWithObject"

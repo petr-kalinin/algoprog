@@ -88,7 +88,7 @@ usersSchema.methods.updateAchieves = (achieves) ->
     await @update({$set: {"achieves": @achieves}})
 
 usersSchema.methods.updateGraduateYear = ->
-    registeredUser = await RegisteredUser.findByKey(@_id)
+    registeredUser = await RegisteredUser.findByKeyWithPassword(@_id)
     if not registeredUser
         return
     informaticsUser = await InformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
@@ -161,7 +161,10 @@ usersSchema.statics.search = (searchString) ->
     await User.find({$or: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$regex: searchString, $options: 'i'}}, {userList: {$regex: searchString, $options: 'i'}}]})
 
 usersSchema.statics.findAll = () ->
-    User.find {dormant: false}
+    User.find({dormant: false})
+
+usersSchema.statics.findById = (id) ->
+    User.findOne({_id: id})
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
