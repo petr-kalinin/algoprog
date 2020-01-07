@@ -4,7 +4,7 @@ import logger from '../log'
 mongoose.Promise = global.Promise;
 
 url = process.env.MONGODB_ADDON_URI || (
-    (process.env.MONGODB_URL || 'mongodb://localhost/') + 'algoprog'
+    (process.env.MONGODB_URL || 'mongodb://localhost:23456/') + 'algoprog'
 )
 
 ( () ->
