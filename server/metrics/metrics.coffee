@@ -17,10 +17,10 @@ sendToGraphite = (passed) ->
     metrics = 
         "rps.all": totalCounts / (passed / 1000)
         "avg.all": totalTime / totalCounts
-    for path of times
-        correctedPath = path.substr(1).replace("/", ".")
-        metrics["rps._.#{correctedPath}"] = counts[path] / (passed / 1000)
-        metrics["avg._.#{correctedPath}"] = times[path] / counts[path]
+    #for path of times
+    #    correctedPath = path.substr(1).replace("/", ".")
+    #    metrics["rps._.#{correctedPath}"] = counts[path] / (passed / 1000)
+    #    metrics["avg._.#{correctedPath}"] = times[path] / counts[path]
     send(metrics)
 
 accumulateRequests = (req, rs, time) ->
