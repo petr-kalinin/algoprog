@@ -58,7 +58,7 @@ export default class Checkins extends React.Component
             </p>
 
             <Alert bsStyle="danger">
-                До 12 января занятий не будет. Ниже запись на 12 января.
+                19 января занятия не будет из-за областной олимпиады, ниже запись на 26 января. 
             </Alert>
 
             {
