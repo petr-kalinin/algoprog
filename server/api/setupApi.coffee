@@ -592,6 +592,18 @@ export default setupApi = (app) ->
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
 
+    app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
+        url = req.query.url
+        console.log "markUsers url=", url
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        text = await download url    
+        users = await User.find({})
+        for user in users
+            text = text.replace(user.name, "<a href='/user/#{user._id}'>#{user.name}</a>")    
+        res.send(text)
+
     app.post '/api/paymentNotify', wrap (req, res) ->
         logger.info("paymentNotify #{req.body.OrderId}")
         data = deepcopy(req.body)
