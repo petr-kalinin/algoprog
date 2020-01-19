@@ -606,8 +606,9 @@ export default setupApi = (app) ->
         text = await download url    
         users = await User.find({})
         for user in users
-            name1 = user.name
-            name2 = user.name.split(' ').reverse().join(' ')
+            name = user.name.replace("е", "(е|ё)").replace("ё", "(е|ё)")
+            name1 = name
+            name2 = name.split(' ').reverse().join(' ')
             re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
             context = {}
             el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
