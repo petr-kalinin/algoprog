@@ -411,7 +411,6 @@ export default setupApi = (app) ->
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
-        console.log "Set comment viewed ", req.params.commentId, ""+req.user?.userKey(), "" + comment?.userId
         if ""+req.user?.userKey() != "" + comment?.userId
             res.status(403).send('No permissions')
             return
@@ -610,11 +609,9 @@ export default setupApi = (app) ->
             name1 = user.name
             name2 = user.name.split(' ').reverse().join(' ')
             re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
-            console.log "Look for strings #{name1}, #{name2}, #{re}"
             context = {}
             el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
             html = renderToString(el)
-            console.log "html=#{html}"
             text = text.replace(re, "$1#{html}$5")
         # assume that if page contains <head>, then it is html
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
