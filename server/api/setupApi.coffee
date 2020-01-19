@@ -612,6 +612,7 @@ export default setupApi = (app) ->
             context = {}
             el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
             html = renderToString(el)
+            html = html.replace("/user/", "https://algoprog.ru/user/")
             text = text.replace(re, "$1#{html}$5")
         # assume that if page contains <head>, then it is html
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
