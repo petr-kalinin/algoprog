@@ -606,7 +606,7 @@ export default setupApi = (app) ->
         text = await download url    
         users = await User.find({})
         for user in users
-            name = user.name.replace("е", "(е|ё)").replace("ё", "(е|ё)")
+            name = user.name.replace("е", "[е`]").replace("ё", "[е`]").replace("`","ё")
             name1 = name
             name2 = name.split(' ').reverse().join(' ')
             re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
