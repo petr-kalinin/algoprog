@@ -89,7 +89,8 @@
     "tinycolor2": "^1.4.1",
     "universal-cookie": "^4.0.2",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.1"
+    "watchify": "^3.11.1",
+    "xregexp": "^4.2.4"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
