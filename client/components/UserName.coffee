@@ -25,7 +25,7 @@ export color = (user, theme) ->
         v = 97
     return "#" + tinycolor.fromRatio({h: h, s: s, v: v}).toHex()
 
-UserName = (props) ->
+export UserNameRaw = (props) ->
     <span>
         <Link to={"/user/" + props.user._id}>
             <span className={styles.name} style={ {color:  color(props.user,props.theme)} }>
@@ -35,4 +35,4 @@ UserName = (props) ->
         {props.noachieves || <span> <Achieves achieves={props.user.achieves} /></span>}
     </span>
 
-export default withTheme(UserName)
+export default withTheme(UserNameRaw)

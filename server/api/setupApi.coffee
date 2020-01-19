@@ -1,3 +1,4 @@
+React = require('react')
 connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
 iconv = require('iconv-lite')
@@ -6,6 +7,10 @@ sha256 = require('sha256')
 fileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
+XRegExp = require('xregexp')
+
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router'
 
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
@@ -45,6 +50,8 @@ import findSimilarSubmits from '../hashes/findSimilarSubmits'
 
 import {unpaidBlocked} from '../../client/lib/isPaid'
 import awaitAll from '../../client/lib/awaitAll'
+
+import {UserNameRaw} from '../../client/components/UserName'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
@@ -594,14 +601,23 @@ export default setupApi = (app) ->
 
     app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
         url = req.query.url
-        console.log "markUsers url=", url
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
         text = await download url    
         users = await User.find({})
         for user in users
-            text = text.replace(user.name, "<a href='/user/#{user._id}'>#{user.name}</a>")    
+            name1 = user.name
+            name2 = user.name.split(' ').reverse().join(' ')
+            re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
+            console.log "Look for strings #{name1}, #{name2}, #{re}"
+            context = {}
+            el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
+            html = renderToString(el)
+            console.log "html=#{html}"
+            text = text.replace(re, "$1#{html}$5")
+        # assume that if page contains <head>, then it is html
+        text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
 
     app.post '/api/paymentNotify', wrap (req, res) ->
