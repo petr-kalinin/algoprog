@@ -149,6 +149,9 @@ export default setupApi = (app) ->
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
+        if user.dormant
+            res.json({dormant: true})
+            return
         try
             await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
         catch e
