@@ -66,7 +66,7 @@ export default dashboard = (registeredUser) ->
     userLists = registeredUser?.adminData?.defaultUserLists
     queries =
         # remember that months start from 0
-        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2019, 1, 14)}},
+        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2020, 0, 1)}},
         ps: {ps: 1},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},
