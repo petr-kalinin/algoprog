@@ -91,6 +91,16 @@ class SubmitForm extends React.Component
                     submit:
                         error: true
                         message: "Вы уже отправляли это код"
+            else if data.unpaid
+                data = 
+                    submit:
+                        error: true
+                        message: "Ваш аккаунт заблокирован за неуплату"
+            else if data.dormant
+                data = 
+                    submit:
+                        error: true
+                        message: "Ваш аккаунт не активирован"
             else
                 throw ""
         catch

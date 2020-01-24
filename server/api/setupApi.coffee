@@ -144,8 +144,8 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
-        userPrivate = (await UserPrivate.findById(req.user.userKey())?.toObject) || {}
-        user = (await User.findById(req.user.userKey())?.toObject) || {}
+        userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
+        user = (await User.findById(req.user.userKey()))?.toObject() || {}
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
             return
