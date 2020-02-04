@@ -30,7 +30,7 @@ jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run)
 
 jobSubmitSubmits = new Cron.CronJob("*/2 * * * * *", submitSubmits)
 
-jobSendMetrics = new Cron.CronJob("0 */1 * * * *", sendMetrics)
+jobSendMetrics = new Cron.CronJob("0 */5 * * * *", sendMetrics)
 
 export default [jobCT, jobCf, jobUpdateResults, jobUpdateBlog, jobSubmitSubmits, jobSendMetrics]
 
