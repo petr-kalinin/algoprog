@@ -8,7 +8,6 @@ export default sendMetrics = () ->
         ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
         ps: {ps: 1}
     metrics = {}
-    console.log GROUPS
     for key, query of queries
         for group, _ of GROUPS
             query["userList"] = group
