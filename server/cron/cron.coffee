@@ -4,6 +4,7 @@ import * as downloadContests from "./downloadContests"
 import * as downloadBlog from './downloadBlog'
 import updateCf from "./updateCf"
 import submitSubmits from './submitSubmits'
+import sendMetrics from './sendMetrics'
 
 import logger from '../log'
 import User from '../models/user'
@@ -29,6 +30,8 @@ jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run)
 
 jobSubmitSubmits = new Cron.CronJob("*/2 * * * * *", submitSubmits)
 
-export default [jobCT, jobCf, jobUpdateResults, jobUpdateBlog, jobSubmitSubmits]
+jobSendMetrics = new Cron.CronJob("0 */1 * * * *", sendMetrics)
+
+export default [jobCT, jobCf, jobUpdateResults, jobUpdateBlog, jobSubmitSubmits, jobSendMetrics]
 
 #downloadSubmits.runLast()

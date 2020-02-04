@@ -9,6 +9,8 @@ import CfResult from '../models/cfResult'
 
 import awaitAll from '../../client/lib/awaitAll'
 
+export START_SUBMITS_DATE = new Date(2020, 0, 1)
+
 expandResult = (result) ->
     res = result.toObject()
     res.fullUser = (await User.findById(result.user))
@@ -66,7 +68,7 @@ export default dashboard = (registeredUser) ->
     userLists = registeredUser?.adminData?.defaultUserLists
     queries =
         # remember that months start from 0
-        ok: {ok: 1, lastSubmitTime: {$gt: new Date(2020, 0, 1)}},
+        ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
         ps: {ps: 1},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},

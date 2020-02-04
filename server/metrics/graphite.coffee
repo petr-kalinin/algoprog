@@ -8,6 +8,7 @@ enabled = process.env["GRAPHITE"]
 
 export default send = (metrics) ->
     if not enabled
+        console.log "disabled send metrics ", metrics
         return
 
     metrics["instance"] = +instance_number
