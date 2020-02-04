@@ -22,7 +22,7 @@ export default class Review extends React.Component
 
     render: () ->
         <div>
-            <Button onClick={@props.handleReload}>Обновить</Button>
+            ={@state.results.length} <Button onClick={@props.handleReload}>Обновить</Button>
             {
             if @state.results.length == 0
                 <div>Ревьювить больше нечего, обновите страницу</div>
