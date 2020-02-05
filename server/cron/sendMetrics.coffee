@@ -9,6 +9,7 @@ export default sendMetrics = () ->
         ps: {ps: 1}
     metrics = {}
     for key, query of queries
+        query["total"] = 1
         for group, _ of GROUPS
             query["userList"] = group
             metrics["#{key}.#{group}"] = (await Result.find(query)).length
