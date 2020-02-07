@@ -27,6 +27,6 @@ hashSchema.statics.removeForSubmit = (submit) ->
 
 hashSchema.index({ hash : 1, user: 1 })
 
-Hash = mongoose.model('Hash', hashSchema);
+Hash = mongoose.model('smHash', hashSchema);
 
 export default Hash

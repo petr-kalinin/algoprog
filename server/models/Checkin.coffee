@@ -33,7 +33,7 @@ checkinSchema.statics.findByUser = (user) ->
 checkinSchema.index({ deleted: 1, session : 1 })
 checkinSchema.index({ deleted: 1, user : 1 })
 
-Checkin = mongoose.model('Checkins', checkinSchema);
+Checkin = mongoose.model('smCheckins', checkinSchema);
 
 export default Checkin
 

@@ -22,6 +22,6 @@ paymentSchema.methods.upsert = () ->
 paymentSchema.index({ user : 1 })
 paymentSchema.index({ time : 1 })
 
-Payment = mongoose.model('Payments', paymentSchema);
+Payment = mongoose.model('smPayments', paymentSchema);
 
 export default Payment

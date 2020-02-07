@@ -15,6 +15,6 @@ submitProcessSchema.methods.upsert = () ->
         logger.info "Could not upsert a submitProcess"
 
 
-SubmitProcess = mongoose.model('SubmitProcess', submitProcessSchema);
+SubmitProcess = mongoose.model('smSubmitProcess', submitProcessSchema);
 
 export default SubmitProcess
