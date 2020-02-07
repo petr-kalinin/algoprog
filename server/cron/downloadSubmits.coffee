@@ -242,8 +242,6 @@ export runUntilIgnored = wrapRunning () ->
 export runLast = wrapRunning () ->
     try
         lastSubmit = await Submit.findLastNotCT()
-            if group != "all"
-                return
         fromTimestamp = (+lastSubmit.time) / 1000 - 5 * 60
         logger.info "fromTimestamp=#{fromTimestamp}"
         await forAllTestSystems (system) ->

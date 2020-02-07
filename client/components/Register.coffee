@@ -164,43 +164,8 @@ class Register extends React.Component
                     id="name"
                     label="Имя, фамилия"
                     type="text"
-                    setField={@setField}
-                <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
-                а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
-                можете не писать ничего.</p>
-
-                <FormGroup controlId="aboutme">
-                    <FieldGroup
-                        id="aboutme"
-                        label=""
-                        componentClass="textarea"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
-
-                <p>Откуда вы узнали про курс?</p>
-
-                <FormGroup controlId="whereFrom">
-                    <FieldGroup
-                        id="whereFrom"
-                        label=""
-                        componentClass="input"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
-
-                <p>Укажите какие-нибудь контактные данные (email, профиль во вКонтакте и т.п., не обязательно)</p>
-
-                <FormGroup controlId="contact">
-                    <FieldGroup
-                        id="contact"
-                        label=""
-                        componentClass="input"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
-                    state={@state}/>
-
+                    setField={@setField} />
+                    
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
                     Зарегистрироваться
                 </Button>

@@ -98,7 +98,6 @@ export default table = (userList, table) ->
 
 export fullUser = (userId) ->
     tables = [["main"]]
-        regTables = await Table.findById(reg)
     user = await User.findById(userId)
     if not user
         return null
