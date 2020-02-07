@@ -29,6 +29,7 @@ class Register extends React.Component
             username: ""
             password: ""
             password2: ""
+            name: ""
             informaticsUsername: ""
             informaticsPassword: ""
             promo: ""
@@ -131,7 +132,11 @@ class Register extends React.Component
             loginValidationState = 'error'
             loginError = 'Логин не может начинаться с пробела или заканчиваться на него'
 
-        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
+        nameValidationState = 'success'
+        if @state.name.length == 0
+            nameValidationState = 'error'
+
+        canSubmit = (nameValidationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
 
         <Grid fluid>
             <h1>Регистрация</h1>
@@ -164,8 +169,10 @@ class Register extends React.Component
                     id="name"
                     label="Имя, фамилия"
                     type="text"
-                    setField={@setField} />
-                    
+                    state={@state}
+                    setField={@setField} 
+                    validationState={nameValidationState}/>
+
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
                     Зарегистрироваться
                 </Button>

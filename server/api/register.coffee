@@ -17,7 +17,7 @@ registerInSystems = (user, registeredUser, password) ->
 
 export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
-    {username, password, name} = req.body
+    {username, password, name, promo, contact, whereFrom} = req.body
 
     oldUser = await User.findById(username)
     if not oldUser
