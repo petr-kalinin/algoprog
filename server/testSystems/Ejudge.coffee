@@ -278,3 +278,6 @@ export default class Ejudge extends TestSystem
             if oldSubmits.length == newSubmits.length
                 throw e
             logger.error "Though the submit appeared in submit list..."
+
+    selfTest: () ->
+        await @getAdmin(@baseContest)
