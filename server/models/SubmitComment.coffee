@@ -35,6 +35,6 @@ submitCommentsSchema.index
     time: -1
 
 
-SubmitComment = mongoose.model('shadSubmitComments', submitCommentsSchema);
+SubmitComment = mongoose.model('smSubmitComments', submitCommentsSchema);
 
 export default SubmitComment

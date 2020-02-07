@@ -230,6 +230,6 @@ usersSchema.index
     dormant: 1
     username: 1
 
-User = mongoose.model('shadUsers', usersSchema);
+User = mongoose.model('smUsers', usersSchema);
 
 export default User

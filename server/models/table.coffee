@@ -108,6 +108,6 @@ tablesSchema.statics.removeDuplicateChildren = () ->
 tablesSchema.statics.main = "main"
 
 
-Table = mongoose.model('shadTables', tablesSchema);
+Table = mongoose.model('smTables', tablesSchema);
 
 export default Table

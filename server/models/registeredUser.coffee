@@ -40,6 +40,6 @@ registeredUserSchema.statics.findByKeyWithPassword = (key) ->
     
 registeredUserSchema.plugin(passportLocalMongoose);
 
-RegisteredUser = mongoose.model('shadRegisteredUser', registeredUserSchema);
+RegisteredUser = mongoose.model('smRegisteredUser', registeredUserSchema);
 
 export default RegisteredUser

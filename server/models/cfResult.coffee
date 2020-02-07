@@ -24,6 +24,6 @@ cfResultsSchema.index
     place: 1
         
 
-CfResult = mongoose.model('shadCfResults', cfResultsSchema);
+CfResult = mongoose.model('smCfResults', cfResultsSchema);
 
 export default CfResult

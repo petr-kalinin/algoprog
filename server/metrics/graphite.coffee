@@ -13,7 +13,7 @@ export default send = (metrics) ->
 
     metrics["instance"] = +instance_number
 
-    prefix = "algoprog.#{instance_number}"
+    prefix = "smalgoprog.#{instance_number}"
     metricsWithPrefix = {}
     for key, value of metrics
         metricsWithPrefix["#{prefix}.#{key}"] = value

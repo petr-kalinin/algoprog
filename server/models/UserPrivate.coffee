@@ -25,6 +25,6 @@ usersPrivateSchema.methods.setPrice = (price) ->
     await @update({$set: {"price": price}})
     @price = price
 
-UserPrivate = mongoose.model('shadUsersPrivate', usersPrivateSchema);
+UserPrivate = mongoose.model('smUsersPrivate', usersPrivateSchema);
 
 export default UserPrivate

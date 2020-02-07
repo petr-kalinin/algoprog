@@ -22,6 +22,6 @@ blogPostSchema.statics.findLast = (limit, time) ->
 
 blogPostSchema.index({ date : -1 })
 
-BlogPost = mongoose.model('shadBlogPosts', blogPostSchema);
+BlogPost = mongoose.model('smBlogPosts', blogPostSchema);
 
 export default BlogPost
