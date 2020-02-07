@@ -3,7 +3,7 @@ import send from './graphite'
 responseTime = require('response-time')
 
 logRequest = (req, res, time) ->
-    logger.info "Request to ", req.path, " user ", req.user?.informaticsId, " time=", time
+    logger.info "Request to ", req.path, " user ", req.user?.userKey(), " time=", time
 
 PERIOD = 300
 

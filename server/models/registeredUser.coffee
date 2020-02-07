@@ -27,16 +27,16 @@ registeredUserSchema.methods.userKey = () ->
     @ejudgeUsername
     
 registeredUserSchema.statics.findByKey = (key) ->
-    RegisteredUser.findOne({informaticsId: key})
+    RegisteredUser.findOne({ejudgeUsername: key})
 
 registeredUserSchema.statics.search = (searchString) ->
     RegisteredUser.find({$or: [{username: {$regex: searchString, $options: 'i'}}, {informaticsUsername: {$regex: searchString, $options: 'i'}}]})
 
 registeredUserSchema.statics.findAllByKey = (key) ->
-    await RegisteredUser.find({informaticsId: key})
+    await RegisteredUser.find({ejudgeUsername: key})
 
 registeredUserSchema.statics.findByKeyWithPassword = (key) ->
-    await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword")
+    await RegisteredUser.findOne({ejudgeUsername: key}).select("+informaticsPassword")
     
 registeredUserSchema.plugin(passportLocalMongoose);
 

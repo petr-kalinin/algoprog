@@ -64,7 +64,7 @@ export default class RegisteredUsers extends React.Component
                                 {user.registerDate && moment(user.registerDate).format('YYYY-MM-DD kk:mm:ss') || "—"}
                             </td>
                             <td>
-                                <Link to={"/user/#{user.informaticsId}"}>{user.informaticsId}</Link>
+                                <Link to={"/user/#{user.ejudgeUsername}"}>{user.ejudgeUsername}</Link>
                             </td>
                             <td>
                                 {user.informaticsUsername}
@@ -80,9 +80,6 @@ export default class RegisteredUsers extends React.Component
                             </td>
                             <td>
                                 {user.whereFrom}
-                            </td>
-                            <td>
-                                <a href={"https://informatics.msk.ru/user/view.php?id=#{user.informaticsId}&course=1"}>{"#"}</a>
                             </td>
                         </tr>
                     )}

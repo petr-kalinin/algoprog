@@ -249,7 +249,7 @@ export default setupApi = (app) ->
 
     app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
-            fullUser = await User.findById(user.informaticsId)
+            fullUser = await User.findById(user.userKey())
             user.fullName = fullUser?.name
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
@@ -275,7 +275,7 @@ export default setupApi = (app) ->
 
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
-            fullUser = await User.findById(user.informaticsId)
+            fullUser = await User.findById(user.userKey())
             user.fullName = fullUser?.name
             user.dormant = fullUser?.dormant
             user.registerDate = fullUser?.registerDate
@@ -453,7 +453,7 @@ export default setupApi = (app) ->
         res.json(checkins)
 
     app.post '/api/checkin/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         session = req.body.session
