@@ -61,7 +61,7 @@ submitToTestSystem = (submit, submitProcess) ->
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
         success = true
 
-    testSystem = await getTestSystem("informatics")
+    testSystem = await getTestSystem("ejudge")
     registeredUser = await RegisteredUser.findByKeyWithPassword(submit.user)
     try
         try

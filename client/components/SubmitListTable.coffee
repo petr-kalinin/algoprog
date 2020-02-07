@@ -103,5 +103,4 @@ export default SubmitListTable = (props) ->
                 ).reverse()}
             </tbody>
         </Table>
-            <a href={"https://informatics.msk.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{s.user}"} target="_blank">Попытки на информатикс</a>
     </div>
