@@ -31,9 +31,9 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         RT: "Runtime error (crash)"
         ML: "Превышен предел памяти"
         DQ: "DQ"
-        PD: "Тестирование..."
-        CG: "Компиляция..."
-        RU: "Тестирование..."
+        PD: "CT"
+        CG: "CT"
+        RU: "CT"
 
     constructor: (@parameters, @options={}) ->
         super()
