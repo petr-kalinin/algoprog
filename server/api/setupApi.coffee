@@ -158,11 +158,8 @@ export default setupApi = (app) ->
         catch e
             res.json({error: e})
             return
-        #testSystem = await getTestSystem("informatics")
-        #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
-        await createDraftSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code)
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
         user = JSON.parse(JSON.stringify(req.user))
         delete user.informaticsPassword

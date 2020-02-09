@@ -107,6 +107,31 @@ class LoggedEjudgeUser
         if result.includes("Error") or result.includes("Ошибка")
             throw {ejudgeError: result}
 
+    submitWithObject: (problem, data) ->
+        formData = 
+            SID: @sid["new-client"]
+            prob_id: problem
+            lang_id: data.language
+            action_40: "Send!"
+            file: {
+                value: Buffer.from(data.source, "latin1")
+                options: {
+                    filename: 'a',
+                    contentType: 'text/plain'
+                }
+            }
+        href = "#{@server}/cgi-bin/new-client"
+        page = await downloadLimited(href, @jar, {
+            method: 'POST',
+            formData,
+            followAllRedirects: true
+        })
+        document = (new JSDOM(page, {url: href})).window.document
+        el = document.getElementsByTagName("title")
+        result = el[0].textContent
+        if result.includes("Error") or result.includes("Ошибка")
+            throw {ejudgeError: result}
+
 
 export default class Ejudge extends TestSystem
     constructor: (@server, @baseContest) ->
@@ -279,5 +304,11 @@ export default class Ejudge extends TestSystem
                 throw e
             logger.error "Though the submit appeared in submit list..."
 
+    submitWithObject: (user, problemId, data) ->
+        [contest, problem] = problemId.split("_")
+        logger.info "Try submit #{user.username}, #{user.userKey()} #{problemId} #{contest} #{problem}"
+        ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, user.ejudgeUsername, user.ejudgePassword, false)
+        await ejudgeUser.submitWithObject(problem, data)
+        
     selfTest: () ->
         await @getAdmin(@baseContest)
