@@ -164,7 +164,7 @@ class TopPanel extends React.Component
                             <span>
                                 <UserName user={@props.myUser}/>
                                 <span className={styles.separator}/>
-                                <span title="Класс">{getClassStartingFromJuly(@props.myUser.graduateYear)}</span>
+                                {@props.myUser.graduateYear && <span title="Класс">{getClassStartingFromJuly(@props.myUser.graduateYear)}</span>}
                                 <span className={styles.separator}/>
                                 <span title="Уровень">{@props.myUser.level.current}</span>
                                 <span className={styles.separator}/>
