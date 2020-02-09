@@ -19,7 +19,7 @@ import globalStyles from './global.css'
 import Tree from './Tree'
 import styles from './Root.css'
 
-Root = (props) ->
+Inner = (props) ->
     <div>
         <Grid fluid>
             <Row>
@@ -128,6 +128,10 @@ Root = (props) ->
         }
         <h2 className={styles.whatitis}>Как начать заниматься?</h2>
         <p className="lead"><Link to="/register">Зарегистрируйтесь</Link> на сайте и напишите мне (контактная информация в разделе <Link to="/material/0">О курсе</Link>).</p>
+    </div>
+
+export default Root = (props) ->
+    <div>
         <Grid fluid>
             <PageHeader>
                 <div className={styles.mainHeader}>Алгоритмическое программирование</div>
@@ -136,11 +140,5 @@ Root = (props) ->
         </Grid>
         {
         sceletonProps = {props..., location: {path: [], _id: "main"}, showNews: "hide", hideBread:true}
-        `<Sceleton {...sceletonProps}><Material material={props.data}/></Sceleton>`}
+        `<Sceleton {...sceletonProps}><Inner match={props.match}/></Sceleton>`}
     </div>
-
-options =
-    urls: (props) ->
-        data: "material/main"
-
-export default ConnectedComponent(Root, options)
