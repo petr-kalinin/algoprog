@@ -17,6 +17,8 @@ import {REGISTRY} from './testSystems/TestSystemRegistry'
 import download from './lib/download'
 import jobs from './cron/cron'
 import sleep from './lib/sleep'
+import setupMetrics from './metrics/metrics'
+import sendToGraphite from './metrics/graphite'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -34,13 +36,7 @@ stats.socket.on 'error',  (error) ->
 app = express()
 app.enable('trust proxy')
 
-if process.env["ENABLE_METRICS"]
-    app.use(responseTime((req, res, time) ->
-        stat = (req.method + req.url).toLowerCase()
-            .replace(/[:.]/g, '')
-            .replace(/\//g, '_')
-        stats.timing(stat, time)
-    ))
+setupMetrics(app)
 
 if process.env["FORCE_HTTPS"]
     app.use(requireHTTPS)
@@ -61,7 +57,7 @@ app.get '/status', (req, res) ->
 
 app.use renderOnServer
 
-port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
+port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 4000)
 
 
 start = () ->
@@ -72,10 +68,14 @@ start = () ->
 
     app.listen port, () ->
         logger.info 'App listening on port ', port
+        sendToGraphite {}
         for id, system of REGISTRY
             system.selfTest()
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped
-        logger.info("Starting jobs")
-        jobs.map((job) -> job.start())
+        if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == "0")
+            logger.info("Starting jobs ", process.env["INSTANCE_NUMBER"])
+            jobs.map((job) -> job.start())
+        else
+            logger.info("Will not start jobs", process.env["INSTANCE_NUMBER"])
 
 start()

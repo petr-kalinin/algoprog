@@ -68,6 +68,8 @@ class SubmitDownloader
             newSubmit.comments = oldSubmit.comments
             newSubmit.quality = oldSubmit.quality
             newSubmit.language = oldSubmit.language
+            newSubmit.downloadTime = oldSubmit.downloadTime
+            newSubmit.hashes = oldSubmit.hashes
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
@@ -108,6 +110,7 @@ class SubmitDownloader
         newSubmit.sourceRaw = sourceRaw
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
+        await newSubmit.calculateHashes()
 
         logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
         try
@@ -247,7 +250,9 @@ export runForCT = wrapRunning () ->
         for submit in submits
             timeSinceSubmit = new Date() - submit.time
             timeSinceDownload = new Date() - submit.downloadTime
-            if (timeSinceSubmit > 20 * 60 * 1000 and timeSinceDownload < 20 * 60 * 1000)
+            if (timeSinceSubmit > 2 * 60 * 1000 and timeSinceDownload < 30 * 1000)
+                continue
+            if (timeSinceSubmit > 10 * 60 * 1000 and timeSinceDownload < 20 * 60 * 1000)
                 continue
             submit.downloadTime = new Date()
             await submit.upsert()

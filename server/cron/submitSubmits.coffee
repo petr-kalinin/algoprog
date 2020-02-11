@@ -3,6 +3,7 @@ iconv = require('iconv-lite')
 import SubmitProcess from '../models/SubmitProcess'
 import Submit from '../models/submit'
 import User from '../models/user'
+import Hash  from '../models/Hash'
 import RegisteredUser from '../models/registeredUser'
 
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
@@ -54,13 +55,14 @@ submitToTestSystem = (submit, submitProcess) ->
     onNewSubmit = (newSubmit) ->
         if not compareSources(newSubmit.sourceRaw, submit.sourceRaw)
             return
+        await Hash.removeForSubmit(submit._id)
         await Submit.remove({_id: submit._id})
         await SubmitProcess.remove({_id: submit._id})
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
         success = true
 
     testSystem = await getTestSystem("informatics")
-    registeredUser = await RegisteredUser.findByKey(submit.user)
+    registeredUser = await RegisteredUser.findByKeyWithPassword(submit.user)
     try
         try
             logger.info "Try submitWithObject"

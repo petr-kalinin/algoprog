@@ -23,6 +23,7 @@ usersSchema = new mongoose.Schema
     name: String,
     userList: String,
     chocos: [Number],
+    chocosGot: [Number],
     level:
         current: String,
         start: String,
@@ -89,7 +90,7 @@ usersSchema.methods.updateAchieves = (achieves) ->
     await @update({$set: {"achieves": @achieves}})
 
 usersSchema.methods.updateGraduateYear = ->
-    registeredUser = await RegisteredUser.findByKey(@_id)
+    registeredUser = await RegisteredUser.findByKeyWithPassword(@_id)
     if not registeredUser
         return
     informaticsUser = await InformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
@@ -118,11 +119,18 @@ usersSchema.methods.setAchieves = (achieves) ->
     await @update({$set: {"achieves": achieves}})
     @achieves = achieves
 
+usersSchema.methods.setChocosGot = (chocosGot) ->
+    logger.info "setting chocosGot ", @_id, chocosGot 
+    await @update({$set: {"chocosGot": chocosGot}})
+    @chocosGot = chocosGot
+
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     @lastActivated = Date.now()
     await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "dormant": false}})
     @userList = userList
+    User.updateUser(@_id)
+    return undefined
 
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
@@ -155,7 +163,10 @@ usersSchema.statics.search = (searchString) ->
     await User.find({$or: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$regex: searchString, $options: 'i'}}, {userList: {$regex: searchString, $options: 'i'}}]})
 
 usersSchema.statics.findAll = () ->
-    User.find {dormant: false}
+    User.find({dormant: false})
+
+usersSchema.statics.findById = (id) ->
+    User.findOne({_id: id})
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
@@ -197,6 +208,7 @@ usersSchema.statics.updateAllCf = () ->
     for u in await User.findAll()
         if u.cf.login
             await u.updateCfRating()
+            await User.updateUser(u._id, {})
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 

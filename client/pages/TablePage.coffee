@@ -27,6 +27,6 @@ options =
         data: "table/#{props.match.params.userList}/#{props.match.params.id}"
         me: "me"
 
-    timeout: 20000
+    #timeout: 20000
 
 export default ConnectedComponent(TablePage, options)

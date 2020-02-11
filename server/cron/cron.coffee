@@ -4,6 +4,7 @@ import * as downloadContests from "./downloadContests"
 import * as downloadBlog from './downloadBlog'
 import updateCf from "./updateCf"
 import submitSubmits from './submitSubmits'
+import sendMetrics from './sendMetrics'
 
 import logger from '../log'
 import User from '../models/user'
@@ -19,7 +20,7 @@ nightHour = (3 + MOSCOW_OFFSET - offset - 1) %% 24
 
 logger.info "Will set downloadAll to " + nightHour + ":59:58 local time"
 
-jobCT = new Cron.CronJob('*/2 * * * * *', downloadSubmits.runForCT);
+jobCT = new Cron.CronJob('*/10 * * * * *', downloadSubmits.runForCT);
 
 jobCf = new Cron.CronJob('0 0 * * * *', updateCf);
 
@@ -29,6 +30,8 @@ jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run)
 
 jobSubmitSubmits = new Cron.CronJob("*/2 * * * * *", submitSubmits)
 
-export default [jobCT, jobCf, jobUpdateResults, jobUpdateBlog, jobSubmitSubmits]
+jobSendMetrics = new Cron.CronJob("0 */5 * * * *", sendMetrics)
+
+export default [jobCT, jobCf, jobUpdateResults, jobUpdateBlog, jobSubmitSubmits, jobSendMetrics]
 
 #downloadSubmits.runLast()

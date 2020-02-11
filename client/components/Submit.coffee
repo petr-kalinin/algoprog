@@ -130,12 +130,12 @@ class TestResult extends React.Component
                 <Grid fluid>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Input:
-                        <pre className={styles.pre}>{@props.result.input}</pre>
+                        <pre>{@props.result.input}</pre>
                         {@props.result.big_input && "..."}
                     </Col>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Checker:
-                        <pre class={styles.pre}>{@props.result.checker_output}</pre>
+                        <pre>{@props.result.checker_output}</pre>
                         Stderr:
                         <pre>{@props.result.error_output}</pre>
                     </Col>

@@ -612,6 +612,7 @@ class MaterialsDownloader
         groups =
             pk: "Все школьники",
         tables = ["0", "1", "2", "main", "reg", "roi", "byWeek"]
+            vega: "Вега",
         materials = []
         trees = []
         globalHeaderMaterial = new Material

@@ -1,3 +1,4 @@
+React = require('react')
 connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
 iconv = require('iconv-lite')
@@ -6,6 +7,10 @@ sha256 = require('sha256')
 fileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
+XRegExp = require('xregexp')
+
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router'
 
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
@@ -39,9 +44,14 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import download from '../lib/download'
 import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
+import setDirty from '../lib/setDirty'
+
+import findSimilarSubmits from '../hashes/findSimilarSubmits'
 
 import {unpaidBlocked} from '../../client/lib/isPaid'
 import awaitAll from '../../client/lib/awaitAll'
+
+import {UserNameRaw} from '../../client/components/UserName'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
@@ -75,7 +85,7 @@ expandSubmit = (submit) ->
         submit.source = "Файл слишком длинный или бинарный"
     return submit
 
-hideTests = (submit, reqUser) ->
+hideTests = (submit) ->
     hideOneTest = (test) ->
         res = {}
         for field in ["string_status", "status", "max_memory_used", "time", "real_time"]
@@ -110,7 +120,16 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         comments: []
         results: []
         force: false
+    await submit.calculateHashes()
     await submit.upsert()
+
+    update = () ->
+        dirtyResults = {}
+        await setDirty(submit, dirtyResults, {})
+        await User.updateUser(submit.user, dirtyResults)
+    update()  # do this async
+    return undefined
+
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -125,10 +144,13 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
-        userPrivate = (await UserPrivate.findById(req.user.userKey())?.toObject) || {}
-        user = (await User.findById(req.user.userKey())?.toObject) || {}
+        userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
+        user = (await User.findById(req.user.userKey()))?.toObject() || {}
         if unpaidBlocked({user..., userPrivate...})
             res.json({unpaid: true})
+            return
+        if user.dormant
+            res.json({dormant: true})
             return
         try
             await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
@@ -185,6 +207,16 @@ export default setupApi = (app) ->
                 logger.info "Set user password", registeredUser.userKey()
                 await registeredUser.setPassword(password)
                 await registeredUser.save()
+        await User.updateUser(user._id, {})
+        res.send('OK')
+
+    app.post '/api/user/:id/setChocosGot', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        chocosGot = req.body.chocosGot
+        user = await User.findById(req.params.id)
+        await user.setChocosGot chocosGot
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
@@ -319,6 +351,29 @@ export default setupApi = (app) ->
         submit = expandSubmit(submit)
         res.json(submit)
 
+    app.get '/api/similarSubmits/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        submit = (await Submit.findById(req.params.id)).toObject()
+        similar = await findSimilarSubmits(submit, 5)
+        similar = similar.map((submit) -> submit.toObject())
+        similar = similar.map(expandSubmit)
+        similar = await awaitAll(similar)
+        similar = similar.map (submit) ->
+            return
+                _id: submit._id
+                time: submit.time
+                user: submit.user
+                problem: submit.problem
+                source: submit.source
+                sourceRaw: submit.sourceRaw
+                fullUser: submit.fullUser
+                fullProblem: submit.fullProblem
+                outcome: submit.outcome
+                language: submit.language
+        res.json(similar)
+
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
         if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
@@ -373,7 +428,6 @@ export default setupApi = (app) ->
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
-        console.log "Set comment viewed ", req.params.commentId, ""+req.user?.userKey(), "" + comment?.userId
         if ""+req.user?.userKey() != "" + comment?.userId
             res.status(403).send('No permissions')
             return
@@ -386,7 +440,7 @@ export default setupApi = (app) ->
             { 
                 checkins: await Checkin.findBySession(i)
                 max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..2])
+            } for i in [0..1])
         for sessionCheckins in checkins
             sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
                 checkin = checkin.toObject()
@@ -525,11 +579,25 @@ export default setupApi = (app) ->
         await downloadSubmits.runForUser(req.params.user, 100, 1e9)
         res.send('OK')
 
+    app.get '/api/downloadSubmitsForUserAndProblem/:user/:problem', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        await downloadSubmits.runForUserAndProblem(req.params.user, req.params.problem)
+        res.send('OK')
+
     app.get '/api/downloadAllSubmits', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
         downloadSubmits.runAll()
+        res.send('OK')
+
+    app.get '/api/calculateAllHashes', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        Submit.calculateAllHashes()
         res.send('OK')
 
     app.post '/api/informatics/userData', wrap (req, res) ->
@@ -546,6 +614,27 @@ export default setupApi = (app) ->
         stats = getStats()
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
+
+    app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
+        url = req.query.url
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        text = await download url    
+        users = await User.find({})
+        for user in users
+            name = user.name.replace("е", "[е`]").replace("ё", "[е`]").replace("`","ё")
+            name1 = name
+            name2 = name.split(' ').reverse().join(' ')
+            re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
+            context = {}
+            el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
+            html = renderToString(el)
+            html = html.replace("/user/", "https://algoprog.ru/user/")
+            text = text.replace(re, "$1#{html}$5")
+        # assume that if page contains <head>, then it is html
+        text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
+        res.send(text)
 
     app.post '/api/paymentNotify', wrap (req, res) ->
         logger.info("paymentNotify #{req.body.OrderId}")

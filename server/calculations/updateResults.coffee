@@ -1,4 +1,5 @@
 import User from '../models/user'
+import Hash from '../models/Hash'
 import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
@@ -46,6 +47,7 @@ removeDuplicateSubmits = (userId, problemId) ->
                 seen = true
                 break
         if seen
+            await Hash.removeForSubmit(submit._id)
             await submit.remove()
         else
             seenSubmits.push(submit)

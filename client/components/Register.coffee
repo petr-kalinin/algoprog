@@ -91,6 +91,8 @@ class Register extends React.Component
             }
             ###
             if data.registered.success
+                if window.yaCounter45895896
+                    window.yaCounter45895896.hit?("/registered")
                 await callApi "login", {
                     username: @state.username,
                     password: @state.password
@@ -125,12 +127,25 @@ class Register extends React.Component
             validationState = 'warning'
 
         passwordValidationState = null
+        passwordError = null
         if @state.password and @state.password == @state.password2
+            if @state.password.startsWith(' ') or @state.password.endsWith(' ')
+                passwordValidationState = 'error'
+                passwordError = 'Пароль не может начинаться с пробела или заканчиваться на него'
             passwordValidationState = 'success'
         else if @state.password and @state.password2
             passwordValidationState = 'error'
+            passwordError = 'Пароли не совпадают'
 
-        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and @state.username)
+        loginValidationState = 'success'
+        loginError = null
+        if @state.username.length == 0
+            loginValidationState = 'error'
+        else if @state.username.startsWith(' ') or @state.username.endsWith(' ')
+            loginValidationState = 'error'
+            loginError = 'Логин не может начинаться с пробела или заканчиваться на него'
+
+        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
 
         <Grid fluid>
             <h1>Регистрация</h1>
@@ -141,14 +156,17 @@ class Register extends React.Component
                     label="Логин"
                     type="text"
                     setField={@setField}
-                    state={@state}/>
+                    state={@state}
+                    validationState={loginValidationState}
+                    error={loginError}/>
                 <FieldGroup
                     id="password"
                     label="Пароль"
                     type="password"
                     setField={@setField}
                     state={@state}
-                    validationState={passwordValidationState}/>
+                    validationState={passwordValidationState}
+                    error={passwordError}/>
                 <FieldGroup
                     id="password2"
                     label="Подтвердите пароль"

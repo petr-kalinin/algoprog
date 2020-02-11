@@ -35,6 +35,7 @@ storeToDatabase = (req, res) ->
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
         submit.force = true
+        submit.calculateHashes()
     if req.body.comment
         reviewer = await User.findById(req.user.userKey())
         if not (req.body.comment in submit.comments.map(decodeComment))

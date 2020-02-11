@@ -1,5 +1,13 @@
 mongoose = require('mongoose')
 
+import Hash from './Hash'
+import User from './user'
+
+import calculateHashes from '../hashes/calculateHashes'
+
+import awaitAll from '../../client/lib/awaitAll'
+import logger from '../log'
+
 outcomeType = (outcome) ->
     switch outcome
         when "DR" then "DR"
@@ -20,9 +28,30 @@ submitsSchema = new mongoose.Schema
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
+    hashes: [{window: Number, hash: String, score: Number}]
 
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
+
+submitsSchema.methods.calculateHashes = () ->
+    logger.info("calculating hashes for submit #{@_id}")
+    @hashes = calculateHashes((@sourceRaw or @source).toString())
+    logger.info("calculating hashes for submit #{@_id}, have #{@hashes.length} hashes")
+    for h in @hashes
+        if @outcome in ['OK', 'IG']
+            h.score *= 2
+        if @outcome == 'AC'
+            h.score *= 3
+        hash = new Hash
+            _id: "#{h.hash}:#{@_id}"
+            hash: h.hash
+            submit: @_id
+            user: @user
+            problem: @problem
+            window: h.window
+            score: h.score
+        await hash.upsert()
+    await @upsert()
 
 submitsSchema.methods.equivalent = (other) ->
     if @comments.length > 0
@@ -68,7 +97,24 @@ submitsSchema.statics.findPendingSubmits = (userId) ->
 submitsSchema.statics.findCT = (userId) ->
     Submit.find
         outcome: "CT"
-        
+
+submitsSchema.statics.calculateAllHashes = () ->
+    users = await User.find({})
+    for u, userI in users
+        submits = await Submit.findByUser(u._id)
+        promises = []
+        count = 0
+        for s in submits
+            promises.push(s.calculateHashes())
+            count++
+            if promises.length >= 10
+                logger.info("Calculating 10 hashes, waiting for completion (#{count} / #{submits.length}  | #{userI} / #{users.length})")
+                await awaitAll(promises)
+                logger.info("Calculated 10 hashes, continuing (#{count} / #{submits.length}  | #{userI} / #{users.length})")
+                promises = []
+        await awaitAll(promises)
+        logger.info("Calculated all hashes for user #{userI} / #{users.length}")
+    logger.info("Calculated all hashes for all users")
 
 submitsSchema.index({ user : 1, problem: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })

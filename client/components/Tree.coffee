@@ -101,7 +101,7 @@ SolutionMark_ = (props) ->
 
 SolutionMark = withMyResults(SolutionMark_)
 
-recTree = (tree, id, indent, theme) ->
+recTree = (tree, id, indent, theme, prefix) ->
     res = []
     a = (el) -> res.push(el)
     for m in tree.materials
@@ -114,7 +114,7 @@ recTree = (tree, id, indent, theme) ->
                     className += " " + styles.navitemDark
                 else
                     className += " " + styles.navitem
-            a <NavItem key={m._id} active={m._id==id} className={className} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
+            a <NavItem key={prefix + ":" + m._id} active={m._id==id} className={className} eventKey={getHref(m)} href={getHref(m)} onClick={window?.goto?(getHref(m))}>
                 <div style={"paddingLeft": 15*indent + "px"} className={styles.levelRow}>
                     <div className={styles.levelName}>
                         {m.title}
@@ -122,7 +122,7 @@ recTree = (tree, id, indent, theme) ->
                     <SolutionMark id={m._id} indent={indent}/>
                 </div>
             </NavItem>
-            res = res.concat(recTree(m, id, indent + 1, theme))
+            res = res.concat(recTree(m, id, indent + 1, theme, prefix + ":" + m._id))
     return res
 
 Tree = (props) ->
@@ -132,7 +132,7 @@ Tree = (props) ->
     markNeeded(tree, props.id, (p._id for p in props.path), 0, 100)
     <div className={styles.tree}>
         <Nav bsStyle="pills" stacked>
-            {recTree(tree, props.id, 0, props.theme)}
+            {recTree(tree, props.id, 0, props.theme, "")}
         </Nav>
     </div>
 
