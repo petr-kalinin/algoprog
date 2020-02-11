@@ -30,6 +30,7 @@ class SubmitForm extends React.Component
         @state =
             lang_id: LANGUAGES[0][0]
             draft: false
+            source: ""
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
         @submit = @submit.bind(this)
@@ -67,9 +68,8 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            fileName = document.getElementById("file").files[0]
-            fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
-            fileText = Array.from(new Uint8Array(fileText))
+            enc = new TextEncoder()
+            fileText = Array.from(enc.encode(@state.source))
             languageName = undefined
             for lang in LANGUAGES
                 if ""+@state.lang_id == ""+lang[0]
@@ -116,30 +116,20 @@ class SubmitForm extends React.Component
         if not @props.myUser?._id
             return null
 
-        canSubmit = (not @state.submit?.loading) and (@state.wasFile)
+        canSubmit = (not @state.submit?.loading) and (@state.source)
 
         <div>
             <h4>Отправить решение</h4>
             <Form inline onSubmit={@submit} id="submitForm">
-                <FieldGroup
-                    id="file"
-                    label=""
-                    type="file"
-                    setField={@setField}
-                    state={@state}/>
-                {if !@props.material.isReview
-                    <FieldGroup
-                        id="lang_id"
-                        label=""
-                        componentClass="select"
-                        setField={@setField}
-                        state={@state}>
-                        {LANGUAGES.map((lang) =>
-                            <option value={lang[0]} key={lang[0]}>{lang[1]}</option>
-                        )}
-                    </FieldGroup>
-                }
-                {" "}
+                <div style={{width: "100%"}}>
+                <FormControl 
+                    value={@state["source"]}
+                    onChange={(e) => @setField("source", e.target.value)}
+                    name="source"
+                    id="source"
+                    componentClass="textarea"
+                    style={{ height: 100, width: "100%", marginBottom: "1ex" }}/>
+                </div>
                 <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
                     <ShadowedSwitch on={@state.draft}>
                         <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
