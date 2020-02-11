@@ -91,8 +91,8 @@ class Register extends React.Component
             }
             ###
             if data.registered.success
-                if window.yaCounter45895896
-                    window.yaCounter45895896.hit?("/registered")
+                if window.yaCounter54702844
+                    window.yaCounter54702844.hit?("/registered")
                 await callApi "login", {
                     username: @state.username,
                     password: @state.password
