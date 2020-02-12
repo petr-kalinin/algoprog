@@ -246,7 +246,8 @@ export default setupApi = (app) ->
 
     app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
-            fullUser = await User.findById(user.userKey())
+            # not userKey() because user is already an object
+            fullUser = await User.findById(user.ejudgeUsername)
             user.fullName = fullUser?.name
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
@@ -258,7 +259,6 @@ export default setupApi = (app) ->
         result = []
         users = []
         for user in await User.search(req.body.searchString)
-            user = user.toObject()
             users = users.concat(await RegisteredUser.findAllByKey(user._id))
         registeredUsers = await RegisteredUser.search(req.body.searchString)
         users = users.concat(registeredUsers)
@@ -272,7 +272,8 @@ export default setupApi = (app) ->
 
     app.get '/api/registeredUsers', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
-            fullUser = await User.findById(user.userKey())
+            # not userKey() because user is already an object
+            fullUser = await User.findById(user.ejudgeUsername)
             user.fullName = fullUser?.name
             user.dormant = fullUser?.dormant
             user.registerDate = fullUser?.registerDate
@@ -285,7 +286,6 @@ export default setupApi = (app) ->
         promises = []
         for user in await RegisteredUser.find({})
             user = user.toObject()
-            delete user.informaticsPassword
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)

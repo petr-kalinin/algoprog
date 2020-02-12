@@ -6,14 +6,14 @@ registeredUserSchema = new mongoose.Schema
     adminData:
         defaultUserLists: [String]
     ejudgeUsername: String
-    ejudgePassword: String
+    ejudgePassword: {type: String, select: false}
     promo: String
     contact: String
     whereFrom: String
     aboutme: String
 
 registeredUserSchema.statics.findAdmin = (list) ->
-    RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword")
+    RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+ejudgePassword")
 
 
 registeredUserSchema.methods.upsert = () ->
@@ -36,7 +36,7 @@ registeredUserSchema.statics.findAllByKey = (key) ->
     await RegisteredUser.find({ejudgeUsername: key})
 
 registeredUserSchema.statics.findByKeyWithPassword = (key) ->
-    await RegisteredUser.findOne({ejudgeUsername: key}).select("+informaticsPassword")
+    await RegisteredUser.findOne({ejudgeUsername: key}).select("+ejudgePassword")
     
 registeredUserSchema.plugin(passportLocalMongoose);
 
