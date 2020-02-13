@@ -155,7 +155,7 @@ export default class Informatics extends TestSystem
         if not userId
             # disable all downloads except for a specific user
             return
-        adminUser = await Informatics._getAdmin()
+        adminUser = await Informatics.getAdmin()
         url = (page) ->
             "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}
             "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&from_timestamp=#{fromTimestamp}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
