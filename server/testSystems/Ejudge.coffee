@@ -202,6 +202,9 @@ export default class Ejudge extends TestSystem
             els = el.getElementsByTagName(tag)
             lastEl = els[els.length - 1]
             lastEl.parentElement.removeChild(lastEl)
+        els = el.getElementsByTagName("table")
+        firstEl = els[0]
+        firstEl.parentElement.removeChild(firstEl)
         headers = el.getElementsByTagName("h3")
         header = headers[0]
         return {
