@@ -41,6 +41,7 @@ wrapRunning = (callable) ->
             running = false
 
 export run = wrapRunning () ->
+    return
     logger.info "Downloading blog posts"
     await download()
     logger.info "Done downloading blog posts"
