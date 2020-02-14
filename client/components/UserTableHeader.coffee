@@ -28,7 +28,9 @@ export default userTableHeader = (res, props) ->
         a <td className={globalStyles.mainTable_td} key="activity" title="Активность">
             {if h then "А" else props.user.activity?.toFixed?(1)}
         </td>
+        ###
         a <td className={globalStyles.mainTable_td} key="cf" title="Codeforces">
             {if h then "CF" else <CfStatus cf={props.user.cf}/>}
         </td>
+        ###
     res

@@ -172,12 +172,14 @@ class TopPanel extends React.Component
                                 {" / "}
                                 <span title="Активность">{@props.myUser.activity.toFixed(1)}</span>
                                 <span className={styles.separator}/>
+                                {###
                                 <CfStatus cf={@props.myUser.cf} />
                                 {needCfWarning(@props.myUser) &&
                                     <span>
                                         <span title="Логин на codeforces неизвестен. Если вы там зарегистрированы, напишите логин мне.">CF: <FontAwesome name="question-circle"/></span>
                                         <span className={styles.separator}/>
                                     </span>}
+                                ###}
                                 {needUnknownWarning(@props.myUser, @props.me) &&
                                     <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
                                 {needUnpaidWarning(@props.myUser) &&
