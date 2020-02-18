@@ -60,10 +60,12 @@ class SubmitList extends React.Component
             return null
         <div>
             {
+            ###
             if @props.bestSubmits.length
                 <h4><a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a></h4>
             else if @props.result.solved == 0
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
+            ###
             }
             <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload}/>
             {
