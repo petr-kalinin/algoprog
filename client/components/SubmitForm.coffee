@@ -131,21 +131,21 @@ class SubmitForm extends React.Component
                     componentClass="textarea"
                     style={{ height: 100, width: "100%", marginBottom: "1ex" }}/>
                 </div>
-                <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
-                    <ShadowedSwitch on={@state.draft}>
-                        <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
-                    </ShadowedSwitch>
-                </span>
-                {" "}
+                <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                    Отправить
+                </Button>
                 {
                 if @state.submit?.loading
                     <div style={display: "inline-block", position: "relative", top: "72px", marginTop: "-144px", width: "30px"}>
                         <Loader size={10} />
                     </div>
                 }
-                <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                    Отправить
-                </Button>
+                {" "}
+                <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
+                    <ShadowedSwitch on={@state.draft}>
+                        <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
+                    </ShadowedSwitch>
+                </span>
             </Form>
             {
             if @state.draft
