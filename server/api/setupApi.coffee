@@ -89,7 +89,7 @@ expandSubmit = (submit) ->
 hideTests = (submit) ->
     hideOneTest = (test) ->
         res = {}
-        for field in ["string_status", "status", "max_memory_used", "time", "real_time"]
+        for field in ["string_status", "status", "max_memory_used", "time", "real_time", "error_output"]
             res[field] = test[field]
         return res
 
