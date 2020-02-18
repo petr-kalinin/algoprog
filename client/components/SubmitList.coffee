@@ -1,6 +1,7 @@
 React = require('react')
 moment = require('moment')
 FontAwesome = require('react-fontawesome')
+Entities = require('html-entities').XmlEntities
 
 import Table from 'react-bootstrap/lib/Table'
 import Modal from 'react-bootstrap/lib/Modal'
@@ -19,6 +20,8 @@ import withMyUser from '../lib/withMyUser'
 import outcomeToText from '../lib/outcomeToText'
 
 import styles from './SubmitList.css'
+
+entities = new Entities()
 
 OpenSubmit = (props) ->
     <Modal show={true} onHide={props.close} dialogClassName={styles.modal}>
@@ -55,6 +58,11 @@ class SubmitList extends React.Component
         @setState
             bestSubmits: not @state.bestSubmits
 
+    initialSourceForForm: () ->
+        if not @props.data?.length
+            return undefined
+        return entities.decode(@props.data[@props.data.length - 1]?.source)
+
     render:  () ->
         if not @props.myUser?._id
             return null
@@ -67,7 +75,7 @@ class SubmitList extends React.Component
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
             ###
             }
-            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload}/>
+            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload} source={@initialSourceForForm()}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>

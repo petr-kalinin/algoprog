@@ -30,7 +30,7 @@ class SubmitForm extends React.Component
         @state =
             lang_id: LANGUAGES[0][0]
             draft: false
-            source: ""
+            source: @props.source || ""
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
         @submit = @submit.bind(this)
@@ -58,6 +58,7 @@ class SubmitForm extends React.Component
         if prevProps.problemId != @props.problemId
             @setState
                 submit: undefined
+                source: @props.source || ""
 
     submit: (event) ->
         event.preventDefault()
