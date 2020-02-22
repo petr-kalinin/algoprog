@@ -146,7 +146,7 @@ class TestResult extends React.Component
                     </Col>
                 </Grid>
             </td></tr>
-        else if @props.result.error_output?.length
+        else if @props.result.error_output?.trim()?.length
             res.push <tr key="3"><td colSpan="4" className={styles.td}>
                 <pre>{@props.result.error_output}</pre>
             </td></tr>

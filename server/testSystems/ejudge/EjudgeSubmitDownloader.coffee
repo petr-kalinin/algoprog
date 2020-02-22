@@ -2,12 +2,15 @@ moment = require('moment')
 xml2js = require('xml2js')
 parseCsv = require('csv-parse/lib/sync')
 import { JSDOM } from 'jsdom'
+Entities = require('html-entities').XmlEntities
 
 import TestSystemSubmitDownloader from '../TestSystem'
 
 import Submit from '../../models/submit'
 
 import logger from '../../log'
+
+entities = new Entities()
 
 parseXml = (xml) ->
     return new Promise (resolve, reject) ->
@@ -134,6 +137,34 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 index++
         return result
 
+    parseResults: (pre, result) ->
+        lines = pre.split("\n")
+        test = undefined
+        block = undefined
+        for line in lines
+            if /<b>====== Test #(\d+) =======<\/b>/.test(line)
+                continue
+            if line == "<u>--- Resource usage ---</u>"
+                block = undefined
+            match = /^<a name="(\d+)(.)">/.exec(line)
+            if match
+                test = +match[1] - 1
+                block = switch match[2]
+                    when "I" then "input"
+                    when "O" then "output"
+                    when "A" then "corr"
+                    when "E" then "error_output"
+                    when "C" then "checker_output"
+                continue
+            if not (test?) or not (block?) 
+                continue
+            if not (result[test]?)
+                logger.warn("Unknown test #{test} in parseResult")
+                continue
+            if not (block of result[test])
+                result[test][block] = ""
+            result[test][block] += entities.decode(line) + "\n"
+
     getResults: (runid) ->
         [contest, run] = @_parseRunId(runid)
         param = @_findParam(contest)
@@ -141,8 +172,10 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         page = await param.admin.download href, {}, "new-master"
         document = (new JSDOM(page, {url: href})).window.document
         result = {tests: []}
+        pre = document.getElementsByTagName("pre")[0]
         if page.includes("Compilation error") or page.includes("Coding style violation")
-            result.compiler_output = document.getElementsByTagName("pre")[0]?.textContent            
+            result.compiler_output = pre?.textContent
+            pre = null
         table = document.getElementsByClassName("b1")?[0]
         if not table
             return result
@@ -154,6 +187,8 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 string_status: td[1].textContent
                 time:  +td[2].textContent * 1000
                 max_memory_used: +td[4].textContent
+        if pre
+            @parseResults(pre.innerHTML, result.tests)
         return result
 
     getSubmitsFromPage: (page) ->
