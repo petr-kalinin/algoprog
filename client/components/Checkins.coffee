@@ -56,6 +56,10 @@ export default class Checkins extends React.Component
             <p>
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) -- его могут спросить охранники на входе!                    
             </p>
+            
+            <Alert bsStyle="danger">
+                1 марта занятия не будет из-за городской олимпиады, ниже запись на 8 марта.
+            </Alert>
 
             {
             if @state.result?.error
