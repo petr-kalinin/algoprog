@@ -9,6 +9,7 @@ paymentSchema = new mongoose.Schema
     oldPaidTill: Date
     newPaidTill: Date
     payload: mongoose.Schema.Types.Mixed
+    receipt: String
 
 
 paymentSchema.methods.upsert = () ->

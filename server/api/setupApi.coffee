@@ -44,6 +44,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import download from '../lib/download'
 import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
+import {addIncome} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
@@ -680,8 +681,10 @@ export default setupApi = (app) ->
         newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
         userPrivate.paidTill = newPaidTill
         await userPrivate.upsert()
+        receipt = await addIncome("Оплата занятий на algoprog.ru", data.Amount)
+        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
         payment.processed = true
         payment.newPaidTill = newPaidTill
+        payment.receipt = receipt
         await payment.upsert()
-        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}")
         res.send('OK')
