@@ -20,7 +20,11 @@ paymentSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a payment"
 
-paymentSchema.index({ user : 1 })
+paymentSchema.statics.findLastReceiptByUserId = (userId) ->
+    payment = Payment.find({user: userId}).sort("-time").limit(1)
+    return payment[0].receipt
+
+paymentSchema.index({ user : 1, time: -1 })
 paymentSchema.index({ time : 1 })
 
 Payment = mongoose.model('Payments', paymentSchema);

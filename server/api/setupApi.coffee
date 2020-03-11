@@ -44,7 +44,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import download from '../lib/download'
 import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
-import {addIncome} from '../lib/npd'
+import {addIncome, INN} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
@@ -462,6 +462,13 @@ export default setupApi = (app) ->
                 session: session
             await checkin.upsert()
         res.json({ok: "OK"})
+
+    app.get '/api/recentReceipt/:user', wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        receipt = await Payment.findLastReceiptByUserId(req.params.user)
+        res.json({receipt: "https://lknpd.nalog.ru/api/v1/receipt/#{INN}/#{receipt}/print"})
 
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

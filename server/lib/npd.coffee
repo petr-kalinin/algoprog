@@ -2,6 +2,7 @@ import download from './download'
 
 API_PROVIDER = 'https://lknpd.nalog.ru/api/v1/'
 BEARER = process.env["NPD_BEARER"]
+export INN = process.env["INN"]
 
 MOSCOW_OFFSET = -3 * 60 * 60 * 1000
 MOSCOW_ZONE = '+03:00'
