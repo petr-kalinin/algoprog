@@ -1,23 +1,50 @@
 import download from './download'
 
 API_PROVIDER = 'https://lknpd.nalog.ru/api/v1/'
-BEARER = process.env["NPD_BEARER"]
+REFRESH_TOKEN = process.env["NPD_REFRESH_TOKEN"]
 export INN = process.env["INN"]
 
 MOSCOW_OFFSET = -3 * 60 * 60 * 1000
 MOSCOW_ZONE = '+03:00'
 
-export callApi = (endpoint, data) ->
+export callApiRaw = (endpoint, data) ->
     headers = 
-        Authorization: "Bearer "+BEARER
         'Content-Type': 'application/json'
     body = data
     url = "#{API_PROVIDER}#{endpoint}"
     result = await download url, null, {method: "POST", headers, body, maxAttempts: 1, json: true}
+    console.log "#{url} -> #{result}"
     try
         return result
     catch
         return {}
+
+getToken = () ->
+    data = {
+        "deviceInfo": {
+            "analytics": {
+                "analyticsDeviceId": "e216f655bbe0aa08",
+                "platform": "AppMetrica"
+            },
+            "appVersion": "2.0.1",
+            "metaDetails": {
+                "browser": "",
+                "browserVersion": "",
+                "os": "android"
+            },
+            "pushProviderToken": "",
+            "sourceDeviceId": "e216f655bbe0aa08",
+            "sourceType": "android"
+        },
+        "refreshToken": REFRESH_TOKEN
+    }
+    res = await callApiRaw('auth/token', data)
+    console.log "token -> #{res}"
+    return res.token
+
+export callApi = (endpoint, data) ->
+    data.Authorization = "Bearer "+ await getToken()
+    return callApiRaw(endpoint, data)
 
 export addIncome = (service, amount) ->
     date = new Date()
@@ -37,4 +64,5 @@ export addIncome = (service, amount) ->
         totalAmount: amount
     }
     res = await callApi('income', data)
+    console.log "income -> #{res}"
     return res.approvedReceiptUuid
