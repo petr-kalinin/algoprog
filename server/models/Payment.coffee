@@ -21,8 +21,8 @@ paymentSchema.methods.upsert = () ->
         logger.info "Could not upsert a payment"
 
 paymentSchema.statics.findLastReceiptByUserId = (userId) ->
-    payment = Payment.find({user: userId}).sort("-time").limit(1)
-    return payment[0].receipt
+    return (await Payment.find({user: userId}).sort("-time").limit(1))[0]
+    
 
 paymentSchema.index({ user : 1, time: -1 })
 paymentSchema.index({ time : 1 })
