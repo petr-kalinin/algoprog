@@ -637,7 +637,6 @@ export default setupApi = (app) ->
         res.send(text)
 
     app.post '/api/paymentNotify', wrap (req, res) ->
-        ###
         logger.info("paymentNotify #{req.body.OrderId}")
         data = deepcopy(req.body)
         token = data.Token
@@ -694,14 +693,11 @@ export default setupApi = (app) ->
         newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
         userPrivate.paidTill = newPaidTill
         await userPrivate.upsert()
-        ###
-        receipt = await addIncome("Оплата занятий на algoprog.ru", 100) #data.Amount)
+        receipt = await addIncome("Оплата занятий на algoprog.ru", data.Amount)
         console.log("receipt=", receipt)
-        ###
         logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
         payment.processed = true
         payment.newPaidTill = newPaidTill
         payment.receipt = receipt
         await payment.upsert()
-        ###
         res.send('OK')
