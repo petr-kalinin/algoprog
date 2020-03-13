@@ -57,6 +57,7 @@
     "mongoose": "^5.7.1",
     "node-notifier": "^5.4.3",
     "node-statsd": "^0.1.1",
+    "node-telegram-bot-api": "^0.40.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",

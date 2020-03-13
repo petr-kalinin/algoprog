@@ -20,6 +20,8 @@ import sleep from './lib/sleep'
 import setupMetrics from './metrics/metrics'
 import sendToGraphite from './metrics/graphite'
 
+import notify from './metrics/notify'
+
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r

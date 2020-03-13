@@ -3,7 +3,7 @@ import download from './download'
 import Config from '../models/Config'
 
 API_PROVIDER = 'https://lknpd.nalog.ru/api/v1/'
-export INN = process.env["INN"]
+INN = process.env["INN"]
 
 MOSCOW_OFFSET = -3 * 60 * 60 * 1000
 MOSCOW_ZONE = '+03:00'
@@ -33,6 +33,9 @@ getToken = () ->
 export callApi = (endpoint, data) ->
     headers = {"Authorization": "Bearer "+ await getToken()}
     return callApiRaw(endpoint, data, headers)
+
+export makeReceiptLink = (receipt) ->
+    "https://lknpd.nalog.ru/api/v1/receipt/#{INN}/#{receipt}/print"
 
 export addIncome = (service, amount) ->
     date = new Date()
