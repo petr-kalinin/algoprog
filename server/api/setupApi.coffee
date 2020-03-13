@@ -693,7 +693,7 @@ export default setupApi = (app) ->
         newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
         userPrivate.paidTill = newPaidTill
         await userPrivate.upsert()
-        receipt = await addIncome("Оплата занятий на algoprog.ru", data.Amount)
+        receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
         console.log("receipt=", receipt)
         logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
         payment.processed = true
