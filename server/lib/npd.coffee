@@ -12,14 +12,11 @@ export callApiRaw = (endpoint, data, headers = {}) ->
     headers['Content-Type'] = 'application/json'
     body = data
     url = "#{API_PROVIDER}#{endpoint}"
-    console.log "Download #{url}", headers, body
     result = await download url, null, {method: "POST", headers, body, maxAttempts: 1, json: true}
-    console.log "#{url} -> ", result
     return result
 
 updateToken = () ->
     data = await Config.get("npd.baseData")
-    console.log data
     refreshToken = await Config.get("npd.refreshToken")
     data.refreshToken = refreshToken
     res = await callApiRaw('auth/token', data)
@@ -55,5 +52,4 @@ export addIncome = (service, amount) ->
         totalAmount: amount
     }
     res = await callApi('income', data)
-    console.log "income -> #{res}"
     return res.approvedReceiptUuid

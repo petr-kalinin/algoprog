@@ -43,7 +43,7 @@ export default class Payment extends React.Component
                     Форма ниже приведена для примера.
                 </Alert>
             canSubmit = false
-        else if @props.myUser.userList in ["lic40", "lic87", "zaoch", "vega", "graduated_"] or @props.myUser.price == 0
+        else if @props.myUser.userList in ["lic40", "lic87", "zaoch", "vega", "graduated"] or @props.myUser.price == 0
             amount = 0
             warning = <Alert bsStyle="danger">
                     Занятия для вас бесплатны, вам не надо их оплачивать.
@@ -54,13 +54,6 @@ export default class Payment extends React.Component
             warning = <Alert bsStyle="danger">
                     Для вас не указана стоимость занятий, напишите мне.
                     Форма ниже приведена для примера.
-                </Alert>
-            canSubmit = false
-        else if not (@props.myUser?.userList == "graduated" and @props.myUser?.price)
-            amount = 0
-            warning = <Alert bsStyle="danger">
-                    Оплата временно не работает по техническим причинам. Ожидаемое время восстановления — несколько часов. 
-                    Пока можете заниматься без оплаты.
                 </Alert>
             canSubmit = false
         else 

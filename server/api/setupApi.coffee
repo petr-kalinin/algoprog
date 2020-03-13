@@ -694,7 +694,6 @@ export default setupApi = (app) ->
         userPrivate.paidTill = newPaidTill
         await userPrivate.upsert()
         receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-        console.log("receipt=", receipt)
         logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
         payment.processed = true
         payment.newPaidTill = newPaidTill
