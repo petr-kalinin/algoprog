@@ -54,7 +54,7 @@
     "log4js": "^5.1.0",
     "moment": "^2.24.0",
     "mongodb": "^3.3.2",
-    "mongoose": "^5.7.1",
+    "mongoose": "^5.7.5",
     "node-notifier": "^5.4.3",
     "node-statsd": "^0.1.1",
     "node-telegram-bot-api": "^0.40.0",
