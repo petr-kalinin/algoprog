@@ -15,10 +15,7 @@ export callApiRaw = (endpoint, data, headers = {}) ->
     console.log "Download #{url}", headers, body
     result = await download url, null, {method: "POST", headers, body, maxAttempts: 1, json: true}
     console.log "#{url} -> ", result
-    try
-        return result
-    catch
-        return {}
+    return result
 
 updateToken = () ->
     data = await Config.get("npd.baseData")
