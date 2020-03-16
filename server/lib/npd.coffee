@@ -22,7 +22,7 @@ updateToken = () ->
     res = await callApiRaw('auth/token', data)
     await Config.set("npd.refreshToken", res.refreshToken)
     await Config.set("npd.token", res.token)
-    await Config.set("npd.tokenExpireIn", res.tokenExpireIn)
+    await Config.set("npd.tokenExpireIn", new Date(res.tokenExpireIn))
 
 getToken = () ->
     tokenExpireIn = await Config.get("npd.tokenExpireIn")
