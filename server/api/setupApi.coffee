@@ -697,9 +697,9 @@ export default setupApi = (app) ->
         await userPrivate.upsert()
         try
             receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-            notify "Добавлен чек (#{req.body.OrderId}, #{userPrivate.price}р.): " + makeReceiptLink(receipt)
+            notify "Добавлен чек (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
         catch e
-            notify "Ошибка добавления чека (#{req.body.OrderId}, #{userPrivate.price}р.): " + e
+            notify "Ошибка добавления чека (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
             receipt = "---"
         logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
         payment.processed = true
