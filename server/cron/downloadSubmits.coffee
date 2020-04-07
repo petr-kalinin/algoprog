@@ -23,6 +23,18 @@ import { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegist
 
 entities = new Entities()
 
+compare = (a, b, path) ->
+    if a and typeof a == 'object' and b and typeof b == 'object'
+        seen = {}
+        for own key of a
+            compare(a[key], b[key], path + "." + key)
+            seen[key] = 1
+        for own key of b
+            if not (key of seen)
+                compare(a[key], b[key], path + "." + key)
+    else if a != b
+        console.log "Diff: #{path} #{a} #{b}"
+
 class SubmitDownloader
     constructor: (@baseDownloader, @minPages, @limitPages, @forceMetadata, @onNewSubmit) ->
         @dirtyUsers = {}
@@ -118,6 +130,12 @@ class SubmitDownloader
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
         await newSubmit.calculateHashes()
+
+        user = await User.findById(newSubmit.user)
+        console.log user?.userList, newSubmit.outcome
+        if user?.userList == "graduated" and newSubmit.outcome == "OK" and newSubmit.time > new Date(2020, 1, 28)
+            newSubmit.outcome = "AC"
+            newSubmit.force = true
 
         logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
         try

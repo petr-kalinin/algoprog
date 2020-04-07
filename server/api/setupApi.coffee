@@ -26,6 +26,8 @@ import BlogPost from '../models/BlogPost'
 import Payment from '../models/Payment'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
 
+import notify from '../metrics/notify'
+
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
 
 import dashboard from './dashboard'
@@ -45,7 +47,9 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import download from '../lib/download'
 import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
+import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
+import sleep from '../lib/sleep'
 
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
 
@@ -476,6 +480,18 @@ export default setupApi = (app) ->
             await checkin.upsert()
         res.json({ok: "OK"})
 
+    app.get '/api/recentReceipt/:user', wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        for i in [1..10]
+            payment = await Payment.findLastReceiptByUserId(req.params.user)
+            if payment and new Date() - payment.time < 24 * 60 * 60 * 1000
+                res.json({receipt: makeReceiptLink(payment.receipt)})
+                return
+            await sleep(1000)
+        res.json({})
+
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -661,7 +677,6 @@ export default setupApi = (app) ->
             processed: false
             payload: req.body
         await payment.upsert()
-
         if not success
             logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull (#{data.Status})")
             res.send('OK')
@@ -692,8 +707,15 @@ export default setupApi = (app) ->
         newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
         userPrivate.paidTill = newPaidTill
         await userPrivate.upsert()
+        try
+            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
+            notify "Добавлен чек (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
+        catch e
+            notify "Ошибка добавления чека (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
+            receipt = "---"
+        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
         payment.processed = true
         payment.newPaidTill = newPaidTill
+        payment.receipt = receipt
         await payment.upsert()
-        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}")
         res.send('OK')

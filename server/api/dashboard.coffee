@@ -9,7 +9,8 @@ import CfResult from '../models/cfResult'
 
 import awaitAll from '../../client/lib/awaitAll'
 
-export START_SUBMITS_DATE = new Date(2020, 0, 1)
+# note that months start from 0
+export START_SUBMITS_DATE = new Date(2020, 2, 20)
 
 expandResult = (result) ->
     res = result.toObject()

@@ -29,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.9899495"
-     inkscape:cx="1110.5148"
-     inkscape:cy="535.72548"
+     inkscape:cx="1031.6767"
+     inkscape:cy="527.77315"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -212,41 +212,46 @@
        width="192"
        id="rect3809" />
     <g
-       id="g918"
-       transform="translate(0,1.2780361)"
+       id="g941"
+       transform="translate(0,3.2227711)"
        inkscape:export-xdpi="254"
        inkscape:export-ydpi="254">
       <text
          inkscape:export-ydpi="254"
          inkscape:export-xdpi="254"
          id="text3813"
-         y="183.10835"
-         x="265.13599"
+         y="170.48837"
+         x="264.47604"
          style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
-           id="tspan3817"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="183.10835"
-           x="265.13599"
-           sodipodi:role="line">Районная/городская</tspan><tspan
            id="tspan911"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="205.15697"
-           x="265.13599"
-           sodipodi:role="line">олимпиада</tspan></text>
+           y="170.48837"
+           x="266.50867"
+           sodipodi:role="line">Системы </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="192.53699"
+           x="266.50864"
+           sodipodi:role="line"
+           id="tspan917">контроля </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="214.5856"
+           x="264.47604"
+           sodipodi:role="line"
+           id="tspan919">версий</tspan></text>
       <text
          inkscape:export-ydpi="254"
          inkscape:export-xdpi="254"
          id="text3821"
-         y="232.06708"
+         y="239.49231"
          x="238.56236"
          style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d32c2c;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#d32c2c;stroke-width:0.26458332"
-           y="232.06708"
+           y="239.49231"
            x="238.56236"
            id="tspan3819"
-           sodipodi:role="line">Петр Калинин, 08.12.2019</tspan></text>
+           sodipodi:role="line">Петр Калинин, 16.02.2019</tspan></text>
     </g>
   </g>
 </svg>
