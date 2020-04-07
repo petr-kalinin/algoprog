@@ -1,6 +1,7 @@
 React = require('react')
 moment = require('moment')
 iconv = require('iconv-lite')
+FontAwesome = require('react-fontawesome')
 
 import Button from 'react-bootstrap/lib/Button'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
@@ -120,7 +121,9 @@ class TestResult extends React.Component
         canToggle = "input" of @props.result
         res = []
         res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1">
-            <td>{@props.index}</td>
+            <td>{@props.index}
+                {@props.copyTest && <span onClick={@props.copyTest(@props.result)}><FontAwesome name="chevron-circle-down"/></span>}
+            </td>
             <td>{@props.result.string_status}</td>
             <td>{@props.result.time/1000}</td>
             <td>{@props.result.max_memory_used}</td>
@@ -131,7 +134,6 @@ class TestResult extends React.Component
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Input:
                         <pre>{@props.result.input}</pre>
-                        {@props.result.big_input && "..."}
                     </Col>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Checker:
@@ -144,18 +146,19 @@ class TestResult extends React.Component
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Output:
                         <pre>{@props.result.output}</pre>
-                        {@props.result.big_output && "..."}
                     </Col>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         Answer:
                         <pre>{@props.result.corr}</pre>
-                        {@props.result.big_corr && "..."}
                     </Col>
                 </Grid>
             </td></tr>
         return res
 
 export default class Submit extends React.Component
+    constructor: (props) ->
+        super(props)
+
     render: () ->
         [cl, message] = outcomeToText(@props.submit.outcome)
         admin = @props.me?.admin
@@ -197,7 +200,7 @@ export default class Submit extends React.Component
                             res = []
                             a = (el) -> res.push(el)
                             for index, result of (@props.submit.results?.tests || [])
-                                a <TestResult key={index} result={result} index={index}/>
+                                a <TestResult key={index} result={result} index={index} copyTest={@props.copyTest}/>
                             res}
                         </tbody>
                     </Table>

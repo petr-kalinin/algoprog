@@ -68,6 +68,18 @@ class ReviewResult extends React.Component
         @setQuality = @setQuality.bind this
         @toggleBestSubmits = @toggleBestSubmits.bind this
         @downloadSubmits = @downloadSubmits.bind this
+        @copyTest = @copyTest.bind this
+
+    copyTest: (result) ->
+        (e) =>
+            e.stopPropagation()
+            newComment = @state.commentText
+            if newComment.length
+                newComment += "\n\n"
+            newComment += "Входные данные:\n#{result.input.trim()}\n\nВывод программы:\n#{result.output.trim()}\n\nПравильный ответ:\n#{result.corr.trim()}"
+            @setState
+                commentText: newComment 
+            return false
 
     setResult: (result) ->
         @syncSetOutcome(result)
@@ -183,7 +195,7 @@ class ReviewResult extends React.Component
                     {
                     if @state.currentSubmit
                         <div>
-                            <Submit submit={@state.currentSubmit} showHeader me={@props.me}/>
+                            <Submit submit={@state.currentSubmit} showHeader me={@props.me} copyTest={@copyTest}/>
                             {
                             admin and not @state.currentSubmit.similar and <div>
                                 <div>
