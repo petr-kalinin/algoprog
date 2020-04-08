@@ -114,7 +114,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
     time = new Date
     timeStr = +time
     submit = new Submit
-        _id: "#{userId}r#{timeStr}#{problemId}" ,
+        _id: "#{userId}r#{timeStr}p#{problemId}" ,
         time: time,
         user: userId,
         problem: problemId,
