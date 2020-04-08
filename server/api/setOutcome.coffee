@@ -14,21 +14,11 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
-parseRunId = (runid) ->
-    if runid.includes("r")
-        [fullSubmitId, contest, run, problem] = runid.match(/(\d+)r(\d+)(p\d+)/)
-    else
-        [fullSubmitId, run, problem] = runid.match(/(\d+)(p\d+)/)
-        contest = undefined
-    return [fullSubmitId, contest, run, problem]
-
 storeToDatabase = (req, res) ->
-    [fullSubmitId, contest, runId, problemId] = parseRunId(req.params.submitId)
-    if contest
-        runId = contest + "r" + runId
     submit = await Submit.findById(req.params.submitId)
+    problemId = submit.problemId
     problem = await Problem.findById(problemId)
-    logger.info("Store to database #{runId} #{problemId} #{problem?._id}")
+    logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
