@@ -16,7 +16,7 @@ import logger from '../log'
 
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
-    problemId = submit.problemId
+    problemId = submit.problem
     problem = await Problem.findById(problemId)
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
     if req.body.result in ["AC", "IG", "DQ"]
