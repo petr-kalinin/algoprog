@@ -14,23 +14,13 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
-parseRunId = (runid) ->
-    if runid.includes("r")
-        [fullSubmitId, contest, run, problem] = runid.match(/(\d+)r(\d+)(p\d+)/)
-    else
-        [fullSubmitId, run, problem] = runid.match(/(\d+)(p\d+)/)
-        contest = undefined
-    return [fullSubmitId, contest, run, problem]
-
 decodeComment = (comment) ->
     entities.decode(comment.text || comment)
 storeToDatabase = (req, res) ->
-    [fullSubmitId, contest, runId, problemId] = parseRunId(req.params.submitId)
-    if contest
-        runId = contest + "r" + runId
     submit = await Submit.findById(req.params.submitId)
+    problemId = submit.problem
     problem = await Problem.findById(problemId)
-    logger.info("Store to database #{runId} #{problemId} #{problem?._id}")
+    logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
@@ -43,7 +33,7 @@ storeToDatabase = (req, res) ->
             logger.info("Force-storing to database comment for #{req.params.submitId}")
             rndId = Math.floor(Math.random() * 1000000)
             newComment = new SubmitComment
-                _id: "_#{rndId}r#{runId}"
+                _id: "_#{rndId}r#{req.params.submitId}"
                 problemId: problemId
                 problemName: problem.name
                 userId: submit.user

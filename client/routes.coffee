@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import AchievesPage from './pages/AchievesPage'
+import AllCommentsPage from './pages/AllCommentsPage'
 import UserBadgePage from './pages/UserBadgePage'
 import FullUserPage from './pages/FullUserPage'
 import DashboardPage from './pages/DashboardPage'
@@ -113,6 +114,11 @@ export default [
         path: '/achieves',
         key: "achieves",
         component: AchievesPage,
+    },
+    {
+        path: '/comments',
+        key: "comments",
+        component: AllCommentsPage,
     },
     {
         path: '/login',

@@ -670,13 +670,20 @@ class MaterialsDownloader
             material: material
             tree: tree
 
-    createNewsTree: ->
-        return
-            _id: "news",
-            type: "link"
-            content: "/news"
-            title: "Новости"
-            materials: []
+    createAdditionalItemsTree: () ->
+        return [{
+                _id: "news",
+                type: "link"
+                content: "/news"
+                title: "Новости"
+                materials: []
+            }, {
+                _id: "comments",
+                type: "link"
+                content: "/comments"
+                title: "Комментарии"
+                materials: []
+            }]
 
     correctInternalLinksInMaterial: (material) ->
         if not (material.type in ["page", "label", "epigraph", "problem", "news"])
@@ -753,7 +760,9 @@ class MaterialsDownloader
         @save()
 
         trees = (m.tree for m in materials)
-        trees.splice(1, 0, @createNewsTree())
+
+        args = [1, 0].concat(@createAdditionalItemsTree())
+        Array.prototype.splice.apply(trees, args)
         
         treeMaterial = new Material
             _id: "tree",

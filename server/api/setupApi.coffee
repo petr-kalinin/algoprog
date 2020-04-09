@@ -393,6 +393,19 @@ export default setupApi = (app) ->
             return
         res.json(await SubmitComment.findLastNotViewedByUser(req.user?.userKey()))
 
+    app.get '/api/comments/:page', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.userKey()
+            res.status(403).send('No permissions')
+            return
+        page = req.params.page
+        res.json(await SubmitComment.findByUserAndPage(req.user?.userKey(), page))
+
+    app.get '/api/commentPages', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.userKey()
+            res.status(403).send('No permissions')
+            return
+        res.json(await SubmitComment.findPagesCountByUser(req.user?.userKey()))
+
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

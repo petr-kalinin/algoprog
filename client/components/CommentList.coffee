@@ -102,6 +102,7 @@ class CommentList extends React.Component
                     )
                 }
             </PanelGroup>
+            <Link to="/comments">Все комментарии</Link>
         </div>
 
 mapStateToProps = () -> {}
