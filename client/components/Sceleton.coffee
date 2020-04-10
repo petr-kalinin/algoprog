@@ -97,11 +97,6 @@ BottomPanel = (props) ->
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                     </div>
                 </Col>
-                <Col xs={12} sm={12} md={4} lg={4}>
-                    <div className={styles.right + " text-muted"}>
-                        <PaidTillConnected/>
-                    </div>
-                </Col>
             </Row>
         </Grid>
     </div>
