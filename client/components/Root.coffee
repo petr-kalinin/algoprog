@@ -10,15 +10,18 @@ import Nav from 'react-bootstrap/lib/Nav'
 import NavItem from 'react-bootstrap/lib/NavItem'
 
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import Sceleton from './Sceleton'
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withMyUser from '../lib/withMyUser'
 import Material from '../components/Material'
 
 import globalStyles from './global.css'
 import Tree from './Tree'
 import styles from './Root.css'
 
+###
 Inner = (props) ->
     <div>
         <Grid fluid>
@@ -141,3 +144,12 @@ export default Root = (props) ->
         sceletonProps = {props..., location: {path: [], _id: "main"}, showNews: "hide", hideBread:true}
         `<Sceleton {...sceletonProps}><Inner match={props.match}/></Sceleton>`}
     </div>
+###
+
+Root = (props) ->
+    if (props.myUser?._id)
+        <Redirect to="/user/#{props.myUser._id}" />
+    else
+        <Redirect to="/login" />
+
+export default withMyUser(Root)

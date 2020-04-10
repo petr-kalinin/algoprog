@@ -16,7 +16,7 @@ class FullUserPage extends React.Component
             @props...,
             location: {title: @props.data.user.name, _id: "user" + @props.data.user._id},
             showNews: "hide",
-            showTree: "hide"
+            showTree: "true"
         }
         child = <FullUser user={@props.data.user} me={@props.me} results={@props.data.results} handleReload={@props.handleReload}/>
         `<Sceleton {...sceletonProps}>{child}</Sceleton>`
