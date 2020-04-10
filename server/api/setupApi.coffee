@@ -295,7 +295,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
-        result = result.filter((user) -> not user.dormant)
+        result = result.filter((user) -> (not user.dormant) and (user.registerDate > new Date() - 1000 * 60 * 60 * 24 * 100))
         result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 
