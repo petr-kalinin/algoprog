@@ -10,9 +10,12 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
 import Button from 'react-bootstrap/lib/Button'
 
+import { Redirect } from 'react-router-dom'
+
 import Loader from '../components/Loader'
 
 import callApi from '../lib/callApi'
+import withMyUser from '../lib/withMyUser'
 
 import FieldGroup from './FieldGroup'
 
@@ -61,6 +64,8 @@ class Login extends React.Component
 
 
     render:  () ->
+        if @props.myUser?._id
+            return <Redirect to="/user/#{@props.myUser._id}" />
         canSubmit = @state.username && @state.password && !@state.loading
         <Grid fluid>
             <h1>Вход в систему</h1>
@@ -110,4 +115,4 @@ mapDispatchToProps = (dispatch) ->
     return
         reloadMyData: () -> dispatch(actions.invalidateAllData())
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))
+export default withMyUser(withRouter(connect(mapStateToProps, mapDispatchToProps)(Login)))
