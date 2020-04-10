@@ -45,9 +45,6 @@ export default SubmitListTable = (props) ->
                 <tr>
                     <th>Время попытки</th>
                     <th>Результат</th>
-                    <th>Язык</th>
-                    <th><span title="(сек)">Время</span></th>
-                    <th><span title="ОЗУ (МБ)">Память</span></th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     {if props.handleDiffClick
@@ -67,12 +64,6 @@ export default SubmitListTable = (props) ->
                     res.push <tr key={submit._id} className={cl} onClick={props.handleSubmitClick(submit)} style={cursor: "hand"}>
                         <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
-                        <td>
-                            <div className='visible-xs visible-sm'>{LANGUAGE_ABBREVIATED[submit.language]}</div>
-                            <div className='hidden-xs hidden-sm'>{submit.language}</div>
-                        </td>
-                        <td><span title="(сек)">{if time? then time / 1000 else ""}</span></td>
-                        <td><span title="ОЗУ (МБ)">{if mem >= 0 then mem else ""}</span></td>
                         <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
                         <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
                         {if props.handleDiffClick

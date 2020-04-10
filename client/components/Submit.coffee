@@ -118,8 +118,6 @@ class TestResult extends React.Component
                 {@props.copyTest && <span onClick={@props.copyTest(@props.result)}><FontAwesome name="chevron-circle-down"/></span>}
             </td>
             <td>{@props.result.string_status}</td>
-            <td>{@props.result.time/1000}</td>
-            <td>{@props.result.max_memory_used}</td>
         </tr>
         if canToggle and @state.open
             res.push <tr key="2"><td colSpan="4" className={styles.td}>
@@ -188,8 +186,6 @@ export default class Submit extends React.Component
                             <tr>
                                 <th>#</th>
                                 <th>Результат</th>
-                                <th>Время</th>
-                                <th>Память</th>
                             </tr>
                         </thead>
                         <tbody>
