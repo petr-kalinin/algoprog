@@ -103,6 +103,7 @@ hideTests = (submit) ->
     return submit
 
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
+    logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
@@ -141,6 +142,7 @@ export default setupApi = (app) ->
         res.status(403).send('No permissions')
 
     app.post '/api/register', wrap register
+    
     app.post '/api/login', passport.authenticate('local'), wrap (req, res) ->
         res.json({logged: true})
 
@@ -293,7 +295,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
-        result = result.filter((user) -> not user.dormant)
+        result = result.filter((user) -> (not user.dormant) and (user.registerDate > new Date() - 1000 * 60 * 60 * 24 * 100))
         result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 

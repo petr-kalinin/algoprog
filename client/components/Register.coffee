@@ -87,6 +87,7 @@ class Register extends React.Component
                 promo: @state.promo
                 whereFrom: @state.whereFrom
                 contact: @state.contact
+                cfLogin: @state.cfLogin
             }
             if data.registered.success
                 if window.yaCounter57483472
