@@ -140,6 +140,7 @@ export default setupApi = (app) ->
         res.status(403).send('No permissions')
 
     app.post '/api/register', wrap register
+    
     app.post '/api/login', passport.authenticate('local'), wrap (req, res) ->
         res.json({logged: true})
 
