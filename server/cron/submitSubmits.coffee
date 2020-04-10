@@ -118,19 +118,23 @@ submitOneSubmit = (submit) ->
 
 submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()
+    if pendingSubmits.length > 0
+        logger.info "Start submitSubmits, have >0 submits"
     await awaitAll(pendingSubmits.map(submitOneSubmit))
+    if pendingSubmits.length > 0
+        logger.info "Done submitSubmits, had >0 submits"
 
-running = false
+running_ = false
 
 wrapRunning = (callable) ->
     () ->
-        if running
+        if running_
             logger.info "Already running submitSubmits"
             return
         try
-            running = true
+            running_ = true
             await callable()
         finally
-            running = false
+            running_ = false
 
 export default wrapRunning(submitSubmits)

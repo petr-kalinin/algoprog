@@ -102,6 +102,7 @@ hideTests = (submit) ->
     return submit
 
 createSubmit = (problemId, userId, language, codeRaw, draft) ->
+    logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
