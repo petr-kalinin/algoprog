@@ -184,6 +184,7 @@ class ContestDownloader
 class ShadContestDownloader extends ContestDownloader
     contests:
         "Тестовый контест": '1001'
+        "Кинематика": '1002'
 
     run: ->
         levels = []
