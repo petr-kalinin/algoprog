@@ -15,6 +15,8 @@ import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
 
+import notify from '../metrics/notify'
+
 import logger from '../log'
 
 makeTimeouts = () ->
@@ -125,6 +127,10 @@ submitSubmits = () ->
         logger.info "Done submitSubmits, had >0 submits"
 
 running_ = false
+timeout = undefined
+onTimeout = () ->
+    running_ = false
+    notify("Resetting running submitSubmits")
 
 wrapRunning = (callable) ->
     () ->
@@ -133,8 +139,10 @@ wrapRunning = (callable) ->
             return
         try
             running_ = true
+            timeout = setTimeout(onTimeout, 1000 * 60 * 10)
             await callable()
         finally
             running_ = false
+            clearTimeout(timeout)
 
 export default wrapRunning(submitSubmits)

@@ -15,6 +15,9 @@ import InformaticsUser from '../informatics/InformaticsUser'
 import logger from '../log'
 import download from '../lib/download'
 import setDirty from '../lib/setDirty'
+import sleep from '../lib/sleep'
+
+import notify from '../metrics/notify'
 
 import awaitAll from '../../client/lib/awaitAll'
 
@@ -192,6 +195,10 @@ class UntilIgnoredSubmitDownloader extends SubmitDownloader
 
 
 running = false
+timeout = undefined
+onTimeout = () ->
+    running = false
+    notify("Resetting running downloadSubmits")
 
 wrapRunning = (callable) ->
     () ->
@@ -200,9 +207,11 @@ wrapRunning = (callable) ->
             return
         try
             running = true
+            timeout = setTimeout(onTimeout, 1000 * 60 * 10)
             await callable()
         finally
             running = false
+            clearTimeout(timeout)
 
 forAllTestSystems = (callable) ->
     for _, system of testSystemsRegistry
@@ -224,6 +233,7 @@ export runForUser = (userId, submitsPerPage, maxPages) ->
         logger.error "Error in runForUser", e
 
 export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
+    logger.info "runForUserAndProblem", userId, problemId
     try
         user = await User.findById(userId)
         await forAllTestSystems (system) ->
@@ -236,6 +246,7 @@ export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
 
 
 export runAll = wrapRunning () ->
+    logger.info "runAll"
     try
         await forAllTestSystems (system) ->
             if group != "all"
@@ -248,6 +259,7 @@ export runAll = wrapRunning () ->
         logger.error "Error in SubmitDownloader", e
 
 export runUntilIgnored = wrapRunning () ->
+    logger.info "runUntilIgnored"
     try
         await forAllTestSystems (system) ->
             logger.info "runUntilIgnored", system.id()
@@ -258,6 +270,7 @@ export runUntilIgnored = wrapRunning () ->
         logger.error "Error in UntilIgnoredSubmitDownloader", e
 
 export runLast = wrapRunning () ->
+    logger.info "runLast"
     try
         lastSubmit = await Submit.findLastNotCT()
         fromTimestamp = (+lastSubmit.time) / 1000 - 5 * 60
@@ -275,6 +288,7 @@ export runForCT = wrapRunning () ->
         submits = await Submit.findCT()
         data = []
         for submit in submits
+            logger.info "runForCT check submit"
             timeSinceSubmit = new Date() - submit.time
             timeSinceDownload = new Date() - submit.downloadTime
             if (timeSinceSubmit > 2 * 60 * 1000 and timeSinceDownload < 30 * 1000)
@@ -292,7 +306,10 @@ export runForCT = wrapRunning () ->
                     unique = false
                     break
             if unique
+                logger.info "runForCT add submit #{userId} #{problemId}"
                 data.push {userId, problemId}
         await awaitAll(data.map((d) -> runForUserAndProblem(d.userId, d.problemId)))
+        if data.length > 0
+            logger.info "Done runForCT"
     catch e
         logger.error "Error in LastSubmitDownloader", e
