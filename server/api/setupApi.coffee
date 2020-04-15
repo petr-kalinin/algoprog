@@ -62,6 +62,7 @@ ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
 PASSWORD = process.env["TINKOFF_PASSWORD"]
+ADMIN_TOKEN = process.env["ADMIN_TOKEN"]
 
 wrap = (fn) ->
     (args...) ->
@@ -521,6 +522,17 @@ export default setupApi = (app) ->
 
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        await user.setDormant(true)
+        res.send('OK')
+
+    app.get '/api/setDormant/:userId', wrap (req, res) ->
+        if req.query.token != ADMIN_TOKEN
             res.status(403).send('No permissions')
             return
         user = await User.findById(req.params.userId)
