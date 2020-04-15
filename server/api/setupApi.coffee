@@ -515,7 +515,7 @@ export default setupApi = (app) ->
         if not user
             res.status(400).send("User not found")
             return
-            await user.setUserList(newGroup)
+        await user.setUserList(newGroup)
         res.send('OK')
 
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
