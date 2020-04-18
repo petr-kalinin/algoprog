@@ -18,13 +18,13 @@ offset = (new Date().getTimezoneOffset()) / 60
 MOSCOW_OFFSET = -3
 nightHour = (3 + MOSCOW_OFFSET - offset - 1) %% 24
 
-logger.info "Will set downloadAll to " + nightHour + ":59:58 local time"
+logger.info "Will set updateResults to " + nightHour + ":59:58 local time"
 
 jobCT = new Cron.CronJob('*/10 * * * * *', downloadSubmits.runForCT);
 
 jobCf = new Cron.CronJob('0 0 * * * *', updateCf);
 
-jobUpdateResults = new Cron.CronJob('45 46 ' + (nightHour + 1) + ' * * *', User.updateAllUsers);
+jobUpdateResults = new Cron.CronJob('45 46 ' + nightHour + ' * * *', User.updateAllUsers);
 
 jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run)
 
