@@ -137,6 +137,18 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
     update()  # do this async
     return undefined
 
+adminPostOrGetWithToken = (app, path, cb) ->
+    app.post path, ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        await cb(req, res)
+
+    app.get path, wrap (req, res) ->
+        if (not ADMIN_TOKEN) or (req.query.token != ADMIN_TOKEN)
+            res.status(403).send('No permissions')
+            return
+        await cb(req, res)
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -508,10 +520,7 @@ export default setupApi = (app) ->
             await sleep(1000)
         res.json({})
 
-    app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
+    adminPostOrGetWithToken app, '/api/moveUserToGroup/:userId/:groupName', (req, res) ->
         user = await User.findById(req.params.userId)
         if not user
             res.status(400).send("User not found")
@@ -520,21 +529,7 @@ export default setupApi = (app) ->
         await user.setUserList(newGroup)
         res.send('OK')
 
-    app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        user = await User.findById(req.params.userId)
-        if not user
-            res.status(400).send("User not found")
-            return
-        await user.setDormant(true)
-        res.send('OK')
-
-    app.get '/api/setDormant/:userId', wrap (req, res) ->
-        if req.query.token != ADMIN_TOKEN
-            res.status(403).send('No permissions')
-            return
+    adminPostOrGetWithToken app, '/api/setDormant/:userId', (req, res) ->
         user = await User.findById(req.params.userId)
         if not user
             res.status(400).send("User not found")
