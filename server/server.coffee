@@ -59,7 +59,7 @@ app.get '/status', (req, res) ->
 
 app.use renderOnServer
 
-port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 4000)
+port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
 
 start = () ->

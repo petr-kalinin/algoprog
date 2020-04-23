@@ -1,1 +1,1 @@
-mongod --dbpath ./data -v --port 23456
+mongod --dbpath ./data -v
