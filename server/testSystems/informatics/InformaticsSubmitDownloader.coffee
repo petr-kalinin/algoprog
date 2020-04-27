@@ -38,7 +38,7 @@ EJUDGE_STATUS_TO_OUTCOME =
 
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
-    constructor: (@adminUser, @baseUrl) ->
+    constructor: (@adminUser, @baseUrl, @admin) ->
         super()
 
     AC: 'Зачтено/Принято'
@@ -78,7 +78,10 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     getResults: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "https://informatics.msk.ru/py/protocol/get-full/#{run}"
+            if @admin
+                href = "https://informatics.msk.ru/py/protocol/get-full/#{run}"
+            else
+                href = "https://informatics.msk.ru/py/protocol/get/#{run}"
             data = await @adminUser.download(href)
             logger.info "results data for runid #{runid}: ", data
             result = JSON.parse(data)
