@@ -1,5 +1,7 @@
 import logger from '../log'
 import Material from '../models/Material'
+import Problem from '../models/problem'
+import Table from '../models/table'
 
 import root from './root'
 
@@ -9,17 +11,9 @@ clone = (material) ->
 
 
 class Context
-    constructor: (@processers) ->
+    constructor: (@processors) ->
         @pathToId = {}
         @path = []
-
-    pushPath: (id, title) ->
-        @path.push
-            _id: id
-            title: title
-
-    popPath: (id) ->
-        @path.pop()
 
     generateId: () ->
         if @path.length
@@ -31,14 +25,25 @@ class Context
         @pathToId[pathItem]++
         return "#{pathItem}#{@pathToId[pathItem]}"
 
+    pushPath: (id, title, type) ->
+        @path.push
+            _id: id
+            title: title
+        for processor in @processors
+            processor.pushPath?(id, title, type)
+
+    popPath: (id) ->
+        @path.pop(id)
+        for processor in @processors
+            processor.popPath?(id)
 
     process: (material) ->
         material.path = clone(@path)
-        for processer in @processers
-            processer.process(material)
+        for processor in @processors
+            await processor.process(material)
 
 
-class SaveProcesser
+class SaveProcessor
     process: (material) ->
         material = clone(material)
         newSubmaterials = []
@@ -65,7 +70,65 @@ class SaveProcesser
         await (new Material(material)).upsert()
 
 
-class TreeProcesser
+class ContestProcessor
+    constructor: () ->
+        @path = []
+        @contests = {}
+        @problems = {}
+        @tables = {}
+
+    level: () ->
+        @path[@path.length - 1]
+
+    pushPath: (id, title, type) ->
+        if type != "level" and type != "main"
+            return
+        if @level()
+            @tables[@level()].tables.push(id)
+        @tables[id] = new Table
+            _id: id
+            name: id
+            tables: []
+            parent: @level()
+        @path.push id
+
+    popPath: (id) ->
+        if id != @level()
+            return
+        @path.pop()
+            
+    finalize: () ->
+        for id, problem of @problems
+            console.log "problem", problem
+            await problem.upsert()
+        for id, table of @tables
+            console.log "table", table
+            await table.upsert()        
+
+    process: (material) ->
+        id = material._id
+        if material.type == "problem"
+            if not (id of @problems)
+                @problems[id] = new Problem
+                    _id: material._id,
+                    name: material.title
+                    level: ""
+                    tables: []
+        else if material.type == "contest" or material.type == "topic"
+            problemIds = (m._id for m in material.materials when m.type == "problem")
+            @tables[id] = new Table
+                _id: id
+                name: material.treeTitle || material.title
+                problems: problemIds
+                parent: @level()
+            for pid in problemIds
+                @problems[pid].tables.push(id)
+                if @problems[pid].level < @level()
+                    @problems[pid].level = @level()
+            @tables[@level()].tables.push(id)
+
+
+class TreeProcessor
     constructor: () ->
         @trees = {}
 
@@ -110,13 +173,17 @@ class TreeProcesser
 
 export default downloadMaterials = () ->
     logger.info "Start downloadMaterials"
-    saveProcesser = new SaveProcesser()
-    treeProcesser = new TreeProcesser()
-    context = new Context([saveProcesser, treeProcesser])
+    saveProcessor = new SaveProcessor()
+    treeProcessor = new TreeProcessor()
+    contestProcessor = new ContestProcessor
+    context = new Context([saveProcessor, treeProcessor, contestProcessor])
 
     await root().build(context)
 
-    tree = treeProcesser.getTree("main")
+    tree = treeProcessor.getTree("main")
     tree._id = "tree"
     await (new Material(tree)).upsert()
+
+    await contestProcessor.finalize()
     logger.info "Done downloadMaterials"
+

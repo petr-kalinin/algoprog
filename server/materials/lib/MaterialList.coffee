@@ -8,7 +8,7 @@ export default class MaterialList
 
     build: (context, properties, options = {}) ->
         {allowAsync = false, keepSubmaterials = false} = options
-        context.pushPath(properties._id, properties.title)
+        context.pushPath(properties._id, properties.title, properties.type)
 
         if allowAsync
             submaterials = await awaitAll(@submaterials.map((material) -> material().build(context)))
@@ -17,7 +17,7 @@ export default class MaterialList
             for submaterial in @submaterials
                 submaterials.push(await submaterial().build(context))
 
-        context.popPath()
+        context.popPath(properties._id)
 
         flattenedSubmaterials = []
         keptSubmaterials = []

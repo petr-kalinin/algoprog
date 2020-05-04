@@ -35,6 +35,8 @@ needUser = (userId, tables) ->
 
 recurseResults = (user, tableId, depth) ->
     table = await Table.findById(tableId)
+    if not table
+        return null
     tableResults = []
     total = undefined
     if depth > 0
@@ -64,6 +66,8 @@ getUserResult = (user, tables, depth) ->
     results = []
     for tableId in tables
         tableResults = await recurseResults(user, tableId, depth)
+        if not tableResults
+            continue
         total = addTotal(total, tableResults.total)
         delete tableResults.total
         results.push tableResults
