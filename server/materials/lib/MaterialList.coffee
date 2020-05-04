@@ -21,21 +21,23 @@ export default class MaterialList
         context.popPath()
 
         flattenedSubmaterials = []
-        keepSubmaterials = []
+        keptSubmaterials = []
         for submaterial in submaterials
             sm = clone(submaterial)
             delete sm.materials
             flattenedSubmaterials.push(sm)
-            keepSubmaterials.push(sm)
+            keptSubmaterials.push(sm)
             for ss in submaterial.materials || []
                 if ss.materials
                     throw "Nested materials in " + submaterials
-                flattenedSubmaterials.push(clone(ss))
+                ss = clone(ss)
+                ss.sub = true
+                flattenedSubmaterials.push(ss)
 
         material = new Material({properties..., materials: flattenedSubmaterials})
         await context.process(material)
 
         if keepSubmaterials
-            properties.materials = keepSubmaterials
+            properties.materials = keptSubmaterials
 
         return properties

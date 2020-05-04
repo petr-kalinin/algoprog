@@ -63,12 +63,12 @@ class TreeProcesser
     makeTree: (material) ->
         if material.type == "label"
             return null
+        if material.type.startsWith("sub.")
+            return null
         delete material.content
         delete material.force
         delete material.path
-        console.log material.type
         if material.type == "news"
-            console.log "Correct news tree"
             delete material.materials
             material.type = "link"
             material.content = "/news"
@@ -77,14 +77,8 @@ class TreeProcesser
     process: (material) ->
         id = material._id
         material = clone(material)
-        if id == "main"
-            console.log material
-        material.materials = (@getTree(m) for m in material.materials)
-        if id == "main"
-            console.log material
+        material.materials = (@getTree(m) for m in material.materials when not m.sub)
         material.materials = (m for m in material.materials when m)
-        if id == "main"
-            console.log material
         material = @makeTree(material)
         @setTree(id, material)
 
@@ -100,5 +94,4 @@ export default downloadMaterials = () ->
     tree = treeProcesser.getTree("main")
     tree._id = "tree"
     await (new Material(tree)).upsert()
-    console.log "tree=", tree
     logger.info "Done downloadMaterials"

@@ -27,6 +27,7 @@ ExternalLink = (props) ->
 Material = (props) ->
     switch props.material.type
         when 'label' then `<Label {...props}/>`
+        when 'topic' then `<MaterialLink {...props}/>`
         when 'page' then `<MaterialLink {...props}/>`
         when 'pdf' then `<ExternalLink head="file-pdf-o" {...props}/>`
         when 'image' then `<ExternalLink head="picture-o" {...props}/>`
@@ -43,7 +44,10 @@ export default Level = (props) ->
     res = []
     a = (el) -> res.push(el)
     for m in props.material.materials
-        a(<div style={{marginLeft: m.indent}} key={m._id}>
+        indent = 0
+        if m.sub
+            indent = 20
+        a(<div style={{marginLeft: indent}} key={m._id}>
             <Material material={m}/>
         </div>)
     res}
