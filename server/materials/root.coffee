@@ -1,11 +1,17 @@
 import link from './lib/link'
 import level from './lib/level'
 import main from './lib/main'
+import news from './lib/news'
+import newsItem from './lib/newsItem'
 import topic from './lib/topic'
 import problem from './lib/problem'
 
 
 export default root = () -> 
+    allNews = news([
+        newsItem("Новость 1", "Текст новости 1"),
+        newsItem("Новость 2", "Текст новости 2")
+    ])
     arithm = topic("Арифметические операции", [
             link("http://notes.algoprog.ru/python_basics/0_quick_start.html", "Начало работы в питоне"), 
             problem("2938"), 
@@ -22,4 +28,4 @@ export default root = () ->
     level1 = level("1", [level1A, level1B])
     level2 = level("2", [level2A])
 
-    return main([level1, level2])
+    return main([allNews, level1, level2])

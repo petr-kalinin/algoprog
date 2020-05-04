@@ -44,12 +44,13 @@ class TreeContext extends BaseContext
         return clone(@trees[id])
 
     setTree: (id, material) ->
-        console.log material
         @trees[id] = material
 
     makeTree: (material) ->
         if material.type == "label"
             return null
+        if material.type == "news"
+            delete material.materials
         delete material.content
         delete material.force
         delete material.path
@@ -65,7 +66,10 @@ class TreeContext extends BaseContext
 
 
 export default downloadMaterials = () ->
-    context = new TreeContext()
+
+    context = new PrintMaterialContext()
     await root().build(context)
+    ###
     tree = context.getTree("main")
     console.log(JSON.stringify(tree))
+    ###
