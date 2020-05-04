@@ -13,6 +13,8 @@ MaterialProper = (props) ->
         `<Page {...props} />`
     else if props.material?.type == 'level'
         `<Level {...props} />`
+    else if props.material?.type == 'simpleLevel'
+        `<Level {...props} simple={true}/>`
     else if props.material?.type == 'contest'
         `<Contest {...props} />`
     else if props.material?.type == 'epigraph'

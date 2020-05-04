@@ -14,8 +14,8 @@ Label = (props) ->
 SubLevel = (props) ->
     inner = props.material.title
     if not props.noLink
-        inner = <a href="/material/#{props.material._id}">{inner}</a>
-    if props.material.sub
+        inner = <Link to="/material/#{props.material._id}">{inner}</Link>
+    if props.material.sub or props.simple
         <div>{inner}</div>
     else
         <h2>{inner}</h2>
@@ -44,6 +44,7 @@ Material = (props) ->
         when 'link' then `<ExternalLink head="external-link" {...props}/>`
         when 'contest' then `<MaterialLink {...props}/>`
         when 'level' then `<SubLevel {...props}/>`
+        when 'simpleLevel' then `<SubLevel {...props}/>`
         when 'topic' then `<SubLevel {...props} noLink={true}/>`
         when 'epigraph' then `<MaterialLink {...props} className="epigraph"/>`
         when 'table' then `<InternalLink {...props}/>`
@@ -69,7 +70,7 @@ export default Level = (props) ->
             a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/> 
             problems = []
         a(<div key={m._id + ":" + m.type}>
-            <Material material={m}/>
+            <Material material={m} simple={props.simple}/>
         </div>)
     if problems.length
         a <ProblemListWrapped problems={problems} key={"problems::final"}/> 

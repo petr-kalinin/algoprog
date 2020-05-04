@@ -99,10 +99,8 @@ class ContestProcessor
             
     finalize: () ->
         for id, problem of @problems
-            console.log "problem", problem
             await problem.upsert()
         for id, table of @tables
-            console.log "table", table
             await table.upsert()        
 
     process: (material) ->
@@ -156,6 +154,8 @@ class TreeProcessor
             delete material.materials
             material.type = "link"
             material.content = "/news"
+        if material.type == "table"
+            material.type = "link"
         if material.type != "link"
             delete material.content
         delete material.path
