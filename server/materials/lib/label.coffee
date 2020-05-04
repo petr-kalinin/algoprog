@@ -4,13 +4,14 @@ export class Label
     constructor: (@content) ->
 
     build: (context) ->
-        material = new Material
+        data = 
             _id: context.generateId(),
             type: "label",
-            title: "",
-            content: @content,
-            materials: []
+            content: @content
+
+        material = new Material(data)
+
         await context.process(material)
-        return material
+        return data
 
 export default label = (args...) -> new Label(args...)

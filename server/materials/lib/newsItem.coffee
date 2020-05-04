@@ -4,13 +4,14 @@ class NewsItem
     constructor: (@title, @content) ->
 
     build: (context) ->
-        material = new Material
+        data =
             _id: context.generateId(),
             type: "newsItem",
             title: @title,
             content: @content,
-            materials: []
+
+        material = new Material(data)
         await context.process(material)
-        return material
+        return data 
 
 export default newsItem = (args...) -> new NewsItem(args...)

@@ -10,9 +10,7 @@ class News extends MaterialList
             type: "news"
             title: "Новости"
 
-        context.pushLevel("news")
         material = await super.build(context, properties)
-        context.popLevel()
 
         return material
 

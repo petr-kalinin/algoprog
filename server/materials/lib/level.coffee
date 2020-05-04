@@ -10,15 +10,12 @@ class Level extends MaterialList
         @id = id
 
     build: (context) ->
-        context.pushLevel(@id)
         properties = 
             _id: @id
             type: "level"
             title: @title
 
         material = await super.build(context, properties)
-        
-        context.popLevel()
 
         return material
 

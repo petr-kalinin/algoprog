@@ -42,17 +42,17 @@ class Problem
             if need
                 text += "<div>" + tag.innerHTML + "</div>"
 
-        material = new Material
+        data = 
             _id: "p#{@id}",
             type: "problem",
             title: name,
             content: text,
-            materials: []
+
+        material = new Material(data)
 
         context.process(material)
         
-        material = material.toObject()
-        delete material.content
-        return material
+        delete data.content
+        return data
 
 export default problem = (args...) -> new Problem(args...)

@@ -7,25 +7,35 @@ clone = (material) ->
 
 class BaseContext
     constructor: () ->
-        @levelToId = {}
-        @levelStack = [""]
+        @pathToId = {}
+        @path = []
 
-    pushLevel: (id) ->
-        @levelStack.push id
+    pushPath: (id, title) ->
+        @path.push
+            _id: id
+            title: title
 
-    popLevel: (id) ->
-        @levelStack.pop()
+    popPath: (id) ->
+        @path.pop()
 
     generateId: () ->
-        level = @levelStack[@levelStack.length - 1]
-        if not (level of @levelToId)
-            @levelToId[level] = 0
-        @levelToId[level]++
-        return "#{level}.#{@levelToId[level]}"
+        if @path.length
+            pathItem = @path[@path.length - 1]._id + "."
+        else
+            pathItem = ""
+        if not (pathItem of @pathToId)
+            @pathToId[pathItem] = 0
+        @pathToId[pathItem]++
+        return "#{pathItem}#{@pathToId[pathItem]}"
+
+
+    process: (material) ->
+        material.path = clone(@path)
 
 
 class PrintMaterialContext extends BaseContext
     process: (material) ->
+        super.process(material)
         console.log "Have material ", material
 
 
@@ -57,6 +67,7 @@ class TreeContext extends BaseContext
         return material
 
     process: (material) ->
+        super.process(material)
         id = material._id
         material = clone(material)
         material.materials = (@getTree(m) for m in material.materials)
