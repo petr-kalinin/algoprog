@@ -19,6 +19,8 @@ MaterialProper = (props) ->
         `<Page {...props} />`
     else if props.material?.type == 'problem'
         `<Problem {...props} />`
+    else if props.material?.type == 'topic'
+        `<Level {...props}/>`
     else
         <div>Unknown material type</div>
 

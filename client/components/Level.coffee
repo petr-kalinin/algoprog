@@ -3,6 +3,8 @@ FontAwesome = require('react-fontawesome')
 
 import { Link } from 'react-router-dom'
 
+import {ProblemList} from './Contest'
+
 import styles from './Level.css'
 
 Label = (props) ->
@@ -47,15 +49,29 @@ Material = (props) ->
         when 'table' then `<InternalLink {...props}/>`
         else <div>{props.material.type}</div>
 
+ProblemListWrapped = (props) ->
+    <div className={styles.problemList}>
+        {`<ProblemList {...props}/>`}
+    </div>
+
 export default Level = (props) ->
     <div>
     <h1>{props.material.title}</h1>
     {
     res = []
+    problems = []
     a = (el) -> res.push(el)
     for m in props.material.materials
+        if m.type == "problem"
+            problems.push(m)
+            continue
+        if problems.length
+            a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/> 
+            problems = []
         a(<div key={m._id + ":" + m.type}>
             <Material material={m}/>
         </div>)
+    if problems.length
+        a <ProblemListWrapped problems={problems} key={"problems::final"}/> 
     res}
     </div>

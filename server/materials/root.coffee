@@ -15,7 +15,7 @@ export default root = () ->
     ])
     arithm = topic("Арифметические операции",
             "Задачи на арифметические операции",
-            [link("http://notes.algoprog.ru/python_basics/0_quick_start.html", "Начало работы в питоне"), 
+            [link("http://notes.algoprog.ru/python_basics/0_quick_start.html", "Теория: начало работы в питоне"), 
                 problem("2938"), 
                 problem("2939")])
     ifs = topic("Условный оператор (if)", "Задачи на условный оператор", [
