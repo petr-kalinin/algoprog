@@ -10,7 +10,6 @@ tablesSchema = new mongoose.Schema
     tables: [String]
     problems: [String]
     parent: String
-    order: Number
 
 
 parentFromParent = (level) ->

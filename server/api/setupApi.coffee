@@ -36,7 +36,8 @@ import setOutcome from './setOutcome'
 
 import logger from '../log'
 
-import downloadMaterials from '../cron/downloadMaterials'
+#import downloadMaterials from '../cron/downloadMaterials'
+
 import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
 import * as groups from '../informatics/informaticsGroups'
@@ -49,6 +50,8 @@ import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
+
+import downloadMaterials from '../materials/downloadMaterials'
 
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
 

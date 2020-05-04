@@ -4,9 +4,7 @@ import logger from '../log'
 
 materialsSchema = new mongoose.Schema
     _id: String
-    order: Number
     type: String
-    indent: Number
     title: String
     content: String
     path: [{_id: String, title: String}]

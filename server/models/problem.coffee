@@ -5,7 +5,6 @@ import logger from '../log'
 
 problemsSchema = new mongoose.Schema
     _id: String
-    letter: String
     name: String
     tables: [String]
     level: String
