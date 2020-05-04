@@ -112,5 +112,5 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
 
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
-    await updateResultsForTable(user, Table.main, dirtyResults)
+    await updateResultsForTable(user, "main", dirtyResults)
     logger.info "updated results for user ", user
