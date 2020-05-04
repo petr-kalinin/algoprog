@@ -1,7 +1,6 @@
 import { JSDOM } from 'jsdom'
 
 import {downloadLimited} from '../../lib/download'
-import Material from "../../models/Material"
 
 downloadAndParse = (href) ->
     page = await downloadLimited(href, {timeout: 15 * 1000})
@@ -48,9 +47,7 @@ class Problem
             title: name,
             content: text,
 
-        material = new Material(data)
-
-        await context.process(material)
+        await context.process(data)
         
         delete data.content
         return data

@@ -1,5 +1,4 @@
 import awaitAll from '../../../client/lib/awaitAll'
-import Material from '../../models/Material'
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
@@ -25,8 +24,8 @@ export default class MaterialList
         for submaterial in submaterials
             sm = clone(submaterial)
             delete sm.materials
-            flattenedSubmaterials.push(sm)
             keptSubmaterials.push(sm)
+            flattenedSubmaterials.push(sm)
             for ss in submaterial.materials || []
                 if ss.materials
                     throw "Nested materials in " + submaterials
@@ -34,7 +33,7 @@ export default class MaterialList
                 ss.sub = true
                 flattenedSubmaterials.push(ss)
 
-        material = new Material({properties..., materials: flattenedSubmaterials})
+        material = {properties..., materials: flattenedSubmaterials}
         await context.process(material)
 
         if keepSubmaterials

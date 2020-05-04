@@ -1,5 +1,3 @@
-import Material from '../../models/Material'
-
 class NewsItem
     constructor: (@title, @content) ->
 
@@ -10,8 +8,7 @@ class NewsItem
             title: @title,
             content: @content,
 
-        material = new Material(data)
-        await context.process(material)
+        await context.process(data)
         return data 
 
 export default newsItem = (args...) -> new NewsItem(args...)

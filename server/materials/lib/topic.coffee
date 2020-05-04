@@ -1,7 +1,8 @@
+import label from './label'
 import MaterialList from "./MaterialList"
 
 class Topic extends MaterialList
-    constructor: (@title, materials) ->
+    constructor: (@title, @contestTitle, materials) ->
         super(materials)
 
     build: (context) ->
@@ -9,8 +10,10 @@ class Topic extends MaterialList
             _id: context.generateId()
             type: "topic"
             title: @title
+            treeTitle: @contestTitle
 
-        material = await super.build(context, properties, {allowAsync: true, keepSubmaterials: true})
+        material = await super.build(context, properties, {keepSubmaterials: true})
+        material.treeTitle = @contestTitle
 
         return material
 

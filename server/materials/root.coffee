@@ -1,3 +1,4 @@
+import contest from './lib/contest'
 import link from './lib/link'
 import level from './lib/level'
 import main from './lib/main'
@@ -12,11 +13,12 @@ export default root = () ->
         newsItem("Новость 1", "Текст новости 1"),
         newsItem("Новость 2", "Текст новости 2")
     ])
-    arithm = topic("Арифметические операции", [
-            link("http://notes.algoprog.ru/python_basics/0_quick_start.html", "Начало работы в питоне"), 
-            problem("2938"), 
-            problem("2939")])
-    ifs = topic("Условный оператор (if)", [
+    arithm = topic("Арифметические операции",
+            "Задачи на арифметические операции",
+            [link("http://notes.algoprog.ru/python_basics/0_quick_start.html", "Начало работы в питоне"), 
+                problem("2938"), 
+                problem("2939")])
+    ifs = topic("Условный оператор (if)", "Задачи на условный оператор", [
         link("http://notes.algoprog.ru/python_basics/1_if.html", "Теория по условному оператору"), 
         problem("292"), 
         problem("293")])

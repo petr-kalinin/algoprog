@@ -40,7 +40,29 @@ class Context
 
 class SaveProcesser
     process: (material) ->
-        await material.upsert()
+        material = clone(material)
+        newSubmaterials = []
+        inProblems = false
+        topic = undefined
+        for submaterial in material.materials || []
+            if submaterial.type == "topic"
+                topic = clone(submaterial)
+            delete submaterial.treeTitle
+            if submaterial.type != "problem" or not submaterial.sub or not topic
+                newSubmaterials.push(submaterial)
+                inProblems = false
+                continue
+            if inProblems
+                continue
+            newSubmaterials.push
+                _id: topic._id
+                title: topic.treeTitle
+                type: "contest"
+            inProblems = true
+        material.materials = newSubmaterials
+
+        delete material.treeTitle
+        await (new Material(material)).upsert()
 
 
 class TreeProcesser
@@ -54,10 +76,12 @@ class TreeProcesser
             id = material_or_id
         if not (id of @trees)
             throw "Can not find material #{id} in trees"
-        return clone(@trees[id])
+        tree = clone(@trees[id])
+        if material_or_id.treeTitle
+            tree.title = material_or_id.treeTitle
+        return tree
 
     setTree: (id, material) ->
-        console.log "setTree", id, material
         @trees[id] = material
 
     makeTree: (material) ->
@@ -77,8 +101,9 @@ class TreeProcesser
     process: (material) ->
         id = material._id
         material = clone(material)
-        material.materials = (@getTree(m) for m in material.materials when not m.sub)
-        material.materials = (m for m in material.materials when m)
+        if material.materials
+            material.materials = (@getTree(m) for m in material.materials || [] when not m.sub)
+            material.materials = (m for m in material.materials when m)
         material = @makeTree(material)
         @setTree(id, material)
 

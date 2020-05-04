@@ -1,5 +1,3 @@
-import Material from '../../models/Material'
-
 export class Label
     constructor: (@content) ->
 
@@ -9,9 +7,7 @@ export class Label
             type: "label",
             content: @content
 
-        material = new Material(data)
-
-        await context.process(material)
+        await context.process(data)
         return data
 
 export default label = (args...) -> new Label(args...)
