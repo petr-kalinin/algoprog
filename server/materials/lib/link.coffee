@@ -1,7 +1,14 @@
-import {Label} from './label'
+class Link
+    constructor: (@id, @link, @title) ->
 
-class Link extends Label
-    constructor: (link, name) ->
-        super("<a href='#{link}'>#{name}</a>")
+    build: (context) ->
+        data = 
+            _id: @id,
+            type: "link",
+            content: @link
+            title: "Комментарии"
+
+        await context.process(data)
+        return data
 
 export default link = (args...) -> new Link(args...)

@@ -89,13 +89,13 @@ class TreeProcesser
             return null
         if material.type.startsWith("sub.")
             return null
-        delete material.content
-        delete material.force
-        delete material.path
         if material.type == "news"
             delete material.materials
             material.type = "link"
             material.content = "/news"
+        if material.type != "link"
+            delete material.content
+        delete material.path
         return material
 
     process: (material) ->
