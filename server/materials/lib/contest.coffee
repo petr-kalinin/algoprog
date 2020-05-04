@@ -10,7 +10,7 @@ class Contest extends MaterialList
             type: "contest"
             title: @title
 
-        material = await super.build(context, properties, {allowAsync: true, keepSubmaterials: true})
+        material = await super.build(context, properties, {allowAsync: true})
 
         return material
 

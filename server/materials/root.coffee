@@ -25,11 +25,16 @@ export default root = () ->
         problem("292"), 
         problem("293")])
 
+    contest1 = contest("Доп. задачи 1", [problem("2946"), problem("2945")])
+    contest2 = contest("Доп. задачи 2", [problem("2947"), problem("2948")])
+
     level1A = level("1А", [arithm, ifs])
     level1B = level("1Б", [arithm])
+    level1C = level("1В", [contest1, contest2])
+
     level2A = level("2А", [arithm])
 
-    level1 = level("1", [level1A, level1B])
+    level1 = level("1", [level1A, level1B, level1C])
     level2 = level("2", [level2A])
 
     return main([allNews, comments, level1, level2])()
