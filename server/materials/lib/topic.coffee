@@ -10,7 +10,7 @@ class Topic extends MaterialList
             type: "topic"
             title: @title
 
-        material = await super.build(context, properties, true)
+        material = await super.build(context, properties, {allowAsync: true, keepSubmaterials: true})
 
         return material
 

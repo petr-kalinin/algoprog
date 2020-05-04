@@ -15,7 +15,7 @@ class Level extends MaterialList
             type: "level"
             title: @title
 
-        material = await super.build(context, properties)
+        material = await super.build(context, properties, {keepSubmaterials: true})
 
         return material
 

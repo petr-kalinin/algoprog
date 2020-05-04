@@ -25,16 +25,16 @@ getHref = (material) ->
 markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
         tree.needed = true
-        for m in tree.materials
+        for m in tree.materials || []
             markNeeded(m, id, path, globalDepth + 1, 1)
     else
         tree.needed = globalDepth <= MAX_GLOBAL_DEPTH or localDepth <= MAX_LOCAL_DEPTH
-        for m in tree.materials
+        for m in tree.materials || []
             subNeeded = markNeeded(m, id, path, globalDepth + 1, localDepth + 1)
             tree.needed = tree.needed or subNeeded
     tree.needed = tree.needed or tree._id in path
     if tree.needed
-        for m in tree.materials
+        for m in tree.materials || []
             m.needed = true
     return tree.needed
 
@@ -104,7 +104,7 @@ SolutionMark = withMyResults(SolutionMark_)
 recTree = (tree, id, indent, theme, prefix) ->
     res = []
     a = (el) -> res.push(el)
-    for m in tree.materials
+    for m in tree.materials || []
         if m.needed and m.title
             className = styles.levelNav
             if indent >= 2

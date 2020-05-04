@@ -50,7 +50,7 @@ class Problem
 
         material = new Material(data)
 
-        context.process(material)
+        await context.process(material)
         
         delete data.content
         return data

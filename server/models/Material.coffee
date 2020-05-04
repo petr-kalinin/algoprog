@@ -13,6 +13,7 @@ materialsSchema = new mongoose.Schema
     
 
 materialsSchema.methods.upsert = () ->
+    console.log "upsert", this
     # https://jira.mongodb.org/browse/SERVER-14322
     try
         @update(this, {upsert: true})

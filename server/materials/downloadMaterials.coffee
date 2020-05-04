@@ -1,3 +1,6 @@
+import logger from '../log'
+import Material from '../models/Material'
+
 import root from './root'
 
 
@@ -5,8 +8,8 @@ clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
 
-class BaseContext
-    constructor: () ->
+class Context
+    constructor: (@processers) ->
         @pathToId = {}
         @path = []
 
@@ -31,17 +34,17 @@ class BaseContext
 
     process: (material) ->
         material.path = clone(@path)
+        for processer in @processers
+            processer.process(material)
 
 
-class PrintMaterialContext extends BaseContext
+class SaveProcesser
     process: (material) ->
-        super.process(material)
-        console.log "Have material ", material
+        await material.upsert()
 
 
-class TreeContext extends BaseContext
+class TreeProcesser
     constructor: () ->
-        super(constructor)
         @trees = {}
 
     getTree: (material_or_id) ->
@@ -54,33 +57,48 @@ class TreeContext extends BaseContext
         return clone(@trees[id])
 
     setTree: (id, material) ->
+        console.log "setTree", id, material
         @trees[id] = material
 
     makeTree: (material) ->
         if material.type == "label"
             return null
-        if material.type == "news"
-            delete material.materials
         delete material.content
         delete material.force
         delete material.path
+        console.log material.type
+        if material.type == "news"
+            console.log "Correct news tree"
+            delete material.materials
+            material.type = "link"
+            material.content = "/news"
         return material
 
     process: (material) ->
-        super.process(material)
         id = material._id
         material = clone(material)
+        if id == "main"
+            console.log material
         material.materials = (@getTree(m) for m in material.materials)
+        if id == "main"
+            console.log material
         material.materials = (m for m in material.materials when m)
+        if id == "main"
+            console.log material
         material = @makeTree(material)
         @setTree(id, material)
 
 
 export default downloadMaterials = () ->
+    logger.info "Start downloadMaterials"
+    saveProcesser = new SaveProcesser()
+    treeProcesser = new TreeProcesser()
+    context = new Context([saveProcesser, treeProcesser])
 
-    context = new PrintMaterialContext()
     await root().build(context)
-    ###
-    tree = context.getTree("main")
-    console.log(JSON.stringify(tree))
-    ###
+
+    tree = treeProcesser.getTree("main")
+    tree._id = "tree"
+    await (new Material(tree)).upsert()
+    console.log "tree=", tree
+    logger.info "Done downloadMaterials"
