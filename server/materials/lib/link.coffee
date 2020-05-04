@@ -11,4 +11,4 @@ class Link
         await context.process(data)
         return data
 
-export default link = (args...) -> new Link(args...)
+export default link = (args...) -> () -> new Link(args...)

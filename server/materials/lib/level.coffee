@@ -19,4 +19,4 @@ class Level extends MaterialList
 
         return material
 
-export default level = (args...) -> new Level(args...)
+export default level = (args...) -> () -> new Level(args...)

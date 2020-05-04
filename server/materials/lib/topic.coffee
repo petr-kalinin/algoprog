@@ -17,4 +17,4 @@ class Topic extends MaterialList
 
         return material
 
-export default topic = (args...) -> new Topic(args...)
+export default topic = (args...) -> () -> new Topic(args...)

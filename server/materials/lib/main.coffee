@@ -14,5 +14,5 @@ class Main extends MaterialList
 
         return material
 
-export default main = (args...) -> new Main(args...)
+export default main = (args...) -> () -> new Main(args...)
 

@@ -14,4 +14,4 @@ class Contest extends MaterialList
 
         return material
 
-export default contest = (args...) -> new Contest(args...)
+export default contest = (args...) -> () -> new Contest(args...)

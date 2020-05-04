@@ -14,4 +14,4 @@ class News extends MaterialList
 
         return material
 
-export default news = (args...) -> new News(args...)
+export default news = (args...) -> () -> new News(args...)

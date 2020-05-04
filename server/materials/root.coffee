@@ -32,4 +32,4 @@ export default root = () ->
     level1 = level("1", [level1A, level1B])
     level2 = level("2", [level2A])
 
-    return main([allNews, comments, level1, level2])
+    return main([allNews, comments, level1, level2])()

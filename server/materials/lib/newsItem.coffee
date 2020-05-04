@@ -11,4 +11,4 @@ class NewsItem
         await context.process(data)
         return data 
 
-export default newsItem = (args...) -> new NewsItem(args...)
+export default newsItem = (args...) -> () -> new NewsItem(args...)

@@ -11,11 +11,11 @@ export default class MaterialList
         context.pushPath(properties._id, properties.title)
 
         if allowAsync
-            submaterials = await awaitAll(@submaterials.map((material) -> material.build(context)))
+            submaterials = await awaitAll(@submaterials.map((material) -> material().build(context)))
         else
             submaterials = []
             for submaterial in @submaterials
-                submaterials.push(await submaterial.build(context))
+                submaterials.push(await submaterial().build(context))
 
         context.popPath()
 

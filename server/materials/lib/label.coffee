@@ -10,4 +10,4 @@ export class Label
         await context.process(data)
         return data
 
-export default label = (args...) -> new Label(args...)
+export default label = (args...) -> () -> new Label(args...)

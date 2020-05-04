@@ -52,4 +52,4 @@ class Problem
         delete data.content
         return data
 
-export default problem = (args...) -> new Problem(args...)
+export default problem = (args...) -> () -> new Problem(args...)
