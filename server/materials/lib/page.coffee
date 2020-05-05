@@ -1,10 +1,11 @@
-class Page
-    constructor: (@title, @content) ->
+export class Page
+    constructor: (@title, @content, type="page") ->
+        @type = type
 
     build: (context) ->
         data = 
             _id: context.generateId(),
-            type: "page",
+            type: @type,
             content: @content
             title: @title
 

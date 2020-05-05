@@ -153,7 +153,7 @@ class TreeProcessor
         @trees[id] = material
 
     makeTree: (material) ->
-        if material.type == "label"
+        if material.type in ["label", "epigraph"]
             return null
         if material.type.startsWith("sub.")
             return null

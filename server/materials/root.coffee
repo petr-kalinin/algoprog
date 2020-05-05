@@ -1,4 +1,5 @@
 import contest from './lib/contest'
+import epigraph from './lib/epigraph'
 import label from './lib/label'
 import labelLink from './lib/labelLink'
 import level from './lib/level'
@@ -65,10 +66,11 @@ tables = () ->
     return simpleLevel("tables", "Сводные таблицы", materials)
 
 level0 = () ->
+    epi = epigraph("Эпиграф", "Текст эпиграфа")
     header = label("<h4>Общая информация</h4>")
     faq = page("Общие вопросы", "Раз два три")
 
-    _level0 = level("about", "О курсе", [header, faq])
+    _level0 = level("about", "О курсе", [epi, header, faq])
 
     return _level0
 
