@@ -38,6 +38,12 @@ class Context
             processor.popPath?(id)
 
     process: (material) ->
+        oldMaterial = await Material.findById(material._id)
+        if oldMaterial?.force
+            logger.info("Will not overwrite forces material #{material._id}")
+            material.content = oldMaterial.content
+            material.title = oldMaterial.title
+            material.force = oldMaterial.force
         material = clone(material)
         material.path = clone(@path)
         for processor in @processors

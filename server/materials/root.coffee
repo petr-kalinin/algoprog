@@ -20,12 +20,12 @@ tables = () ->
         vega: "Вега",
         notnnov: "Остальные школьники"
         stud: "Студенты и старше"
-    tables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "main", "reg", "roi", "byWeek"]
+    allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "main", "reg", "roi", "byWeek"]
 
     materials = []
     for group, groupName of groups
         thisMaterials = []
-        for t in tables
+        for t in allTables
             thisMaterials.push(table(group, t))
 
         material = simpleLevel("tables:#{group}", groupName, thisMaterials)
@@ -37,9 +37,9 @@ level0 = () ->
     header = label("<h4>Общая информация</h4>")
     faq = page("Общие вопросы", "Раз два три")
 
-    level0 = level("about", "О курсе", [header, faq])
+    _level0 = level("about", "О курсе", [header, faq])
 
-    return level0
+    return _level0
 
 
 export default root = () -> 
