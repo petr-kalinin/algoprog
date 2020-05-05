@@ -1,9 +1,9 @@
 class Link
-    constructor: (@id, @link, @title) ->
+    constructor: (@link, @title) ->
 
     build: (context) ->
         data = 
-            _id: @id,
+            _id: context.generateId(),
             type: "link",
             content: @link
             title: @title

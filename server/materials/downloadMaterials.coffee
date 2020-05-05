@@ -153,7 +153,7 @@ class TreeProcessor
         @trees[id] = material
 
     makeTree: (material) ->
-        if material.type in ["label", "epigraph"]
+        if material.type in ["label", "epigraph", "link"]
             return null
         if material.type.startsWith("sub.")
             return null
@@ -185,7 +185,7 @@ export default downloadMaterials = () ->
     contestProcessor = new ContestProcessor
     context = new Context([saveProcessor, treeProcessor, contestProcessor])
 
-    await root().build(context)
+    await root()().build(context)
 
     tree = treeProcessor.getTree("main")
     tree._id = "tree"

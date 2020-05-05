@@ -1,3 +1,4 @@
+###
 import contest from './lib/contest'
 import epigraph from './lib/epigraph'
 import label from './lib/label'
@@ -12,8 +13,11 @@ import table from './lib/table'
 import topic from './lib/topic'
 import problem from './lib/problem'
 import simpleLevel from './lib/simpleLevel'
+###
 
+import root from './converter/generated/root'
 
+###
 getTableTitle = (table) ->
     if table == "reg"
         return "Сводная таблица по региональным олимпиадам"
@@ -109,3 +113,6 @@ export default root = () ->
     reg = simpleLevel("reg", "Региональные олимпиады", [reg2009])
 
     return main([level0(), allNews, comments, level1, level2, reg, tables()])()
+###
+
+export default root

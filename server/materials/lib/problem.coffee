@@ -1,6 +1,7 @@
 import { JSDOM } from 'jsdom'
 
 import {downloadLimited} from '../../lib/download'
+import Material from '../../models/Material'
 
 downloadAndParse = (href) ->
     page = await downloadLimited(href, {timeout: 15 * 1000})
@@ -10,7 +11,7 @@ downloadAndParse = (href) ->
 class Problem
     constructor: (@id) ->
 
-    build: (context) ->
+    download: () ->
         href = "https://informatics.msk.ru/moodle/mod/statements/view3.php?chapterid=#{@id}"
         document = await downloadAndParse(href)
         submit = document.getElementById('submit')
@@ -40,9 +41,18 @@ class Problem
                 pred = pred.parentElement
             if need
                 text += "<div>" + tag.innerHTML + "</div>"
+        return {name, text}
 
+    build: (context) ->
+        id = "p#{@id}"
+        material = await Material.findById(id)
+        if not material
+            {name, text} = @download()
+        else
+            name = material.title
+            text = material.content
         data = 
-            _id: "p#{@id}",
+            _id: id,
             type: "problem",
             title: name,
             content: text,
