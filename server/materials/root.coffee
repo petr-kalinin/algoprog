@@ -1,10 +1,12 @@
 import contest from './lib/contest'
+import label from './lib/label'
 import labelLink from './lib/labelLink'
 import level from './lib/level'
 import link from './lib/link'
 import main from './lib/main'
 import news from './lib/news'
 import newsItem from './lib/newsItem'
+import page from './lib/page'
 import table from './lib/table'
 import topic from './lib/topic'
 import problem from './lib/problem'
@@ -31,11 +33,21 @@ tables = () ->
 
     return simpleLevel("tables", "Сводные таблицы", materials)
 
+level0 = () ->
+    header = label("<h4>Общая информация</h4>")
+    faq = page("Общие вопросы", "Раз два три")
+
+    level0 = level("about", "О курсе", [header, faq])
+
+    return level0
+
+
 export default root = () -> 
     allNews = news([
         newsItem("Новость 1", "Текст новости 1"),
         newsItem("Новость 2", "Текст новости 2")
     ])
+
     comments = link("comments", "/comments", "Комментарии")
     arithm = topic("Арифметические операции",
             "Задачи на арифметические операции",
@@ -63,4 +75,4 @@ export default root = () ->
     reg2009 = simpleLevel("reg2009", "2009", [reg2009_1])
     reg = simpleLevel("reg", "Региональные олимпиады", [reg2009])
 
-    return main([allNews, comments, level1, level2, reg, tables()])()
+    return main([level0(), allNews, comments, level1, level2, reg, tables()])()

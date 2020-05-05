@@ -6,7 +6,7 @@ class Link
             _id: @id,
             type: "link",
             content: @link
-            title: "Комментарии"
+            title: @title
 
         await context.process(data)
         return data

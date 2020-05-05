@@ -38,6 +38,7 @@ class Context
             processor.popPath?(id)
 
     process: (material) ->
+        material = clone(material)
         material.path = clone(@path)
         for processor in @processors
             await processor.process(material)
