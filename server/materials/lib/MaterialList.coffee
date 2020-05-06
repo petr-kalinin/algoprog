@@ -31,7 +31,8 @@ export default class MaterialList
                     throw "Nested materials in " + submaterials
                 ss = clone(ss)
                 ss.sub = true
-                flattenedSubmaterials.push(ss)
+                if ss.type != "label" or sm.type == "topic"
+                    flattenedSubmaterials.push(ss)
 
         material = {properties..., materials: flattenedSubmaterials}
         await context.process(material)
