@@ -40,7 +40,7 @@ class Context
     process: (material) ->
         oldMaterial = await Material.findById(material._id)
         if oldMaterial?.force
-            logger.info("Will not overwrite forces material #{material._id}")
+            logger.info("Will not overwrite forced material #{material._id}")
             material.content = oldMaterial.content
             material.title = oldMaterial.title
             material.force = oldMaterial.force
@@ -154,6 +154,8 @@ class TreeProcessor
 
     makeTree: (material) ->
         if material.type in ["label", "epigraph", "link"]
+            return null
+        if material.treeTitle == null
             return null
         if material.type.startsWith("sub.")
             return null
