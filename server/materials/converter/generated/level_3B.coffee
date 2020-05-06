@@ -19,6 +19,16 @@ topic_16307 = () ->
         problem(46),
     ])
 
+topic_16372 = () ->
+    return topic("Основы поиска в глубину", "3Б: Задачи на простой поиск в глубину", [
+        label("<a href=\"http://notes.algoprog.ru/dfs/index.html\">Теория по поиску в глубину</a> (вплоть до самой продвинутой, пока читайте только основы)<br>\nСм. также <a href=\"http://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Поиск в глубину (DFS)» <br>\nСм. также <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Алгоритмы на графах»<br>\nСм. также <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Поиск в глубину» (здесь есть и продвинутые темы, которые вам пока не нужны)"),
+        problem(164),
+        problem(200),
+        problem(165),
+        problem(166),
+        problem(111541),
+    ])
+
 module16344 = () ->
     page("Краткая теория про два указателя", """
         <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Краткая теория про два указателя</h1>
@@ -138,16 +148,6 @@ topic_16345 = () ->
         module16344(),
         problem(2827),
         problem(111975),
-    ])
-
-topic_16372 = () ->
-    return topic("Основы поиска в глубину", "3Б: Задачи на простой поиск в глубину", [
-        label("<a href=\"http://notes.algoprog.ru/dfs/index.html\">Теория по поиску в глубину</a> (вплоть до самой продвинутой, пока читайте только основы)<br>\nСм. также <a href=\"http://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Поиск в глубину (DFS)» <br>\nСм. также <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Алгоритмы на графах»<br>\nСм. также <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Поиск в глубину» (здесь есть и продвинутые темы, которые вам пока не нужны)"),
-        problem(164),
-        problem(200),
-        problem(165),
-        problem(166),
-        problem(111541),
     ])
 
 export default level_3B = () ->

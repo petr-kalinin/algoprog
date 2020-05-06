@@ -64,10 +64,12 @@ async def convert_problem(problem):
 async def convert_topic_like(name, tree_name, materials, file):
     if not materials:
         raise Exception("No materials in topic {} {}".format(name, tree_name))
+    type = "topic"
     if not name:
         name = tree_name
-    type = "topic"
-    if tree_name:
+        type = "contest"
+        parameters = '"{}", '.format(name)
+    elif tree_name:
         parameters = '"{}", "{}", '.format(escape_quotes(name), escape_quotes(tree_name))
     else:
         parameters = '"{}", null, '.format(escape_quotes(name))
@@ -150,7 +152,9 @@ async def convert_level_like(id, data):
     converted = []
     for material in materials:
         if isinstance(material, dict):
-            converted.append(convert_material(material["_id"], file))
+            # "t" is a label propagated from topic, skip it
+            if not material["_id"].endswith("t"):
+                converted.append(convert_material(material["_id"], file))
         else:
             converted.append(material)
     converted = await asyncio.gather(*converted)
@@ -168,6 +172,8 @@ async def convert_level_like(id, data):
 async def convert_label(id, data):
     content = data["content"]
     content = re.sub(r"<h\d>Уровень [^<]*</h\d>", "", content).strip()
+    content = re.sub(r"<h\d>.*олимпиады</h\d>", "", content).strip()
+    content = re.sub(r"<h\d>\d{4}</h\d>", "", content).strip()
     content = re.sub(r"<h4>[^<]*</h4>", "", content).strip()
     content = escape_quotes(content).replace("\n", "\\n")
     if not content:

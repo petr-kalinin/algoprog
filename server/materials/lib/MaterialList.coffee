@@ -31,7 +31,7 @@ export default class MaterialList
                     throw "Nested materials in " + submaterials
                 ss = clone(ss)
                 ss.sub = true
-                if ss.type != "label" or sm.type == "topic"
+                if ss.type == "topic" or sm.type == "topic"
                     flattenedSubmaterials.push(ss)
 
         material = {properties..., materials: flattenedSubmaterials}

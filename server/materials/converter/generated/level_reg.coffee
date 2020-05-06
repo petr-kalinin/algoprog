@@ -1,4 +1,3 @@
-import label from "../../lib/label"
 import level from "../../lib/level"
 import level_reg2009 from "./level_reg2009"
 import level_reg2010 from "./level_reg2010"
@@ -14,7 +13,6 @@ import level_reg2019 from "./level_reg2019"
 
 export default level_reg = () ->
     return level("reg", "Региональные олимпиады", [
-        label("<h2>Региональные олимпиады</h2>"),
         level_reg2009(),
         level_reg2010(),
         level_reg2011(),

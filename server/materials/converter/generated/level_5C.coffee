@@ -1,21 +1,10 @@
+import contest from "../../lib/contest"
 import label from "../../lib/label"
 import level from "../../lib/level"
 import problem from "../../lib/problem"
-import topic from "../../lib/topic"
 
-topic_19019 = () ->
-    return topic("5В: Задачи на разные темы - 3", "5В: Задачи на разные темы - 3", [
-        problem(1106),
-        problem(583),
-        problem(3892),
-        problem(44),
-        problem(1390),
-        problem(691),
-        problem(111882),
-    ])
-
-topic_19016 = () ->
-    return topic("5В: Задачи на разные темы - 1", "5В: Задачи на разные темы - 1", [
+contest_19016 = () ->
+    return contest("5В: Задачи на разные темы - 1", [
         problem(3871),
         problem(112567),
         problem(1967),
@@ -26,8 +15,19 @@ topic_19016 = () ->
         problem(3899),
     ])
 
-topic_19018 = () ->
-    return topic("5В: Задачи на разные темы - 2", "5В: Задачи на разные темы - 2", [
+contest_19019 = () ->
+    return contest("5В: Задачи на разные темы - 3", [
+        problem(1106),
+        problem(583),
+        problem(3892),
+        problem(44),
+        problem(1390),
+        problem(691),
+        problem(111882),
+    ])
+
+contest_19018 = () ->
+    return contest("5В: Задачи на разные темы - 2", [
         problem(1987),
         problem(218),
         problem(1212),
@@ -37,8 +37,8 @@ topic_19018 = () ->
         problem(641),
     ])
 
-topic_39718 = () ->
-    return topic("5В: Продвинутые задачи на рекурсивный перебор", "5В: Продвинутые задачи на рекурсивный перебор", [
+contest_39718 = () ->
+    return contest("5В: Продвинутые задачи на рекурсивный перебор", [
         problem(157),
         problem(1680),
         problem(2776),
@@ -51,8 +51,8 @@ topic_39718 = () ->
 export default level_5C = () ->
     return level("5В", [
         label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум половину задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),
-        topic_19016(),
-        topic_19018(),
-        topic_19019(),
-        topic_39718(),
+        contest_19016(),
+        contest_19018(),
+        contest_19019(),
+        contest_39718(),
     ])

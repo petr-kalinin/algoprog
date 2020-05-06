@@ -87,6 +87,16 @@ topic_module_48572 = () ->
         link("https://informatics.msk.ru/mod/resource/view.php?id=48572", "Как решать другие контесты и codeforces"),
     ])
 
+topic_16282 = () ->
+    return topic("Бинарный поиск (поиск делением пополам)", "3А: Задачи на бинарный поиск", [
+        label("<a href=\"http://notes.algoprog.ru/binsearch/07_binsearch_main.html\">Теория по бинарному поиску</a>"),
+        label("См. также <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Бинарный поиск» (хотя там несколько устаревший подход к поиску элемента в массиве)."),
+        problem(3570),
+        problem(4),
+        problem(2),
+        problem(1923),
+    ])
+
 topic_16277 = () ->
     return topic("Поиск в ширину", "3А: Задачи на поиск в ширину", [
         label("См. <a href=\"http://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Поиск в ширину (BFS)»<br>\nСм. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B' 2008</a>, раздел «Поиск в ширину» (там есть и довольно продвинутые темы, которые вам пока не нужны)<br>"),
@@ -107,16 +117,6 @@ topic_16274 = () ->
         problem(175),
         problem(474),
         problem(479),
-    ])
-
-topic_16282 = () ->
-    return topic("Бинарный поиск (поиск делением пополам)", "3А: Задачи на бинарный поиск", [
-        label("<a href=\"http://notes.algoprog.ru/binsearch/07_binsearch_main.html\">Теория по бинарному поиску</a>"),
-        label("См. также <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Бинарный поиск» (хотя там несколько устаревший подход к поиску элемента в массиве)."),
-        problem(3570),
-        problem(4),
-        problem(2),
-        problem(1923),
     ])
 
 export default level_3A = () ->

@@ -9,20 +9,15 @@ topic_module_33219_0 = () ->
         label("<a href=\"http://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
     ])
 
-topic_15960 = () ->
-    return topic("Арифметические операции", "1А: Задачи на арифметические операции", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
-        problem(2938),
-        problem(2939),
-        problem(2937),
-        problem(2936),
-        problem(2941),
-        problem(2942),
-        problem(2943),
-        problem(2944),
-        problem(2947),
-        problem(2951),
-        problem(2952),
+topic_15962 = () ->
+    return topic("Условный оператор", "1А: Задачи на условный оператор", [
+        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
+        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
+        problem(292),
+        problem(293),
+        problem(2959),
+        problem(294),
+        problem(253),
     ])
 
 module15969 = () ->
@@ -307,15 +302,20 @@ topic_15966 = () ->
         problem(3067),
     ])
 
-topic_15962 = () ->
-    return topic("Условный оператор", "1А: Задачи на условный оператор", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
-        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
-        problem(292),
-        problem(293),
-        problem(2959),
-        problem(294),
-        problem(253),
+topic_15960 = () ->
+    return topic("Арифметические операции", "1А: Задачи на арифметические операции", [
+        label("<a href=\"http://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
+        problem(2938),
+        problem(2939),
+        problem(2937),
+        problem(2936),
+        problem(2941),
+        problem(2942),
+        problem(2943),
+        problem(2944),
+        problem(2947),
+        problem(2951),
+        problem(2952),
     ])
 
 export default level_1A = () ->

@@ -12,13 +12,14 @@ topic_16788 = () ->
         problem(139),
     ])
 
-topic_16784 = () ->
-    return topic("Сортировка подсчетом", "4Б: Задачи на сортировку подсчетом", [
-        label("См. <a href=\"http://sis.khashaev.ru/2013/august/c-prime/Prz7x1bkW5Y/\">видеозаписи лекций ЛКШ параллели C'</a><br>\nСм. видеозаписи лекций ЛКШ параллели B' (старой): <a href=\"http://sis.khashaev.ru/2008/august/b-prime/kVcmMxhr-CI/\">раз</a> и <a href=\"http://sis.khashaev.ru/2008/august/b-prime/mkdwnjYkg-g/\">два</a><br>\nСм. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/X27QTFl70lY/\">видеозаписи лекций ЛКШ параллели B' (новой)</a>"),
-        label("Набор задач ниже, к сожалению, не очень представителен, но на этом сайте нет больше интересных задач на сортировку подсчетом."),
-        problem(111759),
-        problem(49),
-        problem(1027),
+topic_16878 = () ->
+    return topic("Сортировка событий", "4Б: Задачи на сортировку событий", [
+        label("Теории тут пока нет, прослушайте на занятии (попросите меня рассказать)."),
+        problem(112542),
+        problem(1755),
+        problem(3721),
+        problem(1338),
+        problem(111790),
     ])
 
 topic_16684 = () ->
@@ -30,14 +31,13 @@ topic_16684 = () ->
         problem(170),
     ])
 
-topic_16878 = () ->
-    return topic("Сортировка событий", "4Б: Задачи на сортировку событий", [
-        label("Теории тут пока нет, прослушайте на занятии (попросите меня рассказать)."),
-        problem(112542),
-        problem(1755),
-        problem(3721),
-        problem(1338),
-        problem(111790),
+topic_16784 = () ->
+    return topic("Сортировка подсчетом", "4Б: Задачи на сортировку подсчетом", [
+        label("См. <a href=\"http://sis.khashaev.ru/2013/august/c-prime/Prz7x1bkW5Y/\">видеозаписи лекций ЛКШ параллели C'</a><br>\nСм. видеозаписи лекций ЛКШ параллели B' (старой): <a href=\"http://sis.khashaev.ru/2008/august/b-prime/kVcmMxhr-CI/\">раз</a> и <a href=\"http://sis.khashaev.ru/2008/august/b-prime/mkdwnjYkg-g/\">два</a><br>\nСм. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/X27QTFl70lY/\">видеозаписи лекций ЛКШ параллели B' (новой)</a>"),
+        label("Набор задач ниже, к сожалению, не очень представителен, но на этом сайте нет больше интересных задач на сортировку подсчетом."),
+        problem(111759),
+        problem(49),
+        problem(1027),
     ])
 
 export default level_4B = () ->

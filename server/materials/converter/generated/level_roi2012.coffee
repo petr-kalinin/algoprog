@@ -1,10 +1,9 @@
-import label from "../../lib/label"
+import contest from "../../lib/contest"
 import level from "../../lib/level"
 import problem from "../../lib/problem"
-import topic from "../../lib/topic"
 
-topic_4908 = () ->
-    return topic("2012", "2012", [
+contest_4908 = () ->
+    return contest("2012", [
         problem(111221),
         problem(111222),
         problem(111223),
@@ -17,6 +16,5 @@ topic_4908 = () ->
 
 export default level_roi2012 = () ->
     return level("roi2012", "2012", [
-        label("<h2>2012</h2>"),
-        topic_4908(),
+        contest_4908(),
     ])

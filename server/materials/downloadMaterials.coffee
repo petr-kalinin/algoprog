@@ -70,6 +70,7 @@ class SaveProcessor
                 _id: topic._id
                 title: topic.treeTitle
                 type: "contest"
+                sub: true
             inProblems = true
         material.materials = newSubmaterials
 

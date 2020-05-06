@@ -1,4 +1,3 @@
-import label from "../../lib/label"
 import level from "../../lib/level"
 import level_roi2009 from "./level_roi2009"
 import level_roi2010 from "./level_roi2010"
@@ -14,7 +13,6 @@ import level_roi2019 from "./level_roi2019"
 
 export default level_roi = () ->
     return level("roi", "Всероссийские олимпиады", [
-        label("<h2>Всероссийские олимпиады</h2>"),
         level_roi2009(),
         level_roi2010(),
         level_roi2011(),
