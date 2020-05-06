@@ -4,21 +4,13 @@ import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-topic15962 = () ->
-    return topic("Условный оператор", "1А: Задачи на условный оператор", [
-        label("<h4>Условный оператор</h4>"),
-        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
-        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
-        problem(292),
-        problem(293),
-        problem(2959),
-        problem(294),
-        problem(253),
+topic_module_33219_0 = () ->
+    return topic("Как отлаживать программы", null, [
+        label("<a href=\"http://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
     ])
 
-topic15960 = () ->
+topic_15960 = () ->
     return topic("Арифметические операции", "1А: Задачи на арифметические операции", [
-        label("<h4>Арифметические операции</h4>"),
         label("<a href=\"http://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
         problem(2938),
         problem(2939),
@@ -299,9 +291,8 @@ module15969 = () ->
         </pre></div>
     """)
 
-topic15966 = () ->
+topic_15966 = () ->
     return topic("Циклы", "1А: Задачи на циклы", [
-        label("<h4>Циклы</h4>"),
         label("<a href=\"http://notes.algoprog.ru/python_basics/2_loops.html\">Питон: теория про циклы</a><br>\n<a href=\"http://notes.algoprog.ru/python_basics/2_1_break_continue.html\">Про команды break и continue (питон, но в любых других языках все аналогично)</a>"),
         module15969(),
         problem(333),
@@ -316,12 +307,22 @@ topic15966 = () ->
         problem(3067),
     ])
 
+topic_15962 = () ->
+    return topic("Условный оператор", "1А: Задачи на условный оператор", [
+        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
+        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
+        problem(292),
+        problem(293),
+        problem(2959),
+        problem(294),
+        problem(253),
+    ])
+
 export default level_1A = () ->
     return level("1А", [
         label("<p>Чтобы перейти на следующий уровень, надо решить все задачи.</p>"),
-        topic15960(),
-        topic15962(),
-        label("<h4>Как отлаживать программы</h4>"),
-        label("<a href=\"http://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
-        topic15966(),
+        topic_15960(),
+        topic_15962(),
+        topic_module_33219_0(),
+        topic_15966(),
     ])

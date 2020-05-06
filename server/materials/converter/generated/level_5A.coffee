@@ -3,18 +3,18 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-topic16951 = () ->
-    return topic("Тернарный (троичный) поиск", "5А: Задачи на тернарный поиск", [
-        label("<h4>Тернарный (троичный) поиск</h4>"),
-        label("См. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/t8O8TB6m_d8/\">видеозаписи лекций ЛКШ.2013.B', раздел \"тернарный поиск\"</a>"),
-        problem(3398),
-        problem(3859),
-        problem(1116),
+topic_17237 = () ->
+    return topic("Хеширование", "5А: Задачи на хеширование", [
+        label("Основной теории тут пока нет, поищите в интернете.<br>\nДополнительная теория (предполагает, что вы уже почитали основную теорию): <a href=\"http://blog.algoprog.ru/hash-no-multiply\">как писать хеширование без домножения</a>.<br>\nЕще полезное <a href=\"https://codeforces.com/blog/entry/4898\">про антихештесты</a>."),
+        problem(99),
+        problem(100),
+        problem(1042),
+        problem(1943),
+        problem(1326),
     ])
 
-topic16955 = () ->
+topic_16955 = () ->
     return topic("Задачи средней сложности на ДП", "5А: Задачи средней сложности на ДП", [
-        label("<h4>Задачи средней сложности на ДП</h4>"),
         problem(212),
         problem(492),
         problem(587),
@@ -24,20 +24,18 @@ topic16955 = () ->
         problem(1129),
     ])
 
-topic17237 = () ->
-    return topic("Хеширование", "5А: Задачи на хеширование", [
-        label("<h4>Хеширование</h4>\nОсновной теории тут пока нет, поищите в интернете.<br>\nДополнительная теория (предполагает, что вы уже почитали основную теорию): <a href=\"http://blog.algoprog.ru/hash-no-multiply\">как писать хеширование без домножения</a>.<br>\nЕще полезное <a href=\"https://codeforces.com/blog/entry/4898\">про антихештесты</a>."),
-        problem(99),
-        problem(100),
-        problem(1042),
-        problem(1943),
-        problem(1326),
+topic_16951 = () ->
+    return topic("Тернарный (троичный) поиск", "5А: Задачи на тернарный поиск", [
+        label("См. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/t8O8TB6m_d8/\">видеозаписи лекций ЛКШ.2013.B', раздел \"тернарный поиск\"</a>"),
+        problem(3398),
+        problem(3859),
+        problem(1116),
     ])
 
 export default level_5A = () ->
     return level("5А", [
         label("Чтобы перейти на сладующий уровень, надо решить все задачи."),
-        topic16951(),
-        topic16955(),
-        topic17237(),
+        topic_16951(),
+        topic_16955(),
+        topic_17237(),
     ])

@@ -64,17 +64,14 @@ async def convert_problem(problem):
 async def convert_topic_like(name, tree_name, materials, file):
     if not materials:
         raise Exception("No materials in topic {} {}".format(name, tree_name))
-    if len(materials) > 1:
-        if not name or not tree_name:
-            raise Exception("No name in topic {} {}".format(name, tree_name))
-        type = "topic"
+    if not name:
+        name = tree_name
+    type = "topic"
+    if tree_name:
         parameters = '"{}", "{}", '.format(escape_quotes(name), escape_quotes(tree_name))
     else:
-        if name:
-            raise Exception("Have name in topic {} {}".format(name, tree_name))
-        type = "contest"
-        parameters = '"{}", '.format(escape_quotes(tree_name))
-    function_name = "{}{}".format(type, materials[-1]["_id"])
+        parameters = '"{}", null, '.format(escape_quotes(name))
+    function_name = "{}_{}".format(type, materials[-1]["_id"].replace("-", "_"))
     function = '{} = () ->\n    return {}({}[\n'.format(function_name, type, parameters)
     converted = []
     for material in materials:
@@ -105,10 +102,10 @@ async def fix_topics(materials, file):
     topic_name = None
     for material in materials:
         if material["type"] == "label":
-            match = re.match(r"<h4>([^<]*)</h4>", material["content"])
+            match = re.match(r"^<h4>([^<]*)</h4>", material["content"], re.DOTALL)
             if match:
                 if in_topic:
-                    result += pending_materials
+                    result.append(convert_topic_like(topic_name, None, pending_materials, file))
                     pending_materials = []
                 in_topic = True
                 topic_name = match.group(1)
@@ -124,7 +121,7 @@ async def fix_topics(materials, file):
         else:
             pending_materials.append(material)
     if in_topic:
-        result += pending_materials
+        result.append(convert_topic_like(topic_name, None, pending_materials, file))
 
     return result
 
@@ -171,6 +168,7 @@ async def convert_level_like(id, data):
 async def convert_label(id, data):
     content = data["content"]
     content = re.sub(r"<h\d>Уровень [^<]*</h\d>", "", content).strip()
+    content = re.sub(r"<h4>[^<]*</h4>", "", content).strip()
     content = escape_quotes(content).replace("\n", "\\n")
     if not content:
         return None, None
