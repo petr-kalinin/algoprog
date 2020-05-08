@@ -14,6 +14,16 @@ contest_15994 = () ->
         problem(483),
     ])
 
+contest_15993 = () ->
+    return contest("1Г: Дополнительные задачи на разные темы  - 1", [
+        problem(3469),
+        problem(3466),
+        problem(3477),
+        problem(3472),
+        problem(2954),
+        problem(1370),
+    ])
+
 contest_15996 = () ->
     return contest("1Г: Дополнительные задачи на разные темы - 3", [
         problem(1421),
@@ -26,16 +36,6 @@ contest_15996 = () ->
         problem(993),
         problem(111580),
         problem(2958),
-    ])
-
-contest_15993 = () ->
-    return contest("1Г: Дополнительные задачи на разные темы  - 1", [
-        problem(3469),
-        problem(3466),
-        problem(3477),
-        problem(3472),
-        problem(2954),
-        problem(1370),
     ])
 
 export default level_1D = () ->

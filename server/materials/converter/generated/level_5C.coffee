@@ -3,6 +3,17 @@ import label from "../../lib/label"
 import level from "../../lib/level"
 import problem from "../../lib/problem"
 
+contest_39718 = () ->
+    return contest("5В: Продвинутые задачи на рекурсивный перебор", [
+        problem(157),
+        problem(1680),
+        problem(2776),
+        problem(3879),
+        problem(3096),
+        problem(158),
+        problem(159),
+    ])
+
 contest_19016 = () ->
     return contest("5В: Задачи на разные темы - 1", [
         problem(3871),
@@ -35,17 +46,6 @@ contest_19018 = () ->
         problem(215),
         problem(1254),
         problem(641),
-    ])
-
-contest_39718 = () ->
-    return contest("5В: Продвинутые задачи на рекурсивный перебор", [
-        problem(157),
-        problem(1680),
-        problem(2776),
-        problem(3879),
-        problem(3096),
-        problem(158),
-        problem(159),
     ])
 
 export default level_5C = () ->

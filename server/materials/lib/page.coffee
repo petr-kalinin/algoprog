@@ -1,6 +1,6 @@
 export class Page
-    constructor: (@title, @content, type="page") ->
-        @type = type
+    constructor: (@title, @content, options={}) ->
+        {@type="page", @skipTree=false} = options
 
     build: (context) ->
         data = 
@@ -8,6 +8,9 @@ export class Page
             type: @type,
             content: @content
             title: @title
+
+        if @skipTree
+            data.treeTitle = null 
 
         await context.process(data)
         delete data.content

@@ -188,9 +188,14 @@ async def convert_page_like(id, data, file):
     content = content.replace("\n", "\n        ")
     title = escape_quotes(data["title"]).replace("\n", "\\n")
 
+    skipTreeArg = ", {skipTree: true}"
+    for el in data["path"]:
+        if el["_id"] == "0":
+            skipTreeArg = ""
+
     function_name = id.replace("-", "")
     type = data["type"]
-    function = '{} = () ->\n    {}("{}", """\n        {}\n    """)'.format(function_name, type, title, content)
+    function = '{} = () ->\n    {}("{}", """\n        {}\n    """{})'.format(function_name, type, title, content, skipTreeArg)
     file.add_function(function)
     return '{}()'.format(function_name), lib_import(type)
 

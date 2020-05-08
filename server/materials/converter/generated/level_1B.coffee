@@ -3,16 +3,6 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-topic_15976 = () ->
-    return topic("Символы и строки", "1Б: Задачи на символы и строки", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
-        problem(102),
-        problem(103),
-        problem(105),
-        problem(106),
-        problem(108),
-    ])
-
 topic_15973 = () ->
     return topic("Массивы", "1Б: Задачи на массивы", [
         label("<a href=\"http://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
@@ -36,6 +26,16 @@ topic_15978 = () ->
         problem(597),
         problem(595),
         problem(120),
+    ])
+
+topic_15976 = () ->
+    return topic("Символы и строки", "1Б: Задачи на символы и строки", [
+        label("<a href=\"http://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
+        problem(102),
+        problem(103),
+        problem(105),
+        problem(106),
+        problem(108),
     ])
 
 export default level_1B = () ->

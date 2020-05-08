@@ -19,6 +19,7 @@ import jobs from './cron/cron'
 import sleep from './lib/sleep'
 import setupMetrics from './metrics/metrics'
 import sendToGraphite from './metrics/graphite'
+import downloadMaterials from './materials/downloadMaterials'
 
 import notify from './metrics/notify'
 
@@ -67,6 +68,8 @@ start = () ->
         await logger.info("My ip is " + JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
     catch
         logger.error("Can not determine my ip")
+
+    await downloadMaterials()
 
     app.listen port, () ->
         logger.info 'App listening on port ', port

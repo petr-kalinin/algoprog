@@ -3,13 +3,11 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-topic_26196 = () ->
-    return topic("Паросочетания и связанные темы", "8А: Задачи на паросочетания", [
-        label("<p><a href=\"http://e-maxx.ru/algo/kuhn_matching\">Теория на e-maxx</a><br>\nДополнительный (но важный) материал на вики ИТМО: <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Связь_максимального_паросочетания_и_минимального_вершинного_покрытия_в_двудольных_графах\">раз</a>, <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Связь_вершинного_покрытия_и_независимого_множества\">два</a>.<br>\nНа тему связи паросочетания, независимого множества и вершинного покрытия можете еще поискать в интернете, если в конспекте ИТМО непонятно.</p>"),
-        problem(1683),
-        problem(588),
-        problem(4204),
-        problem(111663),
+topic_26198 = () ->
+    return topic("Функция Гранди", "8А: Задачи на функцию Гранди", [
+        label("<p><a href=\"http://e-maxx.ru/algo/sprague_grundy\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/124856/\">Теория на хабре</a><br>\n<a>Можете еще в интернете поискать</a></p>"),
+        problem(369),
+        problem(905),
     ])
 
 topic_26194 = () ->
@@ -21,11 +19,13 @@ topic_26194 = () ->
         problem(185),
     ])
 
-topic_26198 = () ->
-    return topic("Функция Гранди", "8А: Задачи на функцию Гранди", [
-        label("<p><a href=\"http://e-maxx.ru/algo/sprague_grundy\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/124856/\">Теория на хабре</a><br>\n<a>Можете еще в интернете поискать</a></p>"),
-        problem(369),
-        problem(905),
+topic_26196 = () ->
+    return topic("Паросочетания и связанные темы", "8А: Задачи на паросочетания", [
+        label("<p><a href=\"http://e-maxx.ru/algo/kuhn_matching\">Теория на e-maxx</a><br>\nДополнительный (но важный) материал на вики ИТМО: <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Связь_максимального_паросочетания_и_минимального_вершинного_покрытия_в_двудольных_графах\">раз</a>, <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Связь_вершинного_покрытия_и_независимого_множества\">два</a>.<br>\nНа тему связи паросочетания, независимого множества и вершинного покрытия можете еще поискать в интернете, если в конспекте ИТМО непонятно.</p>"),
+        problem(1683),
+        problem(588),
+        problem(4204),
+        problem(111663),
     ])
 
 export default level_8A = () ->

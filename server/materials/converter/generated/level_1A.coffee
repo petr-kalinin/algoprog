@@ -9,17 +9,6 @@ topic_module_33219_0 = () ->
         label("<a href=\"http://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
     ])
 
-topic_15962 = () ->
-    return topic("Условный оператор", "1А: Задачи на условный оператор", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
-        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
-        problem(292),
-        problem(293),
-        problem(2959),
-        problem(294),
-        problem(253),
-    ])
-
 module15969 = () ->
     page("Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)", """
         <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Оформление программ и отступы</h1>
@@ -284,7 +273,7 @@ module15969 = () ->
         writeln(s);
         end.
         </pre></div>
-    """)
+    """, {skipTree: true})
 
 topic_15966 = () ->
     return topic("Циклы", "1А: Задачи на циклы", [
@@ -316,6 +305,17 @@ topic_15960 = () ->
         problem(2947),
         problem(2951),
         problem(2952),
+    ])
+
+topic_15962 = () ->
+    return topic("Условный оператор", "1А: Задачи на условный оператор", [
+        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
+        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
+        problem(292),
+        problem(293),
+        problem(2959),
+        problem(294),
+        problem(253),
     ])
 
 export default level_1A = () ->

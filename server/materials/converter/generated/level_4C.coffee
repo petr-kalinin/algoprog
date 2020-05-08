@@ -3,15 +3,15 @@ import label from "../../lib/label"
 import level from "../../lib/level"
 import problem from "../../lib/problem"
 
-contest_16880 = () ->
-    return contest("4В: Дополнительные задачи на разные темы - 1", [
-        problem(207),
-        problem(581),
-        problem(111540),
-        problem(1005),
-        problem(145),
-        problem(1216),
-        problem(648),
+contest_16881 = () ->
+    return contest("4В: Дополнительные задачи на разные темы - 2", [
+        problem(143),
+        problem(3334),
+        problem(1095),
+        problem(1106),
+        problem(1766),
+        problem(2918),
+        problem(3878),
     ])
 
 contest_16882 = () ->
@@ -25,15 +25,15 @@ contest_16882 = () ->
         problem(2817),
     ])
 
-contest_16881 = () ->
-    return contest("4В: Дополнительные задачи на разные темы - 2", [
-        problem(143),
-        problem(3334),
-        problem(1095),
-        problem(1106),
-        problem(1766),
-        problem(2918),
-        problem(3878),
+contest_16880 = () ->
+    return contest("4В: Дополнительные задачи на разные темы - 1", [
+        problem(207),
+        problem(581),
+        problem(111540),
+        problem(1005),
+        problem(145),
+        problem(1216),
+        problem(648),
     ])
 
 export default level_4C = () ->

@@ -3,6 +3,14 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
+topic_26201 = () ->
+    return topic("Сложные задачи на ДП", "8Б: Сложные задачи на ДП", [
+        problem(1793),
+        problem(1720),
+        problem(3898),
+        problem(111490),
+    ])
+
 topic_26203 = () ->
     return topic("Декартово дерево по неявному ключу", "8Б: Задачи на декартово дерево по неявному ключу", [
         label("<p><a href=\"http://e-maxx.ru/algo/treap#7\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/102364/\">теория на хабре</a><br>\nДумаю, еще много чего легко ищется в интернете</p>"),
@@ -18,14 +26,6 @@ topic_26205 = () ->
         problem(1877),
         problem(2979),
         problem(3858),
-    ])
-
-topic_26201 = () ->
-    return topic("Сложные задачи на ДП", "8Б: Сложные задачи на ДП", [
-        problem(1793),
-        problem(1720),
-        problem(3898),
-        problem(111490),
     ])
 
 export default level_8B = () ->
