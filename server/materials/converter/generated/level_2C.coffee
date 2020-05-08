@@ -4,13 +4,33 @@ import level from "../../lib/level"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 
-contest_16064 = () ->
-    return contest("2В: Продвинутые задачи на НОД", [
-        problem(1465),
-        problem(668),
-        problem(1422),
-        problem(1346),
-        problem(404),
+contest_16067 = () ->
+    return contest("2В: Продвинутые задачи на ДП", [
+        problem(2998),
+        problem(2999),
+        problem(210),
+        problem(2963),
+        problem(3003),
+        problem(619),
+        problem(1119),
+    ])
+
+contest_16065 = () ->
+    return contest("2В: *Продвинутые задачи на рекурсивный перебор", [
+        problem(157),
+        problem(1680),
+        problem(2776),
+        problem(3879),
+        problem(3096),
+        problem(158),
+        problem(159),
+    ])
+
+contest_16068 = () ->
+    return contest("2В: Продвинутые задачи на множители", [
+        problem(152),
+        problem(584),
+        problem(1009),
     ])
 
 contest_16066 = () ->
@@ -22,15 +42,13 @@ contest_16066 = () ->
         problem(112736),
     ])
 
-contest_16067 = () ->
-    return contest("2В: Продвинутые задачи на ДП", [
-        problem(2998),
-        problem(2999),
-        problem(210),
-        problem(2963),
-        problem(3003),
-        problem(619),
-        problem(1119),
+contest_16064 = () ->
+    return contest("2В: Продвинутые задачи на НОД", [
+        problem(1465),
+        problem(668),
+        problem(1422),
+        problem(1346),
+        problem(404),
     ])
 
 module16828 = () ->
@@ -93,24 +111,6 @@ contest_16070 = () ->
         problem(1230),
         problem(3678),
         problem(111751),
-    ])
-
-contest_16068 = () ->
-    return contest("2В: Продвинутые задачи на множители", [
-        problem(152),
-        problem(584),
-        problem(1009),
-    ])
-
-contest_16065 = () ->
-    return contest("2В: *Продвинутые задачи на рекурсивный перебор", [
-        problem(157),
-        problem(1680),
-        problem(2776),
-        problem(3879),
-        problem(3096),
-        problem(158),
-        problem(159),
     ])
 
 contest_16069 = () ->

@@ -3,6 +3,13 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
+topic_25519 = () ->
+    return topic("Sqrt-декомпозиция, она же корневая эвристика", "7Б: Задачи на sqrt-декомпозицию", [
+        label("<p><a href=\"http://e-maxx.ru/algo/sqrt_decomposition\">Теория на e-maxx</a><br>\n<a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Статистики_на_отрезках._Корневая_эвристика\">Теория в конспектах ИТМО</a><br>\n<a href=\"https://habrahabr.ru/post/138946/\">Статья на хабре</a></p>\n<p>Тут нашлась только одна задача, но можете еще попробовать порешать задачи из следующих тем.</p>"),
+        problem(934),
+        problem(1361),
+    ])
+
 topic_22523 = () ->
     return topic("Дерево отрезков", "7Б: Задачи на дерево отрезков", [
         label("<p><a href=\"http://e-maxx.ru/algo/segment_tree\">Теория на e-maxx</a><br>\n<a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Дерево_отрезков._Построение\">Теория на сайте ИТМО</a><br>\n<a href=\"https://habrahabr.ru/post/115026/\">Статия на хабре</a></p>"),
@@ -12,13 +19,6 @@ topic_22523 = () ->
         problem(3312),
         problem(3321),
         problem(3335),
-    ])
-
-topic_25519 = () ->
-    return topic("Sqrt-декомпозиция, она же корневая эвристика", "7Б: Задачи на sqrt-декомпозицию", [
-        label("<p><a href=\"http://e-maxx.ru/algo/sqrt_decomposition\">Теория на e-maxx</a><br>\n<a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Статистики_на_отрезках._Корневая_эвристика\">Теория в конспектах ИТМО</a><br>\n<a href=\"https://habrahabr.ru/post/138946/\">Статья на хабре</a></p>\n<p>Тут нашлась только одна задача, но можете еще попробовать порешать задачи из следующих тем.</p>"),
-        problem(934),
-        problem(1361),
     ])
 
 topic_25528 = () ->

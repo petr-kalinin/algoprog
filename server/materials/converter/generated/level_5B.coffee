@@ -3,6 +3,14 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
+topic_17241 = () ->
+    return topic("Куча", "5Б: Задачи на кучу", [
+        label("См. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Куча\"<br>\nСм. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Куча\""),
+        problem(755),
+        problem(756),
+        problem(489),
+    ])
+
 topic_19009 = () ->
     return topic("Рекурсивный перебор", "5Б: Задачи на рекурсивный перебор", [
         label("<p>Для тех, кто не изучал или не понял эту тему на уровне 2А, теперь она обязательна. Теория есть на уровне 2А.</p>"),
@@ -32,14 +40,6 @@ topic_17297 = () ->
         problem(3494),
         problem(1745),
         problem(1087),
-    ])
-
-topic_17241 = () ->
-    return topic("Куча", "5Б: Задачи на кучу", [
-        label("См. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Куча\"<br>\nСм. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Куча\""),
-        problem(755),
-        problem(756),
-        problem(489),
     ])
 
 export default level_5B = () ->

@@ -157,6 +157,10 @@ async def convert_level_like(id, data):
                 converted.append(convert_material(material["_id"], file))
         else:
             converted.append(material)
+        # Insert news and comments after 0-th level
+        if id == "main" and material["_id"] == "0":
+            converted.append(convert_material("news", file))
+            converted.append(convert_comments())
     converted = await asyncio.gather(*converted)
     for line, imp in converted:
         if imp:
@@ -206,9 +210,30 @@ async def convert_link(id, data):
     return 'link("{}", "{}")'.format(content, title), lib_import("link")
 
 
+async def convert_news(id, data):
+    file = MaterialFile("news")
+    function = 'export default allNews = () ->\n    return news([\n'
+    for material in data["materials"]:
+        title = escape_quotes(material["header"]).strip().replace("\n", "\\n")
+        content = material["content"].strip().replace("\n", "\n        ")
+        function += '        newsItem("{}", """\n            {}\n        """),\n'.format(title, content)
+    function += "    ])"
+    file.add_function(function)
+    file.add_import(lib_import("news"))
+    file.add_import(lib_import("newsItem"))
+    file.finalize()
+    return "allNews()", 'import allNews from "./news"'
+
+
+async def convert_comments():
+    return 'link("/comments", "Комментарии")', lib_import('link')
+
+
 async def convert_material(id, file):
     data = await download(id)
-    if data["type"] in ["level", "main"]:
+    if data["_id"] == "news":
+        return await convert_news(id, data)
+    elif data["type"] in ["level", "main"]:
         return await convert_level_like(id, data)
     elif data["type"] == "label":
         return await convert_label(id, data)

@@ -3,15 +3,6 @@ import level from "../../lib/level"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-topic_25514 = () ->
-    return topic("Алгоритм Кнута-Морриса-Пратта (КМП)", "7А: Задачи на КМП", [
-        label("<p>\nСм. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Алгоритмы на строках\".<br>\n<a href=\"http://e-maxx.ru/algo/prefix_function\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/191454/\">Теория на хабре</a><br>\nМожете в интернете поискать еще.<br>\nПомимо собственно поиска подстроки в строке, префикс-функция также нередко имеет другие полезные применения. Задачи на это ниже тоже есть.<br>\nКакие-то из задач ниже, наверное, были ранее в задачах на хеши. Решите их повторно с использованием КМП.</p>"),
-        problem(1323),
-        problem(99),
-        problem(100),
-        problem(1943),
-    ])
-
 topic_25516 = () ->
     return topic("Z-функция", "7А: Задачи на Z-функцию", [
         label("<p>См. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Алгоритмы на строках\".<br>\n<a href=\"http://e-maxx.ru/algo/z_function\">Теория на e-maxx</a><br>\n<a href=\"https://ru.wikipedia.org/wiki/Z-функция\">Теория в википедии (!)</a><br>\n<a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Z-функция\">Теория на сайте ИТМО</a><br>\n<a href=\"https://habrahabr.ru/post/113266/\">Теория на хабре</a></p>"),
@@ -28,6 +19,15 @@ topic_16559 = () ->
         problem(3883),
         problem(390),
         problem(113441),
+    ])
+
+topic_25514 = () ->
+    return topic("Алгоритм Кнута-Морриса-Пратта (КМП)", "7А: Задачи на КМП", [
+        label("<p>\nСм. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Алгоритмы на строках\".<br>\n<a href=\"http://e-maxx.ru/algo/prefix_function\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/191454/\">Теория на хабре</a><br>\nМожете в интернете поискать еще.<br>\nПомимо собственно поиска подстроки в строке, префикс-функция также нередко имеет другие полезные применения. Задачи на это ниже тоже есть.<br>\nКакие-то из задач ниже, наверное, были ранее в задачах на хеши. Решите их повторно с использованием КМП.</p>"),
+        problem(1323),
+        problem(99),
+        problem(100),
+        problem(1943),
     ])
 
 export default level_7A = () ->

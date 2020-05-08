@@ -3,16 +3,6 @@ import label from "../../lib/label"
 import level from "../../lib/level"
 import problem from "../../lib/problem"
 
-contest_25537 = () ->
-    return contest("7В: Дополнительные задачи на разные темы - 2", [
-        problem(3318),
-        problem(998),
-        problem(111744),
-        problem(1746),
-        problem(757),
-        problem(573),
-    ])
-
 contest_25536 = () ->
     return contest("7В: Дополнительные задачи на разные темы - 1", [
         problem(112567),
@@ -22,6 +12,16 @@ contest_25536 = () ->
         problem(3568),
         problem(112597),
         problem(112096),
+    ])
+
+contest_25537 = () ->
+    return contest("7В: Дополнительные задачи на разные темы - 2", [
+        problem(3318),
+        problem(998),
+        problem(111744),
+        problem(1746),
+        problem(757),
+        problem(573),
     ])
 
 export default level_7C = () ->
