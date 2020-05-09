@@ -14,24 +14,26 @@ getClass = (result) ->
         else undefined
 
 
+export ProblemList = withMyResults (props) ->
+    <ListGroup>
+        {
+        res = []
+        a = (el) -> res.push(el)
+        for m in props.problems
+            id = props.myUser?._id + "::" + m._id
+            if props.myResults?[id]?
+                cl = getClass(props.myResults[id])
+            else
+                cl = undefined
+            href = "/material/" + m._id
+            a <ListGroupItem key={m._id} onClick={window?.goto?(href)} href={href} bsStyle={cl}>{m?.title}</ListGroupItem>
+        res}
+    </ListGroup>
 
 Contest = (props) ->
     <div>
         <h1>{props.material?.title}</h1>
-        <ListGroup>
-            {
-            res = []
-            a = (el) -> res.push(el)
-            for m in props.material.materials
-                id = props.myUser?._id + "::" + m._id
-                if props.myResults?[id]?
-                    cl = getClass(props.myResults[id])
-                else
-                    cl = undefined
-                href = "/material/" + m._id
-                a <ListGroupItem key={m._id} onClick={window?.goto?(href)} href={href} bsStyle={cl}>{m?.title}</ListGroupItem>
-            res}
-        </ListGroup>
+        <ProblemList problems={props.material.materials} />
     </div>
 
-export default withMyResults(Contest)
+export default Contest
