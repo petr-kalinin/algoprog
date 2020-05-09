@@ -36,7 +36,6 @@ import setOutcome from './setOutcome'
 
 import logger from '../log'
 
-import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
 import * as groups from '../informatics/informaticsGroups'
 

@@ -32,7 +32,7 @@ running = false
 wrapRunning = (callable) ->
     () ->
         if running
-            logger.info "Already running downloadContests"
+            logger.info "Already running downloadBlog"
             return
         try
             running = true
