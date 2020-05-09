@@ -3,7 +3,7 @@ import Material from '../models/Material'
 import Problem from '../models/problem'
 import Table from '../models/table'
 
-import root from './root'
+import root from './data/root'
 
 
 clone = (material) ->
