@@ -46,6 +46,14 @@ if process.env["FORCE_HTTPS"]
 app.use(compression())
 
 configurePassport(app, db)
+
+app.use (req, res, next) ->
+    if not req.user?.admin
+        res.status(503).send("На сервере проводятся технические работы. Ожидаемое время восстановления — вторая половина для 9 мая.")
+        return
+    next()
+
+
 setupApi(app)
 
 
