@@ -104,6 +104,9 @@ class ContestProcessor
         if id != @level()
             return
         @path.pop()
+        if @tables[id].tables.length == 0 and @tables[id].problems.length == 0
+            delete @tables[id]
+            @tables[@level()].tables = @tables[@level()].tables.filter((x) -> x != id)
             
     finalize: () ->
         for id, problem of @problems
@@ -122,6 +125,8 @@ class ContestProcessor
                     tables: []
         else if material.type == "contest" or material.type == "topic"
             problemIds = (m._id for m in material.materials when m.type == "problem")
+            if problemIds.length == 0
+                return
             @tables[id] = new Table
                 _id: id
                 name: material.treeTitle || material.title
