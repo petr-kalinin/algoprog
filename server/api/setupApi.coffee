@@ -36,8 +36,6 @@ import setOutcome from './setOutcome'
 
 import logger from '../log'
 
-#import downloadMaterials from '../cron/downloadMaterials'
-
 import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
 import * as groups from '../informatics/informaticsGroups'
@@ -583,13 +581,6 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         User.updateAllGraduateYears()
-        res.send('OK')
-
-    app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        downloadContests.run()
         res.send('OK')
 
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->
