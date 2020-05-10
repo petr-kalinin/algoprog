@@ -304,7 +304,11 @@ module15969 = () ->
 
 topic_15966 = () ->
     return topic("Циклы", "1А: Задачи на циклы", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/2_loops.html\">Питон: теория про циклы</a><br>\n<a href=\"http://notes.algoprog.ru/python_basics/2_1_break_continue.html\">Про команды break и continue (питон, но в любых других языках все аналогично)</a>"),
+        label("""
+            <a href="http://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
+            Внутри теории про циклы есть также раздел <a href="http://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
+            Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.
+        """),
         module15969(),
         problem(333),
         problem(351),

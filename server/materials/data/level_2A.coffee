@@ -29,7 +29,7 @@ topic_module_24341 = () ->
 
 topic_module_16005_0 = () ->
     return topic("*Функции (без контеста)", null, [
-        label("<p>Теории тут нет, прочитайте в книжке или прослушайте на занятии.</p>"),
+        labelLink("http://notes.algoprog.ru/python_basics/6_functions.html", "Теория про функции")
     ])
 
 topic_16020 = () ->
