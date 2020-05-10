@@ -22,14 +22,11 @@ module25629 = () ->
         </div>
     """, {skipTree: true})
 
-topic_module_24341 = () ->
-    return topic("*Работа с файлами (без контеста)", null, [
+topic_python_additional = () ->
+    return topic("*Дополнительные замечания по питону (без контеста)", null, [
+        labelLink("http://notes.algoprog.ru/python_basics/6_functions.html", "Функции")
         labelLink("http://notes.algoprog.ru/python_basics/7_files.html", "Работа с файлами")
-    ])
-
-topic_module_16005_0 = () ->
-    return topic("*Функции (без контеста)", null, [
-        labelLink("http://notes.algoprog.ru/python_basics/6_functions.html", "Теория про функции")
+        labelLink("http://notes.algoprog.ru/python_basics/8_addtypes.html", "Еще разные полезные типы данных")
     ])
 
 topic_16020 = () ->
@@ -159,8 +156,7 @@ topic_16017 = () ->
 export default level_2A = () ->
     return level("2А", [
         label("<p>Чтобы перейти на следующий уровень, необходимо решить все задачи, кроме раздела \"Рекурсивный перебор\"</p>"),
-        topic_module_24341(),
-        topic_module_16005_0(),
+        topic_python_additional(),
         topic_16009(),
         topic_16017(),
         topic_16020(),
