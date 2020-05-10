@@ -369,8 +369,13 @@ export default setupApi = (app) ->
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
         if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
-            res.status(403).send('No permissions')
-            return
+            if submit.quality == 0
+                res.status(403).send('No permissions')
+                return
+            result = await Result.findByUserAndTable(req.user?.userKey(), submit.problem)
+            if not result or result.solved <= 0
+                res.status(403).send('No permissions')
+                return
         mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime || "text/plain"
         res.contentType(mimeType)
         res.send(submit.sourceRaw)
