@@ -376,7 +376,7 @@ export default setupApi = (app) ->
             if not result or result.solved <= 0
                 res.status(403).send('No permissions')
                 return
-        source = submit.sourceRaw || submit.source
+        source = submit.sourceRaw || entities.decode(submit.source)
         mimeType = FileType.fromBuffer(Buffer.from(source))?.mime || "text/plain"
         res.contentType(mimeType)
         res.send(source)
