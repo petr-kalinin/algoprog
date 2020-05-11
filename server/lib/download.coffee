@@ -17,12 +17,14 @@ addStats = (type) ->
 export getStats = () ->
     return statistics
 
-export default download = (href, jar, options) ->
+export default download = (href, jar, options={}) ->
     logger.info "Downloading", href
     if not jar
         jar = request.jar()
     delay = 5
     maxAttempts = options?.maxAttempts || 8
+    options.headers = options.headers || {}
+    options.headers["User-Agent"] = "algoprog.ru"
     for i in [1..maxAttempts]
         try
             page = await request({
