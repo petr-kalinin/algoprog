@@ -122,6 +122,7 @@ contest_16069 = () ->
         problem(1630),
         problem(637),
         problem(111648),
+        problem(1460),
     ])
 
 export default level_2C = () ->

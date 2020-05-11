@@ -47,7 +47,7 @@ class Problem
         id = "p#{@id}"
         material = await Material.findById(id)
         if not material
-            {name, text} = @download()
+            {name, text} = await @download()
         else
             name = material.title
             text = material.content
