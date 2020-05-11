@@ -8,13 +8,15 @@ registeredUserSchema = new mongoose.Schema
     informaticsUsername: String
     informaticsPassword: {type: String, select: false}
     informaticsId: Number
+    ejudgeUsername: String
+    ejudgePassword: {type: String, select: false}
     promo: String
     contact: String
     whereFrom: String
     aboutme: String
 
 registeredUserSchema.statics.findAdmin = (list) ->
-    RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword")
+    RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword +ejudgePassword")
 
 registeredUserSchema.statics.findByKey = (key) ->
     RegisteredUser.findOne({informaticsId: key})
@@ -26,7 +28,7 @@ registeredUserSchema.statics.findAllByKey = (key) ->
     await RegisteredUser.find({informaticsId: key})
 
 registeredUserSchema.statics.findByKeyWithPassword = (key) ->
-    await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword")
+    await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword +ejudgePassword")
 
 registeredUserSchema.methods.userKey = () ->
     @informaticsId

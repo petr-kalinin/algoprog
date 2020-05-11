@@ -6,7 +6,7 @@ import { GROUPS } from '../../client/lib/informaticsGroups'
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 
-import download from '../lib/download'
+import download, {downloadLimited} from '../lib/download'
 import logger from '../log'
 
 import TestSystem, {TestSystemUser} from './TestSystem'
@@ -192,3 +192,39 @@ export default class Informatics extends TestSystem
 
     selfTest: () ->
         await @_getAdmin()
+
+    downloadProblem: (options) ->
+        href = "https://informatics.msk.ru/moodle/mod/statements/view3.php?chapterid=#{options.id}"
+        page = await downloadLimited(href, {timeout: 15 * 1000})
+        document = (new JSDOM(page, {url: href})).window.document
+        submit = document.getElementById('submit')
+        if submit
+            submit.parentElement.removeChild(submit)
+
+        data = document.getElementsByClassName("problem-statement")
+        if not data or data.length == 0
+            logger.warn("Can't find statement for problem " + href)
+            data = []
+
+        name = document.getElementsByTagName("title")[0] || ""
+        name = name.innerHTML
+
+        if not name
+            logger.warn Error("Can't find name for problem " + href)
+            name = "???"
+
+        text = "<h1>" + name + "</h1>"
+        for tag in data
+            need = true
+            pred = tag.parentElement
+            while pred
+                if pred.classList.contains("problem-statement")
+                    need = false
+                    break
+                pred = pred.parentElement
+            if need
+                text += "<div>" + tag.innerHTML + "</div>"
+        return {name, text}
+
+    getProblemId: (options) ->
+        throw "not implemented"

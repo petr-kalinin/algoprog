@@ -29,6 +29,7 @@
     "cron": "^1.8.2",
     "css-modules-require-hook": "^4.2.3",
     "css-modulesify": "^0.28.0",
+    "csv-parse": "^4.9.0",
     "deep-equal": "^2.0.2",
     "deepcopy": "^2.0.0",
     "diff": "^4.0.2",
@@ -92,6 +93,7 @@
     "universal-cookie": "^4.0.3",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1",
+    "xml2js": "^0.4.23",
     "xregexp": "^4.3.0"
   },
   "devDependencies": {
