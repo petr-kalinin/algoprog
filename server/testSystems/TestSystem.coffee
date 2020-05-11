@@ -50,3 +50,6 @@ export default class TestSystem
 
     getProblemId: (options) ->
         throw "not implemented"
+
+    getProblemData: (options) ->
+        throw "not implemented"

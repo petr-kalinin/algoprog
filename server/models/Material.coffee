@@ -10,6 +10,7 @@ materialsSchema = new mongoose.Schema
     path: [{_id: String, title: String}]
     materials: [mongoose.Schema.Types.Mixed]  # will always be an array of dictionaries
     force: { type: Boolean, default: false }
+    testSystemData: mongoose.Schema.Types.Mixed
     
 
 materialsSchema.methods.upsert = () ->

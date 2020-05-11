@@ -228,3 +228,6 @@ export default class Informatics extends TestSystem
 
     getProblemId: (options) ->
         throw "not implemented"
+
+    getProblemData: (options) ->
+        {}

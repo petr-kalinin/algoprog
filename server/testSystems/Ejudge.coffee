@@ -324,3 +324,9 @@ export default class Ejudge extends TestSystem
 
     getProblemId: (options) ->
         return "e#{options.contest}p#{options.problem}"
+
+    getProblemData: (options) ->
+        {
+            contest: options.contest
+            problem: options.problem
+        }

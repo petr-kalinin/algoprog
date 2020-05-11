@@ -13,10 +13,12 @@ class Problem
         @options = options
         {testSystem = "informatics", id} = options
         @testSystem = testSystem
+        testSystemObject = getTestSystem(@testSystem)
         if not id
-            testSystem = getTestSystem(@testSystem)
-            id = testSystem.getProblemId(@options)
+            id = testSystemObject.getProblemId(@options)
         @id = id
+        @testSystemData = testSystemObject.getProblemData(@options)
+        @testSystemData.system = @testSystem
 
     download: () ->
         testSystem = getTestSystem(@testSystem)
@@ -35,6 +37,7 @@ class Problem
             type: "problem",
             title: name,
             content: text,
+            testSystemData: @testSystemData
 
         await context.process(data)
         

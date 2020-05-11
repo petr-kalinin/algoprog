@@ -123,6 +123,7 @@ class ContestProcessor
                     name: material.title
                     level: ""
                     tables: []
+                    testSystemData: material.testSystemData
         else if material.type == "contest" or material.type == "topic"
             problemIds = (m._id for m in material.materials when m.type == "problem")
             if problemIds.length == 0
