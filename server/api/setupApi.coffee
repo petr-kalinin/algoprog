@@ -4,7 +4,7 @@ passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 sha256 = require('sha256')
-fileType = require('file-type')
+FileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
@@ -376,9 +376,10 @@ export default setupApi = (app) ->
             if not result or result.solved <= 0
                 res.status(403).send('No permissions')
                 return
-        mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime || "text/plain"
+        source = submit.sourceRaw || submit.source
+        mimeType = FileType.fromBuffer(Buffer.from(source))?.mime || "text/plain"
         res.contentType(mimeType)
-        res.send(submit.sourceRaw)
+        res.send(source)
 
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.userKey()

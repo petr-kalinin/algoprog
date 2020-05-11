@@ -35,7 +35,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "feedparser-promised": "^2.0.1",
-    "file-type": "^14.1.4",
+    "file-type": "^14.3.0",
     "graphite": "^0.1.4",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
