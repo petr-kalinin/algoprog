@@ -146,26 +146,18 @@ export default class Informatics extends TestSystem
         id = @_informaticsProblemId(problemId)
         "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{userId}"
 
-    submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage) ->
-        problemId = if problemId then @_informaticsProblemId(problemId) else 0
-        if userId or problemId
-            groupId = 0
-        else
-            userId = 0
-            groupId = GROUPS["unknown"]
-        fromTimestamp = fromTimestamp || 0
-        if not userId
-            # disable all downloads except for a specific user
-            return
+    submitDownloader: (registeredUser, problem, submitsPerPage) ->
+        userId = registeredUser.informaticsId
+        problemId = @_informaticsProblemId(problem._id)
+        groupId = 0
+        fromTimestamp = 0
         user = await @_getAdmin()
         admin = true
         if not user
-            fullUser = await RegisteredUser.findByKeyWithPassword(userId)
-            user = await LoggedInformaticsUser.getUser(fullUser.informaticsUsername, fullUser.informaticsPassword)
+            user = await LoggedInformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
             admin = false
         url = (page) ->
-            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}
-            "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&from_timestamp=#{fromTimestamp}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
+            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}"
         return new InformaticsSubmitDownloader(user, url, admin)
 
     submitNeedsFormData: () ->

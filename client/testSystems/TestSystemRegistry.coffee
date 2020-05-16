@@ -6,4 +6,4 @@ export REGISTRY =
     "ejudge": new Ejudge('https://ejudge.algoprog.ru', 1)
 
 export default getTestSystem = (id) ->
-    REGISTRY[id]
+    REGISTRY[id || "informatics"]

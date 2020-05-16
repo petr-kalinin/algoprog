@@ -27,7 +27,7 @@ export default class TestSystem
     submitsListLink: (problemId, userId) ->
         throw "not implemented"
 
-    submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage) ->
+    submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage, testSystemData) ->
         throw "not implemented"
 
     submitNeedsFormData: () ->

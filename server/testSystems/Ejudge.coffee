@@ -23,7 +23,7 @@ userCache = {}
 
 class LoggedEjudgeUser
     @getUser: (server, contestId, username, password, isAdmin) ->
-        key = "#{server}::#{contestId}::#{username}::#{password}"
+        key = "#{server}::#{contestId}::#{username}::#{password}::#{isAdmin}"
         if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
             logger.info "Creating new EjudgeUser ", username, contestId
             newUser = new LoggedEjudgeUser(server, contestId, username, password, isAdmin)
@@ -130,6 +130,8 @@ class LoggedEjudgeUser
         el = document.getElementsByTagName("title")
         result = el[0].textContent
         if result.includes("Error") or result.includes("Ошибка")
+            if result.includes("This submit is duplicate of another run")
+                throw {duplicate: true}
             throw {ejudgeError: result}
 
 
@@ -213,28 +215,17 @@ export default class Ejudge extends TestSystem
             isReview: isReview
         }
 
-    submitDownloader: (userId, userList, problemId, submitsPerPage) ->
-        problems = []
-        if problemId
-            problems = [await Problem.findById(problemId)]
-        else
-            problems = await Problem.find({})
-        tables = []
-        for problem in problems
-            for table in problem.tables
-                if not (table in tables)
-                    tables.push(table)
-
-        parameters = await Promise.all(tables.map((table) =>
-            admin: await @getAdmin(table)
-            server: @server
-            table: table
-        ))
+    submitDownloader:(registeredUser, problem, submitsPerPage) ->
         options = 
-            user: userId
-            problem: problemId
+            admin: await @getAdmin(problem.testSystemData.contest)
+            server: @server
+            user: registeredUser.userKey()
+            ejudgeUser: registeredUser.ejudgeUsername
+            contest: problem.testSystemData.contest
+            ejudgeProblem: problem.testSystemData.problem
+            problem: problem._id
 
-        return new EjudgeSubmitDownloader(parameters, options)
+        return new EjudgeSubmitDownloader(options)
 
     setOutcome: (submitId, outcome, comment) ->
         [fullMatch, contest, run, problem] = submitId.match(/(.+)r(.+)p(.+)/)
@@ -290,7 +281,7 @@ export default class Ejudge extends TestSystem
             logger.error "Though the submit appeared in submit list..."
 
     submitWithObject: (user, problemId, data) ->
-        [contest, problem] = problemId.split("_")
+        {contest, problem} = data.testSystemData
         logger.info "Try submit #{user.username}, #{user.userKey()} #{problemId} #{contest} #{problem}"
         ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, user.ejudgeUsername, user.ejudgePassword, false)
         await ejudgeUser.submitWithObject(problem, data)

@@ -4,9 +4,10 @@ FontAwesome = require('react-fontawesome')
 
 import Table from 'react-bootstrap/lib/Table'
 
-import ShadowedSwitch from './ShadowedSwitch'
-
 import outcomeToText from '../lib/outcomeToText'
+import getTestSystem from '../testSystems/TestSystemRegistry'
+
+import ShadowedSwitch from './ShadowedSwitch'
 
 import styles from './SubmitListTable.css'
 
@@ -106,7 +107,7 @@ export default SubmitListTable = (props) ->
         {
         if props.submits?[0]
             s = props.submits[props.submits.length - 1]
-            infProblem = s.problem.substr(1)
-            <a href={"https://informatics.msk.ru/moodle/mod/statements/view3.php?" + "chapterid=#{infProblem}&submit&user_id=#{s.user}"} target="_blank">Попытки на информатикс</a>
+            testSystem = getTestSystem(s.testSystemData?.system)
+            testSystem.submitListLink(s)
         }
     </div>

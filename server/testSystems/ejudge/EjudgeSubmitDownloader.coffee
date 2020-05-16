@@ -38,11 +38,11 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         CG: "CT"
         RU: "CT"
 
-    constructor: (@parameters, @options={}) ->
+    constructor: (@options) ->
         super()
 
-    _getMaps: (param) ->
-        data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=153", {}, "new-master"
+    _getMaps: () ->
+        data = await @options.admin.download "#{@options.server}/cgi-bin/new-master?action=153", {}, "new-master"
         data = await parseXml data
         languageMap = {}
         for lang in data.runlog.languages[0].language
@@ -52,65 +52,56 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             problemMap[prob.$.short_name] = prob.$.id
         return {languageMap, problemMap}
 
-    getSubmitsFromContest: (param) ->
-        {languageMap, problemMap} = await @_getMaps(param)
-        data = await param.admin.download "#{param.server}/cgi-bin/new-master?action=152", {}, "new-master"
+    getSubmitsFromContest: () ->
+        {languageMap, problemMap} = await @_getMaps()
+        data = await @options.admin.download "#{@options.server}/cgi-bin/new-master?action=152", {}, "new-master"
         data = parseCsv data, {delimiter: ";", relax_column_count: true, columns: true}
         results = []
         for submit in data
             outcome = submit.Stat_Short
             if outcome of @STATUS_MAP
                 outcome = @STATUS_MAP[outcome]
-            probId = problemMap[submit.Prob]
-            problem = "#{param.table}_#{probId}"
+            problem = problemMap[submit.Prob]
             user = submit.User_Login
-            id = "#{param.table}r#{submit.Run_Id}p#{problem}"
-            if @options.user and @options.user != user
-                logger.debug "Ignoring submit #{id} because it is from a different user"
+            id = "#{@options.contest}r#{submit.Run_Id}p#{problem}"
+            if @options.ejudgeUser and @options.ejudgeUser != user
+                logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
                 continue
-            if @options.problem and @options.problem != problem
-                logger.debug "Ignoring submit #{id} because it is for a different problem"
+            if @options.ejudgeProblem and @options.ejudgeProblem != problem
+                logger.info "Ignoring submit #{id} #{user} #{problem} because it is for a different problem (vs #{@options.ejudgeProblem})"
                 continue
             results.push new Submit(
                 _id: id,
                 time: new Date(submit.Time * 1000),
-                user: user,
-                problem: problem,
+                user: @options.user,
+                problem: @options.problem,
                 outcome: outcome
-                firstFail: if outcome != "OK" and outcome != "AC" and outcome != "IG" then +submit.Test + 1 else undefined
                 language: languageMap[submit.Lang]
+                testSystemData: 
+                    runId: submit.Run_Id
+                    contest: @options.contest
+                    problem: @options.ejudgeProblem
+                    system: "ejudge"
             )
         return results
 
     _parseRunId: (runid) ->
         [fullMatch, contest, run, problem] = runid.match(/(.+)r(.+)p(.+)/)
+        if @options.contest != contest
+            throw "Strange contest #{contest} (#{typeof contest}) vs #{@options.contest} (#{typeof @options.contest}) for run #{runid}"
         return [contest, run, problem]
-
-    _findParam: (contest) ->
-        for param in @parameters
-            if param.table == contest
-                return param
-        return undefined
 
     getSource: (runid) ->
         [contest, run] = @_parseRunId(runid)
-        param = @_findParam(contest)
-        if param
-            return await param.admin.download(
-                "#{param.server}/cgi-bin/new-master?action=91&run_id=#{run}", 
-                {encoding: null}, 
-                "new-master")
-        logger.warn "Unknown contest in getSource, runid=#{runid}"
-        return ""
+        return await @options.admin.download(
+            "#{@options.server}/cgi-bin/new-master?action=91&run_id=#{run}", 
+            {encoding: null}, 
+            "new-master")
 
     getComments: (runid) ->
         [contest, run] = @_parseRunId(runid)
-        param = @_findParam(contest)
-        if not param
-            logger.warn "Unknown contest in getSource, runid=#{runid}"
-            return []
-        href = "#{param.server}/cgi-bin/new-master?action=36&run_id=#{run}"
-        page = await param.admin.download href, {}, "new-master"
+        href = "#{@options.server}/cgi-bin/new-master?action=36&run_id=#{run}"
+        page = await @options.admin.download href, {}, "new-master"
         document = (new JSDOM(page, {url: href})).window.document
         elements = document.getElementsByClassName("message-table")
         result = []
@@ -167,9 +158,8 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
 
     getResults: (runid) ->
         [contest, run] = @_parseRunId(runid)
-        param = @_findParam(contest)
-        href = "#{param.server}/cgi-bin/new-master?action=37&run_id=#{run}"
-        page = await param.admin.download href, {}, "new-master"
+        href = "#{@options.server}/cgi-bin/new-master?action=37&run_id=#{run}"
+        page = await @options.admin.download href, {}, "new-master"
         document = (new JSDOM(page, {url: href})).window.document
         result = {tests: []}
         pre = document.getElementsByTagName("pre")[0]
@@ -195,10 +185,5 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         if page != 0
             logger.debug "Requested non-first page, returning []"
             return []
-        contestResults = (@getSubmitsFromContest(param) for param in @parameters)
-        contestResults = await Promise.all contestResults
-        results = []
-        for cr in contestResults
-            results = [results..., cr...]
-        return results
+        return @getSubmitsFromContest()
     

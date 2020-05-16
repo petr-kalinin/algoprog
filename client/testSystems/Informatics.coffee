@@ -16,6 +16,6 @@ export default class Informatics extends TestSystem
         href = "#{BASE_URL}/moodle/mod/statements/view3.php?chapterid=#{id}"
         <p><a href={href}>Задача на informatics</a></p>
 
-    submitListLink: (problem, user) ->
-        id = @_informaticsProblemId(problem._id)
-        "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{user._id}"
+    submitListLink: (submit) ->
+        id = @_informaticsProblemId(submit.problem)
+        <a href={"#{BASE_URL}/moodle/mod/statements/view3.php?chapterid=#{id}&submit&user_id=#{submit.user}"} target="_blank">Попытки на информатикс</a>

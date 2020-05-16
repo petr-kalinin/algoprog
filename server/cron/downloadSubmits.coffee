@@ -19,7 +19,7 @@ import setDirty from '../lib/setDirty'
 import awaitAll from '../../client/lib/awaitAll'
 
 import * as groups from '../informatics/informaticsGroups'
-import { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
+import getTestSystem, { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
 
 entities = new Entities()
 
@@ -36,7 +36,7 @@ compare = (a, b, path) ->
         console.log "Diff: #{path} #{a} #{b}"
 
 class SubmitDownloader
-    constructor: (@baseDownloader, @minPages, @limitPages, @forceMetadata, @onNewSubmit) ->
+    constructor: (@baseDownloader, @minPages, @limitPages, @forceMetadata, @onNewSubmit, @system) ->
         @dirtyUsers = {}
         @dirtyResults = {}
 
@@ -68,6 +68,9 @@ class SubmitDownloader
 
     processSubmit: (newSubmit) ->
         logger.info "Found submit ", newSubmit._id, newSubmit.user, newSubmit.problem, newSubmit.outcome
+        if not newSubmit.testSystemData
+            newSubmit.testSystemData = {}
+        newSubmit.testSystemData.system = @system
         res = await @needContinueFromSubmit(newSubmit)
 
         oldSubmit = (await Submit.findById(newSubmit._id))?.toObject()
@@ -82,6 +85,7 @@ class SubmitDownloader
             newSubmit.language = oldSubmit.language
             newSubmit.downloadTime = oldSubmit.downloadTime
             newSubmit.hashes = oldSubmit.hashes
+            newSubmit.testSystemData = {oldSubmit.testSystemData..., newSubmit.testSystemData...}
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
@@ -89,9 +93,6 @@ class SubmitDownloader
             await @onNewSubmit?(newSubmit)
             logger.info "Submit already in the database #{newSubmit._id}"
             return res
-
-        #console.log "!!!"
-        #compare(oldSubmit, newSubmit.toObject(), "")
 
         if oldSubmit?.force and not @forceMetadata
             await @onNewSubmit?(newSubmit)
@@ -128,7 +129,6 @@ class SubmitDownloader
         await newSubmit.calculateHashes()
 
         user = await User.findById(newSubmit.user)
-        console.log user?.userList, newSubmit.outcome
         if user?.userList == "graduated" and newSubmit.outcome == "OK" and newSubmit.time > new Date(2020, 1, 28)
             newSubmit.outcome = "AC"
             newSubmit.force = true
@@ -205,64 +205,17 @@ forAllTestSystems = (callable) ->
         await callable(system)
 
 
-# (@baseDownloader, @minPages, @limitPages, @forceMetadata)
-# submitDownloader: (userId, problemId, submitsPerPage) ->
-
-export runForUser = (userId, submitsPerPage, maxPages) ->
-    try
-        user = await User.findById(userId)
-        await forAllTestSystems (system) ->
-            logger.info "runForUser", system.id(), userId
-            systemDownloader = await system.submitDownloader(userId, undefined, undefined, submitsPerPage)
-            await (new SubmitDownloader(systemDownloader, 1, maxPages, false)).run()
-            logger.info "Done runForUser", system.id()
-    catch e
-        logger.error "Error in runForUser", e
-
 export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
     try
-        user = await User.findById(userId)
-        await forAllTestSystems (system) ->
-            logger.info "runForUserAndProblem", system.id(), userId, problemId
-            systemDownloader = await system.submitDownloader(userId, problemId, undefined, 100)
-            await (new SubmitDownloader(systemDownloader, 1, 10, false, onNewSubmit)).run()
-            logger.info "Done runForUserAndProblem", system.id(), userId, problemId
+        registeredUser = await RegisteredUser.findByKeyWithPassword(userId)
+        problem = await Problem.findById(problemId)
+        system = getTestSystem(problem.testSystemData.system)
+        logger.info "runForUserAndProblem", system.id(), userId, problemId
+        systemDownloader = await system.submitDownloader(registeredUser, problem, 100)
+        await (new SubmitDownloader(systemDownloader, 1, 10, false, onNewSubmit, problem.testSystemData.system)).run()
+        logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
         logger.error "Error in runForUserAndProblem", e
-
-
-export runAll = wrapRunning () ->
-    try
-        await forAllTestSystems (system) ->
-            logger.info "runAll", system.id()
-            systemDownloader = await system.submitDownloader(undefined, undefined, undefined, 1000)
-            await (new SubmitDownloader(systemDownloader, 1, 1e9, false)).run()
-            logger.info "Done runAll", system.id()
-    catch e
-        logger.error "Error in SubmitDownloader", e
-
-export runUntilIgnored = wrapRunning () ->
-    try
-        await forAllTestSystems (system) ->
-            logger.info "runUntilIgnored", system.id()
-            systemDownloader = await system.submitDownloader(undefined, undefined, undefined, 1000)
-            await (new UntilIgnoredSubmitDownloader(systemDownloader, 1, 1e9, false)).run()
-            logger.info "Done runUntilIgnored", system.id()
-    catch e
-        logger.error "Error in UntilIgnoredSubmitDownloader", e
-
-export runLast = wrapRunning () ->
-    try
-        lastSubmit = await Submit.findLastNotCT()
-        fromTimestamp = (+lastSubmit.time) / 1000 - 5 * 60
-        logger.info "fromTimestamp=#{fromTimestamp}"
-        await forAllTestSystems (system) ->
-            logger.info "runLast", system.id()
-            systemDownloader = await system.submitDownloader(undefined, undefined, fromTimestamp, 100)
-            await (new LastSubmitDownloader(systemDownloader, 1, 100, false)).run()
-            logger.info "Done runLast", system.id()
-    catch e
-        logger.error "Error in LastSubmitDownloader", e
 
 export runForCT = wrapRunning () ->
     try

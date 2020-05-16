@@ -13,5 +13,6 @@ export default class Ejudge extends TestSystem
         href = "#{@server}/cgi-bin/new-client?contest_id=#{material.testSystemData.contest}"
         <p><a href={href}>Контест в ejudge</a></p>
 
-    submitListLink: (problemId, userId) ->
-        "#{server}/cgi-bin/new-client?contest_id=#{problem.testSystemData.contest}"
+    submitListLink: (submit) ->
+        href = "#{@server}/cgi-bin/new-client?contest_id=#{submit.testSystemData.contest}"
+        <p><a href={href}>Контест в ejudge</a></p>

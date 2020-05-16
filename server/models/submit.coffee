@@ -29,7 +29,8 @@ submitsSchema = new mongoose.Schema
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
     hashes: [{window: Number, hash: String, score: Number}]
-
+    testSystemData: mongoose.Schema.Types.Mixed
+    
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
 
