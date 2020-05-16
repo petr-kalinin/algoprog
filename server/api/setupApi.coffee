@@ -178,10 +178,39 @@ export default setupApi = (app) ->
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
 
+    app.post '/api/user/:id/setUser', ensureLoggedIn, wrap (req, res) ->
+        if not req.params.id-0 == req.user.informaticsId-0
+            res.status(403).send('No permissions')
+            return      
+        now = new Date() 
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)    
+        password = req.body.password  
+        newPassword = req.body.newPassword  
+        if newPassword != ""
+            for registeredUser in registeredUsers
+                logger.info "Set user password", registeredUser.userKey()
+                try
+                    await registeredUser.changePassword(password, newPassword)  
+                    await registeredUser.save()
+                catch e
+                    res.json({passProblem:true})    
+                    return
+        cfLogin = req.body.cf.login
+        if cfLogin == ""
+            cfLogin = undefined
+        user = await User.findById(req.params.id)    
+        await user.setCfLogin cfLogin  
+        await User.updateUser(user._id, {})  
+        if(req.body.clas!='')
+            await user.setGraduateYear new Date((11-req.body.clas)+now.getFullYear())     
+        res.send('OK')    
+            
+        
+
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
-            return
+            return 
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined

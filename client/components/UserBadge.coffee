@@ -6,12 +6,14 @@ deepEqual = require('deep-equal')
 import Grid from 'react-bootstrap/lib/Grid'
 import Button from 'react-bootstrap/lib/Button'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
+import Loader from '../components/Loader'
 
 import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
+
 
 import styles from './UserBadge.css'
 
@@ -68,6 +70,13 @@ export default class UserBadge extends React.Component
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
         @updateResults = @updateResults.bind(this)
+        @redactPan = @redactPan.bind(this)
+        @onTab = @onTab.bind(this)
+        @UserPeremen = @UserPeremen.bind(this)
+        @handleClassChange = @handleClassChange.bind(this)
+        @handleNewPassOneChange = @handleNewPassOneChange.bind(this)
+        @handleNewPassTwoChange = @handleNewPassTwoChange.bind(this)
+
 
     startState: (props) ->
         return
@@ -78,6 +87,14 @@ export default class UserBadge extends React.Component
             price: if props.user.price? then ''+props.user.price else ''
             achieves: (props.user.achieves || []).join(' ')
             password: ''
+            redact: on
+            NeSovpad:false
+            Probel:false
+            clas: getClassStartingFromJuly(@props.user.graduateYear)
+            NewPassOne:''
+            NewPassTwo:''
+            loading:no
+            PassProblem:no
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -90,8 +107,28 @@ export default class UserBadge extends React.Component
         newState[field] = event.target.value
         @setState(newState)
 
+    handleNewPassOneChange:(event)->
+        await @handleChange("NewPassOne", event)
+        if((@state.NewPassOne==@state.NewPassTwo)==@state.NeSovpad)
+            @setState NeSovpad:!@state.NeSovpad
+        if((@state.NewPassOne.startsWith(' ') or @state.NewPassTwo.startsWith(' ') or @state.NewPassOne.endsWith(' ') or @state.NewPassTwo.endsWith(' '))!= @state.Probel)
+            @setState Probel:!@state.Probel
+
+        
+    handleNewPassTwoChange:(event)->
+        await @handleChange("NewPassTwo", event)   
+        if((@state.NewPassOne==@state.NewPassTwo)==@state.NeSovpad)
+            @setState NeSovpad:!@state.NeSovpad
+        if((@state.NewPassOne.startsWith(' ') or @state.NewPassTwo.startsWith(' ') or @state.NewPassOne.endsWith(' ') or @state.NewPassTwo.endsWith(' '))!= @state.Probel)
+            @setState Probel:!@state.Probel
+
+
+
     handleGraduateYearChange: (event) ->
         @handleChange("graduateYear", event)
+
+    handleClassChange: (event) ->
+        @handleChange("clas", event) 
 
     handleBlChange: (event) ->
         @handleChange("baseLevel", event)
@@ -122,8 +159,13 @@ export default class UserBadge extends React.Component
             price: @state.price
             achieves: @state.achieves
             password: @state.password
+            clas: @state.clas
+            
         )
         @props.handleReload()
+        return
+
+        
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"
@@ -133,107 +175,236 @@ export default class UserBadge extends React.Component
         await callApi('updateResults/' + @props.user._id)
         @props.handleReload()
 
-    render: () ->
-        cls = getClassStartingFromJuly(@props.user.graduateYear)
-        <div>
-            <h1>
-                <UserName user={@props.user} noachieves={true}/>
-            </h1>
-            <BigAchieves achieves={@props.user.achieves} />
-            <blockquote>
-                {cls && <div>Класс: {cls}</div>}
-                <div>Уровень: {@props.user.level.current}</div>
-                { @props.me?.admin &&
-                    <div>
-                        Уровень на начало полугодия: {@props.user.level.start}
-                    </div> }
-                <div>Рейтинг: {@props.user.rating}</div>
-                <div>Активность: {@props.user.activity.toFixed(1)}</div>
-                {
-                if @props.user.cf?.rating
-                    <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
-                else if @props.explain
-                    <div>Логин на codeforces неизвестен. Если вы зарегистированы, сообщите логин мне.</div>
-                }
+    UserPeremen: () ->
+        z = await callApi('user/' + @props.user._id + '/setUser',
+            cf:
+                login: @state.cfLogin
+            password: @state.password
+            clas: @state.clas
+            password: @state.password
+            newPassword: @state.NewPassOne
+            )
+        @props.handleReload()
+        return z
 
-                { @props.me?.admin &&
-                    <form className={styles.form} onSubmit={@handleSubmit}>
+    onTab: () ->  
+        if(!@state.redact)
+            await @setState loading:true, PassProblem: false
+            z =await @UserPeremen() 
+            if(z.passProblem)
+                await @setState PassProblem: true
+            await @setState loading:false
+        if  (!@state.PassProblem)    
+            await @setState redact:!@state.redact     
+
+    redactPan: () ->
+            if(@state.loading)
+                <Loader/>
+            else
+                save = @state.NeSovpad or @state.Probel
+                <div>
+                    <h1>
+                        <UserName user={@props.user} noachieves={true}/>
+                    </h1>
+                    <blockquote>
+                        <div>Уровень: {@props.user.level.current}</div>
+                        { @props.me?.admin &&
+                            <div>
+                                Уровень на начало полугодия: {@props.user.level.start}
+                            </div> }
+                        <div>Рейтинг: {@props.user.rating}</div>
+                        <div>Активность: {@props.user.activity.toFixed(1)}</div>
+                        {
+                        if @props.user.cf?.rating
+                            <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
+                        else if @props.explain
+                            <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
+                        }
+                            <form className={styles.form} onSubmit={@handleSubmit}>
+                                <div>
+                                    Логин на codeforces
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="text"
+                                            name="newLogin"
+                                            className={styles.inp}
+                                            value={@state.cfLogin}
+                                            onChange={@handleCfChange}
+                                            />
+                                        </div>
+                                </div>
+                                <div>
+                                    Класс
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="text"
+                                            name="newgraduateYear"
+                                            className={styles.inp}
+                                            value={@state.clas}
+                                            onChange={@handleClassChange}
+                                            />
+                                        </div>
+                                </div>
+                                <div>
+                                    Новый пароль
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="password"
+                                            name="password"
+                                            className="#{styles.inp} #{save && styles.pr}" 
+                                            value={@state.NewPassOne}
+                                            onChange={@handleNewPassOneChange}
+                                            />
+                                        </div>
+                                </div>
+                                <div>
+                                    Повторите пароль
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="password"
+                                            name="password"
+                                            className="#{styles.inp} #{save && styles.pr}" 
+                                            value={@state.NewPassTwo}
+                                            onChange={@handleNewPassTwoChange}
+                                            />
+                                            {@state.NeSovpad && <div className={styles.youHaveProblem}>Пароли не совпадают</div>}
+                                            {@state.Probel && <div className={styles.youHaveProblem}>Пароль не может начинаться с пробела или заканчиваться на него</div>}
+                                        </div>
+                                </div>
+                                <div>
+                                    Старый проль
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="password"
+                                            name="password"
+                                            className="#{styles.inp} #{@state.PassProblem && styles.pr}" 
+                                            value={@state.password}
+                                            onChange={@handlePasswordChange}
+                                            />
+                                            {@state.PassProblem && <div className={styles.youHaveProblem}>Неправильный пароль</div>}
+                                        </div>
+                                </div>
+                            </form> 
+                        { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
+                        { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
+                    </blockquote>
+                    { !@props.me?.admin && @props.user._id-0 == @props.me?.informaticsId &&
+                    <Button onClick={@onTab} bsStyle="primary" bsSize="small" disabled={save}>Сохранить</Button>
+                    }
+                    { @props.explain &&
+                        <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
+                </div> 
+
+            
+
+    render: () ->
+        if(@state.redact)
+            cls = @state.clas
+            <div>
+                <h1>
+                    <UserName user={@props.user} noachieves={true}/>
+                </h1>
+                <BigAchieves achieves={@props.user.achieves} />
+                <blockquote>
+                    {cls && <div>Класс: {cls}</div>}
+                    <div>Уровень: {@props.user.level.current}</div>
+                    { @props.me?.admin &&
                         <div>
-                            Год выпуска: <input
-                                type="text"
-                                name="newgraduateYear"
-                                value={@state.graduateYear}
-                                size="4"
-                                onChange={@handleGraduateYearChange}
-                                onKeyPress={@handleKeyPressed} />
-                        </div>
-                        <div>
-                            Базовый уровень: <input
-                                type="text"
-                                name="newLevel"
-                                value={@state.baseLevel}
-                                size="3"
-                                onChange={@handleBlChange}
-                                onKeyPress={@handleKeyPressed} />
-                        </div>
-                        <div>
-                            Cf login: <input
-                                type="text"
-                                name="newLogin"
-                                value={@state.cfLogin}
-                                size="20"
-                                onChange={@handleCfChange}
-                                onKeyPress={@handleKeyPressed} />
-                        </div>
-                        <div>
-                            Paid till (YYYY-MM-DD): <input
-                                type="text"
-                                name="newPaidTill"
-                                value={@state.paidTill}
-                                size="20"
-                                onChange={@handlePaidTillChange}
-                                onKeyPress={@handleKeyPressed} />
-                            {if @props.user.paidTill 
-                                paidTill = moment(@props.user.paidTill).hours(23).minutes(59).seconds(59)
-                                paidTillDate = paidTill.format("YYYY-MM-DD")
-                                timeLeft = Math.floor(paidTill.diff(moment(), 'days', true))
-                                " (на сервере: #{paidTillDate} = #{timeLeft} дней)"
-                            }
-                        </div>
-                        <div>
-                            Стоимость: <input
-                                type="text"
-                                name="newPrice"
-                                value={@state.price}
-                                size="20"
-                                onChange={@handlePriceChange}
-                                onKeyPress={@handleKeyPressed} />
-                            {if @props.user.price?
-                                " (на сервере: #{@props.user.price})"
-                            }
-                        </div>
-                        <div>
-                            Ачивки: <input
-                                type="text"
-                                name="achieves"
-                                value={@state.achieves}
-                                size="20"
-                                onChange={@handleAchievesChange}
-                                onKeyPress={@handleKeyPressed} />
-                        </div>
-                        <div>
-                            Пароль: <input
-                                type="text"
-                                name="password"
-                                value={@state.password}
-                                size="20"
-                                onChange={@handlePasswordChange}
-                                onKeyPress={@handleKeyPressed} />
-                        </div>
-                    </form> }
-                { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
-                { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
-            </blockquote>
-            { @props.explain &&
-                <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
-        </div>
+                            Уровень на начало полугодия: {@props.user.level.start}
+                        </div> }
+                    <div>Рейтинг: {@props.user.rating}</div>
+                    <div>Активность: {@props.user.activity.toFixed(1)}</div>
+                    {
+                    if @props.user.cf?.rating
+                        <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
+                    else if @props.explain
+                        <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
+                    }
+                    
+
+                    { @props.me?.admin &&
+                        <form className={styles.form} onSubmit={@handleSubmit}>
+                            <div>
+                                Год выпуска: <input
+                                    type="text"
+                                    name="newgraduateYear"
+                                    value={@state.graduateYear}
+                                    size="4"
+                                    onChange={@handleGraduateYearChange}
+                                    onKeyPress={@handleKeyPressed} />
+                            </div>
+                            <div>
+                                Базовый уровень: <input
+                                    type="text"
+                                    name="newLevel"
+                                    value={@state.baseLevel}
+                                    size="3"
+                                    onChange={@handleBlChange}
+                                    onKeyPress={@handleKeyPressed} />
+                            </div>
+                            <div>
+                                Cf login: <input
+                                    type="text"
+                                    name="newLogin"
+                                    value={@state.cfLogin}
+                                    size="20"
+                                    onChange={@handleCfChange}
+                                    onKeyPress={@handleKeyPressed} />
+                            </div>
+                            <div>
+                                Paid till (YYYY-MM-DD): <input
+                                    type="text"
+                                    name="newPaidTill"
+                                    value={@state.paidTill}
+                                    size="20"
+                                    onChange={@handlePaidTillChange}
+                                    onKeyPress={@handleKeyPressed} />
+                                {if @props.user.paidTill 
+                                    paidTill = moment(@props.user.paidTill).hours(23).minutes(59).seconds(59)
+                                    paidTillDate = paidTill.format("YYYY-MM-DD")
+                                    timeLeft = Math.floor(paidTill.diff(moment(), 'days', true))
+                                    " (на сервере: #{paidTillDate} = #{timeLeft} дней)"
+                                }
+                            </div>
+                            <div>
+                                Стоимость: <input
+                                    type="text"
+                                    name="newPrice"
+                                    value={@state.price}
+                                    size="20"
+                                    onChange={@handlePriceChange}
+                                    onKeyPress={@handleKeyPressed} />
+                                {if @props.user.price?
+                                    " (на сервере: #{@props.user.price})"
+                                }
+                            </div>
+                            <div>
+                                Ачивки: <input
+                                    type="text"
+                                    name="achieves"
+                                    value={@state.achieves}
+                                    size="20"
+                                    onChange={@handleAchievesChange}
+                                    onKeyPress={@handleKeyPressed} />
+                            </div>
+                            <div>
+                                Пароль: <input
+                                    type="text"
+                                    name="password"
+                                    value={@state.password}
+                                    size="20"
+                                    onChange={@handlePasswordChange}
+                                    onKeyPress={@handleKeyPressed} />
+                            </div>
+                        </form> }
+                    { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
+                    { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
+                </blockquote>
+                { !@props.me?.admin && @props.user._id-0 == @props.me?.informaticsId &&
+                <Button bsStyle="primary" bsSize="small" onClick={@onTab}>Редактировать профиль</Button>
+                }
+                { @props.explain &&
+                    <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
+            </div>
+        else  
+            @redactPan() 

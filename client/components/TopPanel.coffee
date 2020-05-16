@@ -175,7 +175,7 @@ class TopPanel extends React.Component
                                 <CfStatus cf={@props.myUser.cf} />
                                 {needCfWarning(@props.myUser) &&
                                     <span>
-                                        <span title="Логин на codeforces неизвестен. Если вы там зарегистрированы, напишите логин мне.">CF: <FontAwesome name="question-circle"/></span>
+                                        <span title="Логин на codeforces неизвестен. Если вы там зарегистрированы, укажите логин в своём профиле.">CF: <FontAwesome name="question-circle"/></span>
                                         <span className={styles.separator}/>
                                     </span>}
                                 {needUnknownWarning(@props.myUser, @props.me) &&

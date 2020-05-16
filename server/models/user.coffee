@@ -113,7 +113,7 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     if(cfLogin != undefined)
         @updateCfRating()
     else
-        await @update({$set: {"cf.rating": undefined}})
+        await @update({$unset: {"cf.rating": "", "cf.login":"", "cf.color":"", "cf.activity":"", "cf.progress":""}})
 
 usersSchema.methods.setAchieves = (achieves) ->
     logger.info "setting achieves login ", @_id, achieves
