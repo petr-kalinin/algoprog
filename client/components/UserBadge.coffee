@@ -76,6 +76,8 @@ export default class UserBadge extends React.Component
         @handleClassChange = @handleClassChange.bind(this)
         @handleNewPassOneChange = @handleNewPassOneChange.bind(this)
         @handleNewPassTwoChange = @handleNewPassTwoChange.bind(this)
+        @handleInformaticsPasswordChange = @handleInformaticsPasswordChange.bind(this)
+        @InformOpdate=@InformOpdate.bind(this)
 
 
     startState: (props) ->
@@ -95,6 +97,9 @@ export default class UserBadge extends React.Component
             NewPassTwo:''
             loading:no
             PassProblem:no
+            InformaticsPassword:''
+            InformaticsProblem: no
+            InformaticsLoading: no
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -147,6 +152,8 @@ export default class UserBadge extends React.Component
 
     handlePasswordChange: (event) ->
         @handleChange("password", event)
+        if(@state.PassProblem)
+            @setState PassProblem:false       
 
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/set',
@@ -159,13 +166,30 @@ export default class UserBadge extends React.Component
             price: @state.price
             achieves: @state.achieves
             password: @state.password
-            clas: @state.clas
-            
         )
         @props.handleReload()
         return
 
-        
+    handleInformaticsPasswordChange: (event) ->
+        await @setState InformaticsPassword:event.target.value, InformaticsLoading:true
+
+    InformOpdate:() ->    
+        if(@state.InformaticsPassword!='')
+            try
+                data = await callApi "informatics/userData", {
+                    username: @props.me.informaticsUsername,
+                    password: @state.InformaticsPassword
+                }
+                if not ("name" of data)
+                    throw "Can't find name"
+                if(@state.InformaticsProblem)
+                    @setState InformaticsProblem:no
+            catch
+                if(!@state.InformaticsProblem)
+                    @setState InformaticsProblem:on
+        else
+            @setState InformaticsLoading:false       
+        @setState InformaticsLoading:false    
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"
@@ -183,6 +207,7 @@ export default class UserBadge extends React.Component
             clas: @state.clas
             password: @state.password
             newPassword: @state.NewPassOne
+            InformaticsPassword: @state.InformaticsPassword
             )
         @props.handleReload()
         return z
@@ -201,7 +226,7 @@ export default class UserBadge extends React.Component
             if(@state.loading)
                 <Loader/>
             else
-                save = @state.NeSovpad or @state.Probel
+                save = @state.NeSovpad or @state.Probel or @state.InformaticsProblem or @state.InformaticsLoading
                 <div>
                     <h1>
                         <UserName user={@props.user} noachieves={true}/>
@@ -246,12 +271,26 @@ export default class UserBadge extends React.Component
                                         </div>
                                 </div>
                                 <div>
+                                    Пароль от informatics
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="password"
+                                            name="InformsticsPassword"
+                                            className="#{styles.inp} #{@state.InformaticsProblem && styles.pr}" 
+                                            value={@state.InformaticsPassword}
+                                            onChange={@handleInformaticsPasswordChange} 
+                                            onBlur = {@InformOpdate}
+                                            />
+                                            {@state.InformaticsProblem && <div className={styles.youHaveProblem}>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему</a> аккаунту на informatics</div>}
+                                        </div>
+                                </div>
+                                <div>
                                     Новый пароль
                                         <div className={styles.divInput}>
                                             <input
                                             type="password"
                                             name="password"
-                                            className="#{styles.inp} #{save && styles.pr}" 
+                                            className="#{styles.inp} #{(@state.NeSovpad or @state.Probel) && styles.pr}" 
                                             value={@state.NewPassOne}
                                             onChange={@handleNewPassOneChange}
                                             />
@@ -263,7 +302,7 @@ export default class UserBadge extends React.Component
                                             <input
                                             type="password"
                                             name="password"
-                                            className="#{styles.inp} #{save && styles.pr}" 
+                                            className="#{styles.inp} #{(@state.NeSovpad or @state.Probel) && styles.pr}" 
                                             value={@state.NewPassTwo}
                                             onChange={@handleNewPassTwoChange}
                                             />

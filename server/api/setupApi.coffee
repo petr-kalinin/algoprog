@@ -185,7 +185,8 @@ export default setupApi = (app) ->
         now = new Date() 
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)    
         password = req.body.password  
-        newPassword = req.body.newPassword  
+        newPassword = req.body.newPassword 
+        newInformaticPass=req.body.InformaticsPassword 
         if newPassword != ""
             for registeredUser in registeredUsers
                 logger.info "Set user password", registeredUser.userKey()
@@ -195,6 +196,9 @@ export default setupApi = (app) ->
                 catch e
                     res.json({passProblem:true})    
                     return
+        if newInformaticPass != ""
+            for registeredUser in registeredUsers
+                await registeredUser.apdateInformaticPassword(newInformaticPass)
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined

@@ -1,6 +1,8 @@
 mongoose = require('mongoose')
 passportLocalMongoose = require('passport-local-mongoose')
 
+import logger from '../log'
+
 registeredUserSchema = new mongoose.Schema
     admin: Boolean
     adminData:
@@ -30,6 +32,12 @@ registeredUserSchema.statics.findByKeyWithPassword = (key) ->
 
 registeredUserSchema.methods.userKey = () ->
     @informaticsId
+
+registeredUserSchema.methods.apdateInformaticPassword = (password) ->
+    logger.info "setting InformaticsPassword ", password 
+    await @update({$set: {"informaticsPassword": password}})
+    @informaticsPassword = password
+     
     
 registeredUserSchema.plugin(passportLocalMongoose);
 
