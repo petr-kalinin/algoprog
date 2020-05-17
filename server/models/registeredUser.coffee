@@ -15,6 +15,14 @@ registeredUserSchema = new mongoose.Schema
     whereFrom: String
     aboutme: String
 
+
+registeredUserSchema.methods.upsert = () ->
+    # https://jira.mongodb.org/browse/SERVER-14322
+    try
+        @update(this, {upsert: true})
+    catch
+        logger.info "Could not upsert a registereduser"    
+
 registeredUserSchema.statics.findAdmin = (list) ->
     RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword +ejudgePassword")
 

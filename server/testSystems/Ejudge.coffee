@@ -31,6 +31,7 @@ class LoggedEjudgeUser
             userCache[key] =
                 user: newUser
                 loginTime: new Date()
+            logger.info "Created new EjudgeUser ", username, contestId
         return userCache[key].user
 
     constructor: (@server, @contestId, @username, @password, @isAdmin) ->
@@ -59,9 +60,10 @@ class LoggedEjudgeUser
             timeout: 30 * 1000,
         })
         if not page.includes("Logout") and not page.includes("Выйти из системы")
+            logger.info "Can't log user #{@username} in"
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
-        logger.info "Logger to prog #{prog}, SID=#{sidString[1]}"
+        logger.info "Logged user #{@username} to prog #{prog}, SID=#{sidString[1]}"
         @sid[prog] = sidString[1]
 
     download: (href, options, prog="new-client") ->
@@ -133,6 +135,7 @@ class LoggedEjudgeUser
             if result.includes("This submit is duplicate of another run")
                 throw {duplicate: true}
             throw {ejudgeError: result}
+        logger.info "Done submitWithObject"
 
 
 export default class Ejudge extends TestSystem
@@ -146,11 +149,12 @@ export default class Ejudge extends TestSystem
         admin = await RegisteredUser.findAdmin()
         return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword, true)
 
-    registerUser: (user, registeredUser, password) ->
+    registerUser: (registeredUser) ->
+        logger.info "Try register user #{registeredUser.informaticsUsername}"
         adminUser = await @getAdmin(@baseContest)
 
-        ejudgePassword = Math.random().toString(36).substr(2, 8)
-        registeredUser.ejudgePassword = ejudgePassword
+        registeredUser.ejudgeUsername = registeredUser.informaticsUsername
+        registeredUser.ejudgePassword = registeredUser.informaticsPassword
 
         href = "#{@server}/cgi-bin/serve-control"
         form =
@@ -159,8 +163,8 @@ export default class Ejudge extends TestSystem
             group_id: ""
             other_login: registeredUser.ejudgeUsername
             other_email: ""
-            reg_password1: ejudgePassword
-            reg_password2: ejudgePassword
+            reg_password1: registeredUser.ejudgePassword
+            reg_password2: registeredUser.ejudgePassword
             reg_random: ""
             field_9: 1
             reg_cnts_create: 1
@@ -174,18 +178,22 @@ export default class Ejudge extends TestSystem
             other_group_id: ""
             action_73: "Create a user"
 
-        await adminUser.download(href, {
+        data = await adminUser.download(href, {
             method: 'POST',
             headers: {'Content-Type': "application/x-www-form-urlencoded"},
             form: form,
             followAllRedirects: true
         }, "serve-control")
+        if data.includes("duplicated login name")
+            throw "Can't registed ejudge user #{registeredUser.ejudgeUsername}: Duplicate login name"
         await adminUser.download("http://ejudge.algoprog.ru/cgi-bin/new-master", {
             method: 'POST',
             headers: {'Content-Type': "application/x-www-form-urlencoded"},
             form: {action_276: "Reload config files for ALL contests"},
             followAllRedirects: true
         }, "new-master")
+        await registeredUser.upsert()
+        logger.info "Done register user #{registeredUser.informaticsUsername}"
 
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)
@@ -280,10 +288,12 @@ export default class Ejudge extends TestSystem
                 throw e
             logger.error "Though the submit appeared in submit list..."
 
-    submitWithObject: (user, problemId, data) ->
+    submitWithObject: (registeredUser, problemId, data) ->
         {contest, problem} = data.testSystemData
-        logger.info "Try submit #{user.username}, #{user.userKey()} #{problemId} #{contest} #{problem}"
-        ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, user.ejudgeUsername, user.ejudgePassword, false)
+        logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{registeredUser.ejudgeUsername} #{problemId} #{contest} #{problem}"
+        if not registeredUser.ejudgeUsername
+            await @registerUser(registeredUser)
+        ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, registeredUser.ejudgeUsername, registeredUser.ejudgePassword, false)
         await ejudgeUser.submitWithObject(problem, data)
         
     selfTest: () ->

@@ -66,6 +66,7 @@ submitToTestSystem = (submit, submitProcess) ->
             await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language, testSystemData: submit.testSystemData})
             await sleep(1000)
         finally
+            logger.info "Error in submitWithObject, will try downloadSubmits"
             await downloadSubmits.runForUserAndProblem(registeredUser.userKey(), submit.problem, onNewSubmit)
     catch e
         if not success
