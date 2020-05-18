@@ -202,8 +202,11 @@ export default setupApi = (app) ->
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
+        newName = req.body.newName    
         user = await User.findById(req.params.id)    
-        await user.setCfLogin cfLogin  
+        await user.setCfLogin cfLogin 
+        if(newName!="")
+            await user.updateName newName
         await User.updateUser(user._id, {})  
         if(req.body.clas!='')
             await user.setGraduateYear new Date((11-req.body.clas)+now.getFullYear())     

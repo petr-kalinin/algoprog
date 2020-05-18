@@ -14,7 +14,6 @@ import CfStatus from './CfStatus'
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
 
-
 import styles from './UserBadge.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
@@ -78,6 +77,7 @@ export default class UserBadge extends React.Component
         @handleNewPassTwoChange = @handleNewPassTwoChange.bind(this)
         @handleInformaticsPasswordChange = @handleInformaticsPasswordChange.bind(this)
         @InformOpdate=@InformOpdate.bind(this)
+        @handlenewNameChange = @handlenewNameChange.bind(this)
 
 
     startState: (props) ->
@@ -100,6 +100,7 @@ export default class UserBadge extends React.Component
             InformaticsPassword:''
             InformaticsProblem: no
             InformaticsLoading: no
+            newName:''
 
     componentDidUpdate: (prevProps, prevState) ->
         newState = @startState(@props)
@@ -137,6 +138,9 @@ export default class UserBadge extends React.Component
 
     handleBlChange: (event) ->
         @handleChange("baseLevel", event)
+
+    handlenewNameChange: (event) ->
+        @setState "newName": event.target.value
 
     handleCfChange: (event) ->
         @handleChange("cfLogin", event)
@@ -208,6 +212,7 @@ export default class UserBadge extends React.Component
             password: @state.password
             newPassword: @state.NewPassOne
             InformaticsPassword: @state.InformaticsPassword
+            newName: @state.newName
             )
         @props.handleReload()
         return z
@@ -220,7 +225,21 @@ export default class UserBadge extends React.Component
                 await @setState PassProblem: true
             await @setState loading:false
         if  (!@state.PassProblem)    
-            await @setState redact:!@state.redact     
+            await @setState 
+            redact:!@state.redact   
+            password: ''
+            redact: on
+            NeSovpad:false
+            Probel:false
+            clas: getClassStartingFromJuly(@props.user.graduateYear)
+            NewPassOne:''
+            NewPassTwo:''
+            loading:no
+            PassProblem:no
+            InformaticsPassword:''
+            InformaticsProblem: no
+            InformaticsLoading: no
+            newName:''  
 
     redactPan: () ->
             if(@state.loading)
@@ -246,6 +265,18 @@ export default class UserBadge extends React.Component
                             <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                         }
                             <form className={styles.form} onSubmit={@handleSubmit}>
+                                <div>
+                                    Новое имя
+                                        <div className={styles.divInput}>
+                                            <input
+                                            type="text"
+                                            name="newName"
+                                            className={styles.inp}
+                                            value={@state.newName}
+                                            onChange={@handlenewNameChange}
+                                            />
+                                        </div>
+                                </div>
                                 <div>
                                     Логин на codeforces
                                         <div className={styles.divInput}>

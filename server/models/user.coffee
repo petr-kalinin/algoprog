@@ -55,7 +55,7 @@ usersSchema.methods.upsert = () ->
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
     logger.debug "calculated chocos", @name, @chocos
-    @update({$set: {chocos: @chocos}})
+    @update({$set: {chocos: @chocos}})    
 
 usersSchema.methods.updateRatingEtc = ->
     res = await calculateRatingEtc this
@@ -99,6 +99,11 @@ usersSchema.methods.setGraduateYear = (graduateYear) ->
     logger.info "setting graduateYear id ", @_id, graduateYear
     await @update({$set: {"graduateYear": graduateYear}})
     @graduateYear = graduateYear
+
+usersSchema.methods.updateName = (name) ->
+    logger.info @name, "replaced with", name
+    await @update({$set: {"name": name}})
+    @name = name    
 
 usersSchema.methods.setBaseLevel = (level) ->
     await @update({$set: {"level.base": level}})
