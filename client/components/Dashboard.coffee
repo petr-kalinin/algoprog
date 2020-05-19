@@ -58,7 +58,7 @@ export default class Dashboard extends React.Component
                                 <td className={styles.td}>
                                     {
                                         if result.fullUser.cf?.login
-                                            <a href={"http://codeforces.com/submissions/" + result.fullUser.cf.login + "/contest/" + result.contestId}>
+                                            <a href={"https://codeforces.com/submissions/" + result.fullUser.cf.login + "/contest/" + result.contestId}>
                                                 {
                                                 delta = result.newRating - result.oldRating
                                                 if delta > 0

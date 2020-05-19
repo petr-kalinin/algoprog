@@ -5,7 +5,7 @@ import topic from "../lib/topic"
 
 topic_15978 = () ->
     return topic("Вещественные числа", "1Б: Задачи на вещественные числа", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/5_float.html\">Теория по вещественным числам (в основном про питон, но читать всем независимо от языка!)</a>"),
+        label("<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Теория по вещественным числам (в основном про питон, но читать всем независимо от языка!)</a>"),
         problem(74),
         problem(3612),
         problem(596),
@@ -16,7 +16,7 @@ topic_15978 = () ->
 
 topic_15973 = () ->
     return topic("Массивы", "1Б: Задачи на массивы", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
+        label("<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
         problem(63),
         problem(64),
         problem(66),
@@ -30,7 +30,7 @@ topic_15973 = () ->
 
 topic_15976 = () ->
     return topic("Символы и строки", "1Б: Задачи на символы и строки", [
-        label("<a href=\"http://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
+        label("<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
         problem(102),
         problem(103),
         problem(105),
