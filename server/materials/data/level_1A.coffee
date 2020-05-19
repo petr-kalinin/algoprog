@@ -12,7 +12,7 @@ topic_module_33219_0 = () ->
 topic_15960 = () ->
     return topic("Арифметические операции", "1А: Задачи на арифметические операции", [
         label("<a href=\"http://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
-        problem(2938),
+        problem({testSystem: "ejudge", contest: "2001", problem: "1", id: "2938"})
         problem(2939),
         problem(2937),
         problem(2936),
@@ -35,13 +35,6 @@ topic_15962 = () ->
         problem(294),
         problem(253),
         problem(11),
-        problem({testSystem: "ejudge", contest: "6", problem: "2", id: "e26"})
-        problem(12),
-        problem({testSystem: "ejudge", contest: "6", problem: "3", id: "e23"})
-        problem(13),
-        problem({testSystem: "ejudge", contest: "6", problem: "1"})
-        problem(14),
-        problem({testSystem: "ejudge", contest: "6", problem: "4"})
     ])
 
 module15969 = () ->

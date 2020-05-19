@@ -24,8 +24,8 @@ parseXml = (xml) ->
 export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
     STATUS_MAP:
         PR: "OK"
-        AC: "OK"
-        OK: "AC"
+        OK: "OK"
+        AC: "AC"
         IG: "IG"
         WA: "Неправильный ответ"
         PT: "Неправильный ответ"
@@ -64,10 +64,11 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             problem = problemMap[submit.Prob]
             user = submit.User_Login
             id = "#{@options.contest}r#{submit.Run_Id}p#{problem}"
-            if @options.ejudgeUser and @options.ejudgeUser != user
+            logger.info "Found ejudge submit #{id} #{user} #{problem}"
+            if @options.ejudgeUser != user
                 logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
                 continue
-            if @options.ejudgeProblem and @options.ejudgeProblem != problem
+            if @options.ejudgeProblem != problem
                 logger.info "Ignoring submit #{id} #{user} #{problem} because it is for a different problem (vs #{@options.ejudgeProblem})"
                 continue
             results.push new Submit(
