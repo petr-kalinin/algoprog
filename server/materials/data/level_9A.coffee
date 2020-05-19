@@ -5,13 +5,13 @@ import topic from "../lib/topic"
 
 topic_module_35700_0 = () ->
     return topic("LCA", null, [
-        label("<p><a href=\"https://aleks5d.github.io/blog_LCA_1.html\">Теория по LCA от Алексея Упирвицкого</a></p>\n<p>См. еще <a href=\"http://e-maxx.ru/algo/\">теорию на e-maxx (там несколько разделов)</a>.</p>"),
+        label("<p><a href=\"https://aleks5d.github.io/blog_LCA_1.html\">Теория по LCA от Алексея Упирвицкого</a></p>\n<p>См. еще <a href=\"https://e-maxx.ru/algo/\">теорию на e-maxx (там несколько разделов)</a>.</p>"),
         label("Задач тут пока нет :( Поищите на CF"),
     ])
 
 topic_35678 = () ->
     return topic("Дерево Фенвика", "9А: Задачи на дерево Фенвика", [
-        label("<p>См. <a href=\"http://e-maxx.ru/algo/fenwick_tree\">теорию на e-maxx</a>.</p>"),
+        label("<p>См. <a href=\"https://e-maxx.ru/algo/fenwick_tree\">теорию на e-maxx</a>.</p>"),
         label("В контесте ниже задачи можно решить и деревом отрезков (и часть из них уже была в соответствующем контесте), но решите теперь их деревом Фенвика."),
         problem(3317),
         problem(3568),

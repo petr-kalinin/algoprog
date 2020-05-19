@@ -4,7 +4,7 @@ import BlogPost from "../models/BlogPost"
 import logger from '../log'
 import awaitAll from '../../client/lib/awaitAll'
 
-URL = "http://blog.algoprog.ru/feed.xml"
+URL = "https://blog.algoprog.ru/feed.xml"
 
 download = () ->
     posts = await feedparser.parse(URL)
