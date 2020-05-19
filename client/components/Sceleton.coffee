@@ -99,7 +99,7 @@ BottomPanel = (props) ->
                         {" | "}
                         <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
                         {" | "}
-                        <a href="https://blog.algoprog.ru" target="_blank">Блог</a>
+                        <a href="http://blog.algoprog.ru" target="_blank">Блог</a>
                     </div>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>

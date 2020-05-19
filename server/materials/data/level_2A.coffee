@@ -24,14 +24,14 @@ module25629 = () ->
 
 topic_python_additional = () ->
     return topic("*Дополнительные замечания по питону (без контеста)", null, [
-        labelLink("https://notes.algoprog.ru/python_basics/6_functions.html", "Функции")
-        labelLink("https://notes.algoprog.ru/python_basics/7_files.html", "Работа с файлами")
-        labelLink("https://notes.algoprog.ru/python_basics/8_addtypes.html", "Еще разные полезные типы данных")
+        labelLink("http://notes.algoprog.ru/python_basics/6_functions.html", "Функции")
+        labelLink("http://notes.algoprog.ru/python_basics/7_files.html", "Работа с файлами")
+        labelLink("http://notes.algoprog.ru/python_basics/8_addtypes.html", "Еще разные полезные типы данных")
     ])
 
 topic_16020 = () ->
     return topic("Квадратичные сортировки", "2А: Задачи на квадратичные сортировки", [
-        label("Видеозаписи лекций ЛКШ по сортировкам: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии."),
+        label("Видеозаписи лекций ЛКШ по сортировкам: <a href=\"http://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"http://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии."),
         label("Внимание! В задаче \"Библиотечный метод\" надо выводить очередную строку только если состояние массива при этой вставке изменилось."),
         problem(230),
         problem(1436),
@@ -132,7 +132,7 @@ topic_25199 = () ->
 
 topic_16009 = () ->
     return topic("НОД, алгоритм Евклида", "2А: Задачи на НОД", [
-        label("<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Видеозаписи лекций ЛКШ параллели C' про НОД и алгоритм Евклида</a>"),
+        label("<a href=\"http://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Видеозаписи лекций ЛКШ параллели C' про НОД и алгоритм Евклида</a>"),
         problem(199),
         problem(27),
         problem(1838),
@@ -141,7 +141,7 @@ topic_16009 = () ->
 topic_16017 = () ->
     return topic("*Рекурсивный перебор", "2А: *Задачи на рекурсивный перебор", [
         label("Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 5А. Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас."),
-        label("<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»"),
+        label("<a href=\"http://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"http://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»"),
         link("https://informatics.msk.ru/mod/resource/view.php?id=16016", "Красивая картинка рекурсивного дерева"),
         problem(80),
         problem(84),

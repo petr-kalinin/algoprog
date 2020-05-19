@@ -6,7 +6,7 @@ colors = [[0, "gray"], [1200, "green"], [1400, "#03A89E"], [1600, "blue"],
          [1900, "#a0a"], [2100, "#FF8C00"], [2400, "red"]];
 
 getRating = (user) ->
-    href = "https://codeforces.com/api/user.info?handles=" + user.cf.login
+    href = "http://codeforces.com/api/user.info?handles=" + user.cf.login
     text = await request href
     data = JSON.parse(text)["result"]
     return data[0]["rating"]
@@ -18,7 +18,7 @@ timeScore = (date) ->
     return Math.pow(0.5, weeks)
 
 getActivityAndProgress = (user) ->
-    href = "https://codeforces.com/api/user.rating?handle=" + user.cf.login
+    href = "http://codeforces.com/api/user.rating?handle=" + user.cf.login
     text = await request href
     logger.trace "cf returns ", text
     data = JSON.parse(text)["result"]

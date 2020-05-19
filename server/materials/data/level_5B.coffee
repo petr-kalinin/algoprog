@@ -5,7 +5,7 @@ import topic from "../lib/topic"
 
 topic_17241 = () ->
     return topic("Куча", "5Б: Задачи на кучу", [
-        label("См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Куча\"<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Куча\""),
+        label("См. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Куча\"<br>\nСм. <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Куча\""),
         problem(755),
         problem(756),
         problem(489),
@@ -36,7 +36,7 @@ topic_19011 = () ->
 
 topic_17297 = () ->
     return topic("Продвинутый алгоритм Дейкстры", "5Б: Задачи на алгоритм Дейкстры с кучей", [
-        label("См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/JbeOdEYcQ2Y/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Алгоритм Дейкстры поиска кратчайших путей. Использование кучи.\""),
+        label("См. <a href=\"http://sis.khashaev.ru/2013/july/b-prime/JbeOdEYcQ2Y/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Алгоритм Дейкстры поиска кратчайших путей. Использование кучи.\""),
         problem(3494),
         problem(1745),
         problem(1087),

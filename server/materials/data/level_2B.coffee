@@ -93,12 +93,12 @@ module25835 = () ->
 
 topic_module_52198_0 = () ->
     return topic("Сложность алгоритмов (без контеста)", null, [
-        label("<a href=\"https://notes.algoprog.ru/complexity/index.html\">Теория про сложность алгоритмов (самое важное в разделе «O-обозначение для оценки сложности алгоритмов»; про P и NP читать не обязательно)</a>"),
+        label("<a href=\"http://notes.algoprog.ru/complexity/index.html\">Теория про сложность алгоритмов (самое важное в разделе «O-обозначение для оценки сложности алгоритмов»; про P и NP читать не обязательно)</a>"),
     ])
 
 topic_16044 = () ->
     return topic("Простые числа и разложение на множители", "2Б: Задачи на множители", [
-        label("См. <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Арифметические алгоритмы»"),
+        label("См. <a href=\"http://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Арифметические алгоритмы»"),
         problem(310),
         problem(623),
         problem(973),
@@ -335,9 +335,9 @@ module17576 = () ->
 
 topic_16038 = () ->
     return topic("Основы динамического программирования", "2Б: Простые задачи на ДП", [
-        label("<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)"),
+        label("<a href=\"http://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)"),
         module17576(),
-        label("<div style=\"display:inline-block;\">См. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Динамические программирование»<br>\nСм. также <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Динамические программирование» (в параллели B' уже есть и довольно продвинутые темы, которые вам пока не нужны)</div>"),
+        label("<div style=\"display:inline-block;\">См. также <a href=\"http://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Динамические программирование»<br>\nСм. также <a href=\"http://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Динамические программирование» (в параллели B' уже есть и довольно продвинутые темы, которые вам пока не нужны)</div>"),
         problem(201),
         problem(842),
         problem(843),
@@ -352,7 +352,7 @@ topic_16038 = () ->
 
 topic_16041 = () ->
     return topic("Стек, дек, очередь", "2Б: Задачи на стек, очередь и дек", [
-        label("Теории по этим темам тут пока нет, но очень много теории есть в интернете. Вот, например, что я нашел: <a href=\"https://algolist.manual.ru/ds/basic/\">раз</a>, <a href=\"https://brestprog.neocities.org/lections/datastructures.html\">два</a>."),
+        label("Теории по этим темам тут пока нет, но очень много теории есть в интернете. Вот, например, что я нашел: <a href=\"http://algolist.manual.ru/ds/basic/\">раз</a>, <a href=\"http://brestprog.neocities.org/lections/datastructures.html\">два</a>."),
         problem(54),
         problem(58),
         problem(61),

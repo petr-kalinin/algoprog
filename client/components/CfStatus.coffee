@@ -16,7 +16,7 @@ export default class CfStatus extends React.Component
             cfProgressColor = "#aa0000"
 
         return <span>
-                <a href={"https://codeforces.com/profile/" + cf.login}>
+                <a href={"http://codeforces.com/profile/" + cf.login}>
                     <span className={styles.color} style={color: cf.color}>
                         {cf.rating}
                     </span>

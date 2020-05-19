@@ -6,12 +6,12 @@ import topic from "../lib/topic"
 
 topic_module_33219_0 = () ->
     return topic("Как отлаживать программы", null, [
-        label("<a href=\"https://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
+        label("<a href=\"http://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
     ])
 
 topic_15960 = () ->
     return topic("Арифметические операции", "1А: Задачи на арифметические операции", [
-        label("<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
+        label("<a href=\"http://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
         problem(2938),
         problem(2939),
         problem(2937),
@@ -27,8 +27,8 @@ topic_15960 = () ->
 
 topic_15962 = () ->
     return topic("Условный оператор", "1А: Задачи на условный оператор", [
-        label("<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
-        label("<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
+        label("<a href=\"http://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
+        label("<a href=\"http://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
         problem(292),
         problem(293),
         problem(2959),
@@ -305,8 +305,8 @@ module15969 = () ->
 topic_15966 = () ->
     return topic("Циклы", "1А: Задачи на циклы", [
         label("""
-            <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
-            Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
+            <a href="http://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
+            Внутри теории про циклы есть также раздел <a href="http://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
             Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.
         """),
         module15969(),
