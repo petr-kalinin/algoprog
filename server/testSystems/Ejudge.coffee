@@ -186,7 +186,7 @@ export default class Ejudge extends TestSystem
         }, "serve-control")
         if data.includes("duplicated login name")
             throw "Can't registed ejudge user #{registeredUser.ejudgeUsername}: Duplicate login name"
-        await adminUser.download("http://ejudge.algoprog.ru/cgi-bin/new-master", {
+        await adminUser.download("#{@server}/cgi-bin/new-master", {
             method: 'POST',
             headers: {'Content-Type': "application/x-www-form-urlencoded"},
             form: {action_276: "Reload config files for ALL contests"},
