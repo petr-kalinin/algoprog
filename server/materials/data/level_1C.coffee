@@ -26,7 +26,7 @@ topic_15983 = () ->
     return topic("Задачи", "1В: Продвинутые задачи на арифметические операции: в них запрещается пользоваться if'ами и циклами", [
         module25368(),
         label("<br>"),
-        problem({testSystem: "ejudge", contest: "2003", problem: "1", id: "2946"})
+        problem({testSystem: "ejudge", contest: "2003", problem: "1", id: "2946"}),
         problem(2945),
         problem(506),
         problem(534),
@@ -34,7 +34,7 @@ topic_15983 = () ->
 
 contest_15985 = () ->
     return contest("1В: Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами", [
-        problem(297)
+        problem(297),
         problem(255),
         problem(258),
         problem(38),

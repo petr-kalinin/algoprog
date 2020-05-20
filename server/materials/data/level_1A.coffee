@@ -12,7 +12,7 @@ topic_module_33219_0 = () ->
 topic_15960 = () ->
     return topic("Арифметические операции", "1А: Задачи на арифметические операции", [
         label("<a href=\"http://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
-        problem(2938)
+        problem(2938),
         problem(2939),
         problem(2937),
         problem(2936),
