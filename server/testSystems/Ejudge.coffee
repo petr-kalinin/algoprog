@@ -25,7 +25,7 @@ class LoggedEjudgeUser
     @getUser: (server, contestId, username, password, isAdmin) ->
         key = "#{server}::#{contestId}::#{username}::#{password}::#{isAdmin}"
         if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
-            logger.info "Creating new EjudgeUser ", username, contestId
+            logger.info "Creating new EjudgeUser ", username, contestId, password.length
             newUser = new LoggedEjudgeUser(server, contestId, username, password, isAdmin)
             await newUser._login()
             userCache[key] =
@@ -60,7 +60,7 @@ class LoggedEjudgeUser
             timeout: 30 * 1000,
         })
         if not page.includes("Logout") and not page.includes("Выйти из системы")
-            logger.info "Can't log user #{@username} in"
+            logger.info "Can't log user #{@username} in. Page: #{page}"
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
         logger.info "Logged user #{@username} to prog #{prog}, SID=#{sidString[1]}"
