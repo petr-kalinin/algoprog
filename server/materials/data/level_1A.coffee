@@ -34,7 +34,6 @@ topic_15962 = () ->
         problem(2959),
         problem(294),
         problem(253),
-        problem(11),
     ])
 
 module15969 = () ->
