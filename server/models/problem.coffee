@@ -8,6 +8,7 @@ problemsSchema = new mongoose.Schema
     name: String
     tables: [String]
     level: String
+    testSystemData: mongoose.Schema.Types.Mixed
 
 problemsSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322

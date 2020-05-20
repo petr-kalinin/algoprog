@@ -111,6 +111,9 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         for s in allSubmits
             if s.outcome != "DR" and s.source == code
                 throw "duplicate"
+    problem = await Problem.findById(problemId)
+    if not problem
+        throw "Unknown problem #{problemId}"
     time = new Date
     timeStr = +time
     submit = new Submit
@@ -125,6 +128,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         comments: []
         results: []
         force: false
+        testSystemData: problem.testSystemData
     await submit.calculateHashes()
     await submit.upsert()
 
@@ -163,13 +167,10 @@ export default setupApi = (app) ->
         catch e
             res.json({error: e})
             return
-        #testSystem = await getTestSystem("informatics")
-        #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
         user = JSON.parse(JSON.stringify(req.user))
-        delete user.informaticsPassword
         res.json user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
