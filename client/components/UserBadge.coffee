@@ -6,11 +6,11 @@ deepEqual = require('deep-equal')
 import Grid from 'react-bootstrap/lib/Grid'
 import Button from 'react-bootstrap/lib/Button'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
-import Loader from '../components/Loader'
 
 import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
+import EditingUser from './EditingUser'
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
 
@@ -69,15 +69,7 @@ export default class UserBadge extends React.Component
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
         @updateResults = @updateResults.bind(this)
-        @redactPan = @redactPan.bind(this)
         @onTab = @onTab.bind(this)
-        @UserPeremen = @UserPeremen.bind(this)
-        @handleClassChange = @handleClassChange.bind(this)
-        @handleNewPassOneChange = @handleNewPassOneChange.bind(this)
-        @handleNewPassTwoChange = @handleNewPassTwoChange.bind(this)
-        @handleInformaticsPasswordChange = @handleInformaticsPasswordChange.bind(this)
-        @InformOpdate=@InformOpdate.bind(this)
-        @handlenewNameChange = @handlenewNameChange.bind(this)
 
 
     startState: (props) ->
@@ -102,45 +94,16 @@ export default class UserBadge extends React.Component
             InformaticsLoading: no
             newName:''
 
-    componentDidUpdate: (prevProps, prevState) ->
-        newState = @startState(@props)
-        oldStartState = @startState(prevProps)
-        if !deepEqual(newState, oldStartState)
-            @setState(newState)
-
     handleChange: (field, event) ->
         newState = deepcopy(@state)
         newState[field] = event.target.value
         @setState(newState)
 
-    handleNewPassOneChange:(event)->
-        await @handleChange("NewPassOne", event)
-        if((@state.NewPassOne==@state.NewPassTwo)==@state.NeSovpad)
-            @setState NeSovpad:!@state.NeSovpad
-        if((@state.NewPassOne.startsWith(' ') or @state.NewPassTwo.startsWith(' ') or @state.NewPassOne.endsWith(' ') or @state.NewPassTwo.endsWith(' '))!= @state.Probel)
-            @setState Probel:!@state.Probel
-
-        
-    handleNewPassTwoChange:(event)->
-        await @handleChange("NewPassTwo", event)   
-        if((@state.NewPassOne==@state.NewPassTwo)==@state.NeSovpad)
-            @setState NeSovpad:!@state.NeSovpad
-        if((@state.NewPassOne.startsWith(' ') or @state.NewPassTwo.startsWith(' ') or @state.NewPassOne.endsWith(' ') or @state.NewPassTwo.endsWith(' '))!= @state.Probel)
-            @setState Probel:!@state.Probel
-
-
-
     handleGraduateYearChange: (event) ->
         @handleChange("graduateYear", event)
 
-    handleClassChange: (event) ->
-        @handleChange("clas", event) 
-
     handleBlChange: (event) ->
         @handleChange("baseLevel", event)
-
-    handlenewNameChange: (event) ->
-        @setState "newName": event.target.value
 
     handleCfChange: (event) ->
         @handleChange("cfLogin", event)
@@ -160,7 +123,7 @@ export default class UserBadge extends React.Component
             @setState PassProblem:false       
 
     handleSubmit: (event) ->
-        await callApi('user/' + @props.user._id + '/set',
+        await callApi('user/' + @props.user._id + '/setAdmin',
             graduateYear: @state.graduateYear
             level:
                 base: @state.baseLevel
@@ -174,27 +137,6 @@ export default class UserBadge extends React.Component
         @props.handleReload()
         return
 
-    handleInformaticsPasswordChange: (event) ->
-        await @setState InformaticsPassword:event.target.value, InformaticsLoading:true
-
-    InformOpdate:() ->    
-        if(@state.InformaticsPassword!='')
-            try
-                data = await callApi "informatics/userData", {
-                    username: @props.me.informaticsUsername,
-                    password: @state.InformaticsPassword
-                }
-                if not ("name" of data)
-                    throw "Can't find name"
-                if(@state.InformaticsProblem)
-                    @setState InformaticsProblem:no
-            catch
-                if(!@state.InformaticsProblem)
-                    @setState InformaticsProblem:on
-        else
-            @setState InformaticsLoading:false       
-        @setState InformaticsLoading:false    
-
     handleKeyPressed: (e) ->
         if e.key == "Enter"
             @handleSubmit(e)
@@ -203,169 +145,9 @@ export default class UserBadge extends React.Component
         await callApi('updateResults/' + @props.user._id)
         @props.handleReload()
 
-    UserPeremen: () ->
-        z = await callApi('user/' + @props.user._id + '/setUser',
-            cf:
-                login: @state.cfLogin
-            password: @state.password
-            clas: @state.clas
-            password: @state.password
-            newPassword: @state.NewPassOne
-            InformaticsPassword: @state.InformaticsPassword
-            newName: @state.newName
-            )
-        @props.handleReload()
-        return z
-
     onTab: () ->  
-        if(!@state.redact)
-            await @setState loading:true, PassProblem: false
-            z =await @UserPeremen() 
-            if(z.passProblem)
-                await @setState PassProblem: true
-            await @setState loading:false
-        if  (!@state.PassProblem)    
-            await @setState 
-            redact:!@state.redact   
-            password: ''
-            redact: on
-            NeSovpad:false
-            Probel:false
-            clas: getClassStartingFromJuly(@props.user.graduateYear)
-            NewPassOne:''
-            NewPassTwo:''
-            loading:no
-            PassProblem:no
-            InformaticsPassword:''
-            InformaticsProblem: no
-            InformaticsLoading: no
-            newName:''  
-
-    redactPan: () ->
-            if(@state.loading)
-                <Loader/>
-            else
-                save = @state.NeSovpad or @state.Probel or @state.InformaticsProblem or @state.InformaticsLoading
-                <div>
-                    <h1>
-                        <UserName user={@props.user} noachieves={true}/>
-                    </h1>
-                    <blockquote>
-                        <div>Уровень: {@props.user.level.current}</div>
-                        { @props.me?.admin &&
-                            <div>
-                                Уровень на начало полугодия: {@props.user.level.start}
-                            </div> }
-                        <div>Рейтинг: {@props.user.rating}</div>
-                        <div>Активность: {@props.user.activity.toFixed(1)}</div>
-                        {
-                        if @props.user.cf?.rating
-                            <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
-                        else if @props.explain
-                            <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
-                        }
-                            <form className={styles.form} onSubmit={@handleSubmit}>
-                                <div>
-                                    Новое имя
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="text"
-                                            name="newName"
-                                            className={styles.inp}
-                                            value={@state.newName}
-                                            onChange={@handlenewNameChange}
-                                            />
-                                        </div>
-                                </div>
-                                <div>
-                                    Логин на codeforces
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="text"
-                                            name="newLogin"
-                                            className={styles.inp}
-                                            value={@state.cfLogin}
-                                            onChange={@handleCfChange}
-                                            />
-                                        </div>
-                                </div>
-                                <div>
-                                    Класс
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="text"
-                                            name="newgraduateYear"
-                                            className={styles.inp}
-                                            value={@state.clas}
-                                            onChange={@handleClassChange}
-                                            />
-                                        </div>
-                                </div>
-                                <div>
-                                    Пароль от informatics
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="password"
-                                            name="InformsticsPassword"
-                                            className="#{styles.inp} #{@state.InformaticsProblem && styles.pr}" 
-                                            value={@state.InformaticsPassword}
-                                            onChange={@handleInformaticsPasswordChange} 
-                                            onBlur = {@InformOpdate}
-                                            />
-                                            {@state.InformaticsProblem && <div className={styles.youHaveProblem}>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему</a> аккаунту на informatics</div>}
-                                        </div>
-                                </div>
-                                <div>
-                                    Новый пароль
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="password"
-                                            name="password"
-                                            className="#{styles.inp} #{(@state.NeSovpad or @state.Probel) && styles.pr}" 
-                                            value={@state.NewPassOne}
-                                            onChange={@handleNewPassOneChange}
-                                            />
-                                        </div>
-                                </div>
-                                <div>
-                                    Повторите пароль
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="password"
-                                            name="password"
-                                            className="#{styles.inp} #{(@state.NeSovpad or @state.Probel) && styles.pr}" 
-                                            value={@state.NewPassTwo}
-                                            onChange={@handleNewPassTwoChange}
-                                            />
-                                            {@state.NeSovpad && <div className={styles.youHaveProblem}>Пароли не совпадают</div>}
-                                            {@state.Probel && <div className={styles.youHaveProblem}>Пароль не может начинаться с пробела или заканчиваться на него</div>}
-                                        </div>
-                                </div>
-                                <div>
-                                    Старый проль
-                                        <div className={styles.divInput}>
-                                            <input
-                                            type="password"
-                                            name="password"
-                                            className="#{styles.inp} #{@state.PassProblem && styles.pr}" 
-                                            value={@state.password}
-                                            onChange={@handlePasswordChange}
-                                            />
-                                            {@state.PassProblem && <div className={styles.youHaveProblem}>Неправильный пароль</div>}
-                                        </div>
-                                </div>
-                            </form> 
-                        { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
-                        { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
-                    </blockquote>
-                    { !@props.me?.admin && @props.user._id-0 == @props.me?.informaticsId &&
-                    <Button onClick={@onTab} bsStyle="primary" bsSize="small" disabled={save}>Сохранить</Button>
-                    }
-                    { @props.explain &&
-                        <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
-                </div> 
-
-            
+        await @setState redact:!@state.redact 
+        @props.handleReload()              
 
     render: () ->
         if(@state.redact)
@@ -388,7 +170,7 @@ export default class UserBadge extends React.Component
                     if @props.user.cf?.rating
                         <div> Codeforces рейтинг: <CfStatus cf={@props.user.cf}/> </div>
                     else if @props.explain
-                        <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
+                            <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                     }
                     
 
@@ -470,11 +252,11 @@ export default class UserBadge extends React.Component
                     { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
                     { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
                 </blockquote>
-                { !@props.me?.admin && @props.user._id-0 == @props.me?.informaticsId &&
+                { !@props.me?.admin && +@props.user._id == @props.me?.informaticsId &&
                 <Button bsStyle="primary" bsSize="small" onClick={@onTab}>Редактировать профиль</Button>
                 }
                 { @props.explain &&
                     <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
             </div>
         else  
-            @redactPan() 
+            <EditingUser {...this.props} onTab={@onTab}/>

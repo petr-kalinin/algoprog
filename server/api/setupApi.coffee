@@ -178,8 +178,8 @@ export default setupApi = (app) ->
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
 
-    app.post '/api/user/:id/setUser', ensureLoggedIn, wrap (req, res) ->
-        if not req.params.id-0 == req.user.informaticsId-0
+    app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
+        if not +req.params.id == +req.user.informaticsId
             res.status(403).send('No permissions')
             return      
         now = new Date() 
@@ -205,16 +205,16 @@ export default setupApi = (app) ->
         newName = req.body.newName    
         user = await User.findById(req.params.id)    
         await user.setCfLogin cfLogin 
+        if(req.body.clas!='')
+            await user.setGraduateYear ((11-(+req.body.clas))+now.getFullYear() + (6 + now.getMonth()+1)/12)  
         if(newName!="")
             await user.updateName newName
         await User.updateUser(user._id, {})  
-        if(req.body.clas!='')
-            await user.setGraduateYear new Date((11-req.body.clas)+now.getFullYear())     
         res.send('OK')    
             
         
 
-    app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/user/:id/setAdmin', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return 
