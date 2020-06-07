@@ -3,57 +3,18 @@ deepcopy = require("deepcopy")
 moment = require('moment')
 deepEqual = require('deep-equal')
 
-import Grid from 'react-bootstrap/lib/Grid'
 import Button from 'react-bootstrap/lib/Button'
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 
 import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
 import EditingUser from './EditingUser'
+import EditingUserForAdmin from './EditingUserForAdmin' 
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
 
-import styles from './UserBadge.css'
-
-import { GROUPS } from '../lib/informaticsGroups'
-
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
-
-class GroupSelector extends React.Component
-    constructor: (props) ->
-        super(props)
-        @handleMove = @handleMove.bind(this)
-        @setDormant = @setDormant.bind(this)
-
-    handleMove: (name) ->
-        () =>
-            await callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
-            await @props.handleReload()
-    
-    setDormant: () ->
-        () =>
-            await callApi "setDormant/#{@props.user._id}", {}
-            await @props.handleReload()
-
-    render: () ->
-        <div>
-            {"Переместить в группу: "}
-            <ButtonGroup>
-                {
-                res = []
-                a = (el) -> res.push(el)
-                for name, id of GROUPS
-                    a <Button key={name} active={name==@props.user.userList} onClick={@handleMove(name)}>
-                        {name}
-                    </Button>
-                a <Button key={"dormant"} active={@props.user.dormant} onClick={@setDormant()}>dormant</Button>
-                res
-                }
-            </ButtonGroup>
-        </div>
         
-
 export default class UserBadge extends React.Component
     constructor: (props) ->
         super(props)
@@ -66,10 +27,9 @@ export default class UserBadge extends React.Component
         @handlePriceChange = @handlePriceChange.bind(this)
         @handleAchievesChange = @handleAchievesChange.bind(this)
         @handlePasswordChange = @handlePasswordChange.bind(this)
-        @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
         @updateResults = @updateResults.bind(this)
-        @onTab = @onTab.bind(this)
+        @submit = @submit.bind(this)
 
 
     startState: (props) ->
@@ -82,17 +42,6 @@ export default class UserBadge extends React.Component
             achieves: (props.user.achieves || []).join(' ')
             password: ''
             redact: on
-            NeSovpad:false
-            Probel:false
-            clas: getClassStartingFromJuly(@props.user.graduateYear)
-            NewPassOne:''
-            NewPassTwo:''
-            loading:no
-            PassProblem:no
-            InformaticsPassword:''
-            InformaticsProblem: no
-            InformaticsLoading: no
-            newName:''
 
     handleChange: (field, event) ->
         newState = deepcopy(@state)
@@ -118,24 +67,9 @@ export default class UserBadge extends React.Component
         @handleChange("achieves", event)
 
     handlePasswordChange: (event) ->
-        @handleChange("password", event)
-        if(@state.PassProblem)
-            @setState PassProblem:false       
+        @handleChange("password", event)     
 
-    handleSubmit: (event) ->
-        await callApi('user/' + @props.user._id + '/setAdmin',
-            graduateYear: @state.graduateYear
-            level:
-                base: @state.baseLevel
-            cf:
-                login: @state.cfLogin
-            paidTill: @state.paidTill
-            price: @state.price
-            achieves: @state.achieves
-            password: @state.password
-        )
-        @props.handleReload()
-        return
+    
 
     handleKeyPressed: (e) ->
         if e.key == "Enter"
@@ -145,13 +79,13 @@ export default class UserBadge extends React.Component
         await callApi('updateResults/' + @props.user._id)
         @props.handleReload()
 
-    onTab: () ->  
+    submit: () ->  
         await @setState redact:!@state.redact 
         @props.handleReload()              
 
     render: () ->
         if(@state.redact)
-            cls = @state.clas
+            cls = getClassStartingFromJuly(@props.user.graduateYear)
             <div>
                 <h1>
                     <UserName user={@props.user} noachieves={true}/>
@@ -172,91 +106,15 @@ export default class UserBadge extends React.Component
                     else if @props.explain
                             <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                     }
-                    
-
                     { @props.me?.admin &&
-                        <form className={styles.form} onSubmit={@handleSubmit}>
-                            <div>
-                                Год выпуска: <input
-                                    type="text"
-                                    name="newgraduateYear"
-                                    value={@state.graduateYear}
-                                    size="4"
-                                    onChange={@handleGraduateYearChange}
-                                    onKeyPress={@handleKeyPressed} />
-                            </div>
-                            <div>
-                                Базовый уровень: <input
-                                    type="text"
-                                    name="newLevel"
-                                    value={@state.baseLevel}
-                                    size="3"
-                                    onChange={@handleBlChange}
-                                    onKeyPress={@handleKeyPressed} />
-                            </div>
-                            <div>
-                                Cf login: <input
-                                    type="text"
-                                    name="newLogin"
-                                    value={@state.cfLogin}
-                                    size="20"
-                                    onChange={@handleCfChange}
-                                    onKeyPress={@handleKeyPressed} />
-                            </div>
-                            <div>
-                                Paid till (YYYY-MM-DD): <input
-                                    type="text"
-                                    name="newPaidTill"
-                                    value={@state.paidTill}
-                                    size="20"
-                                    onChange={@handlePaidTillChange}
-                                    onKeyPress={@handleKeyPressed} />
-                                {if @props.user.paidTill 
-                                    paidTill = moment(@props.user.paidTill).hours(23).minutes(59).seconds(59)
-                                    paidTillDate = paidTill.format("YYYY-MM-DD")
-                                    timeLeft = Math.floor(paidTill.diff(moment(), 'days', true))
-                                    " (на сервере: #{paidTillDate} = #{timeLeft} дней)"
-                                }
-                            </div>
-                            <div>
-                                Стоимость: <input
-                                    type="text"
-                                    name="newPrice"
-                                    value={@state.price}
-                                    size="20"
-                                    onChange={@handlePriceChange}
-                                    onKeyPress={@handleKeyPressed} />
-                                {if @props.user.price?
-                                    " (на сервере: #{@props.user.price})"
-                                }
-                            </div>
-                            <div>
-                                Ачивки: <input
-                                    type="text"
-                                    name="achieves"
-                                    value={@state.achieves}
-                                    size="20"
-                                    onChange={@handleAchievesChange}
-                                    onKeyPress={@handleKeyPressed} />
-                            </div>
-                            <div>
-                                Пароль: <input
-                                    type="text"
-                                    name="password"
-                                    value={@state.password}
-                                    size="20"
-                                    onChange={@handlePasswordChange}
-                                    onKeyPress={@handleKeyPressed} />
-                            </div>
-                        </form> }
-                    { @props.me?.admin && <GroupSelector user={@props.user} handleReload={@props.handleReload}/> }
-                    { @props.me?.admin && <Button onClick={@updateResults}>Update results</Button> }
+                        <EditingUserForAdmin {...this.props}/>
+                    }
                 </blockquote>
-                { !@props.me?.admin && +@props.user._id == @props.me?.informaticsId &&
-                <Button bsStyle="primary" bsSize="small" onClick={@onTab}>Редактировать профиль</Button>
+                {+@props.user._id == @props.me?.informaticsId &&
+                <Button bsStyle="primary" bsSize="small" onClick={@submit}>Редактировать профиль</Button>
                 }
                 { @props.explain &&
                     <a href={"/user/" + @props.user._id} target="_blank">Полные результаты</a> }
             </div>
         else  
-            <EditingUser {...this.props} onTab={@onTab}/>
+            <EditingUser {...this.props} submit={@submit}/>

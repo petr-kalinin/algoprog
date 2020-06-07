@@ -206,7 +206,7 @@ export default setupApi = (app) ->
         user = await User.findById(req.params.id)    
         await user.setCfLogin cfLogin 
         if(req.body.clas!='')
-            await user.setGraduateYear ((11-(+req.body.clas))+now.getFullYear() + (6 + now.getMonth()+1)/12)  
+            await user.setGraduateYear new Date(((11-(+req.body.clas))+now.getFullYear() + (6 + now.getMonth())/12))  
         if(newName!="")
             await user.updateName newName
         await User.updateUser(user._id, {})  

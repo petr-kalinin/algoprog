@@ -1,5 +1,4 @@
 React = require('react')
-moment = require('moment')
 
 import UserName from './UserName'
 import Button from 'react-bootstrap/lib/Button'
@@ -39,6 +38,7 @@ export default class EditingUser extends React.Component
             informaticsLoading: no
             passError:no
             newName:''
+            unknownError: no
 
     informOpdate:()->
         await @setState informaticsLoading:on
@@ -61,28 +61,31 @@ export default class EditingUser extends React.Component
         await @setState informaticsLoading:no  
 
     press:()->
-        await @setState loading:true
-        z = await callApi('user/' + @props.user._id + '/set',
-            cf:
-                login: @state.cfLogin
-            password: @state.password
-            clas: @state.clas
-            newPassword: @state.newPassOne
-            InformaticsPassword: @state.informaticsPassword
-            newName: @state.newName
-            )
-        @props.handleReload()
-        if(z.passProblem)
-            await @setState passError:on
-        else
-            @props.onTab()    
-        await @setState loading:false      
+        try
+            await @setState loading:true
+            z = await callApi('user/' + @props.user._id + '/set',
+                cf:
+                    login: @state.cfLogin
+                password: @state.password
+                clas: @state.clas
+                newPassword: @state.newPassOne
+                InformaticsPassword: @state.informaticsPassword
+                newName: @state.newName
+                )
+            @props.handleReload()
+            if(z.passProblem)
+                await @setState passError:on
+            else
+                @props.submit()    
+            await @setState loading:false      
+        catch    
+            @setState unknownError: on
 
     handleCfChange:(event) ->
         await @setState cfLogin: event.target.value
 
     handlePasswordChange:(event) ->
-        await @setState password: event.target.value    
+        await @setState password: event.target.value, passError: no
 
     handleNewPassTwoChange:(event)->
         await @setState newPassTwo: event.target.value 
@@ -106,7 +109,7 @@ export default class EditingUser extends React.Component
             noMatch = (@state.newPassOne!=@state.newPassTwo)
             whitespace = (@state.newPassOne.startsWith(' ') or @state.newPassTwo.startsWith(' ') or @state.newPassOne.endsWith(' ') or @state.newPassTwo.endsWith(' '))
             cls = @state.clas
-            save = noMatch or whitespace or @state.informaticsError or @state.informaticsLoading
+            battonSave = noMatch or whitespace or @state.informaticsError or @state.informaticsLoading
             <div>
                 <h1>
                     <UserName user={@props.user} noachieves={true}/>
@@ -216,7 +219,8 @@ export default class EditingUser extends React.Component
                                     {@state.passError && <div className={styles.youHaveProblem}>Неправильный пароль</div>}
                                 </div>
                         </div>
+                        {@state.unknownError && <div className={styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
                     </form> 
                 </blockquote>
-                <Button onClick={@press} bsStyle="primary" bsSize="small" disabled={save}> Сохранить</Button>
+                <Button onClick={@press} bsStyle="primary" bsSize="small" disabled={battonSave}> Сохранить</Button>
             </div> 
