@@ -11,6 +11,24 @@ import styles from './EditingUser.css'
 
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
+class MeInput extends React.Component
+    constructor: (props) ->
+        super(props)
+
+    render:()-> 
+            <div className={styles.divInput}>
+                <input
+                    type= {@props.type}
+                    name= {@props.name}
+                    className="#{styles.inp} #{@props.error && styles.error}"
+                    value= {@props.value}
+                    onChange= {@props.onChange}
+                    onBlur = {@props.onBlur}
+                />
+                {@props.oneError && <div className={styles.youHaveProblem}>{@props.oneError}</div>}
+                {@props.twoError && <div className={styles.youHaveProblem}>{@props.twoError}</div>}
+            </div>
+
 export default class EditingUser extends React.Component
     constructor: (props) ->
         super(props)
@@ -73,7 +91,7 @@ export default class EditingUser extends React.Component
                 newName: @state.newName
                 )
             @props.handleReload()
-            if(z.passProblem)
+            if(z.passError)
                 await @setState passError:on
             else
                 @props.submit()    
@@ -100,7 +118,7 @@ export default class EditingUser extends React.Component
         await @setState newName: event.target.value
 
     handleInformaticsPasswordChange:(event)->
-        await @setState informaticsPassword: event.target.value
+        await @setState informaticsPassword: event.target.value    
 
     render: () ->
         if @state.loading
@@ -168,17 +186,16 @@ export default class EditingUser extends React.Component
                         </div>
                         <div>
                             Пароль от informatics
-                                <div className={styles.divInput}>
-                                    <input
-                                        type="password"
-                                        name="InformsticsPassword"
-                                        className="#{styles.inp} #{@state.informaticsError && styles.error}" 
-                                        value={@state.informaticsPassword}
-                                        onChange={@handleInformaticsPasswordChange} 
-                                        onBlur = {@informOpdate}     
-                                    />
-                                    {@state.informaticsError && <div className={styles.youHaveProblem}>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему</a> аккаунту на informatics</div>}
-                                </div>
+                                <MeInput
+                                    type="password"
+                                    name="InformsticsPassword"
+                                    error = {@state.informaticsError}
+                                    value={@state.informaticsPassword}
+                                    onChange={@handleInformaticsPasswordChange} 
+                                    onBlur = {@informOpdate}  
+                                    oneError = {@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему</a> аккаунту на informatics</div>}  
+                                    twoError= {false} 
+                                />
                         </div>
                         <div>
                             Новый пароль
@@ -194,30 +211,27 @@ export default class EditingUser extends React.Component
                         </div>
                         <div>
                             Повторите пароль
-                                <div className={styles.divInput}>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        className="#{styles.inp} #{(noMatch or whitespace) && styles.error}" 
-                                        value={@state.newPassTwo}
-                                        onChange={@handleNewPassTwoChange}
-                                    />
-                                    {noMatch && <div className={styles.youHaveProblem}>Пароли не совпадают</div>}
-                                    {whitespace && <div className={styles.youHaveProblem}>Пароль не может начинаться с пробела или заканчиваться на него</div>}
-                                </div>
+                                <MeInput
+                                    type="password"
+                                    name="password"
+                                    error = {noMatch or whitespace}
+                                    value={@state.newPassTwo}
+                                    onChange={@handleNewPassTwoChange}
+                                    oneError = {noMatch && <div>Пароли не совпадают</div>}
+                                    twoError = {whitespace && <div>Пароль не может начинаться с пробела или заканчиваться на него</div>}
+                                />
                         </div>
                         <div>
                             Старый проль
-                                <div className={styles.divInput}>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        className="#{styles.inp} #{@state.passError && styles.error}" 
-                                        value={@state.password}
-                                        onChange={@handlePasswordChange}
-                                    />
-                                    {@state.passError && <div className={styles.youHaveProblem}>Неправильный пароль</div>}
-                                </div>
+                                <MeInput
+                                    type="password"
+                                    name="password"
+                                    error={@state.passError}
+                                    value={@state.password}
+                                    onChange={@handlePasswordChange}
+                                    oneError = {@state.passError && <div>Неправильный пароль</div>}
+                                    twoError = {false}
+                                />
                         </div>
                         {@state.unknownError && <div className={styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
                     </form> 

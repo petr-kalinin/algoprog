@@ -188,14 +188,13 @@ export default setupApi = (app) ->
         newPassword = req.body.newPassword 
         newInformaticPass=req.body.InformaticsPassword 
         if newPassword != ""
-            for registeredUser in registeredUsers
-                logger.info "Set user password", registeredUser.userKey()
-                try
-                    await registeredUser.changePassword(password, newPassword)  
-                    await registeredUser.save()
-                catch e
-                    res.json({passProblem:true})    
-                    return
+            logger.info "Set user password", req.user.userKey()
+            try
+                await req.user.changePassword(password, newPassword)  
+                await req.user.save()
+            catch e
+                res.json({passError:true})    
+                return
         if newInformaticPass != ""
             for registeredUser in registeredUsers
                 await registeredUser.apdateInformaticPassword(newInformaticPass)
