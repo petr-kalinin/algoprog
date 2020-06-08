@@ -4,7 +4,7 @@ passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 sha256 = require('sha256')
-fileType = require('file-type')
+FileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
@@ -36,8 +36,6 @@ import setOutcome from './setOutcome'
 
 import logger from '../log'
 
-import downloadMaterials from '../cron/downloadMaterials'
-import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
 import * as groups from '../informatics/informaticsGroups'
 
@@ -49,6 +47,8 @@ import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
+
+import downloadMaterials from '../materials/downloadMaterials'
 
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
 
@@ -111,6 +111,9 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         for s in allSubmits
             if s.outcome != "DR" and s.source == code
                 throw "duplicate"
+    problem = await Problem.findById(problemId)
+    if not problem
+        throw "Unknown problem #{problemId}"
     time = new Date
     timeStr = +time
     submit = new Submit
@@ -125,6 +128,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         comments: []
         results: []
         force: false
+        testSystemData: problem.testSystemData
     await submit.calculateHashes()
     await submit.upsert()
 
@@ -163,13 +167,10 @@ export default setupApi = (app) ->
         catch e
             res.json({error: e})
             return
-        #testSystem = await getTestSystem("informatics")
-        #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
         user = JSON.parse(JSON.stringify(req.user))
-        delete user.informaticsPassword
         res.json user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
@@ -404,11 +405,17 @@ export default setupApi = (app) ->
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
         if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
-            res.status(403).send('No permissions')
-            return
-        mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime || "text/plain"
+            if submit.quality == 0
+                res.status(403).send('No permissions')
+                return
+            result = await Result.findByUserAndTable(req.user?.userKey(), submit.problem)
+            if not result or result.solved <= 0
+                res.status(403).send('No permissions')
+                return
+        source = submit.sourceRaw || entities.decode(submit.source)
+        mimeType = FileType.fromBuffer(Buffer.from(source))?.mime || "text/plain"
         res.contentType(mimeType)
-        res.send(submit.sourceRaw)
+        res.send(source)
 
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.userKey()
@@ -615,13 +622,6 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         User.updateAllGraduateYears()
-        res.send('OK')
-
-    app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        downloadContests.run()
         res.send('OK')
 
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->

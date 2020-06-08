@@ -315,7 +315,7 @@ options =
 optionsForSimilar = 
     urls: (props) ->
         if props.submits and props.me?.admin
-            similar: "similarSubmits/#{props.submits[props.submits.length - 1]._id}"
+            similar: "similarSubmits/#{props.submits[props.submits.length - 1]?._id}"
         else
             {}
     propogateReload: true

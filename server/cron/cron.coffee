@@ -1,6 +1,5 @@
 import Cron from 'cron'
 import * as downloadSubmits from "./downloadSubmits"
-import * as downloadContests from "./downloadContests"
 import * as downloadBlog from './downloadBlog'
 import updateCf from "./updateCf"
 import submitSubmits from './submitSubmits'
@@ -11,7 +10,6 @@ import User from '../models/user'
 
 #downloadSubmits.runUntilIgnored()
 #downloadSubmits.runAll().catch((e) -> logger.error(e))
-#downloadContests.run().catch((e) -> logger.error(e))
 #updateCf().catch((e) -> logger.error(e))
 
 offset = (new Date().getTimezoneOffset()) / 60

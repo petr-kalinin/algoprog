@@ -19,6 +19,7 @@ import jobs from './cron/cron'
 import sleep from './lib/sleep'
 import setupMetrics from './metrics/metrics'
 import sendToGraphite from './metrics/graphite'
+import downloadMaterials from './materials/downloadMaterials'
 
 import notify from './metrics/notify'
 
@@ -46,6 +47,15 @@ if process.env["FORCE_HTTPS"]
 app.use(compression())
 
 configurePassport(app, db)
+
+###
+app.use (req, res, next) ->
+    if not req.user?.admin
+        res.status(503).send("На сервере проводятся технические работы. Ожидаемое время восстановления — вторая половина для 9 мая.")
+        return
+    next()
+###
+
 setupApi(app)
 
 
@@ -67,6 +77,8 @@ start = () ->
         await logger.info("My ip is " + JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"])
     catch
         logger.error("Can not determine my ip")
+
+    await downloadMaterials()
 
     app.listen port, () ->
         logger.info 'App listening on port ', port

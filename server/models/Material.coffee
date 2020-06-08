@@ -4,14 +4,13 @@ import logger from '../log'
 
 materialsSchema = new mongoose.Schema
     _id: String
-    order: Number
     type: String
-    indent: Number
     title: String
     content: String
     path: [{_id: String, title: String}]
     materials: [mongoose.Schema.Types.Mixed]  # will always be an array of dictionaries
     force: { type: Boolean, default: false }
+    testSystemData: mongoose.Schema.Types.Mixed
     
 
 materialsSchema.methods.upsert = () ->

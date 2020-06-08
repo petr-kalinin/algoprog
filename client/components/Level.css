@@ -5,3 +5,7 @@
     font-style: italic;
     white-space: pre-line;
 }
+.problemList {
+    margin-top: 1ex;
+    margin-bottom: 1ex;
+}
