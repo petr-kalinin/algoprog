@@ -6,7 +6,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 
 import callApi from '../lib/callApi'
 
-import styles from './UserBadge.css'
+import styles from './EditingUser.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
 
@@ -114,42 +114,42 @@ export default class EditingUserForAdmin extends React.Component
 
     render: () ->
         <div>
-            <form className={styles.form} onSubmit={@handleSubmit}>
+            <form className = {styles.form} onSubmit = {@handleSubmit}>
                 <div>
                     Год выпуска: <input
-                        type="text"
-                        name="newgraduateYear"
-                        value={@state.graduateYear}
-                        size="4"
-                        onChange={@handleGraduateYearChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "newgraduateYear"
+                        value = {@state.graduateYear}
+                        size = "4"
+                        onChange = {@handleGraduateYearChange}
+                        onKeyPress = {@handleKeyPressed} />
                 </div>
                 <div>
                     Базовый уровень: <input
-                        type="text"
-                        name="newLevel"
-                        value={@state.baseLevel}
-                        size="3"
-                        onChange={@handleBlChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "newLevel"
+                        value = {@state.baseLevel}
+                        size = "3"
+                        onChange = {@handleBlChange}
+                        onKeyPress = {@handleKeyPressed} />
                 </div>
                 <div>
                     Cf login: <input
-                        type="text"
-                        name="newLogin"
-                        value={@state.cfLogin}
-                        size="20"
-                        onChange={@handleCfChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "newLogin"
+                        value = {@state.cfLogin}
+                        size = "20"
+                        onChange = {@handleCfChange}
+                        onKeyPress = {@handleKeyPressed} />
                 </div>
                 <div>
                     Paid till (YYYY-MM-DD): <input
-                        type="text"
-                        name="newPaidTill"
-                        value={@state.paidTill}
-                        size="20"
-                        onChange={@handlePaidTillChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "newPaidTill"
+                        value = {@state.paidTill}
+                        size = "20"
+                        onChange = {@handlePaidTillChange}
+                        onKeyPress = {@handleKeyPressed} />
                     {if @props.user.paidTill 
                         paidTill = moment(@props.user.paidTill).hours(23).minutes(59).seconds(59)
                         paidTillDate = paidTill.format("YYYY-MM-DD")
@@ -159,35 +159,35 @@ export default class EditingUserForAdmin extends React.Component
                 </div>
                 <div>
                     Стоимость: <input
-                        type="text"
-                        name="newPrice"
-                        value={@state.price}
-                        size="20"
-                        onChange={@handlePriceChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "newPrice"
+                        value = {@state.price}
+                        size = "20"
+                        onChange = {@handlePriceChange}
+                        onKeyPress = {@handleKeyPressed} />
                     {if @props.user.price?
                         " (на сервере: #{@props.user.price})"
                     }
                 </div>
                 <div>
                     Ачивки: <input
-                        type="text"
-                        name="achieves"
-                        value={@state.achieves}
-                        size="20"
-                        onChange={@handleAchievesChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "achieves"
+                        value = {@state.achieves}
+                        size = "20"
+                        onChange = {@handleAchievesChange}
+                        onKeyPress = {@handleKeyPressed} />
                 </div>
                 <div>
                     Пароль: <input
-                        type="text"
-                        name="password"
-                        value={@state.password}
-                        size="20"
-                        onChange={@handlePasswordChange}
-                        onKeyPress={@handleKeyPressed} />
+                        type = "text"
+                        name = "password"
+                        value = {@state.password}
+                        size = "20"
+                        onChange = {@handlePasswordChange}
+                        onKeyPress = {@handleKeyPressed} />
                 </div>
+                <GroupSelector user = {@props.user} handleReload = {@props.handleReload}/> 
+                <Button onClick = {@updateResults}>Update results</Button>
             </form>
-            <GroupSelector user={@props.user} handleReload={@props.handleReload}/> 
-            <Button onClick={@updateResults}>Update results</Button>
         </div>    

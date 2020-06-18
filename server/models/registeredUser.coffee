@@ -43,7 +43,7 @@ registeredUserSchema.statics.findByKeyWithPassword = (key) ->
 registeredUserSchema.methods.userKey = () ->
     @informaticsId
 
-registeredUserSchema.methods.apdateInformaticPassword = (password) ->
+registeredUserSchema.methods.updateInformaticPassword = (password) ->
     logger.info "setting InformaticsPassword ", password 
     await @update({$set: {"informaticsPassword": password}})
     @informaticsPassword = password

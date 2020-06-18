@@ -1,15 +1,13 @@
 .form {
     margin: 0px;
     padding: 0px;
+    margin-bottom: 5px;
 }
 .divInput{
     width: 300px; 
 }
 
 .youHaveProblem{
-    background: #f2dede;
-    border: 1px solid #ebccd1; 
-    color: #a94442;
     width: 100%;
     margin-bottom: 1px;
 }
