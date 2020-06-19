@@ -9,12 +9,12 @@ import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
 import EditingUser from './EditingUser'
-import EditingUserForAdmin from './EditingUserForAdmin' 
+import EditingUserForAdmin from './EditingUserForAdmin'
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
 
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
-        
+
 export default class UserBadge extends React.Component
     constructor: (props) ->
         super(props)
@@ -27,9 +27,9 @@ export default class UserBadge extends React.Component
             graduateYear: props.user.graduateYear || '',
             redact: true
 
-    reload: () ->  
-        await @setState redact:!@state.redact 
-        @props.handleReload()              
+    reload: () ->
+        await @setState redact:!@state.redact
+        @props.handleReload()
 
     render: () ->
         cls = getClassStartingFromJuly(@props.user.graduateYear)
@@ -59,11 +59,10 @@ export default class UserBadge extends React.Component
                         {+@props.user._id == @props.me?.informaticsId && <EditingUser {...this.props} reload = {@reload}/>}
                         {@props.me?.admin && +@props.user._id != @props.me?.informaticsId && <Button bsStyle="primary" bsSize="small" onClick = {@reload}>Отмена</Button>}
                     </div>
-                else    
-                    if (+@props.user._id == @props.me?.informaticsId || @props.me?.admin) 
+                else
+                    if (+@props.user._id == @props.me?.informaticsId || @props.me?.admin)
                         <Button bsStyle="primary" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
             </blockquote>
             { @props.explain &&
                 <a href = {"/user/" + @props.user._id} target = "_blank">Полные результаты</a> }
         </div>
-            

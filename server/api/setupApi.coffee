@@ -184,24 +184,24 @@ export default setupApi = (app) ->
         if not +req.params.id == +req.user.informaticsId
             res.status(403).send('No permissions')
             return
-        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)    
-        password = req.body.password  
-        newPassword = req.body.newPassword 
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
+        password = req.body.password
+        newPassword = req.body.newPassword
         newInformaticsPassword=req.body.informaticsPassword
         informaticsUsername = req.body.informaticsUsername
         if newPassword != ""
             logger.info "Set user password", req.user.userKey()
             try
-                await req.user.changePassword(password, newPassword)  
+                await req.user.changePassword(password, newPassword)
                 await req.user.save()
             catch e
-                res.json({passError:true})    
+                res.json({passError:true})
                 return
         if newInformaticsPassword != ""
             for registeredUser in registeredUsers
                 try
                     userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
-                    result = await userq.getData()   
+                    result = await userq.getData()
                     if not ("name" of result)
                         throw "Can't find name"
                     await registeredUser.updateInformaticPassword(newInformaticsPassword)
@@ -209,16 +209,16 @@ export default setupApi = (app) ->
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
-        newName = req.body.newName    
-        user = await User.findById(req.params.id)    
-        await user.setCfLogin cfLogin 
+        newName = req.body.newName
+        user = await User.findById(req.params.id)
+        await user.setCfLogin cfLogin
         if(req.body.clas!='')
             await user.setGraduateYear (getYears(+req.body.clas))
         if(newName!="")
             await user.updateName newName
-        await User.updateUser(user._id, {})  
-        res.send('OK')    
-            
+        await User.updateUser(user._id, {})
+        res.send('OK')
+
     app.post '/api/user/:id/setAdmin', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

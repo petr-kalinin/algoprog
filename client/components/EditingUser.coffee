@@ -14,11 +14,11 @@ class Input extends React.Component
     constructor: (props) ->
         super(props)
 
-    render:()-> 
+    render:()->
         err = false
         mas = @props.errors?.map(
             (val)->
-                if val 
+                if val
                     err=true
                     <div className = "#{styles.youHaveProblem} alert-danger">{val}</div>
                     )
@@ -84,7 +84,7 @@ export default class EditingUser extends React.Component
                     await @setState informaticsError: true
         else
             if (@state.informaticsError)
-                await @setState informaticsError: false          
+                await @setState informaticsError: false
         await @setState informaticsLoading: false
 
     submit:()->
@@ -104,9 +104,9 @@ export default class EditingUser extends React.Component
             if (z.passError)
                 await @setState passError: true
             else
-                @props.reload()    
-            await @setState loading: false      
-        catch    
+                @props.reload()
+            await @setState loading: false
+        catch
             @setState unknownError: true
 
     handleCfChange:(event) ->
@@ -116,7 +116,7 @@ export default class EditingUser extends React.Component
         await @setState password: event.target.value, passError: false
 
     handleNewPassTwoChange:(event)->
-        await @setState newPassTwo: event.target.value 
+        await @setState newPassTwo: event.target.value
 
     handleNewPassOneChange:(event)->
         await @setState newPassOne: event.target.value
@@ -128,7 +128,7 @@ export default class EditingUser extends React.Component
         await @setState newName: event.target.value
 
     handleInformaticsPasswordChange:(event)->
-        await @setState informaticsPassword: event.target.value    
+        await @setState informaticsPassword: event.target.value
 
     render: () ->
         if @state.loading
@@ -173,8 +173,8 @@ export default class EditingUser extends React.Component
                                 type = "password"
                                 name = "InformsticsPassword"
                                 value = {@state.informaticsPassword}
-                                onChange = {@handleInformaticsPasswordChange} 
-                                onBlur = {@updateInformatics}  
+                                onChange = {@handleInformaticsPasswordChange}
+                                onBlur = {@updateInformatics}
                                 errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему</a> аккаунту на informatics</div>]}  
                             />
                     </div>
@@ -210,6 +210,6 @@ export default class EditingUser extends React.Component
                             />
                     </div>
                     {@state.unknownError && <div className = {styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
-                </form> 
+                </form>
                 <Button onClick = {@submit} bsStyle = "primary" bsSize = "small" disabled = {buttonActive}>Ок</Button>
-            </div> 
+            </div>

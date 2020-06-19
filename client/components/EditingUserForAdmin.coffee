@@ -21,7 +21,7 @@ class GroupSelector extends React.Component
         () =>
             await callApi "moveUserToGroup/#{@props.user._id}/#{name}", {}  # empty data to have it POSTed
             await @props.handleReload()
-    
+
     setDormant: () ->
         () =>
             await callApi "setDormant/#{@props.user._id}", {}
@@ -57,7 +57,6 @@ export default class EditingUserForAdmin extends React.Component
         @handleAchievesChange = @handleAchievesChange.bind(this)
         @handlePasswordChange = @handlePasswordChange.bind(this)
         @updateResults = @updateResults.bind(this)
-        
 
     startState: (props) ->
         return
@@ -81,11 +80,11 @@ export default class EditingUserForAdmin extends React.Component
             password: @state.password
         )
         @props.handleReload()
-        return        
-            
+        return
+
     handleKeyPressed: (e) ->
         if e.key == "Enter"
-            @handleSubmit(e)        
+            @handleSubmit(e)
 
     handleGraduateYearChange: (e) ->
         await @setState graduateYear: e.target.value
@@ -100,17 +99,17 @@ export default class EditingUserForAdmin extends React.Component
         await @setState paidTill:e.target.value
 
     handlePriceChange: (e) ->
-        await @setState price: e.target.value    
+        await @setState price: e.target.value
 
     handleAchievesChange: (e) ->
         await @setState achieves: e
 
     handlePasswordChange: (e) ->
-        await @setState password: e   
+        await @setState password: e
 
     updateResults: (e) ->
         await callApi('updateResults/' + @props.user._id)
-        @props.handleReload()     
+        @props.handleReload()
 
     render: () ->
         <div>
@@ -150,7 +149,7 @@ export default class EditingUserForAdmin extends React.Component
                         size = "20"
                         onChange = {@handlePaidTillChange}
                         onKeyPress = {@handleKeyPressed} />
-                    {if @props.user.paidTill 
+                    {if @props.user.paidTill
                         paidTill = moment(@props.user.paidTill).hours(23).minutes(59).seconds(59)
                         paidTillDate = paidTill.format("YYYY-MM-DD")
                         timeLeft = Math.floor(paidTill.diff(moment(), 'days', true))
@@ -187,7 +186,7 @@ export default class EditingUserForAdmin extends React.Component
                         onChange = {@handlePasswordChange}
                         onKeyPress = {@handleKeyPressed} />
                 </div>
-                <GroupSelector user = {@props.user} handleReload = {@props.handleReload}/> 
+                <GroupSelector user = {@props.user} handleReload = {@props.handleReload}/>
                 <Button onClick = {@updateResults}>Update results</Button>
             </form>
-        </div>    
+        </div>
