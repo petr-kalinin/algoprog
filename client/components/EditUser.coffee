@@ -6,7 +6,7 @@ import Loader from '../components/Loader'
 import CfStatus from './CfStatus'
 import callApi from '../lib/callApi'
 
-import styles from './EditingUser.css'
+import styles from './EditUser.css'
 
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 

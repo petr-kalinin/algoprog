@@ -8,8 +8,8 @@ import Button from 'react-bootstrap/lib/Button'
 import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
-import EditingUser from './EditingUser'
-import EditingUserForAdmin from './EditingUserForAdmin'
+import EditingUser from './EditUser'
+import EditingUserForAdmin from './EditUserForAdmin'
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
 

@@ -6,7 +6,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 
 import callApi from '../lib/callApi'
 
-import styles from './EditingUser.css'
+import styles from './EditUser.css'
 
 import { GROUPS } from '../lib/informaticsGroups'
 
