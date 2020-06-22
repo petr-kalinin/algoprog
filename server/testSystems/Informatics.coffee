@@ -23,7 +23,7 @@ class InformaticsUser extends TestSystemUser
         super()
 
     profileLink: () ->
-        "https://informatics.msk.ru/user/view.php?id=#{@id}&course=1"
+        "https://informatics.mccme.ru/user/view.php?id=#{@id}&course=1"
 
 
 userCache = {}
@@ -47,7 +47,7 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
-            page = await download("https://informatics.msk.ru/login/index.php", @jar, {
+            page = await download("https://informatics.mccme.ru/login/index.php", @jar, {
                 method: 'POST',
                 form: {
                     username: @username,
@@ -64,7 +64,7 @@ class LoggedInformaticsUser
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
 
     getId: () ->
-        page = await download("https://informatics.msk.ru/", @jar)
+        page = await download("https://informatics.mccme.ru/", @jar)
         document = (new JSDOM(page)).window.document
         el = document.getElementsByClassName("logininfo")
         if el.length == 0 or el[0].children.length == 0
@@ -92,7 +92,7 @@ class LoggedInformaticsUser
         return result
 
     _runSubmit: (problemId, addParams) ->
-        page = await download("https://informatics.msk.ru/py/problem/#{problemId}/submit", @jar, {
+        page = await download("https://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
             addParams...,
             method: 'POST',
             followAllRedirects: true,
@@ -124,7 +124,7 @@ class LoggedInformaticsUser
         })
 
 export default class Informatics extends TestSystem
-    BASE_URL = "https://informatics.msk.ru"
+    BASE_URL = "https://informatics.mccme.ru"
 
     _informaticsProblemId: (problemId) ->
         problemId.substring(1)
@@ -186,7 +186,7 @@ export default class Informatics extends TestSystem
         await @_getAdmin()
 
     downloadProblem: (options) ->
-        href = "https://informatics.msk.ru/moodle/mod/statements/view3.php?chapterid=#{options.id}"
+        href = "https://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=#{options.id}"
         page = await downloadLimited(href, {timeout: 15 * 1000})
         document = (new JSDOM(page, {url: href})).window.document
         submit = document.getElementById('submit')
