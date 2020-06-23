@@ -55,6 +55,8 @@ submitsSchema.methods.calculateHashes = () ->
     await @upsert()
 
 submitsSchema.methods.equivalent = (other) ->
+    if @user == "394891"
+        loger.log "Compare submits ", @this, other
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
