@@ -65,7 +65,6 @@ submitsSchema.methods.equivalent = (other) ->
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
         and @source == other.source \
-        and @sourceRaw == other.sourceRaw \
         and @language == other.language
 
 submitsSchema.statics.findByUser = (userId) ->
