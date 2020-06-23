@@ -65,7 +65,9 @@ submitsSchema.methods.equivalent = (other) ->
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
         and @source == other.source \
-        and @language == other.language
+        and (@language == other.language \
+             or Math.abs(@time - other.time) < 1500 \
+             or Math.abs(Math.abs(@time - other.time) - 3 * 60 * 60 * 1000) < 1500)
 
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
