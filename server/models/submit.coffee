@@ -57,8 +57,8 @@ submitsSchema.methods.calculateHashes = () ->
 submitsSchema.methods.equivalent = (other) ->
     if @user == "394891"
         logger.log "Compare submits ", @_id, other._id, @comments.length > 0, @outcome == "AC" or @outcome == "IG" or @outcome == "DQ", @force, @user == other.user, @problem == other.problem, outcomeType(@outcome) == outcomeType(other.outcome), @source.replace("\r", "") == other.source.replace("\r", ""), Math.abs(@time - other.time)
-        logger.log @source.replace("\r", "")
-        logger.log other.source.replace("\r", "")
+        logger.log "s1=`#{@source}` `#{@source.replace("\r", "")}`"
+        logger.log "s2=`#{other.source}`, `#{other.source.replace("\r", "")}`"
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
