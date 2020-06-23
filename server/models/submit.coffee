@@ -62,10 +62,15 @@ submitsSchema.methods.equivalent = (other) ->
         s1 = @source.replace("\r", "")
         s2 = other.source.replace("\r", "")
         logger.log "s1,s2.length=", s1.length, s2.length, @_id, other._id
+        ll = ""
+        ll += "s1,s2.length=#{s1.length}, #{s2.length} "
         for i in [0..s1.length - 1]
             logger.log i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
+            ll += "[#{i}, #{s1.charCodeAt(i)}, #{s2.charCodeAt(i)}]"
             if s1.charAt(i) != s2.charAt(i)
-                logger.log "!!!", i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
+                logger.log "bad", i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
+                ll += "^"
+        logger.log "ll=", ll
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
