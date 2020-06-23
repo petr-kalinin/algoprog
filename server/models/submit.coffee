@@ -4,6 +4,7 @@ import Hash from './Hash'
 import User from './user'
 
 import calculateHashes from '../hashes/calculateHashes'
+import normalizeCode from '../lib/normalizeCode'
 
 import awaitAll from '../../client/lib/awaitAll'
 import logger from '../log'
@@ -56,11 +57,9 @@ submitsSchema.methods.calculateHashes = () ->
 
 submitsSchema.methods.equivalent = (other) ->
     if @user == "394891" and @_id == "18336986p2951" and other._id == "2088r683956p2951"
-        logger.log "Compare submits ", @_id, other._id, @comments.length > 0, @outcome == "AC" or @outcome == "IG" or @outcome == "DQ", @force, @user == other.user, @problem == other.problem, outcomeType(@outcome) == outcomeType(other.outcome), @source.replace("\r", "") == other.source.replace("\r", ""), Math.abs(@time - other.time)
-        logger.log "s1=`#{Buffer.from(@source)}` `#{Buffer.from(@source.replace("\r", ""))}`"
-        logger.log "s2=`#{Buffer.from(other.source)}`, `#{Buffer.from(other.source.replace("\r", ""))}`"
-        s1 = @source.replace("\r", "")
-        s2 = other.source.replace("\r", "")
+        logger.log "Compare submits ", @_id, other._id, @comments.length > 0, @outcome == "AC" or @outcome == "IG" or @outcome == "DQ", @force, @user == other.user, @problem == other.problem, outcomeType(@outcome) == outcomeType(other.outcome), @source.replace(/\r/g, "") == other.source.replace(/\r/g, ""), Math.abs(@time - other.time)
+        s1 = normalizeCode(@source)
+        s2 = normalizeCode(other.source)
         logger.log "s1,s2.length=", s1.length, s2.length, @_id, other._id
         ll = ""
         ll += "s1,s2.length=#{s1.length}, #{s2.length} "
@@ -80,7 +79,7 @@ submitsSchema.methods.equivalent = (other) ->
     return @user == other.user \
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
-        and @source.replace("\r", "") == other.source.replace("\r", "") \
+        and normalizeCode(@source) == normalizeCode(other.source) \
         and (@language == other.language \
              or Math.abs(@time - other.time) < 1500 \
              or Math.abs(Math.abs(@time - other.time) - 3 * 60 * 60 * 1000) < 1500)
