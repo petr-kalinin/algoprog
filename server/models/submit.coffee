@@ -64,7 +64,7 @@ submitsSchema.methods.equivalent = (other) ->
         logger.log "s1,s2.length=", s1.length, s2.length, @_id, other._id
         for i in [0..s1.length - 1]
             if s1.charAt(i) != s2.charAt(i)
-                logger.log "!!!", i, , @_id, other._id
+                logger.log "!!!", i, @_id, other._id
                 break
     if @comments.length > 0
         return false
