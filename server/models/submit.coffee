@@ -59,6 +59,13 @@ submitsSchema.methods.equivalent = (other) ->
         logger.log "Compare submits ", @_id, other._id, @comments.length > 0, @outcome == "AC" or @outcome == "IG" or @outcome == "DQ", @force, @user == other.user, @problem == other.problem, outcomeType(@outcome) == outcomeType(other.outcome), @source.replace("\r", "") == other.source.replace("\r", ""), Math.abs(@time - other.time)
         logger.log "s1=`#{Buffer.from(@source)}` `#{Buffer.from(@source.replace("\r", ""))}`"
         logger.log "s2=`#{Buffer.from(other.source)}`, `#{Buffer.from(other.source.replace("\r", ""))}`"
+        s1 = @source.replace("\r", "")
+        s2 = other.source.replace("\r", "")
+        logger.log "s1,s2.length=", s1.length, s2.length
+        for i in [0..s1.length - 1]
+            if s1.charAt(i) != s2.charAt(i)
+                print("!!!", i)
+                break
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
