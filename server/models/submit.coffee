@@ -66,7 +66,7 @@ submitsSchema.methods.equivalent = (other) ->
     return @user == other.user \
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
-        and @source == other.source \
+        and @source.replace("\r", "") == other.source.replace("\r", "") \
         and (@language == other.language \
              or Math.abs(@time - other.time) < 1500 \
              or Math.abs(Math.abs(@time - other.time) - 3 * 60 * 60 * 1000) < 1500)
