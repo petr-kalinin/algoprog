@@ -55,7 +55,7 @@ submitsSchema.methods.calculateHashes = () ->
     await @upsert()
 
 submitsSchema.methods.equivalent = (other) ->
-    if @user == "394891"
+    if @user == "394891" and @_id == "18336986p2951" and other._id == "2088r683956p2951"
         logger.log "Compare submits ", @_id, other._id, @comments.length > 0, @outcome == "AC" or @outcome == "IG" or @outcome == "DQ", @force, @user == other.user, @problem == other.problem, outcomeType(@outcome) == outcomeType(other.outcome), @source.replace("\r", "") == other.source.replace("\r", ""), Math.abs(@time - other.time)
         logger.log "s1=`#{Buffer.from(@source)}` `#{Buffer.from(@source.replace("\r", ""))}`"
         logger.log "s2=`#{Buffer.from(other.source)}`, `#{Buffer.from(other.source.replace("\r", ""))}`"
@@ -63,9 +63,9 @@ submitsSchema.methods.equivalent = (other) ->
         s2 = other.source.replace("\r", "")
         logger.log "s1,s2.length=", s1.length, s2.length, @_id, other._id
         for i in [0..s1.length - 1]
+            logger.log i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
             if s1.charAt(i) != s2.charAt(i)
-                logger.log "!!!", i, @_id, other._id
-                break
+                logger.log "!!!", i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
