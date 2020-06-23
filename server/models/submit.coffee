@@ -56,7 +56,7 @@ submitsSchema.methods.calculateHashes = () ->
 
 submitsSchema.methods.equivalent = (other) ->
     if @user == "394891"
-        loger.log "Compare submits ", @this, other
+        logger.log "Compare submits ", @this, other, Math.abs(@time - other.time)
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
