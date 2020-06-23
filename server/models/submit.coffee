@@ -56,20 +56,6 @@ submitsSchema.methods.calculateHashes = () ->
     await @upsert()
 
 submitsSchema.methods.equivalent = (other) ->
-    if @user == "394891" and @_id == "18336986p2951" and other._id == "2088r683956p2951"
-        logger.log "Compare submits ", @_id, other._id, @comments.length > 0, @outcome == "AC" or @outcome == "IG" or @outcome == "DQ", @force, @user == other.user, @problem == other.problem, outcomeType(@outcome) == outcomeType(other.outcome), @source.replace(/\r/g, "") == other.source.replace(/\r/g, ""), Math.abs(@time - other.time)
-        s1 = normalizeCode(@source)
-        s2 = normalizeCode(other.source)
-        logger.log "s1,s2.length=", s1.length, s2.length, @_id, other._id
-        ll = ""
-        ll += "s1,s2.length=#{s1.length}, #{s2.length} "
-        for i in [0..s1.length - 1]
-            logger.log i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
-            ll += "[#{i}, #{s1.charCodeAt(i)}, #{s2.charCodeAt(i)}]"
-            if s1.charAt(i) != s2.charAt(i)
-                logger.log "bad", i, s1.charCodeAt(i), s2.charCodeAt(i), @_id, other._id
-                ll += "^"
-        logger.log "ll=", ll
     if @comments.length > 0
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
