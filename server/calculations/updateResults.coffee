@@ -74,7 +74,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         if submit.outcome == "IG"
             if solved == 0
                 ignored = 1
-                ok = 0
+            ok = 0
             continue
         # any other result resets ignored flag
         ignored = 0
