@@ -30,6 +30,7 @@ class Input extends React.Component
                 value = {@props.value}
                 onChange = {@props.onChange}
                 onBlur = {@props.onBlur}
+                onKeyPress = {@props.onKeyPress}
             />
             {if !@props.hideErrors
                 <div>
@@ -51,6 +52,7 @@ export default class EditingUser extends React.Component
         @handleNewPassTwoChange = @handleNewPassTwoChange.bind(this)
         @handlePasswordChange = @handlePasswordChange.bind(this)
         @submit = @submit.bind(this)
+        @handleKeyPressed = @handleKeyPressed.bind(this)
 
     startState: (props) ->
         return
@@ -66,6 +68,10 @@ export default class EditingUser extends React.Component
             passError: false
             newName: ''
             unknownError: false
+
+    handleKeyPressed: (e)->
+        if e.key == "Enter"
+            @submit()
 
     updateInformatics: ()->
         await @setState informaticsLoading: true
@@ -144,6 +150,7 @@ export default class EditingUser extends React.Component
                                 name = "newName"
                                 value = {@state.newName}
                                 onChange = {(@handleNewNameChange)}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <div>
@@ -153,6 +160,7 @@ export default class EditingUser extends React.Component
                                 name = "newLogin"
                                 value = {@state.cfLogin}
                                 onChange = {@handleCfChange}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <div>
@@ -162,6 +170,7 @@ export default class EditingUser extends React.Component
                                 name = "newClass"
                                 value = {@state.clas}
                                 onChange = {@handleClassChange}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <div>
@@ -172,7 +181,7 @@ export default class EditingUser extends React.Component
                                 value = {@state.informaticsPassword}
                                 onChange = {@handleInformaticsPasswordChange}
                                 onBlur = {@updateInformatics}
-                                errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему аккаунту на informatics</a></div>]}  
+                                errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему аккаунту на informatics</a></div>]}
                             />
                     </div>
                     <div>
@@ -183,6 +192,7 @@ export default class EditingUser extends React.Component
                                 value =  {@state.password}
                                 onChange = {@handlePasswordChange}
                                 errors = {[@state.passError && "Неправильный пароль"]}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <div>
@@ -194,6 +204,7 @@ export default class EditingUser extends React.Component
                                 onChange = {@handleNewPassOneChange}
                                 hideErrors = {true}
                                 errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <div>
@@ -204,6 +215,7 @@ export default class EditingUser extends React.Component
                                 value = {@state.newPassTwo}
                                 onChange = {@handleNewPassTwoChange}
                                 errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     {@state.unknownError && <div className = {styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
