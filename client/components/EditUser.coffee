@@ -14,32 +14,32 @@ class Input extends React.Component
     constructor: (props) ->
         super(props)
 
-    render:()->
+    render: ()->
         err = false
-        mas = @props.errors?.map(
+        errors = @props.errors?.map(
             (val)->
                 if val
-                    err=true
                     <div className = "#{styles.youHaveProblem} alert-danger">{val}</div>
                     )
+        if @props.errors? then err = true for q in errors when q
         <div className = {styles.divInput}>
             <input
                 type = {@props.type}
                 name = {@props.name}
-                className = "#{styles.inp} #{err && styles.error}"
+                className = "#{styles.inp} #{err &&  styles.error}"
                 value = {@props.value}
                 onChange = {@props.onChange}
                 onBlur = {@props.onBlur}
             />
-            {if !@props.noActive
+            {if !@props.hideErrors
                 <div>
-                    {mas}
+                    {errors}
                 </div>
                 }
         </div>
 
 export default class EditingUser extends React.Component
-    constructor:(props) ->
+    constructor: (props) ->
         super(props)
         @state = @startState(props)
         @handleNewNameChange = @handleNewNameChange.bind(this)
@@ -52,7 +52,7 @@ export default class EditingUser extends React.Component
         @handlePasswordChange = @handlePasswordChange.bind(this)
         @submit = @submit.bind(this)
 
-    startState:(props) ->
+    startState: (props) ->
         return
             cfLogin: props.user.cf?.login || ''
             password: ''
@@ -67,7 +67,7 @@ export default class EditingUser extends React.Component
             newName: ''
             unknownError: false
 
-    updateInformatics:()->
+    updateInformatics: ()->
         await @setState informaticsLoading: true
         if (@state.informaticsPassword != '')
             try
@@ -77,19 +77,16 @@ export default class EditingUser extends React.Component
                 }
                 if not ("name" of data)
                     throw "Can't find name"
-                if (@state.informaticsError)
                     await @setState informaticsError: false
             catch
-                if (!@state.informaticsError)
                     await @setState informaticsError: true
         else
-            if (@state.informaticsError)
                 await @setState informaticsError: false
         await @setState informaticsLoading: false
 
-    submit:()->
+    submit: ()->
         try
-            await @setState loading:true
+            await @setState loading: true
             z = await callApi('user/' + @props.user._id + '/set',
                 cf:
                     login: @state.cfLogin
@@ -109,25 +106,25 @@ export default class EditingUser extends React.Component
         catch
             @setState unknownError: true
 
-    handleCfChange:(event) ->
+    handleCfChange: (event) ->
         await @setState cfLogin: event.target.value
 
-    handlePasswordChange:(event) ->
+    handlePasswordChange: (event) ->
         await @setState password: event.target.value, passError: false
 
-    handleNewPassTwoChange:(event)->
+    handleNewPassTwoChange: (event)->
         await @setState newPassTwo: event.target.value
 
-    handleNewPassOneChange:(event)->
+    handleNewPassOneChange: (event)->
         await @setState newPassOne: event.target.value
 
-    handleClassChange:(event)->
+    handleClassChange: (event)->
         await @setState clas: event.target.value
 
-    handleNewNameChange:(event)->
+    handleNewNameChange: (event)->
         await @setState newName: event.target.value
 
-    handleInformaticsPasswordChange:(event)->
+    handleInformaticsPasswordChange: (event)->
         await @setState informaticsPassword: event.target.value
 
     render: () ->
@@ -137,7 +134,7 @@ export default class EditingUser extends React.Component
             noMatch = (@state.newPassOne != @state.newPassTwo)
             whitespace = (@state.newPassOne.startsWith(' ') or @state.newPassTwo.startsWith(' ') or @state.newPassOne.endsWith(' ') or @state.newPassTwo.endsWith(' '))
             cls = @state.clas
-            buttonActive = noMatch or whitespace or @state.informaticsError or @state.informaticsLoading
+            buttonDisabled = noMatch or whitespace or @state.informaticsError or @state.informaticsLoading
             <div>
                 <form className = {styles.form}>
                     <div>
@@ -162,7 +159,7 @@ export default class EditingUser extends React.Component
                         Класс
                             <Input
                                 type = "number"
-                                name = "newgraduateYear"
+                                name = "newClass"
                                 value = {@state.clas}
                                 onChange = {@handleClassChange}
                             />
@@ -175,7 +172,7 @@ export default class EditingUser extends React.Component
                                 value = {@state.informaticsPassword}
                                 onChange = {@handleInformaticsPasswordChange}
                                 onBlur = {@updateInformatics}
-                                errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему</a> аккаунту на informatics</div>]}  
+                                errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему аккаунту на informatics</a></div>]}  
                             />
                     </div>
                     <div>
@@ -195,7 +192,7 @@ export default class EditingUser extends React.Component
                                 name = "password"
                                 value = {@state.newPassOne}
                                 onChange = {@handleNewPassOneChange}
-                                noActive = {true}
+                                hideErrors = {true}
                                 errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
                             />
                     </div>
@@ -211,5 +208,5 @@ export default class EditingUser extends React.Component
                     </div>
                     {@state.unknownError && <div className = {styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
                 </form>
-                <Button onClick = {@submit} bsStyle = "primary" bsSize = "small" disabled = {buttonActive}>Ок</Button>
+                <Button onClick = {@submit} bsStyle = "primary" bsSize = "small" disabled = {buttonDisabled}>Ок</Button>
             </div>

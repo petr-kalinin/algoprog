@@ -24,11 +24,10 @@ export default class UserBadge extends React.Component
 
     startState: (props) ->
         return
-            graduateYear: props.user.graduateYear || '',
-            redact: true
+            editing: true
 
     reload: () ->
-        await @setState redact:!@state.redact
+        await @setState editing:!@state.editing
         @props.handleReload()
 
     render: () ->
@@ -53,7 +52,7 @@ export default class UserBadge extends React.Component
                 else if @props.explain
                         <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                 }
-                {if(!@state.redact)
+                {if(!@state.editing)
                     <div>
                         {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
                         {+@props.user._id == @props.me?.informaticsId && <EditingUser {...this.props} reload = {@reload}/>}

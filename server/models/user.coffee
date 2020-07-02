@@ -103,7 +103,7 @@ usersSchema.methods.setGraduateYear = (graduateYear) ->
 usersSchema.methods.updateName = (name) ->
     logger.info "Set name for user", @_id,": old name " ,@name,", new name " ,name
     await @update({$set: {"name": name}})
-    @name = name    
+    @name = name
 
 usersSchema.methods.setBaseLevel = (level) ->
     await @update({$set: {"level.base": level}})

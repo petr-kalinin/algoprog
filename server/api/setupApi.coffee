@@ -46,7 +46,7 @@ import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
-import getYears from '../lib/сlassToGraduateYear'
+import {getYears} from '../../client/lib/graduateYearToClass'
 import sleep from '../lib/sleep'
 
 import downloadMaterials from '../materials/downloadMaterials'
@@ -60,6 +60,7 @@ import {UserNameRaw} from '../../client/components/UserName'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
+
 
 PASSWORD = process.env["TINKOFF_PASSWORD"]
 
@@ -198,14 +199,14 @@ export default setupApi = (app) ->
                 res.json({passError:true})
                 return
         if newInformaticsPassword != ""
-            for registeredUser in registeredUsers
-                try
-                    userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
-                    result = await userq.getData()
-                    if not ("name" of result)
-                        throw "Can't find name"
-                    await registeredUser.updateInformaticPassword(newInformaticsPassword)
-                catch
+            try
+                for registeredUser in registeredUsers
+                        userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
+                        result = await userq.getData()
+                        if not ("name" of result)
+                            throw "Can't find name"
+                        await registeredUser.updateInformaticPassword(newInformaticsPassword)
+            catch
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
@@ -213,7 +214,7 @@ export default setupApi = (app) ->
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
         if(req.body.clas!='')
-            await user.setGraduateYear (getYears(+req.body.clas))
+            await user.setGraduateYear (getYears(+req.body.clas)).getFullYear()
         if(newName!="")
             await user.updateName newName
         await User.updateUser(user._id, {})
