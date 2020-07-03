@@ -51,7 +51,7 @@ export default class InformaticsUser
         @promises = []
 
     doLogin: () ->
-        page = await download("https://informatics.mccme.ru/login/index.php", @jar, {
+        page = await download("https://informatics.msk.ru/login/index.php", @jar, {
             method: 'POST',
             form: {
                 username: @username,
@@ -91,7 +91,7 @@ export default class InformaticsUser
         return result
 
     getData: () ->
-        page = await download("https://informatics.mccme.ru/user/edit.php?id=#{@id}", @jar)
+        page = await download("https://informatics.msk.ru/user/edit.php?id=#{@id}", @jar)
         document = (new JSDOM(page)).window.document
         fields = ["id_lastname",
                   "id_firstname",
@@ -136,7 +136,7 @@ export default class InformaticsUser
             currentYearStart: getCurrentYearStart()
 
     submit: (problemId, contentType, body) ->
-        page = await download("https://informatics.mccme.ru/py/problem/#{problemId}/submit", @jar, {
+        page = await download("https://informatics.msk.ru/py/problem/#{problemId}/submit", @jar, {
             method: 'POST',
             headers: {'Content-Type': contentType},
             body,

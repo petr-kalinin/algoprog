@@ -3,7 +3,7 @@ React = require('react')
 import TestSystem from './TestSystem'
 
 export default class Informatics extends TestSystem
-    BASE_URL = "https://informatics.mccme.ru"
+    BASE_URL = "https://informatics.msk.ru"
 
     _informaticsProblemId: (problemId) ->
         problemId.substring(1)

@@ -82,7 +82,7 @@ export default class RegisteredUsers extends React.Component
                                 {user.whereFrom}
                             </td>
                             <td>
-                                <a href={"https://informatics.mccme.ru/user/view.php?id=#{user.informaticsId}&course=1"}>{"#"}</a>
+                                <a href={"https://informatics.msk.ru/user/view.php?id=#{user.informaticsId}&course=1"}>{"#"}</a>
                             </td>
                         </tr>
                     )}

@@ -44,7 +44,7 @@ module17501 = () ->
 topic_module_48572 = () ->
     return topic("Про сайт codeforces", null, [
         module17501(),
-        link("https://informatics.mccme.ru/mod/resource/view.php?id=48572", "Как решать другие контесты и codeforces"),
+        link("https://informatics.msk.ru/mod/resource/view.php?id=48572", "Как решать другие контесты и codeforces"),
     ])
 
 module24698 = () ->
