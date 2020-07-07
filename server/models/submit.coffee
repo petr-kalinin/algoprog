@@ -20,6 +20,7 @@ submitsSchema = new mongoose.Schema
     time: Date
     downloadTime: { type: Date, default: new Date(0) }
     user: String
+    userList: String
     problem: String
     outcome: String
     source: String

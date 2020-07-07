@@ -101,7 +101,7 @@ hideTests = (submit) ->
             submit.results.tests[key] = hideOneTest(test)
     return submit
 
-createSubmit = (problemId, userId, language, codeRaw, draft) ->
+createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
     logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
@@ -120,6 +120,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         _id: "#{userId}r#{timeStr}#{problemId}" ,
         time: time,
         user: userId,
+        userList: userList,
         problem: problemId,
         outcome: if draft then "DR" else "PS"
         source: code
@@ -163,7 +164,7 @@ export default setupApi = (app) ->
             res.json({dormant: true})
             return
         try
-            await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
         catch e
             res.json({error: e})
             return
