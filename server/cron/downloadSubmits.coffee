@@ -77,6 +77,7 @@ class SubmitDownloader
 
         if oldSubmit
             delete oldSubmit.__v
+            newSubmit.userList = oldSubmit.userList
             newSubmit.source = oldSubmit.source
             newSubmit.sourceRaw = oldSubmit.sourceRaw
             newSubmit.results = oldSubmit.results
@@ -132,6 +133,8 @@ class SubmitDownloader
         if user?.userList == "graduated" and newSubmit.outcome == "OK" and newSubmit.time > new Date(2020, 1, 28)
             newSubmit.outcome = "AC"
             newSubmit.force = true
+
+        if not newSubmit?.userList then newSubmit.userList = user?.userList
 
         logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
         try
