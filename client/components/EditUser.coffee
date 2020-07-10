@@ -66,7 +66,7 @@ export default class EditingUser extends React.Component
             informaticsError: false
             informaticsLoading: false
             passError: false
-            newName: ''
+            newName: @props.user.name
             unknownError: false
 
     handleKeyPressed: (e)->
@@ -83,7 +83,7 @@ export default class EditingUser extends React.Component
                 }
                 if not ("name" of data)
                     throw "Can't find name"
-                    await @setState informaticsError: false
+                await @setState informaticsError: false
             catch
                     await @setState informaticsError: true
         else
@@ -185,17 +185,6 @@ export default class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Старый проль
-                            <Input
-                                type = "password"
-                                name = "password"
-                                value =  {@state.password}
-                                onChange = {@handlePasswordChange}
-                                errors = {[@state.passError && "Неправильный пароль"]}
-                                onKeyPress={@handleKeyPressed}
-                            />
-                    </div>
-                    <div>
                         Новый пароль
                             <Input
                                 type = "password"
@@ -218,7 +207,18 @@ export default class EditingUser extends React.Component
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
+                    <div>
+                        Старый проль
+                            <Input
+                                type = "password"
+                                name = "password"
+                                value =  {@state.password}
+                                onChange = {@handlePasswordChange}
+                                errors = {[@state.passError && "Неправильный пароль"]}
+                                onKeyPress={@handleKeyPressed}
+                            />
+                    </div>
                     {@state.unknownError && <div className = {styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
                 </form>
-                <Button onClick = {@submit} bsStyle = "primary" bsSize = "small" disabled = {buttonDisabled}>Ок</Button>
+                <Button onClick = {@submit} variant="light" bsSize = "small" disabled = {buttonDisabled}>Ок</Button>
             </div>

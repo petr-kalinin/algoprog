@@ -52,15 +52,14 @@ export default class UserBadge extends React.Component
                 else if @props.explain
                         <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                 }
+                {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
                 {if(!@state.editing)
                     <div>
-                        {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
                         {+@props.user._id == @props.me?.informaticsId && <EditingUser {...this.props} reload = {@reload}/>}
-                        {@props.me?.admin && +@props.user._id != @props.me?.informaticsId && <Button bsStyle="primary" bsSize="small" onClick = {@reload}>Отмена</Button>}
                     </div>
                 else
                     if (+@props.user._id == @props.me?.informaticsId || @props.me?.admin)
-                        <Button bsStyle="primary" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
+                        <Button variant="light" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
             </blockquote>
             { @props.explain &&
                 <a href = {"/user/" + @props.user._id} target = "_blank">Полные результаты</a> }

@@ -185,19 +185,22 @@ export default setupApi = (app) ->
         if not +req.params.id == +req.user.informaticsId
             res.status(403).send('No permissions')
             return
-        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
         password = req.body.password
         newPassword = req.body.newPassword
-        newInformaticsPassword=req.body.informaticsPassword
-        informaticsUsername = req.body.informaticsUsername
-        if newPassword != ""
-            logger.info "Set user password", req.user.userKey()
-            try
+        try
+            if newPassword != ""
+                logger.info "Set user password", req.user.userKey()
                 await req.user.changePassword(password, newPassword)
                 await req.user.save()
-            catch e
-                res.json({passError:true})
-                return
+            else
+                if !(await req.user.authenticate(password)).user
+                    throw err
+        catch e
+            res.json({passError:true})
+            return
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
+        newInformaticsPassword=req.body.informaticsPassword
+        informaticsUsername = req.body.informaticsUsername
         if newInformaticsPassword != ""
             try
                 for registeredUser in registeredUsers
@@ -213,10 +216,11 @@ export default setupApi = (app) ->
         newName = req.body.newName
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
-        if(req.body.clas!='')
+        if(req.body.clas !='' & req.body.clas!=null)
             await user.setGraduateYear (getYears(+req.body.clas)).getFullYear()
-        if(newName!="")
-            await user.updateName newName
+        else
+            await user.setGraduateYear(undefined)
+        await user.updateName newName
         await User.updateUser(user._id, {})
         res.send('OK')
 
