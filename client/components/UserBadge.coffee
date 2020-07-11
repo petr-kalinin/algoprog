@@ -24,7 +24,7 @@ export default class UserBadge extends React.Component
 
     startState: (props) ->
         return
-            editing: true
+            editing: false
 
     reload: () ->
         await @setState editing:!@state.editing
@@ -34,7 +34,7 @@ export default class UserBadge extends React.Component
         cls = getClassStartingFromJuly(@props.user.graduateYear)
         <div>
             <h1>
-                <UserName user = {@props.user} noachieves={true}/>
+                <UserName user={@props.user} noachieves={true}/>
             </h1>
             <BigAchieves achieves = {@props.user.achieves} />
             <blockquote>
@@ -53,13 +53,12 @@ export default class UserBadge extends React.Component
                         <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                 }
                 {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
-                {if(!@state.editing)
+                {if(@state.editing && +@props.user._id == @props.me?.informaticsId)
                     <div>
-                        {+@props.user._id == @props.me?.informaticsId && <EditingUser {...this.props} reload = {@reload}/>}
+                        <EditingUser {...this.props} reload = {@reload}/>
                     </div>
                 else
-                    if (+@props.user._id == @props.me?.informaticsId || @props.me?.admin)
-                        <Button variant="light" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
+                    <Button variant="light" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
             </blockquote>
             { @props.explain &&
                 <a href = {"/user/" + @props.user._id} target = "_blank">Полные результаты</a> }

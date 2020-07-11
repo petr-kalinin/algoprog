@@ -2,9 +2,9 @@ MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 
 export getClassStartingFromJuly = (year) -> return getClass(new Date(year, 6, 1))
 
-export getYears = (clas) ->
+export getYear = (clas) ->
     now = new Date()
-    return new Date(((11-(clas))+now.getFullYear() + (6 + now.getMonth())/12),0,1)
+    return (11-clas+now.getFullYear() + Math.floor(6 + now.getMonth())/12)
 
 export default getClass = (graduateDate) ->
     now = new Date()

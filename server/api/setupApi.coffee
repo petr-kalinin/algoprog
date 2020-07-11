@@ -46,7 +46,7 @@ import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
-import {getYears} from '../../client/lib/graduateYearToClass'
+import {getYear} from '../../client/lib/graduateYearToClass'
 import sleep from '../lib/sleep'
 
 import downloadMaterials from '../materials/downloadMaterials'
@@ -60,7 +60,6 @@ import {UserNameRaw} from '../../client/components/UserName'
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
-
 
 PASSWORD = process.env["TINKOFF_PASSWORD"]
 
@@ -203,11 +202,11 @@ export default setupApi = (app) ->
         informaticsUsername = req.body.informaticsUsername
         if newInformaticsPassword != ""
             try
+                userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
+                result = await userq.getData()
+                if not ("name" of result)
+                    throw "Can't find name"
                 for registeredUser in registeredUsers
-                        userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
-                        result = await userq.getData()
-                        if not ("name" of result)
-                            throw "Can't find name"
                         await registeredUser.updateInformaticPassword(newInformaticsPassword)
             catch
         cfLogin = req.body.cf.login
@@ -217,7 +216,7 @@ export default setupApi = (app) ->
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
         if(req.body.clas !='' & req.body.clas!=null)
-            await user.setGraduateYear (getYears(+req.body.clas)).getFullYear()
+            await user.setGraduateYear getYear(+req.body.clas)
         else
             await user.setGraduateYear(undefined)
         await user.updateName newName

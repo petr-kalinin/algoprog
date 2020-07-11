@@ -15,18 +15,19 @@ class Input extends React.Component
         super(props)
 
     render: ()->
-        err = false
         errors = @props.errors?.map(
             (val)->
                 if val
                     <div className = "#{styles.youHaveProblem} alert-danger">{val}</div>
                     )
-        if @props.errors? then err = true for q in errors when q
+        if errors
+            errors = (q for q in errors when q)
+            if errors.length == 0 then errors = undefined
         <div className = {styles.divInput}>
             <input
                 type = {@props.type}
                 name = {@props.name}
-                className = "#{styles.inp} #{err &&  styles.error}"
+                className = "#{styles.inp} #{errors &&  styles.error}"
                 value = {@props.value}
                 onChange = {@props.onChange}
                 onBlur = {@props.onBlur}
@@ -208,7 +209,7 @@ export default class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Старый проль
+                        Старый пароль
                             <Input
                                 type = "password"
                                 name = "password"
