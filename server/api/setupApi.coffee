@@ -584,17 +584,18 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        adminUser = await InformaticsUser.findAdmin()
 
         runForUser = (user) ->
-            await groups.moveUserToGroup(adminUser, user._id, "unknown")
+            userPrivate = await UserPrivate.findById(user._id)
+            registeredUser = await RegisteredUser.findByKey(user._id)
+            if registeredUser.admin or (user.userList == "stud" and userPrivate.paidTill > new Date())
+                logger.info("Will not move user #{user._id} to unknown group")
+                return
             await user.setUserList("unknown")
             logger.info("Moved user #{user._id} to unknown group")
 
         users = await User.findAll()
         for user in users
-            #if user.userList == "stud"
-            #    continue
             runForUser(user)
         res.send('OK')
 

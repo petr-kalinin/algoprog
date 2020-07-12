@@ -4,6 +4,7 @@ import Hash from './Hash'
 import User from './user'
 
 import calculateHashes from '../hashes/calculateHashes'
+import normalizeCode from '../lib/normalizeCode'
 
 import awaitAll from '../../client/lib/awaitAll'
 import logger from '../log'
@@ -61,12 +62,14 @@ submitsSchema.methods.equivalent = (other) ->
         return false
     if @force
         return false
+    otherCodes = [normalizeCode(other.source), normalizeCode(other.sourceRaw)]
     return @user == other.user \
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
-        and @source == other.source \
-        and @sourceRaw == other.sourceRaw \
-        and @language == other.language
+        and ((normalizeCode(@source) in otherCodes) or (normalizeCode(@sourceRaw) in otherCodes)) \
+        and (@language == other.language \
+             or Math.abs(@time - other.time) < 1500 \
+             or Math.abs(Math.abs(@time - other.time) - 3 * 60 * 60 * 1000) < 1500)
 
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
