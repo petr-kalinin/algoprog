@@ -181,7 +181,7 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
-        if not +req.params.id == +req.user.informaticsId
+        if ""+req.user?.userKey() != ""+req.params.id
             res.status(403).send('No permissions')
             return
         password = req.body.password
@@ -198,8 +198,8 @@ export default setupApi = (app) ->
             res.json({passError:true})
             return
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
-        newInformaticsPassword=req.body.informaticsPassword
-        informaticsUsername = req.body.informaticsUsername
+        newInformaticsPassword = req.body.informaticsPassword
+        informaticsUsername = req.user.informaticsUsername
         if newInformaticsPassword != ""
             try
                 userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
@@ -209,13 +209,14 @@ export default setupApi = (app) ->
                 for registeredUser in registeredUsers
                         await registeredUser.updateInformaticPassword(newInformaticsPassword)
             catch
+                # TODO: return error to user
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
         newName = req.body.newName
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
-        if(req.body.clas !='' & req.body.clas!=null)
+        if(req.body.clas !='' and req.body.clas!=null)
             await user.setGraduateYear getYear(+req.body.clas)
         else
             await user.setGraduateYear(undefined)
