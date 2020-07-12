@@ -51,7 +51,7 @@ class LoggedEjudgeUser
         page = await downloadLimited("#{@server}/cgi-bin/#{prog}", @jar, {
             method: 'POST',
             form: {
-                login: @username,
+                login: @username.trim(),
                 password: @password,
                 contest_id: @contestId,
                 locale_id: 1
