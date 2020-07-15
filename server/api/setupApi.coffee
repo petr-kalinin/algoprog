@@ -46,6 +46,7 @@ import {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
+import {getYear} from '../../client/lib/graduateYearToClass'
 import sleep from '../lib/sleep'
 
 import downloadMaterials from '../materials/downloadMaterials'
@@ -181,6 +182,50 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
+        if ""+req.user?.userKey() != ""+req.params.id
+            res.status(403).send('No permissions')
+            return
+        password = req.body.password
+        newPassword = req.body.newPassword
+        try
+            if newPassword != ""
+                logger.info "Set user password", req.user.userKey()
+                await req.user.changePassword(password, newPassword)
+                await req.user.save()
+            else
+                if !(await req.user.authenticate(password)).user
+                    throw err
+        catch e
+            res.json({passError:true})
+            return
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
+        newInformaticsPassword = req.body.informaticsPassword
+        informaticsUsername = req.user.informaticsUsername
+        if newInformaticsPassword != ""
+            try
+                userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
+                result = await userq.getData()
+                if not ("name" of result)
+                    throw "Can't find name"
+                for registeredUser in registeredUsers
+                        await registeredUser.updateInformaticPassword(newInformaticsPassword)
+            catch
+                # TODO: return error to user
+        cfLogin = req.body.cf.login
+        if cfLogin == ""
+            cfLogin = undefined
+        newName = req.body.newName
+        user = await User.findById(req.params.id)
+        await user.setCfLogin cfLogin
+        if(req.body.clas !='' and req.body.clas!=null)
+            await user.setGraduateYear getYear(+req.body.clas)
+        else
+            await user.setGraduateYear(undefined)
+        await user.updateName newName
+        await User.updateUser(user._id, {})
+        res.send('OK')
+
+    app.post '/api/user/:id/setAdmin', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return

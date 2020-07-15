@@ -1,0 +1,19 @@
+.form {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 5px;
+}
+.divInput{
+    width: 300px;
+}
+
+.youHaveProblem{
+    width: 100%;
+    margin-bottom: 1px;
+}
+.inp{
+    width:100%;
+}
+.error{
+    border:1px solid #a94442;
+}

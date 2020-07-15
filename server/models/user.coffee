@@ -101,6 +101,11 @@ usersSchema.methods.setGraduateYear = (graduateYear) ->
     await @update({$set: {"graduateYear": graduateYear}})
     @graduateYear = graduateYear
 
+usersSchema.methods.updateName = (name) ->
+    logger.info "Set name for user", @_id,": old name " ,@name,", new name " ,name
+    await @update({$set: {"name": name}})
+    @name = name
+
 usersSchema.methods.setBaseLevel = (level) ->
     await @update({$set: {"level.base": level}})
     @level.base = level
@@ -111,7 +116,10 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     logger.info "setting cf login ", @_id, cfLogin
     await @update({$set: {"cf.login": cfLogin}})
     @cf.login = cfLogin
-    @updateCfRating()
+    if(cfLogin != undefined)
+        @updateCfRating()
+    else
+        await @update({$unset: {"cf.rating": "", "cf.login":"", "cf.color":"", "cf.activity":"", "cf.progress":""}})
 
 usersSchema.methods.setAchieves = (achieves) ->
     logger.info "setting achieves login ", @_id, achieves
