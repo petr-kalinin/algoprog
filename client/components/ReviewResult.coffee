@@ -235,7 +235,7 @@ class ReviewResult extends React.Component
                                         bsCommentSize = null
                                         if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
                                             bsSize = "xsmall"
-                                        if @props.result.userList == "unknown"
+                                        if @props.result?.activated == false
                                             bsSize = "xsmall"
                                             bsCommentSize = "xsmall"
                                         <ButtonGroup>

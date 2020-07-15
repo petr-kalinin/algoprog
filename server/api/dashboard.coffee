@@ -65,8 +65,7 @@ runCfQuery = (result) ->
     result["cf"] = await awaitAll(result["cf"])
     result["cf"] = (r for r in result["cf"] when r)
 
-export default dashboard = (registeredUser) ->
-    userLists = registeredUser?.adminData?.defaultUserLists
+export default dashboard = () ->
     queries =
         # remember that months start from 0
         ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
@@ -79,10 +78,7 @@ export default dashboard = (registeredUser) ->
     for key, query of queries
         query["total"] = 1
         if key != "ps"
-            if userLists?.length
-                query["userList"] = {$in: userLists}
-            else
-                query["userList"] = {$ne: "unknown"}
+            query["activated"] = {$ne: "false"}
         promises.push(runDashboardQuery(key, query, result))
     promises.push(runCfQuery(result))
     await awaitAll(promises)

@@ -236,7 +236,7 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
-        res.json(await dashboard(req.user))
+        res.json(await dashboard())
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
         res.json(await table(req.params.userList, req.params.table))
@@ -525,6 +525,17 @@ export default setupApi = (app) ->
         await user.setDormant(true)
         res.send('OK')
 
+    app.post '/api/setDeactivated/:userId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        await user.setActivated(false)
+        res.send('OK')
+
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -548,8 +559,8 @@ export default setupApi = (app) ->
             if registeredUser.admin or (user.userList == "stud" and userPrivate.paidTill > new Date())
                 logger.info("Will not move user #{user._id} to unknown group")
                 return
-            await user.setUserList("unknown")
-            logger.info("Moved user #{user._id} to unknown group")
+            await user.setActivated(false)
+            logger.info("Deactivate user #{user._id}")
 
         users = await User.findAll()
         for user in users

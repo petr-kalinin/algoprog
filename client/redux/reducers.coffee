@@ -3,7 +3,7 @@ import { ActionType } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_UNKNOWN_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, SWITCH_THEME } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_DEACTIVATED_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, SWITCH_THEME } from './actions'
 
 import { equalUrl } from './getters'
 
@@ -42,8 +42,8 @@ dataPromises = (state=[], action) ->
     else
         return state
 
-unknownWarningShown = (state = false, action) ->
-    if action.type == SET_UNKNOWN_WARNING_SHOWN
+deactivatedWarningShown = (state = false, action) ->
+    if action.type == SET_DEACTIVATED_WARNING_SHOWN
         return action.value
     else
         return state
@@ -66,7 +66,7 @@ export default rootReducer =
     combineReducers {
         data,
         dataPromises,
-        unknownWarningShown,
+        deactivatedWarningShown,
         unpaidWarningShown,
         theme,
         notifications,

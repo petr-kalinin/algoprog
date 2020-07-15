@@ -8,7 +8,7 @@ export default class Review extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            results: (r for r in props.data.ok when r.userList != "unknown")
+            results: (r for r in props.data.ok when r?.activated != false)
         @gotoNext = @gotoNext.bind this
 
     gotoNext: () ->
@@ -18,7 +18,7 @@ export default class Review extends React.Component
     componentDidUpdate: (prevProps) ->
         if @props.data?.ok[0]?._id != prevProps.data?.ok[0]?._id
             @setState
-                results: (r for r in @props.data.ok when r.userList != "unknown")
+                results: (r for r in @props.data.ok when r?.activated != false)
 
     render: () ->
         <div>

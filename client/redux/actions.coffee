@@ -8,7 +8,7 @@ export INVALIDATE_ALL_DATA = 'INVALIDATE_ALL_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 export LOGIN = 'POST_LOGIN'
-export SET_UNKNOWN_WARNING_SHOWN = 'SET_UNKNOWN_WARNING_SHOWN'
+export SET_DEACTIVATED_WARNING_SHOWN = 'SET_DEACTIVATED_WARNING_SHOWN'
 export SET_UNPAID_WARNING_SHOWN = 'SET_UNPAID_WARNING_SHOWN'
 export SWITCH_THEME = 'SWITCH_THEME'
 
@@ -49,9 +49,9 @@ export logout = () ->
         await callApi 'logout'
         dispatch(invalidateAllData())
 
-export setUnknownWarningShown = (value=true) ->
+export setDeactivatedWarningShown = (value=true) ->
     return
-        type: SET_UNKNOWN_WARNING_SHOWN
+        type: SET_DEACTIVATED_WARNING_SHOWN
         value: value
 
 export setUnpaidWarningShown = (value=true) ->

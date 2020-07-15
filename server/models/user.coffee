@@ -22,6 +22,7 @@ usersSchema = new mongoose.Schema
     _id: String,
     name: String,
     userList: String,
+    activated: Boolean,
     chocos: [Number],
     chocosGot: [Number],
     level:
@@ -69,7 +70,7 @@ usersSchema.methods.updateLevel = ->
 
 usersSchema.methods.updateDormant = ->
     date = new Date()
-    if @userList=="unknown" && @lastActivated && date-@lastActivated > DORMANT_TIME
+    if not @activated && @lastActivated && date-@lastActivated > DORMANT_TIME
         @dormant = true
     @update({$set: {dormant: @dormant}})
 
@@ -125,7 +126,7 @@ usersSchema.methods.setChocosGot = (chocosGot) ->
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     @lastActivated = Date.now()
-    await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "dormant": false}})
+    await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "activated": true, "dormant": false}})
     @userList = userList
     User.updateUser(@_id)
     return undefined
@@ -134,6 +135,11 @@ usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
     await @update({$set: {"dormant": dormant}})
     @dormant = dormant
+
+usersSchema.methods.setActivated = (activated) ->
+    logger.info "setting activated ", @_id, activated
+    await @update({$set: {"activated": activated}})
+    @activated = activated
 
 compareLevels = (a, b) ->
     if a.length != b.length
