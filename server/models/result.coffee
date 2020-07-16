@@ -27,7 +27,7 @@ resultsSchema.methods.upsert = () ->
         logger.warn "Unknown user #{@user} in Result.upsert, result id #{@_id}"
         return
     @userList = user.userList
-    @activated = user.activated
+    @activated = user?.activated
     @_id = @user + "::" + @table
     @update(this, {upsert: true}).exec()
 

@@ -36,7 +36,7 @@ export default class Payment extends React.Component
                     Вы не зарегистрированы, вы не можете оплачивать занятия. Форма ниже приведена для примера.
                 </Alert>
             canSubmit = false
-        else if @props.myUser?.activated == false
+        else if not @props.myUser?.activated
             amount = 1500
             warning = <Alert bsStyle="danger">
                     Ваш аккаунт не активирован. Напишите мне, чтобы я активировал ваш аккаунт и установил стоимость занятий.

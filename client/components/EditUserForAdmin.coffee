@@ -17,7 +17,7 @@ class GroupSelector extends React.Component
         super(props)
         @handleMove = @handleMove.bind(this)
         @setDormant = @setDormant.bind(this)
-        @setDeactivated = @setDeactivated.bind(this)
+        @toggleActivated = @toggleActivated.bind(this)
 
     handleMove: (name) ->
         () =>
@@ -29,9 +29,9 @@ class GroupSelector extends React.Component
             await callApi "setDormant/#{@props.user._id}", {}
             await @props.handleReload()
 
-    setDeactivated: () ->
+    toggleActivated: () ->
         () =>
-            await callApi "setDeactivated/#{@props.user._id}", {}
+            await callApi "setActivated/#{@props.user._id}", {value: not @props.user?.activated}
             await @props.handleReload()
 
     render: () ->
@@ -46,7 +46,7 @@ class GroupSelector extends React.Component
                         {name}
                     </Button>
                 a <Button key={"dormant"} active={@props.user.dormant} onClick={@setDormant()}>dormant</Button>
-                a <Button key={"activated"} active={@props.user.activated} onClick={@setDeactivated()}>activated</Button>
+                a <Button key={"activated"} active={@props.user?.activated} onClick={@toggleActivated()}>activated</Button>
                 res
                 }
             </ButtonGroup>

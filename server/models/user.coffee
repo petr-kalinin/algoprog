@@ -17,6 +17,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 10
+DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 90
 
 usersSchema = new mongoose.Schema
     _id: String,
@@ -70,7 +71,7 @@ usersSchema.methods.updateLevel = ->
 
 usersSchema.methods.updateDormant = ->
     date = new Date()
-    if not @activated && @lastActivated && date-@lastActivated > DORMANT_TIME
+    if not @activated && @lastActivated && date-@lastActivated > (if @userList=="unknown" then DORMANT_TIME else DEACTIVATED_DORMANT_TIME)
         @dormant = true
     @update({$set: {dormant: @dormant}})
 

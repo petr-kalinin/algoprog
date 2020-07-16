@@ -15,7 +15,6 @@ import {BigAchieves} from './Achieves'
 
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 
-
 export default class UserBadge extends React.Component
     constructor: (props) ->
         super(props)

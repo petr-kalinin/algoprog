@@ -9,7 +9,7 @@ makeUserName = (user) ->
     star = ""
     if user.userList == "stud"
         star = "*"
-    if user.activated == false
+    if not user?.activated
         star = "(na) "
     star + user.name + " (" + user.level?.current + ")"
 

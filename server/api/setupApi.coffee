@@ -281,7 +281,7 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
-        res.json(await dashboard())
+        res.json(await dashboard(req.user))
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
         res.json(await table(req.params.userList, req.params.table))
@@ -570,7 +570,7 @@ export default setupApi = (app) ->
         await user.setDormant(true)
         res.send('OK')
 
-    app.post '/api/setDeactivated/:userId', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/setActivated/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
@@ -578,7 +578,8 @@ export default setupApi = (app) ->
         if not user
             res.status(400).send("User not found")
             return
-        await user.setActivated(false)
+        await user.setActivated(req.body?.value)
+        if req.body?.value then await user.setDormant(false)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
