@@ -144,7 +144,7 @@ usersSchema.methods.forceSetUserList = (userList) ->
     logger.info "force-setting userList ", @_id, userList
     await @update({$set: {"userList": userList}})
     @userList = userList
-    User.updateUser(@_id)
+    #User.updateUser(@_id)
     return undefined
 
 usersSchema.methods.setDormant = (dormant) ->
