@@ -559,6 +559,19 @@ export default setupApi = (app) ->
             await user.setUserList(newGroup)
         res.send('OK')
 
+    app.post '/api/forceSetUserList/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        newGroup = req.params.groupName
+        if newGroup != "none"
+            await user.forceSetUserList(newGroup)
+        res.send('OK')
+
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
