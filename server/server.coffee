@@ -20,6 +20,7 @@ import sleep from './lib/sleep'
 import setupMetrics from './metrics/metrics'
 import sendToGraphite from './metrics/graphite'
 import downloadMaterials from './materials/downloadMaterials'
+import User from './models/user'
 
 import notify from './metrics/notify'
 
@@ -71,6 +72,10 @@ app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
+setActivated = () ->
+    users = await User.findAll()
+    promises = users.map((user) -> user.setActivated(user.userList != "unknown"))
+    await Promise.all(promises)
 
 start = () ->
     try
@@ -79,6 +84,8 @@ start = () ->
         logger.error("Can not determine my ip")
 
     await downloadMaterials()
+
+    await setActivated()
 
     app.listen port, () ->
         logger.info 'App listening on port ', port
