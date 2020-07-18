@@ -8,20 +8,24 @@ compression = require('compression')
 responseTime = require('response-time')
 StatsD = require('node-statsd')
 
-import logger from './log'
-import renderOnServer from './ssr/renderOnServer'
-import db from './mongo/mongo'
-import configurePassport from './passport'
 import setupApi from './api/setupApi'
-import {REGISTRY} from './testSystems/TestSystemRegistry'
-import download from './lib/download'
 import jobs from './cron/cron'
+import download from './lib/download'
 import sleep from './lib/sleep'
-import setupMetrics from './metrics/metrics'
-import sendToGraphite from './metrics/graphite'
 import downloadMaterials from './materials/downloadMaterials'
-
+import sendToGraphite from './metrics/graphite'
+import setupMetrics from './metrics/metrics'
 import notify from './metrics/notify'
+import db from './mongo/mongo'
+import Submit from './models/submit'
+import Result from './models/result'
+import User from './models/user'
+import renderOnServer from './ssr/renderOnServer'
+import {REGISTRY} from './testSystems/TestSystemRegistry'
+
+import logger from './log'
+import configurePassport from './passport'
+
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -71,6 +75,27 @@ app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
+setUserLists = () ->
+    process = (resultOrSubmit, userList) ->
+        if resultOrSubmit.userList and resultOrSubmit.userList != "unknown"
+            return
+        logger.info "Set userList for result/submit #{resultOrSubmit._id}, was #{resultOrSubmit.userList}, will be #{userList}"
+        await resultOrSubmit.update({$set: {"userList": userList}})
+        
+    users = await User.find({userList: {$ne: "unknown"}})
+    logger.info "Found #{users.length} users"
+    promises = []
+    for user, i in users
+        logger.info "Processing user #{i} of #{users.length}"
+        results = await Result.findByUser(user._id)
+        for r in results
+            promises.push(process(r, user.userList))
+        submits = await Submit.findByUser(user._id)
+        for s in submits
+            promises.push(process(s, user.userList))
+        await Promise.all(promises)
+        promises = []
+    logger.info "Done setting userlists!"
 
 start = () ->
     try
@@ -86,6 +111,7 @@ start = () ->
         for id, system of REGISTRY
             system.selfTest()
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped
+        setUserLists()
         if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == "0")
             logger.info("Starting jobs ", process.env["INSTANCE_NUMBER"])
             jobs.map((job) -> job.start())

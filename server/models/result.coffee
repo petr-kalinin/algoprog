@@ -31,7 +31,6 @@ resultsSchema.methods.upsert = () ->
     @_id = @user + "::" + @table
     @update(this, {upsert: true}).exec()
 
-
 resultsSchema.statics.DQconst = -10
 
 resultsSchema.statics.findByUserListAndTable = (userList, table) ->
