@@ -12,6 +12,8 @@ XRegExp = require('xregexp')
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
 
+import ACHIEVES from '../../client/lib/achieves'
+
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
 import Submit from '../models/submit'
@@ -297,6 +299,14 @@ export default setupApi = (app) ->
 
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
+
+    app.get '/api/users/withAchieve/:achieve', wrap (req, res) ->
+        achieve = req.params.achieve
+        if not (achieve of ACHIEVES)
+            res.status(400).send('Unknown achieve')
+            return
+        users = await User.findByAchieve(achieve)
+        res.json(users)
 
     app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
