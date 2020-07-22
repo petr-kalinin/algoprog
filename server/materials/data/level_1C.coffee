@@ -27,6 +27,7 @@ topic_15983 = () ->
         module25368(),
         label("<br>"),
         problem({testSystem: "ejudge", contest: "2003", problem: "1", id: "2946"}),
+        problem({testSystem: "codeforces", contest: "1386", problem: "C"}),
         problem(2945),
         problem(506),
         problem(534),
