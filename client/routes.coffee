@@ -24,6 +24,7 @@ import PaymentPage from './pages/PaymentPage'
 import PaymentSuccessPage from './pages/PaymentSuccessPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
+import UsersWithAchievePage from './pages/UsersWithAchievePage'
 import LoginPage from './pages/LoginPage'
 
 class NoMatch extends React.Component
@@ -119,6 +120,11 @@ export default [
         path: '/comments',
         key: "comments",
         component: AllCommentsPage,
+    },
+    {
+        path: '/usersWithAchieve/:achieve',
+        key: "usersWithAchieve",
+        component: UsersWithAchievePage,
     },
     {
         path: '/login',

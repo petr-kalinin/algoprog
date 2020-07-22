@@ -189,6 +189,9 @@ usersSchema.statics.findAll = () ->
 usersSchema.statics.findById = (id) ->
     User.findOne({_id: id})
 
+usersSchema.statics.findByAchieve = (achieve) ->
+    User.find({achieves: achieve}).sort({ratingSort: -1})
+
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
@@ -253,6 +256,10 @@ usersSchema.index
 usersSchema.index
     dormant: 1
     username: 1
+
+usersSchema.index
+    achieves: 1
+    ratingSort: -1
 
 User = mongoose.model('Users', usersSchema);
 
