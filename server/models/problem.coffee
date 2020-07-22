@@ -21,6 +21,10 @@ problemsSchema.statics.findByLevel = (level) ->
     return Problem.find
         level: level
 
+problemsSchema.statics.findByIds = (ids) ->
+    return Problem.find
+        _id: {$in : ids}
+
 Problem = mongoose.model('Problems', problemsSchema);
 
 export default Problem

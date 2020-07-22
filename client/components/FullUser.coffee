@@ -2,11 +2,14 @@ React = require('react')
 
 import UserBadge from './UserBadge'
 import SolvedByWeek from './SolvedByWeek'
+import ContributeByWeekCalendar from './ContributeByWeekCalendar'
+import SubmitListTable from './SubmitListTable'
 import Table from './Table'
 
 import { Badge } from 'react-bootstrap'
 
 import callApi from '../lib/callApi'
+import ConnectedComponent from '../lib/ConnectedComponent'
 
 import globalStyles from './global.css'
 import styles from './FullUser.css'
@@ -53,10 +56,24 @@ Chocos = (props) ->
         </table>
     </div>
 
+
+class SubmitsOnDay extends React.Component
+    render: () ->
+        <div>
+          <div style={display: "inline-block"}>
+              <SubmitListTable submits={@props.data.submits} problems={@props.data.problems} />
+          </div>
+        </div>
+
+SubmitsOnDayConnected = ConnectedComponent(SubmitsOnDay, {urls: (props) -> (data: "submitsByDay/#{props.userId}/#{props.day}")})
+
 export default class FullUser extends React.Component
     constructor: (props) ->
         super(props)
         @setChocosGot = @setChocosGot.bind this
+        @showSubmitsOnDay = @showSubmitsOnDay.bind this
+        @state =
+            day: null
 
     setChocosGot: (index, count) ->
         () =>
@@ -68,11 +85,16 @@ export default class FullUser extends React.Component
             await callApi "user/#{@props.user._id}/setChocosGot", {chocosGot}
             @props.handleReload()
 
+    showSubmitsOnDay: (day) ->
+        @setState {day}
+
     render: () ->
         <div>
             {`<UserBadge {...this.props}/>`}
             {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
             <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
+            <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>
+            {if @state.day then <SubmitsOnDayConnected day={@state.day} userId={@props.user._id}/>}
             <h2>Результаты</h2>
             {
             res = []

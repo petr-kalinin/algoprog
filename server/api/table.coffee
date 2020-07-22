@@ -3,6 +3,7 @@ connectEnsureLogin = require('connect-ensure-login')
 import logger from '../log'
 
 import User from '../models/user'
+import Calendar from '../models/calendar'
 import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
@@ -110,7 +111,8 @@ export fullUser = (userId) ->
         if regTables
             tables.push(regTables.tables)
     user = await User.findById(userId)
-    if not user
+    calendar = await Calendar.findByUser(userId)
+    if not user or calendar.length != 1
         return null
     results = []
     for t in tables
@@ -120,5 +122,6 @@ export fullUser = (userId) ->
     return
         user: user.toObject()
         results: results
+        calendar: calendar[0]
 
     console.log tables

@@ -9,6 +9,7 @@ import calculateAchieves from '../calculations/calculateAchieves'
 import logger from '../log'
 
 import updateResults from '../calculations/updateResults'
+import calculateCalendar from '../calculations/calculateCalendar'
 
 import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
@@ -191,6 +192,7 @@ usersSchema.statics.findById = (id) ->
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
+    await calculateCalendar(userId)
     u = await User.findById(userId)
     if not u
         logger.warn "Unknown user ", userId

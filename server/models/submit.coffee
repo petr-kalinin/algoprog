@@ -76,6 +76,16 @@ submitsSchema.statics.findByUser = (userId) ->
     Submit.find
         user: userId
 
+submitsSchema.statics.findByUserAndDay = (userId, day) ->
+    date = new Date(Date.parse(day))
+    start = new Date(date)
+    end = new Date(date)
+    start.setHours(0,0,0,0);
+    end.setHours(23,59,59,999)
+    Submit.find
+        user: userId
+        time: {$gte: start, $lt: end}
+
 submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
     Submit.find({
         user: userId

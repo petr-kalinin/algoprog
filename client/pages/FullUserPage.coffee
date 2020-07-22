@@ -18,7 +18,7 @@ class FullUserPage extends React.Component
             showNews: "hide",
             showTree: "hide"
         }
-        child = <FullUser user={@props.data.user} me={@props.me} results={@props.data.results} handleReload={@props.handleReload}/>
+        child = <FullUser user={@props.data.user} me={@props.me} results={@props.data.results} calendar={@props.data.calendar} handleReload={@props.handleReload}/>
         `<Sceleton {...sceletonProps}>{child}</Sceleton>`
 
 options =

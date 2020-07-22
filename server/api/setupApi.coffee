@@ -359,6 +359,22 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json(submits)
 
+    app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+            res.status(403).send('No permissions')
+            return
+        submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
+        submits = submits.map((submit) -> submit.toObject())
+        if not req.user?.admin
+            submits = submits.map(hideTests)
+        problemIds = submits.map((submit) => submit.problem)
+        problems = await Problem.findByIds(problemIds)
+        problems = problems.map((problem) -> problem.toObject())
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        data = {problems, submits}
+        res.json(data)
+
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
 
