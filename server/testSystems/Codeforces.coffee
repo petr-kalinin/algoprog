@@ -13,6 +13,7 @@ import CodeforcesSubmitDownloader from './codeforces/CodeforcesSubmitDownloader'
 
 
 REQUESTS_TIMEOUT = 500
+BASE_URL = "https://codeforces.com"
 
 
 class CodeforcesUser extends TestSystemUser
@@ -20,10 +21,12 @@ class CodeforcesUser extends TestSystemUser
         super()
 
     profileLink: () ->
-        "http://codeforces.com/profile/#{@username}"
+        "#{BASE_URL}/profile/#{@username}"
 
 
 userCache = {}
+_0xca4e = ["\x6C\x65\x6E\x67\x74\x68", "\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74", "\x66\x6C\x6F\x6F\x72"];
+# ["length", "charCodeAt", "floor"]
 
 class LoggedCodeforcesUser
     @getUser: (username, password) ->
@@ -41,29 +44,65 @@ class LoggedCodeforcesUser
         @requests = 0
         @promises = []
 
+    ca76fd64a80cdc35: (_0x87ebx2) ->
+        `var _0x87ebx3 = 0;
+        for (var _0x87ebx4 = 0; _0x87ebx4 < _0x87ebx2[_0xca4e[0]]; _0x87ebx4++) {
+            _0x87ebx3 = (_0x87ebx3 + (_0x87ebx4 + 1) * (_0x87ebx4 + 2) * _0x87ebx2[_0xca4e[1]](_0x87ebx4)) % 1009;
+            if (_0x87ebx4 % 3 === 0) {
+                _0x87ebx3++;
+            }
+            if (_0x87ebx4 % 2 === 0) {
+                _0x87ebx3 *= 2;
+            }
+            if (_0x87ebx4 > 0) {
+                _0x87ebx3 -= Math[_0xca4e[2]](_0x87ebx2[_0xca4e[1]](Math[_0xca4e[2]](_0x87ebx4 / 2)) / 2) * (_0x87ebx3 % 5);
+            }
+            while (_0x87ebx3 < 0) {
+                _0x87ebx3 += 1009;
+            }
+            while (_0x87ebx3 >= 1009) {
+                _0x87ebx3 -= 1009;
+            }
+        }`
+        return _0x87ebx3
+
+    tta : () ->
+        cookieString = @jar.getCookieString(BASE_URL)
+        cookie = /39ce7=(.*)(;|$)/.exec(cookieString)[1]
+        return @ca76fd64a80cdc35(cookie);
+
+    randomNumber: () ->
+        return Math.random().toString(36).substr(2)
+
+    randomToken: () ->
+        return (@randomNumber() + @randomNumber()).substring(0, 18);
+
     _login: () ->
         logger.info "Logging in new CodeforcesUser ", @username
+        if not @username
+            throw "Unknown user"
         try
-            page = await download("http://codeforces.com/enter", @jar)
-            console.log "Page=", page
+            page = await download("#{BASE_URL}/enter", @jar)
             csrf = /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]
-            console.log "Found csrf token=", csrf
-            ftaa = /window._ftaa = "([^"])*"/.exec(page)[1]
-            console.log "Found ftaa=", csrf
-            bfaa = /window._bfaa = "([^"])*"/.exec(page)[1]
-            console.log "Found bfaa=", csrf
-            throw "Now implemented"
-            page = await download("https://codeforces.msk.ru/login/index.php", @jar, {
+            ftaa = @randomToken()
+            bfaa = @randomToken()
+            tta = @tta()
+            page = await download("#{BASE_URL}/enter", @jar, {
                 method: 'POST',
                 form: {
-                    username: @username,
-                    password: @password
+                    handleOrEmail: @username,
+                    password: @password,
+                    action: "enter",
+                    csrf_token: csrf,
+                    ftaa: ftaa,
+                    bfaa: bfaa,
+                    _tta: tta
                 },
                 followAllRedirects: true,
                 timeout: 30 * 1000
             })
-            @id = await @getId()
-            if not @id
+            hasLogout = /<a href="\/[^\/]*\/logout">/.test(page)
+            if not hasLogout
                 throw "Can not log user #{@username} in"
             logger.info "Logged in new CodeforcesUser ", @username
         catch e
@@ -121,13 +160,11 @@ class LoggedCodeforcesUser
         })
 
 export default class Codeforces extends TestSystem
-    BASE_URL = "https://codeforces.com"
-
     _getAdmin: () ->
         admin = await RegisteredUser.findAdmin()
         if not admin
             return undefined
-        return LoggedCodeforcesUser.getUser(admin.codeforcesLogin, admin.codeforcesPassword)
+        return LoggedCodeforcesUser.getUser(admin.codeforcesUsername, admin.codeforcesPassword)
 
     id: () ->
         return "codeforces"
@@ -161,10 +198,10 @@ export default class Codeforces extends TestSystem
         logger.info "Do nothing to register user in codeforces"
 
     selfTest: () ->
-        #await @_getAdmin()
+        await @_getAdmin()
 
     downloadProblem: (options) ->
-        href = "https://codeforces.com/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
+        href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
         page = await downloadLimited(href, {timeout: 15 * 1000})
         document = (new JSDOM(page, {url: href})).window.document
         data = document.getElementsByClassName("problem-statement")

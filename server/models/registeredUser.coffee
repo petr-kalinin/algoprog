@@ -12,6 +12,8 @@ registeredUserSchema = new mongoose.Schema
     informaticsId: Number
     ejudgeUsername: String
     ejudgePassword: {type: String, select: false}
+    codeforcesUsername: String
+    codeforcesPassword: {type: String, select: false}
     promo: String
     contact: String
     whereFrom: String
@@ -26,7 +28,7 @@ registeredUserSchema.methods.upsert = () ->
         logger.info "Could not upsert a registereduser"    
 
 registeredUserSchema.statics.findAdmin = (list) ->
-    RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword +ejudgePassword")
+    RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword +ejudgePassword +codeforcesPassword")
 
 registeredUserSchema.statics.findByKey = (key) ->
     RegisteredUser.findOne({informaticsId: key})
@@ -38,7 +40,7 @@ registeredUserSchema.statics.findAllByKey = (key) ->
     await RegisteredUser.find({informaticsId: key})
 
 registeredUserSchema.statics.findByKeyWithPassword = (key) ->
-    await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword +ejudgePassword")
+    await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword +ejudgePassword +codeforcesPassword")
 
 registeredUserSchema.methods.userKey = () ->
     @informaticsId
