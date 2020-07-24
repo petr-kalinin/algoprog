@@ -39,16 +39,13 @@ maxVal = (submit, field) ->
     return if res < 0 then undefined else res
 
 export default SubmitListTable = (props) ->
-    problemById = {}
-    props.problems?.forEach((problem) => problemById[problem._id] = ({name: problem.name, level: problem.level}))
-    if not Object.keys(problemById).length then problemById = undefined
     wasNotSimilar = false
     wasSimilar = false
     <div className={styles.outerDiv}>
         <Table responsive striped condensed hover>
             <thead>
                 <tr>
-                    {if problemById
+                    {if props.showProblems
                         <>
                           <th>Уровень</th>
                           <th>Название</th>
@@ -59,7 +56,7 @@ export default SubmitListTable = (props) ->
                     <th>Язык</th>
                     <th><span title="(сек)">Время</span></th>
                     <th><span title="ОЗУ (МБ)">Память</span></th>
-                    {if not problemById
+                    {if not props.showProblems
                         <>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
@@ -79,13 +76,12 @@ export default SubmitListTable = (props) ->
                     mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
                     mem = mem.toFixed(2)
                     res = []
-                    problem = problemById?[submit.problem]
-                    res.push <tr key={submit._id} className={cl} onClick={if not problem then props.handleSubmitClick(submit)} style={cursor: "hand"}>
+                    res.push <tr key={submit._id} className={cl} onClick={if not props.showProblems then props.handleSubmitClick(submit)} style={cursor: if not props.showProblems then "hand"}>
                         {
-                          if problem
+                          if props.showProblems
                               <>
-                                <td><Link to="/material/#{submit.problem}">{problem.level}</Link></td>
-                                <td><Link to="/material/#{submit.problem}">{problem.name}</Link></td>
+                                <td><Link to="/material/#{submit.problem}">{submit.fullProblem.level}</Link></td>
+                                <td><Link to="/material/#{submit.problem}">{submit.fullProblem.name}</Link></td>
                               </>
                         }
                         <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
@@ -96,8 +92,12 @@ export default SubmitListTable = (props) ->
                         </td>
                         <td><span title="(сек)">{if time? then time / 1000 else ""}</span></td>
                         <td><span title="ОЗУ (МБ)">{if mem >= 0 then mem else ""}</span></td>
-                        <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
-                        {if not problem then <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>}
+                        {if not props.showProblems
+                            <>
+                              <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
+                              <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
+                            </>
+                        }
                         {if props.handleDiffClick
                             <td>
                                 <span onClick={props.handleDiffClick(0, submit)} href="#">
@@ -127,7 +127,7 @@ export default SubmitListTable = (props) ->
             </tbody>
         </Table>
         {
-        if props.submits?[0] and not problemById
+        if props.submits?[0] and not props.showProblems
             s = props.submits[props.submits.length - 1]
             testSystem = getTestSystem(s.testSystemData?.system)
             testSystem.submitListLink(s)

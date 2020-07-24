@@ -377,13 +377,9 @@ export default setupApi = (app) ->
         submits = submits.map((submit) -> submit.toObject())
         if not req.user?.admin
             submits = submits.map(hideTests)
-        problemIds = submits.map((submit) => submit.problem)
-        problems = await Problem.findByIds(problemIds)
-        problems = problems.map((problem) -> problem.toObject())
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
-        data = {problems, submits}
-        res.json(data)
+        res.json(submits)
 
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))

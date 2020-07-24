@@ -1,4 +1,5 @@
 React = require('react')
+import Button from 'react-bootstrap/lib/Button'
 
 import UserBadge from './UserBadge'
 import SolvedByWeek from './SolvedByWeek'
@@ -59,11 +60,10 @@ Chocos = (props) ->
 
 class SubmitsOnDay extends React.Component
     render: () ->
-        <div>
-          <div style={display: "inline-block"}>
-              <SubmitListTable submits={@props.data.submits} problems={@props.data.problems} />
-          </div>
-        </div>
+      # inline-block shrinks table to its content size
+      <div style={display: "inline-block"}>
+          <SubmitListTable submits={@props.data} showProblems={true} />
+      </div>
 
 SubmitsOnDayConnected = ConnectedComponent(SubmitsOnDay, {urls: (props) -> (data: "submitsByDay/#{props.userId}/#{props.day}")})
 
@@ -88,13 +88,21 @@ export default class FullUser extends React.Component
     showSubmitsOnDay: (day) ->
         @setState {day}
 
+    hideSubmitsOnDay: () =>
+        @setState {day: null}
+
     render: () ->
         <div>
             {`<UserBadge {...this.props}/>`}
             {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
             <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
-            <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>
-            {if @state.day then <SubmitsOnDayConnected day={@state.day} userId={@props.user._id}/>}
+            {if @props.calendar then <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>}
+            {if @state.day
+                <>
+                    <div><Button onClick={@hideSubmitsOnDay}>Спрятать посылки</Button></div>
+                    <SubmitsOnDayConnected day={@state.day} userId={@props.user._id}/>
+                </>
+            }
             <h2>Результаты</h2>
             {
             res = []

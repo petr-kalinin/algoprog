@@ -3,7 +3,9 @@ import styles from './ContributeByWeekCalendar.css'
 React = require('react')
 
 export default ContributeByWeekCalendar = (props) ->
-    submits = props.calendar.byDay.submits
+    submits = props.calendar.byDay
+    # startday is monday of "currentday minus 1 year"
+    # lastday is sunday of current week
     startday = new Date()
     startday.setMonth(startday.getMonth() - 12)
     start = startday.getDate() - startday.getDay() + 1
@@ -43,6 +45,7 @@ export default ContributeByWeekCalendar = (props) ->
     yearMonths = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Снт", "Окт", "Нбр", "Дек"]
     for m of xMonth
         months.push <text key={m} x={xMonth[m] * 16} y={"-8"} className={"month"}>{yearMonths[m]}</text>
+    # markup of calendar is captured from github calendar html element under text "contributions in the last year"
     <div>
       <div style={borderRadius: "6px", border: "1px solid #e1e4e8", width: weeks * 16 + 20 + 20, float: "left"}>
         <div style={display: "flex", paddingTop: "4px", marginRight: "8px", \
@@ -63,5 +66,5 @@ export default ContributeByWeekCalendar = (props) ->
           </svg>
         </div>
       </div>
-      <div className="clearfix" ></div>
+      <div className={styles.clearfix} ></div>
     </div>
