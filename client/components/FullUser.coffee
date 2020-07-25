@@ -99,7 +99,7 @@ export default class FullUser extends React.Component
             {if @props.calendar then <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>}
             {if @state.day
                 <>
-                    <div><Button onClick={@hideSubmitsOnDay}>Спрятать посылки</Button></div>
+                    <div><Button onClick={@hideSubmitsOnDay} bsSize="xsmall">Спрятать посылки</Button></div>
                     <SubmitsOnDayConnected day={@state.day} userId={@props.user._id}/>
                 </>
             }

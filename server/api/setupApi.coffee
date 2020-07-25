@@ -383,7 +383,6 @@ export default setupApi = (app) ->
               outcome: submit.outcome
               language: submit.language
               fullProblem: submit.fullProblem
-              results: submit.results
         )
         res.json(submits)
 
