@@ -1,18 +1,20 @@
 import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
 
+import CodeforcesSubmitDownloader from './codeforces/CodeforcesSubmitDownloader'
+import TestSystem, {TestSystemUser} from './TestSystem'
+
+import download, {downloadLimited} from '../lib/download'
+import sleep from '../lib/sleep'
+
+import logger from '../log'
+
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 
-import download, {downloadLimited} from '../lib/download'
-import logger from '../log'
 
-import TestSystem, {TestSystemUser} from './TestSystem'
-
-import CodeforcesSubmitDownloader from './codeforces/CodeforcesSubmitDownloader'
-
-
-REQUESTS_TIMEOUT = 500
+TIMEOUT = 250
+REQUESTS_LIMIT = 1
 BASE_URL = "https://codeforces.com"
 
 
@@ -31,13 +33,15 @@ _0xca4e = ["\x6C\x65\x6E\x67\x74\x68", "\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74
 class LoggedCodeforcesUser
     @getUser: (username, password) ->
         key = username + "::" + password
-        if not userCache[key] or not (await userCache[key].getId())
+        if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60 * 5)
             logger.info "Creating new CodeforcesUser ", username
             newUser = new LoggedCodeforcesUser(username, password)
             await newUser._login()
-            userCache[key] = newUser
+            userCache[key] =
+                user: newUser
+                loginTime: new Date()
             logger.info "Created new CodeforcesUser ", username
-        return userCache[key]
+        return userCache[key].user
 
     constructor: (@username, @password) ->
         @jar = request.jar()
@@ -77,25 +81,28 @@ class LoggedCodeforcesUser
     randomToken: () ->
         return (@randomNumber() + @randomNumber()).substring(0, 18);
 
+    _getCsrf: (page) ->
+        return /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]    
+
     _login: () ->
         logger.info "Logging in new CodeforcesUser ", @username
         if not @username
             throw "Unknown user"
         try
-            page = await download("#{BASE_URL}/enter", @jar)
-            csrf = /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]
-            ftaa = @randomToken()
-            bfaa = @randomToken()
+            page = await @download("#{BASE_URL}/enter")
+            csrf = @_getCsrf(page)
+            @ftaa = @randomToken()
+            @bfaa = @randomToken()
             tta = @tta()
-            page = await download("#{BASE_URL}/enter", @jar, {
+            page = await @download("#{BASE_URL}/enter", {
                 method: 'POST',
                 form: {
                     handleOrEmail: @username,
                     password: @password,
                     action: "enter",
                     csrf_token: csrf,
-                    ftaa: ftaa,
-                    bfaa: bfaa,
+                    ftaa: @ftaa,
+                    bfaa: @bfaa,
                     _tta: tta
                 },
                 followAllRedirects: true,
@@ -109,12 +116,12 @@ class LoggedCodeforcesUser
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
 
     download: (href, options) ->
-        throw "Needs fix"
         if @requests >= REQUESTS_LIMIT
             await new Promise((resolve) => @promises.push(resolve))
         if @requests >= REQUESTS_LIMIT
             throw "Too many requests"
         @requests++
+        await sleep(TIMEOUT)
         try
             result = await download(href, @jar, options)
         finally
@@ -124,40 +131,41 @@ class LoggedCodeforcesUser
                 promise(0)  # resolve
         return result
 
-    _runSubmit: (problemId, addParams) ->
-        throw "Needs fix"
-        page = await download("https://codeforces.msk.ru/py/problem/#{problemId}/submit", @jar, {
-            addParams...,
-            method: 'POST',
-            followAllRedirects: true,
-            timeout: 30 * 1000,
-            maxAttempts: 1
-        })
-        res = JSON.parse(page)
-        if res.res != "ok"
-            throw "Can't submit"
-
     submit: (problemId, contentType, body) ->
-        throw "Needs fix"
-        @_runSubmit(problemId, {
-            headers: {'Content-Type': contentType},
-            body,
-        })
+        throw "Not implemented"
 
     submitWithObject: (problemId, data) ->
-        throw "Needs fix"
-        @_runSubmit(problemId, {
-            formData: {
-                lang_id: data.language
-                file: {
+        {contest, problem} = data.testSystemData
+        page = await @download("#{BASE_URL}/problemset/problem/#{contest}/#{problem}")
+        csrf = @_getCsrf(page)
+        data = {
+                csrf_token: csrf
+                ftaa: @ftaa
+                bfaa: @bfaa
+                action: "submitSolutionFormSubmitted"
+                submittedProblemIndex: problem
+                programTypeId: data.language
+                sourceFile: {
                     value: Buffer.from(data.source, "latin1")
                     options: {
                         filename: 'a',
                         contentType: 'text/plain'
                     }
                 }
-            },
+            }
+        page = await @download("#{BASE_URL}/problemset/problem/#{contest}/#{problem}??csrf_token=#{csrf}", {
+            formData: data,
+            method: 'POST',
+            followAllRedirects: true,
+            timeout: 30 * 1000,
+            maxAttempts: 1
         })
+        if page.includes("You have submitted exactly the same code before")
+            throw {duplicate: true}
+        if not page.includes("Contest status")
+            throw "Can't submit"
+        logger.info "Apparently submitted!"
+
 
 export default class Codeforces extends TestSystem
     _getAdmin: () ->
@@ -170,29 +178,22 @@ export default class Codeforces extends TestSystem
         return "codeforces"
 
     submitDownloader: (registeredUser, problem, submitsPerPage) ->
-        throw "Now implemented"
-        userId = registeredUser.codeforcesId
-        problemId = @_codeforcesProblemId(problem._id)
-        groupId = 0
-        fromTimestamp = 0
-        user = await @_getAdmin()
-        admin = true
-        if not user
-            user = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
-            admin = false
-        url = (page) ->
-            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}"
-        return new CodeforcesSubmitDownloader(user, url, admin)
+        username = registeredUser.codeforcesUsername
+        contest = problem.testSystemData.contest
+        cproblem = problem.testSystemData.problem
+        loggedUser = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
+        return new CodeforcesSubmitDownloader(BASE_URL, username, contest, cproblem, registeredUser.userKey(), problem._id, loggedUser)
 
     submitNeedsFormData: () ->
         false
 
-    submitWithObject: (user, problemId, data) ->
-        throw "Now implemented"
-        codeforcesProblemId = @_codeforcesProblemId(problemId)
-        logger.info "Try submit #{user.username}, #{user.codeforcesId} #{problemId}"
-        codeforcesUser = await LoggedCodeforcesUser.getUser(user.codeforcesUsername, user.codeforcesPassword)
-        await codeforcesUser.submitWithObject(codeforcesProblemId, data)
+    submitWithObject: (registeredUser, problemId, data) ->
+        {contest, problem} = data.testSystemData
+        logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{registeredUser.codeforcesUsername} #{problemId} #{contest} #{problem}"
+        if not registeredUser.codeforcesUsername
+            throw "No codeforces username given"
+        codeforcesUser = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
+        await codeforcesUser.submitWithObject(problem, data)
 
     registerUser: (user) ->
         logger.info "Do nothing to register user in codeforces"

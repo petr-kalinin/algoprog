@@ -1,55 +1,96 @@
 moment = require('moment')
-iconv = require('iconv-lite')
+
 import { JSDOM } from 'jsdom'
-Entities = require('html-entities').XmlEntities
 
 import TestSystemSubmitDownloader from '../TestSystem'
 
-import Submit from '../../models/submit'
-
 import logger from '../../log'
-
+import download from '../../lib/download'
 import normalizeCode from '../../lib/normalizeCode'
+import sleep from '../../lib/sleep'
+import Submit from '../../models/submit'
 
 import LANGUAGES from '../../../client/lib/languages'
 
-entities = new Entities()
+TIMEOUT = 250
+lastRunTime = new Date() - TIMEOUT
+REQUESTS_LIMIT = 1
+requests = 0
+promises = []
+
+downloadLimited = (href, options) ->
+    if requests >= REQUESTS_LIMIT
+        await new Promise((resolve) => promises.push(resolve))
+    if requests >= REQUESTS_LIMIT
+        throw "Too many requests"
+    requests++
+    await sleep(TIMEOUT)
+    try
+        result = await download(href, undefined, options)
+    finally
+        requests--
+        if promises.length
+            promise = promises.shift()
+            promise(0)  # resolve
+    return result
 
 
 export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownloader
-    constructor: (@adminUser, @baseUrl, @admin) ->
-        throw "Not implemented"
+    constructor: (@baseUrl, @username, @contest, @problem, @realUser, @realProblem, @loggedUser) ->
         super()
 
-    AC: 'Зачтено/Принято'
-    IG: 'Проигнорировано'
-    DQ: 'Дисквалифицировано'
-    CE: 'Ошибка компиляции'
-    CT: ["Тестирование...", "Компилирование...", "Перетестировать", "Задача в очереди на тестирование"]
+    VERDICTS: 
+        FAILED: "Ошибка проверки", 
+        OK: "OK", 
+        PARTIAL: "Неполное решение", 
+        COMPILATION_ERROR: "CE", 
+        RUNTIME_ERROR: "Ошибка времени выполнения", 
+        WRONG_ANSWER: "Неверный ответ", 
+        PRESENTATION_ERROR: "Неправильный формат выходных данных", 
+        TIME_LIMIT_EXCEEDED: "Превышен предел времени", 
+        MEMORY_LIMIT_EXCEEDED: "Превышен предел памяти", 
+        IDLENESS_LIMIT_EXCEEDED: "Превышен предел времени простоя", 
+        SECURITY_VIOLATED: "Нарушение правил", 
+        CRASHED: "Ошибка времени выполнения", 
+        INPUT_PREPARATION_CRASHED: "Ошибка проверки", 
+        CHALLENGED: "Взломано", 
+        SKIPPED: "Пропущено", 
+        TESTING: "CT", 
+        REJECTED: "Отклонено"
 
-    parseRunId: (runid) ->
-        if runid.includes("r")
-            [fullMatch, contest, run] = runid.match(/(\d+)r(\d+)p(\d+)/)
-        else
-            [fullMatch, run] = runid.match(/(\d+)p(\d+)/)
-            contest = undefined
-        return [contest, run]
+    _parseRunId: (runid) ->
+        return runid.substr(1)
+
+    _getCsrf: (page) ->
+        return /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]            
+
+    _getSourceAndResults: (runid) ->
+        runid = @_parseRunId(runid)
+        page = await @loggedUser.download("#{@baseUrl}/submissions/#{@username}")
+        csrf = @_getCsrf(page)
+        console.log "csrf=", csrf
+        formData = 
+            csrf_token: csrf
+            submissionId: runid
+        postData =             
+            formData: formData
+            method: 'POST'
+            followAllRedirects: true
+            timeout: 30 * 1000
+            maxAttempts: 1
+        data = await @loggedUser.download "#{@baseUrl}/data/submitSource", postData
+        console.log data
+        data = JSON.parse(data)
+        data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
+        data.protocol = JSON.parse(data.protocol)
+        return data
 
     getSource: (runid) ->
         try
-            [contest, run] = @parseRunId(runid)
-            href = "https://codeforces.msk.ru/py/problem/run/#{run}/source"
-            #page = await @adminUser.download(href, {encoding: 'latin1'})
-            page = await @adminUser.download(href, {encoding: 'utf8'})
-            logger.info "Source for run #{runid} (url #{href}): #{page}"
-            source = JSON.parse(page)?.data?.source || ""
-            buf = Buffer.from(source, "utf8")
-            source = iconv.decode(buf, "latin1")
-            #if source.length == 0
-            #    throw "Source with length 0"
-            return normalizeCode(entities.decode(source))
+            data = await @_getSourceAndResults(runid)
+            return normalizeCode(data.source)
         catch e
-            logger.warn "Can't download source ", runid, href, e.stack
+            logger.warn "Can't download source ", runid, e, e.stack
             throw e
 
     getComments: (runid) ->
@@ -57,78 +98,59 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
 
     getResults: (runid) ->
         try
-            [contest, run] = @parseRunId(runid)
-            if @admin
-                href = "https://codeforces.msk.ru/py/protocol/get-full/#{run}"
-            else
-                href = "https://codeforces.msk.ru/py/protocol/get/#{run}"
-            data = await @adminUser.download(href)
-            #logger.info "results data for runid #{runid}: ", data
-            result = JSON.parse(data)
-            if not result.tests?[1] and not result.compiler_output and not result.message?.includes('status="SV"') and not result.message?.includes('status="CE"') and not result.protocol?.includes('compile-error="yes"')
-                throw "No results found"
+            data = await @_getSourceAndResults(runid)
+            result = 
+                compiler_output: data.protocol
+                tests: []
+            for i in [1..1000]
+                if not ("input##{i}" of data)
+                    break
+                result.tests.push
+                    input: data?["input##{i}"]
+                    output: data?["output##{i}"]
+                    corr: data?["answer##{i}"]
+                    error_output: undefined
+                    checker_output: data?["checkerStdoutAndStderr##{i}"]
+                    string_status: data?["verdict##{i}"]
+                    time: data?["timeConsumed##{i}"]
+                    max_memory_used: data?["memoryConsumed##{i}"]
             return result
         catch e
             logger.warn "Can't download results ", runid, href, e, e.stack
             throw e
 
-    processSubmit: (uid, name, pid, runid, prob, date, language, outcome) ->
-        if (outcome == @CE)
-            outcome = "CE"
-        if (outcome == @AC)
-            outcome = "AC"
-        if (outcome == @IG)
-            outcome = "IG"
-        if (outcome == @DQ)
-            outcome = "DQ"
-        if (outcome in @CT)
-            outcome = "CT"
-
-        date = new Date(moment(date))
-
-        return new Submit(
-            _id: runid,
-            time: date,
-            user: uid,
-            problem: "p" + pid,
-            outcome: outcome
-            language: language
-        )
-
     parseSubmits: (submits) ->
-        console.log submits
-        data = JSON.parse(submits).data
-        result = true
-        wasSubmit = false
         result = []
-        rowI = 0
-        for row in data
-            rowI++
-            uid = row.user.id
-            name = row.user.firstname + " " + row.user.lastname
-            pid = row.problem.id
-            runid = row.id + "p" + pid
-            prob = row.problem.name
-            date = row.create_time
-            language = row.ejudge_language_id
-            for key, lang of LANGUAGES
-                if language == lang.codeforces
-                    language = key
-                    break
-            outcome = EJUDGE_STATUS_TO_OUTCOME[row.ejudge_status] || row.ejudge_status
-            #outcome = outcomeRe.exec outcome
-            if not outcome
-                logger.warn "No outcome found `#{data[8]}`"
-                continue
-            #outcome = outcome[1]
-            result.push(@processSubmit(uid, name, pid, runid, prob, date, language, outcome))
+        for submit in submits
+            if submit.contestId != +@contest
+                throw "Strange submit: found contest #{submit.contestId}, expected #{@contest}"
+            if submit.author.members[0].handle != @username
+                throw "Strange submit: found username  #{submit.author.members[0].handle}, expected #{@username}"
+            if submit.problem.index != @problem
+                logger.info "Skipping submit #{submit.id} because it is for a different problem: #{submit.problem.index} vs #{@problem}"
+            outcome = @VERDICTS[submit.verdict] || submit.verdict
+            result.push new Submit(
+                _id: "c" + submit.id,
+                time: new Date(submit.creationTimeSeconds * 1000),
+                user: @realUser
+                problem: @realProblem
+                outcome: outcome
+                language: submit.programmingLanguage
+                testSystemData: 
+                    runId: submit.id
+                    contest: @contest
+                    problem: @problem
+                    system: "codeforces"
+                    username: @username
+            )
         return result
 
     getSubmitsFromPage: (page) ->
-        submitsUrl = @baseUrl(page)
-        logger.debug "submitsUrl=", submitsUrl
-        submits = await @adminUser.download submitsUrl
-        if submits == ""
+        COUNT_PER_PAGE = 100
+        url = "#{@baseUrl}/api/contest.status?contestId=#{@contest}&handle=#{@username}&from=#{page * COUNT_PER_PAGE + 1}&count=#{COUNT_PER_PAGE}&lang=ru"
+        logger.debug "apiUrl=", url
+        submits = JSON.parse(await downloadLimited(url))
+        if submits.status != "OK"
             return []
-        result = await @parseSubmits(submits)
+        result = await @parseSubmits(submits.result)
         return result

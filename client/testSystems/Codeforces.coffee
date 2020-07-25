@@ -14,6 +14,7 @@ export default class Ejudge extends TestSystem
         <p><a href={href}>Задача на Codeforces (контест {material.testSystemData.contest}, задача {material.testSystemData.problem}, © Codeforces.com)</a></p>
 
     submitListLink: (submit) ->
-        return <p>Needs fix!</p>
-        #href = "https://codeforces.com/submissions/#{user.cf.submitLogin}/contest/#{material.testSystemData.contest}"
-        #<p><a href={href}>Попытки в контесте на codeforces</a></p>
+        if not submit.testSystemData.username
+            return null
+        href = "https://codeforces.com/submissions/#{submit.testSystemData.username}/contest/#{submit.testSystemData.contest}"
+        <p><a href={href}>Попытки в контесте на codeforces</a></p>
