@@ -369,6 +369,23 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json(submits)
 
+    app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
+        submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
+        submits = submits.map((submit) -> submit.toObject())
+        submits = submits.map(hideTests)
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        submits = submits.map((submit) ->
+              _id: submit._id
+              problem: submit.problem
+              user: submit.user
+              time: submit.time
+              outcome: submit.outcome
+              language: submit.language
+              fullProblem: submit.fullProblem
+        )
+        res.json(submits)
+
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
 
