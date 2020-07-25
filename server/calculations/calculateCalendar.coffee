@@ -10,7 +10,6 @@ export default calculateCalendar = (user) ->
     previousYear = (new Date()).getFullYear() - 1
     for submit in submits
         t = submit.time
-        # https://stackoverflow.com/questions/2013255/how-to-get-year-month-day-from-a-date-object
         month = t.getMonth() + 1
         day = t.getDate()
         year = t.getFullYear()

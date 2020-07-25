@@ -80,7 +80,7 @@ export default SubmitListTable = (props) ->
                         {
                           if props.showProblems
                               <>
-                                <td><Link to="/material/#{submit.problem}">{submit.fullProblem.level}</Link></td>
+                                <td>{submit.fullProblem.level}</td>
                                 <td><Link to="/material/#{submit.problem}">{submit.fullProblem.name}</Link></td>
                               </>
                         }
