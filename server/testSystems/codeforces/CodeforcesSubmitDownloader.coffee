@@ -68,7 +68,6 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         runid = @_parseRunId(runid)
         page = await @loggedUser.download("#{@baseUrl}/submissions/#{@username}")
         csrf = @_getCsrf(page)
-        console.log "csrf=", csrf
         formData = 
             csrf_token: csrf
             submissionId: runid
@@ -79,7 +78,6 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             timeout: 30 * 1000
             maxAttempts: 1
         data = await @loggedUser.download "#{@baseUrl}/data/submitSource", postData
-        console.log data
         data = JSON.parse(data)
         data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
         data.protocol = JSON.parse(data.protocol)

@@ -28,6 +28,8 @@ topic_15983 = () ->
         label("<br>"),
         problem({testSystem: "ejudge", contest: "2003", problem: "1", id: "2946"}),
         problem({testSystem: "codeforces", contest: "1386", problem: "C"}),
+        problem({testSystem: "codeforces", contest: "1385", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "1368", problem: "B"}),
         problem(2945),
         problem(506),
         problem(534),

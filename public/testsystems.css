@@ -21,3 +21,10 @@
 .codeforces-statement .property-title:after {
     content: ":";
 }
+.codeforces-statement .sample-test {
+    display: block;
+}
+.codeforces-statement .input,  .codeforces-statement .output{
+    display: block;
+    padding-right: 0px;
+}
