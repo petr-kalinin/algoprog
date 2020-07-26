@@ -49,7 +49,12 @@ registeredUserSchema.methods.updateInformaticPassword = (password) ->
     logger.info "setting InformaticsPassword ", password 
     await @update({$set: {"informaticsPassword": password}})
     @informaticsPassword = password
-     
+
+registeredUserSchema.methods.setCodeforces = (username, password) ->
+    logger.info "setting codeforces data for user #{@userKey()}"
+    await @update({$set: {codeforcesUsername: username, codeforcesPassword: password}})
+    @codeforcesUsername = username
+    @codeforcesPassword = password
     
 registeredUserSchema.plugin(passportLocalMongoose);
 

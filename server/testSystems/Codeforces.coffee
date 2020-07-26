@@ -30,7 +30,7 @@ userCache = {}
 _0xca4e = ["\x6C\x65\x6E\x67\x74\x68", "\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74", "\x66\x6C\x6F\x6F\x72"];
 # ["length", "charCodeAt", "floor"]
 
-class LoggedCodeforcesUser
+export class LoggedCodeforcesUser
     @getUser: (username, password) ->
         key = username + "::" + password
         if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60 * 5)
@@ -114,6 +114,7 @@ class LoggedCodeforcesUser
             logger.info "Logged in new CodeforcesUser ", @username
         catch e
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
+            throw e
 
     download: (href, options) ->
         if @requests >= REQUESTS_LIMIT
