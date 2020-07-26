@@ -72,7 +72,7 @@ class ContestDownloader
         id = idRes[2]
         href = "view3.php?#{idRes[1]}"
 
-        nameRe = new RegExp '<li><strong><B>Задача ([^.]+)\\.</B> ([^<]+)</strong></li>'
+        nameRe = new RegExp '<li><strong><B>Задача ([^.]+)\\.</B> ([^<]*)</strong></li>'
         nameRes = nameRe.exec text
         name = nameRes[2]
         letter = nameRes[1]
@@ -83,7 +83,7 @@ class ContestDownloader
         text = await @admin.download(href)
 
         firstProblem = @getFirstProblem(text)
-        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]+)</a>', 'gm'
+        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]*)</a>', 'gm'
         problems = []
         text.replace re, (res, a, b, c, d) =>
             problems.push(@makeProblem(res, a, b, c, d))
