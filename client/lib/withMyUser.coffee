@@ -2,7 +2,7 @@ import ConnectedComponent from './ConnectedComponent'
 
 options =
     urls: (props) ->
-        return {"myUser"}
+        return {"myUser", "me"}
 
     timeout: 20 * 1000
 

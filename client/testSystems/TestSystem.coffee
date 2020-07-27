@@ -7,3 +7,6 @@ export default class TestSystem
 
     submitsListLink: (problem, user) ->
         throw "not implemented"
+
+    blockSubmission: (material, me) ->
+        return null        
