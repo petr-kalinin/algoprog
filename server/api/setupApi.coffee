@@ -384,7 +384,10 @@ export default setupApi = (app) ->
         res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
 
     app.get '/api/result/:id', wrap (req, res) ->
-        result = (await Result.findById(req.params.id)).toObject()
+        result = (await Result.findById(req.params.id))?.toObject()
+        if not result
+            res.json({})
+            return
         result.fullUser = await User.findById(result.user)
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
