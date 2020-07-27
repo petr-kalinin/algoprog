@@ -11,6 +11,7 @@ contest_15993 = () ->
         problem(3472),
         problem(2954),
         problem(1370),
+        problem({testSystem: "codeforces", contest: "381", problem: "B"}),
     ])
 
 contest_15994 = () ->

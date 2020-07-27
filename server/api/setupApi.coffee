@@ -12,53 +12,49 @@ XRegExp = require('xregexp')
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
 
+import {UserNameRaw} from '../../client/components/UserName'
+import awaitAll from '../../client/lib/awaitAll'
 import ACHIEVES from '../../client/lib/achieves'
-
-import User from '../models/user'
-import UserPrivate from '../models/UserPrivate'
-import Submit from '../models/submit'
-import Result from '../models/result'
-import Problem from '../models/problem'
-import Table from '../models/table'
-import SubmitComment from '../models/SubmitComment'
-import RegisteredUser from '../models/registeredUser'
-import Material from '../models/Material'
-import BlogPost from '../models/BlogPost'
-import Payment from '../models/Payment'
-import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
-
-import notify from '../metrics/notify'
-
-import getTestSystem from '../../server/testSystems/TestSystemRegistry'
-
-import dashboard from './dashboard'
-import table, * as tableApi from './table'
-import register from './register'
-import setOutcome from './setOutcome'
-
-import logger from '../log'
+import {getYear} from '../../client/lib/graduateYearToClass'
+import {unpaidBlocked} from '../../client/lib/isPaid'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
+import findSimilarSubmits from '../hashes/findSimilarSubmits'
 import * as groups from '../informatics/informaticsGroups'
-
 import InformaticsUser from '../informatics/InformaticsUser'
 
-import download from '../lib/download'
-import {getStats} from '../lib/download'
+import download, {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
-import {getYear} from '../../client/lib/graduateYearToClass'
 import sleep from '../lib/sleep'
 
 import downloadMaterials from '../materials/downloadMaterials'
+import notify from '../metrics/notify'
 
-import findSimilarSubmits from '../hashes/findSimilarSubmits'
+import BlogPost from '../models/BlogPost'
+import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
+import Material from '../models/Material'
+import Payment from '../models/Payment'
+import Problem from '../models/problem'
+import RegisteredUser from '../models/registeredUser'
+import Result from '../models/result'
+import Submit from '../models/submit'
+import SubmitComment from '../models/SubmitComment'
+import Table from '../models/table'
+import User from '../models/user'
+import UserPrivate from '../models/UserPrivate'
 
-import {unpaidBlocked} from '../../client/lib/isPaid'
-import awaitAll from '../../client/lib/awaitAll'
+import getTestSystem from '../testSystems/TestSystemRegistry'
+import {LoggedCodeforcesUser} from '../testSystems/Codeforces'
 
-import {UserNameRaw} from '../../client/components/UserName'
+import logger from '../log'
+
+import dashboard from './dashboard'
+import register from './register'
+import setOutcome from './setOutcome'
+import table, * as tableApi from './table'
+
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
@@ -165,7 +161,7 @@ export default setupApi = (app) ->
             return
         if user.dormant
             res.json({dormant: true})
-            return
+            return0
         try
             await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
         catch e
@@ -182,6 +178,13 @@ export default setupApi = (app) ->
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
+
+    app.get '/api/registeredUser/:id', wrap (req, res) ->
+        registeredUser = await RegisteredUser.findByKey(req.params.id)
+        result = {
+            codeforcesUsername: registeredUser?.codeforcesUsername
+        }
+        res.json(result)
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
         if ""+req.user?.userKey() != ""+req.params.id
@@ -224,6 +227,11 @@ export default setupApi = (app) ->
         else
             await user.setGraduateYear(undefined)
         await user.updateName newName
+        if req.body.codeforcesPassword
+            await LoggedCodeforcesUser.getUser(req.body.codeforcesUsername, req.body.codeforcesPassword)
+            req.user.setCodeforces(req.body.codeforcesUsername, req.body.codeforcesPassword)
+        if not req.body.codeforcesUsername
+            req.user.setCodeforces(undefined, undefined)
         await User.updateUser(user._id, {})
         res.send('OK')
 
@@ -393,7 +401,10 @@ export default setupApi = (app) ->
         res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
 
     app.get '/api/result/:id', wrap (req, res) ->
-        result = (await Result.findById(req.params.id)).toObject()
+        result = (await Result.findById(req.params.id))?.toObject()
+        if not result
+            res.json({})
+            return
         result.fullUser = await User.findById(result.user)
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
@@ -722,6 +733,15 @@ export default setupApi = (app) ->
         user = await InformaticsUser.getUser(username, password)
         result = await user.getData()
         res.json(result)
+
+    app.post '/api/codeforces/userData', wrap (req, res) ->
+        username = req.body.username
+        password = req.body.password
+        try
+            user = await LoggedCodeforcesUser.getUser(username, password)
+            res.json({status: true})
+        catch
+            res.json({status: false})
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
