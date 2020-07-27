@@ -83,6 +83,7 @@ export default dashboard = (registeredUser) ->
                 query["userList"] = {$in: userLists}
             else
                 query["userList"] = {$ne: "unknown"}
+            query["activated"] = true
         promises.push(runDashboardQuery(key, query, result))
     promises.push(runCfQuery(result))
     await awaitAll(promises)

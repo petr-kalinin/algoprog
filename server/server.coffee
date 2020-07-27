@@ -8,20 +8,24 @@ compression = require('compression')
 responseTime = require('response-time')
 StatsD = require('node-statsd')
 
-import logger from './log'
-import renderOnServer from './ssr/renderOnServer'
-import db from './mongo/mongo'
-import configurePassport from './passport'
 import setupApi from './api/setupApi'
-import {REGISTRY} from './testSystems/TestSystemRegistry'
-import download from './lib/download'
 import jobs from './cron/cron'
+import download from './lib/download'
 import sleep from './lib/sleep'
-import setupMetrics from './metrics/metrics'
-import sendToGraphite from './metrics/graphite'
 import downloadMaterials from './materials/downloadMaterials'
-
+import sendToGraphite from './metrics/graphite'
+import setupMetrics from './metrics/metrics'
 import notify from './metrics/notify'
+import db from './mongo/mongo'
+import Submit from './models/submit'
+import Result from './models/result'
+import User from './models/user'
+import renderOnServer from './ssr/renderOnServer'
+import {REGISTRY} from './testSystems/TestSystemRegistry'
+
+import logger from './log'
+import configurePassport from './passport'
+
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -70,7 +74,6 @@ app.get '/status', (req, res) ->
 app.use renderOnServer
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
-
 
 start = () ->
     try

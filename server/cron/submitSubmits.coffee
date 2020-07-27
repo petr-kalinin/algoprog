@@ -122,11 +122,7 @@ submitOneSubmit = (submit) ->
 
 submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()
-    if pendingSubmits.length > 0
-        logger.info "Start submitSubmits, have >0 submits"
     await awaitAll(pendingSubmits.map(submitOneSubmit))
-    if pendingSubmits.length > 0
-        logger.info "Done submitSubmits, had >0 submits"
 
 running_ = false
 

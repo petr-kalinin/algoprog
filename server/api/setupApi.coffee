@@ -12,6 +12,8 @@ XRegExp = require('xregexp')
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
 
+import ACHIEVES from '../../client/lib/achieves'
+
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
 import Submit from '../models/submit'
@@ -102,7 +104,7 @@ hideTests = (submit) ->
             submit.results.tests[key] = hideOneTest(test)
     return submit
 
-createSubmit = (problemId, userId, language, codeRaw, draft) ->
+createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
     logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
@@ -121,6 +123,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         _id: "#{userId}r#{timeStr}#{problemId}" ,
         time: time,
         user: userId,
+        userList: userList,
         problem: problemId,
         outcome: if draft then "DR" else "PS"
         source: code
@@ -164,7 +167,7 @@ export default setupApi = (app) ->
             res.json({dormant: true})
             return
         try
-            await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
         catch e
             res.json({error: e})
             return
@@ -181,7 +184,7 @@ export default setupApi = (app) ->
         res.json({user..., userPrivate...})
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
-        if not +req.params.id == +req.user.informaticsId
+        if ""+req.user?.userKey() != ""+req.params.id
             res.status(403).send('No permissions')
             return
         password = req.body.password
@@ -198,8 +201,8 @@ export default setupApi = (app) ->
             res.json({passError:true})
             return
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
-        newInformaticsPassword=req.body.informaticsPassword
-        informaticsUsername = req.body.informaticsUsername
+        newInformaticsPassword = req.body.informaticsPassword
+        informaticsUsername = req.user.informaticsUsername
         if newInformaticsPassword != ""
             try
                 userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
@@ -209,13 +212,14 @@ export default setupApi = (app) ->
                 for registeredUser in registeredUsers
                         await registeredUser.updateInformaticPassword(newInformaticsPassword)
             catch
+                # TODO: return error to user
         cfLogin = req.body.cf.login
         if cfLogin == ""
             cfLogin = undefined
         newName = req.body.newName
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
-        if(req.body.clas !='' & req.body.clas!=null)
+        if(req.body.clas !='' and req.body.clas!=null)
             await user.setGraduateYear getYear(+req.body.clas)
         else
             await user.setGraduateYear(undefined)
@@ -296,6 +300,14 @@ export default setupApi = (app) ->
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
 
+    app.get '/api/users/withAchieve/:achieve', wrap (req, res) ->
+        achieve = req.params.achieve
+        if not (achieve of ACHIEVES)
+            res.status(400).send('Unknown achieve')
+            return
+        users = await User.findByAchieve(achieve)
+        res.json(users)
+
     app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
             fullUser = await User.findById(user.informaticsId)
@@ -355,6 +367,23 @@ export default setupApi = (app) ->
             submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
+        res.json(submits)
+
+    app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
+        submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
+        submits = submits.map((submit) -> submit.toObject())
+        submits = submits.map(hideTests)
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        submits = submits.map((submit) ->
+              _id: submit._id
+              problem: submit.problem
+              user: submit.user
+              time: submit.time
+              outcome: submit.outcome
+              language: submit.language
+              fullProblem: submit.fullProblem
+        )
         res.json(submits)
 
     app.get '/api/material/:id', wrap (req, res) ->
@@ -557,6 +586,19 @@ export default setupApi = (app) ->
             await user.setUserList(newGroup)
         res.send('OK')
 
+    app.post '/api/forceSetUserList/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        newGroup = req.params.groupName
+        if newGroup != "none"
+            await user.forceSetUserList(newGroup)
+        res.send('OK')
+
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -566,6 +608,18 @@ export default setupApi = (app) ->
             res.status(400).send("User not found")
             return
         await user.setDormant(true)
+        res.send('OK')
+
+    app.post '/api/setActivated/:userId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        await user.setActivated(req.body?.value)
+        if req.body?.value then await user.setDormant(false)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
@@ -584,17 +638,18 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        adminUser = await InformaticsUser.findAdmin()
 
         runForUser = (user) ->
-            await groups.moveUserToGroup(adminUser, user._id, "unknown")
-            await user.setUserList("unknown")
-            logger.info("Moved user #{user._id} to unknown group")
+            userPrivate = await UserPrivate.findById(user._id)
+            registeredUser = await RegisteredUser.findByKey(user._id)
+            if registeredUser.admin or (user.userList == "stud" and userPrivate.paidTill > new Date())
+                logger.info("Will not move user #{user._id} to unknown group")
+                return
+            await user.setActivated(false)
+            logger.info("Deactivate user #{user._id}")
 
         users = await User.findAll()
         for user in users
-            #if user.userList == "stud"
-            #    continue
             runForUser(user)
         res.send('OK')
 

@@ -16,9 +16,9 @@ class Input extends React.Component
 
     render: ()->
         errors = @props.errors?.map(
-            (val)->
+            (val, i)->
                 if val
-                    <div className = "#{styles.youHaveProblem} alert-danger">{val}</div>
+                    <div className = "#{styles.youHaveProblem} alert-danger" key={i}>{val}</div>
                     )
         if errors
             errors = (q for q in errors when q)
@@ -59,7 +59,7 @@ export default class EditingUser extends React.Component
         return
             cfLogin: props.user.cf?.login || ''
             password: ''
-            clas: getClassStartingFromJuly(@props.user.graduateYear)
+            clas: getClassStartingFromJuly(@props.user.graduateYear) || ''
             newPassOne: ''
             newPassTwo: ''
             loading: false
@@ -104,11 +104,11 @@ export default class EditingUser extends React.Component
                 informaticsUsername: @props.me.informaticsUsername
                 newName: @state.newName
                 )
-            @props.handleReload()
             if (z.passError)
                 await @setState passError: true
             else
-                @props.reload()
+                @props.handleReload()
+                return
             await @setState loading: false
         catch
             @setState unknownError: true

@@ -1,4 +1,6 @@
 export default normalizeCode = (string) ->
+    if not string
+        return string
     # remove bom, see https://ejudge.ru/wiki/index.php/Serve.cfg:global:ignore_bom
     if string.startsWith("\xEF\xBB\xBF")
         string = string.substring(3)

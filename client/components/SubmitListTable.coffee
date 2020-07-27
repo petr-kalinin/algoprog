@@ -3,6 +3,7 @@ moment = require('moment')
 FontAwesome = require('react-fontawesome')
 
 import Table from 'react-bootstrap/lib/Table'
+import { Link } from 'react-router-dom'
 
 import outcomeToText from '../lib/outcomeToText'
 import getTestSystem from '../testSystems/TestSystemRegistry'
@@ -44,13 +45,23 @@ export default SubmitListTable = (props) ->
         <Table responsive striped condensed hover>
             <thead>
                 <tr>
+                    {if props.showProblems
+                        <>
+                          <th>Уровень</th>
+                          <th>Название</th>
+                        </>
+                    }
                     <th>Время попытки</th>
                     <th>Результат</th>
                     <th>Язык</th>
-                    <th><span title="(сек)">Время</span></th>
-                    <th><span title="ОЗУ (МБ)">Память</span></th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
+                    {if not props.showProblems
+                        <>
+                            <th><span title="(сек)">Время</span></th>
+                            <th><span title="ОЗУ (МБ)">Память</span></th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                        </>
+                    }
                     {if props.handleDiffClick
                         <th>&nbsp;</th>
                     }
@@ -61,21 +72,33 @@ export default SubmitListTable = (props) ->
                     [cl, message] = outcomeToText(submit.outcome)
                     if submit._id == props.activeId
                         cl += " " + styles.active
-                    time = maxVal(submit, "time")
-                    mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
-                    mem = mem.toFixed(2)
+                    if not props.showProblems
+                        time = maxVal(submit, "time")
+                        mem = (maxVal(submit, "max_memory_used")) / (1024*1024)
+                        mem = mem.toFixed(2)
                     res = []
-                    res.push <tr key={submit._id} className={cl} onClick={props.handleSubmitClick(submit)} style={cursor: "hand"}>
+                    res.push <tr key={submit._id} className={cl} onClick={if not props.showProblems then props.handleSubmitClick(submit)} style={cursor: if not props.showProblems then "hand"}>
+                        {
+                          if props.showProblems
+                              <>
+                                <td>{submit.fullProblem.level}</td>
+                                <td><Link to="/material/#{submit.problem}">{submit.fullProblem.name}</Link></td>
+                              </>
+                        }
                         <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>
                             <div className='visible-xs visible-sm'>{LANGUAGE_ABBREVIATED[submit.language]}</div>
                             <div className='hidden-xs hidden-sm'>{submit.language}</div>
                         </td>
-                        <td><span title="(сек)">{if time? then time / 1000 else ""}</span></td>
-                        <td><span title="ОЗУ (МБ)">{if mem >= 0 then mem else ""}</span></td>
-                        <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
-                        <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
+                        {if not props.showProblems
+                            <>
+                              <td><span title="(сек)">{if time? then time / 1000 else ""}</span></td>
+                              <td><span title="ОЗУ (МБ)">{if mem >= 0 then mem else ""}</span></td>
+                              <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
+                              <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
+                            </>
+                        }
                         {if props.handleDiffClick
                             <td>
                                 <span onClick={props.handleDiffClick(0, submit)} href="#">
@@ -105,7 +128,7 @@ export default SubmitListTable = (props) ->
             </tbody>
         </Table>
         {
-        if props.submits?[0]
+        if props.submits?[0] and not props.showProblems
             s = props.submits[props.submits.length - 1]
             testSystem = getTestSystem(s.testSystemData?.system)
             testSystem.submitListLink(s)

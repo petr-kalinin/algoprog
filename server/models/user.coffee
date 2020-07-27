@@ -9,6 +9,7 @@ import calculateAchieves from '../calculations/calculateAchieves'
 import logger from '../log'
 
 import updateResults from '../calculations/updateResults'
+import calculateCalendar from '../calculations/calculateCalendar'
 
 import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
@@ -17,11 +18,13 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 10
+DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 90
 
 usersSchema = new mongoose.Schema
     _id: String,
     name: String,
     userList: String,
+    activated: Boolean,
     chocos: [Number],
     chocosGot: [Number],
     level:
@@ -69,7 +72,7 @@ usersSchema.methods.updateLevel = ->
 
 usersSchema.methods.updateDormant = ->
     date = new Date()
-    if @userList=="unknown" && @lastActivated && date-@lastActivated > DORMANT_TIME
+    if not @activated && @lastActivated && date-@lastActivated > (if @userList=="unknown" then DORMANT_TIME else DEACTIVATED_DORMANT_TIME)
         @dormant = true
     @update({$set: {dormant: @dormant}})
 
@@ -133,15 +136,27 @@ usersSchema.methods.setChocosGot = (chocosGot) ->
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
     @lastActivated = Date.now()
-    await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "dormant": false}})
+    await @update({$set: {"lastActivated": @lastActivated, "userList": userList, "activated": true, "dormant": false}})
     @userList = userList
     User.updateUser(@_id)
+    return undefined
+
+usersSchema.methods.forceSetUserList = (userList) ->
+    logger.info "force-setting userList ", @_id, userList
+    await @update({$set: {"userList": userList}})
+    @userList = userList
+    #User.updateUser(@_id)
     return undefined
 
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
     await @update({$set: {"dormant": dormant}})
     @dormant = dormant
+
+usersSchema.methods.setActivated = (activated) ->
+    logger.info "setting activated ", @_id, activated
+    await @update({$set: {"activated": activated}})
+    @activated = activated
 
 compareLevels = (a, b) ->
     if a.length != b.length
@@ -174,9 +189,13 @@ usersSchema.statics.findAll = () ->
 usersSchema.statics.findById = (id) ->
     User.findOne({_id: id})
 
+usersSchema.statics.findByAchieve = (achieve) ->
+    User.find({achieves: achieve}).sort({ratingSort: -1})
+
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
+    await calculateCalendar(userId)
     u = await User.findById(userId)
     if not u
         logger.warn "Unknown user ", userId
@@ -237,6 +256,10 @@ usersSchema.index
 usersSchema.index
     dormant: 1
     username: 1
+
+usersSchema.index
+    achieves: 1
+    ratingSort: -1
 
 User = mongoose.model('Users', usersSchema);
 

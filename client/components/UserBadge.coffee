@@ -55,7 +55,7 @@ export default class UserBadge extends React.Component
                 {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
                 {if(@state.editing && +@props.user._id == @props.me?.informaticsId)
                     <div>
-                        <EditingUser {...this.props} reload = {@reload}/>
+                        <EditingUser {...this.props} handleReload = {@reload}/>
                     </div>
                 else
                     <Button variant="light" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
