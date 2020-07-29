@@ -1,0 +1,30 @@
+.section-title {
+    font-size: 120%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.sample-test {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+.sample-test .input {
+    padding-right: 20px;
+}
+.codeforces-statement .header {
+    padding-bottom: 20px;
+}
+.codeforces-statement .property-title {
+    display: inline-block;
+    padding-right: 1em;
+}
+.codeforces-statement .property-title:after {
+    content: ":";
+}
+.codeforces-statement .sample-test {
+    display: block;
+}
+.codeforces-statement .input,  .codeforces-statement .output{
+    display: block;
+    padding-right: 0px;
+}

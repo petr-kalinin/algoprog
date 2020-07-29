@@ -67,12 +67,14 @@ export default Level = (props) ->
             problems.push(m)
             continue
         if problems.length
-            a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/> 
+            a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/>
             problems = []
         a(<div key={m._id + ":" + m.type}>
-            <Material material={m} simple={props.simple}/>
+            <div className = {props.material.type == 'topic' && styles.bigText}>
+                <Material material={m} simple={props.simple}/>
+            </div>
         </div>)
     if problems.length
-        a <ProblemListWrapped problems={problems} key={"problems::final"}/> 
+        a <ProblemListWrapped problems={problems} key={"problems::final"}/>
     res}
     </div>

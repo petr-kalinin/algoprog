@@ -33,7 +33,7 @@ renderFullPage = (html, data, helmet) ->
             <link rel="stylesheet" href="/server.bundle.css"/>
             <link rel="stylesheet" href="/bundle.css"/>
             <link rel="stylesheet" href="/react-diff-view.css"/>
-            <link rel="stylesheet" href="/informatics.css"/>
+            <link rel="stylesheet" href="/testsystems.css"/>
             <link rel="stylesheet" href="/highlight.css"/>
             <link rel="stylesheet" href="/main.css"/>
             <meta name="viewport" content="width=device-width, initial-scale=1">
