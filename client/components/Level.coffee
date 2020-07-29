@@ -8,7 +8,7 @@ import {ProblemList} from './Contest'
 import styles from './Level.css'
 
 Label = (props) ->
-    <div dangerouslySetInnerHTML={{__html: props.material.content}}>
+    <div dangerouslySetInnerHTML={__html: props.material.content}>
     </div>
 
 SubLevel = (props) ->
@@ -26,7 +26,7 @@ InternalLink = (props) ->
     </div>
 
 MaterialLink = (props) ->
-    <div className={props.className && styles[props.className]}>
+    <div className = {props.className && styles[props.className]}>
         <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
@@ -37,7 +37,7 @@ ExternalLink = (props) ->
 
 Material = (props) ->
     switch props.material.type
-        when 'label' then `<Label {...props}/>`
+        when 'label' then `<Label {...props} />`
         when 'page' then `<MaterialLink {...props}/>`
         when 'pdf' then `<ExternalLink head="file-pdf-o" {...props}/>`
         when 'image' then `<ExternalLink head="picture-o" {...props}/>`
@@ -67,12 +67,14 @@ export default Level = (props) ->
             problems.push(m)
             continue
         if problems.length
-            a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/> 
+            a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/>
             problems = []
         a(<div key={m._id + ":" + m.type}>
-            <Material material={m} simple={props.simple}/>
+            <div className = {props.material.type == 'topic' && styles.bigText}>
+                <Material material={m} simple={props.simple}/>
+            </div>
         </div>)
     if problems.length
-        a <ProblemListWrapped problems={problems} key={"problems::final"}/> 
+        a <ProblemListWrapped problems={problems} key={"problems::final"}/>
     res}
     </div>
