@@ -62,7 +62,7 @@ app.use (req, res, next) ->
 
 setupApi(app)
 
-
+app.use(express.static('build/server'))
 app.use(express.static('build/assets'))
 
 app.use(express.static('public'))
