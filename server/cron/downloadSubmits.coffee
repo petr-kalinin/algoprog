@@ -127,6 +127,7 @@ class SubmitDownloader
         newSubmit.sourceRaw = sourceRaw
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
+        newSubmit.downloadTime = new Date()
         await newSubmit.calculateHashes()
 
         user = await User.findById(newSubmit.user)
