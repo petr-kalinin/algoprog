@@ -161,7 +161,7 @@ export default setupApi = (app) ->
             return
         if user.dormant
             res.json({dormant: true})
-            return0
+            return
         try
             await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
         catch e
