@@ -9,7 +9,8 @@ const TerserWebpackPlugin = require('terser-webpack-plugin')
 const isDev = process.env.NODE_ENV === 'development'
 console.log('IS DEV:', isDev)
 const isProd = !isDev
-
+const mode = () => isDev ? 'development' : 'production'
+const watch = () => isDev
 const optimization = () => {
   const config = {
     // i don't know how to handle unknown amount of parts in ssr
@@ -72,7 +73,8 @@ const moduleconf = () => ({
 
 const clientConfig = {
   context: path.resolve(__dirname, 'client'),
-  mode: isDev ? 'development' : 'production',
+  mode: mode(),
+  watch: watch(),
   entry: {
     client: ['./client.coffee']
   },
@@ -95,7 +97,8 @@ const clientConfig = {
 
 const serverConfig = {
   context: path.resolve(__dirname, 'server'),
-  mode: isDev ? 'development' : 'production',
+  mode: mode(),
+  watch: watch(),
   target: 'node',
   entry: {
     server: ['./server.coffee']

@@ -2,10 +2,9 @@
   "name": "",
   "version": "1.0.0",
   "scripts": {
-    "start": "gulp",
+    "start": "concurrently 'npm run build' 'npm run start:server'",
     "start:server": "nodemon ./build/server/server.bundle.js",
-    "build": "rm -rf build && cross-env NODE_ENV=production webpack --mode production --config webpack.config.js",
-    "build:dev": "rm -rf build && cross-env NODE_ENV=development webpack --mode development --config webpack.config.js --watch"
+    "build": "webpack --config webpack.config.js"
   },
   "browserslist": "> 0.25%, not dead",
   "dependencies": {
@@ -109,6 +108,7 @@
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "coffee-loader": "^1.0.0",
+    "concurrently": "^5.2.0",
     "css-loader": "^4.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "nodemon": "^2.0.4",
