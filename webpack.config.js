@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 console.log('IS DEV:', isDev)
 const isProd = !isDev
 const mode = () => isDev ? 'development' : 'production'
