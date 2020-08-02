@@ -2,8 +2,11 @@
   "name": "",
   "version": "1.0.0",
   "scripts": {
-    "start": "gulp"
+    "start": "concurrently 'npm run build' 'npm run start:server'",
+    "start:server": "nodemon ./build/server/server.bundle.js",
+    "build": "webpack --config webpack.config.js"
   },
+  "browserslist": "> 0.25%, not dead",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-react-css-modules": "^5.2.6",
@@ -27,6 +30,7 @@
     "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "cron": "^1.8.2",
+    "cross-env": "^7.0.2",
     "css-modules-require-hook": "^4.2.3",
     "css-modulesify": "^0.28.0",
     "csv-parse": "^4.9.0",
@@ -97,7 +101,22 @@
     "xregexp": "^4.3.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.9.5",
-    "@babel/preset-react": "^7.9.4"
+    "@babel/core": "^7.10.5",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "coffee-loader": "^1.0.0",
+    "concurrently": "^5.2.0",
+    "css-loader": "^4.0.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "nodemon": "^2.0.4",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "style-loader": "^1.2.1",
+    "terser-webpack-plugin": "^3.0.8",
+    "webpack": "^4.44.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-node-externals": "^2.5.0"
   }
 }
