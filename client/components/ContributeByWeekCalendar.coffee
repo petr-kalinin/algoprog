@@ -23,7 +23,7 @@ export default ContributeByWeekCalendar = (props) ->
         currDay = "#{d.getFullYear()}-#{d.getMonth() + 1}-#{d.getDate()}"
         if d.getDate() == 15 then xMonth[d.getMonth()] = weeks
         color = "#ebedf0"
-        if currDay of submits
+        if submits and (currDay of submits)
             c = submits[currDay]
             if c < 3
                 color = "#9be9a8"
