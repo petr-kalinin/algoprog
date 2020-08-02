@@ -2,7 +2,8 @@
   "name": "",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently 'npm run build' 'npm run start:server'",
+    "dev": "concurrently 'npm run build' 'npm run start:server'",
+    "start": "npm run build && npm run start:server",
     "start:server": "nodemon ./build/server/server.bundle.js",
     "build": "webpack --config webpack.config.js"
   },
