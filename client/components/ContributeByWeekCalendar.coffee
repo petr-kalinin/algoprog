@@ -33,9 +33,9 @@ export default ContributeByWeekCalendar = (props) ->
                 color = "#30a14e"
             else
                 color = "#216e39"
-        onClickFun = do (currDay) -> -> if currDay of submits then props.clickOnDay(currDay)
+        onClickFun = do (currDay) -> -> if submits and (currDay of submits) then props.clickOnDay(currDay)
         title = currDay
-        if currDay of submits
+        if submits and (currDay of submits)
             title += ": #{submits[currDay]}"
         column.push <rect key={currDay} onClick={onClickFun} width="11" height="11" x={weeks * 16} y={dayOfWeek * 15} fill={color}>
                   <title>{title}</title>
