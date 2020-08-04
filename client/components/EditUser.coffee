@@ -223,7 +223,7 @@ class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Логин на codeforces:
+                        Хендл (никнейм) на codeforces:
                             <Input
                                 type = "text"
                                 name = "newLogin"
@@ -260,7 +260,7 @@ class EditingUser extends React.Component
                         Вы можете указать данные того же аккаунта, что и выше, или можете зарегистрировать
                         отдельный аккаунт только для отправки решений с алгопрога, если не хотите указывать пароль
                         от вашего основного аккаунта.<br/>
-                        Логин на codeforces для отправки решений:
+                        Хендл (никнейм) на codeforces для отправки решений:
                             <Input
                                 type = "text"
                                 name = "codeforcesUsername"
