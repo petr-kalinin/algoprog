@@ -7,6 +7,7 @@ import Calendar from '../models/Calendar'
 import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
+import SummaryTable from '../models/SummaryTable'
 
 import addTotal from '../../client/lib/addTotal'
 import awaitAll from '../../client/lib/awaitAll'
@@ -89,16 +90,30 @@ sortBySolved = (a, b) ->
 sortByLevelAndRating = (a, b) ->
     return User.sortByLevelAndRating(a.user, b.user)
 
+calcdiff = (d) -> (d[0] * 1e9 + d[1]) / 1e9 ##########################################
+
 export default table = (userList, table) ->
+    ttt = process.hrtime() ##########################################
+    console.log "TIME", ttt ##########################################
     data = []
     users = await User.findByList(userList)
     tables = await getTables(table)
     #[users, tables] = await awaitAll([users, tables])
     for user in users
-        data.push(getUserResult(user, tables, 1))
+        sumTable = await SummaryTable.findById "#{user._id}::#{table}"
+        if sumTable
+            data.push
+                user : user
+                results: sumTable?.table?.results
+                total : sumTable?.table?.total
+        else
+            data.push(getUserResult(user, tables, 1))
     results = await awaitAll(data)
+    diff5 = process.hrtime(ttt) ##########################################
+    console.log calcdiff(diff5) ##########################################
     results = (r for r in results when r)
     results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
+    console.log "--- TIME", process.hrtime() ##########################################
     return results
 
 export fullUser = (userId) ->
