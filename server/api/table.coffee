@@ -7,12 +7,12 @@ import Calendar from '../models/Calendar'
 import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
-import SummaryTable from '../models/SummaryTable'
+import TableResults from '../models/TableResults'
 
 import addTotal from '../../client/lib/addTotal'
 import awaitAll from '../../client/lib/awaitAll'
 
-getTables = (table) ->
+export getTables = (table) ->
     if table == "main"
         return ["main"]
     tableIds = table.split(",")
@@ -35,7 +35,7 @@ needUser = (userId, tables) ->
             return true
     return false
 
-recurseResults = (user, tableId, depth) ->
+recurseResults = (userId, tableId, depth) ->
     table = await Table.findById(tableId)
     if not table
         return null
@@ -43,15 +43,15 @@ recurseResults = (user, tableId, depth) ->
     total = undefined
     if depth > 0
         for subtableId in table.tables
-            subtableResults = await recurseResults(user, subtableId, depth-1)
+            subtableResults = await recurseResults(userId, subtableId, depth-1)
             total = addTotal(total, subtableResults.total)
             delete subtableResults.total
             tableResults.push(subtableResults)
     else
         for subtableId in table.tables
-            tableResults.push(getResult(user._id, subtableId , Table))
+            tableResults.push(getResult(userId, subtableId , Table))
         for subtableId in table.problems
-            tableResults.push(getResult(user._id, subtableId , Problem))
+            tableResults.push(getResult(userId, subtableId , Problem))
         tableResults = await awaitAll(tableResults)
         for r in tableResults
             total = addTotal(total, r)
@@ -61,20 +61,19 @@ recurseResults = (user, tableId, depth) ->
         results: tableResults
         total: total
 
-getUserResult = (user, tables, depth) ->
-    if not await needUser(user._id, tables)
+export getUserResult = (userId, tables, depth) ->
+    if not await needUser(userId, tables)
         return null
     total = undefined
     results = []
     for tableId in tables
-        tableResults = await recurseResults(user, tableId, depth)
+        tableResults = await recurseResults(userId, tableId, depth)
         if not tableResults
             continue
         total = addTotal(total, tableResults.total)
         delete tableResults.total
         results.push tableResults
     return
-        user: user
         results: results
         total: total
 
@@ -90,30 +89,24 @@ sortBySolved = (a, b) ->
 sortByLevelAndRating = (a, b) ->
     return User.sortByLevelAndRating(a.user, b.user)
 
-calcdiff = (d) -> (d[0] * 1e9 + d[1]) / 1e9 ##########################################
-
 export default table = (userList, table) ->
-    ttt = process.hrtime() ##########################################
-    console.log "TIME", ttt ##########################################
     data = []
     users = await User.findByList(userList)
     tables = await getTables(table)
     #[users, tables] = await awaitAll([users, tables])
-    for user in users
-        sumTable = await SummaryTable.findById "#{user._id}::#{table}"
+    getTableResults = (user, tableName, tables) ->
+        sumTable = await TableResults.findByUserAndTable(user._id, tableName)
         if sumTable
-            data.push
-                user : user
-                results: sumTable?.table?.results
-                total : sumTable?.table?.total
+            return
+                results: sumTable?.data?.results
+                total : sumTable?.data?.total
         else
-            data.push(getUserResult(user, tables, 1))
+            return getUserResult(user._id, tables, 1)
+    for user in users
+        data.push getTableResults user, table, tables
     results = await awaitAll(data)
-    diff5 = process.hrtime(ttt) ##########################################
-    console.log calcdiff(diff5) ##########################################
-    results = (r for r in results when r)
+    results = ({r..., user: users[i]} for r, i in results when r)
     results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
-    console.log "--- TIME", process.hrtime() ##########################################
     return results
 
 export fullUser = (userId) ->

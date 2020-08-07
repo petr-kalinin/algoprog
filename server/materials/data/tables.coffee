@@ -31,6 +31,8 @@ getTreeTitle = (table) ->
     else
         return "Уровни " + tables.join(", ")
 
+export allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "10", "main", "reg", "roi", "byWeek"]
+
 export default tables = () ->
     groups =
         lic40: "Лицей 40",
@@ -39,7 +41,6 @@ export default tables = () ->
         vega: "Вега",
         notnnov: "Остальные школьники"
         stud: "Студенты и старше"
-    allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "main", "reg", "roi", "byWeek"]
 
     materials = []
     for group, groupName of groups
