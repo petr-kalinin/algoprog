@@ -26,7 +26,12 @@ findMistakeSchema.statics.findByProblemAndNotUser = (problem, user) ->
         problem: problem
         user: {$ne: user}
 
+findMistakeSchema.statics.findOneNotApproved = () ->
+    FindMistake.findOne
+        approved: UNKNOWN
+
 findMistakeSchema.index({ problem : 1, user: 1 })
+findMistakeSchema.index({ approved : 1 })
 
 FindMistake = mongoose.model('FindMistake', findMistakeSchema);
 

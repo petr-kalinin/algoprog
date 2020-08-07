@@ -49,7 +49,7 @@ listOptions =
 ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists, listOptions)
 
 
-class ReviewResult extends React.Component
+export class ReviewResult extends React.Component
     constructor: (props) ->
         super(props)
         @state =
