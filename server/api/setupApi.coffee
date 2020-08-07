@@ -34,6 +34,7 @@ import notify from '../metrics/notify'
 
 import BlogPost from '../models/BlogPost'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
+import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
 import Payment from '../models/Payment'
 import Problem from '../models/problem'
@@ -69,6 +70,7 @@ wrap = (fn) ->
             args[2](error)
 
 expandSubmit = (submit) ->
+    submit = submit.toObject?() || submit
     MAX_SUBMIT_LENGTH = 100000
 
     containsBinary = (source) ->
@@ -750,6 +752,19 @@ export default setupApi = (app) ->
         stats = getStats()
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
+
+    app.get '/api/approveFindMistake', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        mistake = await FindMistake.findOneNotApproved()
+        if not mistake
+            res.json({})
+            return
+        submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        res.json({mistake, submits})
 
     app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
         url = req.query.url

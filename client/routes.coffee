@@ -8,6 +8,7 @@ import {
 
 import AchievesPage from './pages/AchievesPage'
 import AllCommentsPage from './pages/AllCommentsPage'
+import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
 import UserBadgePage from './pages/UserBadgePage'
 import FullUserPage from './pages/FullUserPage'
 import DashboardPage from './pages/DashboardPage'
@@ -65,6 +66,11 @@ export default [
         path: '/review',
         key: "review",
         component: ReviewPage,
+    },
+    {
+        path: '/approveFindMistake',
+        key: "approveFindMistake",
+        component: ApproveFindMistakePage,
     },
     {
         path: '/solvedByWeek/:userList',
