@@ -1,3 +1,5 @@
+import processForFindMistake from '../findMistake/processForFindMistake'
+
 import User from '../models/user'
 import Hash from '../models/Hash'
 import Table from '../models/table'
@@ -108,6 +110,8 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
     await result.upsert()
+    # Warning: processForFindMistake reverses submits array
+    await processForFindMistake(submits)
     return result
 
 export default updateResults = (user, dirtyResults) ->
