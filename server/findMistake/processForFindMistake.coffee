@@ -34,13 +34,14 @@ export default processForFindMistake = (submits) ->
             if submit.problem != currentOk.problem
                 throw "Different users in processForFindMistake: #{submit.problem} vs #{currentOk.problem}"
             if distance(submit.sourceRaw, currentOk.sourceRaw) < DISTANCE_THRESHOLD
-                findMistake = new FindMistake
-                        _id: submit._id + "::" + currentOk._id
-                        source: submit.sourceRaw
-                        submit: submit._id
-                        correctSubmit: currentOk._id
-                        user: submit.user
-                        problem: submit.problem
-                        approved: false
-                await findMistake.upsert()
+                id = submit._id + "::" + currentOk._id
+                if not (await FindMistake.findById(id))
+                    findMistake = new FindMistake
+                            _id: id
+                            source: submit.sourceRaw
+                            submit: submit._id
+                            correctSubmit: currentOk._id
+                            user: submit.user
+                            problem: submit.problem
+                    await findMistake.upsert()
                 currentOk = undefined

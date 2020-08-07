@@ -1,5 +1,9 @@
 mongoose = require('mongoose')
 
+APPROVED = 2
+DISPROVED = 1
+UNKNOWN = 0
+
 findMistakeSchema = new mongoose.Schema
     _id: String
     source: String
@@ -7,14 +11,15 @@ findMistakeSchema = new mongoose.Schema
     correctSubmit: String
     user: String
     problem: String
-    approved: Boolean
+    approved: Number
 
 findMistakeSchema.methods.upsert = () ->
+    @approved = UNKNOWN
     # https://jira.mongodb.org/browse/SERVER-14322
     try
         @update(this, {upsert: true})
     catch
-        logger.info "Could not upsert a hash"
+        logger.info "Could not upsert a findMistake"
 
 findMistakeSchema.statics.findByProblemAndNotUser = (problem, user) ->
     FindMistake.find
