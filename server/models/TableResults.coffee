@@ -14,6 +14,10 @@ TableResultsSchema.methods.upsert = () ->
 TableResultsSchema.statics.findByUserAndTable = (user, table) ->
     TableResults.findOne({user, table})
 
+TableResultsSchema.index
+    user: 1
+    table: 1
+
 TableResults = mongoose.model('TableResults', TableResultsSchema)
 
 export default TableResults
