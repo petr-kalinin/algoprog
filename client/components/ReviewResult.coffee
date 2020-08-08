@@ -248,14 +248,15 @@ export class SubmitListWithDiff extends React.Component
                 currentDiff: newDiff
     render:  () ->
         SubmitComponent = @props.SubmitComponent
-        submitComponentProps = {@props..., @state...}
+        allProps = {@props..., @state...}
+        PostSubmit = @props.PostSubmit
         admin = @props.me?.admin
         <Grid fluid>
             <Col xs={12} sm={12} md={8} lg={8}>
                 {
                 if @state.currentSubmit
                     <div>
-                        {`<SubmitComponent {...submitComponentProps}/>`}
+                        {`<SubmitComponent {...allProps}/>`}
                     </div>
                 else if @state.currentDiff[1] and @state.currentDiff[0]
                     if @state.currentDiff[1].source == @state.currentDiff[0].source
@@ -290,6 +291,7 @@ export class SubmitListWithDiff extends React.Component
                     activeId={@state.currentSubmit?._id}
                     activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
             </Col>
+            {PostSubmit && `<Col xs={12} sm={12} md={12} lg={12}><PostSubmit {...allProps}/></Col>`}
         </Grid>
 
 export class ReviewResult extends React.Component

@@ -766,6 +766,15 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json({mistake, submits})
 
+    app.post '/api/setApproveFindMistake/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        approve = req.body.approve
+        mistake = await FindMistake.findById(req.params.id)
+        await mistake.setApprove(approve)
+        res.send('OK')
+
     app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
         url = req.query.url
         if not req.user?.admin
