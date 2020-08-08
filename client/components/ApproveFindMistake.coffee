@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 
-import {ReviewResult} from './ReviewResult'
+import {SubmitListWithDiff} from './ReviewResult'
+import Submit from './Submit'
+
+SubmitComponent = (props) ->
+    <Submit submit={props.currentSubmit} showHeader/>
 
 ApproveFindMistake = (props) ->
-    fakeResult = 
-        _id: ""
-    <ReviewResult submits={props.data.submits} user={{}} bestSubmits={[]} me={{}} result={fakeResult}/>
+    console.log props.data.submits
+    <SubmitListWithDiff submits={props.data.submits} SubmitComponent={SubmitComponent}/>
 
 options = {
     urls: (props) ->
