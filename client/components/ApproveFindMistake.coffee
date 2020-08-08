@@ -1,14 +1,39 @@
 React = require('react')
+import Button from 'react-bootstrap/lib/Button'
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import { Link } from 'react-router-dom'
 
+import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
-import {ReviewResult} from './ReviewResult'
+import {SubmitListWithDiff} from './ReviewResult'
+import Submit from './Submit'
 
-ApproveFindMistake = (props) ->
-    fakeResult = 
-        _id: ""
-    <ReviewResult submits={props.data.submits} user={{}} bestSubmits={[]} me={{}} result={fakeResult}/>
+SubmitComponent = (props) ->
+    <Submit submit={props.currentSubmit} showHeader/>
+
+PostSubmit = (props) ->
+    <>
+        <ButtonGroup>
+            <Button onClick={props.setApprove(true)} bsStyle="success">Ок</Button>
+            <Button onClick={props.setApprove(false)} bsStyle="danger">Не ок</Button>
+        </ButtonGroup>
+    </>
+
+class ApproveFindMistake extends React.Component
+    constructor: (props) ->
+        super(props)
+        @setApprove = @setApprove.bind this
+
+    setApprove: (approve) ->
+        () =>
+            await callApi "setApproveFindMistake/#{@props.data.mistake._id}", { approve }
+            @props.handleReload()
+
+    render: () ->
+        if not @props.data.mistake
+            return <div>Тут ничего нет</div>
+        <SubmitListWithDiff submits={@props.data.submits} setApprove={@setApprove} SubmitComponent={SubmitComponent} PostSubmit={PostSubmit}/>
 
 options = {
     urls: (props) ->

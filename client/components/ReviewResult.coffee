@@ -48,14 +48,11 @@ listOptions =
 
 ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists, listOptions)
 
-
-export class ReviewResult extends React.Component
+class SubmitWithActions extends React.Component
     constructor: (props) ->
         super(props)
         @state =
             commentText: ""
-            currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
-            currentDiff: [undefined, undefined]
             bestSubmits: false
         @accept = @accept.bind this
         @ignore = @ignore.bind this
@@ -63,8 +60,6 @@ export class ReviewResult extends React.Component
         @comment = @comment.bind this
         @setField = @setField.bind this
         @setComment = @setComment.bind this
-        @setCurrentSubmit = @setCurrentSubmit.bind this
-        @setCurrentDiff = @setCurrentDiff.bind this
         @setQuality = @setQuality.bind this
         @toggleBestSubmits = @toggleBestSubmits.bind this
         @downloadSubmits = @downloadSubmits.bind this
@@ -86,31 +81,12 @@ export class ReviewResult extends React.Component
         @props.handleDone?()
 
     syncSetOutcome: (result) ->
-        await callApi "setOutcome/#{@state.currentSubmit._id}", {
+        await callApi "setOutcome/#{@props.currentSubmit._id}", {
             result,
             comment: @state.commentText
         }
         @props.syncHandleDone?()
         @props.handleReload()
-
-    componentDidUpdate: (prevProps, prevState) ->
-        if prevProps.result._id != @props.result._id
-            @setState
-                commentText: ""
-                currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
-                bestSubmits: @state.bestSubmits
-                currentDiff: @state.currentDiff
-        else
-            newState =
-                commentText: @state.commentText
-                currentSubmit: null
-                bestSubmits: @state.bestSubmits
-                currentDiff: @state.currentDiff
-            for submit in @props.submits
-                if submit._id == @state.currentSubmit?._id
-                    newState.currentSubmit = submit
-            if not deepEqual(newState, @state)
-                @setState(newState)
 
     downloadSubmits: () ->
         await callApi "downloadSubmitsForUserAndProblem/#{@props.user._id}/#{@props.result.fullTable._id}"
@@ -128,10 +104,9 @@ export class ReviewResult extends React.Component
     comment: () ->
         @setResult(null)
 
-
     setQuality: (quality) ->
         () =>
-            await callApi "setQuality/#{@state.currentSubmit._id}/#{quality}", {}
+            await callApi "setQuality/#{@props.currentSubmit._id}/#{quality}", {}
             @props.handleReload()
 
     toggleBestSubmits: (e) ->
@@ -157,6 +132,102 @@ export class ReviewResult extends React.Component
         newState[field] = value
         @setState(newState)
 
+    render: () ->
+        admin = @props.me?.admin
+        <div>
+            <Submit submit={@props.currentSubmit} showHeader me={@props.me} copyTest={@copyTest}/>
+            {(not @props.currentSubmit.similar) && <div>
+                <div>
+                    {
+                    if @props.currentSubmit.outcome in ["OK", "AC"]
+                        starsClass = styles.stars
+                    else
+                        starsClass = ""
+                    <div className={starsClass}>
+                        <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
+                        {(<FontAwesome
+                            name={"star" + (if x <= @props.currentSubmit.quality then "" else "-o")}
+                            key={x}
+                            onClick={@setQuality(x)}/> \
+                            for x in [1..5])}
+                    </div>
+                    }
+                </div>
+                {
+                if @props.bestSubmits.length
+                    <span>
+                        <a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a>
+                        {" = " + @props.bestSubmits.length}
+                        {" " + @props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
+                    </span>
+                }
+                <FieldGroup
+                        id="commentText"
+                        label="Комментарий"
+                        componentClass="textarea"
+                        setField={@setField}
+                        style={{ height: 200 }}
+                        state={@state}/>
+                <FormGroup>
+                    {
+                    bsSize = null
+                    bsCommentSize = null
+                    if not (@props.currentSubmit.outcome in ["OK", "AC", "IG"])
+                        bsSize = "xsmall"
+                    if not @props.result?.activated
+                        bsSize = "xsmall"
+                        bsCommentSize = "xsmall"
+                    <ButtonGroup>
+                        <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
+                        <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
+                        <Button onClick={@comment}  bsSize={bsCommentSize}>Прокомментировать</Button>
+                        <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
+                    </ButtonGroup>
+                    }
+                </FormGroup>
+                <Button onClick={@downloadSubmits} bsSize="xsmall">re-download submits</Button>
+                {
+                admin and @props.currentSubmit and not @props.currentSubmit.similar and <Col xs={12} sm={12} md={12} lg={12}>
+                    <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
+                </Col>
+                }
+                {
+                admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits} stars/>
+                }
+            </div>}
+        </div>
+
+export class SubmitListWithDiff extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
+            currentDiff: [undefined, undefined]
+        @setCurrentSubmit = @setCurrentSubmit.bind this
+        @setCurrentDiff = @setCurrentDiff.bind this
+
+    componentDidUpdate: (prevProps, prevState) ->
+        changed = false
+        if prevProps.submits.length != @props.submits.length
+            changed = true
+        else
+            for s, i in prevProps.submits
+                if s._id != @props.submits[i]._id
+                    changed = true
+        if changed
+            @setState
+                currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
+                currentDiff: [undefined, undefined]
+        else
+            newState =
+                currentSubmit: null
+                currentDiff: @state.currentDiff
+            for submit in @props.submits
+                if submit._id == @state.currentSubmit?._id
+                    newState.currentSubmit = submit
+            if not deepEqual(newState, @state)
+                @setState(newState)
+
     setCurrentSubmit: (submit) ->
         (e) =>
             e.preventDefault()
@@ -175,7 +246,55 @@ export class ReviewResult extends React.Component
             @setState
                 currentSubmit: undefined
                 currentDiff: newDiff
+    render:  () ->
+        SubmitComponent = @props.SubmitComponent
+        allProps = {@props..., @state...}
+        PostSubmit = @props.PostSubmit
+        admin = @props.me?.admin
+        <Grid fluid>
+            <Col xs={12} sm={12} md={8} lg={8}>
+                {
+                if @state.currentSubmit
+                    <div>
+                        {`<SubmitComponent {...allProps}/>`}
+                    </div>
+                else if @state.currentDiff[1] and @state.currentDiff[0]
+                    if @state.currentDiff[1].source == @state.currentDiff[0].source
+                        <div>
+                            <SubmitHeader submit={@state.currentDiff[0]} admin={@props.me?.admin}/>
+                            <pre>Нет изменений</pre>
+                        </div>
+                    else
+                        diffText = JsDiff.createTwoFilesPatch(
+                            @state.currentDiff[1]._id,
+                            @state.currentDiff[0]._id,
+                            @state.currentDiff[1].sourceRaw,
+                            @state.currentDiff[0].sourceRaw)
+                        diffText = diffText.split("\n")
+                        diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
+                        diffText = diffText.join("\n")
+                        files = parseDiff(diffText, {nearbySequences: "zip"})
 
+                        <div>
+                            <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
+                            <pre>
+                                {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split"/>)}
+                            </pre>
+                        </div>
+                }
+            </Col>
+            <Col xs={12} sm={12} md={4} lg={4}>
+                <SubmitListTable
+                    submits={@props.submits}
+                    handleSubmitClick={@setCurrentSubmit}
+                    handleDiffClick={@setCurrentDiff}
+                    activeId={@state.currentSubmit?._id}
+                    activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
+            </Col>
+            {PostSubmit && `<Col xs={12} sm={12} md={12} lg={12}><PostSubmit {...allProps}/></Col>`}
+        </Grid>
+
+export class ReviewResult extends React.Component
     paidStyle: () ->
         user = @props.user
         if (!user?.paidTill)
@@ -188,110 +307,8 @@ export class ReviewResult extends React.Component
             styles.muchUnpaid
 
     render:  () ->
-        admin = @props.me?.admin
         <div className={@paidStyle()}>
-            <Grid fluid>
-                <Col xs={12} sm={12} md={8} lg={8}>
-                    {
-                    if @state.currentSubmit
-                        <div>
-                            <Submit submit={@state.currentSubmit} showHeader me={@props.me} copyTest={@copyTest}/>
-                            {
-                            admin and not @state.currentSubmit.similar and <div>
-                                <div>
-                                    {
-                                    if @state.currentSubmit.outcome in ["OK", "AC"]
-                                        starsClass = styles.stars
-                                    else
-                                        starsClass = ""
-                                    <div className={starsClass}>
-                                        <FontAwesome name="times" key={0} onClick={@setQuality(0)}/>
-                                        {(<FontAwesome
-                                            name={"star" + (if x <= @state.currentSubmit.quality then "" else "-o")}
-                                            key={x}
-                                            onClick={@setQuality(x)}/> \
-                                            for x in [1..5])}
-                                    </div>
-                                    }
-                                </div>
-                                {
-                                if @props.bestSubmits.length
-                                    <span>
-                                        <a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a>
-                                        {" = " + @props.bestSubmits.length}
-                                        {" " + @props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
-                                    </span>
-                                }
-                                <FieldGroup
-                                        id="commentText"
-                                        label="Комментарий"
-                                        componentClass="textarea"
-                                        setField={@setField}
-                                        style={{ height: 200 }}
-                                        state={@state}/>
-                                    <FormGroup>
-                                        {
-                                        bsSize = null
-                                        bsCommentSize = null
-                                        if not (@state.currentSubmit.outcome in ["OK", "AC", "IG"])
-                                            bsSize = "xsmall"
-                                        if not @props.result?.activated
-                                            bsSize = "xsmall"
-                                            bsCommentSize = "xsmall"
-                                        <ButtonGroup>
-                                            <Button onClick={@accept} bsStyle="success" bsSize={bsSize}>Зачесть</Button>
-                                            <Button onClick={@ignore} bsStyle="info" bsSize={bsSize}>Проигнорировать</Button>
-                                            <Button onClick={@comment}  bsSize={bsCommentSize}>Прокомментировать</Button>
-                                            <Button onClick={@disqualify} bsStyle="danger" bsSize="xsmall">Дисквалифицировать</Button>
-                                        </ButtonGroup>
-                                        }
-                                    </FormGroup>
-                                    <Button onClick={@downloadSubmits} bsSize="xsmall">re-download submits</Button>
-                                </div>
-                            }
-                        </div>
-                    else if @state.currentDiff[1] and @state.currentDiff[0]
-                        if @state.currentDiff[1].source == @state.currentDiff[0].source
-                            <div>
-                                <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                                <pre>Нет изменений</pre>
-                            </div>
-                        else
-                            diffText = JsDiff.createTwoFilesPatch(
-                                @state.currentDiff[1]._id,
-                                @state.currentDiff[0]._id,
-                                @state.currentDiff[1].sourceRaw,
-                                @state.currentDiff[0].sourceRaw)
-                            diffText = diffText.split("\n")
-                            diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
-                            diffText = diffText.join("\n")
-                            files = parseDiff(diffText, {nearbySequences: "zip"})
-
-                            <div>
-                                <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                                <pre>
-                                    {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split"/>)}
-                                </pre>
-                            </div>
-                    }
-                </Col>
-                <Col xs={12} sm={12} md={4} lg={4}>
-                    <SubmitListTable
-                        submits={@props.submits}
-                        handleSubmitClick={@setCurrentSubmit}
-                        handleDiffClick={@setCurrentDiff}
-                        activeId={@state.currentSubmit?._id}
-                        activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
-                </Col>
-                {
-                admin and @state.currentSubmit and not @state.currentSubmit.similar and <Col xs={12} sm={12} md={12} lg={12}>
-                    <ConnectedProblemCommentsLists problemId={@props.result.fullTable._id} handleCommentClicked={@setComment}/>
-                </Col>
-                }
-                {
-                admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits} stars/>
-                }
-            </Grid>
+            {`<SubmitListWithDiff {...this.props} SubmitComponent={SubmitWithActions}/>`}
         </div>
 
 SubmitsAndSimilarMerger = (props) ->

@@ -1,6 +1,6 @@
 import FindMistake from '../models/FindMistake'
 
-DISTANCE_THRESHOLD = 10
+DISTANCE_THRESHOLD = 15
 
 distance = (s1, s2) ->
     if (not s1) or (not s2)
@@ -33,15 +33,18 @@ export default processForFindMistake = (submits) ->
                 throw "Different users in processForFindMistake: #{submit.user} vs #{currentOk.user}"
             if submit.problem != currentOk.problem
                 throw "Different users in processForFindMistake: #{submit.problem} vs #{currentOk.problem}"
-            if distance(submit.sourceRaw, currentOk.sourceRaw) < DISTANCE_THRESHOLD
+            if distance(submit.sourceRaw, currentOk.sourceRaw) < DISTANCE_THRESHOLD and submit.language == currentOk.language
                 id = submit._id + "::" + currentOk._id
-                if not (await FindMistake.findById(id))
-                    findMistake = new FindMistake
-                            _id: id
-                            source: submit.sourceRaw
-                            submit: submit._id
-                            correctSubmit: currentOk._id
-                            user: submit.user
-                            problem: submit.problem
-                    await findMistake.upsert()
+                findMistake = new FindMistake
+                        _id: id
+                        source: submit.sourceRaw
+                        submit: submit._id
+                        correctSubmit: currentOk._id
+                        user: submit.user
+                        problem: submit.problem
+                        language: submit.language
+                oldData = await FindMistake.findById(id)
+                if oldData
+                    findMistake.approved = oldData.approved
+                await findMistake.upsert()
                 currentOk = undefined
