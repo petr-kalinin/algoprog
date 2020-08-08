@@ -8,6 +8,7 @@ import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
 import TableResults from '../models/TableResults'
+import {allTables} from '../materials/data/tables'
 
 import addTotal from '../../client/lib/addTotal'
 import awaitAll from '../../client/lib/awaitAll'
@@ -110,21 +111,18 @@ export default table = (userList, table) ->
     return results
 
 export fullUser = (userId) ->
-    tables = [["1А", "1Б"],
-              ["1В", "1Г"]];
-    for level in [2..10]
-        tables.push(((level + ch) for ch in ["А", "Б", "В"]))
-    for reg in ["reg", "roi"]
-        regTables = await Table.findById(reg)
-        if regTables
-            tables.push(regTables.tables)
+    tables = []
+    for t in allTables when t != 'main'
+      tables.push(getTables(t))
+    tables = await awaitAll(tables)
+
     user = await User.findById(userId)
     calendar = await Calendar.findById(userId)
     if not user
         return null
     results = []
     for t in tables
-        results.push(getUserResult(user, t, 1))
+        results.push(getUserResult(user._id, t, 1))
     results = await awaitAll(results)
     results = (r.results for r in results when r)
     return
