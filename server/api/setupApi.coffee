@@ -18,6 +18,8 @@ import ACHIEVES from '../../client/lib/achieves'
 import {getYear} from '../../client/lib/graduateYearToClass'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
+import {getTables, getUserResult} from '../calculations/updateTableResults'
+
 import * as downloadSubmits from "../cron/downloadSubmits"
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
 import * as groups from '../informatics/informaticsGroups'
@@ -29,10 +31,12 @@ import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 
+import {allTables} from '../materials/data/tables'
 import downloadMaterials from '../materials/downloadMaterials'
 import notify from '../metrics/notify'
 
 import BlogPost from '../models/BlogPost'
+import Calendar from '../models/Calendar'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
 import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
@@ -43,6 +47,7 @@ import Result from '../models/result'
 import Submit from '../models/submit'
 import SubmitComment from '../models/SubmitComment'
 import Table from '../models/table'
+import TableResults from '../models/TableResults'
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
 
@@ -54,7 +59,6 @@ import logger from '../log'
 import dashboard from './dashboard'
 import register from './register'
 import setOutcome from './setOutcome'
-import table, * as tableApi from './table'
 
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
@@ -296,11 +300,62 @@ export default setupApi = (app) ->
         res.json(await dashboard(req.user))
 
     app.get '/api/table/:userList/:table', wrap (req, res) ->
+        sortBySolved = (a, b) ->
+            if a.user.active != b.user.active
+                return if a.user.active then -1 else 1
+            if a.total.solved != b.total.solved
+                return b.total.solved - a.total.solved
+            if a.total.attempts != b.total.attempts
+                return a.total.attempts - b.total.attempts
+            return 0
+
+        sortByLevelAndRating = (a, b) ->
+            return User.sortByLevelAndRating(a.user, b.user)
+
+        table = (userList, table) ->
+                data = []
+                users = await User.findByList(userList)
+                tables = await getTables(table)
+                #[users, tables] = await awaitAll([users, tables])
+                getTableResults = (user, tableName, tables) ->
+                    sumTable = await TableResults.findByUserAndTable(user._id, tableName)
+                    if sumTable
+                        return
+                            results: sumTable?.data?.results
+                            total : sumTable?.data?.total
+                    else
+                        return getUserResult(user._id, tables, 1)
+                for user in users
+                    data.push getTableResults user, table, tables
+                results = await awaitAll(data)
+                results = ({r..., user: users[i]} for r, i in results when r)
+                results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
+                return results
         res.json(await table(req.params.userList, req.params.table))
 
     app.get '/api/fullUser/:id', wrap (req, res) ->
+        fullUser = (userId) ->
+            tables = []
+            for t in allTables when t != 'main'
+              tables.push(getTables(t))
+            tables = await awaitAll(tables)
+
+            user = await User.findById(userId)
+            calendar = await Calendar.findById(userId)
+            if not user
+                return null
+            results = []
+            for t in tables
+                results.push(getUserResult(user._id, t, 1))
+            results = await awaitAll(results)
+            results = (r.results for r in results when r)
+            return
+                user: user.toObject()
+                results: results
+                calendar: calendar?.toObject()
+
         id = req.params.id
-        result = await tableApi.fullUser(id)
+        result = await fullUser(id)
         userPrivate = {}
         if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
             userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
