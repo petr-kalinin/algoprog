@@ -1,6 +1,6 @@
 import FindMistake from '../models/FindMistake'
 
-DISTANCE_THRESHOLD = 10
+DISTANCE_THRESHOLD = 15
 
 distance = (s1, s2) ->
     if (not s1) or (not s2)
