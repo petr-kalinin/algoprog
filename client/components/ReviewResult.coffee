@@ -4,6 +4,7 @@ Entities = require('html-entities').XmlEntities;
 entities = new Entities();
 FontAwesome = require('react-fontawesome')
 deepEqual = require('deep-equal')
+deepcopy = require('deepcopy')
 JsDiff = require('diff')
 
 import {parseDiff, markWordEdits, Diff} from 'react-diff-view';
@@ -327,7 +328,7 @@ SubmitsAndSimilarMerger = (props) ->
     if props.similar and Array.isArray(props.similar)
         for submit in props.similar
             submit.similar = true
-        newSubmits = props.similar.reverse().concat(props.submits)
+        newSubmits = deepcopy(props.similar).reverse().concat(props.submits)
     `<ReviewResult  {...props} submits={newSubmits}/>`
 
 options =
