@@ -33,6 +33,15 @@ import styles from './ReviewResult.css'
 
 TAIL_TEXTS = ["Решение проигнорировано", "Решение зачтено"]
 
+submitListEquals = (submits1, submits2) ->
+    if submits1.length != submits2.length
+        return false
+    for s, i in submits1
+        if s._id != submits2[i]._id
+            return false
+    return true
+
+
 class ProblemCommentsLists extends React.Component
     render: () ->
         <div>
@@ -64,6 +73,12 @@ class SubmitWithActions extends React.Component
         @toggleBestSubmits = @toggleBestSubmits.bind this
         @downloadSubmits = @downloadSubmits.bind this
         @copyTest = @copyTest.bind this
+
+    componentDidUpdate: (prevProps, prevState) ->
+        if !submitListEquals(prevProps.submits, @props.submits)
+            @setState
+                commentText: ""
+                bestSubmits: false
 
     copyTest: (result) ->
         (e) =>
@@ -207,14 +222,7 @@ export class SubmitListWithDiff extends React.Component
         @setCurrentDiff = @setCurrentDiff.bind this
 
     componentDidUpdate: (prevProps, prevState) ->
-        changed = false
-        if prevProps.submits.length != @props.submits.length
-            changed = true
-        else
-            for s, i in prevProps.submits
-                if s._id != @props.submits[i]._id
-                    changed = true
-        if changed
+        if !submitListEquals(prevProps.submits, @props.submits)
             @setState
                 currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
                 currentDiff: [undefined, undefined]
@@ -246,6 +254,7 @@ export class SubmitListWithDiff extends React.Component
             @setState
                 currentSubmit: undefined
                 currentDiff: newDiff
+
     render:  () ->
         SubmitComponent = @props.SubmitComponent
         allProps = {@props..., @state...}
