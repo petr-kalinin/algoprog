@@ -123,6 +123,9 @@ export class LoggedCodeforcesUser
             throw "Too many requests"
         @requests++
         await sleep(TIMEOUT)
+        if not options
+            options = {}
+        options.maxAttempts = 1
         try
             result = await download(href, @jar, options)
         finally
@@ -158,8 +161,7 @@ export class LoggedCodeforcesUser
             formData: data,
             method: 'POST',
             followAllRedirects: true,
-            timeout: 30 * 1000,
-            maxAttempts: 1
+            timeout: 30 * 1000
         })
         if page.includes("You have submitted exactly the same code before")
             throw {duplicate: true}

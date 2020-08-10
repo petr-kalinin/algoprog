@@ -4,6 +4,7 @@ Entities = require('html-entities').XmlEntities;
 entities = new Entities();
 FontAwesome = require('react-fontawesome')
 deepEqual = require('deep-equal')
+deepcopy = require('deepcopy')
 JsDiff = require('diff')
 
 import {parseDiff, markWordEdits, Diff} from 'react-diff-view';
@@ -32,6 +33,15 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import styles from './ReviewResult.css'
 
 TAIL_TEXTS = ["Решение проигнорировано", "Решение зачтено"]
+
+submitListEquals = (submits1, submits2) ->
+    if submits1.length != submits2.length
+        return false
+    for s, i in submits1
+        if s._id != submits2[i]._id
+            return false
+    return true
+
 
 class ProblemCommentsLists extends React.Component
     render: () ->
@@ -64,6 +74,12 @@ class SubmitWithActions extends React.Component
         @toggleBestSubmits = @toggleBestSubmits.bind this
         @downloadSubmits = @downloadSubmits.bind this
         @copyTest = @copyTest.bind this
+
+    componentDidUpdate: (prevProps, prevState) ->
+        if !submitListEquals(prevProps.submits, @props.submits)
+            @setState
+                commentText: ""
+                bestSubmits: false
 
     copyTest: (result) ->
         (e) =>
@@ -207,14 +223,7 @@ export class SubmitListWithDiff extends React.Component
         @setCurrentDiff = @setCurrentDiff.bind this
 
     componentDidUpdate: (prevProps, prevState) ->
-        changed = false
-        if prevProps.submits.length != @props.submits.length
-            changed = true
-        else
-            for s, i in prevProps.submits
-                if s._id != @props.submits[i]._id
-                    changed = true
-        if changed
+        if !submitListEquals(prevProps.submits, @props.submits)
             @setState
                 currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
                 currentDiff: [undefined, undefined]
@@ -246,6 +255,7 @@ export class SubmitListWithDiff extends React.Component
             @setState
                 currentSubmit: undefined
                 currentDiff: newDiff
+
     render:  () ->
         SubmitComponent = @props.SubmitComponent
         allProps = {@props..., @state...}
@@ -318,7 +328,7 @@ SubmitsAndSimilarMerger = (props) ->
     if props.similar and Array.isArray(props.similar)
         for submit in props.similar
             submit.similar = true
-        newSubmits = props.similar.reverse().concat(props.submits)
+        newSubmits = deepcopy(props.similar).reverse().concat(props.submits)
     `<ReviewResult  {...props} submits={newSubmits}/>`
 
 options =
