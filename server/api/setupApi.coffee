@@ -312,7 +312,6 @@ export default setupApi = (app) ->
         sortByLevelAndRating = (a, b) ->
             return User.sortByLevelAndRating(a.user, b.user)
 
-        table = (userList, table) ->
         userList = req.params.userList
         table = req.params.table
         data = []
