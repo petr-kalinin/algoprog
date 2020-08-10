@@ -313,52 +313,51 @@ export default setupApi = (app) ->
             return User.sortByLevelAndRating(a.user, b.user)
 
         table = (userList, table) ->
-                data = []
-                users = await User.findByList(userList)
-                tables = await getTables(table)
-                #[users, tables] = await awaitAll([users, tables])
-                getTableResults = (user, tableName, tables) ->
-                    sumTable = await TableResults.findByUserAndTable(user._id, tableName)
-                    if sumTable
-                        return
-                            results: sumTable?.data?.results
-                            total : sumTable?.data?.total
-                    else
-                        return getUserResult(user._id, tables, 1)
-                for user in users
-                    data.push getTableResults user, table, tables
-                results = await awaitAll(data)
-                results = ({r..., user: users[i]} for r, i in results when r)
-                results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
-                return results
-        res.json(await table(req.params.userList, req.params.table))
+        userList = req.params.userList
+        table = req.params.table
+        data = []
+        users = await User.findByList(userList)
+        tables = await getTables(table)
+        #[users, tables] = await awaitAll([users, tables])
+        getTableResults = (user, tableName, tables) ->
+            sumTable = await TableResults.findByUserAndTable(user._id, tableName)
+            if sumTable
+                return
+                    results: sumTable?.data?.results
+                    total : sumTable?.data?.total
+            else
+                return getUserResult(user._id, tables, 1)
+        for user in users
+            data.push getTableResults user, table, tables
+        results = await awaitAll(data)
+        results = ({r..., user: users[i]} for r, i in results when r)
+        results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
+        res.json(results)
 
     app.get '/api/fullUser/:id', wrap (req, res) ->
-        fullUser = (userId) ->
-            tables = []
-            for t in allTables when t != 'main'
-              tables.push(getTables(t))
-            tables = await awaitAll(tables)
+        userId = req.params.id
+        tables = []
+        for t in allTables when t != 'main'
+          tables.push(getTables(t))
+        tables = await awaitAll(tables)
 
-            user = await User.findById(userId)
-            calendar = await Calendar.findById(userId)
-            if not user
-                return null
-            results = []
-            for t in tables
-                results.push(getUserResult(user._id, t, 1))
-            results = await awaitAll(results)
-            results = (r.results for r in results when r)
-            return
-                user: user.toObject()
-                results: results
-                calendar: calendar?.toObject()
+        user = await User.findById(userId)
+        calendar = await Calendar.findById(userId)
+        if not user
+            return null
+        results = []
+        for t in tables
+            results.push(getUserResult(user._id, t, 1))
+        results = await awaitAll(results)
+        results = (r.results for r in results when r)
+        result =
+            user: user.toObject()
+            results: results
+            calendar: calendar?.toObject()
 
-        id = req.params.id
-        result = await fullUser(id)
         userPrivate = {}
-        if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
-            userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        if req.user?.admin or ""+req.user?.userKey() == ""+userId
+            userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
         result.user = {result.user..., userPrivate...}
         res.json(result)
 
