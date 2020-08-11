@@ -9,6 +9,7 @@ import calculateAchieves from '../calculations/calculateAchieves'
 import logger from '../log'
 
 import updateResults from '../calculations/updateResults'
+import updateTableResults from '../calculations/updateTableResults'
 import calculateCalendar from '../calculations/calculateCalendar'
 
 import sleep from '../lib/sleep'
@@ -195,6 +196,7 @@ usersSchema.statics.findByAchieve = (achieve) ->
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
     await updateResults(userId, dirtyResults)
+    await updateTableResults(userId)
     await calculateCalendar(userId)
     u = await User.findById(userId)
     if not u
