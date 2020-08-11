@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet"
 import FindMistakeList from '../components/FindMistakeList'
 import Sceleton from '../components/Sceleton'
 
-export default class AllFindMistakePage extends React.Component
+export default class FindMistakeListPage extends React.Component
     constructor: (props) ->
         super(props)
 

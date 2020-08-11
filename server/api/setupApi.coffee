@@ -746,6 +746,7 @@ export default setupApi = (app) ->
             res.json({status: false})
 
     app.get '/api/findMistakeList/:user', ensureLoggedIn, wrap (req, res) ->
+        # TODO: check whether user has solved
         mistakes = await FindMistake.findApprovedByNotUser(req.params.user)
         mistakes = mistakes.map (mistake) -> 
             mistake = mistake.toObject()
@@ -754,6 +755,14 @@ export default setupApi = (app) ->
             return mistake
         mistakes = await awaitAll(mistakes)
         res.json(mistakes)
+
+    app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
+        # TODO: check whether user has solved
+        mistake = await FindMistake.findById(req.params.id)
+        mistake = mistake.toObject()
+        mistake.fullProblem = await Problem.findById(mistake.problem)
+        mistake.hash = sha256(mistake._id).substring(0, 4)
+        res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
