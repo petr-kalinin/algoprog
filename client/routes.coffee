@@ -6,6 +6,7 @@ import {
   Redirect
 } from 'react-router-dom'
 
+import AllFindMistakePage from './pages/AllFindMistakePage'
 import AchievesPage from './pages/AchievesPage'
 import AllCommentsPage from './pages/AllCommentsPage'
 import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
@@ -91,6 +92,11 @@ export default [
         path: '/reviewResult/:id',
         key: "reviewResult",
         component: ReviewResultPage,
+    },
+    {
+        path: '/findMistakeList',
+        key: "findMistakeList",
+        component: AllFindMistakePage,
     },
     {
         path: '/news',

@@ -745,6 +745,16 @@ export default setupApi = (app) ->
         catch
             res.json({status: false})
 
+    app.get '/api/findMistakeList/:user', ensureLoggedIn, wrap (req, res) ->
+        mistakes = await FindMistake.findApprovedByNotUser(req.params.user)
+        mistakes = mistakes.map (mistake) -> 
+            mistake = mistake.toObject()
+            mistake.fullProblem = await Problem.findById(mistake.problem)
+            mistake.hash = sha256(mistake._id).substring(0, 4)
+            return mistake
+        mistakes = await awaitAll(mistakes)
+        res.json(mistakes)
+
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

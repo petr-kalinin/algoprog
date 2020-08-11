@@ -28,9 +28,14 @@ findMistakeSchema.methods.setApprove = (approve) ->
     @approved = if approve then APPROVED else DISPROVED
     @update(this)
 
-findMistakeSchema.statics.findByProblemAndNotUser = (problem, user) ->
+findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
     FindMistake.find
         problem: problem
+        user: {$ne: user}
+
+findMistakeSchema.statics.findApprovedByNotUser = (user) ->
+    FindMistake.find
+        approved: APPROVED
         user: {$ne: user}
 
 findMistakeSchema.statics.findOneNotApproved = () ->
