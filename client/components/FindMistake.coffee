@@ -8,6 +8,6 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 
 FindMistake = (props) ->
-    <pre>{props.findMistake.source}</pre>
+    <pre>{props.findMistake?.source}</pre>
 
 export default FindMistake

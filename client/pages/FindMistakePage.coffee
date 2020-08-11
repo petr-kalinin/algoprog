@@ -15,7 +15,7 @@ class FindMistakePage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Найди ошибку: #{@props.findMistake?.fullProblem.title}", _id: "findMistake"},
+            location: {title: "Найди ошибку: #{@props.findMistake?.fullProblem?.name}", _id: "findMistake"},
         }
         `<Sceleton {...sceletonProps}><FindMistake findMistake={this.props.findMistake}/></Sceleton>`
 

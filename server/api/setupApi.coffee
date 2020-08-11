@@ -141,6 +141,19 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
     update()  # do this async
     return undefined
 
+expandFindMistake = (mistake, admin, userKey) ->
+    allowed = false
+    if admin 
+        allowed = true
+    else if userKey
+        result = await Result.findByUserAndTable(userKey, mistake.problem)
+        allowed = result && result.solved > 0
+    if not allowed
+        return null
+    mistake = mistake.toObject()
+    mistake.fullProblem = await Problem.findById(mistake.problem)
+    mistake.hash = sha256(mistake._id).substring(0, 4)
+    return mistake
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -746,22 +759,19 @@ export default setupApi = (app) ->
             res.json({status: false})
 
     app.get '/api/findMistakeList/:user', ensureLoggedIn, wrap (req, res) ->
-        # TODO: check whether user has solved
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
         mistakes = await FindMistake.findApprovedByNotUser(req.params.user)
         mistakes = mistakes.map (mistake) -> 
-            mistake = mistake.toObject()
-            mistake.fullProblem = await Problem.findById(mistake.problem)
-            mistake.hash = sha256(mistake._id).substring(0, 4)
-            return mistake
+            expandFindMistake(mistake, req.user?.admin, req.params.user)
         mistakes = await awaitAll(mistakes)
+        mistakes = (m for m in mistakes when m)
         res.json(mistakes)
 
     app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
-        # TODO: check whether user has solved
         mistake = await FindMistake.findById(req.params.id)
-        mistake = mistake.toObject()
-        mistake.fullProblem = await Problem.findById(mistake.problem)
-        mistake.hash = sha256(mistake._id).substring(0, 4)
+        mistake = await expandFindMistake(mistake, req.user?.admin, req.user?.userKey())
         res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->

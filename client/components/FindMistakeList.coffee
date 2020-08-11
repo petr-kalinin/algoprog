@@ -22,6 +22,6 @@ FindMistakeList = (props) ->
 options = 
     urls: (props) ->
         return
-            findMistakes: "findMistakeList/#{props.myUser._id}"
+            findMistakes: "findMistakeList/#{props.myUser?._id}"
 
 export default withMyUser(ConnectedComponent(FindMistakeList, options))
