@@ -119,6 +119,8 @@ class SubmitForm extends React.Component
             return null
 
         canSubmit = (not @state.submit?.loading) and (@state.wasFile || @props.getSource)
+        if @props.canSubmit?
+            canSubmit = canSubmit and @props.canSubmit
 
         <div>
             <h4>Отправить решение</h4>

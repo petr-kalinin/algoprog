@@ -54,14 +54,17 @@ FindMistake = (props) ->
         scrollBeyondLastLine: false
         minimap: {enabled: false}
 
+    maxSubmits = Math.floor(DISTANCE_THRESHOLD * 1.5)
+    tooMuchChanges = currentDistance > maxSubmits
+
     <>
         <h1><Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
         <div class={styles.top}>
             <div class={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
-            <div class={styles.right}>Исправлений: {currentDistance}</div>
+            <div class={styles.right + if tooMuchChanges then " text-danger" else ""}>Исправлений: {currentDistance} (можно {maxSubmits})</div>
         </div>
         <Editor height="600px" language={getLanguage(props.findMistake?.language)} value={props.findMistake?.source} loading={<Loader />} options={options} className={styles.editor} editorDidMount={handleEditorDidMount}/>
-        <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} />
+        <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} canSubmit={!tooMuchChanges}/>
     </>
 
 options = 
