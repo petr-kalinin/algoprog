@@ -67,9 +67,13 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            fileName = document.getElementById("file").files[0]
-            fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
-            fileText = Array.from(new Uint8Array(fileText))
+            if @props.getSource
+                enc = new TextEncoder()
+                fileText = Array.from(enc.encode(@props.getSource()))
+            else
+                fileName = document.getElementById("file").files[0]
+                fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
+                fileText = Array.from(new Uint8Array(fileText))
             dataToSend =
                 language: @state.lang_id
                 code: fileText
@@ -114,17 +118,17 @@ class SubmitForm extends React.Component
         if not @props.myUser?._id
             return null
 
-        canSubmit = (not @state.submit?.loading) and (@state.wasFile)
+        canSubmit = (not @state.submit?.loading) and (@state.wasFile || @props.getSource)
 
         <div>
             <h4>Отправить решение</h4>
             <Form inline onSubmit={@submit} id="submitForm">
-                <FieldGroup
+                {@props.noFile || <FieldGroup
                     id="file"
                     label=""
                     type="file"
                     setField={@setField}
-                    state={@state}/>
+                    state={@state}/>}
                 {if !@props.material.isReview
                     <FieldGroup
                         id="lang_id"

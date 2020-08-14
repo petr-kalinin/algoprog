@@ -9,6 +9,8 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import {DISTANCE_THRESHOLD, distance} from '../lib/findMistake'
 import withMyUser from '../lib/withMyUser'
 
+import SubmitList from './SubmitList'
+
 import styles from './FindMistake.css'
 
 FindMistake = (props) ->
@@ -24,6 +26,9 @@ FindMistake = (props) ->
     resetEditor = () ->
         editorRef.current.setValue(props.findMistake?.source)
 
+    getValue = () ->
+        editorRef.current.getValue()
+
     options = 
         autoClosingBrackets: "never"
         autoClosingOvertype: "never" 
@@ -32,12 +37,17 @@ FindMistake = (props) ->
         minimap: {enabled: false}
 
     <>
+        <h1><Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
         <div class={styles.top}>
             <div class={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
             <div class={styles.right}>Исправлений: {currentDistance}</div>
         </div>
         <Editor height="600px" language="python" value={props.findMistake?.source} loading={<Loader />} options={options} className={styles.editor} editorDidMount={handleEditorDidMount}/>
+        <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} />
     </>
 
+options = 
+    urls: (props) ->
+        "material": "material/#{props.findMistake.problem}"
 
-export default FindMistake
+export default ConnectedComponent(FindMistake, options)
