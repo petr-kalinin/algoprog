@@ -13,6 +13,24 @@ import SubmitList from './SubmitList'
 
 import styles from './FindMistake.css'
 
+LANGUAGE_TO_MONACO_STYLE =
+    "Python": "python",
+    "Pascal": "pascal",
+    "C++": "cpp",
+    " C": "cpp",  # space important
+    "Delphi": "pascal",
+    "Java": "java"
+    "PHP": "php",
+    "Perl": "perl",
+    "C#": "csharp",
+    "Ruby": "ruby",
+    
+getLanguage = (lang) ->
+    for l, style of LANGUAGE_TO_MONACO_STYLE
+        if lang && lang.includes(l)
+            return style
+    return undefined
+
 FindMistake = (props) ->
     [currentDistance, setCurrentDistance] = useState(0);
     editorRef = useRef()
@@ -42,7 +60,7 @@ FindMistake = (props) ->
             <div class={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
             <div class={styles.right}>Исправлений: {currentDistance}</div>
         </div>
-        <Editor height="600px" language="python" value={props.findMistake?.source} loading={<Loader />} options={options} className={styles.editor} editorDidMount={handleEditorDidMount}/>
+        <Editor height="600px" language={getLanguage(props.findMistake?.language)} value={props.findMistake?.source} loading={<Loader />} options={options} className={styles.editor} editorDidMount={handleEditorDidMount}/>
         <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} />
     </>
 
