@@ -1,0 +1,8 @@
+.editor {
+    border: 1px solid black;
+    margin-top: 1ex;
+}
+.top {
+    display: flex;
+    justify-content: space-between;
+}
