@@ -78,6 +78,7 @@ class SubmitForm extends React.Component
                 language: @state.lang_id
                 code: fileText
                 draft: @state.draft
+                findMistake: @props.findMistake
             url = "submit/#{@props.problemId}"
             data = await callApi url, dataToSend
 

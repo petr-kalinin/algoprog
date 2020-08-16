@@ -71,7 +71,7 @@ class SubmitList extends React.Component
             else if @props.result.solved == 0
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
             }
-            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload} noFile={@props.noFile} noBestSubmits={@props.noBestSubmits} getSource={@props.getSource} canSubmit={@props.canSubmit}/>
+            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload} noFile={@props.noFile} noBestSubmits={@props.noBestSubmits} getSource={@props.getSource} canSubmit={@props.canSubmit} findMistake={@props.findMistake}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
@@ -92,8 +92,11 @@ class SubmitList extends React.Component
 options =
     urls: (props) ->
         if props?.myUser?._id
-            result =
-                data: "submits/#{props.myUser._id}/#{props.material._id}"
+            result = {}
+            if props?.findMistake
+                result.data = "submitsForFindMistake/#{props.myUser._id}/#{props.findMistake}"
+            else
+                result.data = "submits/#{props.myUser._id}/#{props.material._id}"
             if not props?.noBestSubmits
                 result.result = "result/#{props.myUser._id}::#{props.material._id}"
                 result.bestSubmits = "bestSubmits/#{props.material._id}"

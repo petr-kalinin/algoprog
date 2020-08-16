@@ -102,7 +102,7 @@ hideTests = (submit) ->
             submit.results.tests[key] = hideOneTest(test)
     return submit
 
-createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
+createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMistake) ->
     logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
@@ -131,6 +131,7 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
         results: []
         force: false
         testSystemData: problem.testSystemData
+        findMistake: findMistake
     await submit.calculateHashes()
     await submit.upsert()
 
@@ -178,7 +179,7 @@ export default setupApi = (app) ->
             res.json({dormant: true})
             return
         try
-            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
+            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft, req.body.findMistake)
         catch e
             res.json({error: e})
             return
@@ -385,6 +386,18 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
+        submits = submits.map((submit) -> submit.toObject())
+        if not req.user?.admin
+            submits = submits.map(hideTests)
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        res.json(submits)
+
+    app.get '/api/submitsForFindMistake/:user/:findMistake', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+            res.status(403).send('No permissions')
+            return
+        submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
         submits = submits.map((submit) -> submit.toObject())
         if not req.user?.admin
             submits = submits.map(hideTests)
