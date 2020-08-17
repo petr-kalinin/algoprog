@@ -1,9 +1,12 @@
 import FindMistake from '../models/FindMistake'
 
 DISTANCE_THRESHOLD = 15
+MAX_LENGTH = 3000
 
 distance = (s1, s2) ->
     if (not s1) or (not s2)
+        return DISTANCE_THRESHOLD + 1
+    if s1.length > MAX_LENGTH or s2.length > MAX_LENGTH
         return DISTANCE_THRESHOLD + 1
     d = new Array(s1.length + 1)
     for _, i in d
