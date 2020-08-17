@@ -108,7 +108,7 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
     if not draft
-        allSubmits = await Submit.findByUserAndProblem(userId, problemId)
+        allSubmits = await Submit.findByUserAndProblemWithFindMistakeAny(userId, problemId)
         for s in allSubmits
             if s.outcome != "DR" and s.source == code
                 throw "duplicate"
