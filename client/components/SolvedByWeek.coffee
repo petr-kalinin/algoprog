@@ -38,11 +38,11 @@ bgColorDark = (number) ->
     else
         "#1ee51e"
 
-weekHeader = (weekNumber, userList) ->
+weekHeader = (weekNumber, weekCount, userList) ->
     thisStart = new Date(startDayForWeeks[userList])
     startDay = new Date(+thisStart + MSEC_IN_WEEK * weekNumber)
-    endDay = new Date(+startDay + MSEC_IN_WEEK - 1)
-    startDay.getUTCDate() + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
+    endDay = new Date(+startDay + MSEC_IN_WEEK * weekCount - 1)
+    startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1) + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
 
 Header = (props) ->
     cl = props.headerClass || "h1"
@@ -60,14 +60,16 @@ SolvedByWeekRow = (props) ->
         <td className={globalStyles.border} />
         {
         res = []
-        a = (el) -> res.push(el)
+        a = (el) -> res.splice(0, 0, el)
         userTableHeader(res, props)
         a <td className={globalStyles.border} key="border"/>
         data = props.user.byWeek
-        for w in props.weeks
+        for w, i in props.weeks
             if props.header
-                a <td className={globalStyles.mainTable_td} key={w}>
-                    {weekHeader(w, props.userList)}
+              if i % 3 == 0
+                weekCount = if props.weeks.length - i > 2 then 3 else props.weeks.length - i
+                a <td className={globalStyles.mainTable_td} key={w} colSpan={weekCount}>
+                    {weekHeader(w, weekCount, props.userList)}
                 </td>
             else
                 text = ""
@@ -100,7 +102,8 @@ export default SolvedByWeek = (props) ->
 
     <div>
         <Header headerClass={props.headerClass} />
-        <table className={globalStyles.mainTable}>
+        <div style={direction: "rtl", overflow: "hidden"}>
+          <table className={globalStyles.mainTable}>
             <tbody>
                 {
                 res = []
@@ -110,5 +113,6 @@ export default SolvedByWeek = (props) ->
                     a <SolvedByWeekRowWithTheme details={props.details} user={user} weeks={weeks} key={user._id}/>
                 res}
             </tbody>
-        </table>
+          </table>
+        </div>
     </div>
