@@ -210,7 +210,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updated user", userId
 
 usersSchema.statics.updateAllUsers = (dirtyResults) ->
-    PARALLLEL = 5
+    PARALLEL = 5
     tryUpdate = (id) ->
         try
             await User.updateUser(id)
