@@ -125,7 +125,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
         for row in data
             rowI++
             uid = row.user?.id || @userId
-            name = row.user.firstname + " " + row.user.lastname
+            name = "not used"
             pid = row.problem.id
             runid = row.id + "p" + pid
             prob = row.problem.name
