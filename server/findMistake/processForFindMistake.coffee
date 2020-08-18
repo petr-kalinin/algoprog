@@ -6,6 +6,8 @@ export default processForFindMistake = (submits) ->
     submits.reverse()
     currentOk = undefined
     for submit in submits
+        if submit.findMistake
+            continue
         if submit.outcome in ["OK", "AC", "IG"]
             currentOk = submit
         else
