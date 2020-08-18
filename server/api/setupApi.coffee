@@ -445,6 +445,14 @@ export default setupApi = (app) ->
             json[r._id] = r
         res.json(json)
 
+    app.get '/api/userResultsForFindMistake/:userId', wrap (req, res) ->
+        results = (await Result.findByUserWithFindMistakeSet(req.params.userId))
+        json = {}
+        for r in results
+            r = r.toObject()
+            json[r.findMistake] = r
+        res.json(json)
+
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
         res.status(404).send("Not found")
         return

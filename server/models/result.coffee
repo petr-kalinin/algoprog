@@ -28,7 +28,7 @@ resultsSchema.methods.upsert = () ->
         return
     @userList = user.userList
     @activated = user?.activated
-    @_id = @user + "::" + @table
+    @_id = @user + "::" + (@findMistake || @table)
     @update(this, {upsert: true}).exec()
 
 resultsSchema.statics.DQconst = -10
@@ -51,6 +51,11 @@ resultsSchema.statics.findByUser = (userId) ->
     return Result.find
         user: userId
         findMistake: null
+
+resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
+    return Result.find
+        user: userId
+        findMistake: {$ne: null}
 
 resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
     return Result.find
