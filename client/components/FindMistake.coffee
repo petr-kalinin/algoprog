@@ -1,4 +1,3 @@
-import Editor from '@monaco-editor/react';
 import React, { useRef, useState } from "react";
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import {Link} from 'react-router-dom'
@@ -13,18 +12,7 @@ import SubmitList from './SubmitList'
 
 import styles from './FindMistake.css'
 
-LANGUAGE_TO_MONACO_STYLE =
-    "Python": "python",
-    "Pascal": "pascal",
-    "C++": "cpp",
-    " C": "cpp",  # space important
-    "Delphi": "pascal",
-    "Java": "java"
-    "PHP": "php",
-    "Perl": "perl",
-    "C#": "csharp",
-    "Ruby": "ruby",
-    
+   
 getLanguage = (lang) ->
     for l, style of LANGUAGE_TO_MONACO_STYLE
         if lang && lang.includes(l)
@@ -37,6 +25,7 @@ FindMistake = (props) ->
 
     handleEditorDidMount = (_, editor) ->
         editorRef.current = editor;
+        setCurrentDistance(distance(props.findMistake?.source, editor.getValue()))
         editorRef.current.onDidChangeModelContent () -> 
             text = editorRef.current.getValue()
             setCurrentDistance(distance(props.findMistake?.source, text))
@@ -63,8 +52,15 @@ FindMistake = (props) ->
             <div className={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
             <div className={styles.right + if tooMuchChanges then " text-danger" else ""}>Исправлений: {currentDistance} (можно {maxSubmits})</div>
         </div>
-        <Editor height="600px" language={getLanguage(props.findMistake?.language)} value={props.findMistake?.source} loading={<Loader />} options={options} className={styles.editor} editorDidMount={handleEditorDidMount}/>
-        <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} canSubmit={!tooMuchChanges} findMistake={props.findMistake._id} startLanguage={props.findMistake?.language}/>
+        <SubmitList material={props.material} 
+            noFile={true}
+            noBestSubmits={true}
+            canSubmit={!tooMuchChanges}
+            findMistake={props.findMistake._id}
+            startLanguage={props.findMistake?.language}
+            editorOn={true}
+            editorDidMount={handleEditorDidMount}
+            defaultSource={props.findMistake?.source}/>
     </>
 
 options = 

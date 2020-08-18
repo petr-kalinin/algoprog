@@ -71,7 +71,16 @@ class SubmitList extends React.Component
             else if @props.result.solved == 0
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
             }
-            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload} noFile={@props.noFile} noBestSubmits={@props.noBestSubmits} getSource={@props.getSource} canSubmit={@props.canSubmit} findMistake={@props.findMistake} startLanguage={@props.startLanguage}/>
+            <SubmitForm material={@props.material} 
+                problemId={@props.material._id} 
+                reloadSubmitList={@props.handleReload} 
+                noFile={@props.noFile} 
+                canSubmit={@props.canSubmit} 
+                findMistake={@props.findMistake} 
+                startLanguage={@props.startLanguage}
+                editorOn={true}
+                editorDidMount={@props.editorDidMount}
+                editorValue={@props.data?.length && @props.data[@props.data.length-1].source || @props.defaultSource}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
@@ -102,6 +111,8 @@ options =
                 result.bestSubmits = "bestSubmits/#{props.material._id}"
             return result
         return {}
+
+    allowNotLoaded: true
 
     timeout: 20 * 1000
 
