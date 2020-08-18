@@ -64,7 +64,7 @@ FindMistake = (props) ->
             <div className={styles.right + if tooMuchChanges then " text-danger" else ""}>Исправлений: {currentDistance} (можно {maxSubmits})</div>
         </div>
         <Editor height="600px" language={getLanguage(props.findMistake?.language)} value={props.findMistake?.source} loading={<Loader />} options={options} className={styles.editor} editorDidMount={handleEditorDidMount}/>
-        <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} canSubmit={!tooMuchChanges} findMistake={props.findMistake._id}/>
+        <SubmitList material={props.material} noFile={true} noBestSubmits={true} getSource={getValue} canSubmit={!tooMuchChanges} findMistake={props.findMistake._id} startLanguage={props.findMistake?.language}/>
     </>
 
 options = 
