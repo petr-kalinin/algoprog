@@ -11,10 +11,10 @@ export default userTableHeader = (res, props) ->
     h = props.header
     cls = if h then "К" else
         getClassStartingFromJuly(props.user.graduateYear) || ""
-    a = (el) -> res.splice(0, 0, el)
-    a <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user} key="user">
+    a = (el) -> res.push(el)
+    a <th className={globalStyles.mainTable_th + " " + globalStyles.mainTable_user} key="user">
         {if h then "" else <UserName user={props.user} />}
-    </td>
+      </th>
     if props.details
         a <td className={globalStyles.mainTable_td} key="graduateYear" title="Класс">
             {cls} 

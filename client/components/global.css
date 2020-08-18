@@ -3,6 +3,7 @@
     border-top:1px solid black;
     margin-bottom: 10px;
     white-space: nowrap;
+    border-collapse: separate;
 }
 .mainTable_td {
     border-bottom:1px solid black;
@@ -10,12 +11,15 @@
     padding: 3px;
     text-align: center;
     min-width: 3ex;
-    height: 34px;
 }
-.mainTable_user {
-    position: absolute;
+.mainTable_th {
+    border-bottom:1px solid black;
+    border-right:1px solid black;
+    position: sticky;
     left: 0;
     background: white;
+}
+.mainTable_user {
     text-align: left;
 }
 .border {

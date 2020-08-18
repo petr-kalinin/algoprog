@@ -60,7 +60,7 @@ SolvedByWeekRow = (props) ->
         <td className={globalStyles.border} />
         {
         res = []
-        a = (el) -> res.splice(0, 0, el)
+        a = (el) -> res.push(el)
         userTableHeader(res, props)
         a <td className={globalStyles.border} key="border"/>
         data = props.user.byWeek
@@ -102,7 +102,7 @@ export default SolvedByWeek = (props) ->
 
     <div>
         <Header headerClass={props.headerClass} />
-        <div style={direction: "rtl", overflow: "hidden"}>
+        <div>
           <table className={globalStyles.mainTable}>
             <tbody>
                 {
