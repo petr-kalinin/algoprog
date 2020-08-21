@@ -49,6 +49,7 @@ class LoggedInformaticsUser
         try
             page = await download('https://informatics.msk.ru/login/index.php', @jar)
             token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
+            console.log "Logging user #{@username}, token=#{token}"
             page = await download("https://informatics.msk.ru/login/index.php", @jar, {
                 method: 'POST',
                 form: {
@@ -70,6 +71,7 @@ class LoggedInformaticsUser
         page = await download("https://informatics.msk.ru/", @jar)
         @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
         id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]
+        console.log "Logging user #{@username}, id=#{id} name=#{@name}"
         if not @name or not id or id.length < 2
             return null
         return id[1]
@@ -149,8 +151,8 @@ export default class Informatics extends TestSystem
         problemId = @_informaticsProblemId(problem._id)
         groupId = 0
         fromTimestamp = 0
-        user = await @_getAdmin()
-        admin = true
+        #user = await @_getAdmin()
+        #admin = true
         if not user
             user = await LoggedInformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
             admin = false

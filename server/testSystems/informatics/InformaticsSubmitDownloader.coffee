@@ -78,7 +78,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     getResults: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            if false && @admin
+            if @admin
                 href = "https://informatics.msk.ru/py/protocol/get-full/#{run}"
             else
                 href = "https://informatics.msk.ru/py/protocol/get/#{run}"
