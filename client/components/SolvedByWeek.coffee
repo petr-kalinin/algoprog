@@ -83,10 +83,11 @@ SolvedByWeekRow = (props) ->
                     text = "0"
                     style =
                         bgColor: bgColor(undefined)
+                textAdd = undefined
                 if data?.ok and w of data.ok
-                    text += " + " + data.ok[w]
+                    textAdd = <font style={fontSize: "10"}>{" + " + data.ok[w]}</font>
                 a <td className={globalStyles.mainTable_td} key={w} style={style}>
-                    {text}
+                    {text}{textAdd}
                 </td>
         res
         }
@@ -102,7 +103,7 @@ export default SolvedByWeek = (props) ->
 
     <div>
         <Header headerClass={props.headerClass} />
-        <div>
+        <div style={overflow: "auto"} ref={(d) -> if d then d.scrollTo(10000, 0) }>
           <table className={globalStyles.mainTable}>
             <tbody>
                 {
