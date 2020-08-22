@@ -96,24 +96,31 @@ SolvedByWeekRow = (props) ->
 
 SolvedByWeekRowWithTheme = withTheme(SolvedByWeekRow)
 
-export default SolvedByWeek = (props) ->
-    if not props.users?.length
+class SolvedByWeek extends React.PureComponent
+  componentDidMount: () ->
+    if @table_div
+        @table_div.scrollTo 10000, 0
+
+  render: () ->
+    if not @props.users?.length
         return <table className={globalStyles.mainTable}/>
-    weeks = weekSet(props.userList)
+    weeks = weekSet(@props.userList)
 
     <div>
-        <Header headerClass={props.headerClass} />
-        <div style={overflow: "auto"} ref={(d) -> if d then d.scrollTo(10000, 0) }>
+        <Header headerClass={@props.headerClass} />
+        <div style={overflow: "auto"} ref={(d) => if d then @table_div = d }>
           <table className={globalStyles.mainTable}>
             <tbody>
                 {
                 res = []
                 a = (el) -> res.push(el)
-                a <SolvedByWeekRowWithTheme header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
-                for user in props.users
-                    a <SolvedByWeekRowWithTheme details={props.details} user={user} weeks={weeks} key={user._id}/>
+                a <SolvedByWeekRowWithTheme header={true} details={@props.details} user={@props.users[0]} userList={@props.userList} weeks={weeks} key={"header"}/>
+                for user in @props.users
+                    a <SolvedByWeekRowWithTheme details={@props.details} user={user} weeks={weeks} key={user._id}/>
                 res}
             </tbody>
           </table>
         </div>
     </div>
+
+export default SolvedByWeek
