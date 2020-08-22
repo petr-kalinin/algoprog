@@ -15,7 +15,7 @@ News = (props) ->
             for m, i in props.news?.materials || []
                 a <Panel key={i}>
                     <Panel.Heading>
-                        <Panel.Title toggle>{m.header}</Panel.Title>
+                        <Panel.Title toggle>{m.title}</Panel.Title>
                     </Panel.Heading>
                     <Panel.Collapse>
                         <Panel.Body><div dangerouslySetInnerHTML={{__html: m.content}}/></Panel.Body>

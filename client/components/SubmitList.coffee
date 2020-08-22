@@ -8,15 +8,16 @@ import Button from 'react-bootstrap/lib/Button'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
 
+import ConnectedComponent from '../lib/ConnectedComponent'
+import withMyUser from '../lib/withMyUser'
+import outcomeToText from '../lib/outcomeToText'
+
+import getTestSystem from '../testSystems/TestSystemRegistry'
+
 import Submit from './Submit'
 import SubmitForm from './SubmitForm'
 import SubmitListTable from './SubmitListTable'
 import BestSubmits from './BestSubmits'
-
-import ConnectedComponent from '../lib/ConnectedComponent'
-import withMyUser from '../lib/withMyUser'
-
-import outcomeToText from '../lib/outcomeToText'
 
 import styles from './SubmitList.css'
 
@@ -58,6 +59,10 @@ class SubmitList extends React.Component
     render:  () ->
         if not @props.myUser?._id
             return null
+        testSystem = getTestSystem(@props.material.testSystemData.system)
+        blockedByTestSystem = testSystem.blockSubmission(@props.material, @props.me)
+        if blockedByTestSystem
+            return blockedByTestSystem
         <div>
             {
             if @props.bestSubmits.length

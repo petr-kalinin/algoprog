@@ -1,4 +1,8 @@
-export default LANGUAGES = [
-    [3, "GNU C++", "cpp"]
-]
-
+export default LANGUAGES = {
+    "GNU C++": {
+        extensions: ["cpp"],
+        informatics: 3,
+        ejudge: 3
+        codeforces: 54
+    },
+}

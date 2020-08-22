@@ -7,6 +7,7 @@ resultsSchema = new mongoose.Schema
     _id: String
     user: String
     userList: String
+    activated: Boolean
     table: String
     total: Number
     required: Number  # number of problems from non-star subcontests, not the number of required problems on level
@@ -26,9 +27,9 @@ resultsSchema.methods.upsert = () ->
         logger.warn "Unknown user #{@user} in Result.upsert, result id #{@_id}"
         return
     @userList = user.userList
+    @activated = user?.activated
     @_id = @user + "::" + @table
     @update(this, {upsert: true}).exec()
-
 
 resultsSchema.statics.DQconst = -10
 

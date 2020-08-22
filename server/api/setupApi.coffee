@@ -4,7 +4,7 @@ passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 sha256 = require('sha256')
-fileType = require('file-type')
+FileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
@@ -12,50 +12,54 @@ XRegExp = require('xregexp')
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
 
-import User from '../models/user'
-import UserPrivate from '../models/UserPrivate'
-import Submit from '../models/submit'
-import Result from '../models/result'
-import Problem from '../models/problem'
-import Table from '../models/table'
-import SubmitComment from '../models/SubmitComment'
-import RegisteredUser from '../models/registeredUser'
-import Material, {isLevelAllowedForUser} from '../models/Material'
-import BlogPost from '../models/BlogPost'
-import Payment from '../models/Payment'
-import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
+import {UserNameRaw} from '../../client/components/UserName'
+import awaitAll from '../../client/lib/awaitAll'
+import ACHIEVES from '../../client/lib/achieves'
+import {getYear} from '../../client/lib/graduateYearToClass'
+import {unpaidBlocked} from '../../client/lib/isPaid'
 
-import notify from '../metrics/notify'
+import {getTables, getUserResult} from '../calculations/updateTableResults'
 
-import getTestSystem from '../../server/testSystems/TestSystemRegistry'
-
-import dashboard from './dashboard'
-import table, * as tableApi from './table'
-import register from './register'
-import setOutcome from './setOutcome'
-
-import logger from '../log'
-
-import downloadMaterials from '../cron/downloadMaterials'
-import * as downloadContests from '../cron/downloadContests'
 import * as downloadSubmits from "../cron/downloadSubmits"
+import findSimilarSubmits from '../hashes/findSimilarSubmits'
 import * as groups from '../informatics/informaticsGroups'
-
 import InformaticsUser from '../informatics/InformaticsUser'
 
-import download from '../lib/download'
-import {getStats} from '../lib/download'
+import download, {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 
-import findSimilarSubmits from '../hashes/findSimilarSubmits'
+import {allTables} from '../materials/data/tables'
+import downloadMaterials from '../materials/downloadMaterials'
+import notify from '../metrics/notify'
 
-import {unpaidBlocked} from '../../client/lib/isPaid'
-import awaitAll from '../../client/lib/awaitAll'
+import BlogPost from '../models/BlogPost'
+import Calendar from '../models/Calendar'
+import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
+import FindMistake from '../models/FindMistake'
+import Material, {isLevelAllowedForUser} from '../models/Material'
+import Payment from '../models/Payment'
+import Problem from '../models/problem'
+import RegisteredUser from '../models/registeredUser'
+import Result from '../models/result'
+import Submit from '../models/submit'
+import SubmitComment from '../models/SubmitComment'
+import Table from '../models/table'
+import TableResults from '../models/TableResults'
+import User from '../models/user'
+import UserPrivate from '../models/UserPrivate'
 
-import {UserNameRaw} from '../../client/components/UserName'
+import getTestSystem from '../testSystems/TestSystemRegistry'
+import {LoggedCodeforcesUser} from '../testSystems/Codeforces'
+
+import logger from '../log'
+
+import dashboard from './dashboard'
+import register from './register'
+import setOutcome from './setOutcome'
+
 
 ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
@@ -70,6 +74,7 @@ wrap = (fn) ->
             args[2](error)
 
 expandSubmit = (submit) ->
+    submit = submit.toObject?() || submit
     MAX_SUBMIT_LENGTH = 100000
 
     containsBinary = (source) ->
@@ -101,7 +106,8 @@ hideTests = (submit) ->
             submit.results.tests[key] = hideOneTest(test)
     return submit
 
-createSubmit = (problemId, userId, language, codeRaw, draft) ->
+createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
+    logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
@@ -110,12 +116,16 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         for s in allSubmits
             if s.outcome != "DR" and s.source == code
                 throw "duplicate"
+    problem = await Problem.findById(problemId)
+    if not problem
+        throw "Unknown problem #{problemId}"
     time = new Date
     timeStr = +time
     submit = new Submit
         _id: "#{userId}r#{timeStr}#{problemId}" ,
         time: time,
         user: userId,
+        userList: userList,
         problem: problemId,
         outcome: if draft then "DR" else "PS"
         source: code
@@ -124,6 +134,7 @@ createSubmit = (problemId, userId, language, codeRaw, draft) ->
         comments: []
         results: []
         force: false
+        testSystemData: problem.testSystemData
     await submit.calculateHashes()
     await submit.upsert()
 
@@ -140,6 +151,7 @@ export default setupApi = (app) ->
         res.status(403).send('No permissions')
 
     app.post '/api/register', wrap register
+    
     app.post '/api/login', passport.authenticate('local'), wrap (req, res) ->
         res.json({logged: true})
 
@@ -157,17 +169,14 @@ export default setupApi = (app) ->
             res.json({dormant: true})
             return
         try
-            await createSubmit(req.params.problemId, req.user.userKey(), req.body.language, req.body.code, req.body.draft)
+            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
         catch e
             res.json({error: e})
             return
-        #testSystem = await getTestSystem("informatics")
-        #await testSystem.submitWithFormData(req.user, req.params.problemId, req.get('Content-Type'), req.body)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
         user = JSON.parse(JSON.stringify(req.user))
-        delete user.informaticsPassword
         res.json user
 
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
@@ -176,7 +185,63 @@ export default setupApi = (app) ->
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
 
+    app.get '/api/registeredUser/:id', wrap (req, res) ->
+        registeredUser = await RegisteredUser.findByKey(req.params.id)
+        result = {
+            codeforcesUsername: registeredUser?.codeforcesUsername
+        }
+        res.json(result)
+
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
+        if ""+req.user?.userKey() != ""+req.params.id
+            res.status(403).send('No permissions')
+            return
+        password = req.body.password
+        newPassword = req.body.newPassword
+        try
+            if newPassword != ""
+                logger.info "Set user password", req.user.userKey()
+                await req.user.changePassword(password, newPassword)
+                await req.user.save()
+            else
+                if !(await req.user.authenticate(password)).user
+                    throw err
+        catch e
+            res.json({passError:true})
+            return
+        registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
+        newInformaticsPassword = req.body.informaticsPassword
+        informaticsUsername = req.user.informaticsUsername
+        if newInformaticsPassword != ""
+            try
+                userq = await InformaticsUser.getUser(informaticsUsername, newInformaticsPassword)
+                result = await userq.getData()
+                if not ("name" of result)
+                    throw "Can't find name"
+                for registeredUser in registeredUsers
+                        await registeredUser.updateInformaticPassword(newInformaticsPassword)
+            catch
+                # TODO: return error to user
+        cfLogin = req.body.cf.login
+        if cfLogin == ""
+            cfLogin = undefined
+        newName = req.body.newName
+        user = await User.findById(req.params.id)
+        await user.setCfLogin cfLogin
+        if(req.body.clas !='' and req.body.clas!=null)
+            await user.setGraduateYear getYear(+req.body.clas)
+        else
+            await user.setGraduateYear(undefined)
+        await user.updateName newName
+        if req.body.codeforcesPassword
+            await LoggedCodeforcesUser.getUser(req.body.codeforcesUsername, req.body.codeforcesPassword)
+            req.user.setCodeforces(req.body.codeforcesUsername, req.body.codeforcesPassword)
+        if not req.body.codeforcesUsername
+            req.user.setCodeforces(undefined, undefined)
+        await User.updateUser(user._id, {})
+        res.send('OK')
+
+    app.post '/api/user/:id/setAdmin', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
@@ -242,20 +307,77 @@ export default setupApi = (app) ->
         user = await User.findById(id)
         if (not req.user?.admin) and (not isLevelAllowedForUser(req.params.table, user) or user?.userList != req.params.userList)
             res.json({"error": "level"})
-        else
-            res.json(await table(req.params.userList, req.params.table))
+            return
+        sortBySolved = (a, b) ->
+            if a.user.active != b.user.active
+                return if a.user.active then -1 else 1
+            if a.total.solved != b.total.solved
+                return b.total.solved - a.total.solved
+            if a.total.attempts != b.total.attempts
+                return a.total.attempts - b.total.attempts
+            return 0
+
+        sortByLevelAndRating = (a, b) ->
+            return User.sortByLevelAndRating(a.user, b.user)
+
+        userList = req.params.userList
+        table = req.params.table
+        data = []
+        users = await User.findByList(userList)
+        tables = await getTables(table)
+        #[users, tables] = await awaitAll([users, tables])
+        getTableResults = (user, tableName, tables) ->
+            sumTable = await TableResults.findByUserAndTable(user._id, tableName)
+            if sumTable
+                return
+                    results: sumTable?.data?.results
+                    total : sumTable?.data?.total
+            else
+                return getUserResult(user._id, tables, 1)
+        for user in users
+            data.push getTableResults user, table, tables
+        results = await awaitAll(data)
+        results = ({r..., user: users[i]} for r, i in results when r)
+        results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
+        res.json(results)
 
     app.get '/api/fullUser/:id', wrap (req, res) ->
-        id = req.params.id
-        result = await tableApi.fullUser(id)
+        userId = req.params.id
+        tables = []
+        for t in allTables when t != 'main'
+          tables.push(getTables(t))
+        tables = await awaitAll(tables)
+
+        user = await User.findById(userId)
+        calendar = await Calendar.findById(userId)
+        if not user
+            return null
+        results = []
+        for t in tables
+            results.push(getUserResult(user._id, t, 1))
+        results = await awaitAll(results)
+        results = (r.results for r in results when r)
+        result =
+            user: user.toObject()
+            results: results
+            calendar: calendar?.toObject()
+
         userPrivate = {}
-        if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
-            userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        if req.user?.admin or ""+req.user?.userKey() == ""+userId
+            userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
         result.user = {result.user..., userPrivate...}
         res.json(result)
 
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
+
+    app.get '/api/users/withAchieve/:achieve', wrap (req, res) ->
+        achieve = req.params.achieve
+        if not (achieve of ACHIEVES)
+            res.status(400).send('Unknown achieve')
+            return
+        users = await User.findByAchieve(achieve)
+        res.json(users)
 
     app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
@@ -302,7 +424,7 @@ export default setupApi = (app) ->
             promises.push(addUserName(user))
             result.push(user)
         await awaitAll(promises)
-        result = result.filter((user) -> not user.dormant)
+        result = result.filter((user) -> (not user.dormant) and (user.registerDate > new Date() - 1000 * 60 * 60 * 24 * 100))
         result.sort((a, b) -> (a.registerDate || new Date(0)) - (b.registerDate || new Date(0)))
         res.json(result)
 
@@ -318,6 +440,23 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json(submits)
 
+    app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
+        submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
+        submits = submits.map((submit) -> submit.toObject())
+        submits = submits.map(hideTests)
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        submits = submits.map((submit) ->
+              _id: submit._id
+              problem: submit.problem
+              user: submit.user
+              time: submit.time
+              outcome: submit.outcome
+              language: submit.language
+              fullProblem: submit.fullProblem
+        )
+        res.json(submits)
+
     app.get '/api/material/:id', wrap (req, res) ->
         id = req.user?.userKey()
         user = await User.findById(id)
@@ -331,7 +470,10 @@ export default setupApi = (app) ->
         res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
 
     app.get '/api/result/:id', wrap (req, res) ->
-        result = (await Result.findById(req.params.id)).toObject()
+        result = (await Result.findById(req.params.id))?.toObject()
+        if not result
+            res.json({})
+            return
         result.fullUser = await User.findById(result.user)
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
@@ -381,11 +523,17 @@ export default setupApi = (app) ->
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
         if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
-            res.status(403).send('No permissions')
-            return
-        mimeType = fileType(Buffer.from(submit.sourceRaw))?.mime || "text/plain"
+            if submit.quality == 0
+                res.status(403).send('No permissions')
+                return
+            result = await Result.findByUserAndTable(req.user?.userKey(), submit.problem)
+            if not result or result.solved <= 0
+                res.status(403).send('No permissions')
+                return
+        source = submit.sourceRaw || entities.decode(submit.source)
+        mimeType = FileType.fromBuffer(Buffer.from(source))?.mime || "text/plain"
         res.contentType(mimeType)
-        res.send(submit.sourceRaw)
+        res.send(source)
 
     app.get '/api/lastComments', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.userKey()
@@ -518,6 +666,19 @@ export default setupApi = (app) ->
             await user.setUserList(newGroup)
         res.send('OK')
 
+    app.post '/api/forceSetUserList/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        newGroup = req.params.groupName
+        if newGroup != "none"
+            await user.forceSetUserList(newGroup)
+        res.send('OK')
+
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -527,6 +688,18 @@ export default setupApi = (app) ->
             res.status(400).send("User not found")
             return
         await user.setDormant(true)
+        res.send('OK')
+
+    app.post '/api/setActivated/:userId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        user = await User.findById(req.params.userId)
+        if not user
+            res.status(400).send("User not found")
+            return
+        await user.setActivated(req.body?.value)
+        if req.body?.value then await user.setDormant(false)
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
@@ -545,17 +718,18 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        adminUser = await InformaticsUser.findAdmin()
 
         runForUser = (user) ->
-            await groups.moveUserToGroup(adminUser, user._id, "unknown")
-            await user.setUserList("unknown")
-            logger.info("Moved user #{user._id} to unknown group")
+            userPrivate = await UserPrivate.findById(user._id)
+            registeredUser = await RegisteredUser.findByKey(user._id)
+            if registeredUser.admin or (user.userList == "stud" and userPrivate.paidTill > new Date())
+                logger.info("Will not move user #{user._id} to unknown group")
+                return
+            await user.setActivated(false)
+            logger.info("Deactivate user #{user._id}")
 
         users = await User.findAll()
         for user in users
-            #if user.userList == "stud"
-            #    continue
             runForUser(user)
         res.send('OK')
 
@@ -594,13 +768,6 @@ export default setupApi = (app) ->
         User.updateAllGraduateYears()
         res.send('OK')
 
-    app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        downloadContests.run()
-        res.send('OK')
-
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -636,6 +803,15 @@ export default setupApi = (app) ->
         result = await user.getData()
         res.json(result)
 
+    app.post '/api/codeforces/userData', wrap (req, res) ->
+        username = req.body.username
+        password = req.body.password
+        try
+            user = await LoggedCodeforcesUser.getUser(username, password)
+            res.json({status: true})
+        catch
+            res.json({status: false})
+
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -643,6 +819,28 @@ export default setupApi = (app) ->
         stats = getStats()
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
+
+    app.get '/api/approveFindMistake', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        mistake = await FindMistake.findOneNotApproved()
+        if not mistake
+            res.json({})
+            return
+        submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        res.json({mistake, submits})
+
+    app.post '/api/setApproveFindMistake/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        approve = req.body.approve
+        mistake = await FindMistake.findById(req.params.id)
+        await mistake.setApprove(approve)
+        res.send('OK')
 
     app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
         url = req.query.url

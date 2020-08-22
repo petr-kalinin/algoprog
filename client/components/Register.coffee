@@ -88,6 +88,7 @@ class Register extends React.Component
                 whereFrom: @state.whereFrom
                 contact: @state.contact
                 aboutme: @state.aboutme
+                cfLogin: @state.cfLogin
             }
             ###
             if data.registered.success

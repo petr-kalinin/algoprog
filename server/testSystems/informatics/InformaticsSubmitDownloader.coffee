@@ -38,7 +38,7 @@ EJUDGE_STATUS_TO_OUTCOME =
 
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
-    constructor: (@adminUser, @baseUrl) ->
+    constructor: (@adminUser, @baseUrl, @admin, @userId) ->
         super()
 
     AC: 'Зачтено/Принято'
@@ -78,9 +78,12 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
     getResults: (runid) ->
         try
             [contest, run] = @parseRunId(runid)
-            href = "https://informatics.msk.ru/py/protocol/get-full/#{run}"
+            if @admin
+                href = "https://informatics.msk.ru/py/protocol/get-full/#{run}"
+            else
+                href = "https://informatics.msk.ru/py/protocol/get/#{run}"
             data = await @adminUser.download(href)
-            logger.info "results data for runid #{runid}: ", data
+            #logger.info "results data for runid #{runid}: ", data
             result = JSON.parse(data)
             if not result.tests?[1] and not result.compiler_output and not result.message?.includes('status="SV"') and not result.message?.includes('status="CE"') and not result.protocol?.includes('compile-error="yes"')
                 throw "No results found"
@@ -121,16 +124,16 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
         rowI = 0
         for row in data
             rowI++
-            uid = row.user.id
-            name = row.user.firstname + " " + row.user.lastname
+            uid = row.user?.id || @userId
+            name = "not used"
             pid = row.problem.id
             runid = row.id + "p" + pid
             prob = row.problem.name
             date = row.create_time
             language = row.ejudge_language_id
-            for lang in LANGUAGES
-                if language == lang[0]
-                    language = lang[1]
+            for key, lang of LANGUAGES
+                if language == lang.informatics
+                    language = key
                     break
             outcome = EJUDGE_STATUS_TO_OUTCOME[row.ejudge_status] || row.ejudge_status
             #outcome = outcomeRe.exec outcome

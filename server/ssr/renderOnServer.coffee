@@ -30,9 +30,10 @@ renderFullPage = (html, data, helmet) ->
             <meta name="yandex-verification" content="4f0059cd93dfb218" />
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+            <link rel="stylesheet" href="/server.bundle.css"/>
             <link rel="stylesheet" href="/bundle.css"/>
             <link rel="stylesheet" href="/react-diff-view.css"/>
-            <link rel="stylesheet" href="/informatics.css"/>
+            <link rel="stylesheet" href="/testsystems.css"/>
             <link rel="stylesheet" href="/highlight.css"/>
             <link rel="stylesheet" href="/main.css"/>
             <meta name="viewport" content="width=device-width, initial-scale=1">

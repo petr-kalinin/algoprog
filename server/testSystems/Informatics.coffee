@@ -6,7 +6,7 @@ import { GROUPS } from '../../client/lib/informaticsGroups'
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 
-import download from '../lib/download'
+import download, {downloadLimited} from '../lib/download'
 import logger from '../log'
 
 import TestSystem, {TestSystemUser} from './TestSystem'
@@ -47,11 +47,15 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
+            page = await download('https://informatics.msk.ru/login/index.php', @jar)
+            token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
+            console.log "Logging user #{@username}, token=#{token}"
             page = await download("https://informatics.msk.ru/login/index.php", @jar, {
                 method: 'POST',
                 form: {
                     username: @username,
-                    password: @password
+                    password: @password,
+                    logintoken: token
                 },
                 followAllRedirects: true,
                 timeout: 30 * 1000
@@ -65,14 +69,10 @@ class LoggedInformaticsUser
 
     getId: () ->
         page = await download("https://informatics.msk.ru/", @jar)
-        document = (new JSDOM(page)).window.document
-        el = document.getElementsByClassName("logininfo")
-        if el.length == 0 or el[0].children.length == 0
-            return null
-        a = el[0].children[0]
-        id = a.href.match(/view.php\?id=(\d+)/)
-        @name = a.innerHTML
-        if not id or id.length < 2
+        @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
+        id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]
+        console.log "Logging user #{@username}, id=#{id} name=#{@name}"
+        if not @name or not id or id.length < 2
             return null
         return id[1]
 
@@ -131,6 +131,8 @@ export default class Informatics extends TestSystem
 
     @getAdmin: () ->
         admin = await RegisteredUser.findAdmin()
+        if not admin
+            return undefined
         return LoggedInformaticsUser.getUser(admin.informaticsUsername, admin.informaticsPassword)
 
     id: () ->
@@ -144,22 +146,19 @@ export default class Informatics extends TestSystem
         id = @_informaticsProblemId(problemId)
         "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{userId}"
 
-    submitDownloader: (userId, problemId, fromTimestamp, submitsPerPage) ->
-        problemId = if problemId then @_informaticsProblemId(problemId) else 0
-        if userId or problemId
-            groupId = 0
-        else
-            userId = 0
-            groupId = GROUPS["unknown"]
-        fromTimestamp = fromTimestamp || 0
-        if not userId
-            # disable all downloads except for a specific user
-            return
-        adminUser = await Informatics.getAdmin()
+    submitDownloader: (registeredUser, problem, submitsPerPage) ->
+        userId = registeredUser.informaticsId
+        problemId = @_informaticsProblemId(problem._id)
+        groupId = 0
+        fromTimestamp = 0
+        #user = await @_getAdmin()
+        #admin = true
+        if not user
+            user = await LoggedInformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
+            admin = false
         url = (page) ->
-            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}
-            "#{BASE_URL}/moodle/ajax/ajax.php?problem_id=#{problemId}&group_id=#{groupId}&user_id=#{userId}&from_timestamp=#{fromTimestamp}&lang_id=-1&status_id=-1&statement_id=0&objectName=submits&count=#{submitsPerPage}&with_comment=&page=#{page}&action=getHTMLTable"
-        return new InformaticsSubmitDownloader(adminUser, url)
+            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}"
+        return new InformaticsSubmitDownloader(user, url, admin, userId)
 
     submitNeedsFormData: () ->
         true
@@ -185,3 +184,42 @@ export default class Informatics extends TestSystem
 
     selfTest: () ->
         await Informatics.getAdmin()
+
+    downloadProblem: (options) ->
+        href = "https://informatics.msk.ru/moodle/mod/statements/view3.php?chapterid=#{options.id}"
+        page = await downloadLimited(href, {timeout: 15 * 1000})
+        document = (new JSDOM(page, {url: href})).window.document
+        submit = document.getElementById('submit')
+        if submit
+            submit.parentElement.removeChild(submit)
+
+        data = document.getElementsByClassName("problem-statement")
+        if not data or data.length == 0
+            logger.warn("Can't find statement for problem " + href)
+            data = []
+
+        name = document.getElementsByTagName("title")[0] || ""
+        name = name.innerHTML
+
+        if not name
+            logger.warn Error("Can't find name for problem " + href)
+            name = "???"
+
+        text = "<h1>" + name + "</h1>"
+        for tag in data
+            need = true
+            pred = tag.parentElement
+            while pred
+                if pred.classList.contains("problem-statement")
+                    need = false
+                    break
+                pred = pred.parentElement
+            if need
+                text += "<div>" + tag.innerHTML + "</div>"
+        return {name, text}
+
+    getProblemId: (options) ->
+        throw "not implemented"
+
+    getProblemData: (options) ->
+        {}

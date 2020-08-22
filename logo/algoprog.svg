@@ -28,14 +28,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.9899495"
-     inkscape:cx="1031.6767"
-     inkscape:cy="527.77315"
+     inkscape:zoom="0.7"
+     inkscape:cx="900.30331"
+     inkscape:cy="507.6473"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="2560"
-     inkscape:window-height="1367"
+     inkscape:window-width="1920"
+     inkscape:window-height="1133"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -104,15 +104,15 @@
     <rect
        id="rect3785"
        width="192"
-       height="108"
+       height="120"
        x="164.37076"
-       y="35.720921"
-       style="stroke:none;stroke-width:0.88456362;fill:#ffffff"
+       y="23.720921"
+       style="fill:#ffffff;stroke:none;stroke-width:0.93241191"
        inkscape:export-xdpi="254"
        inkscape:export-ydpi="254" />
     <g
        id="g3793"
-       transform="matrix(1.601841,0,0,1.7243876,-118.1489,-64.047311)"
+       transform="matrix(1.601841,0,0,1.7243876,-118.1489,-70.047311)"
        inkscape:export-xdpi="254"
        inkscape:export-ydpi="254">
       <text
@@ -205,53 +205,61 @@
     <rect
        inkscape:export-ydpi="254"
        inkscape:export-xdpi="254"
-       style="fill:#ffffff;stroke:none;stroke-width:0.88456362"
-       y="148.77592"
+       style="fill:#ffffff;stroke:none;stroke-width:0.93241191"
+       y="136.77592"
        x="169.18161"
-       height="108"
+       height="120"
        width="192"
        id="rect3809" />
     <g
-       id="g941"
-       transform="translate(0,3.2227711)"
+       id="g940"
+       transform="translate(-3.5333734,-6.1411183)"
        inkscape:export-xdpi="254"
        inkscape:export-ydpi="254">
       <text
          inkscape:export-ydpi="254"
          inkscape:export-xdpi="254"
          id="text3813"
-         y="170.48837"
+         y="173.71115"
          x="264.47604"
          style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
-           id="tspan911"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="170.48837"
-           x="266.50867"
-           sodipodi:role="line">Системы </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="192.53699"
-           x="266.50864"
-           sodipodi:role="line"
-           id="tspan917">контроля </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="214.5856"
+           y="173.71115"
            x="264.47604"
            sodipodi:role="line"
-           id="tspan919">версий</tspan></text>
+           id="tspan919">Делаем алгопрог</tspan></text>
       <text
          inkscape:export-ydpi="254"
          inkscape:export-xdpi="254"
          id="text3821"
-         y="239.49231"
+         y="242.71509"
          x="238.56236"
          style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d32c2c;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#d32c2c;stroke-width:0.26458332"
-           y="239.49231"
+           y="242.71509"
            x="238.56236"
            id="tspan3819"
-           sodipodi:role="line">Петр Калинин, 16.02.2019</tspan></text>
+           sodipodi:role="line">Петр Калинин, 19.07.2020</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="264.19891"
+         y="196.16179"
+         id="text929"
+         inkscape:export-xdpi="254"
+         inkscape:export-ydpi="254"><tspan
+           id="tspan927"
+           sodipodi:role="line"
+           x="265.21521"
+           y="196.16179"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332">Список пользователей, </tspan><tspan
+           id="tspan931"
+           sodipodi:role="line"
+           x="264.19891"
+           y="209.39096"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332">имеющих конкретную ачивку</tspan></text>
     </g>
   </g>
 </svg>

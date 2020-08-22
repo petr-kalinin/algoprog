@@ -43,12 +43,6 @@ compareSources = (newSource, oldSource) ->
             return true
     return false
 
-getLanguage = (lang) ->
-    for l in LANGUAGES
-        if lang == l[1]
-            return l[0]
-    throw "Unknown language " + lang
-
 submitToTestSystem = (submit, submitProcess) ->
     success = false
 
@@ -61,14 +55,18 @@ submitToTestSystem = (submit, submitProcess) ->
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
         success = true
 
-    testSystem = await getTestSystem("informatics")
+    testSystem = getTestSystem(submit.testSystemData.system)
     registeredUser = await RegisteredUser.findByKeyWithPassword(submit.user)
     try
         try
             logger.info "Try submitWithObject"
-            await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language: getLanguage(submit.language)})
+            language = LANGUAGES[submit.language][submit.testSystemData.system]
+            if not language
+                throw "Unknown language id"
+            await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language, testSystemData: submit.testSystemData})
             await sleep(1000)
         finally
+            logger.info "Error in submitWithObject, will try downloadSubmits"
             await downloadSubmits.runForUserAndProblem(registeredUser.userKey(), submit.problem, onNewSubmit)
     catch e
         if not success
@@ -106,11 +104,17 @@ submitOneSubmit = (submit) ->
     try
         await submitToTestSystem(submit, submitProcess)
     catch e
-        logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
-        logger.info e, e.message, e.stack
-        submitProcess.attempts += 1
-        submitProcess.lastAttempt = new Date()
-        await submitProcess.upsert()
+        if e.duplicate
+            logger.info "Duplicate"
+            submit.outcome = "Вы уже отправляли этот код"
+            await submit.upsert()
+            await SubmitProcess.remove({_id: submit._id})
+        else
+            logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
+            logger.info e, e.message, e.stack
+            submitProcess.attempts += 1
+            submitProcess.lastAttempt = new Date()
+            await submitProcess.upsert()
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
         await User.updateUser(submit.user, dirtyResults)
@@ -120,17 +124,17 @@ submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()
     await awaitAll(pendingSubmits.map(submitOneSubmit))
 
-running = false
+running_ = false
 
 wrapRunning = (callable) ->
     () ->
-        if running
+        if running_
             logger.info "Already running submitSubmits"
             return
         try
-            running = true
+            running_ = true
             await callable()
         finally
-            running = false
+            running_ = false
 
 export default wrapRunning(submitSubmits)

@@ -21,7 +21,7 @@ import UserName, {color} from './UserName'
 import CfStatus from './CfStatus'
 import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 import ThemeSwitch from './ThemeSwitch'
-import needUnknownWarning from '../lib/needUnknownWarning'
+import needDeactivatedWarning from '../lib/needDeactivatedWarning'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
@@ -33,7 +33,7 @@ needCfWarning = (user) ->
 needUnpaidWarning = (user) ->
     (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (not isPaid(user))
 
-UnknownWarning = (props) ->
+DeactivatedWarning = (props) ->
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
@@ -116,7 +116,7 @@ class TopPanel extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser, @props.me)
+            showWarning: (not @props.deactivatedWarningShown) and needDeactivatedWarning(@props.myUser, @props.me)
             showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or (unpaidBlocked(@props.myUser) and @props.history.location.pathname != "/payment")
         @closeWarning = @closeWarning.bind(this)
         @openWarning = @openWarning.bind(this)
@@ -124,7 +124,7 @@ class TopPanel extends React.Component
         @openUnpaid = @openUnpaid.bind(this)
 
     closeWarning: ->
-        @props.setUnknownWarningShown()
+        @props.setDeactivatedWarningShown()
         @setState
             showWarning: false
 
@@ -145,7 +145,7 @@ class TopPanel extends React.Component
 
     componentDidUpdate: (prevProps, prevState) ->
         newState =
-            showWarning: (not @props.unknownWarningShown) and needUnknownWarning(@props.myUser, @props.me)
+            showWarning: (not @props.deactivatedWarningShown) and needDeactivatedWarning(@props.myUser, @props.me)
             showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         if !deepEqual(newState, prevState)
             @setState(newState)
@@ -175,10 +175,10 @@ class TopPanel extends React.Component
                                 <CfStatus cf={@props.myUser.cf} />
                                 {needCfWarning(@props.myUser) &&
                                     <span>
-                                        <span title="Логин на codeforces неизвестен. Если вы там зарегистрированы, напишите логин мне.">CF: <FontAwesome name="question-circle"/></span>
+                                        <span title="Логин на codeforces неизвестен. Если вы там зарегистрированы, укажите логин в своём профиле.">CF: <FontAwesome name="question-circle"/></span>
                                         <span className={styles.separator}/>
                                     </span>}
-                                {needUnknownWarning(@props.myUser, @props.me) &&
+                                {needDeactivatedWarning(@props.myUser, @props.me) &&
                                     <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
                                 {needUnpaidWarning(@props.myUser) &&
                                     <span title="Занятия не оплачены" className={"text-danger " + styles.warning} onClick={@openUnpaid}><FontAwesome name="exclamation-triangle"/></span>}
@@ -220,7 +220,7 @@ class TopPanel extends React.Component
             @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
             }
             {
-            not @props.myUser?.dormant and @state.showWarning && <UnknownWarning handleClose={@closeWarning}/>
+            not @props.myUser?.dormant and @state.showWarning && <DeactivatedWarning handleClose={@closeWarning}/>
             }
             {
             not @props.myUser?.dormant and @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
@@ -238,18 +238,18 @@ ConnectedTopPanel = ConnectedComponent(withRouter(TopPanel), options)
 mapStateToProps = (state) ->
     return
         theme: state.theme
-        unknownWarningShown: state.unknownWarningShown
+        deactivatedWarningShown: state.deactivatedWarningShown
         unpaidWarningShown: state.unpaidWarningShown
 
 doLogout = (dispatch) ->
     dispatch(actions.logout())
-    dispatch(actions.setUnknownWarningShown(false))
+    dispatch(actions.setDeactivatedWarningShown(false))
     dispatch(actions.setUnpaidWarningShown(false))
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
         logout: () -> doLogout(dispatch)
-        setUnknownWarningShown: () -> dispatch(actions.setUnknownWarningShown())
+        setDeactivatedWarningShown: () -> dispatch(actions.setDeactivatedWarningShown())
         setUnpaidWarningShown: () -> dispatch(actions.setUnpaidWarningShown())
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectedTopPanel)

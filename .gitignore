@@ -1,7 +1,8 @@
 node_modules
 build
-data
+/data
 log
 v2
 *.orig
 run_bearer.sh
+t

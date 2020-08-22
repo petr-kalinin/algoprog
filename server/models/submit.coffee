@@ -4,6 +4,7 @@ import Hash from './Hash'
 import User from './user'
 
 import calculateHashes from '../hashes/calculateHashes'
+import normalizeCode from '../lib/normalizeCode'
 
 import awaitAll from '../../client/lib/awaitAll'
 import logger from '../log'
@@ -19,6 +20,7 @@ submitsSchema = new mongoose.Schema
     time: Date
     downloadTime: { type: Date, default: new Date(0) }
     user: String
+    userList: String
     problem: String
     outcome: String
     source: String
@@ -29,7 +31,8 @@ submitsSchema = new mongoose.Schema
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
     hashes: [{window: Number, hash: String, score: Number}]
-
+    testSystemData: mongoose.Schema.Types.Mixed
+    
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
 
@@ -60,16 +63,28 @@ submitsSchema.methods.equivalent = (other) ->
         return false
     if @force
         return false
+    otherCodes = [normalizeCode(other.source), normalizeCode(other.sourceRaw)]
     return @user == other.user \
         and @problem == other.problem \
         and outcomeType(@outcome) == outcomeType(other.outcome) \
-        and @source == other.source \
-        and @sourceRaw == other.sourceRaw \
-        and @language == other.language
+        and ((normalizeCode(@source) in otherCodes) or (normalizeCode(@sourceRaw) in otherCodes)) \
+        and (@language == other.language \
+             or Math.abs(@time - other.time) < 1500 \
+             or Math.abs(Math.abs(@time - other.time) - 3 * 60 * 60 * 1000) < 1500)
 
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
         user: userId
+
+submitsSchema.statics.findByUserAndDay = (userId, day) ->
+    date = new Date(Date.parse(day))
+    start = new Date(date)
+    end = new Date(date)
+    start.setHours(0,0,0,0);
+    end.setHours(23,59,59,999)
+    Submit.find
+        user: userId
+        time: {$gte: start, $lt: end}
 
 submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
     Submit.find({

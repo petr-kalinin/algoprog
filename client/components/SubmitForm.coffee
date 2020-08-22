@@ -28,7 +28,7 @@ class SubmitForm extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            lang_id: LANGUAGES[0][0]
+            lang_id: Object.keys(LANGUAGES)[0]
             draft: false
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
@@ -38,10 +38,10 @@ class SubmitForm extends React.Component
         newState = {@state...}
         if field == "file"
             newState.wasFile = true
-            for lang in LANGUAGES
-                for candidate in lang
+            for key, lang of LANGUAGES
+                for candidate in lang.extensions
                     if value.endsWith(candidate)
-                        newState["lang_id"] = lang[0]
+                        newState["lang_id"] = key
         else  # file input is not controlled
             newState[field] = value
         @setState(newState)
@@ -70,12 +70,8 @@ class SubmitForm extends React.Component
             fileName = document.getElementById("file").files[0]
             fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
             fileText = Array.from(new Uint8Array(fileText))
-            languageName = undefined
-            for lang in LANGUAGES
-                if ""+@state.lang_id == ""+lang[0]
-                    languageName = lang[1]
             dataToSend =
-                language: languageName
+                language: @state.lang_id
                 code: fileText
                 draft: @state.draft
             url = "submit/#{@props.problemId}"
@@ -136,8 +132,12 @@ class SubmitForm extends React.Component
                         componentClass="select"
                         setField={@setField}
                         state={@state}>
-                        {LANGUAGES.map((lang) =>
-                            <option value={lang[0]} key={lang[0]}>{lang[1]}</option>
+                        {Object.keys(LANGUAGES).map((key) =>
+                            id = LANGUAGES[key][@props.material.testSystemData.system]
+                            if id
+                                <option value={key} key={key}>{key}</option>
+                            else
+                                null
                         )}
                     </FieldGroup>
                 }

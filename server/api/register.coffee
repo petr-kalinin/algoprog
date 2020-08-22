@@ -36,6 +36,7 @@ export default register = (req, res, next) ->
             graduateYear: informaticsData.graduateYear,
             level: {current: "0A"}
             userList: "unknown",
+            activated: false,
             lastActivated: new Date()
             registerDate: new Date()
         )

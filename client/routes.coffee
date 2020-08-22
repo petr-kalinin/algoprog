@@ -8,6 +8,7 @@ import {
 
 import AchievesPage from './pages/AchievesPage'
 import AllCommentsPage from './pages/AllCommentsPage'
+import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
 import UserBadgePage from './pages/UserBadgePage'
 import FullUserPage from './pages/FullUserPage'
 import DashboardPage from './pages/DashboardPage'
@@ -24,6 +25,7 @@ import PaymentPage from './pages/PaymentPage'
 import PaymentSuccessPage from './pages/PaymentSuccessPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
+import UsersWithAchievePage from './pages/UsersWithAchievePage'
 import LoginPage from './pages/LoginPage'
 
 class NoMatch extends React.Component
@@ -64,6 +66,11 @@ export default [
         path: '/review',
         key: "review",
         component: ReviewPage,
+    },
+    {
+        path: '/approveFindMistake',
+        key: "approveFindMistake",
+        component: ApproveFindMistakePage,
     },
     {
         path: '/solvedByWeek/:userList',
@@ -119,6 +126,11 @@ export default [
         path: '/comments',
         key: "comments",
         component: AllCommentsPage,
+    },
+    {
+        path: '/usersWithAchieve/:achieve',
+        key: "usersWithAchieve",
+        component: UsersWithAchievePage,
     },
     {
         path: '/login',

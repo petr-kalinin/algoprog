@@ -1,3 +1,5 @@
+import processForFindMistake from '../findMistake/processForFindMistake'
+
 import User from '../models/user'
 import Hash from '../models/Hash'
 import Table from '../models/table'
@@ -74,7 +76,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         if submit.outcome == "IG"
             if solved == 0
                 ignored = 1
-                ok = 0
+            ok = 0
             continue
         # any other result resets ignored flag
         ignored = 0
@@ -108,9 +110,11 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
     await result.upsert()
+    # Warning: processForFindMistake reverses submits array
+    await processForFindMistake(submits)
     return result
 
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user
-    await updateResultsForTable(user, Table.main, dirtyResults)
+    await updateResultsForTable(user, "main", dirtyResults)
     logger.info "updated results for user ", user
