@@ -55,12 +55,12 @@ submitToTestSystem = (submit, submitProcess) ->
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
         success = true
 
-    testSystem = getTestSystem(submit.testSystemData.system)
+    testSystem = getTestSystem(submit.testSystemData?.system)
     registeredUser = await RegisteredUser.findByKeyWithPassword(submit.user)
     try
         try
             logger.info "Try submitWithObject"
-            language = LANGUAGES[submit.language][submit.testSystemData.system]
+            language = LANGUAGES[submit.language][submit.testSystemData?.system || "informatics"]
             if not language
                 throw "Unknown language id"
             await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language, testSystemData: submit.testSystemData})

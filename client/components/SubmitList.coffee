@@ -59,10 +59,12 @@ class SubmitList extends React.Component
     render:  () ->
         if not @props.myUser?._id
             return null
+        ###
         testSystem = getTestSystem(@props.material.testSystemData.system)
         blockedByTestSystem = testSystem.blockSubmission(@props.material, @props.me)
         if blockedByTestSystem
             return blockedByTestSystem
+        ###
         <div>
             {
             if @props.bestSubmits.length

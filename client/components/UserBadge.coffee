@@ -49,7 +49,7 @@ export default class UserBadge extends React.Component
                         <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                 }
                 {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
-                {if(@state.editing && +@props.user._id == @props.me?.informaticsId)
+                {@props.me?.admin && if(@state.editing && +@props.user._id == @props.me?.informaticsId)
                     <div>
                         <EditingUser {...this.props} handleReload = {@reload}/>
                     </div>

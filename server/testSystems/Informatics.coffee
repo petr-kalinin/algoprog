@@ -14,7 +14,7 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownloader'
 
 
-REQUESTS_LIMIT = 20
+REQUESTS_LIMIT = 10
 UNKNOWN_GROUP = '7647'
 
 
@@ -86,6 +86,7 @@ class LoggedInformaticsUser
             result = await download(href, @jar, options)
         finally
             @requests--
+            logger.info "Successfull download #{href}, queue length #{@promises.length}"
             if @promises.length
                 promise = @promises.shift()
                 promise(0)  # resolve

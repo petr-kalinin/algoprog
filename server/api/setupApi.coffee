@@ -32,7 +32,8 @@ import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 
 import {allTables} from '../materials/data/tables'
-import downloadMaterials from '../materials/downloadMaterials'
+import downloadMaterials from '../cron/downloadMaterials'
+import * as downloadContests from '../cron/downloadContests'
 import notify from '../metrics/notify'
 
 import BlogPost from '../models/BlogPost'
@@ -344,8 +345,8 @@ export default setupApi = (app) ->
     app.get '/api/fullUser/:id', wrap (req, res) ->
         userId = req.params.id
         tables = []
-        for t in allTables when t != 'main'
-          tables.push(getTables(t))
+        for t in ["0", "1", "main", "reg", "roi"] when t != 'main'
+            tables.push(getTables(t))
         tables = await awaitAll(tables)
 
         user = await User.findById(userId)
@@ -766,6 +767,13 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         User.updateAllGraduateYears()
+        res.send('OK')
+
+    app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        downloadContests.run()
         res.send('OK')
 
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->

@@ -22,7 +22,7 @@ finalizeMaterialsList = (materials) ->
 getIndent = (activity) ->
     indent = 0
     while true
-        spacers = activity.getElementsByClassName('spacer')
+        spacers = activity.getElementsByClassName('mod-indent')
         if spacers.length == 0
             break
         spacers[0].parentElement.removeChild(spacers[0])
@@ -92,18 +92,19 @@ class MaterialsDownloader
         hrefs = []
         tags = toc.getElementsByTagName("a")
         for tag in tags
-            if tag.href.startsWith("https://informatics.msk.ru/mod/statements/view3.php")
+            if tag.href.startsWith("https://informatics.msk.ru/mod/statements/view.php")
                 hrefs.push(tag.href)
             else
                 throw Error("Strange link in statements toc: " + tag.href + " " + href)
 
-        allATags = document.getElementsByTagName("a")
+        allATags = document.getElementsByTagName("h4")
         firstProblemHref = undefined
         s = ""
         for tag in allATags 
-            s += tag.title + "\n"
-            if tag.title == "Print This Problem"
-                firstProblemHref = tag.href.replace("print3", "view3")
+            s += tag.innerHTML + "\n"
+            id = /Задача №(\d+)/.exec(tag.innerHTML)?[1]
+            if id
+                firstProblemHref = "https://informatics.msk.ru/mod/statements/view.php?chapterid=#{id}"
 
         if not firstProblemHref
             throw Error("Can not detect first problem href at #{href} (#{s})")
@@ -123,14 +124,19 @@ class MaterialsDownloader
             logger.warn("Can't find statement for problem " + href)
             data = []
 
-        name = document.getElementsByTagName("title")[0] || ""
-        name = name.innerHTML
+        els = ["title", "h4"]
+        name = undefined
+        for el in els
+            nameEl = document.getElementsByTagName(el)[0] || ""
+            nameEl = nameEl?.innerHTML
 
-        re = new RegExp '^.*?\\((.*)\\)$'
-        res = re.exec name
-        name = res[1]
+            res = /^Задача №\d+\. (.*)$/.exec(nameEl)
+            name = res?[1]
+            if name
+                break
+
         if not name
-            logger.warn Error("Can't find name for problem " + href)
+            logger.warn Error("Can't find name for problem #{href} #{nameEl}")
             name = "???"
 
         text = "<h1>" + name + "</h1>"
@@ -193,7 +199,19 @@ class MaterialsDownloader
 
     parseLink: (a, id, order, keepResourcesInTree, indent, icon, type, path) ->
         material = undefined
-        if icon?.src?.endsWith("pdf.gif")
+        doc = await @downloadAndParse(a.href)
+        obj = doc.getElementById("resourceobject")
+        if obj
+            material = new Material
+                _id: id,
+                order: order,
+                type: "pdf",
+                indent: indent
+                content: obj.data
+                title: a.innerHTML,
+                path: path
+                materials: []
+        else if icon?.src?.endsWith("pdf.gif")
             material = new Material
                 _id: id,
                 order: order,
@@ -280,14 +298,15 @@ class MaterialsDownloader
 
     parseResource: (activity, order, keepResourcesInTree) ->
         indent = getIndent(activity)
-        icon = activity.firstChild
-        if activity.children.length != 2
-            throw Error("Found resource with >2 children " + activity.innerHTML)
-        a = activity.children[1]
+        icon = null
+        links = activity.getElementsByTagName("a")
+        if links.length != 1
+            throw Error("Found resource with >1 children " + activity.innerHTML)
+        a = links[0]
         return @parseLink(a, activity.id, order, keepResourcesInTree, indent, icon)
 
     getProblem: (href, order) ->
-        re = new RegExp '.*view3.php\\?id=\\d+&chapterid=(\\d+)'
+        re = new RegExp 'chapterid=(\\d+)'
         res = re.exec href
         id = res[1]
 
@@ -335,9 +354,11 @@ class MaterialsDownloader
 
     parseStatements: (activity, order) ->
         indent = getIndent(activity)
-        if activity.children.length != 2
-            throw Error("Found resource with >2 children " + activity.innerHTML)
-        a = activity.children[1]
+        links = activity.getElementsByTagName('a')
+        if links.length != 1
+            throw Error("Found resource with >1 children " + activity.innerHTML)
+        
+        a = links[0]
 
         re = new RegExp 'view.php\\?id=(\\d+)'
         res = re.exec a.href
@@ -708,7 +729,7 @@ class MaterialsDownloader
               if not (key of @urlToMaterial)
                   await @parseLink(a, key, 0, false, 0, undefined, undefined, subpath)
               if not (key of @urlToMaterial)
-                  throw Error("Found internal link without a material: #{href}")
+                  #throw Error("Found internal link without a material: #{href}")
                   continue
               newhref = "/material/#{@urlToMaterial[key]}"
             a.href = newhref

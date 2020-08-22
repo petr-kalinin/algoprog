@@ -76,7 +76,7 @@ export getUserResult = (userId, tables, depth) ->
 
 export default updateTableResults = (userId) ->
     logger.info "updating table results for user ", userId
-    for table in allTables
+    for table in ["0", "1", "main", "reg", "roi"]
         tables = await getTables(table)
         tableResults = await getUserResult(userId, tables, 1)
         if tableResults

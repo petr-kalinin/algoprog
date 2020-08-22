@@ -9,7 +9,7 @@ problemId = (props) ->
     props.material._id.substring(1)
 
 export default Problem = (props) ->
-    testSystem = getTestSystem(props.material.testSystemData.system)
+    #testSystem = getTestSystem(props.material.testSystemData.system)
     <div>
         <EditablePage material={props.material} reloadMaterial={props.handleReload}/>
         {`<SubmitList {...props}/>`}

@@ -67,23 +67,20 @@ class ContestDownloader
         ).upsert()
 
     getFirstProblem: (text) ->
-        idRe = new RegExp '<a title="Print This Problem" href="print3.php(\\?id=\\d+&amp;chapterid=(\\d+))"'
-        idRes = idRe.exec text
-        id = idRes[2]
-        href = "view3.php?#{idRes[1]}"
-
-        nameRe = new RegExp '<li><strong><B>Задача ([^.]+)\\.</B> ([^<]*)</strong></li>'
-        nameRes = nameRe.exec text
-        name = nameRes[2]
-        letter = nameRes[1]
-
-        return @makeProblem(nameRes[0], href, id, letter, name)
+        res = /<h4>Задача №(\d+). (.+)<\/h4>/.exec(text)
+        id = res[1]
+        name = res[2]
+        letter = "A"
+        href = "view.php?chapterid=#{id}"
+        return @makeProblem(null, href, id, letter, name)
 
     processContest: (order, fullText, href, cid, name, level) ->
+        logger.info "processContest", href, cid, name, level
         text = await @admin.download(href)
 
         firstProblem = @getFirstProblem(text)
-        re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]*)</a>', 'gm'
+        #re = new RegExp '<a href="(view3.php\\?id=\\d+&amp;chapterid=(\\d+))"><B>Задача ([^.]+)\\.</B> ([^<]*)</a>', 'gm'
+        re = /<li><a title="[^"]*" class="text-truncate" href="(view.php\?id=\d+&amp;chapterid=(\d+))"><b>([^.]+)\.<\/b> ([^<]*)<\/a><\/li>/gm
         problems = []
         text.replace re, (res, a, b, c, d) =>
             problems.push(@makeProblem(res, a, b, c, d))
@@ -94,7 +91,7 @@ class ContestDownloader
         logger.info "Downloading base contests"
         @admin = await Informatics.getAdmin()
         text = await @admin.download(@url)
-        re = new RegExp '<a title="Условия задач"\\s*href="(https://informatics.msk.ru/mod/statements/view.php\\?id=(\\d+))">(([^:]*): [^<]*)</a>', 'gm'
+        re = /<a class="aalink" onclick="" href="(https:\/\/informatics.msk.ru\/mod\/statements\/view.php\?id=(\d+))"><img src="[^"]*statements[^"]*" [^\/]*\/><span class="instancename">(([^:]*): [^<]*)<span/gm
         order = 0
         promises = []
         text.replace re, (a,b,c,d,e) =>

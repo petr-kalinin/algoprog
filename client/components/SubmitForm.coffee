@@ -133,7 +133,7 @@ class SubmitForm extends React.Component
                         setField={@setField}
                         state={@state}>
                         {Object.keys(LANGUAGES).map((key) =>
-                            id = LANGUAGES[key][@props.material.testSystemData.system]
+                            id = LANGUAGES[key]["informatics"]
                             if id
                                 <option value={key} key={key}>{key}</option>
                             else

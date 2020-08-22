@@ -76,7 +76,7 @@ app.use renderOnServer
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
 start = () ->
-    await downloadMaterials()
+    #await downloadMaterials()
 
     app.listen port, () ->
         logger.info 'App listening on port ', port
