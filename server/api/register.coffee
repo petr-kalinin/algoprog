@@ -6,20 +6,6 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 
 import logger from '../log'
 
-UNKNOWN_GROUP = '7647'
-
-addUserToUnknownGroup = (uid) ->
-    adminUser = await InformaticsUser.findAdmin()
-
-    href = "https://informatics.msk.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{UNKNOWN_GROUP}&selectedName=users&action=add"
-    body = 'addParam={"id":"' + uid + '"}&group_id=&session_sid='
-    await adminUser.download(href, {
-        method: 'POST',
-        headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-        body: body,
-        followAllRedirects: true
-    })
-
 export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
     {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin, promo, contact, whereFrom} = req.body
