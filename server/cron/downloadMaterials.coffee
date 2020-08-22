@@ -353,6 +353,12 @@ class MaterialsDownloader
             tree: tree
 
     parseStatements: (activity, order) ->
+        while true
+            els = activity.getElementsByClassName('accesshide ')
+            if els.length == 0
+                break
+            els[0].parentElement.removeChild(els[0])
+
         indent = getIndent(activity)
         links = activity.getElementsByTagName('a')
         if links.length != 1
@@ -364,7 +370,9 @@ class MaterialsDownloader
         res = re.exec a.href
         id = res[1]
 
-        return @parseContest(a.href, id, a.innerHTML, order, indent)
+        head = activity.getElementsByClassName("instancename")[0]
+
+        return @parseContest(a.href, id, head.innerHTML, order, indent)
 
     parseActivity: (activity, order, keepResourcesInTree) ->
         if activity.classList.contains("label")
