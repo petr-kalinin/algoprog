@@ -299,7 +299,7 @@ export class SubmitListWithDiff extends React.Component
                     handleSubmitClick={@setCurrentSubmit}
                     handleDiffClick={@setCurrentDiff}
                     activeId={@state.currentSubmit?._id}
-                    activeDiffId={@state.currentDiff.map((submit)->submit?._id)}/>
+                    activeDiffId={@state.currentDiff.map((submit)->submit?._id)}
                     admin={admin}/>
             </Col>
             {PostSubmit && `<Col xs={12} sm={12} md={12} lg={12}><PostSubmit {...allProps}/></Col>`}
