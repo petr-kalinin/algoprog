@@ -138,14 +138,6 @@ export default class Informatics extends TestSystem
     id: () ->
         return "informatics"
 
-    problemLink: (problemId) ->
-        id = @_informaticsProblemId(problemId)
-        "#{BASE_URL}/moodle/mod/statements/view3.php?chapterid=#{id}"
-
-    submitListLink: (problemId, userId) ->
-        id = @_informaticsProblemId(problemId)
-        "#{BASE_URL}/moodle/mod/statements/view3.php?" + "chapterid=#{id}&submit&user_id=#{userId}"
-
     submitDownloader: (registeredUser, problem, submitsPerPage) ->
         userId = registeredUser.informaticsId
         problemId = @_informaticsProblemId(problem._id)
@@ -176,7 +168,7 @@ export default class Informatics extends TestSystem
         await @_getAdmin()
 
     downloadProblem: (options) ->
-        href = "https://informatics.msk.ru/moodle/mod/statements/view3.php?chapterid=#{options.id}"
+        href = "https://informatics.msk.ru/mod/statements/view.php?chapterid=#{options.id}"
         page = await downloadLimited(href, {timeout: 15 * 1000})
         document = (new JSDOM(page, {url: href})).window.document
         submit = document.getElementById('submit')
@@ -189,7 +181,7 @@ export default class Informatics extends TestSystem
             data = []
 
         name = document.getElementsByTagName("title")[0] || ""
-        name = name.innerHTML
+        name = /^Задача №\d+. (.*)$/.exec(name.innerHTML)?[1]
 
         if not name
             logger.warn Error("Can't find name for problem " + href)
