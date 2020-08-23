@@ -3,15 +3,7 @@ import { GROUPS } from '../../client/lib/informaticsGroups'
 export { GROUPS }
 
 makeRequest = (adminUser, userId, groupName, urlAction, bodyAction) ->
-    groupId = GROUPS[groupName]
-    href = "https://informatics.msk.ru/moodle/ajax/ajax.php?sid=&objectName=group&objectId=#{groupId}&selectedName=users&action=#{urlAction}"
-    body = "#{bodyAction}={\"id\":\"#{userId}\"}&group_id=&session_sid="
-    await adminUser.download(href, {
-        method: 'POST',
-        headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
-        body: body,
-        followAllRedirects: true
-    })
+    throw "Legacy; do not really move users to groups"
 
 export addUserToGroup = (adminUser, userId, groupName) ->
     makeRequest(adminUser, userId, groupName, "add", "addParam")

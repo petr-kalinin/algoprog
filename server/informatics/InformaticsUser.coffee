@@ -67,7 +67,7 @@ export default class InformaticsUser
         @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
         @id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]
         if not @name or not @id or @id.length < 2
-            return null
+            throw "Can't log user #{@username} into informatics"
         return
             id: @id,
             name: @name

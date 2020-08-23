@@ -53,7 +53,7 @@ export default class UserBadge extends React.Component
                     <div>
                         <EditingUser {...this.props} handleReload = {@reload}/>
                     </div>
-                else
+                else if +@props.user._id == @props.me?.informaticsId
                     <Button variant="light" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
             </blockquote>
             { @props.explain &&
