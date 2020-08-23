@@ -79,6 +79,7 @@ start = () ->
     await downloadMaterials()
 
     app.listen port, () ->
+        notify "Started"
         logger.info 'App listening on port ', port
         sendToGraphite {}
         for id, system of REGISTRY
