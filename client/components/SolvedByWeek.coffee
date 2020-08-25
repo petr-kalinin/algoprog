@@ -6,13 +6,13 @@ import userTableHeader from './UserTableHeader'
 
 import withTheme from '../lib/withTheme'
 
-import {startDayForWeeks, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
+import {startDayForWeeks, lastWeeksToShow, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
 
 weekSet = (userList) ->
     thisStart = new Date(startDayForWeeks["" + userList])
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
-    [0..nowWeek]
+    [Math.max(0, nowWeek - lastWeeksToShow + 1)..nowWeek]
 
 bgColor = (number) ->
     if !number
@@ -85,7 +85,7 @@ SolvedByWeekRow = (props) ->
                         bgColor: bgColor(undefined)
                 textAdd = undefined
                 if data?.ok and w of data.ok
-                    textAdd = <font style={fontSize: "10"}>{" + " + data.ok[w]}</font>
+                    textAdd = <span className={globalStyles.textAdd}>{" + " + data.ok[w]}</span>
                 a <td className={globalStyles.mainTable_td} key={w} style={style}>
                     {text}{textAdd}
                 </td>
@@ -108,7 +108,7 @@ class SolvedByWeek extends React.PureComponent
 
     <div>
         <Header headerClass={@props.headerClass} />
-        <div style={overflow: "auto"} ref={(d) => if d then @table_div = d }>
+        <div className={globalStyles.mainTable_div} ref={(d) => if d then @table_div = d }>
           <table className={globalStyles.mainTable}>
             <tbody>
                 {

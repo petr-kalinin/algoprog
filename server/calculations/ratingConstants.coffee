@@ -8,6 +8,8 @@ export startDayForWeeks =
     "graduated": "2020-01-06"
     "unknown": "2020-01-06"
 
+export lastWeeksToShow = 52
+
 export WEEK_ACTIVITY_EXP = 0.55
 export LEVEL_RATING_EXP = 2.5
 export ACTIVITY_THRESHOLD = 0.1
