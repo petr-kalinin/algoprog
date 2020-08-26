@@ -1,18 +1,19 @@
 React = require('react')
 
 import globalStyles from './global.css'
+import styles from './SolvedByWeek.css'
 
 import userTableHeader from './UserTableHeader'
 
 import withTheme from '../lib/withTheme'
 
-import {startDayForWeeks, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
+import {startDayForWeeks, lastWeeksToShow, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
 
 weekSet = (userList) ->
     thisStart = new Date(startDayForWeeks["" + userList])
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
-    [0..nowWeek]
+    [(nowWeek - lastWeeksToShow + 1)..nowWeek]
 
 bgColor = (number) ->
     if !number
@@ -38,11 +39,11 @@ bgColorDark = (number) ->
     else
         "#1ee51e"
 
-weekHeader = (weekNumber, userList) ->
+weekHeader = (weekNumber, weekCount, userList) ->
     thisStart = new Date(startDayForWeeks[userList])
     startDay = new Date(+thisStart + MSEC_IN_WEEK * weekNumber)
-    endDay = new Date(+startDay + MSEC_IN_WEEK - 1)
-    startDay.getUTCDate() + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
+    endDay = new Date(+startDay + MSEC_IN_WEEK * weekCount - 1)
+    startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1) + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
 
 Header = (props) ->
     cl = props.headerClass || "h1"
@@ -64,10 +65,12 @@ SolvedByWeekRow = (props) ->
         userTableHeader(res, props)
         a <td className={globalStyles.border} key="border"/>
         data = props.user.byWeek
-        for w in props.weeks
+        for w, i in props.weeks
             if props.header
-                a <td className={globalStyles.mainTable_td} key={w}>
-                    {weekHeader(w, props.userList)}
+              if i % 3 == 0
+                weekCount = if props.weeks.length - i > 2 then 3 else props.weeks.length - i
+                a <td className={globalStyles.mainTable_td} key={w} colSpan={weekCount}>
+                    {weekHeader(w, weekCount, props.userList)}
                 </td>
             else
                 text = ""
@@ -81,10 +84,11 @@ SolvedByWeekRow = (props) ->
                     text = "0"
                     style =
                         bgColor: bgColor(undefined)
+                textAdd = undefined
                 if data?.ok and w of data.ok
-                    text += " + " + data.ok[w]
+                    textAdd = <span className={styles.textAdd}>{" + " + data.ok[w]}</span>
                 a <td className={globalStyles.mainTable_td} key={w} style={style}>
-                    {text}
+                    {text}{textAdd}
                 </td>
         res
         }
@@ -93,22 +97,31 @@ SolvedByWeekRow = (props) ->
 
 SolvedByWeekRowWithTheme = withTheme(SolvedByWeekRow)
 
-export default SolvedByWeek = (props) ->
-    if not props.users?.length
+class SolvedByWeek extends React.PureComponent
+  componentDidMount: () ->
+    if @table_div
+        @table_div.scrollTo 10000, 0
+
+  render: () ->
+    if not @props.users?.length
         return <table className={globalStyles.mainTable}/>
-    weeks = weekSet(props.userList)
+    weeks = weekSet(@props.userList)
 
     <div>
-        <Header headerClass={props.headerClass} />
-        <table className={globalStyles.mainTable}>
+        <Header headerClass={@props.headerClass} />
+        <div className={globalStyles.mainTable_div} ref={(d) => if d then @table_div = d }>
+          <table className={globalStyles.mainTable}>
             <tbody>
                 {
                 res = []
                 a = (el) -> res.push(el)
-                a <SolvedByWeekRowWithTheme header={true} details={props.details} user={props.users[0]} userList={props.userList} weeks={weeks} key={"header"}/>
-                for user in props.users
-                    a <SolvedByWeekRowWithTheme details={props.details} user={user} weeks={weeks} key={user._id}/>
+                a <SolvedByWeekRowWithTheme header={true} details={@props.details} user={@props.users[0]} userList={@props.userList} weeks={weeks} key={"header"}/>
+                for user in @props.users
+                    a <SolvedByWeekRowWithTheme details={@props.details} user={user} weeks={weeks} key={user._id}/>
                 res}
             </tbody>
-        </table>
+          </table>
+        </div>
     </div>
+
+export default SolvedByWeek

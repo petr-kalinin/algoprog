@@ -3,7 +3,7 @@ import Problem from '../models/problem'
 import Result from '../models/result'
 import logger from '../log'
 
-import {startDayForWeeks, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
+import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
 
 levelVersion = (level) ->
     if (level.slice(0,3) == "reg")
@@ -47,6 +47,9 @@ activityScore = (level, date) ->
 
 export default calculateRatingEtc = (user) ->
     thisStart = new Date(startDayForWeeks[user.userList])
+    now = new Date()
+    nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
+    firstWeek = nowWeek - lastWeeksToShow + 1
 
     weekByTime = (time) ->
         submitDate = new Date(time)
@@ -103,10 +106,10 @@ export default calculateRatingEtc = (user) ->
             weekSolved[week] = 0.5
 
     for w of weekSolved
-        if w<0
+        if w<firstWeek
             delete weekSolved[w]
     for w of weekOk
-        if w<0
+        if w<firstWeek
             delete weekOk[w]
 
     activity *= (1 - WEEK_ACTIVITY_EXP) # make this averaged
