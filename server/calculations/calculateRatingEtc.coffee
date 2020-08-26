@@ -49,7 +49,7 @@ export default calculateRatingEtc = (user) ->
     thisStart = new Date(startDayForWeeks[user.userList])
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
-    firstWeek = Math.max(0, nowWeek - lastWeeksToShow + 1)
+    firstWeek = nowWeek - lastWeeksToShow + 1
 
     weekByTime = (time) ->
         submitDate = new Date(time)

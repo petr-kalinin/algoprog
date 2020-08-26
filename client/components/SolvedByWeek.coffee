@@ -1,6 +1,7 @@
 React = require('react')
 
 import globalStyles from './global.css'
+import styles from './SolvedByWeek.css'
 
 import userTableHeader from './UserTableHeader'
 
@@ -12,7 +13,7 @@ weekSet = (userList) ->
     thisStart = new Date(startDayForWeeks["" + userList])
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
-    [Math.max(0, nowWeek - lastWeeksToShow + 1)..nowWeek]
+    [(nowWeek - lastWeeksToShow + 1)..nowWeek]
 
 bgColor = (number) ->
     if !number
@@ -85,7 +86,7 @@ SolvedByWeekRow = (props) ->
                         bgColor: bgColor(undefined)
                 textAdd = undefined
                 if data?.ok and w of data.ok
-                    textAdd = <span className={globalStyles.textAdd}>{" + " + data.ok[w]}</span>
+                    textAdd = <span className={styles.textAdd}>{" + " + data.ok[w]}</span>
                 a <td className={globalStyles.mainTable_td} key={w} style={style}>
                     {text}{textAdd}
                 </td>

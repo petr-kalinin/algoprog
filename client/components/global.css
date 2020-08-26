@@ -1,4 +1,4 @@
- .mainTable_div {
+.mainTable_div {
     overflow: auto;
 }
 .mainTable {
@@ -24,9 +24,6 @@
 }
 .mainTable_user {
     text-align: left;
-}
-.textAdd {
-    font-size: 10;
 }
 .border {
     background:black;
