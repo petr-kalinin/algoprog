@@ -9,13 +9,13 @@ class Level extends MaterialList
         @title = title
         @id = id
 
-    build: (context) ->
+    build: (context, order) ->
         properties = 
             _id: @id
             type: "level"
             title: @title
 
-        material = await super.build(context, properties, {keepSubmaterials: true})
+        material = await super.build(context, order, properties, {keepSubmaterials: true})
 
         return material
 

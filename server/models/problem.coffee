@@ -9,6 +9,7 @@ problemsSchema = new mongoose.Schema
     tables: [String]
     level: String
     testSystemData: mongoose.Schema.Types.Mixed
+    order: String
 
 problemsSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322

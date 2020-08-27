@@ -10,6 +10,7 @@ tablesSchema = new mongoose.Schema
     tables: [String]
     problems: [String]
     parent: String
+    order: String
 
 
 tablesSchema.methods.upsert = () ->
