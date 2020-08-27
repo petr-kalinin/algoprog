@@ -124,7 +124,7 @@ export default TableRow = (props) ->
                     if res.length
                         a <td className={globalStyles.border} key={subtable._id + "b"}/>
                     if props.header
-                        a <td className={globalStyles.mainTable_td} colSpan={subtable.colspan}  key={subtable._id + "c"}>
+                        a <td className={globalStyles.mainTable_td + " " + styles.subtableHeader} colSpan={subtable.colspan}  key={subtable._id + "c"}>
                             {subtable.name}
                         </td>
                     else
