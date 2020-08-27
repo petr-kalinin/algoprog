@@ -47,7 +47,7 @@ FindMistake = (props) ->
     tooMuchChanges = currentDistance > maxSubmits
 
     <>
-        <h1><Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
+        <h1>Найди ошибку: <Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
         <div className={styles.top}>
             <div className={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
             <div className={styles.right + if tooMuchChanges then " text-danger" else ""}>Исправлений: {currentDistance} (можно {maxSubmits})</div>

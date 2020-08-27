@@ -18,6 +18,8 @@ getClass = (result) ->
         else undefined
 
 FindMistakeList = (props) ->
+    <div>
+    <h1>Найди ошибку</h1>
     <ListGroup>
         {props.findMistakes.map (m) ->
             href = "/findMistake/" + m._id
@@ -29,6 +31,7 @@ FindMistakeList = (props) ->
             </ListGroupItem>
         }
     </ListGroup>
+    </div>
 
 options = 
     urls: (props) ->

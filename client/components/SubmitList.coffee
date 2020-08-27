@@ -80,7 +80,7 @@ class SubmitList extends React.Component
                 startLanguage={@props.startLanguage}
                 editorOn={true}
                 editorDidMount={@props.editorDidMount}
-                editorValue={@props.data?.length && @props.data[@props.data.length-1].source || @props.defaultSource}/>
+                editorValue={@props.data?.length && @props.data[@props.data.length-1].sourceRaw || @props.defaultSource}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
