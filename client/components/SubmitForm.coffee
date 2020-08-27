@@ -44,7 +44,7 @@ class SubmitForm extends React.Component
 
     handleEditorDidMount: (_, editor) ->
         @editorRef.current = editor
-        @props.editorDidMount(_, editor)
+        @props.editorDidMount?(_, editor)
 
     setField: (field, value) ->
         newState = {@state...}

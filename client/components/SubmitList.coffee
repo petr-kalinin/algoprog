@@ -66,9 +66,9 @@ class SubmitList extends React.Component
         <div>
             {if @props.noBestSubmits 
                 null
-            else if @props.bestSubmits.length
+            else if @props.bestSubmits?.length
                 <h4><a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a></h4>
-            else if @props.result.solved == 0
+            else if @props.result?.solved == 0
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
             }
             <SubmitForm material={@props.material} 
@@ -78,7 +78,7 @@ class SubmitList extends React.Component
                 canSubmit={@props.canSubmit} 
                 findMistake={@props.findMistake} 
                 startLanguage={@props.startLanguage}
-                editorOn={true}
+                editorOn={@props.editorOn}
                 editorDidMount={@props.editorDidMount}
                 editorValue={@props.data?.length && @props.data[@props.data.length-1].sourceRaw || @props.defaultSource}/>
             {
