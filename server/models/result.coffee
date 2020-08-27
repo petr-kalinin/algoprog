@@ -18,7 +18,7 @@ resultsSchema = new mongoose.Schema
     lastSubmitId: String
     lastSubmitTime: Date
     ignored: Number
-
+    findMistake: String
 
 resultsSchema.methods.upsert = () ->
     # required: user, table, total, solved, ok, attempts, ignored, lastSubmitId, lastSubmitTime
@@ -28,7 +28,7 @@ resultsSchema.methods.upsert = () ->
         return
     @userList = user.userList
     @activated = user?.activated
-    @_id = @user + "::" + @table
+    @_id = @user + "::" + (@findMistake || @table)
     @update(this, {upsert: true}).exec()
 
 resultsSchema.statics.DQconst = -10
@@ -38,21 +38,35 @@ resultsSchema.statics.findByUserListAndTable = (userList, table) ->
     return Result.find({
         userList: userList,
         table: {$in: tableList}
+        findMistake: null
     }).sort { solved: -1, attempts: 1}
 
 resultsSchema.statics.findByUserList = (userList) ->
     return Result.find({
         userList: userList
+        findMistake: null
     }).sort { solved: -1, attempts: 1}
 
 resultsSchema.statics.findByUser = (userId) ->
     return Result.find
         user: userId
+        findMistake: null
+
+resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
+    return Result.find
+        user: userId
+        findMistake: {$ne: null}
+
+resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
+    return Result.find
+        user: userId
+        findMistake: {$ne: null}
 
 resultsSchema.statics.findByUserAndTable = (userId, tableId) ->
     key = userId + "::" + tableId
     return Result.findOne
             _id: userId + "::" + tableId
+            findMistake: null
 
 resultsSchema.statics.findLastWA = (limit) ->
     return Result.find({
@@ -61,23 +75,27 @@ resultsSchema.statics.findLastWA = (limit) ->
         ok: 0,
         ignored: 0,
         attempts: {$gte: 1},
+        findMistake: null
     }).sort({ lastSubmitTime: -1 }).limit(limit)
 
 
 resultsSchema.index
     userList: 1
     table : 1
+    findMistake: 1
     solved: -1
     attempts: 1
 
 resultsSchema.index
     userList: 1
+    findMistake: 1
     solved: -1
     attempts: 1
 
 resultsSchema.index
     user: 1
     table: 1
+    findMistake: 1
 
 resultsSchema.index
     total: 1
@@ -85,6 +103,7 @@ resultsSchema.index
     ok: 1
     ignored: 1
     attempts: 1
+    findMistake: 1
     lastSubmitTime: -1
 
 

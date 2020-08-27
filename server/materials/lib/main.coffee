@@ -4,13 +4,13 @@ class Main extends MaterialList
     constructor: (levels) ->
         super(levels)
 
-    build: (context) ->
+    build: (context, order) ->
         properties = 
             _id: "main"
             type: "main"
             title: "/"
 
-        material = await super.build(context, properties)
+        material = await super.build(context, order, properties)
 
         return material
 

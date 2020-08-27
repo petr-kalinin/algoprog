@@ -9,24 +9,26 @@ import {
 import AchievesPage from './pages/AchievesPage'
 import AllCommentsPage from './pages/AllCommentsPage'
 import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
-import UserBadgePage from './pages/UserBadgePage'
-import FullUserPage from './pages/FullUserPage'
-import DashboardPage from './pages/DashboardPage'
 import CheckinsPage from './pages/CheckinsPage'
-import TablePage from './pages/TablePage'
-import MaterialPage from './pages/MaterialPage'
-import SolvedByWeekPage from './pages/SolvedByWeekPage'
-import SubmitPage from './pages/SubmitPage'
-import ReviewResultPage from './pages/ReviewResultPage'
-import RootPage from './pages/RootPage'
+import DashboardPage from './pages/DashboardPage'
+import FindMistakeListPage from './pages/FindMistakeListPage'
+import FindMistakePage from './pages/FindMistakePage'
 import FullNewsPage from './pages/FullNewsPage'
-import ReviewPage from './pages/ReviewPage'
+import FullUserPage from './pages/FullUserPage'
+import LoginPage from './pages/LoginPage'
+import MaterialPage from './pages/MaterialPage'
 import PaymentPage from './pages/PaymentPage'
 import PaymentSuccessPage from './pages/PaymentSuccessPage'
-import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import RegisterPage from './pages/RegisterPage'
+import RegisteredUsersPage from './pages/RegisteredUsersPage'
+import ReviewPage from './pages/ReviewPage'
+import ReviewResultPage from './pages/ReviewResultPage'
+import RootPage from './pages/RootPage'
+import SolvedByWeekPage from './pages/SolvedByWeekPage'
+import SubmitPage from './pages/SubmitPage'
+import TablePage from './pages/TablePage'
+import UserBadgePage from './pages/UserBadgePage'
 import UsersWithAchievePage from './pages/UsersWithAchievePage'
-import LoginPage from './pages/LoginPage'
 
 class NoMatch extends React.Component
     render: () ->
@@ -91,6 +93,16 @@ export default [
         path: '/reviewResult/:id',
         key: "reviewResult",
         component: ReviewResultPage,
+    },
+    {
+        path: '/findMistake/:id',
+        key: "findMistake",
+        component: FindMistakePage,
+    },
+    {
+        path: '/findMistakeList',
+        key: "findMistakeList",
+        component: FindMistakeListPage,
     },
     {
         path: '/news',

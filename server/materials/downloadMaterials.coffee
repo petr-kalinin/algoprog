@@ -25,12 +25,12 @@ class Context
         @pathToId[pathItem]++
         return "#{pathItem}#{@pathToId[pathItem]}"
 
-    pushPath: (id, title, type) ->
+    pushPath: (id, order, title, type) ->
         @path.push
             _id: id
             title: title
         for processor in @processors
-            processor.pushPath?(id, title, type)
+            processor.pushPath?(id, order, title, type)
 
     popPath: (id) ->
         @path.pop(id)
@@ -88,7 +88,7 @@ class ContestProcessor
     level: () ->
         @path[@path.length - 1]
 
-    pushPath: (id, title, type) ->
+    pushPath: (id, order, title, type) ->
         if type != "level" and type != "main"
             return
         if @level()
@@ -98,6 +98,7 @@ class ContestProcessor
             name: id
             tables: []
             parent: @level()
+            order: order
         @path.push id
 
     popPath: (id) ->
@@ -124,6 +125,7 @@ class ContestProcessor
                     level: ""
                     tables: []
                     testSystemData: material.testSystemData
+                    order: material.order
         else if material.type == "contest" or material.type == "topic"
             problemIds = (m._id for m in material.materials when m.type == "problem")
             if problemIds.length == 0
@@ -133,6 +135,7 @@ class ContestProcessor
                 name: material.treeTitle || material.title
                 problems: problemIds
                 parent: @level()
+                order: material.order
             for pid in problemIds
                 @problems[pid].tables.push(id)
                 if @problems[pid].level < @level()
@@ -194,7 +197,7 @@ export default downloadMaterials = () ->
     contestProcessor = new ContestProcessor
     context = new Context([saveProcessor, treeProcessor, contestProcessor])
 
-    await root()().build(context)
+    await root()().build(context, "")
 
     tree = treeProcessor.getTree("main")
     tree._id = "tree"

@@ -106,13 +106,13 @@ hideTests = (submit) ->
             submit.results.tests[key] = hideOneTest(test)
     return submit
 
-createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
+createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMistake) ->
     logger.info("Creating submit #{userId} #{problemId}")
     codeRaw = iconv.decode(new Buffer(codeRaw), "latin1")
     codeRaw = normalizeCode(codeRaw)
     code = entities.encode(codeRaw)
     if not draft
-        allSubmits = await Submit.findByUserAndProblem(userId, problemId)
+        allSubmits = await Submit.findByUserAndProblemWithFindMistakeAny(userId, problemId)
         for s in allSubmits
             if s.outcome != "DR" and s.source == code
                 throw "duplicate"
@@ -135,6 +135,7 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
         results: []
         force: false
         testSystemData: problem.testSystemData
+        findMistake: findMistake
     await submit.calculateHashes()
     await submit.upsert()
 
@@ -145,6 +146,19 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft) ->
     update()  # do this async
     return undefined
 
+expandFindMistake = (mistake, admin, userKey) ->
+    allowed = false
+    if admin 
+        allowed = true
+    else if userKey
+        result = await Result.findByUserAndTable(userKey, mistake.problem)
+        allowed = result && result.solved > 0
+    if not allowed
+        return null
+    mistake = mistake.toObject()
+    mistake.fullProblem = await Problem.findById(mistake.problem)
+    mistake.hash = sha256(mistake._id).substring(0, 4)
+    return mistake
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -169,7 +183,7 @@ export default setupApi = (app) ->
             res.json({dormant: true})
             return
         try
-            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft)
+            await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft, req.body.findMistake)
         catch e
             res.json({error: e})
             return
@@ -432,6 +446,18 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json(submits)
 
+    app.get '/api/submitsForFindMistake/:user/:findMistake', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+            res.status(403).send('No permissions')
+            return
+        submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+        submits = submits.map((submit) -> submit.toObject())
+        if not req.user?.admin
+            submits = submits.map(hideTests)
+        submits = submits.map(expandSubmit)
+        submits = await awaitAll(submits)
+        res.json(submits)
+
     app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
         submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
         submits = submits.map((submit) -> submit.toObject())
@@ -470,6 +496,14 @@ export default setupApi = (app) ->
         for r in results
             r = r.toObject()
             json[r._id] = r
+        res.json(json)
+
+    app.get '/api/userResultsForFindMistake/:userId', wrap (req, res) ->
+        results = (await Result.findByUserWithFindMistakeSet(req.params.userId))
+        json = {}
+        for r in results
+            r = r.toObject()
+            json[r.findMistake] = r
         res.json(json)
 
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
@@ -797,6 +831,22 @@ export default setupApi = (app) ->
             res.json({status: true})
         catch
             res.json({status: false})
+
+    app.get '/api/findMistakeList/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        mistakes = await FindMistake.findApprovedByNotUser(req.params.user)
+        mistakes = mistakes.map (mistake) -> 
+            expandFindMistake(mistake, req.user?.admin, req.params.user)
+        mistakes = await awaitAll(mistakes)
+        mistakes = (m for m in mistakes when m)
+        res.json(mistakes)
+
+    app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
+        mistake = await FindMistake.findById(req.params.id)
+        mistake = await expandFindMistake(mistake, req.user?.admin, req.user?.userKey())
+        res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

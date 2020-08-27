@@ -9,6 +9,7 @@
   },
   "browserslist": "> 0.25%, not dead",
   "dependencies": {
+    "@monaco-editor/react": "^3.5.7",
     "babel-cli": "^6.26.0",
     "babel-plugin-react-css-modules": "^5.2.6",
     "babel-plugin-transform-react-jsx": "*",

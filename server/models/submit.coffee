@@ -32,6 +32,7 @@ submitsSchema = new mongoose.Schema
     quality: { type: Number, default: 0 },
     hashes: [{window: Number, hash: String, score: Number}]
     testSystemData: mongoose.Schema.Types.Mixed
+    findMistake: String
     
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
@@ -75,6 +76,7 @@ submitsSchema.methods.equivalent = (other) ->
 submitsSchema.statics.findByUser = (userId) ->
     Submit.find
         user: userId
+        findMistake: null
 
 submitsSchema.statics.findByUserAndDay = (userId, day) ->
     date = new Date(Date.parse(day))
@@ -85,17 +87,39 @@ submitsSchema.statics.findByUserAndDay = (userId, day) ->
     Submit.find
         user: userId
         time: {$gte: start, $lt: end}
+        findMistake: null
 
 submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
     Submit.find({
         user: userId
         problem: problemId
+        findMistake: null
+    }).sort({time: 1})
+
+submitsSchema.statics.findByUserAndProblemWithFindMistakeSet = (userId, problemId) ->
+    Submit.find({
+        user: userId
+        problem: problemId
+        findMistake: {$ne: null}
+    }).sort({time: 1})
+
+submitsSchema.statics.findByUserAndProblemWithFindMistakeAny = (userId, problemId) ->
+    Submit.find({
+        user: userId
+        problem: problemId
+    }).sort({time: 1})
+
+submitsSchema.statics.findByUserAndFindMistake = (userId, findMistakeId) ->
+    Submit.find({
+        user: userId
+        findMistake: findMistakeId
     }).sort({time: 1})
 
 submitsSchema.statics.findBestByProblem = (problemId, limit) ->
     Submit.find({
         problem: problemId,
         quality: {$gt: 0}
+        findMistake: null
     })
         .sort({quality: -1, time: -1})
         .select({results: 0, comments: 0, force: 0})
@@ -131,7 +155,8 @@ submitsSchema.statics.calculateAllHashes = () ->
         logger.info("Calculated all hashes for user #{userI} / #{users.length}")
     logger.info("Calculated all hashes for all users")
 
-submitsSchema.index({ user : 1, problem: 1, time: 1 })
+submitsSchema.index({ user : 1, problem: 1, findMistake: 1, time: 1 })
+submitsSchema.index({ user : 1, findMistake: 1, time: 1 })
 submitsSchema.index({ user : 1, problem: 1, outcome: 1 })
 submitsSchema.index({ outcome : 1, time : 1 })
 submitsSchema.index({ time : 1 })

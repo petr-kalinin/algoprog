@@ -15,6 +15,7 @@ findMistakeSchema = new mongoose.Schema
     problem: String
     language: String
     approved: { type: Number, default: UNKNOWN },
+    order: String
 
 findMistakeSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -28,16 +29,22 @@ findMistakeSchema.methods.setApprove = (approve) ->
     @approved = if approve then APPROVED else DISPROVED
     @update(this)
 
-findMistakeSchema.statics.findByProblemAndNotUser = (problem, user) ->
+findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
     FindMistake.find
         problem: problem
         user: {$ne: user}
+
+findMistakeSchema.statics.findApprovedByNotUser = (user) ->
+    FindMistake.find({
+        approved: APPROVED
+        user: {$ne: user}
+    }).sort({order: 1})
 
 findMistakeSchema.statics.findOneNotApproved = () ->
     FindMistake.findOne
         approved: UNKNOWN
 
-findMistakeSchema.index({ problem : 1, user: 1 })
+findMistakeSchema.index({ problem : 1, user: 1, order: 1 })
 findMistakeSchema.index({ approved : 1 })
 
 FindMistake = mongoose.model('FindMistake', findMistakeSchema);

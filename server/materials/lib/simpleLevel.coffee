@@ -6,13 +6,13 @@ class SimpleLevel extends MaterialList
         @title = title
         @id = id
 
-    build: (context) ->
+    build: (context, order) ->
         properties = 
             _id: @id
             type: "simpleLevel"
             title: @title
 
-        material = await super.build(context, properties)
+        material = await super.build(context, order, properties)
 
         return material
 

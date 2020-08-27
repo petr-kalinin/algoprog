@@ -87,6 +87,7 @@ class SubmitDownloader
             newSubmit.downloadTime = oldSubmit.downloadTime
             newSubmit.hashes = oldSubmit.hashes
             newSubmit.testSystemData = {oldSubmit.testSystemData..., newSubmit.testSystemData...}
+            newSubmit.findMistake = oldSubmit.findMistake
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
@@ -137,12 +138,12 @@ class SubmitDownloader
 
         if not newSubmit?.userList then newSubmit.userList = user?.userList
 
-        logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
+        await @onNewSubmit?(newSubmit)
+        logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem, newSubmit.findMistake
         try
             await newSubmit.upsert()
         catch e
             logger.warning "Could not upsert submit", newSubmit._id, newSubmit.user, newSubmit.problem, e
-        await @onNewSubmit?(newSubmit)
         await @setDirty(newSubmit)
         logger.debug "Done submit", newSubmit._id, newSubmit.user, newSubmit.problem
         res

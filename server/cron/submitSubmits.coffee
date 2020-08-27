@@ -49,6 +49,7 @@ submitToTestSystem = (submit, submitProcess) ->
     onNewSubmit = (newSubmit) ->
         if not compareSources(newSubmit.sourceRaw, submit.sourceRaw)
             return
+        newSubmit.findMistake = submit.findMistake
         await Hash.removeForSubmit(submit._id)
         await Submit.remove({_id: submit._id})
         await SubmitProcess.remove({_id: submit._id})
