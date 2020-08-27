@@ -63,7 +63,8 @@ SolvedByWeekRow = (props) ->
         res = []
         a = (el) -> res.push(el)
         userTableHeader(res, props)
-        a <td className={globalStyles.border} key="border"/>
+        if res.length
+            a <td className={globalStyles.border} key="border"/>
         data = props.user.byWeek
         for w, i in props.weeks
             if props.header

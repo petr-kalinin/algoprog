@@ -16,10 +16,10 @@ export default userTableHeader = (res, props) ->
     else
         style = backgroundColor : "white"
     a = (el) -> res.push(el)
-    a <th className={globalStyles.mainTable_th + " " + globalStyles.mainTable_user} key="user" style={style}>
-        {if h then "" else <UserName user={props.user} />}
-      </th>
     if props.details
+        a <th className={globalStyles.mainTable_th + " " + globalStyles.mainTable_user} key="user" style={style}>
+            {if h then "" else <UserName user={props.user} />}
+        </th>
         a <td className={globalStyles.mainTable_td} key="graduateYear" title="Класс">
             {cls} 
         </td>
