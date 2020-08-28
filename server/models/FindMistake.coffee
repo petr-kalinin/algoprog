@@ -11,7 +11,7 @@ findMistakeSchema = new mongoose.Schema
     source: String
     submit: String
     correctSubmit: String
-    user: String
+    user: {type: String, select: false}
     problem: String
     language: String
     approved: { type: Number, default: UNKNOWN },
