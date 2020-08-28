@@ -5,6 +5,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
+const WebpackAssetsManifest = require('webpack-assets-manifest')
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 console.log('IS DEV:', isDev)
@@ -13,9 +14,9 @@ const mode = isDev ? 'development' : 'production'
 const watch = isDev
 const optimization = () => {
   const config = {
-    //splitChunks: {
-    //  chunks: 'all'
-    //}
+    splitChunks: {
+      chunks: 'all'
+    }
   }
   
   if (isProd) {
@@ -87,7 +88,8 @@ const clientConfig = {
     client: ['./client.coffee']
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name]-[hash].js',
+    chunkFilename: '[id]-[chunkhash].js',
     path: path.resolve(__dirname, 'build/assets')
   },
   resolve,
@@ -97,8 +99,12 @@ const clientConfig = {
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'bundle.css',
-      chunkFilename: '[id].bundle.css',
+      filename: '[name]-[hash].css',
+      chunkFilename: '[id]-[chunkhash].css',
+    }),
+    new WebpackAssetsManifest({
+      entrypoints: true,
+      transform: assets => assets.entrypoints
     })
   ],
 }

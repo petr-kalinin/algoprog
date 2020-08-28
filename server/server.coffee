@@ -3,7 +3,9 @@ require('source-map-support').install()
 import csshook from 'css-modules-require-hook/preset'
 
 express = require('express')
+fs = require('fs')
 passport = require('passport')
+path = require('path')
 compression = require('compression')
 responseTime = require('response-time')
 StatsD = require('node-statsd')
@@ -71,7 +73,9 @@ app.get '/status', (req, res) ->
     logger.info "Query string", req.query
     res.send "OK"
 
-app.use renderOnServer
+linkClientJsCss = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/manifest.json'), 'utf-8'))
+
+app.use renderOnServer(linkClientJsCss)
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
