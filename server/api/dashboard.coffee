@@ -78,6 +78,7 @@ export default dashboard = (registeredUser) ->
     promises = []
     for key, query of queries
         query["total"] = 1
+        query["findMistake"] = null
         if key != "ps"
             if userLists?.length
                 query["userList"] = {$in: userLists}
