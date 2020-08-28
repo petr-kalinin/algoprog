@@ -152,7 +152,7 @@ class SubmitWithActions extends React.Component
         admin = @props.me?.admin
         <div>
             <Submit submit={@props.currentSubmit} showHeader me={@props.me} copyTest={@copyTest}/>
-            {(not @props.currentSubmit.similar) && <div>
+            {(not @props.currentSubmit.similar) && (not @props.result.findMistake) && <div>
                 <div>
                     {
                     if @props.currentSubmit.outcome in ["OK", "AC"]
@@ -170,7 +170,7 @@ class SubmitWithActions extends React.Component
                     }
                 </div>
                 {
-                if @props.bestSubmits.length
+                if @props.bestSubmits?.length
                     <span>
                         <a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a>
                         {" = " + @props.bestSubmits.length}
@@ -211,6 +211,7 @@ class SubmitWithActions extends React.Component
                 admin && @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits} stars/>
                 }
             </div>}
+            {@props.result.findMistake && <Link to="/findMistake/#{@props.result.findMistake}">Исходный поиск ошибки</Link>}
         </div>
 
 export class SubmitListWithDiff extends React.Component
@@ -333,10 +334,16 @@ SubmitsAndSimilarMerger = (props) ->
 
 options =
     urls: (props) ->
-        submits: "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
-        user: "user/#{props.result.fullUser._id}"
-        bestSubmits: "bestSubmits/#{props.result.fullTable._id}"
-        me: "me"
+        result = 
+            user: "user/#{props.result.fullUser._id}"
+            me: "me"
+        if not props.result.findMistake
+            result.submits = "submits/#{props.result.fullUser._id}/#{props.result.fullTable._id}"
+            result.bestSubmits = "bestSubmits/#{props.result.fullTable._id}"
+        else
+            result.submits = "submitsForFindMistake/#{props.result.fullUser._id}/#{props.result.findMistake}"
+        return result
+
     timeout: 0
 
 optionsForSimilar = 

@@ -34,7 +34,7 @@ export default class Dashboard extends React.Component
     render: () ->
         <div>
             <h4><ConnectedStats/></h4>
-            {for type in ['ok', 'ps', 'wa', 'ig', 'ac']
+            {for type in ['ok', 'ps', 'wa', 'ig', 'ac', 'fm_ok', 'fm_wa']
                 <div key={type}>
                     <h1>{type.toUpperCase()}</h1>
                     <Table striped condensed hover>

@@ -73,12 +73,14 @@ export default dashboard = (registeredUser) ->
         ps: {ps: 1},
         wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
         ig: {ignored: 1},
-        ac: {solved: 1}
+        ac: {solved: 1},
+        fm_ok: {$or: [{ok: 1}, {solved: 1}], lastSubmitTime: {$gt: START_SUBMITS_DATE}, findMistake: {$ne: null}},
+        fm_wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}, findMistake: {$ne: null}}
     result = {}
     promises = []
     for key, query of queries
-        query["total"] = 1
-        query["findMistake"] = null
+        query.total = 1
+        query.findMistake = query.findMistake || null
         if key != "ps"
             if userLists?.length
                 query["userList"] = {$in: userLists}
