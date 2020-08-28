@@ -21,7 +21,7 @@ FindMistakeList = (props) ->
     <div>
     <h1>Найди ошибку</h1>
     <ListGroup>
-        {props.findMistakes.map (m) ->
+        {props.findMistakes.map? (m) ->
             href = "/findMistake/" + m._id
             cl = getClass(props.results?[m._id])
             <ListGroupItem key={m._id} onClick={window?.goto?(href)} href={href} bsStyle={cl}>
