@@ -10,7 +10,8 @@ sendGraphite = () ->
         ps: {ps: 1}
     metrics = {}
     for key, query of queries
-        query["total"] = 1
+        query.total = 1
+        query.findMistake = null
         query.activated = true
         for group, _ of GROUPS
             query["userList"] = group
