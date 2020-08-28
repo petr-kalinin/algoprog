@@ -6,13 +6,11 @@ import Result from "../models/result"
 
 sendGraphite = () ->
     queries = 
-        ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
+        ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}, findMistake: null, activated: true},
         ps: {ps: 1}
     metrics = {}
     for key, query of queries
         query.total = 1
-        query.findMistake = null
-        query.activated = true
         for group, _ of GROUPS
             query["userList"] = group
             metrics["#{key}.#{group}"] = (await Result.find(query)).length

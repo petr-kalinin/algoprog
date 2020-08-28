@@ -106,6 +106,55 @@ resultsSchema.index
     findMistake: 1
     lastSubmitTime: -1
 
+resultsSchema.index
+    total: 1
+    ps: 1
+
+resultsSchema.index
+    ok: 1
+    total: 1
+    lastSubmitTime: -1
+    findMistake: 1
+    activated: 1
+
+resultsSchema.index
+    ok: 1
+    total: 1
+    lastSubmitTime: -1
+    findMistake: 1
+    activated: 1
+    userList: 1
+
+resultsSchema.index
+    ps: 1
+    total: 1
+    findMistake: 1
+    activated: 1
+    userList: 1
+
+resultsSchema.index
+    solved: 1
+    ok: 1
+    ignored: 1
+    attempts: 1
+    total: 1
+    findMistake: 1
+    activated: 1
+    userList: 1
+
+resultsSchema.index
+    ignored: 1
+    total: 1
+    findMistake: 1
+    activated: 1
+    userList: 1
+
+resultsSchema.index
+    solved: 1
+    total: 1
+    findMistake: 1
+    activated: 1
+    userList: 1
 
 Result = mongoose.model('Results', resultsSchema);
 
