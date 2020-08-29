@@ -1,5 +1,4 @@
 import level from "../lib/level"
-import level_1C from "./level_1C"
 import level_1D from "./level_1D"
 
 export default level_1 = () ->

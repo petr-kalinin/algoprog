@@ -35,6 +35,7 @@ class TopicGenerator
 minorLevel = (generator, id) ->
     topics = []
     topicsCount = 0
+    allAdvancedTopics = []
     while true
         if topicsCount == TOPICS_PER_LEVEL
             break
@@ -44,27 +45,39 @@ minorLevel = (generator, id) ->
         nextTopic = nextTopic()
         if not nextTopic.topic
             nextTopic = {topic: nextTopic}
-        {topic, count=true} = nextTopic
+        {topic, count=true, advancedTopics = []} = nextTopic
         topics.push topic
+        allAdvancedTopics = [allAdvancedTopics..., advancedTopics...]
         if count
             topicsCount++
     if topics.length == 0
-        console.log "Return null minorLevel"
+        console.log "Return null minorLevel #{id}"
         return null
-    return level(id, [
+    return {
+        level: level(id, [
                 label("<p>Чтобы перейти на следующий уровень, надо решить все задачи.</p>"),
                 topics...
-            ])
+            ]),
+        advancedTopics: allAdvancedTopics
+    }
 
 majorLevel = (generator, id) ->
+    levelA = minorLevel(generator, "#{id}А")
+    levelB = minorLevel(generator, "#{id}Б")
     subLevels = [
-        minorLevel(generator, "#{id}А"),
-        minorLevel(generator, "#{id}Б")
+        levelA?.level
+        levelB?.level
     ]
     subLevels = (l for l in subLevels when l)
     if subLevels.length == 0
-        console.log "Return null majorLevel"
+        console.log "Return null majorLevel #{id}"
         return null
+    advancedTopics = [(levelA?.advancedTopics || [])..., (levelB?.advancedTopics || [])...]
+    if advancedTopics.length != 0
+        subLevels.push level("#{id}В", [
+            label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум половину задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),
+            advancedTopics...
+        ])
     return level("#{id}", [
         subLevels...
     ])

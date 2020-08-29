@@ -1,3 +1,4 @@
+import contest from "../../lib/contest"
 import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
@@ -270,21 +271,33 @@ module15969 = () ->
     """, {skipTree: true})
 
 export default loops = () ->
-    return topic("Циклы", "1А: Задачи на циклы", [
-        label(String.raw"""
-            <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
-            Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
-            Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.
-        """),
-        module15969(),
-        problem(333),
-        problem(351),
-        problem(315),
-        problem(340),
-        problem(347),
-        problem(113),
-        problem(3058),
-        problem(3064),
-        problem(3065),
-        problem(3067),
-    ])
+    return {
+        topic: topic("Циклы", "1А: Задачи на циклы", [
+            label(String.raw"""
+                <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
+                Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
+                Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.
+            """),
+            module15969(),
+            problem(333),
+            problem(351),
+            problem(315),
+            problem(340),
+            problem(347),
+            problem(113),
+            problem(3058),
+            problem(3064),
+            problem(3065),
+            problem(3067),
+        ]),
+        advancedTopics: [
+            label("Если вы пишете на питоне, то в первых двух задачах из продвинутых задач на циклы массивами пользоваться можно — просто потому, что иначе вы не сможете считать много чисел в одной строке."),
+            contest("1В: Продвинутые задачи на циклы: в них запрещается пользоваться массивами", [
+                problem(227),
+                problem(228),
+                problem(3072),
+                problem(3077),
+                problem(1430),
+            ])
+        ]
+    }
