@@ -8,6 +8,11 @@ import loops from './topics/loops'
 import arrays from './topics/arrays'
 import strings from './topics/strings'
 import floats from './topics/floats'
+import pythonAdditional from './topics/pythonAdditional'
+import gcd from './topics/gcd'
+import backtrack from './topics/backtrack'
+import sorting from './topics/sorting'
+import technical from './topics/technical'
 
 import level_1D from './level_1D'
 
@@ -20,7 +25,16 @@ ALL_TOPICS = [
     loops,
     arrays,
     strings,
-    floats
+    floats,
+    pythonAdditional,
+
+    gcd,
+    # tbd prefixSums,
+    # tbd recursion,
+    backtrack
+
+    # sorting
+    # technical
 ]
 
 ADDITIONAL_LEVELS =
@@ -38,7 +52,7 @@ class TopicGenerator
 
 
 minorLevel = (generator, id) ->
-    topics = []
+    allTopics = []
     topicsCount = 0
     allAdvancedTopics = []
     while true
@@ -48,20 +62,22 @@ minorLevel = (generator, id) ->
         if not nextTopic
             break
         nextTopic = nextTopic()
-        if not nextTopic.topic
+        if not nextTopic.topic and not nextTopic.topics
             nextTopic = {topic: nextTopic}
-        {topic, count=true, advancedTopics = []} = nextTopic
-        topics.push topic
+        {topic, topics = [], count=true, advancedTopics = []} = nextTopic
+        if topic
+            topics.push topic
+        allTopics = [allTopics..., topics...]
         allAdvancedTopics = [allAdvancedTopics..., advancedTopics...]
         if count
             topicsCount++
-    if topics.length == 0
+    if allTopics.length == 0
         console.log "Return null minorLevel #{id}"
         return null
     return {
         level: level(id, [
                 label("<p>Чтобы перейти на следующий уровень, надо решить все задачи.</p>"),
-                topics...
+                allTopics...
             ]),
         advancedTopics: allAdvancedTopics
     }
