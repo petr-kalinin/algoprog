@@ -202,4 +202,18 @@ export default arrays = () ->
             problem(206),
             problem(944),
         ]),
+        advancedProblems: [
+            problem(2998),
+            problem(2999),
+            problem(210),
+            problem(2963),
+            problem(3003),
+            problem(619),
+            problem(1119),            
+            problem(1129),
+            problem(1758),
+            problem(637),
+            problem(492),
+            problem(111702),
+        ]
     }

@@ -16,5 +16,9 @@ export default prefixSums = () ->
             problem(112745),
             problem(2774),
             problem(111121)
+
+            # Not a prefixSum problem
+            problem(1460),
+
         ]
     }

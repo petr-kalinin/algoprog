@@ -140,5 +140,8 @@ export default arrays = () ->
                 problem(113075),
             ]),
             module25835()
+        ],
+        advancedProblems: [
+            problem(3678),
         ]
     }

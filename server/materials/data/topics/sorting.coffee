@@ -14,4 +14,12 @@ export default sorting = () ->
             problem(1099),
             problem(39),
         ]),
+        advancedProblems: [
+            problem(720),
+            problem(1137),
+            problem(111628),
+            problem(1630),
+            problem(111162),
+            problem(111751),
+        ]
     }

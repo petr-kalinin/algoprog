@@ -11,4 +11,12 @@ export default gcd = () ->
             problem(27),
             problem(1838),
         ]),
+        advancedProblems: [
+            problem(1465),
+            problem(668),
+            problem(1422),
+            problem(1346),
+            problem(404),
+            problem(1441),
+        ]
     }
