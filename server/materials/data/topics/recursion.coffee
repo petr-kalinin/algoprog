@@ -3,26 +3,17 @@ import label from "../../lib/label"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default arrays = () ->
+export default recursion = () ->
     return {
-        topic: topic("Массивы", "1Б: Задачи на массивы", [
-            label("<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
-            problem(63),
-            problem(64),
-            problem(66),
-            problem(69),
-            problem(71),
-            problem(72),
-            problem(355),
-            problem(357),
-            problem(362),
+        topic: topic("Рекурсия", "Задачи на рекурсию", [
+            label("Теории тут пока нет, почитайте в книжке или спросите меня."),
+            problem(153),
+            problem(154)
+            problem(113656),
+            problem({testSystem: "ejudge", contest: "2001", problem: "2"}),
+            problem(3050)
         ]),
-        advancedTopics: [
-            contest("1В: Продвинутые задачи на массивы", [
-                problem(1456),
-                problem(1228),
-                problem(201),
-                problem(1568),
-            ])
+        additionalProblems: [
+            problem(1414),
         ]
     }

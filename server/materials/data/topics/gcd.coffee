@@ -5,7 +5,7 @@ import topic from "../../lib/topic"
 
 export default gcd = () ->
     return {
-        topic: topic("НОД, алгоритм Евклида", "2А: Задачи на НОД", [
+        topic: topic("НОД, алгоритм Евклида", "Задачи на НОД", [
             label("<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Видеозаписи лекций ЛКШ параллели C' про НОД и алгоритм Евклида</a>"),
             problem(199),
             problem(27),

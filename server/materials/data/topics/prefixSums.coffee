@@ -3,26 +3,18 @@ import label from "../../lib/label"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default arrays = () ->
+export default prefixSums = () ->
     return {
-        topic: topic("Массивы", "1Б: Задачи на массивы", [
-            label("<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
-            problem(63),
-            problem(64),
-            problem(66),
-            problem(69),
-            problem(71),
-            problem(72),
-            problem(355),
-            problem(357),
-            problem(362),
+        topic: topic("Префиксные суммы", "Задачи на префиксные суммы", [
+            label("Теории тут пока нет, спросите меня."),
+            problem(2771),
+            problem(2772),
+            problem(3313),
+            problem(112735)
         ]),
-        advancedTopics: [
-            contest("1В: Продвинутые задачи на массивы", [
-                problem(1456),
-                problem(1228),
-                problem(201),
-                problem(1568),
-            ])
+        advancedProblems: [
+            problem(112745),
+            problem(2774),
+            problem(111121)
         ]
     }

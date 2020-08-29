@@ -89,7 +89,7 @@ module15986 = () ->
 
 export default ifs = () ->
     return {
-        topic: topic("Условный оператор", "1А: Задачи на условный оператор", [
+        topic: topic("Условный оператор", "Задачи на условный оператор", [
             label("<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
             label("<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
             problem(292),
@@ -99,7 +99,7 @@ export default ifs = () ->
             problem(253),
         ]),
         advancedTopics: [
-            contest("1В: Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами", [
+            contest("Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами", [
                 problem(297),
                 problem(255),
                 problem(258),

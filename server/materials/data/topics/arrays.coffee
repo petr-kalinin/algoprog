@@ -5,7 +5,7 @@ import topic from "../../lib/topic"
 
 export default arrays = () ->
     return {
-        topic: topic("Массивы", "1Б: Задачи на массивы", [
+        topic: topic("Массивы", "Задачи на массивы", [
             label("<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
             problem(63),
             problem(64),
@@ -18,7 +18,7 @@ export default arrays = () ->
             problem(362),
         ]),
         advancedTopics: [
-            contest("1В: Продвинутые задачи на массивы", [
+            contest("Продвинутые задачи на массивы", [
                 problem(1456),
                 problem(1228),
                 problem(201),

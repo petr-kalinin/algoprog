@@ -272,7 +272,7 @@ module15969 = () ->
 
 export default loops = () ->
     return {
-        topic: topic("Циклы", "1А: Задачи на циклы", [
+        topic: topic("Циклы", "Задачи на циклы", [
             label(String.raw"""
                 <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
                 Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
@@ -292,7 +292,7 @@ export default loops = () ->
         ]),
         advancedTopics: [
             label("Если вы пишете на питоне, то в первых двух задачах из продвинутых задач на циклы массивами пользоваться можно — просто потому, что иначе вы не сможете считать много чисел в одной строке."),
-            contest("1В: Продвинутые задачи на циклы: в них запрещается пользоваться массивами", [
+            contest("Продвинутые задачи на циклы: в них запрещается пользоваться массивами", [
                 problem(227),
                 problem(228),
                 problem(3072),

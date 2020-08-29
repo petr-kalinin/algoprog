@@ -13,6 +13,8 @@ import gcd from './topics/gcd'
 import backtrack from './topics/backtrack'
 import sorting from './topics/sorting'
 import technical from './topics/technical'
+import prefixSums from './topics/prefixSums'
+import recursion from './topics/recursion'
 
 import level_1D from './level_1D'
 
@@ -29,8 +31,8 @@ ALL_TOPICS = [
     pythonAdditional,
 
     gcd,
-    # tbd prefixSums,
-    # tbd recursion,
+    prefixSums,
+    recursion,
     backtrack
 
     # sorting

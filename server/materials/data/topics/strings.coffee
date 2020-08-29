@@ -5,7 +5,7 @@ import topic from "../../lib/topic"
 
 export default strings = () ->
     return {
-        topic: topic("Символы и строки", "1Б: Задачи на символы и строки", [
+        topic: topic("Символы и строки", "Задачи на символы и строки", [
             label("<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
             problem(102),
             problem(103),
@@ -14,7 +14,7 @@ export default strings = () ->
             problem(108),
         ]),
         advancedTopics: [
-            contest("1В: Продвинутые задачи на строки", [
+            contest("Продвинутые задачи на строки", [
                 problem(107),
                 problem(109),
                 problem(112),

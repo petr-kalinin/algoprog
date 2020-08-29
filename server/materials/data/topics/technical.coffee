@@ -103,7 +103,7 @@ module25629 = () ->
 
 export default technical = () ->
     return {
-        topics: [topic("Задачи \"на технику\"", "2А: Задачи \"на технику\"", [
+        topics: [topic("Задачи \"на технику\"", "Задачи \"на технику\"", [
                 module25200(),
                 problem(848),
                 problem(426),
