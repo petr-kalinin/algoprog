@@ -14,6 +14,4 @@ export default sorting = () ->
             problem(1099),
             problem(39),
         ]),
-        advancedTopics: [
-        ]
     }

@@ -112,6 +112,4 @@ export default technical = () ->
             ]),
             module25629()
         ],
-        advancedTopics: [
-        ]
     }

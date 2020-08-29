@@ -19,7 +19,5 @@ export default backtrack = (count) -> () ->
             problem(485),
             problem(1182),
         ]),
-        advancedTopics: [
-        ],
         count: count
     }

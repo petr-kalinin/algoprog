@@ -1,5 +1,6 @@
 import label from "../lib/label"
 import level from "../lib/level"
+import contest from "../lib/contest"
 
 import arithmeticalOperations from './topics/arithmeticalOperations'
 import ifs from './topics/ifs'
@@ -24,6 +25,7 @@ import stack from './topics/stack'
 import level_1D from './level_1D'
 
 TOPICS_PER_LEVEL = 3
+PROBLEMS_PER_ADDITIONAL_CONTEST = 6
 
 ALL_TOPICS = [
     arithmeticalOperations,
@@ -43,7 +45,7 @@ ALL_TOPICS = [
     dp_simple,
     technical,
     primes
-    
+
     # greedy_simple
     # primes
     # stack
@@ -64,11 +66,37 @@ class TopicGenerator
             return null
         return ALL_TOPICS[@lastTopicId]
 
+shuffleArray = (array) ->
+    if array.length == 0
+        return
+    for i in [array.length - 1 .. 0]
+        j = Math.floor(Math.random() * (i + 1))
+        [array[i], array[j]] = [array[j], array[i]]
+
+contestsFromAdvancedProblems = (problems) ->
+    shuffleArray(problems)
+    count = Math.ceil(problems.length / PROBLEMS_PER_ADDITIONAL_CONTEST)
+    countPerContest = Math.floor(problems.length / count)
+    idx = 0
+    result = []
+    for i in [0...count]
+        thisCount = countPerContest
+        if i < problems.length % count
+            thisCount++
+        thisProblems = []
+        for j in [0...thisCount]
+            thisProblems.push(problems[idx])
+            idx++
+        result.push(contest("Дополнительные задачи на разные темы - #{i + 1}", thisProblems))
+    if idx != problems.length
+        throw "Bad idx: #{idx}, #{problems.length}"
+    return result
 
 minorLevel = (generator, id) ->
     allTopics = []
     topicsCount = 0
     allAdvancedTopics = []
+    allAdvancedProblems = []
     while true
         if topicsCount == TOPICS_PER_LEVEL
             break
@@ -78,11 +106,12 @@ minorLevel = (generator, id) ->
         nextTopic = nextTopic()
         if not nextTopic.topic and not nextTopic.topics
             nextTopic = {topic: nextTopic}
-        {topic, topics = [], count=true, advancedTopics = []} = nextTopic
+        {topic, topics = [], count=true, advancedTopics = [], advancedProblems = []} = nextTopic
         if topic
             topics.push topic
         allTopics = [allTopics..., topics...]
         allAdvancedTopics = [allAdvancedTopics..., advancedTopics...]
+        allAdvancedProblems = [allAdvancedProblems..., advancedProblems...]
         if count
             topicsCount++
     if allTopics.length == 0
@@ -94,6 +123,7 @@ minorLevel = (generator, id) ->
                 allTopics...
             ]),
         advancedTopics: allAdvancedTopics
+        advancedProblems: allAdvancedProblems
     }
 
 majorLevel = (generator, id) ->
@@ -107,7 +137,8 @@ majorLevel = (generator, id) ->
     if subLevels.length == 0
         console.log "Return null majorLevel #{id}"
         return null
-    advancedTopics = [(levelA?.advancedTopics || [])..., (levelB?.advancedTopics || [])...]
+    advancedProblems = [(levelA?.advancedProblems || [])..., (levelB?.advancedProblems || [])...]
+    advancedTopics = [(levelA?.advancedTopics || [])..., (levelB?.advancedTopics || [])..., contestsFromAdvancedProblems(advancedProblems)...]
     if advancedTopics.length != 0
         subLevels.push level("#{id}В", [
             label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум половину задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),

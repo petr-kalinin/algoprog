@@ -11,6 +11,4 @@ export default gcd = () ->
             problem(27),
             problem(1838),
         ]),
-        advancedTopics: [
-        ]
     }
