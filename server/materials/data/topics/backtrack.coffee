@@ -4,7 +4,7 @@ import link from "../../lib/link"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default backtrack = () ->
+export default backtrack = (count) -> () ->
     return {
         topic: topic("*Рекурсивный перебор", "*Задачи на рекурсивный перебор", [
             label("Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 5А. Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас."),
@@ -20,5 +20,6 @@ export default backtrack = () ->
             problem(1182),
         ]),
         advancedTopics: [
-        ]
+        ],
+        count: count
     }

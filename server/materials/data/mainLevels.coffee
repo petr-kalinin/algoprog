@@ -15,6 +15,11 @@ import sorting from './topics/sorting'
 import technical from './topics/technical'
 import prefixSums from './topics/prefixSums'
 import recursion from './topics/recursion'
+import complexity from './topics/complexity'
+import dp_simple from './topics/dp_simple'
+import greedy_simple from './topics/greedy_simple'
+import primes from './topics/primes'
+import stack from './topics/stack'
 
 import level_1D from './level_1D'
 
@@ -33,10 +38,17 @@ ALL_TOPICS = [
     gcd,
     prefixSums,
     recursion,
-    backtrack
+    backtrack(false),
+    complexity,
+    dp_simple,
+    technical,
+    primes
+    
+    # greedy_simple
+    # primes
+    # stack
 
     # sorting
-    # technical
 ]
 
 ADDITIONAL_LEVELS =
