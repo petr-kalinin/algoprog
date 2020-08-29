@@ -3,6 +3,7 @@ import level from "../lib/level"
 
 import arithmeticalOperations from './topics/arithmeticalOperations'
 import ifs from './topics/ifs'
+import debugging from './topics/debugging'
 import loops from './topics/loops'
 import arrays from './topics/arrays'
 import strings from './topics/strings'
@@ -13,6 +14,7 @@ TOPICS_PER_LEVEL = 3
 ALL_TOPICS = [
     arithmeticalOperations,
     ifs,
+    debugging,
     loops,
     arrays,
     strings,
@@ -32,13 +34,20 @@ class TopicGenerator
 
 minorLevel = (generator, id) ->
     topics = []
+    topicsCount = 0
     while true
-        if topics.length == TOPICS_PER_LEVEL
+        if topicsCount == TOPICS_PER_LEVEL
             break
         nextTopic = generator.nextTopic()
         if not nextTopic
             break
-        topics.push nextTopic()
+        nextTopic = nextTopic()
+        if not nextTopic.topic
+            nextTopic = {topic: nextTopic}
+        {topic, count=true} = nextTopic
+        topics.push topic
+        if count
+            topicsCount++
     if topics.length == 0
         console.log "Return null minorLevel"
         return null
