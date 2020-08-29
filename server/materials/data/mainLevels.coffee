@@ -9,6 +9,8 @@ import arrays from './topics/arrays'
 import strings from './topics/strings'
 import floats from './topics/floats'
 
+import level_1D from './level_1D'
+
 TOPICS_PER_LEVEL = 3
 
 ALL_TOPICS = [
@@ -20,6 +22,9 @@ ALL_TOPICS = [
     strings,
     floats
 ]
+
+ADDITIONAL_LEVELS =
+    '1Г': level_1D
 
 class TopicGenerator
     constructor: () ->
@@ -78,6 +83,8 @@ majorLevel = (generator, id) ->
             label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум половину задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),
             advancedTopics...
         ])
+    if "#{id}Г" of ADDITIONAL_LEVELS
+        subLevels.push ADDITIONAL_LEVELS["#{id}Г"]()
     return level("#{id}", [
         subLevels...
     ])
