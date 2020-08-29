@@ -1,24 +1,7 @@
-import label from "../lib/label"
-import level from "../lib/level"
-import page from "../lib/page"
-import problem from "../lib/problem"
-import topic from "../lib/topic"
-
-topic_module_33219_0 = () ->
-    return topic("Как отлаживать программы", null, [
-        label("<a href=\"https://blog.algoprog.ru/how-to-debug-small-programs/\">Про то, как искать ошибки в маленьких программах</a>. Вы, наверное, пока еще не все тут поймете, но тем не менее прочитайте, а потом возвращайтесь к этому тексту на всем протяжении уровня 1."),
-    ])
-
-topic_15962 = () ->
-    return topic("Условный оператор", "1А: Задачи на условный оператор", [
-        label("<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
-        label("<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
-        problem(292),
-        problem(293),
-        problem(2959),
-        problem(294),
-        problem(253),
-    ])
+import label from "../../lib/label"
+import page from "../../lib/page"
+import problem from "../../lib/problem"
+import topic from "../../lib/topic"
 
 module15969 = () ->
     page("Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)", String.raw"""
@@ -286,7 +269,7 @@ module15969 = () ->
         </pre></div>
     """, {skipTree: true})
 
-topic_15966 = () ->
+export default loops = () ->
     return topic("Циклы", "1А: Задачи на циклы", [
         label(String.raw"""
             <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
@@ -304,13 +287,4 @@ topic_15966 = () ->
         problem(3064),
         problem(3065),
         problem(3067),
-    ])
-
-export default level_1A = () ->
-    return level("1А", [
-        label("<p>Чтобы перейти на следующий уровень, надо решить все задачи.</p>"),
-        topic_15960(),
-        topic_15962(),
-        topic_module_33219_0(),
-        topic_15966(),
     ])

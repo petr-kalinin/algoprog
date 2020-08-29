@@ -13,6 +13,7 @@ import level_9 from "./level_9"
 import level_about from "./level_about"
 import level_reg from "./level_reg"
 import level_roi from "./level_roi"
+import mainLevels from './mainLevels'
 import allNews from "./news"
 import tables from './tables'
 
@@ -21,16 +22,7 @@ export default root = () ->
         level_about(),
         allNews(),
         link("/comments", "Комментарии"),
-        level_1(),
-        level_2(),
-        level_3(),
-        level_4(),
-        level_5(),
-        level_6(),
-        level_7(),
-        level_8(),
-        level_9(),
-        level_10(),
+        mainLevels()...,
         level_reg(),
         level_roi(),
         tables()
