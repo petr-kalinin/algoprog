@@ -210,14 +210,14 @@ forAllTestSystems = (callable) ->
         await callable(system)
 
 
-export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
+export runForUserAndProblem = (userId, problemId, onNewSubmit, forceMetadata) ->
     try
         registeredUser = await RegisteredUser.findByKeyWithPassword(userId)
         problem = await Problem.findById(problemId)
         system = getTestSystem(problem.testSystemData.system)
         logger.info "runForUserAndProblem", system.id(), userId, problemId
         systemDownloader = await system.submitDownloader(registeredUser, problem, 100)
-        await (new SubmitDownloader(systemDownloader, 1, 10, false, onNewSubmit, problem.testSystemData.system)).run()
+        await (new SubmitDownloader(systemDownloader, 1, 10, forceMetadata, onNewSubmit, problem.testSystemData.system)).run()
         logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
         logger.error "Error in runForUserAndProblem", e
