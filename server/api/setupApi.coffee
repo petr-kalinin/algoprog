@@ -800,7 +800,7 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        await downloadSubmits.runForUserAndProblem(req.params.user, req.params.problem)
+        await downloadSubmits.runForUserAndProblem(req.params.user, req.params.problem, undefined, true)
         res.send('OK')
 
     app.get '/api/downloadAllSubmits', ensureLoggedIn, wrap (req, res) ->
