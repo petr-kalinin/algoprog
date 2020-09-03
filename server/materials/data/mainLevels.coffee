@@ -27,6 +27,8 @@ import cpp from './topics/cpp'
 import codeforces from './topics/codeforces'
 import binsearch from './topics/binsearch'
 import bfs from './topics/bfs'
+import dfs_simple from './topics/dfs_simple'
+import testing_advanced from './topics/testing_advanced'
 
 import level_1D from './level_1D'
 
@@ -52,16 +54,21 @@ ALL_TOPICS = [
     technical,
     primes,
     greedy_simple,
+
     stack,
     stl,
-    graphs_simple,
+    testing_advanced,
 
+    graphs_simple,
     cpp,
     codeforces,
-    bfs
+    bfs,
+    dfs_simple,
+    binsearch
 
-    # binsearch
     # bfs
+    # numeral_systems
+    # two_pointers
     # sorting
 ]
 

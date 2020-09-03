@@ -15,5 +15,11 @@ export default graph_simple = () ->
             problem(175),
             problem(474),
             problem(479),
-        ])
+        ]),
+        advancedProblems: [        
+            problem(476),
+            problem(1992),
+            problem(468),
+            problem(470),
+        ]
     }

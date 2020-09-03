@@ -47,5 +47,6 @@ export default codeforces = () ->
         topic:  topic("Про сайт codeforces", null, [
             module17501(),
             link("http://blog.algoprog.ru/other-contests/", "Как решать другие контесты и codeforces"),
-        ])
+        ]),
+        count: false
     }

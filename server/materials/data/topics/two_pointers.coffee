@@ -1,13 +1,9 @@
-import label from "../lib/label"
-import level from "../lib/level"
-import page from "../lib/page"
-import problem from "../lib/problem"
-import topic from "../lib/topic"
-
-topic_module_16373_0 = () ->
-    return topic("Продвинутое тестирование задач (без контеста)", null, [
-        label("<p>Перечитайте еще раз текст про тестирование задач из уровня 1В — вам он теперь наверняка еще более полезен, и вы можете освоить более продвинутые техники (если еще не освоили).</p>"),
-    ])
+import contest from "../../lib/contest"
+import label from "../../lib/label"
+import link from "../../lib/link"
+import page from "../../lib/page"
+import problem from "../../lib/problem"
+import topic from "../../lib/topic"
 
 module16344 = () ->
     page("Краткая теория про два указателя", String.raw"""
@@ -123,38 +119,15 @@ module16344 = () ->
         </div>
     """, {skipTree: true})
 
-topic_16345 = () ->
-    return topic("Два указателя", "3Б: Задачи на два указателя", [
-        module16344(),
-        problem(2827),
-        problem(111975),
-    ])
-
-topic_16307 = () ->
-    return topic("Системы счисления. Двоичная система счисления.", "3Б: Задачи на системы счисления", [
-        label("Теории тут пока нет, можете поискать в интернете (я нашел <a href=\"https://ru.wikibooks.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F\">раз</a>, <a href=\"https://habrahabr.ru/post/124395/\">два</a>). Вам нужно понимание того, как работают позиционные системы счисления, и как переводить числа из одной системы в другую."),
-        problem(117),
-        problem(344),
-        problem(47),
-        problem(1367),
-        problem(46),
-    ])
-
-topic_16372 = () ->
-    return topic("Основы поиска в глубину", "3Б: Задачи на простой поиск в глубину", [
-        label("<a href=\"https://notes.algoprog.ru/dfs/index.html\">Теория по поиску в глубину</a> (вплоть до самой продвинутой, пока читайте только основы)<br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Поиск в глубину (DFS)» <br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Алгоритмы на графах»<br>\nСм. также <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Поиск в глубину» (здесь есть и продвинутые темы, которые вам пока не нужны)"),
-        problem(164),
-        problem(200),
-        problem(165),
-        problem(166),
-        problem(111541),
-    ])
-
-export default level_3B = () ->
-    return level("3Б", [
-        label("<p>Чтобы перейти на следующий уровень, необходимо решить все задачи</p>"),
-        topic_16307(),
-        topic_16345(),
-        topic_16372(),
-        topic_module_16373_0(),
-    ])
+export default two_pointers = () ->
+    return {
+        topic: topic("Два указателя", "Задачи на два указателя", [
+            module16344(),
+            problem(2827),
+            problem(111975),
+        ]),
+        advancedProblems: [
+            problem(111493),
+            problem(111634),
+        ]
+    }
