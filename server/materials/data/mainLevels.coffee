@@ -21,6 +21,12 @@ import dp_simple from './topics/dp_simple'
 import greedy_simple from './topics/greedy_simple'
 import primes from './topics/primes'
 import stack from './topics/stack'
+import stl from './topics/stl'
+import graphs_simple from './topics/graphs_simple'
+import cpp from './topics/cpp'
+import codeforces from './topics/codeforces'
+import binsearch from './topics/binsearch'
+import bfs from './topics/bfs'
 
 import level_1D from './level_1D'
 
@@ -44,12 +50,18 @@ ALL_TOPICS = [
     complexity,
     dp_simple,
     technical,
-    primes
+    primes,
+    greedy_simple,
+    stack,
+    stl,
+    graphs_simple,
 
-    # greedy_simple
-    # primes
-    # stack
+    cpp,
+    codeforces,
+    bfs
 
+    # binsearch
+    # bfs
     # sorting
 ]
 
