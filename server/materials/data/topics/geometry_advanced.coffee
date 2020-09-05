@@ -15,5 +15,13 @@ export default geometry_advanced = () ->
             problem(1360),
             problem(1128),
             problem(3209),
-        ])
+        ]),
+        advancedProblems: [
+            problem(519),
+            problem(111500),
+            problem(3894),
+            problem(19),
+            problem(3400),
+            problem(111828),
+        ]
     }
