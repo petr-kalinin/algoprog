@@ -9,6 +9,6 @@ export default two_sat = () ->
     return {
         topic: topic("Супер-сложное ДП", "Задачи на супер-сложное ДП", [
             label("TODO"),
-            problem(80),
+            problem({testSystem: "codeforces", contest: "1083", problem: "E"}),
         ]),
     }

@@ -5,7 +5,7 @@ import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default backtrack = () ->
+export default binary_trees_and_trie = () ->
     return {
         topic: topic("Бинарные деревья и бор", "Задачи на бинарные деревья и бор", [
             label("Теории тут пока нет"),

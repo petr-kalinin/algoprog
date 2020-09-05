@@ -5,7 +5,7 @@ import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default backtrack = () ->
+export default bit_operations = () ->
     return {
         topic: topic("Битовые операции", "Задачи на битовые операции", [
             label("Теории тут пока нет."),
@@ -16,5 +16,6 @@ export default backtrack = () ->
         advancedProblems: [
             problem(111521),
             problem(122),
+            problem({testSystem: "codeforces", contest: "1303", problem: "D"}),
         ]
     }
