@@ -17,5 +17,10 @@ export default floyd_and_fb = () ->
             problem(178),
             problem(179),
             problem(524),
-        ])
+        ]),
+        advancedProblems: [
+            problem(173),
+            problem(1995),
+            problem(2598),
+        ]
     }

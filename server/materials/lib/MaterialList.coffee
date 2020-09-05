@@ -13,6 +13,7 @@ export default class MaterialList
         {allowAsync = false, keepSubmaterials = false} = options
         context.pushPath(properties._id, order, properties.title, properties.type)
 
+        @submaterials = (s for s in @submaterials when s)
         if allowAsync
             submaterials = await awaitAll(@submaterials.map((material, i) -> material().build(context, makeOrder(order, i))))
         else

@@ -31,9 +31,24 @@ import dfs_simple from './topics/dfs_simple'
 import testing_advanced from './topics/testing_advanced'
 import two_pointers from './topics/two_pointers'
 import numeral_systems from './topics/numeral_systems'
-import bit_operations  from './topics/bit_operations'
-import dp_bayans  from './topics/dp_bayans'
-import dijkstra  from './topics/dijkstra'
+import bit_operations from './topics/bit_operations'
+import dp_bayans from './topics/dp_bayans'
+import dijkstra from './topics/dijkstra'
+import geometry_simple from './topics/geometry_simple'
+import count_sort from './topics/count_sort'
+import long_arithmetics from './topics/long_arithmetics'
+import events_sort from './topics/events_sort'
+import tertiary_search from './topics/tertiary_search'
+import linked_lists from './topics/linked_lists'
+import dp_middle from './topics/dp_middle'
+import hash from './topics/hash'
+import heap from './topics/heap'
+import dijkstra_with_heap from './topics/dijkstra_with_heap'
+import floyd_and_fb from './topics/floyd_and_fb'
+import simple_games from './topics/simple_games'
+import combinatorics from './topics/combinatorics'
+import bfs_01 from './topics/bfs_01'
+import greedy_advanced from './topics/greedy_advanced'
 
 import level_1D from './level_1D'
 
@@ -73,21 +88,26 @@ ALL_TOPICS = [
     bit_operations,
     sorting,
     dp_bayans,
-    dijkstra
+    dijkstra,
+    geometry_simple,
+    count_sort
+    long_arithmetics,
+    events_sort,
+    tertiary_search,
+    linked_lists,
+    dp_middle,
+    hash,
+    heap,
+    dijkstra_with_heap,
+    backtrack(true),
+    floyd_and_fb,
+    simple_games,
+    combinatorics,
+    bfs_01
+    greedy_advanced
 
-    # linked_lists
-    # count_sort
-    # events_sort
-    # long_arithmetics
-    # dp_middle
-    # hash
-    # tertiary_search
-    # heap
     # greedy_sorting
-    # dijkstra_with_heap
-    # bfs_01
-    # floyd_and_fb
-    # simple_games
+    # geometry_simple
 ]
 
 ADDITIONAL_LEVELS =
