@@ -13,5 +13,8 @@ export default count_sort = () ->
             problem(111759),
             problem(49),
             problem(1027),
-        ])
+        ]),
+        advancedProblems: [
+            problem(1216),
+        ]
     }

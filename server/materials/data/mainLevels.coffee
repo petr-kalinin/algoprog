@@ -79,6 +79,8 @@ ALL_TOPICS = [
     # count_sort
     # events_sort
     # long_arithmetics
+    # dp_middle
+    # hash
 ]
 
 ADDITIONAL_LEVELS =

@@ -129,5 +129,9 @@ export default two_pointers = () ->
         advancedProblems: [
             problem(111493),
             problem(111634),
+            problem(581),
+            problem(3878),
+            problem(994),
+            problem(2817),
         ]
     }

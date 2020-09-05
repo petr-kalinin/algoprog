@@ -20,5 +20,7 @@ export default binsearch = () ->
             problem(586),
             problem(1),
             problem(490),
+            problem(3334),
+            problem(1620),
         ]
     }

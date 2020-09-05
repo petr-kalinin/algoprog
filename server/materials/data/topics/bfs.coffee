@@ -22,5 +22,6 @@ export default bfs = () ->
             problem(1472),
             problem(1764),
             problem(608),
+            problem(1766),
         ]
     }
