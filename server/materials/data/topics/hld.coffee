@@ -5,7 +5,7 @@ import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default hdl = () ->
+export default hld = () ->
     return {
         topic: topic("Heavy-light decomposition", "Задачи на HLD", [
             label("TODO"),

@@ -76,7 +76,7 @@ import advanced_scanline from './topics/advanced_scanline'
 import divide_and_conquer from './topics/divide_and_conquer'
 import matrices from './topics/matrices'
 import suffixes from './topics/suffixes'
-import hdl from './topics/hld'
+import hld from './topics/hld'
 import geometry_advanced from './topics/geometry_advanced'
 import mincost_maxflow from './topics/mincost_maxflow'
 import dp_hard from './topics/dp_hard'
@@ -165,7 +165,7 @@ ALL_TOPICS = [
     divide_and_conquer
     matrices
     suffixes
-    hdl
+    hld
     geometry_advanced
     mincost_maxflow
     dp_hard
