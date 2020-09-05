@@ -14,5 +14,12 @@ export default dfs_advanced = () ->
             problem(3883),
             problem(390),
             problem(113441),
-        ])
+        ]),
+        advancedProblems: [
+            problem(21),
+            problem(3388),
+            problem(112597),
+            problem(1746),
+            problem(573),
+        ]
     }

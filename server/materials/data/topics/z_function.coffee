@@ -12,5 +12,8 @@ export default z_function = () ->
             problem(1324),
             problem(1326),
             problem(3369),
-        ])
+        ]),
+        advancedProblems: [
+            problem(998),
+        ]
     }

@@ -23,5 +23,6 @@ export default greedy_2 = () ->
             problem(1782),
             problem(641),
             problem(583),
+            problem(112096),
         ]
     }
