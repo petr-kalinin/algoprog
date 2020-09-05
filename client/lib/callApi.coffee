@@ -3,6 +3,13 @@ import fetch from 'isomorphic-fetch';
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '3000')
 ip = (process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1')
 export API_URL = (if (typeof window == 'undefined') then ('http://' + ip + ':' + port) else '') + '/api/'
+export WS_API_URL = (if window? then ('ws://' + location.host) else '') + '/wsapi/'
+
+export callWsApiWithBody = (endpoint, cb) ->
+    if window?
+        ws = new WebSocket(WS_API_URL + endpoint)
+        ws.onmessage = (msg) ->
+            cb msg.data
 
 export callApiWithBody = (endpoint, method, headers, body) ->
     response = await fetch(API_URL + endpoint, {

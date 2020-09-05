@@ -1,5 +1,6 @@
 mongoose = require('mongoose')
 
+import {addHook} from './MongooseCallbackManager'
 import User from './user'
 import logger from '../log'
 
@@ -30,6 +31,8 @@ resultsSchema.methods.upsert = () ->
     @activated = user?.activated
     @_id = @user + "::" + (@findMistake || @table)
     @update(this, {upsert: true}).exec()
+
+resultsSchema.post 'update', addHook('update_result')
 
 resultsSchema.statics.DQconst = -10
 

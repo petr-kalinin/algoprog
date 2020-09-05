@@ -1,6 +1,7 @@
 mongoose = require('mongoose')
 
 import Hash from './Hash'
+import {addHook} from './MongooseCallbackManager'
 import User from './user'
 
 import calculateHashes from '../hashes/calculateHashes'
@@ -36,6 +37,8 @@ submitsSchema = new mongoose.Schema
     
 submitsSchema.methods.upsert = () ->
     @update(this, {upsert: true, overwrite: true})
+
+submitsSchema.post 'update', addHook('update_submit')
 
 submitsSchema.methods.calculateHashes = () ->
     logger.info("calculating hashes for submit #{@_id}")

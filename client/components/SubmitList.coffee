@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/lib/Button'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
 
-import ConnectedComponent from '../lib/ConnectedComponent'
+import ConnectedComponent, {WsConnectedComponent} from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 import outcomeToText from '../lib/outcomeToText'
 
@@ -104,10 +104,10 @@ options =
             result = {}
             if props?.findMistake
                 result.data = "submitsForFindMistake/#{props.myUser._id}/#{props.findMistake}"
-            else
-                result.data = "submits/#{props.myUser._id}/#{props.material._id}"
+            #else
+            #    result.data = "submits/#{props.myUser._id}/#{props.material._id}"
             if not props?.noBestSubmits
-                result.result = "result/#{props.myUser._id}::#{props.material._id}"
+                #result.result = "result/#{props.myUser._id}::#{props.material._id}"
                 result.bestSubmits = "bestSubmits/#{props.material._id}"
             return result
         return {}
@@ -116,4 +116,15 @@ options =
 
     timeout: 20 * 1000
 
-export default withMyUser(ConnectedComponent(SubmitList, options))
+options2 =
+    urls: (props) ->
+        if props?.myUser?._id
+            result = {}
+            if not props?.findMistake
+                result.data = "submits/#{props.myUser._id}/#{props.material._id}"
+            if not props?.noBestSubmits
+                result.result = "result/#{props.myUser._id}::#{props.material._id}"
+            return result
+        return {}
+
+export default withMyUser(ConnectedComponent(WsConnectedComponent(SubmitList, options2), options))

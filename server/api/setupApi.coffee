@@ -40,6 +40,7 @@ import Calendar from '../models/Calendar'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
 import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
+import {addCallback} from '../models/MongooseCallbackManager'
 import Payment from '../models/Payment'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
@@ -159,6 +160,13 @@ expandFindMistake = (mistake, admin, userKey) ->
     mistake.fullProblem = await Problem.findById(mistake.problem)
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
+
+getRandomString = (length) =>
+    text = ''
+    possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    for i in [0..length]
+        text += possible.charAt(Math.floor(Math.random() * possible.length))
+    text
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -447,6 +455,18 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json(submits)
 
+    app.ws '/wsapi/submits/:user/:problem', (ws, req, next) ->
+        addCallback 'update_submit', getRandomString(5), ->
+            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+                return
+            submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
+            submits = submits.map((submit) -> submit.toObject())
+            if not req.user?.admin
+                submits = submits.map(hideTests)
+            submits = submits.map(expandSubmit)
+            submits = await awaitAll(submits)
+            ws.send JSON.stringify submits
+
     app.get '/api/submitsForFindMistake/:user/:findMistake', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
@@ -490,6 +510,14 @@ export default setupApi = (app) ->
         result.fullUser = await User.findById(result.user)
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
+
+    app.ws '/wsapi/result/:id', (ws, req, next) ->
+        addCallback 'update_result', getRandomString(5), ->
+            result = (await Result.findById(req.params.id))?.toObject()
+            if not result then return
+            result.fullUser = await User.findById(result.user)
+            result.fullTable = await Problem.findById(result.table)
+            ws.send JSON.stringify result
 
     app.get '/api/userResults/:userId', wrap (req, res) ->
         results = (await Result.findByUser(req.params.userId))

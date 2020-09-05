@@ -25,6 +25,61 @@ class ErrorBoundary extends React.Component
             return <h1><FontAwesome name="exclamation-circle"/></h1>     
         return this.props.children;
 
+
+export WsConnectedComponent = (Component, options) ->
+    class Result extends React.Component
+        constructor: (props) ->
+            super(props)
+            if window? then @requestData()
+
+        urls: () ->
+            options.urls(@props)
+
+        dataLoaded: () ->
+            for key, url of @urls()
+                if not @props.hasData(url)
+                    return false
+            return true
+
+        dataRejected: () ->
+            for key, url of @urls()
+                if @props.isDataRejected(url)
+                    return true
+            return false
+
+        render:  () ->
+            if @dataRejected()
+                <h1><FontAwesome name="exclamation-circle"/></h1>
+            else if not @dataLoaded() and not options.allowNotLoaded
+                if options.Placeholder
+                    Placeholder = options.Placeholder
+                    return <Placeholder/>
+                else
+                    return <Loader/>
+            else
+                componentProps = {@props...}
+                delete componentProps.wsdata
+                delete componentProps.hasData
+                delete componentProps.isDataRejected
+                delete componentProps.updateWsData
+                for key, url of @urls()
+                    componentProps[key] = @props.wsdata(url)
+                return `<ErrorBoundary><Component  {...componentProps}/></ErrorBoundary>`
+
+        requestData: () ->
+            (@props.updateWsData(url) for key, url of @urls())
+
+    mapStateToProps = (state, ownProps) ->
+            wsdata: (url) -> getters.getData(state, url)
+            hasData: (url) -> getters.hasData(state, url)
+            isDataRejected: (url) -> getters.isDataRejected(state, url)
+
+    mapDispatchToProps = (dispatch, ownProps) ->
+            updateWsData: (url, cookies) -> dispatch(actions.updateWsData(url, cookies))
+
+    return connect(mapStateToProps, mapDispatchToProps)(Result)
+
+
 export default ConnectedComponent = (Component, options) ->
     class Result extends React.Component
         constructor: (props) ->
