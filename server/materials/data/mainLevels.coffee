@@ -106,8 +106,9 @@ ALL_TOPICS = [
     bfs_01
     greedy_advanced
 
-    # greedy_sorting
-    # geometry_simple
+    # kmp
+    # dfs_advanced
+    # z_function
 ]
 
 ADDITIONAL_LEVELS =
