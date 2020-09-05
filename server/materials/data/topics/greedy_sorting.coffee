@@ -15,4 +15,10 @@ export default greedy_sorting = () ->
             problem(1744),
             problem(2978),
         ])
+        advancedProblems: [
+            problem(1987),
+            problem(1782),
+            problem(641),
+            problem(583),
+        ]
     }

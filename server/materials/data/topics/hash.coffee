@@ -14,5 +14,11 @@ export default hash = () ->
             problem(1042),
             problem(1943),
             problem(1326),
-        ])
+        ]),
+        advancedProblems: [
+            problem(3871),
+            problem(112567),
+            problem(3899),
+            problem(1390),
+        ]
     }
