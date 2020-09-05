@@ -32,5 +32,4 @@ export default backtrack = () ->
             ]),
             module16828()       
         ]
-        count: count
     }

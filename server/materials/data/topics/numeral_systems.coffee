@@ -17,5 +17,6 @@ export default numeral_systems = () ->
         ]),
         advancedProblems: [
             problem(245),
+            problem(111584)
         ]
     }

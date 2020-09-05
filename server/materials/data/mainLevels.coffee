@@ -29,6 +29,10 @@ import binsearch from './topics/binsearch'
 import bfs from './topics/bfs'
 import dfs_simple from './topics/dfs_simple'
 import testing_advanced from './topics/testing_advanced'
+import two_pointers from './topics/two_pointers'
+import numeral_systems from './topics/numeral_systems'
+import bit_operations  from './topics/bit_operations'
+import dp_bayans  from './topics/dp_bayans'
 
 import level_1D from './level_1D'
 
@@ -54,22 +58,22 @@ ALL_TOPICS = [
     technical,
     primes,
     greedy_simple,
-
     stack,
     stl,
     testing_advanced,
-
     graphs_simple,
     cpp,
     codeforces,
     bfs,
     dfs_simple,
-    binsearch
+    binsearch,
+    two_pointers,
+    numeral_systems,
+    bit_operations,
+    sorting,
+    dp_bayans
 
-    # bfs
-    # numeral_systems
-    # two_pointers
-    # sorting
+    # linked_lists
 ]
 
 ADDITIONAL_LEVELS =
