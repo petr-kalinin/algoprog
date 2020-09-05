@@ -33,6 +33,7 @@ import two_pointers from './topics/two_pointers'
 import numeral_systems from './topics/numeral_systems'
 import bit_operations  from './topics/bit_operations'
 import dp_bayans  from './topics/dp_bayans'
+import dijkstra  from './topics/dijkstra'
 
 import level_1D from './level_1D'
 
@@ -71,9 +72,13 @@ ALL_TOPICS = [
     numeral_systems,
     bit_operations,
     sorting,
-    dp_bayans
+    dp_bayans,
+    dijkstra
 
     # linked_lists
+    # count_sort
+    # events_sort
+    # long_arithmetics
 ]
 
 ADDITIONAL_LEVELS =
