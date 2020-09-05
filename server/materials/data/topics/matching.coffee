@@ -13,5 +13,10 @@ export default matching = () ->
             problem(588),
             problem(4204),
             problem(111663),
-        ])
+        ]),
+        advancedProblems: [
+            problem(111757),
+            problem(112571),
+            problem(111733),
+        ]
     }

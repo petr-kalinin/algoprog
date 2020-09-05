@@ -14,5 +14,13 @@ export default geometry_middle = () ->
             problem(1877),
             problem(2979),
             problem(3858),
-        ])
+        ]),
+        advancedProblems: [
+            problem(488),
+            problem(493),
+            problem(2866),
+            problem(1109),
+            problem(455),
+            problem(397),
+        ]
     }

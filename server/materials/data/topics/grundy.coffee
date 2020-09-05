@@ -11,5 +11,6 @@ export default grundy = () ->
             label("<p><a href=\"https://e-maxx.ru/algo/sprague_grundy\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/124856/\">Теория на хабре</a><br>\n<a>Можете еще в интернете поискать</a></p>"),
             problem(369),
             problem(905),
+            problem(2916),
         ])
     }
