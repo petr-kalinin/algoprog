@@ -124,6 +124,13 @@ ALL_TOPICS = [
     # lca.coffee
     # mass_operations.coffee
     # multid_trees.coffee
+    # advanced_numbers.coffee
+    # geometry_advanced.coffee
+    # matrices.coffee
+    # maxmatching.coffee
+    # mincost_maxflow.coffee
+    # suffixes.coffee
+
 ]
 
 ADDITIONAL_LEVELS =
