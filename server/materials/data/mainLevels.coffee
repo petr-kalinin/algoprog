@@ -109,6 +109,9 @@ ALL_TOPICS = [
     # kmp
     # dfs_advanced
     # z_function
+    # cartesian_tree
+    # segment_tree
+    # sqrt_decomposition
 ]
 
 ADDITIONAL_LEVELS =
