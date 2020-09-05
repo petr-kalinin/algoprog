@@ -85,6 +85,9 @@ ALL_TOPICS = [
     # heap
     # greedy_sorting
     # dijkstra_with_heap
+    # bfs_01
+    # floyd_and_fb
+    # simple_games
 ]
 
 ADDITIONAL_LEVELS =
