@@ -118,6 +118,12 @@ ALL_TOPICS = [
     # geometry_middle.coffee
     # grundy.coffee
     # matching.coffee
+    # aho_corasick.coffee
+    # fenwick.coffee
+    # flows.coffee
+    # lca.coffee
+    # mass_operations.coffee
+    # multid_trees.coffee
 ]
 
 ADDITIONAL_LEVELS =
