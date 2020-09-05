@@ -9,7 +9,6 @@ export default aho_corasick = () ->
     return {
         topic: topic("Алгоритм Ахо-Корасик", "Задачи на Ахо-Корасик", [
             label("<p>См. <a href=\"https://e-maxx.ru/algo/aho_corasick\">теорию на e-maxx</a>.</p>"),
-            problem(111729),
             problem(111732),
         ]),
         advancedProblems: [

@@ -5,13 +5,10 @@ import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
 
-export default backtrack = () ->
+export default sparse_tables = () ->
     return {
-        topic: topic("Бор", "Задачи на бор", [
-            label("Теории тут пока нет"),
+        topic: topic("Sparse tables, двоичный подъем", "Задачи на sparse tables", [
+            label("TODO"),
+            problem(80),
         ]),
-        advancedProblems: [
-            problem(30),
-            problem(1044),
-        ]
     }

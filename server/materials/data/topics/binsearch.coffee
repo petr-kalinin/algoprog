@@ -15,7 +15,7 @@ export default binsearch = () ->
             problem(2),
             problem(1923),
         ]),
-        adcancedProblems: [
+        advancedProblems: [
             problem(672),
             problem(586),
             problem(1),

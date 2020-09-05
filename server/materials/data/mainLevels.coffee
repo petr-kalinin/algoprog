@@ -45,10 +45,43 @@ import hash from './topics/hash'
 import heap from './topics/heap'
 import dijkstra_with_heap from './topics/dijkstra_with_heap'
 import floyd_and_fb from './topics/floyd_and_fb'
-import simple_games from './topics/simple_games'
+import games_simple from './topics/games_simple'
 import combinatorics from './topics/combinatorics'
 import bfs_01 from './topics/bfs_01'
 import greedy_advanced from './topics/greedy_advanced'
+import dfs_advanced from './topics/dfs_advanced'
+import kmp from './topics/kmp'
+import z_function from './topics/z_function'
+import sqrt_decomposition from './topics/sqrt_decomposition'
+import sparse_tables from './topics/sparse_tables'
+import segment_tree from './topics/segment_tree'
+import two_sat from './topics/2sat'
+import lca from './topics/lca'
+import binary_trees_and_trie from './topics/binary_trees_and_trie'
+import geometry_middle from './topics/geometry_middle'
+import dp_advanced from './topics/dp_advanced'
+import games_cyclic from './topics/games_cyclic'
+import cartesian_tree from './topics/cartesian_tree'
+import dsu from './topics/dsu'
+import cartesian_tree_implicit from './topics/cartesian_tree_implicit'
+import advanced_numbers from './topics/advanced_numbers'
+import inclusion_exclusion from './topics/inclusion_exclusion'
+import matching from './topics/matching'
+import grundy from './topics/grundy'
+import flows from './topics/flows'
+import fenwick from './topics/fenwick'
+import mass_operations from './topics/mass_operations'
+import aho_corasick from './topics/aho_corasick'
+import advanced_scanline from './topics/advanced_scanline'
+import divide_and_conquer from './topics/divide_and_conquer'
+import matrices from './topics/matrices'
+import suffixes from './topics/suffixes'
+import hdl from './topics/hld'
+import geometry_advanced from './topics/geometry_advanced'
+import mincost_maxflow from './topics/mincost_maxflow'
+import dp_hard from './topics/dp_hard'
+import maxmatching from './topics/maxmatching'
+import persistency from './topics/persistency'
 
 import level_1D from './level_1D'
 
@@ -101,36 +134,43 @@ ALL_TOPICS = [
     dijkstra_with_heap,
     backtrack(true),
     floyd_and_fb,
-    simple_games,
+    games_simple,
     combinatorics,
-    bfs_01
-    greedy_advanced
-
-    # kmp
-    # dfs_advanced
-    # z_function
-    # cartesian_tree
-    # segment_tree
-    # sqrt_decomposition
-    # cartesian_tree_implicit
-    # dp_advanced.coffee
-    # dsu.coffee
-    # geometry_middle.coffee
-    # grundy.coffee
-    # matching.coffee
-    # aho_corasick.coffee
-    # fenwick.coffee
-    # flows.coffee
-    # lca.coffee
-    # mass_operations.coffee
-    # multid_trees.coffee
-    # advanced_numbers.coffee
-    # geometry_advanced.coffee
-    # matrices.coffee
-    # maxmatching.coffee
-    # mincost_maxflow.coffee
-    # suffixes.coffee
-
+    bfs_01,
+    greedy_advanced,
+    dfs_advanced,
+    kmp,
+    z_function,
+    sqrt_decomposition,
+    sparse_tables,
+    segment_tree
+    two_sat,
+    lca,
+    binary_trees_and_trie
+    geometry_middle
+    dp_advanced
+    games_cyclic
+    cartesian_tree
+    dsu
+    cartesian_tree_implicit
+    advanced_numbers,
+    inclusion_exclusion,
+    matching
+    grundy
+    flows
+    fenwick
+    mass_operations
+    aho_corasick,
+    advanced_scanline,
+    divide_and_conquer
+    matrices
+    suffixes
+    hdl
+    geometry_advanced
+    mincost_maxflow
+    dp_hard
+    maxmatching
+    persistency
 ]
 
 ADDITIONAL_LEVELS =
