@@ -11,5 +11,8 @@ export default multid_trees = () ->
             label("<p>См. теорию на e-maxx: <a href=\"https://e-maxx.ru/algo/segment_tree#25\">деревья отрезков</a>, <a href=\"https://e-maxx.ru/algo/fenwick_tree#4\">дерево Фенвика</a>.</p>"),
             problem(3013),
             problem(111778),
-        ])
+        ]),
+        advancedProblems: [
+            problem(113809),
+        ]
     }

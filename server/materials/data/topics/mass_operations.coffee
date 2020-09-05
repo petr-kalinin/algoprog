@@ -13,5 +13,9 @@ export default mass_operations = () ->
             problem(3329),
             problem(3328),
             problem(111800),
-        ])
+        ]),
+        advancedProblems: [
+            problem(113563),
+            problem(113775),
+        ]
     }

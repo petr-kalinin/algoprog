@@ -14,5 +14,14 @@ export default flows = () ->
             problem(111772),
             problem(2917),
             problem(2785),
-        ])
+        ]),
+        advancedProblems: [
+            problem(2784),
+            problem(2512),
+            problem(3300),
+            problem(395),
+            problem(2821),
+            problem(1650),
+            problem(186),
+        ]
     }
