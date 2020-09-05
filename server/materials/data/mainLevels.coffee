@@ -112,6 +112,12 @@ ALL_TOPICS = [
     # cartesian_tree
     # segment_tree
     # sqrt_decomposition
+    # cartesian_tree_implicit
+    # dp_advanced.coffee
+    # dsu.coffee
+    # geometry_middle.coffee
+    # grundy.coffee
+    # matching.coffee
 ]
 
 ADDITIONAL_LEVELS =
