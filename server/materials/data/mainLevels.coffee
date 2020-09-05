@@ -81,6 +81,10 @@ ALL_TOPICS = [
     # long_arithmetics
     # dp_middle
     # hash
+    # tertiary_search
+    # heap
+    # greedy_sorting
+    # dijkstra_with_heap
 ]
 
 ADDITIONAL_LEVELS =
