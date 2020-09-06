@@ -13,8 +13,6 @@ export default greedy_2 = () ->
             problem(3380),
             problem(3589),
             problem(411),
-            problem(734),
-            problem(1130),
             problem(1744),
             problem(2978),
         ]),

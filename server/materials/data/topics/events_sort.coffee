@@ -14,5 +14,8 @@ export default events_sort = () ->
             problem(3721),
             problem(1338),
             problem(111790),
-        ])
+        ]),
+        advancedProblems: [
+            problem(1622)
+        ]
     }

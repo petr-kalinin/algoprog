@@ -6,7 +6,7 @@ import topic from "../../lib/topic"
 export default prefixSums = () ->
     return {
         topic: topic("Префиксные суммы", "Задачи на префиксные суммы", [
-            label("Теории тут пока нет, спросите меня."),
+            label("Идея простая, но легкой теории я с ходу не нашел. Можете почитать по следующим ссылкам: <a href='https://brestprog.by/topics/prefixsums/'>раз</a>, <a href='https://silvertests.ru/GuideView.aspx?id=31909'>два</a>, <a href='https://ru.wikipedia.org/wiki/Префиксная_сумма'>три</a>, или спросить меня."),
             problem(2771),
             problem(2772),
             problem(3313),
@@ -19,6 +19,5 @@ export default prefixSums = () ->
 
             # Not a prefixSum problem
             problem(1460),
-
         ]
     }

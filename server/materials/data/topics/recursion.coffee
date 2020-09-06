@@ -6,7 +6,9 @@ import topic from "../../lib/topic"
 export default recursion = () ->
     return {
         topic: topic("Рекурсия", "Задачи на рекурсию", [
-            label("Теории тут пока нет, почитайте в книжке или спросите меня."),
+            label("<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>"),
+            label("""Имейте в виду, что многие из задач ниже на самом деле проще и правильнее решать не рекурсией, а циклом (в частности, никогда не пишите факториал рекурсией!). 
+            Но понимать, что такое рекурсия, надо, и очень полезно потренироваться на задачах ниже.""")
             problem(153),
             problem(154)
             problem(113656),
@@ -15,5 +17,8 @@ export default recursion = () ->
         ]),
         advancedProblems: [
             problem(1414),
+            problem(3283),
+            problem(3806),
+            problem(111589)
         ]
     }
