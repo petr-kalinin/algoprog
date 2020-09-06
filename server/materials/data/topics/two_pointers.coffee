@@ -125,6 +125,7 @@ export default two_pointers = () ->
             module16344(),
             problem(2827),
             problem(111975),
+            problem({testSystem: "codeforces", contest: "1354", problem: "B"}),
         ]),
         advancedProblems: [
             problem(111493),

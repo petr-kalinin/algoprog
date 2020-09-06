@@ -8,11 +8,13 @@ import topic from "../../lib/topic"
 export default bit_operations = () ->
     return {
         topic: topic("Битовые операции", "Задачи на битовые операции", [
-            label("Теории тут пока нет."),
+            label("""<p>Терия: <a href='https://notes.algoprog.ru/shortideas/03_5_bitandor.html'>основная</a>, дополнительно:
+            <a href='https://server.179.ru/tasks/python/2014b1/22-bits.html'>раз</a>, <a href='https://ravesli.com/urok-45-pobitovye-operatory/'>два</a>.
+            Тут везде разные языки программирования, но принцип один и тот же, максимум операции могут по-разному записываться.</p>"""),
             problem(123),
             problem(128),
             problem(111588),
-            # TODO: Две одинаковые буквы без массивов (надо задвоить задачу)
+            problem({testSystem: "ejudge", contest: "2001", problem: "4"}),
         ]),
         advancedProblems: [
             problem(111521),
