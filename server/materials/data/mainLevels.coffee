@@ -86,6 +86,11 @@ import maxmatching from './topics/maxmatching'
 import persistency from './topics/persistency'
 
 import level_1D from './level_1D'
+import level_3D from './level_3D'
+import level_5D from './level_5D'
+import level_7D from './level_7D'
+import level_9D from './level_9D'
+import level_11D from './level_11D'
 
 TOPICS_PER_LEVEL = 3
 PROBLEMS_PER_ADDITIONAL_CONTEST = 6
@@ -177,6 +182,11 @@ ALL_TOPICS = [
 
 ADDITIONAL_LEVELS =
     '1Г': level_1D
+    '3Г': level_3D
+    '5Г': level_5D
+    '7Г': level_7D
+    '9Г': level_9D
+    '11Г': level_11D
 
 class TopicGenerator
     constructor: () ->
