@@ -43,6 +43,7 @@ stats.socket.on 'error',  (error) ->
     logger.error(error)
 
 app = express()
+expressWs = require('express-ws')(app)
 app.enable('trust proxy')
 
 setupMetrics(app)

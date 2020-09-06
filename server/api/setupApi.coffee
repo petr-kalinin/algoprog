@@ -40,7 +40,6 @@ import Calendar from '../models/Calendar'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
 import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
-import {addCallback} from '../models/MongooseCallbackManager'
 import Payment from '../models/Payment'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
@@ -51,6 +50,8 @@ import Table from '../models/table'
 import TableResults from '../models/TableResults'
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
+
+import {addMongooseCallback} from '../mongo/MongooseCallbackManager'
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 import {LoggedCodeforcesUser} from '../testSystems/Codeforces'
@@ -160,13 +161,6 @@ expandFindMistake = (mistake, admin, userKey) ->
     mistake.fullProblem = await Problem.findById(mistake.problem)
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
-
-getRandomString = (length) =>
-    text = ''
-    possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    for i in [0..length]
-        text += possible.charAt(Math.floor(Math.random() * possible.length))
-    text
 
 export default setupApi = (app) ->
     app.get '/api/forbidden', wrap (req, res) ->
@@ -456,7 +450,7 @@ export default setupApi = (app) ->
         res.json(submits)
 
     app.ws '/wsapi/submits/:user/:problem', (ws, req, next) ->
-        addCallback 'update_submit', getRandomString(5), ->
+        addMongooseCallback 'update_submit', req.user?.userKey(), ->
             if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
@@ -478,6 +472,18 @@ export default setupApi = (app) ->
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
         res.json(submits)
+
+    app.ws '/wsapi/submitsForFindMistake/:user/:findMistake', (ws, req, next) ->
+        addMongooseCallback 'update_submit', req.user?.userKey(), ->
+            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+                return
+            submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+            submits = submits.map((submit) -> submit.toObject())
+            if not req.user?.admin
+                submits = submits.map(hideTests)
+            submits = submits.map(expandSubmit)
+            submits = await awaitAll(submits)
+            ws.send JSON.stringify submits
 
     app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
         submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
@@ -512,7 +518,7 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.ws '/wsapi/result/:id', (ws, req, next) ->
-        addCallback 'update_result', getRandomString(5), ->
+        addMongooseCallback 'update_result', req.user?.userKey(), ->
             result = (await Result.findById(req.params.id))?.toObject()
             if not result then return
             result.fullUser = await User.findById(result.user)
