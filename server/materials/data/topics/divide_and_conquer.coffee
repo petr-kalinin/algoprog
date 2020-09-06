@@ -9,6 +9,8 @@ export default divide_and_conquer = () ->
     return {
         topic: topic("Разделяй и влавствуй", "Задачи на разделяй и влавствуй", [
             label("TODO"),
-            problem(80),
+            problem({testSystem: "codeforces", contest: "429", problem: "D"}),
+            problem({testSystem: "codeforces", contest: "120", problem: "J"}),
+            #problem({testSystem: "codeforces", contest: "100273", problem: "A"}),  # TODO
         ]),
     }

@@ -12,6 +12,7 @@ export default bit_operations = () ->
             problem(123),
             problem(128),
             problem(111588),
+            # TODO: Две одинаковые буквы без массивов (надо задвоить задачу)
         ]),
         advancedProblems: [
             problem(111521),

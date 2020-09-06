@@ -23,5 +23,6 @@ export default flows = () ->
             problem(2821),
             problem(1650),
             problem(186),
+            problem({testSystem: "codeforces", contest: "1082", problem: "G"}),
         ]
     }
