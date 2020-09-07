@@ -450,7 +450,7 @@ export default setupApi = (app) ->
         res.json(submits)
 
     app.ws '/wsapi/submits/:user/:problem', (ws, req, next) ->
-        addMongooseCallback 'update_submit', req.user?.userKey(), ->
+        addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
             if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
@@ -474,7 +474,7 @@ export default setupApi = (app) ->
         res.json(submits)
 
     app.ws '/wsapi/submitsForFindMistake/:user/:findMistake', (ws, req, next) ->
-        addMongooseCallback 'update_submit', req.user?.userKey(), ->
+        addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
             if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
@@ -518,7 +518,7 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.ws '/wsapi/result/:id', (ws, req, next) ->
-        addMongooseCallback 'update_result', req.user?.userKey(), ->
+        addMongooseCallback ws, 'update_result', req.user?.userKey(), ->
             result = (await Result.findById(req.params.id))?.toObject()
             if not result then return
             result.fullUser = await User.findById(result.user)

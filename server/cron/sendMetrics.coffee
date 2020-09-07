@@ -1,3 +1,4 @@
+import {mongoCallbacksCount} from '../mongo/MongooseCallbackManager'
 import {GROUPS} from '../../client/lib/informaticsGroups'
 import {START_SUBMITS_DATE} from '../api/dashboard'
 import send from '../metrics/graphite'
@@ -16,6 +17,10 @@ sendGraphite = () ->
             metrics["#{key}.#{group}"] = (await Result.find(query)).length
     await send(metrics)
 
+sendWebSocketsCount2Graphite = () ->
+    metrics = {"websockets": mongoCallbacksCount()}
+    await send(metrics)
+
 sendWarnings = () ->
     endDate = new Date(new Date() - 5 * 60 * 1000)
     query = {ps: 1, lastSubmitTime: {$lt: endDate}, total: 1}
@@ -28,3 +33,4 @@ sendWarnings = () ->
 export default sendMetrics = () ->
     await sendWarnings()
     await sendGraphite()
+    await sendWebSocketsCount2Graphite()
