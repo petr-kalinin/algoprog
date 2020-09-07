@@ -9,6 +9,9 @@ export default two_sat = () ->
     return {
         topic: topic("Формула включения-исключения", "Задачи на формулу включения-исключения", [
             label("TODO"),
-            problem(80),
+            problem(552),
         ]),
+        advancedProblems: [
+            problem({testSystem: "codeforces", contest: "585", problem: "E"}),
+        ]
     }
