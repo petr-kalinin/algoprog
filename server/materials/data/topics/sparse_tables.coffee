@@ -9,6 +9,7 @@ export default sparse_tables = () ->
     return {
         topic: topic("Sparse tables, двоичный подъем", "Задачи на sparse tables", [
             label("TODO"),
-            problem(80),
+            problem(113919),
+            problem(113550),
         ]),
     }
