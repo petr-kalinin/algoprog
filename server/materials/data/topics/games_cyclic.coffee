@@ -9,6 +9,6 @@ export default games_cyclic = () ->
     return {
         topic: topic("Игры на циклических графах", "Задачи на игры на циклических графах", [
             label("TODO"),
-            problem(80),
+            problem(3390),
         ]),
     }
