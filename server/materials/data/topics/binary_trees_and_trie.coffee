@@ -9,7 +9,11 @@ export default binary_trees_and_trie = () ->
     return {
         topic: topic("Бинарные деревья и бор", "Задачи на бинарные деревья и бор", [
             label("Теории тут пока нет"),
-            label("TODO"),
+            problem(757),
+            problem(760),
+            problem(761),
+            problem(111730),
+            problem(3302),
             problem(111729),
         ]),
         advancedProblems: [
