@@ -36,8 +36,8 @@ submitsSchema = new mongoose.Schema
     findMistake: String
     
 submitsSchema.methods.upsert = () ->
+    await @update(this, {upsert: true, overwrite: true})
     runMongooseCallback 'update_submit', @user
-    @update(this, {upsert: true, overwrite: true})
 
 submitsSchema.methods.calculateHashes = () ->
     logger.info("calculating hashes for submit #{@_id}")

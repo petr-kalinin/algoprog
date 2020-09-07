@@ -30,8 +30,8 @@ resultsSchema.methods.upsert = () ->
     @userList = user.userList
     @activated = user?.activated
     @_id = @user + "::" + (@findMistake || @table)
+    await @update(this, {upsert: true}).exec()
     runMongooseCallback 'update_result', @user
-    @update(this, {upsert: true}).exec()
 
 resultsSchema.statics.DQconst = -10
 
