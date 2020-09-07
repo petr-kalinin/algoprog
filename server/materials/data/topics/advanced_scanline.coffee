@@ -8,7 +8,12 @@ import topic from "../../lib/topic"
 export default advanced_scanline = () ->
     return {
         topic: topic("Продвинутый scanline", "Задачи на продвинутый scanline", [
-            label("TODO"),
-            problem(80),
+            problem(1217),
+            problem(2866),
+            problem(111800),
+            problem(113809),
         ]),
+        advancedProblems: [
+            problem(112817)
+        ]
     }

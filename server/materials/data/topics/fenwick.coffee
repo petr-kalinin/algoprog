@@ -18,6 +18,5 @@ export default fenwick = () ->
         advancedProblems: [
             problem(113556),
             problem(1049),
-            problem(113809),
         ]
     }
