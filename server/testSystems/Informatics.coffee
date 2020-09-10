@@ -144,8 +144,8 @@ export default class Informatics extends TestSystem
         problemId = @_informaticsProblemId(problem._id)
         groupId = 0
         fromTimestamp = 0
-        user = await @_getAdmin()
-        admin = true
+        #user = await @_getAdmin()
+        #admin = true
         if not user
             user = await LoggedInformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
             admin = false
