@@ -127,7 +127,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             if submit.problem.index != @problem
                 logger.info "Skipping submit #{submit.id} because it is for a different problem: #{submit.problem.index} vs #{@problem}"
                 continue
-            outcome = @VERDICTS[submit.verdict] || submit.verdict
+            outcome = @VERDICTS[submit.verdict] || submit.verdict || "CT"
             result.push new Submit(
                 _id: "c" + submit.id,
                 time: new Date(submit.creationTimeSeconds * 1000),
