@@ -7,9 +7,12 @@ export WS_API_URL = (if window? then ('ws://' + location.host) else '') + '/wsap
 
 export callWsApiWithBody = (endpoint, cb) ->
     if window?
-        ws = new WebSocket(WS_API_URL + endpoint)
-        ws.onmessage = (msg) ->
-            cb msg.data
+        wsCloseListener = () ->
+            ws = new WebSocket(WS_API_URL + endpoint)
+            ws.onmessage = (msg) ->
+                cb msg.data
+            ws.onclose = wsCloseListener
+        wsCloseListener()
 
 export callApiWithBody = (endpoint, method, headers, body) ->
     response = await fetch(API_URL + endpoint, {

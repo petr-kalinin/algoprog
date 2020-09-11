@@ -102,12 +102,7 @@ options =
     urls: (props) ->
         if props?.myUser?._id
             result = {}
-            #if props?.findMistake
-            #    result.data = "submitsForFindMistake/#{props.myUser._id}/#{props.findMistake}"
-            #else
-            #    result.data = "submits/#{props.myUser._id}/#{props.material._id}"
             if not props?.noBestSubmits
-                #result.result = "result/#{props.myUser._id}::#{props.material._id}"
                 result.bestSubmits = "bestSubmits/#{props.material._id}"
             return result
         return {}
