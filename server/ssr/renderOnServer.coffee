@@ -114,8 +114,6 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
             ],
             clientCookie: req.headers.cookie,
             theme: defaultTheme(req.headers.cookie)
-        console.log "req.user=", req.user
-        console.log "myUser=", await User.findById(req.user?.userKey())
         store = createStore(initialState)
 
         component = undefined

@@ -151,7 +151,6 @@ class TopPanel extends React.Component
             @setState(newState)
 
     render: ->
-        console.log "in toppanel=", @props.myUser
         <div>
             <Navbar fixedTop fluid>
                 <Navbar.Form pullLeft>
