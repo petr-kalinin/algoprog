@@ -20,7 +20,6 @@ export default dp_bayans = () ->
         advancedProblems: [
             problem(217),
             problem(1095),
-            problem(1106),
             problem(3001),
         ]
     }
