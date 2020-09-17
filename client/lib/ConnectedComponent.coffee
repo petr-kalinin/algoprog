@@ -10,6 +10,8 @@ import * as getters from '../redux/getters'
 
 import awaitAll from '../lib/awaitAll'
 
+import {subscribeMemento, unsubscribeMemento} from './Memento'
+
 class ErrorBoundary extends React.Component 
     constructor: (props) ->
         super(props)
@@ -80,11 +82,16 @@ export default ConnectedComponent = (Component, options) ->
             @requestDataAndSetTimeout()
 
         componentWillUnmount: ->
+            (unsubscribeMemento(url) for key, url of @wsurls())
             if @timeout
                 console.log "Clearing timeout"
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
+            if window?
+                if not deepEqual(options.wsurls?(prevProps), options.wsurls?(@props))
+                    (unsubscribeMemento(url) for key, url of options.wsurls?(prevProps))
+                    @requestWsData()
             if not deepEqual(options.urls(prevProps), options.urls(@props))
                 @requestData(options.timeout)
             else
@@ -92,6 +99,7 @@ export default ConnectedComponent = (Component, options) ->
                 @requestData()
 
         requestWsData: () ->
+            (subscribeMemento(url) for key, url of @wsurls())
             (@props.updateWsData(url) for key, url of @wsurls())
 
         requestData: (timeout) ->

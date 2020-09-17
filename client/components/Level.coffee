@@ -26,7 +26,7 @@ InternalLink = (props) ->
     </div>
 
 MaterialLink = (props) ->
-    <div className={props.className && styles[props.className]}>
+    <div className={if props.className then styles[props.className]}>
         <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
@@ -70,7 +70,7 @@ export default Level = (props) ->
             a <ProblemListWrapped problems={problems} key={"problems::pre-" + m._id}/>
             problems = []
         a(<div key={m._id + ":" + m.type}>
-            <div className = {props.material.type == 'topic' && styles.bigText}>
+            <div className = {if props.material.type == 'topic' then styles.bigText}>
                 <Material material={m} simple={props.simple}/>
             </div>
         </div>)
