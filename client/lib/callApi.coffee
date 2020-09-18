@@ -15,7 +15,8 @@ export callWsApiWithBody = (endpoint, cb) ->
             ws = new WebSocket(WS_API_URL + endpoint)
             ws.onmessage = (msg) ->
                 cb msg.data
-            ws.onclose = wsCloseListener
+            ws.onclose = ->
+                setTimeout wsCloseListener, 20 * 1000
             timeout = setInterval ->
                   if not hasMementoKey(endpoint)
                       clearInterval(timeout)
