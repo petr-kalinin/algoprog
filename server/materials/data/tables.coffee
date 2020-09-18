@@ -31,7 +31,7 @@ getTreeTitle = (table) ->
     else
         return "Уровни " + tables.join(", ")
 
-export allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "10", "main", "reg", "roi"]
+export allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "main", "reg", "roi"]
 
 export default tables = () ->
     groups =
