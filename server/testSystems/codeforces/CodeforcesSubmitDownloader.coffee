@@ -126,7 +126,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         for submit in submits
             if submit.contestId != +@contest
                 throw "Strange submit: found contest #{submit.contestId}, expected #{@contest}"
-            if submit.author.members[0].handle != @username
+            if submit.author.members[0].handle.toLowerCase() != @username.toLowerCase()
                 throw "Strange submit: found username  #{submit.author.members[0].handle}, expected #{@username}"
             if submit.problem.index != @problem
                 logger.info "Skipping submit #{submit.id} because it is for a different problem: #{submit.problem.index} vs #{@problem}"
