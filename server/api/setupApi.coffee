@@ -51,6 +51,8 @@ import TableResults from '../models/TableResults'
 import User from '../models/user'
 import UserPrivate from '../models/UserPrivate'
 
+import {addMongooseCallback} from '../mongo/MongooseCallbackManager'
+
 import getTestSystem from '../testSystems/TestSystemRegistry'
 import {LoggedCodeforcesUser} from '../testSystems/Codeforces'
 
@@ -447,6 +449,18 @@ export default setupApi = (app) ->
         submits = await awaitAll(submits)
         res.json(submits)
 
+    app.ws '/wsapi/submits/:user/:problem', (ws, req, next) ->
+        addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
+            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+                return
+            submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
+            submits = submits.map((submit) -> submit.toObject())
+            if not req.user?.admin
+                submits = submits.map(hideTests)
+            submits = submits.map(expandSubmit)
+            submits = await awaitAll(submits)
+            ws.send JSON.stringify submits
+
     app.get '/api/submitsForFindMistake/:user/:findMistake', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
@@ -458,6 +472,18 @@ export default setupApi = (app) ->
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
         res.json(submits)
+
+    app.ws '/wsapi/submitsForFindMistake/:user/:findMistake', (ws, req, next) ->
+        addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
+            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+                return
+            submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+            submits = submits.map((submit) -> submit.toObject())
+            if not req.user?.admin
+                submits = submits.map(hideTests)
+            submits = submits.map(expandSubmit)
+            submits = await awaitAll(submits)
+            ws.send JSON.stringify submits
 
     app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
         submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
@@ -490,6 +516,14 @@ export default setupApi = (app) ->
         result.fullUser = await User.findById(result.user)
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
+
+    app.ws '/wsapi/result/:id', (ws, req, next) ->
+        addMongooseCallback ws, 'update_result', req.user?.userKey(), ->
+            result = (await Result.findById(req.params.id))?.toObject()
+            if not result then return
+            result.fullUser = await User.findById(result.user)
+            result.fullTable = await Problem.findById(result.table)
+            ws.send JSON.stringify result
 
     app.get '/api/userResults/:userId', wrap (req, res) ->
         results = (await Result.findByUser(req.params.userId))

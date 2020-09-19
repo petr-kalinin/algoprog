@@ -41,6 +41,7 @@
     "diff": "^4.0.2",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "express-ws": "^4.0.0",
     "feedparser-promised": "^2.0.1",
     "file-type": "^14.3.0",
     "graphite": "^0.1.4",

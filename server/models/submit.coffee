@@ -5,6 +5,7 @@ import User from './user'
 
 import calculateHashes from '../hashes/calculateHashes'
 import normalizeCode from '../lib/normalizeCode'
+import {runMongooseCallback} from '../mongo/MongooseCallbackManager'
 
 import awaitAll from '../../client/lib/awaitAll'
 import logger from '../log'
@@ -35,7 +36,8 @@ submitsSchema = new mongoose.Schema
     findMistake: String
     
 submitsSchema.methods.upsert = () ->
-    @update(this, {upsert: true, overwrite: true})
+    await @update(this, {upsert: true, overwrite: true})
+    runMongooseCallback 'update_submit', @user
 
 submitsSchema.methods.calculateHashes = () ->
     logger.info("calculating hashes for submit #{@_id}")

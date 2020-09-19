@@ -102,18 +102,23 @@ options =
     urls: (props) ->
         if props?.myUser?._id
             result = {}
+            if not props?.noBestSubmits
+                result.bestSubmits = "bestSubmits/#{props.material._id}"
+            return result
+        return {}
+
+    wsurls: (props) ->
+        if props?.myUser?._id
+            result = {}
             if props?.findMistake
                 result.data = "submitsForFindMistake/#{props.myUser._id}/#{props.findMistake}"
             else
                 result.data = "submits/#{props.myUser._id}/#{props.material._id}"
             if not props?.noBestSubmits
                 result.result = "result/#{props.myUser._id}::#{props.material._id}"
-                result.bestSubmits = "bestSubmits/#{props.material._id}"
             return result
         return {}
 
     allowNotLoaded: true
-
-    timeout: 20 * 1000
 
 export default withMyUser(ConnectedComponent(SubmitList, options))
