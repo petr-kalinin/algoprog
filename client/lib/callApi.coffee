@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch';
-import {hasMementoKey} from './Memento'
+import {hasWsSetKey} from './WebsocketsSet'
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '3000')
 ip = (process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1')
@@ -10,7 +10,7 @@ export callWsApiWithBody = (endpoint, cb) ->
     if window?
         timeout = undefined
         wsCloseListener = () ->
-            if not hasMementoKey(endpoint)
+            if not hasWsSetKey(endpoint)
                 return
             ws = new WebSocket(WS_API_URL + endpoint)
             ws.onmessage = (msg) ->
@@ -18,7 +18,7 @@ export callWsApiWithBody = (endpoint, cb) ->
             ws.onclose = ->
                 setTimeout wsCloseListener, 20 * 1000
             timeout = setInterval ->
-                  if not hasMementoKey(endpoint)
+                  if not hasWsSetKey(endpoint)
                       clearInterval(timeout)
                       ws.close()
               , 5000

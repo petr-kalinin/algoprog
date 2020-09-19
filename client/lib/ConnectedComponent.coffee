@@ -10,7 +10,7 @@ import * as getters from '../redux/getters'
 
 import awaitAll from '../lib/awaitAll'
 
-import {subscribeMemento, unsubscribeMemento} from './Memento'
+import {subscribeWsSet, unsubscribeWsSet} from './WebsocketsSet'
 
 class ErrorBoundary extends React.Component 
     constructor: (props) ->
@@ -82,7 +82,8 @@ export default ConnectedComponent = (Component, options) ->
             @requestDataAndSetTimeout()
 
         componentWillUnmount: ->
-            (unsubscribeMemento(url) for key, url of @wsurls())
+            for key, url of @wsurls()
+                unsubscribeWsSet(url)
             if @timeout
                 console.log "Clearing timeout"
                 clearTimeout(@timeout)
@@ -90,7 +91,8 @@ export default ConnectedComponent = (Component, options) ->
         componentDidUpdate: (prevProps, prevState) ->
             if window?
                 if not deepEqual(options.wsurls?(prevProps), options.wsurls?(@props))
-                    (unsubscribeMemento(url) for key, url of options.wsurls?(prevProps))
+                    for key, url of options.wsurls?(prevProps)
+                        unsubscribeWsSet(url)
                     @requestWsData()
             if not deepEqual(options.urls(prevProps), options.urls(@props))
                 @requestData(options.timeout)
@@ -99,7 +101,8 @@ export default ConnectedComponent = (Component, options) ->
                 @requestData()
 
         requestWsData: () ->
-            (subscribeMemento(url) for key, url of @wsurls())
+            for key, url of @wsurls()
+                subscribeWsSet(url)
             (@props.updateWsData(url) for key, url of @wsurls())
 
         requestData: (timeout) ->
