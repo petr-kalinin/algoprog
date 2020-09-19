@@ -1,4 +1,5 @@
 moment = require('moment')
+iconv = require('iconv-lite')
 
 import { JSDOM } from 'jsdom'
 
@@ -86,7 +87,10 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
     getSource: (runid) ->
         try
             data = await @_getSourceAndResults(runid)
-            return normalizeCode(data.source)
+            source = data.source
+            buf = Buffer.from(source, "utf8")
+            source = iconv.decode(buf, "latin1")
+            return normalizeCode(source)
         catch e
             logger.warn "Can't download source ", runid, e, e.stack
             throw e
