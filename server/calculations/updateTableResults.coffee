@@ -86,4 +86,9 @@ export default updateTableResults = (userId) ->
                 table: table
                 data: tableResults
             await sumTable.upsert()
+        else
+            await TableResults.remove
+                user: userId
+                table: table
+
     logger.info "updated table results for user ", userId
