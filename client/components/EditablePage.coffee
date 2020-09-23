@@ -7,30 +7,22 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 
 import callApi from '../lib/callApi'
 
-copy2clipboardcode = () ->
-    'ondblclick="copyText=this.textContent;navigator.clipboard.writeText(copyText).then(res=>alert(\'Текст успешно скопирован в буфер\')).catch(error=>alert(error));" title="Двойной клик для копирования в буфер"'
+class SimplePage extends React.Component
+    componentDidMount: () =>
+        preses = @dangerEl.querySelectorAll("pre")
+        preses.forEach (pre) ->
+            copy = document.createElement "button"
+            copy.className = "btn btn-secondary"
+            copy.appendChild document.createTextNode "скопировать"
+            copy.onclick = () =>
+                navigator.clipboard.writeText pre.textContent
+            pre.after(copy)
 
-addCopy2Clipboard = (content) ->
-    ind = content.lastIndexOf("sample-tests")
-    if ind > 0
-        part1 = content.substring(0, ind)
-        part2 = content.substring(ind, content.length)
-    else
-        part1 = ''
-        part2 = content
-    ind = part2.indexOf("<pre")
-    while ind >= 0
-        part3 = part2.substring(0, ind + 5)
-        part1 = part1 + part3 + copy2clipboardcode() + " "
-        part2 = part2.substring(ind + 5)
-        ind = part2.indexOf("<pre")
-    part1 + " " + part2
-
-SimplePage = (props) ->
-    <div>
-        <div dangerouslySetInnerHTML={{__html: addCopy2Clipboard(props.material.content)}}>
+    render: () ->
+        <div>
+            <div dangerouslySetInnerHTML={{__html: @props.material.content}} ref={(el) => @dangerEl = el}>
+            </div>
         </div>
-    </div>
 
 class EditablePage extends React.Component
     constructor: (props) ->
