@@ -8,19 +8,29 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import callApi from '../lib/callApi'
 
 class SimplePage extends React.Component
+    updatePreElements: () =>
+        preElements = @statementEl.querySelectorAll("pre")
+        preElements.forEach (preElement) ->
+            copyBtn = document.createElement "button"
+            copyBtn.className = "btn btn-secondary"
+            copyBtnSmall = document.createElement "small"
+            copyBtnSmall.appendChild document.createTextNode "скопировать"
+            copyBtn.appendChild copyBtnSmall
+            copyBtn.onclick = () =>
+                navigator.clipboard.writeText preElement.textContent
+                copyBtnSmall.textContent = "скопировано"
+            preElement.after(copyBtn)
+
     componentDidMount: () =>
-        preses = @dangerEl.querySelectorAll("pre")
-        preses.forEach (pre) ->
-            copy = document.createElement "button"
-            copy.className = "btn btn-secondary"
-            copy.appendChild document.createTextNode "скопировать"
-            copy.onclick = () =>
-                navigator.clipboard.writeText pre.textContent
-            pre.after(copy)
+        @updatePreElements()
+
+    componentDidUpdate: (prevProps) =>
+        if @props.material.content != prevProps.material.content
+            @updatePreElements()
 
     render: () ->
         <div>
-            <div dangerouslySetInnerHTML={{__html: @props.material.content}} ref={(el) => @dangerEl = el}>
+            <div dangerouslySetInnerHTML={{__html: @props.material.content}} ref={(el) => @statementEl = el}>
             </div>
         </div>
 
