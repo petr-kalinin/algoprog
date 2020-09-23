@@ -8,7 +8,7 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import callApi from '../lib/callApi'
 
 copy2clipboardcode = () ->
-    'ondblclick="copyText=this.textContent;textArea=document.createElement(\'textarea\');textArea.textContent=copyText;document.body.append(textArea);textArea.select();document.execCommand(\'copy\');"'
+    'ondblclick="copyText=this.textContent;navigator.clipboard.writeText(copyText).then(res=>alert(\'Текст успешно скопирован в буфер\')).catch(error=>alert(error));" title="Двойной клик для копирования в буфер"'
 
 addCopy2Clipboard = (content) ->
     ind = content.lastIndexOf("sample-tests")
