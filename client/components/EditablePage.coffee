@@ -7,9 +7,28 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 
 import callApi from '../lib/callApi'
 
+copy2clipboardcode = () ->
+    'ondblclick="copyText=this.textContent;textArea=document.createElement(\'textarea\');textArea.textContent=copyText;document.body.append(textArea);textArea.select();document.execCommand(\'copy\');"'
+
+addCopy2Clipboard = (content) ->
+    ind = content.lastIndexOf("sample-tests")
+    if ind > 0
+        part1 = content.substring(0, ind)
+        part2 = content.substring(ind, content.length)
+    else
+        part1 = ''
+        part2 = content
+    ind = part2.indexOf("<pre")
+    while ind >= 0
+        part3 = part2.substring(0, ind + 5)
+        part1 = part1 + part3 + copy2clipboardcode() + " "
+        part2 = part2.substring(ind + 5)
+        ind = part2.indexOf("<pre")
+    part1 + " " + part2
+
 SimplePage = (props) ->
     <div>
-        <div dangerouslySetInnerHTML={{__html: props.material.content}}>
+        <div dangerouslySetInnerHTML={{__html: addCopy2Clipboard(props.material.content)}}>
         </div>
     </div>
 
