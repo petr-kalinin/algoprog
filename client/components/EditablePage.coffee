@@ -12,14 +12,17 @@ class SimplePage extends React.Component
         preElements = @statementEl.querySelectorAll("pre")
         preElements.forEach (preElement) ->
             copyBtn = document.createElement "button"
-            copyBtn.className = "btn btn-secondary"
-            copyBtnSmall = document.createElement "small"
-            copyBtnSmall.appendChild document.createTextNode "скопировать"
-            copyBtn.appendChild copyBtnSmall
+            copyBtn.className = "btn btn-default btn-xs"
+            copyBtn.appendChild document.createTextNode "скопировать"
             copyBtn.onclick = () =>
                 navigator.clipboard.writeText preElement.textContent
-                copyBtnSmall.textContent = "скопировано"
-            preElement.after(copyBtn)
+                copyBtn.textContent = "скопировано"
+                copyBtn.className = "btn btn-success btn-xs"
+                clearSuccess = () => 
+                    copyBtn.className = "btn btn-default btn-xs"
+                    copyBtn.textContent = "скопировать"
+                setTimeout clearSuccess, 1000
+            preElement.before(copyBtn)
 
     componentDidMount: () =>
         @updatePreElements()
