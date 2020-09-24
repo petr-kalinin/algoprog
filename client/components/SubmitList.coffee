@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/lib/Button'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
 
+import { Link } from 'react-router-dom'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 import outcomeToText from '../lib/outcomeToText'
@@ -64,6 +66,13 @@ class SubmitList extends React.Component
         if blockedByTestSystem
             return blockedByTestSystem
         <div>
+            {if @props.noBestSubmits || not @props.findMistake?.pagesCount
+                null
+            else if @props.result?.solved != 0 || @props.me.admin
+                <h4><Link to="/findMistakeProblem/#{@props.material._id}">Найди ошибку</Link></h4>
+            else if @props.result?.solved == 0
+                <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь вы сможете искать ошибки в чужих решениях">Найди ошибку <FontAwesome name="question-circle-o"/></span></h4>
+            }
             {if @props.noBestSubmits 
                 null
             else if @props.bestSubmits?.length
@@ -104,6 +113,8 @@ options =
             result = {}
             if not props?.noBestSubmits
                 result.bestSubmits = "bestSubmits/#{props.material._id}"
+                if props.myUser?._id
+                    result.findMistake = "findMistakeProblemPages/#{props.myUser._id}/#{props.material._id}"
             return result
         return {}
 
