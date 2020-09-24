@@ -12,6 +12,7 @@ import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
 import CheckinsPage from './pages/CheckinsPage'
 import DashboardPage from './pages/DashboardPage'
 import FindMistakeListPage from './pages/FindMistakeListPage'
+import FindMistakeProblemListPage from './pages/FindMistakeProblemListPage'
 import FindMistakePage from './pages/FindMistakePage'
 import FullNewsPage from './pages/FullNewsPage'
 import FullUserPage from './pages/FullUserPage'
@@ -98,6 +99,11 @@ export default [
         path: '/findMistake/:id',
         key: "findMistake",
         component: FindMistakePage,
+    },
+    {
+        path: '/findMistakeProblem/:problemId',
+        key: "findMistakeProblem",
+        component: FindMistakeProblemListPage,
     },
     {
         path: '/findMistakeList',

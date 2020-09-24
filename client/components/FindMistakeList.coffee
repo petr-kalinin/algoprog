@@ -34,7 +34,7 @@ FindMistakeList = (props) ->
 options = 
     urls: (props) ->
         return
-            findMistakes: "findMistakeList/#{props.myUser?._id}/#{props.page}"
+            findMistakes: if props.problem then "findMistakeProblemList/#{props.myUser?._id}/#{props.problem}/#{props.page}" else "findMistakeList/#{props.myUser?._id}/#{props.page}"
             results: "userResultsForFindMistake/#{props.myUser?._id}"
 
 FindMistakeListConnected = withMyUser(ConnectedComponent(FindMistakeList, options))
@@ -54,7 +54,7 @@ class FindMistakeListWithPaginator extends React.Component
     render: () ->
         <div>
             <h1>Найди ошибку</h1>
-            <FindMistakeListConnected page={@state.activePage - 1} />
+            <FindMistakeListConnected page={@state.activePage - 1} problem={@props.problem}/>
             <Pagination
                 activePage={@state.activePage}
                 itemsCountPerPage={@props.data.perPage}
@@ -67,7 +67,7 @@ class FindMistakeListWithPaginator extends React.Component
 pageOptions = {
     urls: (props) ->
         return
-            data: "findMistakePages/#{props.myUser?._id}"
+            data: if props.problem then "findMistakeProblemPages/#{props.myUser?._id}/#{props.problem}" else "findMistakePages/#{props.myUser?._id}"
 }
 
 export default withMyUser(ConnectedComponent(FindMistakeListWithPaginator, pageOptions))

@@ -886,6 +886,23 @@ export default setupApi = (app) ->
             return
         res.json(await FindMistake.findPagesCountForApprovedByNotUser(req.params.user))
 
+    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        mistakes = await FindMistake.findApprovedByNotUserAndProblem(req.params.user, req.params.problem, req.params.page)
+        mistakes = mistakes.map (mistake) -> 
+            expandFindMistake(mistake, req.user?.admin, req.params.user)
+        mistakes = await awaitAll(mistakes)
+        mistakes = (m for m in mistakes when m)
+        res.json(mistakes)
+
+    app.get '/api/findMistakeProblemPages/:user/:problem', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.userKey()
+            res.status(403).send('No permissions')
+            return
+        res.json(await FindMistake.findPagesCountForApprovedByNotUserAndProblem(req.params.user, req.params.problem))
+
     app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
         mistake = await FindMistake.findById(req.params.id)
         mistake = await expandFindMistake(mistake, req.user?.admin, req.user?.userKey())

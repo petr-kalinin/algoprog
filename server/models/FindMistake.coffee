@@ -43,9 +43,21 @@ findMistakeSchema.statics.findApprovedByNotUser = (user, page) ->
         user: {$ne: user}
     }).sort({order: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
 
+findMistakeSchema.statics.findApprovedByNotUserAndProblem = (user, problem, page) ->
+    FindMistake.find({
+        approved: APPROVED
+        user: {$ne: user}
+        problem
+    }).sort({order: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
+
 findMistakeSchema.statics.findPagesCountForApprovedByNotUser = (user) ->
     return 
         pagesCount: Math.ceil(await FindMistake.find({approved: APPROVED, user: {$ne: user}}).countDocuments() / PER_PAGE)
+        perPage: PER_PAGE
+
+findMistakeSchema.statics.findPagesCountForApprovedByNotUserAndProblem = (user, problem) ->
+    return 
+        pagesCount: Math.ceil(await FindMistake.find({approved: APPROVED, user: {$ne: user}, problem}).countDocuments() / PER_PAGE)
         perPage: PER_PAGE
 
 findMistakeSchema.statics.findOneNotApproved = () ->
