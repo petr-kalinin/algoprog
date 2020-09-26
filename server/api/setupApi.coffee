@@ -915,7 +915,6 @@ export default setupApi = (app) ->
     app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
         allowed = false
         user = null
-        console.log req.params.user, req.params.user == "undefined"
         if req.params.user == "undefined"
             allowed = true
         else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
@@ -979,10 +978,13 @@ export default setupApi = (app) ->
         if not mistake
             res.json({})
             return
+        console.log "Try findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
         submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
+        console.log "Mistake submits=", submits.map((s) -> s?)
         submits = submits.map(expandSubmit)
         submits = await awaitAll(submits)
-        res.json({mistake, submits})
+        count = await FindMistake.findNotApprovedCount()
+        res.json({mistake, submits, count})
 
     app.post '/api/setApproveFindMistake/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

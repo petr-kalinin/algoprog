@@ -64,6 +64,9 @@ findMistakeSchema.statics.findOneNotApproved = () ->
     FindMistake.findOne
         approved: UNKNOWN
 
+findMistakeSchema.statics.findNotApprovedCount = () ->
+    FindMistake.find({approved: UNKNOWN}).countDocuments()
+
 findMistakeSchema.index({ problem : 1, user: 1, order: 1 })
 findMistakeSchema.index({ approved : 1 })
 
