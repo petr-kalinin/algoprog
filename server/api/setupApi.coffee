@@ -989,7 +989,7 @@ export default setupApi = (app) ->
             submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
             if not submits[0] || not submits[1]
                 console.log "Bad findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
-                mistake.setBad()
+                await mistake.setBad()
                 continue
             submits = submits.map(expandSubmit)
             submits = await awaitAll(submits)
