@@ -5,6 +5,7 @@ import logger from '../log'
 APPROVED = 2
 DISPROVED = 1
 UNKNOWN = 0
+BAD = -1
 
 PER_PAGE = 20
 
@@ -30,6 +31,11 @@ findMistakeSchema.methods.upsert = () ->
 findMistakeSchema.methods.setApprove = (approve) ->
     logger.info "Approve findMistake #{@_id} -> #{approve}"
     @approved = if approve then APPROVED else DISPROVED
+    @update(this)
+
+findMistakeSchema.methods.setBad = () ->
+    logger.info "Bad findMistake #{@_id}"
+    @approved = BAD
     @update(this)
 
 findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->

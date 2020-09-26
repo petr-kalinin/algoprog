@@ -981,20 +981,21 @@ export default setupApi = (app) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        mistake = await FindMistake.findOneNotApproved()
-        if not mistake
-            res.json({})
+        while true
+            mistake = await FindMistake.findOneNotApproved()
+            if not mistake
+                res.json({})
+                return
+            submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
+            if not submits[0] || not submits[1]
+                console.log "Bad findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
+                mistake.setBad()
+                continue
+            submits = submits.map(expandSubmit)
+            submits = await awaitAll(submits)
+            count = await FindMistake.findNotApprovedCount()
+            res.json({mistake, submits, count})
             return
-        submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
-        if not submits[0] || not submits[1]
-            console.log "Bad findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
-            mistake.setApprove(false)
-            res.json({})
-            return
-        submits = submits.map(expandSubmit)
-        submits = await awaitAll(submits)
-        count = await FindMistake.findNotApprovedCount()
-        res.json({mistake, submits, count})
 
     app.post '/api/setApproveFindMistake/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
