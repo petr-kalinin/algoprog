@@ -478,7 +478,7 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
-        submit0 = await Submit.findById(fm.submit).toObject()
+        submit0 = (await Submit.findById(fm.submit)).toObject()
         submit0 =
             _id: submit0._id
             time: "_orig"
