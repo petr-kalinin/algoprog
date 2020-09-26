@@ -48,6 +48,7 @@ FindMistake = (props) ->
 
     <>
         <h1>Найди ошибку: <Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
+        <p><Link to="/material/about_find_mistake">О поиске ошибок</Link></p>
         <div className={styles.top}>
             <div className={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
             <div className={styles.right + if tooMuchChanges then " text-danger" else ""}>Исправлений: {currentDistance} (можно {maxSubmits})</div>

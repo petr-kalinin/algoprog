@@ -54,6 +54,7 @@ class FindMistakeListWithPaginator extends React.Component
     render: () ->
         <div>
             <h1>Найди ошибку</h1>
+            <p><Link to="/material/about_find_mistake">О поиске ошибок</Link></p>
             <FindMistakeListConnected page={@state.activePage - 1} problem={@props.problem}/>
             <Pagination
                 activePage={@state.activePage}
