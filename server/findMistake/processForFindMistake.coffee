@@ -18,6 +18,8 @@ export default processForFindMistake = (submits) ->
                 throw "Different users in processForFindMistake: #{submit.user} vs #{currentOk.user}"
             if submit.problem != currentOk.problem
                 throw "Different users in processForFindMistake: #{submit.problem} vs #{currentOk.problem}"
+            if submit.outcome in ["DR", "PS", "CT"]
+                continue
             if distance(submit.sourceRaw, currentOk.sourceRaw) < DISTANCE_THRESHOLD and submit.language == currentOk.language
                 problem = await Problem.findById(submit.problem)
                 if not problem
