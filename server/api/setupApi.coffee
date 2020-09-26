@@ -155,9 +155,11 @@ expandFindMistake = (mistake, admin, userKey) ->
     else if userKey
         result = await Result.findByUserAndTable(userKey, mistake.problem)
         allowed = result && result.solved > 0
-    if not allowed
-        return null
     mistake = mistake.toObject()
+    mistake.allowed = allowed
+    if not allowed
+        mistake.allowed = false
+        mistake.source = ""
     mistake.fullProblem = await Problem.findById(mistake.problem)
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
@@ -466,7 +468,20 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+        fm = await FindMistake.findById(req.params.findMistake)
+        submit0 = await Submit.findById(fm.submit).toObject()
+        submit0 =
+            _id: submit0._id
+            time: "_orig"
+            problem: submit0.problem
+            outcome: submit0.outcome
+            source: submit0.source
+            sourceRaw: submit0.sourceRaw
+            language: submit0.language
+            comments: []
+            results: submit0.results
         submits = submits.map((submit) -> submit.toObject())
+        submits.splice(0, 0, submit0)
         if not req.user?.admin
             submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)
@@ -478,12 +493,25 @@ export default setupApi = (app) ->
             if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+            fm = await FindMistake.findById(req.params.findMistake)
+            submit0 = (await Submit.findById(fm.submit)).toObject()
+            submit0 =
+                _id: submit0._id
+                time: "_orig"
+                problem: submit0.problem
+                outcome: submit0.outcome
+                source: submit0.source
+                sourceRaw: submit0.sourceRaw
+                language: submit0.language
+                comments: []
+                results: submit0.results
             submits = submits.map((submit) -> submit.toObject())
+            submits.splice(0, 0, submit0)
             if not req.user?.admin
                 submits = submits.map(hideTests)
             submits = submits.map(expandSubmit)
             submits = await awaitAll(submits)
-            ws.send JSON.stringify submits
+            ws.send JSON.stringify(submits)
 
     app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
         submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
@@ -867,16 +895,51 @@ export default setupApi = (app) ->
         catch
             res.json({status: false})
 
-    app.get '/api/findMistakeList/:user', ensureLoggedIn, wrap (req, res) ->
+    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
+        allowed = false
+        user = null
+        console.log req.params.user, req.params.user == "undefined"
+        if req.params.user == "undefined"
+            allowed = true
+        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
+            allowed = true
+            user = req.params.user
+        if not allowed
+            res.status(403).json({error: 'No permissions'})
+            return
+        mistakes = await FindMistake.findApprovedByNotUser(user, req.params.page)
+        mistakes = mistakes.map (mistake) -> 
+            expandFindMistake(mistake, req.user?.admin, user)
+        mistakes = await awaitAll(mistakes)
+        mistakes = (m for m in mistakes when m)
+        res.json(mistakes)
+
+    app.get '/api/findMistakePages/:user', wrap (req, res) ->
+        allowed = false
+        user = null
+        if req.params.user == "undefined"
+            allowed = true
+        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
+            allowed = true
+            user = req.params.user
+        res.json(await FindMistake.findPagesCountForApprovedByNotUser(user))
+
+    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
-        mistakes = await FindMistake.findApprovedByNotUser(req.params.user)
+        mistakes = await FindMistake.findApprovedByNotUserAndProblem(req.params.user, req.params.problem, req.params.page)
         mistakes = mistakes.map (mistake) -> 
             expandFindMistake(mistake, req.user?.admin, req.params.user)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
+
+    app.get '/api/findMistakeProblemPages/:user/:problem', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.userKey()
+            res.status(403).send('No permissions')
+            return
+        res.json(await FindMistake.findPagesCountForApprovedByNotUserAndProblem(req.params.user, req.params.problem))
 
     app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
         mistake = await FindMistake.findById(req.params.id)

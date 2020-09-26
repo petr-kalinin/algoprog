@@ -163,7 +163,7 @@ class TreeProcessor
         @trees[id] = material
 
     makeTree: (material) ->
-        if material.type in ["label", "epigraph", "link"] and material.content != "/comments"
+        if material.type in ["label", "epigraph", "link"] and material.content != "/comments" and material.content != "/findMistakeList"
             return null
         if material.treeTitle == null
             return null

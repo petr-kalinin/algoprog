@@ -12,6 +12,7 @@ export default root = () ->
         level_about(),
         allNews(),
         link("/comments", "Комментарии"),
+        link("/findMistakeList", "Найди ошибку"),
         mainLevels()...,
         level_reg(),
         level_roi(),
