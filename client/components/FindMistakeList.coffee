@@ -22,8 +22,10 @@ FindMistakeList = (props) ->
     <ListGroup>
         {props.findMistakes.map? (m) ->
             href = "/findMistake/" + m._id
+            if not m.allowed
+                href = undefined
             cl = getClass(props.results?[m._id])
-            <ListGroupItem key={m._id} onClick={window?.goto?(href)} href={href} bsStyle={cl} disabled={!m.allowed}>
+            <ListGroupItem key={m._id} onClick={if m.allowed then window?.goto?(href)} href={href} bsStyle={cl} disabled={!m.allowed}>
                 {m.fullProblem.name}{" "} 
                 ({m.fullProblem.level}, {m.language}){" "} 
                 <small>#{m.hash}</small>

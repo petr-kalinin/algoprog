@@ -467,8 +467,17 @@ export default setupApi = (app) ->
         if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
-        submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
         fm = await FindMistake.findById(req.params.findMistake)
+        allowed = false
+        if req.user.admin 
+            allowed = true
+        else 
+            result = await Result.findByUserAndTable(req.params.user, fm.problem)
+            allowed = result && result.solved > 0
+        if not allowed
+            res.status(403).send('No permissions')
+            return
+        submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
         submit0 = await Submit.findById(fm.submit).toObject()
         submit0 =
             _id: submit0._id
@@ -492,8 +501,16 @@ export default setupApi = (app) ->
         addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
             if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
                 return
-            submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
             fm = await FindMistake.findById(req.params.findMistake)
+            allowed = false
+            if req.user.admin 
+                allowed = true
+            else 
+                result = await Result.findByUserAndTable(req.params.user, fm.problem)
+                allowed = result && result.solved > 0
+            if not allowed
+                return
+            submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
             submit0 = (await Submit.findById(fm.submit)).toObject()
             submit0 =
                 _id: submit0._id
