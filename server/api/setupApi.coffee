@@ -468,7 +468,20 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+        fm = await FindMistake.findById(req.params.findMistake)
+        submit0 = await Submit.findById(fm.submit).toObject()
+        submit0 =
+            _id: submit0._id
+            time: "_orig"
+            problem: submit0.problem
+            outcome: submit0.outcome
+            source: submit0.source
+            sourceRaw: submit0.sourceRaw
+            language: submit0.language
+            comments: []
+            results: submit0.results
         submits = submits.map((submit) -> submit.toObject())
+        submits.splice(0, 0, submit0)
         if not req.user?.admin
             submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)
@@ -480,12 +493,25 @@ export default setupApi = (app) ->
             if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
+            fm = await FindMistake.findById(req.params.findMistake)
+            submit0 = (await Submit.findById(fm.submit)).toObject()
+            submit0 =
+                _id: submit0._id
+                time: "_orig"
+                problem: submit0.problem
+                outcome: submit0.outcome
+                source: submit0.source
+                sourceRaw: submit0.sourceRaw
+                language: submit0.language
+                comments: []
+                results: submit0.results
             submits = submits.map((submit) -> submit.toObject())
+            submits.splice(0, 0, submit0)
             if not req.user?.admin
                 submits = submits.map(hideTests)
             submits = submits.map(expandSubmit)
             submits = await awaitAll(submits)
-            ws.send JSON.stringify submits
+            ws.send JSON.stringify(submits)
 
     app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
         submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
