@@ -15,7 +15,7 @@ class SimplePage extends React.Component
             copyBtn.className = "btn btn-default btn-xs"
             copyBtn.appendChild document.createTextNode "скопировать"
             copyBtn.onclick = () =>
-                navigator.clipboard.writeText preElement.textContent
+                navigator.clipboard.writeText preElement.innerText
                 copyBtn.textContent = "скопировано"
                 copyBtn.className = "btn btn-success btn-xs"
                 clearSuccess = () => 
