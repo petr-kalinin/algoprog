@@ -847,6 +847,13 @@ export default setupApi = (app) ->
         User.updateAllUsers()
         res.send('OK')
 
+    app.get '/api/updateAllAllResults', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        User.updateAllUsers(undefined, true)
+        res.send('OK')
+
     app.get '/api/updateAllCf', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

@@ -187,6 +187,9 @@ usersSchema.statics.search = (searchString) ->
 usersSchema.statics.findAll = () ->
     User.find({dormant: false})
 
+usersSchema.statics.findAllAll = () ->
+    User.find({})
+
 usersSchema.statics.findById = (id) ->
     User.findOne({_id: id})
 
@@ -209,7 +212,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateAchieves()
     logger.info "Updated user", userId
 
-usersSchema.statics.updateAllUsers = (dirtyResults) ->
+usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
     PARALLEL = 5
     tryUpdate = (id) ->
         try
@@ -217,7 +220,11 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
         catch e
             logger.warn("Error while updating user: ", e.message || e, e.stack)
 
-    users = await User.findAll()
+    users = []
+    if alsoDormant
+        users = await User.findAllAll()
+    else
+        users = await User.findAll()
     promises = []
     count = 0
     for u in users
