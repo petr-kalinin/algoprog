@@ -869,22 +869,34 @@ export default setupApi = (app) ->
         catch
             res.json({status: false})
 
-    app.get '/api/findMistakeList/:user/:page', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
+        allowed = false
+        user = null
+        console.log req.params.user, req.params.user == "undefined"
+        if req.params.user == "undefined"
+            allowed = true
+        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
+            allowed = true
+            user = req.params.user
+        if not allowed
             res.status(403).json({error: 'No permissions'})
             return
-        mistakes = await FindMistake.findApprovedByNotUser(req.params.user, req.params.page)
+        mistakes = await FindMistake.findApprovedByNotUser(user, req.params.page)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, req.params.user)
+            expandFindMistake(mistake, req.user?.admin, user)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
 
-    app.get '/api/findMistakePages/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.userKey()
-            res.status(403).send('No permissions')
-            return
-        res.json(await FindMistake.findPagesCountForApprovedByNotUser(req.params.user))
+    app.get '/api/findMistakePages/:user', wrap (req, res) ->
+        allowed = false
+        user = null
+        if req.params.user == "undefined"
+            allowed = true
+        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
+            allowed = true
+            user = req.params.user
+        res.json(await FindMistake.findPagesCountForApprovedByNotUser(user))
 
     app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
