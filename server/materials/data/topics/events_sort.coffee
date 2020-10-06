@@ -8,7 +8,7 @@ import topic from "../../lib/topic"
 export default events_sort = () ->
     return {
         topic: topic("Сортировка событий", "Задачи на сортировку событий", [
-            label("Теории тут пока нет, прослушайте на занятии (попросите меня рассказать)."),
+            label("См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Отрезки на прямой»<br>"),
             problem(112542),
             problem(1755),
             problem(3721),
