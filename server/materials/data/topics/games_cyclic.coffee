@@ -8,7 +8,7 @@ import topic from "../../lib/topic"
 export default games_cyclic = () ->
     return {
         topic: topic("Игры на циклических графах", "Задачи на игры на циклических графах", [
-            label("TODO"),
             problem(3390),
+            problem({testSystem: "codeforces", contest: "787", problem: "C"}),
         ]),
     }
