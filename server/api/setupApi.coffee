@@ -1,3 +1,4 @@
+seedrandom = require('seedrandom')
 React = require('react')
 connectEnsureLogin = require('connect-ensure-login')
 passport = require('passport')
@@ -18,6 +19,7 @@ import ACHIEVES from '../../client/lib/achieves'
 import {getYear} from '../../client/lib/graduateYearToClass'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
+import {levelVersion} from '../calculations/calculateRatingEtc'
 import {getTables, getUserResult} from '../calculations/updateTableResults'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
@@ -1095,4 +1097,73 @@ export default setupApi = (app) ->
         payment.newPaidTill = newPaidTill
         payment.receipt = receipt
         await payment.upsert()
+        res.send('OK')
+
+    app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        for i in [0..14]
+            console.log "User #{i}"
+            newUser = new User(
+                _id: "fake#{i}",
+                name: "Fake Fake",
+                userList: "zaoch",
+                activated: true,
+                lastActivated: new Date()
+                registerDate: new Date()
+            )
+            await newUser.upsert()
+            newRegisteredUser = new RegisteredUser({
+                "fake#{i}",
+                informaticsId: "fake#{i}",
+                "fake#{i}",
+                "fake#{i}",
+                "fake",
+                "",
+                "",
+                ""
+                admin: false
+            })
+            RegisteredUser.register newRegisteredUser, req.body.password, (err) -> 
+
+            problems = await Problem.find {}
+            for problem in problems
+                #console.log "Problem #{problem._id} level #{problem.level}"
+                level = problem.level
+                version = levelVersion(problem.level)
+                #console.log "Problem #{problem._id} version #{version.major} #{version.minor}"
+                solved = true
+                if problem._id == "p2938"
+                    solved = true
+                else if level.slice(0,3) in ["reg", "roi"]
+                    solved = false
+                else if version.major > i
+                    solved = false
+                else if version.minor in ['В', 'Г']
+                    p = 1 - Math.pow(0.5, i - version.major + 1)
+                    if version.minor == 'Г'
+                        p *= 2.0/3
+                    rng = seedrandom("#{problem._id}")
+                    #console.log "Problem #{problem._id} p=#{p}"
+                    if rng() > p
+                        solved = false
+                #console.log "Solved= #{solved}"
+                submit = new Submit
+                    _id: "fake#{i}r#{problem._id}" ,
+                    time: new Date(),
+                    user: "fake#{i}",
+                    userList: "zaoch",
+                    problem: problem._id,
+                    outcome: if solved then "AC" else "IG"
+                    source: "fake"
+                    sourceRaw: "fake"
+                    language: "fake"
+                    comments: []
+                    results: []
+                    force: false
+                    testSystemData: []
+                await submit.upsert()
+            
+            await User.updateUser(newUser._id)
         res.send('OK')

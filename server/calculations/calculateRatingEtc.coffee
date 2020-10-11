@@ -5,7 +5,7 @@ import logger from '../log'
 
 import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
 
-levelVersion = (level) ->
+export levelVersion = (level) ->
     if (level.slice(0,3) == "reg")
         major = 3
         minor = 'А'
