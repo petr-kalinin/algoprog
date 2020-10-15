@@ -8,3 +8,8 @@
     /* strange hack */
     max-width: 10px;
 }
+.stickyHeader {
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+}

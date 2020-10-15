@@ -89,7 +89,7 @@ export class SubmitSource extends React.Component
 
 export SubmitHeader = (props) ->
     [cl, message] = outcomeToText(props.submit.outcome)
-    <div>
+    <div className={(if props.sticky then styles.stickyHeader else "") + " " + (props.className || "")}>
         <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
         <h1>{props.submit.fullUser && <UserName user={props.submit.fullUser}/>}
             {props.admin && " (#{getClassStartingFromJuly(props.submit.fullUser?.graduateYear)}, #{props.submit.fullUser?.level?.current}, #{props.submit.fullUser?.userList}), " || ", "}
@@ -156,7 +156,7 @@ export default class Submit extends React.Component
         [cl, message] = outcomeToText(@props.submit.outcome)
         admin = @props.me?.admin
         <div>
-            {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin}/>}
+            {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin} sticky={@props.headerSticky} className={@props.headerClassName}/>}
             <Tabs defaultActiveKey={1} id="submitTabs">
                 <Tab eventKey={1} title="Исходный код">
                     <SubmitSource submit={@props.submit} />

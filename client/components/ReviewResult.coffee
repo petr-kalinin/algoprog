@@ -62,7 +62,7 @@ class SubmitForReviewResults extends React.Component
     render: () ->
         admin = @props.me?.admin
         <div>
-            <Submit submit={@props.currentSubmit} showHeader me={@props.me} copyTest={@props.copyTest}/>
+            <Submit submit={@props.currentSubmit} showHeader me={@props.me} copyTest={@props.copyTest} headerSticky={true} headerClassName={@props.headerClassName}/>
         </div>
 
 export class SubmitListWithDiff extends React.Component
@@ -335,7 +335,7 @@ export class ReviewResult extends React.Component
 
     render:  () ->
         <div className={@paidStyle()}>
-            {`<SubmitListWithDiff {...this.props} {...this.state} SubmitComponent={SubmitForReviewResults} PostSubmit={SubmitActions} setCurrentSubmit={this.setCurrentSubmit} accept={this.accept} ignore={this.ignore} disqualify={this.disqualify} comment={this.comment} setField={this.setField} setQuality={this.setQuality} toggleBestSubmits={this.toggleBestSubmits} downloadSubmits={this.downloadSubmits} setComment={this.setComment} copyTest={this.copyTest} />`}
+            {`<SubmitListWithDiff {...this.props} {...this.state} SubmitComponent={SubmitForReviewResults} PostSubmit={SubmitActions} setCurrentSubmit={this.setCurrentSubmit} accept={this.accept} ignore={this.ignore} disqualify={this.disqualify} comment={this.comment} setField={this.setField} setQuality={this.setQuality} toggleBestSubmits={this.toggleBestSubmits} downloadSubmits={this.downloadSubmits} setComment={this.setComment} copyTest={this.copyTest} headerClassName={this.paidStyle()}/>`}
         </div>
 
 SubmitsAndSimilarMerger = (props) ->
