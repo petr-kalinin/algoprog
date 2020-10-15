@@ -285,7 +285,10 @@ export class ReviewResult extends React.Component
         if (!user?.paidTill)
             styles.nonpaid
         else if isPaid(user)
-            styles.paid
+            if user.userList == "stud"
+                styles.paid
+            else
+                styles.nonpaid
         else if !isMuchUnpaid(user)
             styles.unpaid
         else
