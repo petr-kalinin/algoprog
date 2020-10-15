@@ -107,8 +107,6 @@ export default class InformaticsUser
         @class = data.id_profile_field_class
         @graduateYear = data.id_profile_field_graduateyear
         if @class?
-            # 'values' for class select are inverted and start from 0 for 11 class
-            @class = 11 - @class
             if @class <= 2
                 @class = null
                 @graduateYear = null
