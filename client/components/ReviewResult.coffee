@@ -71,7 +71,7 @@ export class SubmitListWithDiff extends React.Component
         @state =
             currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
             currentDiff: [undefined, undefined]
-        props.setCurrentSubmit?(@state.currentSubmit)
+        @props.setCurrentSubmit?(@state.currentSubmit)
         @setCurrentSubmit = @setCurrentSubmit.bind this
         @setCurrentDiff = @setCurrentDiff.bind this
 
@@ -80,6 +80,7 @@ export class SubmitListWithDiff extends React.Component
             @setState
                 currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
                 currentDiff: [undefined, undefined]
+            @props.setCurrentSubmit?(@state.currentSubmit)
         else
             newState =
                 currentSubmit: null
@@ -89,6 +90,7 @@ export class SubmitListWithDiff extends React.Component
                     newState.currentSubmit = submit
             if not deepEqual(newState, @state)
                 @setState(newState)
+            @props.setCurrentSubmit?(@state.currentSubmit)
 
     setCurrentSubmit: (submit) ->
         (e) =>
