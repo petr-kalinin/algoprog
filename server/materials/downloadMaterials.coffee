@@ -51,7 +51,13 @@ class Context
 
 
 class SaveProcessor
+    constructor: () ->
+        @ids = {}
+
     process: (material) ->
+        if (material._id of @ids) and (material.type != "problem")
+            throw "Duplicate material id found: #{material._id}"
+        @ids[material._id] = 1
         material = clone(material)
         newSubmaterials = []
         inProblems = false
