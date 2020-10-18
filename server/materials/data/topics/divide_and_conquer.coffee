@@ -12,5 +12,5 @@ export default divide_and_conquer = () ->
             problem({testSystem: "codeforces", contest: "429", problem: "D"}),
             problem({testSystem: "codeforces", contest: "120", problem: "J"}),
             #problem({testSystem: "codeforces", contest: "100273", problem: "A"}),  # TODO
-        ]),
+        ], "divide_and_conquer"),
     }

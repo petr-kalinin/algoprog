@@ -13,7 +13,7 @@ export default kmp = () ->
             problem(99),
             problem(100),
             problem(1943),
-        ]),
+        ], "kmp"),
         advancedProblems: [
             problem(112567),
         ]

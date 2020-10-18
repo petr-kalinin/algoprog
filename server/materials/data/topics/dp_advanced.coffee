@@ -12,7 +12,7 @@ export default dp_advanced = () ->
             problem(1720),
             problem(3898),
             problem(111490),
-        ]),
+        ], "dp_advanced"),
         additionalProblems: [
             problem(11),
             problem(16),

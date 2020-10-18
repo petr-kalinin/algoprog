@@ -13,7 +13,7 @@ export default tertiary_search = () ->
             problem(3859),
             problem({testSystem: "codeforces", contest: "1288", problem: "A"}),
             problem({testSystem: "codeforces", contest: "782", problem: "B"}),
-        ]),
+        ], "tertiary_search"),
         advancedProblems: [
             problem(1116),
             problem({testSystem: "codeforces", contest: "1354", problem: "C1"}),

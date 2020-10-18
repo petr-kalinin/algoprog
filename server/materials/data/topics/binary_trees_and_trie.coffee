@@ -15,7 +15,7 @@ export default binary_trees_and_trie = () ->
             problem(111730),
             problem(3302),
             problem(111729),
-        ]),
+        ], "trees_and_trie"),
         advancedProblems: [
             problem(30),
             problem(1044),

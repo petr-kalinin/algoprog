@@ -10,7 +10,7 @@ export default two_sat = () ->
         topic: topic("Формула включения-исключения", "Задачи на формулу включения-исключения", [
             label("TODO"),
             problem(552),
-        ]),
+        ], "inclusion_exclusion"),
         advancedProblems: [
             problem({testSystem: "codeforces", contest: "585", problem: "E"}),
         ]

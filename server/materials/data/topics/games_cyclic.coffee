@@ -10,5 +10,5 @@ export default games_cyclic = () ->
         topic: topic("Игры на циклических графах", "Задачи на игры на циклических графах", [
             problem(3390),
             problem({testSystem: "codeforces", contest: "787", problem: "C"}),
-        ]),
+        ], "games_cyclic"),
     }

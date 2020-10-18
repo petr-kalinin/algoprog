@@ -11,7 +11,7 @@ export default stack = () ->
             problem(58),
             problem(61),
             problem(50),
-        ]),
+        ], "stack"),
         advancedProblems: [
             problem(51),
             problem(112736),

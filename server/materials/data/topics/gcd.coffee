@@ -10,7 +10,7 @@ export default gcd = () ->
             problem(199),
             problem(27),
             problem(1838),
-        ]),
+        ], "gcd"),
         advancedProblems: [
             problem(1465),
             problem(668),

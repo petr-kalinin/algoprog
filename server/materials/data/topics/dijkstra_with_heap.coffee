@@ -12,7 +12,7 @@ export default dijkstra_with_heap = () ->
             problem(3494),
             problem(1745),
             problem(1087),
-        ]),
+        ], "dijkstra_with_heap"),
         advancedProblems: [
             problem(1967),
         ]

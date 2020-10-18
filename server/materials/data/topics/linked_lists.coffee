@@ -13,7 +13,7 @@ export default linked_lists = () ->
             problem(59),
             problem(2983),
             problem(412),
-        ]),
+        ], "linked_lists"),
         advancedProblems: [
             problem(40),
         ]

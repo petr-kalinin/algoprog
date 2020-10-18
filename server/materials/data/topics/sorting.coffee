@@ -200,7 +200,7 @@ export default sorting = () ->
             problem(1442),
             problem(766),
             problem(1418),
-        ]),
+        ], "sorting"),
         advancedProblems: [
             problem(767),
             problem(3142),

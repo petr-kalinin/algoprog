@@ -97,7 +97,7 @@ export default ifs = () ->
             problem(2959),
             problem(294),
             problem(253),
-        ]),
+        ], "ifs"),
         advancedTopics: [
             contest("Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами", [
                 problem(297),

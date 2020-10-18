@@ -12,7 +12,7 @@ export default advanced_scanline = () ->
             problem(2866),
             problem(111800),
             problem(113809),
-        ]),
+        ], "advanced_scanline"),
         advancedProblems: [
             problem(112817)
         ]

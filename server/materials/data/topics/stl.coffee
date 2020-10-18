@@ -18,7 +18,7 @@ export default stl = () ->
             problem(2782),
             problem(111771),
             problem(3492)
-        ]),
+        ], "stl"),
         advancedProblems: [
             problem(112984),
         ]

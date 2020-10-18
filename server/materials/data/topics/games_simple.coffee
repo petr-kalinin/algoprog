@@ -13,7 +13,7 @@ export default simple_games = () ->
             problem(366),
             problem(3344),
             problem(371),
-        ]),
+        ], "games_simple"),
         advancedProblems: [
             problem(112448),
             problem(112445),

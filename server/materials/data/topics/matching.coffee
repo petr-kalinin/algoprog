@@ -13,7 +13,7 @@ export default matching = () ->
             problem(588),
             problem(4204),
             problem(111663),
-        ]),
+        ], "matching"),
         advancedProblems: [
             problem(111757),
             problem(112571),

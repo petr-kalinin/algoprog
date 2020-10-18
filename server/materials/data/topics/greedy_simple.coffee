@@ -142,7 +142,7 @@ export default arrays = () ->
                 problem(734),
                 problem(1130),
                 problem({testSystem: "codeforces", contest: "777", problem: "B"}),
-            ]),
+            ], "greedy_simple"),
             module25835()
         ],
         advancedProblems: [

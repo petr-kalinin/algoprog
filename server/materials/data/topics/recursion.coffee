@@ -15,7 +15,7 @@ export default recursion = () ->
             problem(113656),
             problem({testSystem: "ejudge", contest: "2001", problem: "2"}),
             problem(3050)
-        ]),
+        ], "recursion"),
         advancedProblems: [
             problem(1414),
             problem(3283),

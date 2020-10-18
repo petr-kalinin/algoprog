@@ -11,5 +11,5 @@ export default sparse_tables = () ->
             label("TODO"),
             problem(113919),
             problem(113550),
-        ]),
+        ], "sparse_tables"),
     }

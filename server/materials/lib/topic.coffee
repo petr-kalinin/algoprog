@@ -2,12 +2,12 @@ import label from './label'
 import MaterialList from "./MaterialList"
 
 class Topic extends MaterialList
-    constructor: (@title, @contestTitle, materials) ->
+    constructor: (@title, @contestTitle, materials, @id) ->
         super(materials)
 
     build: (context, order) ->
         properties = 
-            _id: context.generateId()
+            _id: @id || context.generateId()
             type: "topic"
             title: @title
             treeTitle: @contestTitle

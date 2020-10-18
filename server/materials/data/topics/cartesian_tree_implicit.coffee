@@ -11,7 +11,7 @@ export default cartesian_tree_implicit  = () ->
             label("<p><a href=\"https://e-maxx.ru/algo/treap#7\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/102364/\">теория на хабре</a><br>\nДумаю, еще много чего легко ищется в интернете</p>"),
             problem(2791),
             problem(111881),
-        ]),
+        ], "implicit_cartesian_tree"),
         advancedProblems: [
             problem(571),
         ]

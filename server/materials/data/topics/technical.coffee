@@ -109,7 +109,7 @@ export default technical = () ->
                 problem(848),
                 problem(426),
                 problem(1629),
-            ]),
+            ], "technical"),
             module25629()
         ],
         advancedproblems: [

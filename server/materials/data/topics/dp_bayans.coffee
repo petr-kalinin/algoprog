@@ -16,7 +16,7 @@ export default dp_bayans = () ->
             problem(1124),
             problem(3005),
             problem(2962),
-        ]),
+        ], "dp_bayans"),
         advancedProblems: [
             problem(217),
             problem(1095),

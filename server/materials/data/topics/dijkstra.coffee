@@ -13,7 +13,7 @@ export default dijkstra = () ->
             problem(6),
             problem(7),
             problem(170),
-        ]),
+        ], "dijkstra"),
         advancedProblems: [
             problem(1005),
             problem(2918),

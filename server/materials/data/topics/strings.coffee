@@ -12,7 +12,7 @@ export default strings = () ->
             problem(105),
             problem(106),
             problem(108),
-        ]),
+        ], "strings"),
         advancedTopics: [
             contest("Продвинутые задачи на строки", [
                 problem(107),

@@ -13,7 +13,7 @@ export default long_arithmetics = () ->
             problem(134),
             problem(136),
             problem(139),
-        ]),
+        ], "long_arithmetics"),
         advancedProblems: [
             problem(207),
             problem(145),

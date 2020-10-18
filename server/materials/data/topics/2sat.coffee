@@ -12,7 +12,8 @@ export default two_sat = () ->
             problem({testSystem: "codeforces", contest: "587", problem: "D"}),
             problem({testSystem: "codeforces", contest: "568", problem: "C"}),
             problem({testSystem: "codeforces", contest: "1239", problem: "D"}),
-        ]),
+        ], 
+        "2sat"),
         advancedProblems: [
             problem(113793)
             problem({testSystem: "codeforces", contest: "1215", problem: "F"}),

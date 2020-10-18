@@ -12,7 +12,7 @@ export default dp_hard = () ->
             problem({testSystem: "codeforces", contest: "1083", problem: "E"}),
             problem({testSystem: "codeforces", contest: "319", problem: "C"}),
             problem({testSystem: "codeforces", contest: "311", problem: "B"}),
-        ]),
+        ], "dp_hard"),
         advancedProblems: [
             problem({testSystem: "codeforces", contest: "631", problem: "E"}),
             problem({testSystem: "codeforces", contest: "1388", problem: "E"}),

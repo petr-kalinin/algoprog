@@ -13,7 +13,7 @@ export default hld = () ->
             problem({testSystem: "codeforces", contest: "600", problem: "E"}),
             problem({testSystem: "codeforces", contest: "570", problem: "D"}),
             problem({testSystem: "codeforces", contest: "246", problem: "E"}),
-        ]),
+        ], "hld"),
         advancedProblems: [
             problem({testSystem: "codeforces", contest: "208", problem: "E"}),
             problem({testSystem: "codeforces", contest: "291", problem: "E"}),

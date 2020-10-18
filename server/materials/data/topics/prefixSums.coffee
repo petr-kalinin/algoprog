@@ -11,7 +11,7 @@ export default prefixSums = () ->
             problem(2772),
             problem(3313),
             problem(112735)
-        ]),
+        ], "prefix_sums"),
         advancedProblems: [
             problem(112745),
             problem(2774),

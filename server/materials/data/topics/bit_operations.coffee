@@ -15,7 +15,7 @@ export default bit_operations = () ->
             problem(128),
             problem(111588),
             problem({testSystem: "ejudge", contest: "2001", problem: "4"}),
-        ]),
+        ], "bit_operations"),
         advancedProblems: [
             problem(111521),
             problem(122),

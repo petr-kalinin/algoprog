@@ -16,7 +16,7 @@ export default arrays = () ->
             problem(355),
             problem(357),
             problem(362),
-        ]),
+        ], "arrays"),
         advancedTopics: [
             contest("Продвинутые задачи на массивы", [
                 problem(1456),

@@ -15,7 +15,7 @@ export default segment_tree = () ->
             problem(3312),
             problem(3321),
             problem(3335),
-        ]),
+        ], "segment_tree"),
         advancedProblems: [
             problem(3320),
             problem(3568),

@@ -15,7 +15,7 @@ export default dp_middle = () ->
             problem(545),
             problem(208),
             problem(1129),
-        ]),
+        ], "dp_middle"),
         advancedProblems: [
             problem(860),
             problem(3717),

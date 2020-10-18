@@ -12,5 +12,5 @@ export default cartesian_tree = () ->
             problem(2782),
             problem(1363),
             problem(2790),
-        ])
+        ], "cartesian_tree")
     }

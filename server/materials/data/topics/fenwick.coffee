@@ -14,7 +14,7 @@ export default fenwick = () ->
             problem(3568),
             problem(3013),
             problem(111778),
-        ]),
+        ], "fenwick"),
         advancedProblems: [
             problem(113556),
             problem(1049),

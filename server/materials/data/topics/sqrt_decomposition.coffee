@@ -16,7 +16,7 @@ export default sqrt_decomposition = () ->
                 </p>"""),
             problem(934),
             problem(1361),
-        ]),
+        ], "sqrt_decompositiom"),
         advancedProblems: [
             problem(113099),
             problem({testSystem: "codeforces", contest: "617", problem: "E"}),

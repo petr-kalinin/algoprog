@@ -13,7 +13,7 @@ export default advanced_numbers = () ->
             problem(4188),
             problem(3880),
             problem(1133),
-        ]),
+        ], "advanced_numbers"),
         advancedProblems: [
             problem(3887),
             problem(111597),

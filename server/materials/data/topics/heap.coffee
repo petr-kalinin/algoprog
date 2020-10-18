@@ -12,7 +12,7 @@ export default heap = () ->
             problem(755),
             problem(756),
             problem(489),
-        ]),
+        ], "heap"),
         advancedProblems: [
             problem(3350),
             problem(1207),

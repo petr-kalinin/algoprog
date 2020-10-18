@@ -126,7 +126,7 @@ export default two_pointers = () ->
             problem(2827),
             problem(111975),
             problem({testSystem: "codeforces", contest: "1354", problem: "B"}),
-        ]),
+        ], "two_pointers"),
         advancedProblems: [
             problem(111493),
             problem(111634),

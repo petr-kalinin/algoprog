@@ -13,7 +13,7 @@ export default dsu = () ->
             problem(1362),
             problem(1376),
             problem(185),
-        ]),
+        ], "dsu"),
         advancedProblems: [
             problem(2786),
             problem(111749),

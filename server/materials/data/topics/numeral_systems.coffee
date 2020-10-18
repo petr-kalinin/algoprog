@@ -14,7 +14,7 @@ export default numeral_systems = () ->
             problem(47),
             problem(1367),
             problem(46),
-        ]),
+        ], "numeral_systems"),
         advancedProblems: [
             problem(245),
             problem(111584)

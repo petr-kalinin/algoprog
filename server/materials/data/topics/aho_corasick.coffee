@@ -10,7 +10,7 @@ export default aho_corasick = () ->
         topic: topic("Алгоритм Ахо-Корасик", "Задачи на Ахо-Корасик", [
             label("<p>См. <a href=\"https://e-maxx.ru/algo/aho_corasick\">теорию на e-maxx</a>.</p>"),
             problem(111732),
-        ]),
+        ], "aho"),
         advancedProblems: [
             problem(2881),
         ]

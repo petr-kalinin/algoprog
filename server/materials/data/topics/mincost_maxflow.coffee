@@ -13,5 +13,5 @@ export default mincost_maxflow = () ->
             problem({testSystem: "codeforces", contest: "863", problem: "F"}),
             problem({testSystem: "codeforces", contest: "818", problem: "G"}),
             problem({testSystem: "codeforces", contest: "1187", problem: "G"}),
-        ])
+        ], "mincost_maxflow")
     }

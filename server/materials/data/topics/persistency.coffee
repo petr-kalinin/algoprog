@@ -14,5 +14,5 @@ export default persistency = () ->
             problem(2980)
             problem(111614)
             problem({testSystem: "codeforces", contest: "1000", problem: "F"}),
-        ]),
+        ], "persistency"),
     }

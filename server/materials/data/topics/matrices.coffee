@@ -10,5 +10,5 @@ export default matrices = () ->
         topic: topic("Матрицы и их применение к ДП", "Задачи на матрицы", [
             label("<p>См.\n<a href=\"https://e-maxx.ru/algo/linear_systems_gauss\">теорию по методу Гаусса на e-maxx</a>. Теории по применению матриц к ДП в удобоваримом виде я не нашел.\n</p>"),
             problem(76),
-        ])
+        ], "matrices")
     }

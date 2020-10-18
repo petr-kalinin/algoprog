@@ -12,7 +12,7 @@ export default lca = () ->
             problem(111796),
             problem(111711),
             problem(111894)
-        ]),
+        ], "lca"),
         advancedProblems: [
             problem(724)
         ]

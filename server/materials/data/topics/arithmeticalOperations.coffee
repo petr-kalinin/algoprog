@@ -54,7 +54,7 @@ export default arithmeticalOperations = () ->
             problem(2947),
             problem(2951),
             problem(2952),
-        ]),
+        ], "arithmetical_operations"),
         advancedTopics: [
             topic("Вещественные числа", null, [
                 label("Если вы еще не решали задачи на вещественные числа из уровня 1Б, то прочитайте там теорию и прорешайте все эти задачи. Там есть тонкости, которые обязательно надо знать."),

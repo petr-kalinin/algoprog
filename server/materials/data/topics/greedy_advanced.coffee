@@ -15,7 +15,7 @@ export default greedy_2 = () ->
             problem(411),
             problem(1744),
             problem(2978),
-        ]),
+        ], "greedy_advanced"),
         advancedProblems: [
             problem(1987),
             problem(1782),

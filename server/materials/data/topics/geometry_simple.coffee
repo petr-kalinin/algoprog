@@ -48,7 +48,7 @@ export default geometry_simple = () ->
             problem(279),
             problem(280),
             problem(433),
-        ]),
+        ], "geometry_simple"),
         advancedProblems: [
             problem(1350),
             problem(435),

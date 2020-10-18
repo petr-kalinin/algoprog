@@ -201,7 +201,7 @@ export default arrays = () ->
             problem(915),
             problem(206),
             problem(2998),
-        ]),
+        ], "dp_simple"),
         advancedProblems: [
             problem(944),
             problem(2999),

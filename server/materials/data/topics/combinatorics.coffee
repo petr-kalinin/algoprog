@@ -17,7 +17,7 @@ export default combinatorics = () ->
             problem(194),
             problem(190),
             problem(192),
-        ]),
+        ], "combinatorics"),
         advancedProblems: [
             problem(2517),
             problem(86)

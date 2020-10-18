@@ -68,7 +68,7 @@ export default backtrack = (count) -> () ->
             problem(91),
             problem(485),
             problem(1182),
-        ]),
+        ], "backtrack"),
         advancedTopics: [
             contest("#{star}Продвинутые задачи на рекурсивный перебор", [
                 problem(157),
@@ -79,7 +79,7 @@ export default backtrack = (count) -> () ->
                 problem(158),
                 problem(159),
             ]),
-            module16828()       
+            module16828()
         ]
         count: count
     }

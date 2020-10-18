@@ -12,5 +12,5 @@ export default grundy = () ->
             problem(369),
             problem(905),
             problem(2916),
-        ])
+        ], "grundy")
     }

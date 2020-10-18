@@ -10,7 +10,7 @@ export default primes = () ->
             problem(310),
             problem(623),
             problem(973),
-        ]),
+        ], "primes"),
         advancedProblems: [
             problem(152),
             problem(584),
