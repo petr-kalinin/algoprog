@@ -125,9 +125,11 @@ class SubmitForm extends React.Component
                     message: "Неопознанная ошибка"
         newState = {
             @state...
+            wasFile: false
             submit: data.submit
         }
         @setState(newState)
+        document.getElementById("file").value = ""
 
     render: () ->
         if not @props.myUser?._id
