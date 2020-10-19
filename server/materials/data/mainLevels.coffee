@@ -1,5 +1,7 @@
 seedrandom = require('seedrandom')
 
+import isContestRequired from '../../../client/lib/isContestRequired'
+
 import label from "../lib/label"
 import level from "../lib/level"
 import contest from "../lib/contest"
@@ -225,6 +227,21 @@ contestsFromAdvancedProblems = (id, problems) ->
         throw "Bad idx: #{idx}, #{problems.length}"
     return result
 
+requiredNote = (topics) ->
+    allRequired  = true
+    for topic in topics
+        t = topic()
+        if t.title 
+            hasProblems = false
+            for m in t.submaterials || []
+                if m?()?.testSystem
+                    hasProblems = true
+            if hasProblems
+                allRequired = allRequired and isContestRequired(t.title)
+    if not allRequired
+        return " (кроме контестов со звездочкой)"
+    return ""
+
 minorLevel = (generator, id) ->
     allTopics = []
     topicsCount = 0
@@ -252,7 +269,7 @@ minorLevel = (generator, id) ->
         return null
     return {
         level: level(id, [
-                label("<p>Чтобы перейти на следующий уровень, надо решить все задачи.</p>"),
+                label("<p>Чтобы перейти на следующий уровень, надо решить все задачи#{requiredNote(allTopics)}.</p>"),
                 allTopics...
             ]),
         advancedTopics: allAdvancedTopics
@@ -274,7 +291,7 @@ majorLevel = (generator, id) ->
     advancedTopics = [(levelA?.advancedTopics || [])..., (levelB?.advancedTopics || [])..., contestsFromAdvancedProblems(id, advancedProblems)...]
     if advancedTopics.length != 0
         subLevels.push level("#{id}В", [
-            label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум половину задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),
+            label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум половину задач</b>#{requiredNote(advancedTopics)}. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),
             advancedTopics...
         ])
     if "#{id}Г" of ADDITIONAL_LEVELS
