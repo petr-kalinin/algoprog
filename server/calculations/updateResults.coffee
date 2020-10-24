@@ -88,7 +88,7 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
             continue  # we might have a future AC
         else if submit.outcome == "PS" or submit.outcome == "CT"
             ps = 1
-        else if submit.outcome != "CE"
+        else if submit.outcome != "CE" and solved == 0
             attempts++
     logger.debug "updated result ", userId, problemId, findMistake, solved, ok, ps, attempts, ignored, lastSubmitId
     result = new Result
