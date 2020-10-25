@@ -11,6 +11,7 @@ import AllCommentsPage from './pages/AllCommentsPage'
 import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
 import CheckinsPage from './pages/CheckinsPage'
 import DashboardPage from './pages/DashboardPage'
+import EditUserPage from './pages/EditUserPage'
 import FindMistakeListPage from './pages/FindMistakeListPage'
 import FindMistakeProblemListPage from './pages/FindMistakeProblemListPage'
 import FindMistakePage from './pages/FindMistakePage'
@@ -49,6 +50,11 @@ export default [
         path: '/user/:id',
         key: "user",
         component: FullUserPage,
+    },
+    {
+        path: '/edituser/:id',
+        key: "edituser",
+        component: EditUserPage,
     },
     {
         path: '/table/:userList/:id',

@@ -213,6 +213,7 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.post '/api/user/:id/set', ensureLoggedIn, wrap (req, res) ->
+        # can't allow admins as we use req.user.* below
         if ""+req.user?.userKey() != ""+req.params.id
             res.status(403).send('No permissions')
             return

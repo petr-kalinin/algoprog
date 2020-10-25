@@ -4,11 +4,11 @@ moment = require('moment')
 deepEqual = require('deep-equal')
 
 import Button from 'react-bootstrap/lib/Button'
+import { Link } from 'react-router-dom'
 
 import callApi from '../lib/callApi'
 
 import CfStatus from './CfStatus'
-import EditingUser from './EditUser'
 import EditingUserForAdmin from './EditUserForAdmin'
 import UserName from './UserName'
 import {BigAchieves} from './Achieves'
@@ -18,17 +18,6 @@ import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 export default class UserBadge extends React.Component
     constructor: (props) ->
         super(props)
-        @state = @startState(props)
-        @reload = @reload.bind(this)
-
-
-    startState: (props) ->
-        return
-            editing: false
-
-    reload: () ->
-        await @setState editing:!@state.editing
-        @props.handleReload()
 
     render: () ->
         cls = getClassStartingFromJuly(@props.user.graduateYear)
@@ -53,12 +42,8 @@ export default class UserBadge extends React.Component
                         <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                 }
                 {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
-                {if @state.editing
-                    <div>
-                        <EditingUser {...this.props} handleReload = {@reload}/>
-                    </div>
-                else if +@props.user._id == @props.me?.informaticsId
-                    <Button variant="light" bsSize="small" onClick = {@reload}>Редактировать профиль</Button>}
+                {if +@props.user._id == @props.me?.informaticsId
+                    <Link to="/edituser/#{@props.user._id}">Редактировать профиль</Link>}
             </blockquote>
             { @props.explain &&
                 <a href = {"/user/" + @props.user._id} target = "_blank">Полные результаты</a> }
