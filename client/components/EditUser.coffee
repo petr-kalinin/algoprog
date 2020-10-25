@@ -46,6 +46,7 @@ class EditingUser extends React.Component
         @state = @startState(props)
         @handleNewNameChange = @handleNewNameChange.bind(this)
         @handleCfChange = @handleCfChange.bind(this)
+        @handleTelegramChange = @handleTelegramChange.bind(this)
         @handleClassChange = @handleClassChange.bind(this)
         @handleInformaticsPasswordChange = @handleInformaticsPasswordChange.bind(this)
         @handleCodeforcesUsernameChange = @handleCodeforcesUsernameChange.bind(this)
@@ -68,6 +69,7 @@ class EditingUser extends React.Component
             newPassOne: ''
             newPassTwo: ''
             informaticsPassword: ''
+            newTelegram: props.user.telegram || ''
             loading: false
             informaticsError: false
             informaticsLoading: false
@@ -129,6 +131,7 @@ class EditingUser extends React.Component
                 newName: @state.newName
                 codeforcesUsername: @state.codeforcesUsername
                 codeforcesPassword: @state.codeforcesPassword
+                telegram: @state.newTelegram
                 )
             if (z.passError)
                 await @setState passError: true
@@ -140,6 +143,9 @@ class EditingUser extends React.Component
 
     handleCfChange: (event) ->
         await @setState cfLogin: event.target.value
+
+    handleTelegramChange: (event) ->
+        await @setState newTelegram: event.target.value
 
     handleCodeforcesUsernameChange: (event)->
         await @setState codeforcesUsername: event.target.value
@@ -251,6 +257,16 @@ class EditingUser extends React.Component
                                 onChange = {@handleInformaticsPasswordChange}
                                 onBlur = {@updateInformatics}
                                 errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему аккаунту на informatics</a></div>]}
+                            />
+                    </div>
+                    <div>
+                        Аккаунт в Телеграм:
+                            <Input
+                                type = "text"
+                                name = "newTelegram"
+                                value = {@state.newTelegram}
+                                onChange = {@handleTelegramChange}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <h3>Данные codeforces для отправки решений </h3>

@@ -254,6 +254,8 @@ export default setupApi = (app) ->
         else
             await user.setGraduateYear(undefined)
         await user.updateName newName
+        if req.body.telegram
+            await user.setTelegram req.body.telegram
         if req.body.codeforcesPassword
             await LoggedCodeforcesUser.getUser(req.body.codeforcesUsername, req.body.codeforcesPassword)
             for registeredUser in registeredUsers
@@ -377,9 +379,11 @@ export default setupApi = (app) ->
             calendar: calendar?.toObject()
 
         userPrivate = {}
+        tg = {}
         if req.user?.admin or ""+req.user?.userKey() == ""+userId
             userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
-        result.user = {result.user..., userPrivate...}
+            tg = (await User.findTelegram(userId))?.toObject() || {}
+        result.user = {result.user..., userPrivate..., tg...}
         res.json(result)
 
     app.get '/api/users/:userList', wrap (req, res) ->

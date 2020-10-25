@@ -48,6 +48,7 @@ usersSchema = new mongoose.Schema
     dormant: { type: Boolean, default: false },
     registerDate: Date,
     achieves: [String]
+    telegram: { type: String, select: false }
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -159,6 +160,11 @@ usersSchema.methods.setActivated = (activated) ->
     await @update({$set: {"activated": activated}})
     @activated = activated
 
+usersSchema.methods.setTelegram = (telegram) ->
+    logger.info "setting telegram ", @_id, telegram
+    await @update({$set: {telegram}})
+    @telegram = telegram
+
 compareLevels = (a, b) ->
     if a.length != b.length
         return if a.length > b.length then -1 else 1
@@ -195,6 +201,9 @@ usersSchema.statics.findById = (id) ->
 
 usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
+
+usersSchema.statics.findTelegram = (id) ->
+    User.findById(id)?.select("+telegram")
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     logger.info "Updating user", userId
@@ -270,6 +279,9 @@ usersSchema.index
 usersSchema.index
     achieves: 1
     ratingSort: -1
+
+usersSchema.index
+    telegram: 1
 
 User = mongoose.model('Users', usersSchema);
 
