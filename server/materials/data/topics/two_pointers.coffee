@@ -19,7 +19,7 @@ module16344 = () ->
                 s:=s+a[j]; // в переменной s подсчитываем текущую сумму
                 if s&gt;k then begin
                     // writeln(j); // этот вывод пригодится дальше
-                    if j-i+1&gt;min then min:=j-i+1;
+                    if j-i+1&lt;min then min:=j-i+1;
                     break;
                 end;
             end;
@@ -34,7 +34,7 @@ module16344 = () ->
             for j:=j to n do begin // цикл начинается с j!
                 s:=s+a[j]; 
                 if s&gt;k then begin
-                    if j-i+1&gt;min then min:=j-i+1;
+                    if j-i+1&lt;min then min:=j-i+1;
                     break;
                 end;
             end;
