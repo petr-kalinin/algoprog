@@ -3,7 +3,7 @@ import Problem from '../models/problem'
 import Result from '../models/result'
 import logger from '../log'
 
-import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
+import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK, FM_CONST} from './ratingConstants'
 
 export levelVersion = (level) ->
     if (level.slice(0,3) == "reg")
@@ -61,6 +61,7 @@ export default calculateRatingEtc = (user) ->
 
     submits = await Submit.findByUser(user._id)
     results = await Result.findByUser(user._id)
+    fmResults = await Result.findByUserWithFindMistakeSet(user._id)
     weekSolved = {}
     weekOk = {}
     wasSubmits = {}
@@ -81,7 +82,7 @@ export default calculateRatingEtc = (user) ->
         if not level  # this will happen, in particular, if this is not a problem result
             continue
         week = weekByTime(r.lastSubmitTime)
-        if r.solved == 1
+        if r.solved == 1 
             inc(weekSolved, week)
             rating += levelScore(level)
             activity += activityScore(level, r.lastSubmitTime)
@@ -92,6 +93,15 @@ export default calculateRatingEtc = (user) ->
             activity -= 2 * activityScore(level, r.lastSubmitTime)
         else if r.ok == 1
             inc(weekOk, week)
+
+    for r in fmResults
+        level = await findProblemLevel(r.table)
+        if not level  # this will happen, in particular, if this is not a problem result
+            continue
+        week = weekByTime(r.lastSubmitTime)
+        if r.solved == 1 or r.ok == 1
+            rating += levelScore(level) * FM_CONST
+            activity += activityScore(level, r.lastSubmitTime) * FM_CONST
 
     for level in ["1А", "1Б"]
         if (!user.level.base) or (level >= user.level.base)

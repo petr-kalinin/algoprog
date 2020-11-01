@@ -114,7 +114,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     await removeDuplicateSubmits(userId, problemId)
     submits = await Submit.findByUserAndProblem(userId, problemId)
     fmResults = await updateResultsForFindMistake(userId, problemId, dirtyResults)
-    await makeProblemResult(userId, problemId, submits, fmResults)
+    result = await makeProblemResult(userId, problemId, submits, fmResults)
     await processForFindMistake(submits)
     return result
 
@@ -139,6 +139,7 @@ makeProblemResult = (userId, problemId, submits, fmResults) ->
     result = makeResultFromSubmitsList(submits, userId, problemId)
     result.subFindMistakes = await makeSubFindMistakes(problemId, fmResults) 
     await result.upsert()
+    return result
 
 makeSubFindMistakes = (problemId, results) ->
     result = 

@@ -63,11 +63,6 @@ resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
         user: userId
         findMistake: {$ne: null}
 
-resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
-    return Result.find
-        user: userId
-        findMistake: {$ne: null}
-
 resultsSchema.statics.findByUserAndTable = (userId, tableId) ->
     key = userId + "::" + tableId
     return Result.findOne
