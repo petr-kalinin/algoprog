@@ -120,7 +120,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
 
 updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
     if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
-        return
+        return []
     submits = await Submit.findByUserAndProblemWithFindMistakeSet(userId, problemId)
     submitsByFindMistake = {}
     for submit in submits
@@ -146,7 +146,7 @@ makeSubFindMistakes = (problemId, results) ->
         ok: 0
         wa: 0
         none: 0
-    for r in results
+    for r in results || []
         if r.ok > 0 or r.solved > 0
             result.ok++
         else if r.attempts > 0

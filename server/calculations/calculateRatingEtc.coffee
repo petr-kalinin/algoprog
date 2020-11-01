@@ -47,7 +47,7 @@ activityScore = (level, date) ->
 
 export default calculateRatingEtc = (user) ->
     start = new Date()
-    console.log "calculate rating etc ", user._id
+    logger.info "calculate rating etc ", user._id
     thisStart = new Date(startDayForWeeks[user.userList])
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
@@ -135,4 +135,4 @@ export default calculateRatingEtc = (user) ->
         ratingSort: if activity > ACTIVITY_THRESHOLD then rating else -1/(rating+1),
         active: if activity > ACTIVITY_THRESHOLD then 1 else 0
     }
-    console.log "calculated rating etc ", user._id, " spent time ", (new Date()) - start
+    logger.info "calculated rating etc ", user._id, " spent time ", (new Date()) - start
