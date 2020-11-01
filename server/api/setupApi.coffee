@@ -255,9 +255,9 @@ export default setupApi = (app) ->
             await user.setGraduateYear(undefined)
         await user.updateName newName
         if req.body.codeforcesPassword
-            await LoggedCodeforcesUser.getUser(req.body.codeforcesUsername, req.body.codeforcesPassword)
+            cfUser = await LoggedCodeforcesUser.getUser(req.body.codeforcesUsername, req.body.codeforcesPassword)
             for registeredUser in registeredUsers
-                    await registeredUser.setCodeforces(req.body.codeforcesUsername, req.body.codeforcesPassword)
+                    await registeredUser.setCodeforces(cfUser.handle, req.body.codeforcesPassword)
         if not req.body.codeforcesUsername
             req.user.setCodeforces(undefined, undefined)
         await User.updateUser(user._id, {})
