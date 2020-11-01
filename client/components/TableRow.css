@@ -1,6 +1,8 @@
 .res {
     font-family: monospace;
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .full {
@@ -16,4 +18,10 @@
 }
 .subtableHeader {
     white-space: normal;
+}
+.subFindMistakes {
+    font-size: 6;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
 }

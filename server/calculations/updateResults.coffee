@@ -1,10 +1,11 @@
 import processForFindMistake from '../findMistake/processForFindMistake'
 
-import User from '../models/user'
+import FindMistake from '../models/FindMistake'
 import Hash from '../models/Hash'
-import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
+import Table from '../models/table'
+import User from '../models/user'
 
 import addTotal from '../../client/lib/addTotal'
 import isContestRequired from '../../client/lib/isContestRequired'
@@ -112,10 +113,8 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
             return result
     await removeDuplicateSubmits(userId, problemId)
     submits = await Submit.findByUserAndProblem(userId, problemId)
-    result = makeResultFromSubmitsList(submits, userId, problemId)
-    await result.upsert()
-    await updateResultsForFindMistake(userId, problemId, dirtyResults)
-    # Warning: processForFindMistake reverses submits array
+    fmResults = await updateResultsForFindMistake(userId, problemId, dirtyResults)
+    await makeProblemResult(userId, problemId, submits, fmResults)
     await processForFindMistake(submits)
     return result
 
@@ -129,9 +128,31 @@ updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
         if not (fm of submitsByFindMistake)
             submitsByFindMistake[fm] = []
         submitsByFindMistake[fm].push(submit)
+    allResults = []
     for fm, submits of submitsByFindMistake
         result = makeResultFromSubmitsList(submits, userId, problemId, fm)
         await result.upsert()
+        allResults.push result
+    return allResults
+
+makeProblemResult = (userId, problemId, submits, fmResults) ->
+    result = makeResultFromSubmitsList(submits, userId, problemId)
+    result.subFindMistakes = await makeSubFindMistakes(problemId, fmResults) 
+    await result.upsert()
+
+makeSubFindMistakes = (problemId, results) ->
+    result = 
+        ok: 0
+        wa: 0
+        none: 0
+    for r in results
+        if r.ok > 0 or r.solved > 0
+            result.ok++
+        else if r.attempts > 0
+            result.wa++
+    totalFm = (await FindMistake.findApprovedByProblemAndNotUser(problemId, null)).length
+    result.none = totalFm - result.ok - result.wa
+    return result
 
 export default updateResults = (user, dirtyResults) ->
     logger.info "updating results for user ", user

@@ -223,7 +223,12 @@ SubmitActions = (props) ->
             admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars/>
             }
         </div>}
-        {props.result.findMistake && <Link to="/findMistake/#{props.result.findMistake}">Исходный поиск ошибки</Link>}
+        {props.result.findMistake && 
+            <>
+                <Button onClick={props.downloadSubmits} bsSize="xsmall">re-download submits</Button><br/>
+                <Link to="/findMistake/#{props.result.findMistake}">Исходный поиск ошибки</Link>
+            </>
+        }
     </div>
 
 export class ReviewResult extends React.Component

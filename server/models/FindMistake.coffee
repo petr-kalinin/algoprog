@@ -40,6 +40,7 @@ findMistakeSchema.methods.setBad = () ->
 
 findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
     FindMistake.find
+        approved: APPROVED
         problem: problem
         user: {$ne: user}
 

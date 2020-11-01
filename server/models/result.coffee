@@ -20,6 +20,10 @@ resultsSchema = new mongoose.Schema
     lastSubmitTime: Date
     ignored: Number
     findMistake: String
+    subFindMistakes:
+        ok: Number
+        wa: Number
+        none: Number
 
 resultsSchema.methods.upsert = () ->
     # required: user, table, total, solved, ok, attempts, ignored, lastSubmitId, lastSubmitTime
