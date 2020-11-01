@@ -85,7 +85,6 @@ export default ConnectedComponent = (Component, options) ->
             for key, url of @wsurls()
                 unsubscribeWsSet(url)
             if @timeout
-                console.log "Clearing timeout"
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
