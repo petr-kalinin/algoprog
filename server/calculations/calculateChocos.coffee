@@ -57,6 +57,8 @@ class HalfCleanContestChocoCalculator
         @hcleanContests // 2
         
 export default calculateChocos = (userId) ->
+    start = new Date()
+    logger.info "calculateChocos ", userId
     chocoCalcs = [new FullContestChocoCalculator(), new CleanContestChocoCalculator(), new HalfCleanContestChocoCalculator()]
     tables = await Table.find({})
     for table in tables
@@ -70,4 +72,5 @@ export default calculateChocos = (userId) ->
     res = []
     for calc in chocoCalcs
         res.push(calc.chocos())
+    logger.info "calculated chocos ", userId, " spent time ", (new Date()) - start
     return res

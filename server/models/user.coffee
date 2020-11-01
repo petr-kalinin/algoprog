@@ -197,7 +197,8 @@ usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
-    logger.info "Updating user", userId
+    start = new Date()
+    logger.info ">>Updating user", userId
     await updateResults(userId, dirtyResults)
     await updateTableResults(userId)
     await calculateCalendar(userId)
@@ -210,7 +211,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateLevel()
     await u.updateDormant()
     await u.updateAchieves()
-    logger.info "Updated user", userId
+    logger.info "<<Updated user", userId, " spent time ", (new Date()) - start
 
 usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
     PARALLEL = 5

@@ -75,6 +75,7 @@ export getUserResult = (userId, tables, depth) ->
         total: total
 
 export default updateTableResults = (userId) ->
+    start = new Date()
     logger.info "updating table results for user ", userId
     for table in allTables
         tables = await getTables(table)
@@ -91,4 +92,4 @@ export default updateTableResults = (userId) ->
                 user: userId
                 table: table
 
-    logger.info "updated table results for user ", userId
+    logger.info "updated table results for user ", userId, " spent time ", (new Date()) - start

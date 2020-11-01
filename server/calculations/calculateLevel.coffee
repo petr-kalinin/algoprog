@@ -4,6 +4,8 @@ import logger from '../log'
 import isContestRequired from '../../client/lib/isContestRequired'
 
 export default calculateLevel = (user, baseLevel, lastDate) ->
+    start = new Date()
+    logger.info "calculate level ", user
     for bigLevel in [1..10]
         for smallLevel in ["А", "Б", "В", "Г"]
             tableId = bigLevel + smallLevel
@@ -35,6 +37,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
             else if smallLevel == "Г"
                 needProblem = probNumber * 0.3333
             if (probAc < needProblem) and ((!baseLevel) or (baseLevel <= level))
-                logger.debug "calculated level", user, level
+                logger.info "calculated level", user, level, " spent time ", (new Date()) - start
                 return level
+    logger.info "calculated level", user, "inf spent time ", (new Date()) - start
     return "inf"

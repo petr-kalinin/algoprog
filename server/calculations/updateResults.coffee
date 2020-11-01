@@ -156,6 +156,7 @@ makeSubFindMistakes = (problemId, results) ->
     return result
 
 export default updateResults = (user, dirtyResults) ->
+    start = new Date()
     logger.info "updating results for user ", user
     await updateResultsForTable(user, "main", dirtyResults)
-    logger.info "updated results for user ", user
+    logger.info "updated results for user ", user, " spent time ", (new Date()) - start
