@@ -152,11 +152,13 @@ usersSchema.methods.forceSetUserList = (userList) ->
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
     await @update({$set: {"dormant": dormant}})
+    User.updateUser(@_id)
     @dormant = dormant
 
 usersSchema.methods.setActivated = (activated) ->
     logger.info "setting activated ", @_id, activated
     await @update({$set: {"activated": activated}})
+    User.updateUser(@_id)
     @activated = activated
 
 compareLevels = (a, b) ->
