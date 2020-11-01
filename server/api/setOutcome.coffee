@@ -24,6 +24,10 @@ storeToDatabase = (req, res) ->
         submit.outcome = req.body.result
         submit.force = true
         submit.calculateHashes()
+        comments = await SubmitComment.findBySubmit(req.params.submitId)
+        for c in comments
+            c.outcome = submit.outcome
+            await c.upsert()
     if req.body.comment
         if not (req.body.comment in submit.comments.map(entities.decode))
             comment = entities.encode(req.body.comment)
@@ -31,6 +35,7 @@ storeToDatabase = (req, res) ->
             rndId = Math.floor(Math.random() * 1000000)
             newComment = new SubmitComment
                 _id: "_#{rndId}r#{req.params.submitId}"
+                submit: req.params.submitId
                 problemId: problemId
                 problemName: problem.name
                 userId: submit.user

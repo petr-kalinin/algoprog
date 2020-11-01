@@ -12,6 +12,7 @@ submitCommentsSchema = new mongoose.Schema
     text: String
     time: Date
     outcome: String
+    submit: String
     viewed: { type: Boolean, default: false }
 
 submitCommentsSchema.methods.upsert = () ->
@@ -24,6 +25,10 @@ submitCommentsSchema.methods.upsert = () ->
 submitCommentsSchema.statics.findLastNotViewedByUser = (id) ->
     SubmitComment.find({userId: id, viewed: false, time: {$gt: new Date(2017, 10, 11)}}) \
         .sort({time: -1}).limit(20)
+
+submitCommentsSchema.statics.findBySubmit = (id) ->
+    SubmitComment.find
+        submit: id
 
 submitCommentsSchema.statics.findByUserAndPage = (id, page) ->
     return await SubmitComment.find({userId: id}).skip(page * COMMENTS_PER_PAGE).sort({time: -1}).limit(COMMENTS_PER_PAGE)
