@@ -10,6 +10,8 @@ else
         (process.env.MONGODB_URL || 'mongodb://localhost/') + 'algoprog'
     )
 
+logger.info "Using mongo url #{url}"
+
 ( () ->
     await mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true })
 )().catch((error) ->
