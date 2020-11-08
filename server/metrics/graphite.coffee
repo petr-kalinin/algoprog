@@ -4,7 +4,8 @@ import logger from '../log'
 client = graphite.createClient('plaintext://ije.algoprog.ru:2003/')
 
 instance_number = process.env["INSTANCE_NUMBER"] || "0"
-enabled = process.env["GRAPHITE"]
+enabled = process.env["GRAPHITE"] || process.env["GRAPHITE_PREFIX"]
+PREFIX = process.env["GRAPHITE_PREFIX"] || "algoprog"
 
 export default send = (metrics) ->
     if not enabled
@@ -13,7 +14,7 @@ export default send = (metrics) ->
 
     metrics["instance"] = +instance_number
 
-    prefix = "algoprog.#{instance_number}"
+    prefix = "#{PREFIX}.#{instance_number}"
     metricsWithPrefix = {}
     for key, value of metrics
         metricsWithPrefix["#{prefix}.#{key}"] = value
