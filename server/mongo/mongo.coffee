@@ -14,9 +14,10 @@ logger.info "Using mongo url #{url}"
 
 ( () ->
     await mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true })
-)().catch((error) ->
-    logger.error error
-    process.exit(1)
-)
+)().then(() -> logger.info "Successfully connected to mongo")
+    .catch((error) ->
+        logger.error error
+        process.exit(1)
+    )
 
 export default db = mongoose.connection
