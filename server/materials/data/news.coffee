@@ -3,7 +3,7 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
-        newsItem("Про районную олимпиаду", String.raw"""
+        newsItem("Про Открытую олимпиаду (заочку)", String.raw"""
             <p>Началась <a href='https://olympiads.ru/zaoch/'>Открытая олимпиада школьников (так называемая Заочка)</a>. Очень известная олимпиада, поступательная, но задачи не самые простые. Рекомендую участвовать всем, у кого уровень 3+.</p>
         """),
         newsItem("Про районную олимпиаду", String.raw"""
