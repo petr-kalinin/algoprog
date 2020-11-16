@@ -11,7 +11,7 @@ responseTime = require('response-time')
 StatsD = require('node-statsd')
 
 import setupApi from './api/setupApi'
-import jobs from './cron/cron'
+import scheduleJobs from './cron/cron'
 import download from './lib/download'
 import sleep from './lib/sleep'
 import downloadMaterials from './materials/downloadMaterials'
@@ -92,7 +92,7 @@ start = () ->
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped
         if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == "0")
             logger.info("Starting jobs ", process.env["INSTANCE_NUMBER"])
-            jobs.map((job) -> job.start())
+            scheduleJobs()
         else
             logger.info("Will not start jobs", process.env["INSTANCE_NUMBER"])
 

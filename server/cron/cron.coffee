@@ -1,4 +1,5 @@
-import Cron from 'cron'
+cron = require('node-cron')
+
 import * as downloadSubmits from "./downloadSubmits"
 import * as downloadBlog from './downloadBlog'
 import updateCf from "./updateCf"
@@ -8,28 +9,16 @@ import sendMetrics from './sendMetrics'
 import logger from '../log'
 import User from '../models/user'
 
-#downloadSubmits.runUntilIgnored()
-#downloadSubmits.runAll().catch((e) -> logger.error(e))
-#updateCf().catch((e) -> logger.error(e))
-
 offset = (new Date().getTimezoneOffset()) / 60
 MOSCOW_OFFSET = -3
 nightHour = (3 + MOSCOW_OFFSET - offset - 1) %% 24
 
 logger.info "Will set updateResults to " + nightHour + ":59:58 local time"
 
-jobCT = new Cron.CronJob('*/10 * * * * *', downloadSubmits.runForCT);
-
-jobCf = new Cron.CronJob('0 0 * * * *', updateCf);
-
-jobUpdateResults = new Cron.CronJob('45 46 ' + nightHour + ' * * *', User.updateAllUsers);
-
-jobUpdateBlog = new Cron.CronJob('0 */5 * * * *', downloadBlog.run)
-
-jobSubmitSubmits = new Cron.CronJob("*/2 * * * * *", submitSubmits)
-
-jobSendMetrics = new Cron.CronJob("0 */5 * * * *", sendMetrics)
-
-export default [jobCT, jobCf, jobUpdateResults, jobUpdateBlog, jobSubmitSubmits, jobSendMetrics]
-
-#downloadSubmits.runLast()
+export default scheduleJobs = () ->
+    cron.schedule('*/10 * * * * *', downloadSubmits.runForCT);
+    cron.schedule('0 0 * * * *', updateCf);
+    cron.schedule('45 46 ' + nightHour + ' * * *', User.updateAllUsers);
+    cron.schedule('0 */5 * * * *', downloadBlog.run)
+    cron.schedule("*/2 * * * * *", submitSubmits)
+    cron.schedule("0 */5 * * * *", sendMetrics)
