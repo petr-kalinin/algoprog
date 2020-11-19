@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "concurrently 'npm run build' 'npm run start:server'",
     "start": "npm run build && npm run start:server",
-    "start:server": "supervisor ./build/server/server.bundle.js",
+    "start:server": "nodemon ./build/server/server.bundle.js",
     "build": "webpack --config webpack.config.js"
   },
   "browserslist": "> 0.25%, not dead",
@@ -98,7 +98,6 @@
     "seedrandom": "^3.0.5",
     "sha256": "^0.2.0",
     "source-map-support": "^0.5.16",
-    "supervisor": "^0.12.0",
     "tinycolor2": "^1.4.1",
     "universal-cookie": "^4.0.3",
     "vinyl-source-stream": "^2.0.0",
@@ -117,6 +116,7 @@
     "concurrently": "^5.2.0",
     "css-loader": "^4.0.0",
     "mini-css-extract-plugin": "^0.9.0",
+    "nodemon": "^2.0.4",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^3.0.8",
