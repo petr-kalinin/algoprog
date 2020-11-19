@@ -167,6 +167,9 @@ expandFindMistake = (mistake, admin, userKey) ->
     return mistake
 
 export default setupApi = (app) ->
+    app.get '/api/ping', wrap (req, res) ->
+        res.send('OK')
+
     app.get '/api/forbidden', wrap (req, res) ->
         res.status(403).send('No permissions')
 
