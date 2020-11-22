@@ -55,13 +55,12 @@ app.use(compression())
 
 configurePassport(app, db)
 
-###
-app.use (req, res, next) ->
-    if not req.user?.admin
-        res.status(503).send("На сервере проводятся технические работы. Ожидаемая продолжительность — до часа.")
-        return
-    next()
-###
+if process.env["TECH_WORKS"]
+    app.use (req, res, next) ->
+        if not req.user?.admin
+            res.status(503).send("На сервере проводятся технические работы. Ожидаемая продолжительность — несколько часов.")
+            return
+        next()
 
 setupApi(app)
 
