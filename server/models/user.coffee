@@ -78,13 +78,16 @@ usersSchema.methods.updateDormant = ->
     @update({$set: {dormant: @dormant}})
 
 usersSchema.methods.updateCfRating = ->
+    oldRating = @cf?.rating
     logger.debug "Updating cf rating ", @name
     res = await calculateCfRating this
     logger.debug "Updated cf rating ", @name, res
     if not res
         return
     res.login = @cf.login
-    @update({$set: {cf: res}})
+    await @update({$set: {cf: res}})
+    @cf = res
+    return @cf.rating != oldRating
 
 usersSchema.methods.updateAchieves = (achieves) ->
     logger.info "updating achieves login ", @_id, achieves
@@ -245,8 +248,8 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"
     for u in await User.findAll()
         if u.cf.login
-            await u.updateCfRating()
-            await User.updateUser(u._id, {})
+            if await u.updateCfRating()
+                await User.updateUser(u._id, {})
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 
