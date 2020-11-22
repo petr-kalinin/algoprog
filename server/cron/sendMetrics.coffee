@@ -1,3 +1,5 @@
+os = require('os')
+
 import {GROUPS} from '../../client/lib/informaticsGroups'
 
 import {START_SUBMITS_DATE} from '../api/dashboard'
@@ -38,9 +40,15 @@ sendWarnings = () ->
     if count > 0
         notify "#{count} решений в статусе PS"
 
+sendLoadAndMem = () ->
+    await send
+        "load5": os.loadavg()[1]
+        "freemem": os.freemem()
+        "totalmem": os.totalmem()
 
 export default sendMetrics = () ->
     await sendWarnings()
     await sendGraphite()
     await sendWebSocketsCount2Graphite()
     await sendPendingFindMistakes() 
+    await sendLoadAndMem()
