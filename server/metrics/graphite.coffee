@@ -18,4 +18,7 @@ export default send = (metrics) ->
     metricsWithPrefix = {}
     for key, value of metrics
         metricsWithPrefix["#{prefix}.#{key}"] = value
-    client.write(metricsWithPrefix, (err) -> if err? then logger.error("Can't send metrics to graphite: #{err}"))
+    try
+        client.write(metricsWithPrefix, (err) -> if err? then logger.error("Can't send metrics to graphite: #{err}"))
+    catch e
+        logger.error("Can't send metrics to graphite: #{e}")
