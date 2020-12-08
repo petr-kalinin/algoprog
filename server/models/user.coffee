@@ -48,6 +48,8 @@ usersSchema = new mongoose.Schema
     dormant: { type: Boolean, default: false },
     registerDate: Date,
     achieves: [String]
+    prefs:
+        editorOn: Boolean
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -163,6 +165,11 @@ usersSchema.methods.setActivated = (activated) ->
     await @update({$set: {"activated": activated}})
     User.updateUser(@_id)
     @activated = activated
+
+usersSchema.methods.setEditorOn = (editorOn) ->
+    logger.info "set editor on ", @name, editorOn
+    @prefs.editorOn = editorOn
+    @save()
 
 compareLevels = (a, b) ->
     if a.length != b.length

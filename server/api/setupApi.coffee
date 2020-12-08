@@ -184,8 +184,9 @@ export default setupApi = (app) ->
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
         userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
-        user = (await User.findById(req.user.userKey()))?.toObject() || {}
-        if unpaidBlocked({user..., userPrivate...})
+        user = await User.findById(req.user.userKey())
+        userObj = user?.toObject() || {}
+        if unpaidBlocked({userObj..., userPrivate...})
             res.json({unpaid: true})
             return
         if user.dormant
@@ -196,6 +197,8 @@ export default setupApi = (app) ->
         catch e
             res.json({error: e})
             return
+        if req.body.editorOn?
+            user.setEditorOn(req.body.editorOn)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->

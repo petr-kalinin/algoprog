@@ -31,7 +31,7 @@ class SubmitForm extends React.Component
         @state =
             lang_id: Object.keys(LANGUAGES)[1]
             draft: false
-            editorOn: false
+            editorOn: @props.myUser.prefs?.editorOn
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
         @toggleEditor = @toggleEditor.bind(this)
@@ -108,6 +108,8 @@ class SubmitForm extends React.Component
                 code: fileText
                 draft: @state.draft
                 findMistake: @props.findMistake
+            if not @props.editorOn
+                dataToSend.editorOn = @state.editorOn
             url = "submit/#{@props.problemId}"
             data = await callApi url, dataToSend
 
