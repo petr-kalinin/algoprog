@@ -64,7 +64,7 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
     lastSubmitId = undefined
     lastSubmitTime = undefined
     for submit in submits
-        if submit.outcome == "DR"
+        if submit.outcome == "DR" or submit.outcome == "PW" or submit.outcome == "DP"
             continue
         lastSubmitId = submit._id
         lastSubmitTime = submit.time
