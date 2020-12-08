@@ -37,7 +37,8 @@ OpenSubmit = (props) ->
 class SubmitList extends React.Component
     constructor: (props) ->
         super(props)
-        @state = {bestSubmits: false}
+        @state = 
+            bestSubmits: false
         @openSubmit = @openSubmit.bind(this)
         @closeSubmit = @closeSubmit.bind(this)
         @toggleBestSubmits = @toggleBestSubmits.bind this
@@ -86,7 +87,7 @@ class SubmitList extends React.Component
                 noFile={@props.noFile} 
                 canSubmit={@props.canSubmit} 
                 findMistake={@props.findMistake} 
-                startLanguage={@props.startLanguage}
+                startLanguage={@props.startLanguage || (@props.data?.length && @props.data[@props.data.length-1].language) }
                 editorOn={@props.editorOn}
                 editorDidMount={@props.editorDidMount}
                 editorValue={@props.data?.length && @props.data[@props.data.length-1].sourceRaw || @props.defaultSource}/>

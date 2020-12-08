@@ -31,16 +31,15 @@ class SubmitForm extends React.Component
         @state =
             lang_id: Object.keys(LANGUAGES)[1]
             draft: false
-        if props.startLanguage
-            for lang of LANGUAGES
-                if props.startLanguage.includes(lang)
-                    @state.lang_id = lang
-                    break
+            editorOn: false
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
+        @toggleEditor = @toggleEditor.bind(this)
         @submit = @submit.bind(this)
         @handleEditorDidMount = @handleEditorDidMount.bind(this)
         @editorRef = React.createRef()
+        @setStartLanguage = @setStartLanguage.bind(this)
+        @setStartLanguage()
 
     handleEditorDidMount: (_, editor) ->
         @editorRef.current = editor
@@ -65,11 +64,27 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
 
+    toggleEditor: () ->
+        @setState
+            editorOn: not @state.editorOn
+
+    setStartLanguage: () ->
+        if @props.startLanguage
+            for lang of LANGUAGES
+                if @props.startLanguage.includes(lang)
+                    @state.lang_id = lang
+                    break
+
     componentDidUpdate: (prevProps, prevState) ->
         if prevProps.problemId != @props.problemId
             @setState
                 submit: undefined
+                editorOn: false
+                draft: false
             @editorRef.current = undefined
+        if prevProps.startLanguage != @props.startLanguage
+            @setStartLanguage()
+
 
     submit: (event) ->
         event.preventDefault()
@@ -80,7 +95,7 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            if @props.editorOn
+            if @props.editorOn || @state.editorOn
                 text = @editorRef.current.getValue()
                 enc = new TextEncoder()
                 fileText = Array.from(enc.encode(text))
@@ -118,7 +133,7 @@ class SubmitForm extends React.Component
                         message: "Ваш аккаунт не активирован"
             else
                 throw ""
-        catch
+        catch e
             data =
                 submit:
                     error: true
@@ -129,21 +144,22 @@ class SubmitForm extends React.Component
             submit: data.submit
         }
         @setState(newState)
-        document.getElementById("file").value = ""
+        document.getElementById("file")?.value = ""
 
     render: () ->
         if not @props.myUser?._id
             return null
 
-        canSubmit = (not @state.submit?.loading) and (@state.wasFile || @props.editorOn)
+        # TODO: merge @props.noFile and @props.editorOn?
+        canSubmit = (not @state.submit?.loading) and (@state.wasFile || @props.editorOn || @state.editorOn)
         if @props.canSubmit?
             canSubmit = canSubmit and @props.canSubmit
 
         <div>
-            {@props.editorOn && <Editor language={@state.lang_id} editorDidMount={@handleEditorDidMount} value={@editorRef.current?.getValue() || @props.editorValue}/>}
+            {(@props.editorOn || @state.editorOn) && <Editor language={@state.lang_id} editorDidMount={@handleEditorDidMount} value={@editorRef.current?.getValue() || @props.editorValue}/>}
             <h4>Отправить решение</h4>
             <Form inline onSubmit={@submit} id="submitForm">
-                {@props.noFile || <FieldGroup
+                {(@props.noFile || @state.editorOn) || <FieldGroup
                     id="file"
                     label=""
                     type="file"
@@ -164,6 +180,14 @@ class SubmitForm extends React.Component
                                 null
                         )}
                     </FieldGroup>
+                }
+                {@props.editorOn || <>{" "}
+                    <span onClick={@toggleEditor} title="Редактор кода">
+                        <ShadowedSwitch on={@state.editorOn}>
+                            <FontAwesome name={"pencil-square" + if @state.editorOn then "" else "-o"} />
+                        </ShadowedSwitch>
+                    </span>
+                </>
                 }
                 {" "}
                 <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
