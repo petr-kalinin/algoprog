@@ -58,7 +58,7 @@ export default calculateCfRating = (user) ->
     try
         rating = await getRating(user)
     catch
-        return {}
+        return
     color = colorByRating(rating)
     activityAndProgress = await getActivityAndProgress(user)
     return
