@@ -3,9 +3,21 @@ import Result from '../models/result'
 import logger from '../log'
 import isContestRequired from '../../client/lib/isContestRequired'
 
+isFloatsSolved = (user, lastDate) ->
+    result = await Result.findByUserAndTable(user, "floats")
+    if not result
+        return false
+    submitDate = new Date(result.lastSubmitTime)
+    if submitDate >= lastDate
+        return false
+    return result.solved == result.total
+
 export default calculateLevel = (user, baseLevel, lastDate) ->
     start = new Date()
-    logger.info "calculate level ", user
+    logger.info "calculate level ", user, "baseLevel=", baseLevel
+    if (not baseLevel) and (await isFloatsSolved(user, lastDate))
+        baseLevel = "1В"
+        logger.info "calculate level ", user, "baseLevel=>", baseLevel, lastDate
     for bigLevel in [1..10]
         for smallLevel in ["А", "Б", "В", "Г"]
             tableId = bigLevel + smallLevel
