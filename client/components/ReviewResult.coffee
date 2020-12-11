@@ -5,9 +5,7 @@ entities = new Entities();
 FontAwesome = require('react-fontawesome')
 deepEqual = require('deep-equal')
 deepcopy = require('deepcopy')
-JsDiff = require('diff')
 
-import {parseDiff, markWordEdits, Diff} from 'react-diff-view';
 import {Link} from 'react-router-dom'
 
 import Grid from 'react-bootstrap/lib/Grid'
@@ -19,10 +17,11 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 import FormGroup from 'react-bootstrap/lib/FormGroup'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 
-import Submit, {SubmitHeader} from './Submit'
-import FieldGroup from './FieldGroup'
-import SubmitListTable from './SubmitListTable'
 import BestSubmits from './BestSubmits'
+import {DiffEditor} from './Editor'
+import FieldGroup from './FieldGroup'
+import Submit, {SubmitHeader} from './Submit'
+import SubmitListTable from './SubmitListTable'
 
 import callApi from '../lib/callApi'
 
@@ -114,6 +113,10 @@ export class SubmitListWithDiff extends React.Component
             @props.setCurrentSubmit?(submit)
 
     render:  () ->
+        editorDidMount = (orig, modif, e) ->
+            fun = () ->
+                e.layout()
+            setTimeout(fun, 100)
         SubmitComponent = @props.SubmitComponent
         allProps = {@props..., @state...}
         PostSubmit = @props.PostSubmit
@@ -126,28 +129,10 @@ export class SubmitListWithDiff extends React.Component
                         {`<SubmitComponent {...allProps}/>`}
                     </div>
                 else if @state.currentDiff[1] and @state.currentDiff[0]
-                    if @state.currentDiff[1].source == @state.currentDiff[0].source
-                        <div>
-                            <SubmitHeader submit={@state.currentDiff[0]} admin={@props.me?.admin}/>
-                            <pre>Нет изменений</pre>
-                        </div>
-                    else
-                        diffText = JsDiff.createTwoFilesPatch(
-                            @state.currentDiff[1]._id,
-                            @state.currentDiff[0]._id,
-                            @state.currentDiff[1].sourceRaw,
-                            @state.currentDiff[0].sourceRaw)
-                        diffText = diffText.split("\n")
-                        diffText[0] = "diff --git a/#{@state.currentDiff[0]._id} b/#{@state.currentDiff[1]._id}\nindex aaaaaaa..aaaaaaa 100644"
-                        diffText = diffText.join("\n")
-                        files = parseDiff(diffText, {nearbySequences: "zip"})
-
-                        <div>
-                            <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                            <pre>
-                                {files.map(({hunks}, i) => <Diff key={i} hunks={hunks} viewType="split"/>)}
-                            </pre>
-                        </div>
+                    <>
+                        <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
+                        <DiffEditor original={@state.currentDiff[1].sourceRaw} modified={@state.currentDiff[0].sourceRaw} editorDidMount={editorDidMount}/>
+                    </>
                 }
             </Col>
             <Col xs={12} sm={12} md={4} lg={4}>

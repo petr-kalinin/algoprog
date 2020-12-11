@@ -1,4 +1,4 @@
-import Editor from '@monaco-editor/react';
+import BaseEditor, { DiffEditor as BaseDiffEditor} from '@monaco-editor/react';
 import React, { useRef, useState } from "react";
 
 import Loader from '../components/Loader'
@@ -23,11 +23,21 @@ getLanguage = (lang) ->
             return style
     return undefined
 
-export default AdaptedEditor = (props) ->
+export DiffEditor = (props) ->
     options = 
         autoClosingBrackets: "never"
         autoClosingOvertype: "never" 
         autoClosingQuotes: "never"
         scrollBeyondLastLine: false
         minimap: {enabled: false}
-    <Editor height="600px" language={getLanguage(props.language)} value={props.value} loading={<Loader />} options={options} className={styles.editor} editorDidMount={props.editorDidMount}/>
+    <BaseDiffEditor height="600px" original={props.original} modified={props.modified} language={getLanguage(props.language)} loading={<Loader />} options={options} className={styles.editor} editorDidMount={props.editorDidMount}/>
+
+export default Editor = (props) ->
+    options = 
+        autoClosingBrackets: "never"
+        autoClosingOvertype: "never" 
+        autoClosingQuotes: "never"
+        scrollBeyondLastLine: false
+        minimap: {enabled: false}
+    <BaseEditor height="600px" language={getLanguage(props.language)} value={props.value} loading={<Loader />} options={options} className={styles.editor} editorDidMount={props.editorDidMount}/>
+
