@@ -405,6 +405,8 @@ export default setupApi = (app) ->
             user.fullName = fullUser?.name
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
+            user.dormant = fullUser?.dormant
+            user.activated = fullUser?.activated
 
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -432,6 +434,8 @@ export default setupApi = (app) ->
             user.dormant = fullUser?.dormant
             user.registerDate = fullUser?.registerDate
             user.userList = fullUser?.userList
+            user.dormant = fullUser?.dormant
+            user.activated = fullUser?.activated
 
         if not req.user?.admin
             res.status(403).send('No permissions')
