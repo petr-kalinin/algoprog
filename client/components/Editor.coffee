@@ -30,7 +30,17 @@ export DiffEditor = (props) ->
         autoClosingQuotes: "never"
         scrollBeyondLastLine: false
         minimap: {enabled: false}
-    <BaseDiffEditor height="600px" original={props.original} modified={props.modified} language={getLanguage(props.language)} loading={<Loader />} options={options} className={styles.editor} editorDidMount={props.editorDidMount}/>
+    editorDidMount = (orig, modif, e) ->
+        props.editorDidMount?(orig, modif, e)
+        fun = () ->
+            e.layout()
+        setTimeout(fun, 100)
+    height = "600px"
+    if props.height != undefined
+        height = props.height
+    if not height
+        height = undefined
+    <BaseDiffEditor height={height} original={props.original} modified={props.modified} language={getLanguage(props.language)} loading={<Loader />} options={options} className={styles.editor} editorDidMount={editorDidMount}/>
 
 export default Editor = (props) ->
     options = 

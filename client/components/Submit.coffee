@@ -13,10 +13,11 @@ import Col from 'react-bootstrap/lib/Col'
 
 import {Link} from 'react-router-dom'
 
-import UserName from './UserName'
-import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
-
+import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import outcomeToText from '../lib/outcomeToText'
+
+import {DiffEditor} from './Editor'
+import UserName from './UserName'
 
 import styles from './Submit.css'
 
@@ -114,7 +115,7 @@ class TestResult extends React.Component
         canToggle = "input" of @props.result
         res = []
         res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1">
-            <td>{@props.index}
+            <td>{@props.index}{" "}
                 {@props.copyTest && <span onClick={@props.copyTest(@props.result)}><FontAwesome name="chevron-circle-down"/></span>}
             </td>
             <td>{@props.result.string_status}</td>
@@ -122,6 +123,13 @@ class TestResult extends React.Component
             <td>{@props.result.max_memory_used}</td>
         </tr>
         if canToggle and @state.open
+            editorDidMount = (orig, modif, e) =>
+                h1 = e.getOriginalEditor().getContentHeight();
+                h2 = e.getModifiedEditor().getContentHeight();
+                h = Math.min(300, Math.max(h1, h2))
+                document.getElementById(styles.diffEditor + "_" + @props.index).style.height = h
+                e.layout()
+
             res.push <tr key="2"><td colSpan="4" className={styles.td}>
                 <Grid fluid>
                     <Col xs={12} sm={12} md={6} lg={6}>
@@ -136,13 +144,11 @@ class TestResult extends React.Component
                     </Col>
                 </Grid>
                 <Grid fluid>
-                    <Col xs={12} sm={12} md={6} lg={6}>
-                        Output:
-                        <pre>{@props.result.output}</pre>
-                    </Col>
-                    <Col xs={12} sm={12} md={6} lg={6}>
-                        Answer:
-                        <pre>{@props.result.corr}</pre>
+                    <Col xs={12} sm={12} md={12} lg={12}>
+                        Left: answer, right: output
+                        <div id={styles.diffEditor + "_" + @props.index}>
+                            <DiffEditor original={@props.result.corr} modified={@props.result.output} editorDidMount={editorDidMount} height={null}/>
+                        </div>
                     </Col>
                 </Grid>
             </td></tr>

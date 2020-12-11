@@ -113,10 +113,6 @@ export class SubmitListWithDiff extends React.Component
             @props.setCurrentSubmit?(submit)
 
     render:  () ->
-        editorDidMount = (orig, modif, e) ->
-            fun = () ->
-                e.layout()
-            setTimeout(fun, 100)
         SubmitComponent = @props.SubmitComponent
         allProps = {@props..., @state...}
         PostSubmit = @props.PostSubmit
@@ -131,7 +127,7 @@ export class SubmitListWithDiff extends React.Component
                 else if @state.currentDiff[1] and @state.currentDiff[0]
                     <>
                         <SubmitHeader submit={@state.currentDiff[0]} admin={admin}/>
-                        <DiffEditor original={@state.currentDiff[1].sourceRaw} modified={@state.currentDiff[0].sourceRaw} editorDidMount={editorDidMount}/>
+                        <DiffEditor original={@state.currentDiff[1].sourceRaw} modified={@state.currentDiff[0].sourceRaw}/>
                     </>
                 }
             </Col>
