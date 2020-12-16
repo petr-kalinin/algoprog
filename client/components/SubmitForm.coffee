@@ -29,7 +29,7 @@ class SubmitForm extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            lang_id: Object.keys(LANGUAGES)[1]
+            lang_id: Object.keys(LANGUAGES)[0]
             draft: false
             editorOn: @props.myUser.prefs?.editorOn
         @setField = @setField.bind(this)
