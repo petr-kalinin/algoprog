@@ -48,6 +48,8 @@ usersSchema = new mongoose.Schema
     dormant: { type: Boolean, default: false },
     registerDate: Date,
     achieves: [String]
+    prefs:
+        editorOn: Boolean
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -80,13 +82,16 @@ usersSchema.methods.updateDormant = ->
     @update({$set: {dormant: @dormant}})
 
 usersSchema.methods.updateCfRating = ->
+    oldRating = @cf?.rating
     logger.debug "Updating cf rating ", @name
     res = await calculateCfRating this
     logger.debug "Updated cf rating ", @name, res
     if not res
         return
     res.login = @cf.login
-    @update({$set: {cf: res}})
+    await @update({$set: {cf: res}})
+    @cf = res
+    return @cf.rating != oldRating
 
 usersSchema.methods.updateAchieves = (achieves) ->
     logger.info "updating achieves login ", @_id, achieves
@@ -155,12 +160,19 @@ usersSchema.methods.forceSetUserList = (userList) ->
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
     await @update({$set: {"dormant": dormant}})
+    User.updateUser(@_id)
     @dormant = dormant
 
 usersSchema.methods.setActivated = (activated) ->
     logger.info "setting activated ", @_id, activated
     await @update({$set: {"activated": activated}})
+    User.updateUser(@_id)
     @activated = activated
+
+usersSchema.methods.setEditorOn = (editorOn) ->
+    logger.info "set editor on ", @name, editorOn
+    @prefs.editorOn = editorOn
+    @save()
 
 compareLevels = (a, b) ->
     if a.length != b.length
@@ -190,6 +202,9 @@ usersSchema.statics.search = (searchString) ->
 usersSchema.statics.findAll = () ->
     User.find({dormant: false})
 
+usersSchema.statics.findAllAll = () ->
+    User.find({})
+
 usersSchema.statics.findById = (id) ->
     User.findOne({_id: id})
 
@@ -197,7 +212,8 @@ usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
-    logger.info "Updating user", userId
+    start = new Date()
+    logger.info ">>Updating user", userId
     await updateResults(userId, dirtyResults)
     await updateTableResults(userId)
     await calculateCalendar(userId)
@@ -210,9 +226,9 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateLevel()
     await u.updateDormant()
     await u.updateAchieves()
-    logger.info "Updated user", userId
+    logger.info "<<Updated user", userId, " spent time ", (new Date()) - start
 
-usersSchema.statics.updateAllUsers = (dirtyResults) ->
+usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
     PARALLEL = 5
     tryUpdate = (id) ->
         try
@@ -220,7 +236,11 @@ usersSchema.statics.updateAllUsers = (dirtyResults) ->
         catch e
             logger.warn("Error while updating user: ", e.message || e, e.stack)
 
-    users = await User.findAll()
+    users = []
+    if alsoDormant
+        users = await User.findAllAll()
+    else
+        users = await User.findAll()
     promises = []
     count = 0
     for u in users
@@ -238,8 +258,8 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"
     for u in await User.findAll()
         if u.cf.login
-            await u.updateCfRating()
-            await User.updateUser(u._id, {})
+            if await u.updateCfRating()
+                await User.updateUser(u._id, {})
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 

@@ -1,12 +1,30 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
+
+import addTotal from '../lib/addTotal'
+import withTheme from '../lib/withTheme'
+
+import userTableHeader from './UserTableHeader'
 
 import styles from './TableRow.css'
 import globalStyles from './global.css'
 
-import userTableHeader from './UserTableHeader'
-
-import addTotal from '../lib/addTotal'
-import withTheme from '../lib/withTheme'
+SubFindMistakes = (props) ->
+    if not props.subFindMistakes
+        return null
+    sfm = props.subFindMistakes
+    res = []
+    a = (el) -> res.push(el)
+    for i in [0...sfm.none]
+        a <FontAwesome name="star-o"/>
+    for i in [0...sfm.wa]
+        a <FontAwesome name="star-half-o"/>
+    for i in [0...sfm.ok]
+        a <FontAwesome name="star"/>
+    title = "Поиск ошибок: #{sfm.none} не начаты, #{sfm.wa} неуспешны, #{sfm.ok} успешны"
+    <div className={styles.subFindMistakes} title={title}>
+        {res}
+    </div>        
 
 ProblemResult = (props) ->
     r = props.result
@@ -57,6 +75,7 @@ ProblemResult = (props) ->
 
     <td title={props.user.name + " : " + props.result.problemName} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
         {text}
+        <SubFindMistakes subFindMistakes={r.subFindMistakes}/>
     </td>
 
 totalResultClass = (result) ->
@@ -123,9 +142,10 @@ export default TableRow = (props) ->
             for table in props.results
                 subTotal = null
                 for subtable in table.results
-                    a <td className={globalStyles.border} key={subtable._id + "b"}/>
+                    if res.length
+                        a <td className={globalStyles.border} key={subtable._id + "b"}/>
                     if props.header
-                        a <td className={globalStyles.mainTable_td} colSpan={subtable.colspan}  key={subtable._id + "c"}>
+                        a <td className={globalStyles.mainTable_td + " " + styles.subtableHeader} colSpan={subtable.colspan}  key={subtable._id + "c"}>
                             {subtable.name}
                         </td>
                     else

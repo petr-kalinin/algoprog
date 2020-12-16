@@ -55,6 +55,9 @@ export default class RegisteredUsers extends React.Component
                                 {user.fullName || "***"}
                             </td>
                             <td>
+                                {if user.activated then "" else "(na)"}
+                                {if user.dormant then "(d)" else ""}
+                                {" "}
                                 {user.username}
                             </td>
                             <td>
@@ -67,7 +70,7 @@ export default class RegisteredUsers extends React.Component
                                 <Link to={"/user/#{user.informaticsId}"}>{user.informaticsId}</Link>
                             </td>
                             <td>
-                                {user.informaticsUsername}
+                                (inf=){user.informaticsUsername}
                             </td>
                             <td>
                                 {user.aboutme}

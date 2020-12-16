@@ -22,7 +22,7 @@ import ThemeCss from '../../client/components/ThemeCss'
 
 import Cookies from 'universal-cookie'
 
-renderFullPage = (html, data, helmet) ->
+renderFullPage = (html, data, helmet, linkClientJsCss) ->
     return '
         <html>
         <head>
@@ -31,7 +31,7 @@ renderFullPage = (html, data, helmet) ->
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/server.bundle.css"/>
-            <link rel="stylesheet" href="/bundle.css"/>
+            ' + linkClientJsCss.client.css.map((css) => '<link rel="stylesheet" href="/' + css + '"/>').join('') + '
             <link rel="stylesheet" href="/react-diff-view.css"/>
             <link rel="stylesheet" href="/testsystems.css"/>
             <link rel="stylesheet" href="/highlight.css"/>
@@ -45,8 +45,8 @@ renderFullPage = (html, data, helmet) ->
                     extensions: ["tex2jax.js"],
                     jax: ["input/TeX", "output/HTML-CSS"],
                     tex2jax: {
-                        inlineMath: [ ["$","$"] ],
-                        displayMath: [ ["$$","$$"] ],
+                        inlineMath: [ ["$","$"], ["\\\\(", "\\\\)"] ],
+                        displayMath: [ ["$$","$$"], ["\\\\[", "\\\\]"] ],
                         processEscapes: true
                     },
                     "HTML-CSS": { availableFonts: ["TeX"] }
@@ -59,7 +59,7 @@ renderFullPage = (html, data, helmet) ->
         </head>
         <body>
             <div id="main" style="min-width: 100%; min-height: 100%">' + html + '</div>
-            <script src="/bundle.js" type="text/javascript"></script>
+            ' + linkClientJsCss.client.js.map((js) => '<script src="/' + js + '" type="text/javascript"></script>').join('') + '
             <!-- Yandex.Metrika counter -->
             <script type="text/javascript" >
             (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -92,7 +92,7 @@ renderFullPage = (html, data, helmet) ->
     else
         return "light"
 
-export default renderOnServer = (req, res, next) =>
+export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     try
         initialState = 
             data: [
@@ -163,4 +163,4 @@ export default renderOnServer = (req, res, next) =>
     delete state.dataPromises
     delete state.clientCookie
 
-    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, state, helmet))
+    res.set('Content-Type', 'text/html').status(200).end(renderFullPage(html, state, helmet, linkClientJsCss))

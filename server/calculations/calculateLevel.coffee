@@ -3,9 +3,23 @@ import Result from '../models/result'
 import logger from '../log'
 import isContestRequired from '../../client/lib/isContestRequired'
 
+isFloatsSolved = (user, lastDate) ->
+    result = await Result.findByUserAndTable(user, "floats")
+    if not result
+        return false
+    submitDate = new Date(result.lastSubmitTime)
+    if submitDate >= lastDate
+        return false
+    return result.solved == result.total
+
 export default calculateLevel = (user, baseLevel, lastDate) ->
     # level calculations disabled on adina branch
     return
+    start = new Date()
+    logger.info "calculate level ", user, "baseLevel=", baseLevel
+    if (not baseLevel) and (await isFloatsSolved(user, lastDate))
+        baseLevel = "1В"
+        logger.info "calculate level ", user, "baseLevel=>", baseLevel, lastDate
     for bigLevel in [1..10]
         for smallLevel in ["А", "Б", "В", "Г"]
             tableId = bigLevel + smallLevel
@@ -37,6 +51,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
             else if smallLevel == "Г"
                 needProblem = probNumber * 0.3333
             if (probAc < needProblem) and ((!baseLevel) or (baseLevel <= level))
-                logger.debug "calculated level", user, level
+                logger.info "calculated level", user, level, " spent time ", (new Date()) - start
                 return level
+    logger.info "calculated level", user, "inf spent time ", (new Date()) - start
     return "inf"

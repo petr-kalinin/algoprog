@@ -11,11 +11,15 @@ export default userTableHeader = (res, props) ->
     h = props.header
     cls = if h then "К" else
         getClassStartingFromJuly(props.user.graduateYear) || ""
+    if props.theme == 'dark'
+        style = backgroundColor : "#707070"
+    else
+        style = backgroundColor : "white"
     a = (el) -> res.push(el)
-    a <td className={globalStyles.mainTable_td + " " + globalStyles.mainTable_user} key="user">
-        {if h then "" else <UserName user={props.user} />}
-    </td>
     if props.details
+        a <th className={globalStyles.mainTable_th + " " + globalStyles.mainTable_user} key="user" style={style}>
+            {if h then "" else <UserName user={props.user} />}
+        </th>
         a <td className={globalStyles.mainTable_td} key="graduateYear" title="Класс">
             {cls} 
         </td>

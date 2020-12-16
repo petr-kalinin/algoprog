@@ -19,9 +19,11 @@ data = (state=[], action) ->
                     delete newValue.rejected
                     newValue.pending = true
                 when "#{GET_DATA}_#{ActionType.Fulfilled}"
-                    newValue = {data: action.payload, success: true}
+                    newValue = {data: action.payload}
                 when "#{GET_DATA}_#{ActionType.Rejected}"
-                    newValue = {rejected: true}
+                    newValue = (x for x in state when equalUrl(x.url, action.meta.url))[0] || {}
+                    delete newValue.pending
+                    newValue.rejected = true
             a = [{newValue..., url: action.meta.url, updateTime}]
             b = (x for x in state when !equalUrl(x.url, action.meta.url))
             result = a.concat(b)

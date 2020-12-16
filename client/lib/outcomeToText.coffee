@@ -25,4 +25,8 @@ export default outcomeToText = (outcome) ->
             message = "Тестируется..."
         when "PS"
             message = "Отправка..."
+        when "DP"
+            message = "Вы уже отправляли этот код"
+        when "PW"
+            message = "Проверьте пароль от тестирующей системы в профиле на алгопроге"
     return [cl, message]

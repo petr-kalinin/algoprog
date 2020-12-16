@@ -4,7 +4,7 @@ import level from "../lib/level"
 import problem from "../lib/problem"
 
 contest_15993 = () ->
-    return contest("1Г: Дополнительные задачи на разные темы  - 1", [
+    return contest("Дополнительные задачи на разные темы  - 1", [
         problem(3469),
         problem(3466),
         problem(3477),
@@ -15,7 +15,7 @@ contest_15993 = () ->
     ])
 
 contest_15994 = () ->
-    return contest("1Г: Дополнительные задачи на разные темы - 2", [
+    return contest("Дополнительные задачи на разные темы - 2", [
         problem(111499),
         problem(3888),
         problem(3893),
@@ -26,7 +26,7 @@ contest_15994 = () ->
     ])
 
 contest_15996 = () ->
-    return contest("1Г: Дополнительные задачи на разные темы - 3", [
+    return contest("Дополнительные задачи на разные темы - 3", [
         problem(1421),
         problem(3745),
         problem(1406),

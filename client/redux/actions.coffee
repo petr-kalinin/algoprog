@@ -1,4 +1,4 @@
-import callApi, {callApiWithBody} from '../lib/callApi'
+import callApi, {callApiWithBody, callWsApiWithBody} from '../lib/callApi'
 
 import {getRawData} from './getters'
 
@@ -27,6 +27,15 @@ export updateData = (url, minAgeToUpdate, cookies) ->
             payload: callApiWithBody url, 'GET', if cookies then {"Cookie": cookies} else {}
             meta:
                 url: url
+
+export updateWsData = (url) ->
+    (dispatch, getState) ->
+        callWsApiWithBody url, (result) ->
+            dispatch
+                type: GET_DATA
+                payload: Promise.resolve(JSON.parse(result))
+                meta:
+                    url: url
 
 export invalidateData = (url) ->
     return

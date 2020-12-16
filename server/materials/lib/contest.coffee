@@ -4,13 +4,13 @@ class Contest extends MaterialList
     constructor: (@title, materials) ->
         super(materials)
 
-    build: (context) ->
+    build: (context, order) ->
         properties = 
             _id: context.generateId()
             type: "contest"
             title: @title
 
-        material = await super.build(context, properties, {allowAsync: true})
+        material = await super.build(context, order, properties, {allowAsync: true})
 
         return material
 

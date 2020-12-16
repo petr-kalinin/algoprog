@@ -108,10 +108,12 @@ export class LoggedCodeforcesUser
                 followAllRedirects: true,
                 timeout: 30 * 1000
             })
-            hasLogout = /<a href="\/[^\/]*\/logout">/.test(page)
-            if not hasLogout
+            if page.includes("Некорректный хэндл/email или пароль") or page.includes("Invalid handle/email or password")
+                throw {badPassword: true}
+            @handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(page)?[1]
+            if not @handle
                 throw "Can not log user #{@username} in"
-            logger.info "Logged in new CodeforcesUser ", @username
+            logger.info "Logged in new CodeforcesUser ", @username, @handle
         catch e
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
             throw e

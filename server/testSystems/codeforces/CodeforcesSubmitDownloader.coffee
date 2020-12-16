@@ -1,4 +1,5 @@
 moment = require('moment')
+iconv = require('iconv-lite')
 
 import { JSDOM } from 'jsdom'
 
@@ -86,7 +87,10 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
     getSource: (runid) ->
         try
             data = await @_getSourceAndResults(runid)
-            return normalizeCode(data.source)
+            source = data.source
+            buf = Buffer.from(source, "utf8")
+            source = iconv.decode(buf, "latin1")
+            return normalizeCode(source)
         catch e
             logger.warn "Can't download source ", runid, e, e.stack
             throw e
@@ -122,11 +126,12 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         for submit in submits
             if submit.contestId != +@contest
                 throw "Strange submit: found contest #{submit.contestId}, expected #{@contest}"
-            if submit.author.members[0].handle != @username
+            if submit.author.members[0].handle.toLowerCase() != @username.toLowerCase()
                 throw "Strange submit: found username  #{submit.author.members[0].handle}, expected #{@username}"
             if submit.problem.index != @problem
                 logger.info "Skipping submit #{submit.id} because it is for a different problem: #{submit.problem.index} vs #{@problem}"
-            outcome = @VERDICTS[submit.verdict] || submit.verdict
+                continue
+            outcome = @VERDICTS[submit.verdict] || submit.verdict || "CT"
             result.push new Submit(
                 _id: "c" + submit.id,
                 time: new Date(submit.creationTimeSeconds * 1000),

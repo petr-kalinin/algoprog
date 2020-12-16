@@ -65,9 +65,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
             source = JSON.parse(page)?.data?.source || ""
             buf = Buffer.from(source, "utf8")
             source = iconv.decode(buf, "latin1")
-            #if source.length == 0
-            #    throw "Source with length 0"
-            return normalizeCode(entities.decode(source))
+            return normalizeCode(source)
         catch e
             logger.warn "Can't download source ", runid, href, e.stack
             throw e

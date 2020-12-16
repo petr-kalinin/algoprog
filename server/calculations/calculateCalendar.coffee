@@ -4,6 +4,7 @@ import Submit from '../models/submit'
 import logger from '../log'
 
 export default calculateCalendar = (user) ->
+    start = new Date()
     logger.info "updating calendar for user ", user
     submits = await Submit.findByUser(user)
     events = {}
@@ -18,4 +19,4 @@ export default calculateCalendar = (user) ->
             events[short] = if short of events then events[short] + 1 else 1
     calendar = new Calendar {_id: user, byDay : events}
     await calendar.upsert()
-    logger.info "updated calendar for user ", user
+    logger.info "updated calendar for user ", user, " spent time ", (new Date()) - start

@@ -17,6 +17,7 @@ import Loader from '../components/Loader'
 
 import callApi, {callApiWithBody} from '../lib/callApi'
 
+import Editor from './Editor'
 import FieldGroup from './FieldGroup'
 import ShadowedSwitch from './ShadowedSwitch'
 
@@ -28,11 +29,21 @@ class SubmitForm extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            lang_id: Object.keys(LANGUAGES)[0]
+            lang_id: Object.keys(LANGUAGES)[1]
             draft: false
+            editorOn: @props.myUser.prefs?.editorOn
         @setField = @setField.bind(this)
         @toggleDraft = @toggleDraft.bind(this)
+        @toggleEditor = @toggleEditor.bind(this)
         @submit = @submit.bind(this)
+        @handleEditorDidMount = @handleEditorDidMount.bind(this)
+        @editorRef = React.createRef()
+        @setStartLanguage = @setStartLanguage.bind(this)
+        @setStartLanguage()
+
+    handleEditorDidMount: (_, editor) ->
+        @editorRef.current = editor
+        @props.editorDidMount?(_, editor)
 
     setField: (field, value) ->
         newState = {@state...}
@@ -53,10 +64,27 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
 
+    toggleEditor: () ->
+        @setState
+            editorOn: not @state.editorOn
+
+    setStartLanguage: () ->
+        if @props.startLanguage
+            for lang of LANGUAGES
+                if @props.startLanguage.includes(lang)
+                    @state.lang_id = lang
+                    break
+
     componentDidUpdate: (prevProps, prevState) ->
         if prevProps.problemId != @props.problemId
             @setState
                 submit: undefined
+                editorOn: false
+                draft: false
+            @editorRef.current = undefined
+        if prevProps.startLanguage != @props.startLanguage
+            @setStartLanguage()
+
 
     submit: (event) ->
         event.preventDefault()
@@ -67,13 +95,21 @@ class SubmitForm extends React.Component
         }
         @setState(newState)
         try
-            fileName = document.getElementById("file").files[0]
-            fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
-            fileText = Array.from(new Uint8Array(fileText))
+            if @props.editorOn || @state.editorOn
+                text = @editorRef.current.getValue()
+                enc = new TextEncoder()
+                fileText = Array.from(enc.encode(text))
+            else
+                fileName = document.getElementById("file").files[0]
+                fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
+                fileText = Array.from(new Uint8Array(fileText))
             dataToSend =
                 language: @state.lang_id
                 code: fileText
                 draft: @state.draft
+                findMistake: @props.findMistake
+            if not @props.editorOn
+                dataToSend.editorOn = @state.editorOn
             url = "submit/#{@props.problemId}"
             data = await callApi url, dataToSend
 
@@ -99,32 +135,38 @@ class SubmitForm extends React.Component
                         message: "Ваш аккаунт не активирован"
             else
                 throw ""
-        catch
+        catch e
             data =
                 submit:
                     error: true
                     message: "Неопознанная ошибка"
         newState = {
             @state...
+            wasFile: false
             submit: data.submit
         }
         @setState(newState)
+        document.getElementById("file")?.value = ""
 
     render: () ->
         if not @props.myUser?._id
             return null
 
-        canSubmit = (not @state.submit?.loading) and (@state.wasFile)
+        # TODO: merge @props.noFile and @props.editorOn?
+        canSubmit = (not @state.submit?.loading) and (@state.wasFile || @props.editorOn || @state.editorOn)
+        if @props.canSubmit?
+            canSubmit = canSubmit and @props.canSubmit
 
         <div>
+            {(@props.editorOn || @state.editorOn) && <Editor language={@state.lang_id} editorDidMount={@handleEditorDidMount} value={@editorRef.current?.getValue() || @props.editorValue}/>}
             <h4>Отправить решение</h4>
             <Form inline onSubmit={@submit} id="submitForm">
-                <FieldGroup
+                {(@props.noFile || @state.editorOn) || <FieldGroup
                     id="file"
                     label=""
                     type="file"
                     setField={@setField}
-                    state={@state}/>
+                    state={@state}/>}
                 {if !@props.material.isReview
                     <FieldGroup
                         id="lang_id"
@@ -140,6 +182,14 @@ class SubmitForm extends React.Component
                                 null
                         )}
                     </FieldGroup>
+                }
+                {@props.editorOn || <>{" "}
+                    <span onClick={@toggleEditor} title="Редактор кода">
+                        <ShadowedSwitch on={@state.editorOn}>
+                            <FontAwesome name={"pencil-square" + if @state.editorOn then "" else "-o"} />
+                        </ShadowedSwitch>
+                    </span>
+                </>
                 }
                 {" "}
                 <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">

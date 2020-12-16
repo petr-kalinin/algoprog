@@ -1,10 +1,11 @@
 import processForFindMistake from '../findMistake/processForFindMistake'
 
-import User from '../models/user'
+import FindMistake from '../models/FindMistake'
 import Hash from '../models/Hash'
-import Table from '../models/table'
 import Result from '../models/result'
 import Submit from '../models/submit'
+import Table from '../models/table'
+import User from '../models/user'
 
 import addTotal from '../../client/lib/addTotal'
 import isContestRequired from '../../client/lib/isContestRequired'
@@ -39,7 +40,7 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
     return result
 
 removeDuplicateSubmits = (userId, problemId) ->
-    submits = await Submit.findByUserAndProblem(userId, problemId)
+    submits = await Submit.findByUserAndProblemWithFindMistakeAny(userId, problemId)
     seenSubmits = []
     for submit in submits
         seen = false
@@ -54,13 +55,7 @@ removeDuplicateSubmits = (userId, problemId) ->
         else
             seenSubmits.push(submit)
 
-updateResultsForProblem = (userId, problemId, dirtyResults) ->
-    if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
-        result = await Result.findByUserAndTable(userId, problemId)
-        if result
-            return result
-    await removeDuplicateSubmits(userId, problemId)
-    submits = await Submit.findByUserAndProblem(userId, problemId)
+makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
     solved = 0
     ok = 0
     ps = 0
@@ -69,7 +64,7 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
     lastSubmitId = undefined
     lastSubmitTime = undefined
     for submit in submits
-        if submit.outcome == "DR"
+        if submit.outcome == "DR" or submit.outcome == "PW" or submit.outcome == "DP"
             continue
         lastSubmitId = submit._id
         lastSubmitTime = submit.time
@@ -94,9 +89,9 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
             continue  # we might have a future AC
         else if submit.outcome == "PS" or submit.outcome == "CT"
             ps = 1
-        else if submit.outcome != "CE"
+        else if submit.outcome != "CE" and solved == 0
             attempts++
-    logger.debug "updated result ", userId, problemId, solved, ok, ps, attempts, ignored, lastSubmitId
+    logger.debug "updated result ", userId, problemId, findMistake, solved, ok, ps, attempts, ignored, lastSubmitId
     result = new Result
         user: userId,
         table: problemId,
@@ -109,12 +104,59 @@ updateResultsForProblem = (userId, problemId, dirtyResults) ->
         ignored: ignored,
         lastSubmitId: lastSubmitId,
         lastSubmitTime: lastSubmitTime
-    await result.upsert()
-    # Warning: processForFindMistake reverses submits array
+        findMistake: findMistake
+
+updateResultsForProblem = (userId, problemId, dirtyResults) ->
+    if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
+        result = await Result.findByUserAndTable(userId, problemId)
+        if result
+            return result
+    await removeDuplicateSubmits(userId, problemId)
+    submits = await Submit.findByUserAndProblem(userId, problemId)
+    fmResults = await updateResultsForFindMistake(userId, problemId, dirtyResults)
+    result = await makeProblemResult(userId, problemId, submits, fmResults)
     await processForFindMistake(submits)
     return result
 
+updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
+    if dirtyResults and (not ((userId + "::" + problemId) of dirtyResults))
+        return []
+    submits = await Submit.findByUserAndProblemWithFindMistakeSet(userId, problemId)
+    submitsByFindMistake = {}
+    for submit in submits
+        fm = submit.findMistake
+        if not (fm of submitsByFindMistake)
+            submitsByFindMistake[fm] = []
+        submitsByFindMistake[fm].push(submit)
+    allResults = []
+    for fm, submits of submitsByFindMistake
+        result = makeResultFromSubmitsList(submits, userId, problemId, fm)
+        await result.upsert()
+        allResults.push result
+    return allResults
+
+makeProblemResult = (userId, problemId, submits, fmResults) ->
+    result = makeResultFromSubmitsList(submits, userId, problemId)
+    result.subFindMistakes = await makeSubFindMistakes(problemId, fmResults) 
+    await result.upsert()
+    return result
+
+makeSubFindMistakes = (problemId, results) ->
+    result = 
+        ok: 0
+        wa: 0
+        none: 0
+    for r in results || []
+        if r.ok > 0 or r.solved > 0
+            result.ok++
+        else if r.attempts > 0
+            result.wa++
+    totalFm = (await FindMistake.findApprovedByProblemAndNotUser(problemId, null)).length
+    result.none = totalFm - result.ok - result.wa
+    return result
+
 export default updateResults = (user, dirtyResults) ->
+    start = new Date()
     logger.info "updating results for user ", user
     await updateResultsForTable(user, "main", dirtyResults)
-    logger.info "updated results for user ", user
+    logger.info "updated results for user ", user, " spent time ", (new Date()) - start

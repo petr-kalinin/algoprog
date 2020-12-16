@@ -133,7 +133,7 @@ class EditingUser extends React.Component
             if (z.passError)
                 await @setState passError: true
             else
-                @props.handleReload()
+                window.goto("/user/#{@props.user._id}")()
             await @setState loading: false
         catch
             @setState unknownError: true
