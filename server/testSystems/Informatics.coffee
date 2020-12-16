@@ -132,7 +132,7 @@ export default class Informatics extends TestSystem
     _informaticsProblemId: (problemId) ->
         problemId.substring(1)
 
-    @getAdmin: () ->
+    _getAdmin: () ->
         admin = await RegisteredUser.findAdmin()
         if not admin
             return undefined
@@ -168,7 +168,7 @@ export default class Informatics extends TestSystem
         
 
     selfTest: () ->
-        await Informatics.getAdmin()
+        await @_getAdmin()
 
     downloadProblem: (options) ->
         href = "https://informatics.msk.ru/mod/statements/view.php?chapterid=#{options.id}"
