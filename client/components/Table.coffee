@@ -62,15 +62,17 @@ export default Table = (props) ->
 
     <div>
         {props.headerText && <Text levels={levels} /> }
-        <table className={globalStyles.mainTable}>
-            <tbody>
-                <TableRow details={props.details} header={true} results={header}/>
-                {
-                res = []
-                a = (el) -> res.push(el)
-                for result in props.data
-                    a <TableRow details={props.details} user={result.user} results={result.results} key={result.user._id}/>
-                res}
-            </tbody>
-        </table>
+        <div className={globalStyles.mainTable_div}>
+            <table className={globalStyles.mainTable}>
+                <tbody>
+                    <TableRow details={props.details} header={true} results={header}/>
+                    {
+                    res = []
+                    a = (el) -> res.push(el)
+                    for result in props.data
+                        a <TableRow details={props.details} user={result.user} results={result.results} key={result.user._id}/>
+                    res}
+                </tbody>
+            </table>
+        </div>
     </div>
