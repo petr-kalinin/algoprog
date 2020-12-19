@@ -85,7 +85,7 @@ export default SubmitListTable = (props) ->
                                 <td><Link to="/material/#{submit.problem}">{submit.fullProblem.name}</Link></td>
                               </>
                         }
-                        <td>{moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
+                        <td>{if submit.time=="_orig" then "(Исходное решение)" else moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>
                             <div className='visible-xs visible-sm'>{LANGUAGE_ABBREVIATED[submit.language]}</div>

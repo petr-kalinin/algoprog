@@ -4,7 +4,7 @@ export getClassStartingFromJuly = (year) -> return getClass(new Date(year, 6, 1)
 
 export getYear = (clas) ->
     now = new Date()
-    return (11-clas+now.getFullYear() + Math.floor(6 + now.getMonth())/12)
+    return (11-clas+now.getFullYear() + Math.floor((6 + now.getMonth())/12))
 
 export default getClass = (graduateDate) ->
     now = new Date()

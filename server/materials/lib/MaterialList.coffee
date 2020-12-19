@@ -3,19 +3,23 @@ import awaitAll from '../../../client/lib/awaitAll'
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
+makeOrder = (order, i) ->
+    "#{order}.#{(""+i).padStart(3, 0)}"
+
 export default class MaterialList
     constructor: (@submaterials) ->
 
-    build: (context, properties, options = {}) ->
+    build: (context, order, properties, options = {}) ->
         {allowAsync = false, keepSubmaterials = false} = options
-        context.pushPath(properties._id, properties.title, properties.type)
+        context.pushPath(properties._id, order, properties.title, properties.type)
 
+        @submaterials = (s for s in @submaterials when s)
         if allowAsync
-            submaterials = await awaitAll(@submaterials.map((material) -> material().build(context)))
+            submaterials = await awaitAll(@submaterials.map((material, i) -> material().build(context, makeOrder(order, i))))
         else
             submaterials = []
-            for submaterial in @submaterials
-                submaterials.push(await submaterial().build(context))
+            for submaterial, i in @submaterials
+                submaterials.push(await submaterial().build(context, makeOrder(order, i)))
 
         context.popPath(properties._id)
 
@@ -34,7 +38,7 @@ export default class MaterialList
                 if ss.type == "topic" or sm.type == "topic"
                     flattenedSubmaterials.push(ss)
 
-        material = {properties..., materials: flattenedSubmaterials}
+        material = {properties..., order, materials: flattenedSubmaterials}
         await context.process(material)
 
         if keepSubmaterials

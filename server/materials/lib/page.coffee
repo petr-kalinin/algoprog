@@ -4,12 +4,13 @@ export class Page
         if options.id
             console.log "Have id in options: id=#{@id}"
 
-    build: (context) ->
+    build: (context, order) ->
         data = 
             _id: @id || context.generateId(),
             type: @type,
             content: @content
             title: @title
+            order: order
 
         if @skipTree
             data.treeTitle = null 

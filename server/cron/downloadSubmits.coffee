@@ -87,6 +87,7 @@ class SubmitDownloader
             newSubmit.downloadTime = oldSubmit.downloadTime
             newSubmit.hashes = oldSubmit.hashes
             newSubmit.testSystemData = {oldSubmit.testSystemData..., newSubmit.testSystemData...}
+            newSubmit.findMistake = oldSubmit.findMistake
         if (oldSubmit and newSubmit and deepEqual(oldSubmit, newSubmit.toObject()) \
                 and oldSubmit.results \
                 and oldSubmit.source != "" \
@@ -137,12 +138,12 @@ class SubmitDownloader
 
         if not newSubmit?.userList then newSubmit.userList = user?.userList
 
-        logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem
+        await @onNewSubmit?(newSubmit)
+        logger.debug "Adding submit", newSubmit._id, newSubmit.user, newSubmit.problem, newSubmit.findMistake
         try
             await newSubmit.upsert()
         catch e
             logger.warning "Could not upsert submit", newSubmit._id, newSubmit.user, newSubmit.problem, e
-        await @onNewSubmit?(newSubmit)
         await @setDirty(newSubmit)
         logger.debug "Done submit", newSubmit._id, newSubmit.user, newSubmit.problem
         res
@@ -209,14 +210,14 @@ forAllTestSystems = (callable) ->
         await callable(system)
 
 
-export runForUserAndProblem = (userId, problemId, onNewSubmit) ->
+export runForUserAndProblem = (userId, problemId, onNewSubmit, forceMetadata) ->
     try
         registeredUser = await RegisteredUser.findByKeyWithPassword(userId)
         problem = await Problem.findById(problemId)
         system = getTestSystem(problem.testSystemData?.system)
         logger.info "runForUserAndProblem", system.id(), userId, problemId
         systemDownloader = await system.submitDownloader(registeredUser, problem, 100)
-        await (new SubmitDownloader(systemDownloader, 1, 10, false, onNewSubmit, problem.testSystemData?.system)).run()
+        await (new SubmitDownloader(systemDownloader, 1, 10, forceMetadata, onNewSubmit, problem.testSystemData?.system)).run()
         logger.info "Done runForUserAndProblem", system.id(), userId, problemId
     catch e
         logger.error "Error in runForUserAndProblem", e

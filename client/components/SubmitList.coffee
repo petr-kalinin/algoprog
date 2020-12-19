@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/lib/Button'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import Tab from 'react-bootstrap/lib/Tab'
 
+import { Link } from 'react-router-dom'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 import outcomeToText from '../lib/outcomeToText'
@@ -35,7 +37,8 @@ OpenSubmit = (props) ->
 class SubmitList extends React.Component
     constructor: (props) ->
         super(props)
-        @state = {bestSubmits: false}
+        @state = 
+            bestSubmits: false
         @openSubmit = @openSubmit.bind(this)
         @closeSubmit = @closeSubmit.bind(this)
         @toggleBestSubmits = @toggleBestSubmits.bind this
@@ -66,13 +69,30 @@ class SubmitList extends React.Component
             return blockedByTestSystem
         ###
         <div>
-            {
-            if @props.bestSubmits.length
+            {if @props.noBestSubmits || not @props.findMistake?.pagesCount
+                null
+            else if @props.result?.solved != 0 || @props.me.admin
+                <h4><Link to="/findMistakeProblem/#{@props.material._id}">Найди ошибку</Link></h4>
+            else if @props.result?.solved == 0
+                <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь вы сможете искать ошибки в чужих решениях">Найди ошибку <FontAwesome name="question-circle-o"/></span></h4>
+            }
+            {if @props.noBestSubmits 
+                null
+            else if @props.bestSubmits?.length
                 <h4><a href="#" onClick={@toggleBestSubmits}>Хорошие решения</a></h4>
-            else if @props.result.solved == 0
+            else if @props.result?.solved == 0
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
             }
-            <SubmitForm material={@props.material} problemId={@props.material._id} reloadSubmitList={@props.handleReload}/>
+            <SubmitForm material={@props.material} 
+                problemId={@props.material._id} 
+                reloadSubmitList={@props.handleReload} 
+                noFile={@props.noFile} 
+                canSubmit={@props.canSubmit} 
+                findMistake={@props.findMistake} 
+                startLanguage={@props.startLanguage || (@props.data?.length && @props.data[@props.data.length-1].language) }
+                editorOn={@props.editorOn}
+                editorDidMount={@props.editorDidMount}
+                editorValue={@props.data?.length && @props.data[@props.data.length-1].sourceRaw || @props.defaultSource}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
@@ -93,12 +113,26 @@ class SubmitList extends React.Component
 options =
     urls: (props) ->
         if props?.myUser?._id
-            return
-                data: "submits/#{props.myUser._id}/#{props.material._id}"
-                result: "result/#{props.myUser._id}::#{props.material._id}"
-                bestSubmits: "bestSubmits/#{props.material._id}"
+            result = {}
+            if not props?.noBestSubmits
+                result.bestSubmits = "bestSubmits/#{props.material._id}"
+                if props.myUser?._id
+                    result.findMistake = "findMistakeProblemPages/#{props.myUser._id}/#{props.material._id}"
+            return result
         return {}
 
-    timeout: 20 * 1000
+    wsurls: (props) ->
+        if props?.myUser?._id
+            result = {}
+            if props?.findMistake
+                result.data = "submitsForFindMistake/#{props.myUser._id}/#{props.findMistake}"
+            else
+                result.data = "submits/#{props.myUser._id}/#{props.material._id}"
+            if not props?.noBestSubmits
+                result.result = "result/#{props.myUser._id}::#{props.material._id}"
+            return result
+        return {}
+
+    allowNotLoaded: true
 
 export default withMyUser(ConnectedComponent(SubmitList, options))

@@ -49,6 +49,7 @@ submitToTestSystem = (submit, submitProcess) ->
     onNewSubmit = (newSubmit) ->
         if not compareSources(newSubmit.sourceRaw, submit.sourceRaw)
             return
+        newSubmit.findMistake = submit.findMistake
         await Hash.removeForSubmit(submit._id)
         await Submit.remove({_id: submit._id})
         await SubmitProcess.remove({_id: submit._id})
@@ -66,7 +67,6 @@ submitToTestSystem = (submit, submitProcess) ->
             await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language, testSystemData: submit.testSystemData})
             await sleep(1000)
         finally
-            logger.info "Error in submitWithObject, will try downloadSubmits"
             await downloadSubmits.runForUserAndProblem(registeredUser.userKey(), submit.problem, onNewSubmit)
     catch e
         if not success
@@ -106,7 +106,12 @@ submitOneSubmit = (submit) ->
     catch e
         if e.duplicate
             logger.info "Duplicate"
-            submit.outcome = "Вы уже отправляли этот код"
+            submit.outcome = "DP"
+            await submit.upsert()
+            await SubmitProcess.remove({_id: submit._id})
+        else if e.badPassword
+            logger.info "Bad password"
+            submit.outcome = "PW"
             await submit.upsert()
             await SubmitProcess.remove({_id: submit._id})
         else

@@ -31,9 +31,15 @@ class ApproveFindMistake extends React.Component
             @props.handleReload()
 
     render: () ->
-        if not @props.data.mistake
-            return <div>Тут ничего нет</div>
-        <SubmitListWithDiff submits={@props.data.submits} setApprove={@setApprove} SubmitComponent={SubmitComponent} PostSubmit={PostSubmit}/>
+        <>
+            <div>Всего: {@props.data.count}</div>
+            {
+            if not @props.data.mistake
+                <div>Тут ничего нет</div>
+            else
+                <SubmitListWithDiff submits={@props.data.submits} setApprove={@setApprove} SubmitComponent={SubmitComponent} PostSubmit={PostSubmit}/>
+            }
+        </>
 
 options = {
     urls: (props) ->

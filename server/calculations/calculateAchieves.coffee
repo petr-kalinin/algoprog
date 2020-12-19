@@ -1,4 +1,5 @@
 import ACHIEVES from '../../client/lib/achieves'
+import logger from '../log'
 
 achievesConditions = (user) ->
     chocos0 = (user.chocos?[0] || 0) - 1
@@ -31,6 +32,8 @@ achievesConditions = (user) ->
             doNoRevoke: true
 
 export default calculateAchieves = (user) ->
+    start = new Date()
+    logger.info "calculate achieves ", user._id
     result = user?.achieves || []
     return result
     conditions = achievesConditions(user)
@@ -56,5 +59,5 @@ export default calculateAchieves = (user) ->
                 bestSuffix = suffix
         if bestSuffix
             result.push("#{prefix}:#{bestSuffix}")
-
+    logger.info "calculated achieves ", user._id, " spent time ", (new Date()) - start
     return result

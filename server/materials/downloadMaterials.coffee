@@ -25,12 +25,12 @@ class Context
         @pathToId[pathItem]++
         return "#{pathItem}#{@pathToId[pathItem]}"
 
-    pushPath: (id, title, type) ->
+    pushPath: (id, order, title, type) ->
         @path.push
             _id: id
             title: title
         for processor in @processors
-            processor.pushPath?(id, title, type)
+            processor.pushPath?(id, order, title, type)
 
     popPath: (id) ->
         @path.pop(id)
@@ -51,7 +51,13 @@ class Context
 
 
 class SaveProcessor
+    constructor: () ->
+        @ids = {}
+
     process: (material) ->
+        if (material._id of @ids) and (material.type != "problem")
+            throw "Duplicate material id found: #{material._id}"
+        @ids[material._id] = 1
         material = clone(material)
         newSubmaterials = []
         inProblems = false
@@ -88,7 +94,7 @@ class ContestProcessor
     level: () ->
         @path[@path.length - 1]
 
-    pushPath: (id, title, type) ->
+    pushPath: (id, order, title, type) ->
         if type != "level" and type != "main"
             return
         if @level()
@@ -98,6 +104,7 @@ class ContestProcessor
             name: id
             tables: []
             parent: @level()
+            order: order
         @path.push id
 
     popPath: (id) ->
@@ -124,15 +131,17 @@ class ContestProcessor
                     level: ""
                     tables: []
                     testSystemData: material.testSystemData
+                    order: material.order
         else if material.type == "contest" or material.type == "topic"
             problemIds = (m._id for m in material.materials when m.type == "problem")
             if problemIds.length == 0
                 return
             @tables[id] = new Table
                 _id: id
-                name: material.treeTitle || material.title
+                name: @level() + ": " + (material.treeTitle || material.title)
                 problems: problemIds
                 parent: @level()
+                order: material.order
             for pid in problemIds
                 @problems[pid].tables.push(id)
                 if @problems[pid].level < @level()
@@ -160,7 +169,7 @@ class TreeProcessor
         @trees[id] = material
 
     makeTree: (material) ->
-        if material.type in ["label", "epigraph", "link"] and material.content != "/comments"
+        if material.type in ["label", "epigraph", "link"] and material.content != "/comments" and material.content != "/findMistakeList"
             return null
         if material.treeTitle == null
             return null
@@ -194,7 +203,7 @@ export default downloadMaterials = () ->
     contestProcessor = new ContestProcessor
     context = new Context([saveProcessor, treeProcessor, contestProcessor])
 
-    await root()().build(context)
+    await root()().build(context, "")
 
     tree = treeProcessor.getTree("main")
     tree._id = "tree"

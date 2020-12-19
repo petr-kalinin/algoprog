@@ -3,9 +3,9 @@ import Problem from '../models/problem'
 import Result from '../models/result'
 import logger from '../log'
 
-import {startDayForWeeks, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK} from './ratingConstants'
+import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK, FM_CONST} from './ratingConstants'
 
-levelVersion = (level) ->
+export levelVersion = (level) ->
     if (level.slice(0,3) == "reg")
         major = 3
         minor = 'А'
@@ -46,7 +46,12 @@ activityScore = (level, date) ->
     return Math.sqrt(v.major + 1) * timeScore(date)
 
 export default calculateRatingEtc = (user) ->
+    start = new Date()
+    logger.info "calculate rating etc ", user._id
     thisStart = new Date(startDayForWeeks[user.userList])
+    now = new Date()
+    nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
+    firstWeek = nowWeek - lastWeeksToShow + 1
 
     weekByTime = (time) ->
         submitDate = new Date(time)
@@ -58,6 +63,7 @@ export default calculateRatingEtc = (user) ->
 
     submits = await Submit.findByUser(user._id)
     results = await Result.findByUser(user._id)
+    fmResults = await Result.findByUserWithFindMistakeSet(user._id)
     weekSolved = {}
     weekOk = {}
     wasSubmits = {}
@@ -78,7 +84,7 @@ export default calculateRatingEtc = (user) ->
         if not level  # this will happen, in particular, if this is not a problem result
             continue
         week = weekByTime(r.lastSubmitTime)
-        if r.solved == 1
+        if r.solved == 1 
             inc(weekSolved, week)
             rating += levelScore(level)
             activity += activityScore(level, r.lastSubmitTime)
@@ -89,6 +95,15 @@ export default calculateRatingEtc = (user) ->
             activity -= 2 * activityScore(level, r.lastSubmitTime)
         else if r.ok == 1
             inc(weekOk, week)
+
+    for r in fmResults
+        level = await findProblemLevel(r.table)
+        if not level  # this will happen, in particular, if this is not a problem result
+            continue
+        week = weekByTime(r.lastSubmitTime)
+        if r.solved == 1 or r.ok == 1
+            rating += levelScore(level) * FM_CONST
+            activity += activityScore(level, r.lastSubmitTime) * FM_CONST
 
     ###
     for level in ["1А", "1Б"]
@@ -105,10 +120,10 @@ export default calculateRatingEtc = (user) ->
             weekSolved[week] = 0.5
 
     for w of weekSolved
-        if w<0
+        if w<firstWeek
             delete weekSolved[w]
     for w of weekOk
-        if w<0
+        if w<firstWeek
             delete weekOk[w]
 
     activity *= (1 - WEEK_ACTIVITY_EXP) # make this averaged
@@ -122,3 +137,4 @@ export default calculateRatingEtc = (user) ->
         ratingSort: if activity > ACTIVITY_THRESHOLD then rating else -1/(rating+1),
         active: if activity > ACTIVITY_THRESHOLD then 1 else 0
     }
+    logger.info "calculated rating etc ", user._id, " spent time ", (new Date()) - start

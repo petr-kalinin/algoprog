@@ -7,11 +7,35 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 
 import callApi from '../lib/callApi'
 
-SimplePage = (props) ->
-    <div>
-        <div dangerouslySetInnerHTML={{__html: props.material.content}}>
+class SimplePage extends React.Component
+    updatePreElements: () =>
+        preElements = @statementEl.querySelectorAll("pre")
+        preElements.forEach (preElement) ->
+            copyBtn = document.createElement "button"
+            copyBtn.className = "btn btn-default btn-xs"
+            copyBtn.appendChild document.createTextNode "скопировать"
+            copyBtn.onclick = () =>
+                navigator.clipboard.writeText preElement.innerText
+                copyBtn.textContent = "скопировано"
+                copyBtn.className = "btn btn-success btn-xs"
+                clearSuccess = () => 
+                    copyBtn.className = "btn btn-default btn-xs"
+                    copyBtn.textContent = "скопировать"
+                setTimeout clearSuccess, 1000
+            preElement.before(copyBtn)
+
+    componentDidMount: () =>
+        @updatePreElements()
+
+    componentDidUpdate: (prevProps) =>
+        if @props.material.content != prevProps.material.content
+            @updatePreElements()
+
+    render: () ->
+        <div>
+            <div dangerouslySetInnerHTML={{__html: @props.material.content}} ref={(el) => @statementEl = el}>
+            </div>
         </div>
-    </div>
 
 class EditablePage extends React.Component
     constructor: (props) ->

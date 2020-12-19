@@ -24,7 +24,7 @@ class Problem
         testSystem = getTestSystem(@testSystem)
         return await testSystem.downloadProblem(@options)
 
-    build: (context) ->
+    build: (context, order) ->
         id = "p#{@id}"
         material = await Material.findById(id)
         if not material
@@ -38,6 +38,7 @@ class Problem
             title: name,
             content: text,
             testSystemData: @testSystemData
+            order: order
 
         await context.process(data)
         

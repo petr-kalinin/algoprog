@@ -3,13 +3,15 @@ require('source-map-support').install()
 import csshook from 'css-modules-require-hook/preset'
 
 express = require('express')
+fs = require('fs')
 passport = require('passport')
+path = require('path')
 compression = require('compression')
 responseTime = require('response-time')
 StatsD = require('node-statsd')
 
 import setupApi from './api/setupApi'
-import jobs from './cron/cron'
+import scheduleJobs from './cron/cron'
 import download from './lib/download'
 import sleep from './lib/sleep'
 import downloadMaterials from './materials/downloadMaterials'
@@ -41,6 +43,7 @@ stats.socket.on 'error',  (error) ->
     logger.error(error)
 
 app = express()
+expressWs = require('express-ws')(app)
 app.enable('trust proxy')
 
 setupMetrics(app)
@@ -52,13 +55,12 @@ app.use(compression())
 
 configurePassport(app, db)
 
-###
-app.use (req, res, next) ->
-    if not req.user?.admin
-        res.status(503).send("На сервере проводятся технические работы. Ожидаемое время восстановления — вторая половина для 9 мая.")
-        return
-    next()
-###
+if process.env["TECH_WORKS"]
+    app.use (req, res, next) ->
+        if not req.user?.admin
+            res.status(503).send("На сервере проводятся технические работы. Ожидаемая продолжительность — несколько часов.")
+            return
+        next()
 
 setupApi(app)
 
@@ -71,7 +73,9 @@ app.get '/status', (req, res) ->
     logger.info "Query string", req.query
     res.send "OK"
 
-app.use renderOnServer
+linkClientJsCss = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/manifest.json'), 'utf-8'))
+
+app.use renderOnServer(linkClientJsCss)
 
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
@@ -87,7 +91,7 @@ start = () ->
         await sleep(30 * 1000)  # wait for a bit to make sure previous deployment has been stopped
         if not (process.env["INSTANCE_NUMBER"]?) or (process.env["INSTANCE_NUMBER"] == "0")
             logger.info("Starting jobs ", process.env["INSTANCE_NUMBER"])
-            jobs.map((job) -> job.start())
+            scheduleJobs()
         else
             logger.info("Will not start jobs", process.env["INSTANCE_NUMBER"])
 
