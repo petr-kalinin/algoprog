@@ -7,7 +7,7 @@ import topic from "../../lib/topic"
 
 export default maxmatching = () ->
     return {
-        topic: topic("Паросочетание максимального веста, венгерский алгоритм", "Задачи на венгерский алгоритм", [
+        topic: topic("Паросочетание максимального веса, венгерский алгоритм", "Задачи на венгерский алгоритм", [
             label("<p>См.\n<a href=\"https://e-maxx.ru/algo/assignment_hungary\">теорию на e-maxx</a>, но <a href=\"https://e-maxx.ru/algo/assignment_mincostflow\">можно писать и mincost-maxflow</a>.\n</p>"),
             problem(111556),
             problem({testSystem: "codeforces", contest: "1107", problem: "F"}),
