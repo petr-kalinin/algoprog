@@ -53,8 +53,8 @@ export default ContributeByWeekCalendar = (props) ->
         months.push <text key={m} x={xMonth[m] * 16} y="-8">{yearMonths[m]}</text>
     # markup of calendar is captured from github calendar html element under text "contributions in the last year"
     <div>
-        <div className={styles.outerDiv} style={width: weeks * 16 + 20 + 20}>
-            <div className={styles.innerDiv}>
+        <div className={styles.outerDiv} >
+            <div className={styles.innerDiv} style={width: weeks * 16 + 20 + 20}>
                 <svg width={weeks * 16 + 20} height="128">
                     <g transform="translate(10, 20)">
                         {row}
