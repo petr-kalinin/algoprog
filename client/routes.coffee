@@ -161,11 +161,13 @@ export default [
         key: "login",
         component: LoginPage,
     },
+    ###
     {
         path: '/register',
         key: "register",
         component: RegisterPage,
     },
+    ###
     {
         path: '/stud',
         key: "/stud",

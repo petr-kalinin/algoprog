@@ -6,6 +6,7 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 News = (props) ->
+    return null
     <div>
         <h4>Новости</h4>
         <PanelGroup id="news">
