@@ -8,7 +8,7 @@ if process.env.MONGODB_HOST and process.env.MONGO_USER and process.env.MONGO_PAS
 else if process.env.MONGODB_ADDON_URI
     url = process.env.MONGODB_ADDON_URI
 else
-    url =(process.env.MONGODB_URL || 'mongodb://localhost/') + 'algoprog'
+    url =(process.env.MONGODB_URL || 'mongodb://localhost/') + 'algoprog_sbory'
 
 logger.info "Using mongo url #{url}"
 
