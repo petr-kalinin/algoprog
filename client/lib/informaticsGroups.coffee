@@ -1,8 +1,3 @@
 export GROUPS =
-    lic40: "7248"
-    lic87: "7248"
-    zaoch: "7247"
-    notnnov: "8592"
-    stud: "7170"
-    graduated: "7248"
+    all: "-1"
     unknown: "7647"
