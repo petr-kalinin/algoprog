@@ -126,11 +126,13 @@ export default [
         key: "pay",
         component: PayPage,
     },
+    ###
     {
         path: '/payment',
         key: "payment",
         component: PaymentPage,
     },
+    ###
     {
         path: '/paymentSuccess',
         key: "paymentSuccess",
