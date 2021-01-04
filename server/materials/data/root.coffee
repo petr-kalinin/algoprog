@@ -6,7 +6,7 @@ import level_roi from "./level_roi"
 #import mainLevels from './mainLevels'
 import allNews from "./news"
 import tables from './tables'
-import two_sat from './topics/2sat'
+import dp from './topics/dp'
 
 export default root = () ->
     return main([
@@ -14,7 +14,7 @@ export default root = () ->
         #allNews(),
         #link("/comments", "Комментарии"),
         #link("/findMistakeList", "Найди ошибку"),
-        two_sat(),
+        dp(),
         #mainLevels()...,
         #level_reg(),
         #level_roi(),

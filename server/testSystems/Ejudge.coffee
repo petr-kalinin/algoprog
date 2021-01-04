@@ -210,8 +210,9 @@ export default class Ejudge extends TestSystem
                 subels[0].parentElement.removeChild(subels[0])
         for tag in ["h3", "table"]
             els = el.getElementsByTagName(tag)
-            lastEl = els[els.length - 1]
-            lastEl.parentElement.removeChild(lastEl)
+            if els
+                lastEl = els[els.length - 1]
+                lastEl.parentElement.removeChild(lastEl)
         els = el.getElementsByTagName("table")
         firstEl = els[0]
         firstEl?.parentElement?.removeChild(firstEl)
