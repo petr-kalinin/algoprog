@@ -25,6 +25,7 @@ usersSchema = new mongoose.Schema
     _id: String,
     name: String,
     userList: String,
+    mainUserList: String
     activated: Boolean,
     chocos: [Number],
     chocosGot: [Number],
