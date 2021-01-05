@@ -7,6 +7,7 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 class BlogPosts extends React.Component
     render:  () ->
+        return null
         if not @props.posts.length
             return null
         <div>
