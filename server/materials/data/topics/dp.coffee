@@ -7,6 +7,15 @@ import topic from "../../lib/topic"
 
 export default dp = () ->
     return topic("ДП", "Задачи на ДП", [
+            problem(498),
+            problem(44),
+            problem(631),
+            problem(691),
+            problem(217),
+            problem(1212),
+            problem(24),
+            problem(571),
+            problem(78),
             problem({testSystem: "ejudge", contest: "3001", problem: "2"}),
             problem({testSystem: "ejudge", contest: "3001", problem: "1"}),
         ], 
