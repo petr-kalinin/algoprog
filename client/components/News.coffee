@@ -5,7 +5,7 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 
-News = (props) ->
+export default News = (props) ->
     return null
     <div>
         <h4>Новости</h4>
@@ -27,8 +27,10 @@ News = (props) ->
         </PanelGroup>
     </div>
 
+###
 options =
     urls: (props) ->
         news: "material/news"
 
 export default ConnectedComponent(News, options)
+###
