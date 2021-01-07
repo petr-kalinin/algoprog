@@ -10,6 +10,7 @@ import addTotal from '../../client/lib/addTotal'
 import awaitAll from '../../client/lib/awaitAll'
 
 export getTables = (table) ->
+    ###
     if table == "main"
         return ["main"]
     tableIds = table.split(",")
@@ -17,6 +18,8 @@ export getTables = (table) ->
         return tableIds
     table = await Table.findById(tableIds[0])
     return table.tables
+    ###
+    return [table]
 
 getResult = (userId, tableId, collection) ->
     table = await collection.findById(tableId)

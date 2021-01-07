@@ -364,7 +364,7 @@ export default setupApi = (app) ->
     app.get '/api/fullUser/:id', wrap (req, res) ->
         userId = req.params.id
         tables = []
-        for t in allTables when t != 'main'
+        for t in allTables
           tables.push(getTables(t))
         tables = await awaitAll(tables)
 
