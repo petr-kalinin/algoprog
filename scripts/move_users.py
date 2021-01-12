@@ -5,7 +5,7 @@ import pymongo
 import os
 
 MONGODB_URI = os.environ['MONGODB_URI']
-IDS = [601230]
+IDS = [301755]
 
 algoprog = pymongo.MongoClient(MONGODB_URI)["algoprog"]
 algoprog_sbory = pymongo.MongoClient(MONGODB_URI)["algoprog_sbory"]
