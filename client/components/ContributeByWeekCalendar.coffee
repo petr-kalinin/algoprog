@@ -38,7 +38,7 @@ export default class ContributeByWeekCalendar extends React.PureComponent
                     color = "#30a14e"
                 else
                     color = "#216e39"
-            onClickFun = do (currDay) -> -> if submits and (currDay of submits) then @props.clickOnDay(currDay)
+            onClickFun = do (currDay) => => if submits and (currDay of submits) then @props.clickOnDay(currDay)
             title = currDay
             if submits and (currDay of submits)
                 title += ": #{submits[currDay]}"
