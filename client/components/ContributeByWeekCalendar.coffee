@@ -5,7 +5,7 @@ React = require('react')
 export default class ContributeByWeekCalendar extends React.PureComponent
     componentDidMount: () ->
         if @table_div
-            @table_div.scrollTo 10000, 0
+            @table_div?.scrollTo 10000, 0
 
     render: () ->
         submits = @props.calendar.byDay
