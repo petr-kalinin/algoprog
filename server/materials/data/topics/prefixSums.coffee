@@ -5,8 +5,8 @@ import topic from "../../lib/topic"
 
 export default prefixSums = () ->
     return {
-        topic: topic("Префиксные суммы", "Задачи на префиксные суммы", [
-            label("Идея простая, но легкой теории я с ходу не нашел. Можете почитать по следующим ссылкам: <a href='https://brestprog.by/topics/prefixsums/'>раз</a>, <a href='https://silvertests.ru/GuideView.aspx?id=31909'>два</a>, <a href='https://ru.wikipedia.org/wiki/Префиксная_сумма'>три</a>, или спросить меня."),
+        topic: topic("Префиксные суммы и смежные темы", "Задачи на префиксные суммы", [
+            label("<a href='https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html'>Теория по префиксным суммам и смежным темам</a>"),
             problem(2771),
             problem(2772),
             problem(3313),
