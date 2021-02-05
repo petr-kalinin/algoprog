@@ -35,6 +35,12 @@ export default LANGUAGES = {
         ejudge: 18
         codeforces: 36
     },
+    "GNU Go": {
+        extensions: ["go"],
+        informatics: 53
+        ejudge: 53
+        codeforces: 32
+    },
     "PHP": {
         extensions: ["php"],
         informatics: 22,
