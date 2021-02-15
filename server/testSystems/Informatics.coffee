@@ -48,9 +48,9 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
-            page = await download('https://informatics.msk.ru/login/index.php', @jar)
+            page = await @download('https://informatics.msk.ru/login/index.php')
             token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
-            page = await download("https://informatics.msk.ru/login/index.php", @jar, {
+            page = await @download("https://informatics.msk.ru/login/index.php", {
                 method: 'POST',
                 form: {
                     username: @username,
@@ -72,7 +72,7 @@ class LoggedInformaticsUser
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
 
     getId: () ->
-        page = await download("https://informatics.msk.ru/course/view.php?id=1135", @jar)
+        page = await @download("https://informatics.msk.ru/course/view.php?id=1135")
         @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
         id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]
         if not @name or not id or id.length < 2
@@ -96,7 +96,7 @@ class LoggedInformaticsUser
         return result
 
     _runSubmit: (problemId, addParams) ->
-        page = await download("https://informatics.msk.ru/py/problem/#{problemId}/submit", @jar, {
+        page = await @download("https://informatics.msk.ru/py/problem/#{problemId}/submit", {
             addParams...,
             method: 'POST',
             followAllRedirects: true,
