@@ -17,7 +17,7 @@ import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownload
 
 REQUESTS_LIMIT = 1
 UNKNOWN_GROUP = '7647'
-TIMEOUT = 1000 * 60
+TIMEOUT = 1000 * 60 / 3
 
 class InformaticsUser extends TestSystemUser
     constructor: (@id) ->
