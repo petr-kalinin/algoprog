@@ -18,6 +18,8 @@ import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownload
 REQUESTS_LIMIT = 1
 UNKNOWN_GROUP = '7647'
 TIMEOUT = 1000 * 60 / 3
+_requests = 0
+_promises = []
 
 class InformaticsUser extends TestSystemUser
     constructor: (@id) ->
@@ -80,18 +82,18 @@ class LoggedInformaticsUser
         return id[1]
 
     download: (href, options) ->
-        if @requests >= REQUESTS_LIMIT
-            await new Promise((resolve) => @promises.push(resolve))
-        if @requests >= REQUESTS_LIMIT
+        if _requests >= REQUESTS_LIMIT
+            await new Promise((resolve) => _promises.push(resolve))
+        if _requests >= REQUESTS_LIMIT
             throw "Too many requests"
-        @requests++
+        _requests++
         await sleep(TIMEOUT)
         try
             result = await download(href, @jar, options)
         finally
-            @requests--
-            if @promises.length
-                promise = @promises.shift()
+            _requests--
+            if _promises.length
+                promise = _promises.shift()
                 promise(0)  # resolve
         return result
 
