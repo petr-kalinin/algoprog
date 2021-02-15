@@ -7,6 +7,7 @@ import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 
 import download, {downloadLimited} from '../lib/download'
+import sleep from '../lib/sleep'
 import logger from '../log'
 
 import TestSystem, {TestSystemUser} from './TestSystem'
@@ -14,9 +15,9 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownloader'
 
 
-REQUESTS_LIMIT = 20
+REQUESTS_LIMIT = 1
 UNKNOWN_GROUP = '7647'
-
+TIMEOUT = 1000 * 60
 
 class InformaticsUser extends TestSystemUser
     constructor: (@id) ->
@@ -84,6 +85,7 @@ class LoggedInformaticsUser
         if @requests >= REQUESTS_LIMIT
             throw "Too many requests"
         @requests++
+        await sleep(TIMEOUT)
         try
             result = await download(href, @jar, options)
         finally
