@@ -13,7 +13,8 @@ weekSet = (userList) ->
     thisStart = new Date(startDayForWeeks["" + userList])
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
-    [(nowWeek - lastWeeksToShow + 1)..nowWeek]
+    res = [(nowWeek - lastWeeksToShow + 1)..nowWeek]
+    res.reverse()
 
 bgColor = (number) ->
     if !number
@@ -41,9 +42,9 @@ bgColorDark = (number) ->
 
 weekHeader = (weekNumber, weekCount, userList) ->
     thisStart = new Date(startDayForWeeks[userList])
-    startDay = new Date(+thisStart + MSEC_IN_WEEK * weekNumber)
-    endDay = new Date(+startDay + MSEC_IN_WEEK * weekCount - 1)
-    startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1) + "-" + endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1)
+    endDay = new Date(+thisStart + MSEC_IN_WEEK * (weekNumber + 1) - 1)
+    startDay = new Date(+endDay - MSEC_IN_WEEK * weekCount + 1)
+    endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1) + "-" + startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1)
 
 Header = (props) ->
     cl = props.headerClass || "h1"
@@ -99,10 +100,6 @@ SolvedByWeekRow = (props) ->
 SolvedByWeekRowWithTheme = withTheme(SolvedByWeekRow)
 
 class SolvedByWeek extends React.PureComponent
-  componentDidMount: () ->
-    if @table_div
-        @table_div?.scrollTo 10000, 0
-
   render: () ->
     if not @props.users?.length
         return <table className={globalStyles.mainTable}/>
