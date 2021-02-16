@@ -45,6 +45,7 @@ import events_sort from './topics/events_sort'
 import tertiary_search from './topics/tertiary_search'
 import linked_lists from './topics/linked_lists'
 import dp_middle from './topics/dp_middle'
+import dp_sbory from './topics/dp_sbory'
 import hash from './topics/hash'
 import heap from './topics/heap'
 import dijkstra_with_heap from './topics/dijkstra_with_heap'
@@ -138,6 +139,7 @@ ALL_TOPICS = [
     tertiary_search,
     linked_lists,
     dp_middle,
+    dp_sbory,
     hash,
     heap,
     dijkstra_with_heap,

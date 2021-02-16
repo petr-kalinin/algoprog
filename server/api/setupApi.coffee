@@ -552,8 +552,8 @@ export default setupApi = (app) ->
             submits = await awaitAll(submits)
             ws.send JSON.stringify(submits)
 
-    app.get '/api/submitsByDay/:user/:day', ensureLoggedIn, wrap (req, res) ->
-        submits = await Submit.findByUserAndDay(req.params.user, req.params?.day)
+    app.get '/api/submitsByDay/:user/:day', wrap (req, res) ->
+        submits = await Submit.findByUserAndDayWithFindMistakeAny(req.params.user, req.params?.day)
         submits = submits.map((submit) -> submit.toObject())
         submits = submits.map(hideTests)
         submits = submits.map(expandSubmit)

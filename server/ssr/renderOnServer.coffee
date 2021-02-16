@@ -96,7 +96,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     try
         initialState = 
             data: [
-                {data: req.user
+                {data: req.user || {}
                 success: true
                 updateTime: new Date()
                 url: "me"},

@@ -5,18 +5,8 @@
 }
 
 .outerDiv {
-  border-radius: "6px";
-  border: "1px solid #e1e4e8";
-  float: "left";
+  overflow: auto;
 }
 
 .innerDiv {
-  display: "flex";
-  padding-top: "4px";
-  margin-right: "8px";
-  margin-left: "8px";
-  height: "135";
-  overflow: "hidden";
-  align-items: "start";
-  flex-direction: "column";
 }

@@ -24,6 +24,7 @@
 }
 .mainTable_user {
     text-align: left;
+    z-index: 1;
 }
 .border {
     background:black;

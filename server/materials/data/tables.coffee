@@ -38,8 +38,9 @@ export default tables = () ->
         lic40: "Лицей 40",
         lic87: "Лицей 87",
         zaoch: "Нижегородские школьники",
-        notnnov: "Остальные школьники"
+        notnnov: "Остальные школьники",
         stud: "Студенты и старше"
+        sbory: "Сборы"
 
     materials = []
     for group, groupName of groups

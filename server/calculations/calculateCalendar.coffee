@@ -6,7 +6,7 @@ import logger from '../log'
 export default calculateCalendar = (user) ->
     start = new Date()
     logger.info "updating calendar for user ", user
-    submits = await Submit.findByUser(user)
+    submits = await Submit.findByUserWithFindMistakeAny(user)
     events = {}
     previousYear = (new Date()).getFullYear() - 1
     for submit in submits

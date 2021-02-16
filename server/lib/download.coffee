@@ -22,7 +22,7 @@ export default download = (href, jar, options={}) ->
     if not jar
         jar = request.jar()
     delay = 5
-    maxAttempts = options?.maxAttempts || 8
+    maxAttempts = options?.maxAttempts || 1
     options.headers = options.headers || {}
     options.headers["User-Agent"] = "algoprog.ru"
     for i in [1..maxAttempts]

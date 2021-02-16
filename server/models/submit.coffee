@@ -80,7 +80,11 @@ submitsSchema.statics.findByUser = (userId) ->
         user: userId
         findMistake: null
 
-submitsSchema.statics.findByUserAndDay = (userId, day) ->
+submitsSchema.statics.findByUserWithFindMistakeAny = (userId) ->
+    Submit.find
+        user: userId
+
+submitsSchema.statics.findByUserAndDayWithFindMistakeAny = (userId, day) ->
     date = new Date(Date.parse(day))
     start = new Date(date)
     end = new Date(date)
@@ -89,7 +93,6 @@ submitsSchema.statics.findByUserAndDay = (userId, day) ->
     Submit.find
         user: userId
         time: {$gte: start, $lt: end}
-        findMistake: null
 
 submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
     Submit.find({

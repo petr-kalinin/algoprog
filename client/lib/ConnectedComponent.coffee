@@ -118,7 +118,6 @@ export default ConnectedComponent = (Component, options) ->
             if options.propogateReload
                 @props.handleReload?()
 
-
         requestDataAndSetTimeout: () ->
             try
                 await awaitAll(@requestData(options.timeout))
