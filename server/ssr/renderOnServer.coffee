@@ -93,6 +93,11 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         return "light"
 
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
+    # https://github.com/HenningM/express-ws/issues/64
+    if req.path.includes(".websocket")
+        console.log "Ignoring websocket path in renderOnServer: ", req.path
+        next()
+        return
     try
         initialState = 
             data: [
