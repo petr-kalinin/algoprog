@@ -100,6 +100,10 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         return "light"
 
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
+    # https://github.com/HenningM/express-ws/issues/64
+    if req.path.includes(".websocket")
+        next()
+        return
     try
         initialState = 
             data: [
