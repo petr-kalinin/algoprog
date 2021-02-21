@@ -17,7 +17,7 @@ import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownload
 
 REQUESTS_LIMIT = 1
 UNKNOWN_GROUP = '7647'
-TIMEOUT = 1000
+TIMEOUT = 1000 * 6
 _requests = 0
 _promises = []
 
