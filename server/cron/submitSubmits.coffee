@@ -18,7 +18,7 @@ import awaitAll from '../../client/lib/awaitAll'
 import logger from '../log'
 
 makeTimeouts = () ->
-    timeout = 1000
+    timeout = 1000 * 60
     result = []
     while true
         result.push(timeout)
