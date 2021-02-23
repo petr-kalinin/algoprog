@@ -11,10 +11,13 @@ import NavItem from 'react-bootstrap/lib/NavItem'
 
 import { Link } from 'react-router-dom'
 
+import ConnectedComponent from '../lib/ConnectedComponent'
+
 import Sceleton from './Sceleton'
 
 import globalStyles from './global.css'
 import styles from './Root.css'
+
 ###
 Inner = (props) ->
     <div>
@@ -128,7 +131,17 @@ Inner = (props) ->
 ###
 
 Inner = (props) ->
-    <div/>
+    <div>
+        {props.contests.map((c) -> <div key={c._id}><Link to="/contest/#{c._id}">{c.name}</Link></div> )}
+    </div>
+
+options =
+    urls: (props) ->
+        contests: "allContests"
+
+    timeout: 0
+
+Inner = ConnectedComponent(Inner, options)
     
 export default Root = (props) ->
     <div>

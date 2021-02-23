@@ -20,17 +20,17 @@ import TopPanel from './TopPanel'
 import styles from './Sceleton.css'
 
 SIZES = ["xs", "sm", "md", "lg"]
-DEFAULT_PATH = [{_id: "main", title: "/"}]
+DEFAULT_PATH = [{href: "/", title: "/"}]
 
 Bread = (props) ->
     <Breadcrumb>
         {
-        props.path.map((p) ->
-            href = if p._id != "main" then "/material/" + p._id else "/"
-            title = if p._id != "main" then p.title else "/"
-            <LinkContainer to={href} key={p._id} isActive={() -> false}>
+        fullPath = DEFAULT_PATH.concat(props.path)
+        console.log fullPath
+        fullPath.map((p) ->
+            <LinkContainer to={p.href} key={p._id} isActive={() -> false}>
                  <Breadcrumb.Item active={p._id==props.id}>
-                    {title}
+                    {p.title}
                 </Breadcrumb.Item>
             </LinkContainer>
         )
@@ -156,9 +156,6 @@ export default class Sceleton extends React.Component
 
     render: () ->
         path = @props.location.path || DEFAULT_PATH
-        breadPath = path.concat
-            _id: @props.location._id
-            title: @props.location.title
         {treeSize, newsSize, selfSize} = getSizes(@state)
         <div className={styles.wrapper}>
             <Helmet>
@@ -174,7 +171,7 @@ export default class Sceleton extends React.Component
                         </ColWrapper>
                         ###}
                         <ColWrapper size={selfSize}>
-                            {@props.hideBread || <Bread path={breadPath} id={@props.location._id} /> }
+                            {@props.hideBread || <Bread path={path} id={@props.location._id} /> }
                             {@props.children}
                         </ColWrapper>
                         {###

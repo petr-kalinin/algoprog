@@ -25,6 +25,7 @@ import sleep from '../lib/sleep'
 
 import notify from '../metrics/notify'
 
+import Contest from '../models/Contest'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
 import Result from '../models/result'
@@ -187,7 +188,8 @@ export default setupApi = (app) ->
     app.get '/api/myUser', ensureLoggedIn, wrap (req, res) ->
         id = req.user.informaticsId
         user = (await User.findById(id))?.toObject() || {}
-        userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        #userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        userPrivate = {}
         res.json({user..., userPrivate...})
 
     app.get '/api/registeredUser/:id', wrap (req, res) ->
@@ -271,6 +273,7 @@ export default setupApi = (app) ->
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         await user.setAchieves achieves
+        ###
         userPrivate = await UserPrivate.findById(req.params.id)
         if not userPrivate
             userPrivate = new UserPrivate({_id: req.params.id})
@@ -278,6 +281,7 @@ export default setupApi = (app) ->
             userPrivate = await UserPrivate.findById(req.params.id)
         await userPrivate.setPaidTill paidTill
         await userPrivate.setPrice price
+        ###
         if password != ""
             for registeredUser in registeredUsers
                 logger.info "Set user password", registeredUser.userKey()
@@ -290,8 +294,10 @@ export default setupApi = (app) ->
         id = req.params.id
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = {}
+        ###
         if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
             userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
+        ###
         res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
@@ -381,6 +387,15 @@ export default setupApi = (app) ->
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
     ###
+
+    app.get '/api/allContests', wrap (req, res) ->
+        res.json(await Contest.findAll())
+
+    app.get '/api/contest/:id', wrap (req, res) ->
+        res.json(await Contest.findById(req.params.id))
+
+    app.get '/api/problem/:id', wrap (req, res) ->
+        res.json(await Problem.findById(req.params.id))
 
     app.get '/api/result/:id', wrap (req, res) ->
         result = (await Result.findById(req.params.id))?.toObject()

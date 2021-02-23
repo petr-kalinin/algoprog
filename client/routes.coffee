@@ -6,9 +6,11 @@ import {
   Redirect
 } from 'react-router-dom'
 
+import ContestPage from './pages/ContestPage'
 import DashboardPage from './pages/DashboardPage'
 import EditUserPage from './pages/EditUserPage'
 import LoginPage from './pages/LoginPage'
+import ProblemPage from './pages/ProblemPage'
 import RegisterPage from './pages/RegisterPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
 import ReviewResultPage from './pages/ReviewResultPage'
@@ -19,6 +21,17 @@ class NoMatch extends React.Component
         return <h2>404 Not found</h2>
 
 export default [
+    {
+        path: '/contest/:id',
+        key: "contest",
+        component: ContestPage,
+    },
+    {
+        path: '/problem/:id',
+        key: "problem",
+        component: ProblemPage,
+    },
+
     {
         path: '/edituser/:id',
         key: "edituser",

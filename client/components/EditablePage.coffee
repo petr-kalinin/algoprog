@@ -28,12 +28,12 @@ class SimplePage extends React.Component
         @updatePreElements()
 
     componentDidUpdate: (prevProps) =>
-        if @props.material.content != prevProps.material.content
+        if @props.material.text != prevProps.material.text
             @updatePreElements()
 
     render: () ->
         <div>
-            <div dangerouslySetInnerHTML={{__html: @props.material.content}} ref={(el) => @statementEl = el}>
+            <div dangerouslySetInnerHTML={{__html: @props.material.text}} ref={(el) => @statementEl = el}>
             </div>
         </div>
 
@@ -42,7 +42,7 @@ class EditablePage extends React.Component
         super(props)
         @state =
             isEditing: false
-            content: @props.material.content
+            text: @props.material.text
             title: @props.material.title
         @setEditing = @setEditing.bind this
         @setField = @setField.bind this
@@ -61,15 +61,15 @@ class EditablePage extends React.Component
         @setState
             isEditing: false
         result = await callApi "editMaterial/#{@props.material._id}", {
-            content: @state.content
+            text: @state.text
             title: @state.title
         }
         @props.reloadMaterial()
 
     componentDidUpdate: () ->
-        if not @state.isEditing and (@state.content != @props.material.content or @state.title != @props.material.title)
+        if not @state.isEditing and (@state.text != @props.material.text or @state.title != @props.material.title)
             @setState
-                content: @props.material.content
+                text: @props.material.text
                 title: @props.material.title
 
     render: () ->
@@ -84,7 +84,7 @@ class EditablePage extends React.Component
                     setField={@setField}
                     state={@state}/>
                 <FieldGroup
-                    id="content"
+                    id="text"
                     label="Текст"
                     componentClass="textarea"
                     setField={@setField}

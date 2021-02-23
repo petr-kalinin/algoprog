@@ -15,5 +15,8 @@ contestsSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a problemsSchema"
 
+contestsSchema.statics.findAll = () ->
+    Contest.find {}
+
 export default Contest = mongoose.model('Contests', contestsSchema);
 

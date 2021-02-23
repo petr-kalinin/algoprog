@@ -19,7 +19,6 @@ import getTestSystem from '../testSystems/TestSystemRegistry'
 import Submit from './Submit'
 import SubmitForm from './SubmitForm'
 import SubmitListTable from './SubmitListTable'
-import BestSubmits from './BestSubmits'
 
 import styles from './SubmitList.css'
 
@@ -67,6 +66,7 @@ class SubmitList extends React.Component
         if blockedByTestSystem
             return blockedByTestSystem
         <div>
+            {###
             {if @props.noBestSubmits || not @props.findMistake?.pagesCount
                 null
             else if @props.result?.solved != 0 || @props.me.admin
@@ -81,6 +81,7 @@ class SubmitList extends React.Component
             else if @props.result?.solved == 0
                 <h4 className="text-muted"><span title="Когда вы получите Зачтено, здесь будут хорошие решения">Хорошие решения <FontAwesome name="question-circle-o"/></span></h4>
             }
+            ###}
             <SubmitForm material={@props.material} 
                 problemId={@props.material._id} 
                 reloadSubmitList={@props.handleReload} 
@@ -95,9 +96,11 @@ class SubmitList extends React.Component
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>
             }
+            {###
             {
             @state.bestSubmits && <BestSubmits submits={@props.bestSubmits} close={@toggleBestSubmits}/>
             }
+            ###}
             <h4>Попытки <Button onClick={@props.handleReload}>{"\u200B"}<FontAwesome name="refresh"/></Button></h4>
             <p>Не обновляйте страницу; список посылок обновляется автоматически.</p>
             {
@@ -110,6 +113,7 @@ class SubmitList extends React.Component
 
 options =
     urls: (props) ->
+        ###
         if props?.myUser?._id
             result = {}
             if not props?.noBestSubmits
@@ -117,6 +121,7 @@ options =
                 if props.myUser?._id
                     result.findMistake = "findMistakeProblemPages/#{props.myUser._id}/#{props.material._id}"
             return result
+        ###
         return {}
 
     wsurls: (props) ->
