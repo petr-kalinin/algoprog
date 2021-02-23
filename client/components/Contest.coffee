@@ -11,6 +11,6 @@ export default Contest = (props) ->
     <div>
         <h1>{props.contest.name}</h1>
         <ListGroup>
-            {props.contest.problems.map((p) -> <ProblemLine problem={p}/>)}
+            {props.contest.problems.map((p) -> <ProblemLine problem={p} key={p._id}/>)}
         </ListGroup>
     </div>

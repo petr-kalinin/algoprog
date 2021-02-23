@@ -20,7 +20,7 @@ import TopPanel from './TopPanel'
 import styles from './Sceleton.css'
 
 SIZES = ["xs", "sm", "md", "lg"]
-DEFAULT_PATH = [{href: "/", title: "/"}]
+DEFAULT_PATH = [{href: "/", title: "/", _id: "/"}]
 
 Bread = (props) ->
     <Breadcrumb>
