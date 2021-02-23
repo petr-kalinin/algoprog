@@ -15,7 +15,6 @@ import GotoProvider from './components/GotoProvider'
 import ScrollToTop from './components/ScrollToTop'
 import YaMetrikaHit from './components/YaMetrikaHit'
 import DefaultHelmet from './components/DefaultHelmet'
-import ConnectedNotifications from './components/ConnectedNotifications'
 import ThemeCss from './components/ThemeCss'
 
 preloadedState = window.__PRELOADED_STATE__
@@ -38,7 +37,6 @@ ReactDOM.hydrate(
                             </GotoProvider>
                         </YaMetrikaHit>
                     </ScrollToTop>
-                    <ConnectedNotifications/>
                 </div>
             </BrowserRouter>
         </div>

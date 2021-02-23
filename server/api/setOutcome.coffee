@@ -10,8 +10,6 @@ import getTestSystem from '../testSystems/TestSystemRegistry'
 
 import {runForUserAndProblem} from '../cron/downloadSubmits'
 
-import setDirty from '../lib/setDirty'
-
 import logger from '../log'
 
 storeToDatabase = (req, res) ->
@@ -45,10 +43,13 @@ storeToDatabase = (req, res) ->
             await newComment.upsert()
             submit.comments.push(comment)
     await submit.upsert()
+    ###
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
     await User.updateUser(submit.user, dirtyResults)
+    ###
+    # TODO: update contest
 
 export default setOutcome = (req, res) ->
     if req.body.result or req.body.comment

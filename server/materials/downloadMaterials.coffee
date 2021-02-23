@@ -1,15 +1,14 @@
 import logger from '../log'
 import Material from '../models/Material'
 import Problem from '../models/problem'
-import Table from '../models/table'
 
-import root from './data/root'
+#import root from './data/root'
 
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
-
+###
 class Context
     constructor: (@processors) ->
         @pathToId = {}
@@ -212,3 +211,8 @@ export default downloadMaterials = () ->
     await contestProcessor.finalize()
     logger.info "Done downloadMaterials"
 
+###
+
+export default downloadMaterials = () ->
+    logger.info "Start downloadMaterials"
+    logger.info "Done downloadMaterials"

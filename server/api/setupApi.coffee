@@ -15,43 +15,23 @@ import { StaticRouter } from 'react-router'
 
 import {UserNameRaw} from '../../client/components/UserName'
 import awaitAll from '../../client/lib/awaitAll'
-import ACHIEVES from '../../client/lib/achieves'
-import {getYear} from '../../client/lib/graduateYearToClass'
-import {unpaidBlocked} from '../../client/lib/isPaid'
-
-import {levelVersion} from '../calculations/calculateRatingEtc'
-import {getTables, getUserResult} from '../calculations/updateTableResults'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
-import findSimilarSubmits from '../hashes/findSimilarSubmits'
-import * as groups from '../informatics/informaticsGroups'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 import download, {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
-import {addIncome, makeReceiptLink} from '../lib/npd'
-import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 
-import {allTables} from '../materials/data/tables'
-import downloadMaterials from '../materials/downloadMaterials'
 import notify from '../metrics/notify'
 
-import BlogPost from '../models/BlogPost'
-import Calendar from '../models/Calendar'
-import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
-import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
-import Payment from '../models/Payment'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
 import Result from '../models/result'
 import Submit from '../models/submit'
 import SubmitComment from '../models/SubmitComment'
-import Table from '../models/table'
-import TableResults from '../models/TableResults'
 import User from '../models/user'
-import UserPrivate from '../models/UserPrivate'
 
 import {addMongooseCallback} from '../mongo/MongooseCallbackManager'
 
@@ -307,15 +287,6 @@ export default setupApi = (app) ->
         await User.updateUser(user._id, {})
         res.send('OK')
 
-    app.post '/api/user/:id/setChocosGot', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        chocosGot = req.body.chocosGot
-        user = await User.findById(req.params.id)
-        await user.setChocosGot chocosGot
-        res.send('OK')
-
     app.get '/api/user/:id', wrap (req, res) ->
         id = req.params.id
         user = (await User.findById(id))?.toObject() || {}
@@ -327,77 +298,8 @@ export default setupApi = (app) ->
     app.get '/api/dashboard', wrap (req, res) ->
         res.json(await dashboard(req.user))
 
-    app.get '/api/table/:userList/:table', wrap (req, res) ->
-        sortBySolved = (a, b) ->
-            if a.user.active != b.user.active
-                return if a.user.active then -1 else 1
-            if a.total.solved != b.total.solved
-                return b.total.solved - a.total.solved
-            if a.total.attempts != b.total.attempts
-                return a.total.attempts - b.total.attempts
-            return 0
-
-        sortByLevelAndRating = (a, b) ->
-            return User.sortByLevelAndRating(a.user, b.user)
-
-        userList = req.params.userList
-        table = req.params.table
-        data = []
-        users = await User.findByList(userList)
-        tables = await getTables(table)
-        #[users, tables] = await awaitAll([users, tables])
-        getTableResults = (user, tableName, tables) ->
-            sumTable = await TableResults.findByUserAndTable(user._id, tableName)
-            if sumTable
-                return
-                    results: sumTable?.data?.results
-                    total : sumTable?.data?.total
-            else
-                return getUserResult(user._id, tables, 1)
-        for user in users
-            data.push getTableResults user, table, tables
-        results = await awaitAll(data)
-        results = ({r..., user: users[i]} for r, i in results when r)
-        results = results.sort(if table == "main" then sortByLevelAndRating else sortBySolved)
-        res.json(results)
-
-    app.get '/api/fullUser/:id', wrap (req, res) ->
-        userId = req.params.id
-        tables = []
-        for t in allTables when t != 'main'
-          tables.push(getTables(t))
-        tables = await awaitAll(tables)
-
-        user = await User.findById(userId)
-        calendar = await Calendar.findById(userId)
-        if not user
-            return null
-        results = []
-        for t in tables
-            results.push(getUserResult(user._id, t, 1))
-        results = await awaitAll(results)
-        results = (r.results for r in results when r)
-        result =
-            user: user.toObject()
-            results: results
-            calendar: calendar?.toObject()
-
-        userPrivate = {}
-        if req.user?.admin or ""+req.user?.userKey() == ""+userId
-            userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
-        result.user = {result.user..., userPrivate...}
-        res.json(result)
-
     app.get '/api/users/:userList', wrap (req, res) ->
         res.json(await User.findByList(req.params.userList))
-
-    app.get '/api/users/withAchieve/:achieve', wrap (req, res) ->
-        achieve = req.params.achieve
-        if not (achieve of ACHIEVES)
-            res.status(400).send('Unknown achieve')
-            return
-        users = await User.findByAchieve(achieve)
-        res.json(users)
 
     app.post '/api/searchUser', ensureLoggedIn, wrap (req, res) ->
         addUserName = (user) ->
@@ -476,95 +378,8 @@ export default setupApi = (app) ->
             submits = await awaitAll(submits)
             ws.send JSON.stringify submits
 
-    app.get '/api/submitsForFindMistake/:user/:findMistake', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
-            res.status(403).send('No permissions')
-            return
-        fm = await FindMistake.findById(req.params.findMistake)
-        allowed = false
-        if req.user.admin 
-            allowed = true
-        else 
-            result = await Result.findByUserAndTable(req.params.user, fm.problem)
-            allowed = result && result.solved > 0
-        if not allowed
-            res.status(403).send('No permissions')
-            return
-        submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
-        submit0 = (await Submit.findById(fm.submit)).toObject()
-        submit0 =
-            _id: submit0._id
-            time: "_orig"
-            problem: submit0.problem
-            outcome: submit0.outcome
-            source: submit0.source
-            sourceRaw: submit0.sourceRaw
-            language: submit0.language
-            comments: []
-            results: submit0.results
-        submits = submits.map((submit) -> submit.toObject())
-        submits.splice(0, 0, submit0)
-        if not req.user?.admin
-            submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
-        submits = await awaitAll(submits)
-        res.json(submits)
-
-    app.ws '/wsapi/submitsForFindMistake/:user/:findMistake', (ws, req, next) ->
-        addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
-            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
-                return
-            fm = await FindMistake.findById(req.params.findMistake)
-            allowed = false
-            if req.user.admin 
-                allowed = true
-            else 
-                result = await Result.findByUserAndTable(req.params.user, fm.problem)
-                allowed = result && result.solved > 0
-            if not allowed
-                return
-            submits = await Submit.findByUserAndFindMistake(req.params.user, req.params.findMistake)
-            submit0 = (await Submit.findById(fm.submit)).toObject()
-            submit0 =
-                _id: submit0._id
-                time: "_orig"
-                problem: submit0.problem
-                outcome: submit0.outcome
-                source: submit0.source
-                sourceRaw: submit0.sourceRaw
-                language: submit0.language
-                comments: []
-                results: submit0.results
-            submits = submits.map((submit) -> submit.toObject())
-            submits.splice(0, 0, submit0)
-            if not req.user?.admin
-                submits = submits.map(hideTests)
-            submits = submits.map(expandSubmit)
-            submits = await awaitAll(submits)
-            ws.send JSON.stringify(submits)
-
-    app.get '/api/submitsByDay/:user/:day', wrap (req, res) ->
-        submits = await Submit.findByUserAndDayWithFindMistakeAny(req.params.user, req.params?.day)
-        submits = submits.map((submit) -> submit.toObject())
-        submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
-        submits = await awaitAll(submits)
-        submits = submits.map((submit) ->
-              _id: submit._id
-              problem: submit.problem
-              user: submit.user
-              time: submit.time
-              outcome: submit.outcome
-              language: submit.language
-              fullProblem: submit.fullProblem
-        )
-        res.json(submits)
-
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
-
-    app.get '/api/lastBlogPosts', wrap (req, res) ->
-        res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
 
     app.get '/api/result/:id', wrap (req, res) ->
         result = (await Result.findById(req.params.id))?.toObject()
@@ -590,48 +405,6 @@ export default setupApi = (app) ->
             r = r.toObject()
             json[r._id] = r
         res.json(json)
-
-    app.get '/api/userResultsForFindMistake/:userId', wrap (req, res) ->
-        results = (await Result.findByUserWithFindMistakeSet(req.params.userId))
-        json = {}
-        for r in results
-            r = r.toObject()
-            json[r.findMistake] = r
-        res.json(json)
-
-    app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
-        res.status(404).send("Not found")
-        return
-        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
-            res.status(403).send('No permissions')
-            return
-        submit = (await Submit.findById(req.params.id)).toObject()
-        submit = hideTests(submit)
-        submit = expandSubmit(submit)
-        res.json(submit)
-
-    app.get '/api/similarSubmits/:id', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        submit = (await Submit.findById(req.params.id)).toObject()
-        similar = await findSimilarSubmits(submit, 5)
-        similar = similar.map((submit) -> submit.toObject())
-        similar = similar.map(expandSubmit)
-        similar = await awaitAll(similar)
-        similar = similar.map (submit) ->
-            return
-                _id: submit._id
-                time: submit.time
-                user: submit.user
-                problem: submit.problem
-                source: submit.source
-                sourceRaw: submit.sourceRaw
-                fullUser: submit.fullUser
-                fullProblem: submit.fullProblem
-                outcome: submit.outcome
-                language: submit.language
-        res.json(similar)
 
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
@@ -712,59 +485,6 @@ export default setupApi = (app) ->
         comment.viewed = true
         await comment.save()
         res.send('OK')
-
-    app.get '/api/checkins', wrap (req, res) ->
-        checkins = (
-            { 
-                checkins: await Checkin.findBySession(i)
-                max: MAX_CHECKIN_PER_SESSION[i]
-            } for i in [0..1])
-        for sessionCheckins in checkins
-            sessionCheckins.checkins = await awaitAll(sessionCheckins.checkins.map((checkin) ->
-                checkin = checkin.toObject()
-                checkin.fullUser = await User.findById(checkin.user)
-                return checkin
-            ))
-        res.json(checkins)
-
-    app.post '/api/checkin/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
-            res.status(403).json({error: 'No permissions'})
-            return
-        session = req.body.session
-        if session?
-            session = +session
-        user = ""+req.params.user
-        logger.info "User #{user} checkin for session #{session}"
-        if (session? and session != 0 and session != 1)
-            res.status(400).json({error: "Strange session"})
-            return
-        if session?
-            sessionCheckins = await Checkin.findBySession(session)
-            if sessionCheckins.length >= MAX_CHECKIN_PER_SESSION[session]        
-                res.status(403).json({error: "Нет мест"})
-                return
-        userCheckins = await Checkin.findByUser(user)
-        for checkin in userCheckins
-            await checkin.markDeleted()
-        if session?
-            checkin = new Checkin
-                user: user
-                session: session
-            await checkin.upsert()
-        res.json({ok: "OK"})
-
-    app.get '/api/recentReceipt/:user', wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
-            res.status(403).json({error: 'No permissions'})
-            return
-        for i in [1..10]
-            payment = await Payment.findLastReceiptByUserId(req.params.user)
-            if payment and new Date() - payment.time < 24 * 60 * 60 * 1000
-                res.json({receipt: makeReceiptLink(payment.receipt)})
-                return
-            await sleep(1000)
-        res.json({})
 
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
@@ -909,13 +629,6 @@ export default setupApi = (app) ->
         downloadSubmits.runAll()
         res.send('OK')
 
-    app.get '/api/calculateAllHashes', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        Submit.calculateAllHashes()
-        res.send('OK')
-
     app.post '/api/informatics/userData', wrap (req, res) ->
         username = req.body.username
         password = req.body.password
@@ -932,56 +645,6 @@ export default setupApi = (app) ->
         catch
             res.json({status: false})
 
-    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
-        allowed = false
-        user = null
-        if req.params.user == "undefined"
-            allowed = true
-        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
-            allowed = true
-            user = req.params.user
-        if not allowed
-            res.status(403).json({error: 'No permissions'})
-            return
-        mistakes = await FindMistake.findApprovedByNotUser(user, req.params.page)
-        mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, user)
-        mistakes = await awaitAll(mistakes)
-        mistakes = (m for m in mistakes when m)
-        res.json(mistakes)
-
-    app.get '/api/findMistakePages/:user', wrap (req, res) ->
-        allowed = false
-        user = null
-        if req.params.user == "undefined"
-            allowed = true
-        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
-            allowed = true
-            user = req.params.user
-        res.json(await FindMistake.findPagesCountForApprovedByNotUser(user))
-
-    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
-            res.status(403).json({error: 'No permissions'})
-            return
-        mistakes = await FindMistake.findApprovedByNotUserAndProblem(req.params.user, req.params.problem, req.params.page)
-        mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, req.params.user)
-        mistakes = await awaitAll(mistakes)
-        mistakes = (m for m in mistakes when m)
-        res.json(mistakes)
-
-    app.get '/api/findMistakeProblemPages/:user/:problem', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.userKey()
-            res.status(403).send('No permissions')
-            return
-        res.json(await FindMistake.findPagesCountForApprovedByNotUserAndProblem(req.params.user, req.params.problem))
-
-    app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
-        mistake = await FindMistake.findById(req.params.id)
-        mistake = await expandFindMistake(mistake, req.user?.admin, req.user?.userKey())
-        res.json(mistake)
-
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -989,192 +652,3 @@ export default setupApi = (app) ->
         stats = getStats()
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
-
-    app.get '/api/approveFindMistake', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        while true
-            mistake = await FindMistake.findOneNotApproved()
-            if not mistake
-                res.json({})
-                return
-            submits = [await Submit.findById(mistake.submit), await Submit.findById(mistake.correctSubmit)]
-            if not submits[0] || not submits[1]
-                console.log "Bad findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
-                await mistake.setBad()
-                continue
-            submits = submits.map(expandSubmit)
-            submits = await awaitAll(submits)
-            count = await FindMistake.findNotApprovedCount()
-            res.json({mistake, submits, count})
-            return
-
-    app.post '/api/setApproveFindMistake/:id', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        approve = req.body.approve
-        mistake = await FindMistake.findById(req.params.id)
-        await mistake.setApprove(approve)
-        res.send('OK')
-
-    app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
-        url = req.query.url
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        text = await download url    
-        users = await User.find({})
-        for user in users
-            name = user.name.replace("е", "[е`]").replace("ё", "[е`]").replace("`","ё")
-            name1 = name
-            name2 = name.split(' ').reverse().join(' ')
-            re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
-            context = {}
-            el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
-            html = renderToString(el)
-            html = html.replace("/user/", "https://algoprog.ru/user/")
-            text = text.replace(re, "$1#{html}$5")
-        # assume that if page contains <head>, then it is html
-        text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
-        res.send(text)
-
-    app.post '/api/paymentNotify', wrap (req, res) ->
-        logger.info("paymentNotify #{req.body.OrderId}")
-        data = deepcopy(req.body)
-        token = data.Token
-        delete data.Token
-        data.Password = PASSWORD
-        keys = (key for own key, value of data)
-        keys.sort()
-        str = ""
-        for key in keys
-            str += data[key]
-        hash = sha256(str)
-        if hash != token
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong token")
-            res.status(403).send('Wrong token')
-            return
-
-        [userId, paidTillInOrder] = data.OrderId.split(":")
-        success = data.Status == "CONFIRMED"
-
-        payment = new Payment
-            user: userId
-            orderId: data.OrderId
-            success: success
-            processed: false
-            payload: req.body
-        await payment.upsert()
-        if not success
-            logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull (#{data.Status})")
-            res.send('OK')
-            return
-        user = await User.findById(userId)
-        if not user
-            logger.warn("paymentNotify #{req.body.OrderId}: unknown user")
-            res.send('OK')
-            return
-
-        userPrivate = await UserPrivate.findById(userId)
-        if not userPrivate
-            userPrivate = new UserPrivate({_id: req.params.id})
-        payment.oldPaidTill = userPrivate.paidTill
-        expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
-        if expectedPaidTill != paidTillInOrder
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong paid till (current is #{expectedPaidTill})")
-            res.send('OK')
-            return
-        if +userPrivate.price * 100 != +data.Amount
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong amount (price is #{userPrivate.price}, paid #{data.Amount/100})")
-            res.send('OK')
-            return
-        if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
-            newPaidTill = new Date()
-        else
-            newPaidTill = userPrivate.paidTill
-        newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
-        userPrivate.paidTill = newPaidTill
-        await userPrivate.upsert()
-        try
-            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-            notify "Добавлен чек (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
-        catch e
-            notify "Ошибка добавления чека (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
-            receipt = "---"
-        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
-        payment.processed = true
-        payment.newPaidTill = newPaidTill
-        payment.receipt = receipt
-        await payment.upsert()
-        res.send('OK')
-
-    app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        for i in [0..14]
-            console.log "User #{i}"
-            newUser = new User(
-                _id: "fake#{i}",
-                name: "Fake Fake",
-                userList: "zaoch",
-                activated: true,
-                lastActivated: new Date()
-                registerDate: new Date()
-            )
-            await newUser.upsert()
-            newRegisteredUser = new RegisteredUser({
-                "fake#{i}",
-                informaticsId: "fake#{i}",
-                "fake#{i}",
-                "fake#{i}",
-                "fake",
-                "",
-                "",
-                ""
-                admin: false
-            })
-            RegisteredUser.register newRegisteredUser, req.body.password, (err) -> 
-
-            problems = await Problem.find {}
-            for problem in problems
-                #console.log "Problem #{problem._id} level #{problem.level}"
-                level = problem.level
-                version = levelVersion(problem.level)
-                #console.log "Problem #{problem._id} version #{version.major} #{version.minor}"
-                solved = true
-                if problem._id == "p2938"
-                    solved = true
-                else if level.slice(0,3) in ["reg", "roi"]
-                    solved = false
-                else if version.major > i
-                    solved = false
-                else if version.minor in ['В', 'Г']
-                    p = 1 - Math.pow(0.5, i - version.major + 1)
-                    if version.minor == 'Г'
-                        p *= 2.0/3
-                    rng = seedrandom("#{problem._id}")
-                    #console.log "Problem #{problem._id} p=#{p}"
-                    if rng() > p
-                        solved = false
-                #console.log "Solved= #{solved}"
-                submit = new Submit
-                    _id: "fake#{i}r#{problem._id}" ,
-                    time: new Date(),
-                    user: "fake#{i}",
-                    userList: "zaoch",
-                    problem: problem._id,
-                    outcome: if solved then "AC" else "IG"
-                    source: "fake"
-                    sourceRaw: "fake"
-                    language: "fake"
-                    comments: []
-                    results: []
-                    force: false
-                    testSystemData: []
-                await submit.upsert()
-            
-            await User.updateUser(newUser._id)
-        res.send('OK')

@@ -5,7 +5,7 @@ client = graphite.createClient('plaintext://ije.algoprog.ru:2003/')
 
 instance_number = process.env["INSTANCE_NUMBER"] || "0"
 enabled = process.env["GRAPHITE"] || process.env["GRAPHITE_PREFIX"]
-PREFIX = process.env["GRAPHITE_PREFIX"] || "algoprog"
+PREFIX = process.env["GRAPHITE_PREFIX"] || "algoprog_archive"
 
 export default send = (metrics) ->
     if not enabled

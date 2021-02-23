@@ -7,7 +7,6 @@ import {START_SUBMITS_DATE} from '../api/dashboard'
 import send from '../metrics/graphite'
 import notify from '../metrics/notify'
 
-import FindMistake from '../models/FindMistake'
 import Result from "../models/result"
 
 import {mongoCallbacksCount} from '../mongo/MongooseCallbackManager'
@@ -28,9 +27,11 @@ sendWebSocketsCount2Graphite = () ->
     metrics = {"websockets": mongoCallbacksCount()}
     await send(metrics)
 
+###
 sendPendingFindMistakes = () ->
     metrics = {"pendingFindMistakes": await FindMistake.findNotApprovedCount()}
     await send(metrics)
+###
 
 sendWarnings = () ->
     endDate = new Date(new Date() - 5 * 60 * 1000)
@@ -50,5 +51,4 @@ export default sendMetrics = () ->
     await sendWarnings()
     await sendGraphite()
     await sendWebSocketsCount2Graphite()
-    await sendPendingFindMistakes() 
     await sendLoadAndMem()

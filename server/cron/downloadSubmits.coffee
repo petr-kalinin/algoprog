@@ -9,16 +9,13 @@ import SubmitComment from '../models/SubmitComment'
 import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
 import Problem from '../models/problem'
-import Table from '../models/table'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 import logger from '../log'
 import download from '../lib/download'
-import setDirty from '../lib/setDirty'
 
 import awaitAll from '../../client/lib/awaitAll'
 
-import * as groups from '../informatics/informaticsGroups'
 import getTestSystem, { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
 
 entities = new Entities()
@@ -43,8 +40,10 @@ class SubmitDownloader
     needContinueFromSubmit: (submit) ->
         true
 
+    ###
     setDirty: (submit) ->
         await setDirty(submit, @dirtyResults, @dirtyUsers)
+    ###
 
     upsertComments: (submit, comments) ->
         for c in comments
@@ -99,7 +98,7 @@ class SubmitDownloader
         if oldSubmit?.force and not @forceMetadata
             await @onNewSubmit?(newSubmit)
             logger.info("Will not overwrite a forced submit #{newSubmit._id}")
-            await @setDirty(newSubmit)
+            # await @setDirty(newSubmit)
             return res
 
         if oldSubmit?.force
@@ -144,7 +143,7 @@ class SubmitDownloader
             await newSubmit.upsert()
         catch e
             logger.warning "Could not upsert submit", newSubmit._id, newSubmit.user, newSubmit.problem, e
-        await @setDirty(newSubmit)
+        # await @setDirty(newSubmit)
         logger.debug "Done submit", newSubmit._id, newSubmit.user, newSubmit.problem
         res
 
@@ -173,12 +172,15 @@ class SubmitDownloader
                 if page > @limitPages
                     break
         finally
+            ###
             tables = await Table.find({})
             addedPromises = []
             for uid, tmp of @dirtyUsers
                 logger.debug "Will process dirty user ", uid
                 addedPromises.push(@processDirty(uid))
             await awaitAll(addedPromises)
+            ###
+            # TODO: update contest results
         logger.info "Finish SubmitDownloader.run ", @minPages, '-', @limitPages
 
 class LastSubmitDownloader extends SubmitDownloader

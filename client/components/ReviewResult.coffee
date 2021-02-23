@@ -17,15 +17,12 @@ import FormControl from 'react-bootstrap/lib/FormControl'
 import FormGroup from 'react-bootstrap/lib/FormGroup'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 
-import BestSubmits from './BestSubmits'
 import {DiffEditor} from './Editor'
 import FieldGroup from './FieldGroup'
 import Submit, {SubmitHeader} from './Submit'
 import SubmitListTable from './SubmitListTable'
 
 import callApi from '../lib/callApi'
-
-import isPaid, { isMuchUnpaid } from '../lib/isPaid'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 
@@ -162,6 +159,7 @@ SubmitActions = (props) ->
                 </div>
                 }
             </div>
+            ###
             {
             if props.bestSubmits?.length
                 <span>
@@ -170,6 +168,7 @@ SubmitActions = (props) ->
                     {" " + props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
                 </span>
             }
+            ###
             <FieldGroup
                     id="commentText"
                     label="Комментарий"
@@ -201,7 +200,7 @@ SubmitActions = (props) ->
             </Col>
             }
             {
-            admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars/>
+            # admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars/>
             }
         </div>}
         {props.result.findMistake && 
@@ -269,6 +268,7 @@ export class ReviewResult extends React.Component
         @setState(newState)
 
     paidStyle: () ->
+        return styles.nonpaid
         user = @props.user
         if (!user?.paidTill)
             styles.nonpaid

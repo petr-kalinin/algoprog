@@ -4,8 +4,6 @@ import User from '../models/user'
 import Result from '../models/result'
 import Submit from '../models/submit'
 import Problem from '../models/problem'
-import Table from '../models/table'
-import CfResult from '../models/cfResult'
 
 import awaitAll from '../../client/lib/awaitAll'
 
@@ -18,18 +16,20 @@ expandResult = (result) ->
     if not res.fullUser
         return undefined
     res.fullUser = res.fullUser.toObject()
-    res.fullTable = (await Problem.findById(result.table))?.toObject() || {}
+    # res.fullTable = (await Problem.findById(result.table))?.toObject() || {}
     if res.lastSubmitId
         res.fullSubmit = (await Submit.findById(result.lastSubmitId))?.toObject() or {}
         delete res.fullSubmit.source
         delete res.fullSubmit.sourceRaw
         delete res.fullSubmit.results
+    ###
     tableNamePromises = []
     if res.fullTable?.tables?
         for table in res.fullTable.tables
             tableNamePromises.push(Table.findById(table))
         tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
         res.fullTable.tables = tableNames
+    ###
     return res
 
 expandResults = (results) ->
@@ -88,6 +88,6 @@ export default dashboard = (registeredUser) ->
                 query["userList"] = {$ne: "unknown"}
             query["activated"] = true
         promises.push(runDashboardQuery(key, query, result))
-    promises.push(runCfQuery(result))
+    # promises.push(runCfQuery(result))
     await awaitAll(promises)
     return result

@@ -18,20 +18,14 @@ import { Link } from 'react-router-dom'
 import * as actions from '../redux/actions'
 
 import UserName, {color} from './UserName'
-import CfStatus from './CfStatus'
-import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 import ThemeSwitch from './ThemeSwitch'
-import needDeactivatedWarning from '../lib/needDeactivatedWarning'
-import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './TopPanel.css'
 
+###
 needCfWarning = (user) ->
     (not user.cf?.login?) and (user.level.current >= "1В")
-
-needUnpaidWarning = (user) ->
-    (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (not isPaid(user))
 
 DeactivatedWarning = (props) ->
     <div className="static-modal">
@@ -110,9 +104,11 @@ DormantWarning = (props) ->
 
         </Modal.Dialog>
     </div>
+###
 
 
 class TopPanel extends React.Component
+    ###
     constructor: (props) ->
         super(props)
         @state =
@@ -149,6 +145,7 @@ class TopPanel extends React.Component
             showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         if !deepEqual(newState, prevState)
             @setState(newState)
+    ###
 
     render: ->
         <div>
@@ -164,24 +161,6 @@ class TopPanel extends React.Component
                             <span>
                                 <UserName user={@props.myUser}/>
                                 <span className={styles.separator}/>
-                                <span title="Класс">{getClassStartingFromJuly(@props.myUser.graduateYear)}</span>
-                                <span className={styles.separator}/>
-                                <span title="Уровень">{@props.myUser.level.current}</span>
-                                <span className={styles.separator}/>
-                                <span title="Рейтинг" style={color: color(@props.myUser, @props.theme)}>{@props.myUser.rating}</span>
-                                {" / "}
-                                <span title="Активность">{@props.myUser.activity.toFixed(1)}</span>
-                                <span className={styles.separator}/>
-                                <CfStatus cf={@props.myUser.cf} />
-                                {needCfWarning(@props.myUser) &&
-                                    <span>
-                                        <span title="Логин на codeforces неизвестен. Если вы там зарегистрированы, укажите логин в своём профиле.">CF: <FontAwesome name="question-circle"/></span>
-                                        <span className={styles.separator}/>
-                                    </span>}
-                                {needDeactivatedWarning(@props.myUser, @props.me) &&
-                                    <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
-                                {needUnpaidWarning(@props.myUser) &&
-                                    <span title="Занятия не оплачены" className={"text-danger " + styles.warning} onClick={@openUnpaid}><FontAwesome name="exclamation-triangle"/></span>}
                             </span>
                         else
                             "Неизвестный пользователь"
@@ -214,6 +193,7 @@ class TopPanel extends React.Component
                     }
                 </Navbar.Form>
             </Navbar>
+            {###
             {
             @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
             }
@@ -223,6 +203,7 @@ class TopPanel extends React.Component
             {
             not @props.myUser?.dormant and @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
             }
+            ###}
         </div>
 
 options =
@@ -237,17 +218,14 @@ mapStateToProps = (state) ->
     return
         theme: state.theme
         deactivatedWarningShown: state.deactivatedWarningShown
-        unpaidWarningShown: state.unpaidWarningShown
 
 doLogout = (dispatch) ->
     dispatch(actions.logout())
     dispatch(actions.setDeactivatedWarningShown(false))
-    dispatch(actions.setUnpaidWarningShown(false))
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
         logout: () -> doLogout(dispatch)
         setDeactivatedWarningShown: () -> dispatch(actions.setDeactivatedWarningShown())
-        setUnpaidWarningShown: () -> dispatch(actions.setUnpaidWarningShown())
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectedTopPanel)

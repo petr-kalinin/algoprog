@@ -10,7 +10,6 @@ import { Helmet } from "react-helmet"
 
 import Routes from '../../client/routes'
 import DefaultHelmet from '../../client/components/DefaultHelmet'
-import ConnectedNotifications from '../../client/components/ConnectedNotifications'
 
 import createStore from '../../client/redux/store'
 import awaitAll from '../../client/lib/awaitAll'
@@ -157,7 +156,6 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
                         <div>
                             <ThemeCss/>
                             {element}
-                            <ConnectedNotifications/>
                         </div>
                     </StaticRouter>
                 </div>

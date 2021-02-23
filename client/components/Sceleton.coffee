@@ -15,13 +15,7 @@ import { Helmet } from "react-helmet"
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withTheme from '../lib/withTheme'
 
-import Tree from './Tree'
-import News from './News'
-import BlogPosts from './BlogPosts'
-import CommentList from './CommentList'
 import TopPanel from './TopPanel'
-
-import isPaid from '../lib/isPaid'
 
 import styles from './Sceleton.css'
 
@@ -136,7 +130,7 @@ getSizes = (props) ->
         xs: 0
         sm: 0
         md: 0
-        lg: 3
+        lg: 0
     })
     selfSize = {}
     for size in SIZES
@@ -174,18 +168,22 @@ export default class Sceleton extends React.Component
             <div className={styles.main}>
                 <Grid fluid>
                     <Row>
+                        {###
                         <ColWrapper size={treeSize}>
                             <Tree tree={@props.tree} path={@props.location?.path || []} id={@props.location?._id} />
                         </ColWrapper>
+                        ###}
                         <ColWrapper size={selfSize}>
                             {@props.hideBread || <Bread path={breadPath} id={@props.location._id} /> }
                             {@props.children}
                         </ColWrapper>
+                        {###
                         <ColWrapper size={newsSize}>
                             <News/>
                             <BlogPosts/>
                             <CommentList />
                         </ColWrapper>
+                        ###}
                     </Row>
                 </Grid>
             </div>

@@ -14,9 +14,8 @@ import { Link } from 'react-router-dom'
 import Sceleton from './Sceleton'
 
 import globalStyles from './global.css'
-import Tree from './Tree'
 import styles from './Root.css'
-
+###
 Inner = (props) ->
     <div>
         <Grid fluid>
@@ -126,13 +125,16 @@ Inner = (props) ->
         <h2 className={styles.whatitis}>Как начать заниматься?</h2>
         <p className="lead"><Link to="/register">Зарегистрируйтесь</Link> на сайте и напишите мне (контактная информация в разделе <Link to="/material/0">О курсе</Link>).</p>
     </div>
+###
 
+Inner = (props) ->
+    <div/>
+    
 export default Root = (props) ->
     <div>
         <Grid fluid>
             <PageHeader>
-                <div className={styles.mainHeader}>Алгоритмическое программирование</div>
-                <small>Очно-заочный курс Петра Калинина</small>
+                <div className={styles.mainHeader}>Алгопрог: архив</div>
             </PageHeader>
         </Grid>
         {

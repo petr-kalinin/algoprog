@@ -1,16 +1,20 @@
 mongoose = require('mongoose')
 
+###
 import calculateChocos from '../calculations/calculateChocos'
 import calculateRatingEtc from '../calculations/calculateRatingEtc'
 import calculateLevel from '../calculations/calculateLevel'
 import calculateCfRating from '../calculations/calculateCfRating'
 import calculateAchieves from '../calculations/calculateAchieves'
+###
 
 import logger from '../log'
 
+###
 import updateResults from '../calculations/updateResults'
 import updateTableResults from '../calculations/updateTableResults'
 import calculateCalendar from '../calculations/calculateCalendar'
+###
 
 import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
@@ -59,6 +63,7 @@ usersSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a user"
 
+###
 usersSchema.methods.updateChocos = ->
     @chocos = await calculateChocos @_id
     logger.debug "calculated chocos", @name, @chocos
@@ -96,6 +101,7 @@ usersSchema.methods.updateAchieves = (achieves) ->
     logger.info "updating achieves login ", @_id, achieves
     @achieves = await calculateAchieves(this)
     await @update({$set: {"achieves": @achieves}})
+###
 
 usersSchema.methods.updateGraduateYear = ->
     registeredUser = await RegisteredUser.findByKeyWithPassword(@_id)
@@ -130,6 +136,7 @@ usersSchema.methods.setCfLogin = (cfLogin) ->
     else
         await @update({$unset: {"cf.rating": "", "cf.login":"", "cf.color":"", "cf.activity":"", "cf.progress":""}})
 
+###
 usersSchema.methods.setAchieves = (achieves) ->
     logger.info "setting achieves login ", @_id, achieves
     await @update({$set: {"achieves": achieves}})
@@ -139,6 +146,7 @@ usersSchema.methods.setChocosGot = (chocosGot) ->
     logger.info "setting chocosGot ", @_id, chocosGot 
     await @update({$set: {"chocosGot": chocosGot}})
     @chocosGot = chocosGot
+###
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
@@ -209,6 +217,7 @@ usersSchema.statics.findById = (id) ->
 usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
 
+###
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     start = new Date()
     logger.info ">>Updating user", userId
@@ -260,6 +269,7 @@ usersSchema.statics.updateAllCf = () ->
                 await User.updateUser(u._id, {})
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
+###
 
 usersSchema.statics.updateAllGraduateYears = () ->
     logger.info "Updating graduateYear"

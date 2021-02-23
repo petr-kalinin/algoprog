@@ -1,6 +1,5 @@
 mongoose = require('mongoose')
 
-import Table from './table'
 import logger from '../log'
 
 problemsSchema = new mongoose.Schema

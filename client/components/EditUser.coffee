@@ -2,7 +2,6 @@ React = require('react')
 
 import Button from 'react-bootstrap/lib/Button'
 
-import CfStatus from './CfStatus'
 import styles from './EditUser.css'
 import Loader from './Loader'
 

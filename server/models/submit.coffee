@@ -1,9 +1,7 @@
 mongoose = require('mongoose')
 
-import Hash from './Hash'
 import User from './user'
 
-import calculateHashes from '../hashes/calculateHashes'
 import normalizeCode from '../lib/normalizeCode'
 import {runMongooseCallback} from '../mongo/MongooseCallbackManager'
 
@@ -31,7 +29,6 @@ submitsSchema = new mongoose.Schema
     results: mongoose.Schema.Types.Mixed
     force: { type: Boolean, default: false },
     quality: { type: Number, default: 0 },
-    hashes: [{window: Number, hash: String, score: Number}]
     testSystemData: mongoose.Schema.Types.Mixed
     findMistake: String
     
@@ -39,6 +36,7 @@ submitsSchema.methods.upsert = () ->
     await @update(this, {upsert: true, overwrite: true})
     runMongooseCallback 'update_submit', @user
 
+###
 submitsSchema.methods.calculateHashes = () ->
     logger.info("calculating hashes for submit #{@_id}")
     @hashes = calculateHashes((@sourceRaw or @source).toString())
@@ -58,6 +56,7 @@ submitsSchema.methods.calculateHashes = () ->
             score: h.score
         await hash.upsert()
     await @upsert()
+###
 
 submitsSchema.methods.equivalent = (other) ->
     if @comments.length > 0
@@ -142,6 +141,7 @@ submitsSchema.statics.findCT = (userId) ->
     Submit.find
         outcome: "CT"
 
+###
 submitsSchema.statics.calculateAllHashes = () ->
     users = await User.find({})
     for u, userI in users
@@ -159,6 +159,7 @@ submitsSchema.statics.calculateAllHashes = () ->
         await awaitAll(promises)
         logger.info("Calculated all hashes for user #{userI} / #{users.length}")
     logger.info("Calculated all hashes for all users")
+###
 
 submitsSchema.index({ user : 1, problem: 1, findMistake: 1, time: 1 })
 submitsSchema.index({ user : 1, findMistake: 1, time: 1 })

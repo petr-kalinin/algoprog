@@ -3,7 +3,6 @@ iconv = require('iconv-lite')
 import SubmitProcess from '../models/SubmitProcess'
 import Submit from '../models/submit'
 import User from '../models/user'
-import Hash  from '../models/Hash'
 import RegisteredUser from '../models/registeredUser'
 
 import getTestSystem from '../../server/testSystems/TestSystemRegistry'
@@ -11,7 +10,6 @@ import LANGUAGES from '../../client/lib/languages'
 
 import * as downloadSubmits from '../cron/downloadSubmits'
 
-import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 import awaitAll from '../../client/lib/awaitAll'
 
@@ -50,7 +48,6 @@ submitToTestSystem = (submit, submitProcess) ->
         if not compareSources(newSubmit.sourceRaw, submit.sourceRaw)
             return
         newSubmit.findMistake = submit.findMistake
-        await Hash.removeForSubmit(submit._id)
         await Submit.remove({_id: submit._id})
         await SubmitProcess.remove({_id: submit._id})
         logger.info "Successfully submitted pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
@@ -96,9 +93,12 @@ submitOneSubmit = (submit) ->
         logger.info "Empty source or unknown language, failing"
         submit.outcome = "Ошибка отправки, переотправьте"
         await submit.upsert()
+        ###
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
         await User.updateUser(submit.user, dirtyResults)
+        ###
+        # TODO: update contest result
         return
 
     try
@@ -120,9 +120,12 @@ submitOneSubmit = (submit) ->
             submitProcess.attempts += 1
             submitProcess.lastAttempt = new Date()
             await submitProcess.upsert()
+        ###
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
         await User.updateUser(submit.user, dirtyResults)
+        ###
+        # TODO: update contest result
 
 
 submitSubmits = () ->
