@@ -67,8 +67,8 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
         required: 1,
         solved: solved,
         ok: ok,
-        ps: ps,
         ###
+        ps: ps,
         attempts: attempts,
         # ignored: ignored,
         lastSubmitId: lastSubmitId,

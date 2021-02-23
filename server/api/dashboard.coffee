@@ -16,7 +16,7 @@ expandResult = (result) ->
     if not res.fullUser
         return undefined
     res.fullUser = res.fullUser.toObject()
-    # res.fullTable = (await Problem.findById(result.table))?.toObject() || {}
+    res.fullProblem = (await Problem.findById(result.table))?.toObject() || {}
     if res.lastSubmitId
         res.fullSubmit = (await Submit.findById(result.lastSubmitId))?.toObject() or {}
         delete res.fullSubmit.source
@@ -41,7 +41,7 @@ expandResults = (results) ->
     return res
 
 runDashboardQuery = (key, query, result) ->
-    limit = 20
+    limit = 50
     if key == "ok" or key == "ps"
         limit = 200
     subResults = await Result.find(query).sort({lastSubmitTime: -1}).limit(limit)
@@ -69,17 +69,19 @@ export default dashboard = (registeredUser) ->
     userLists = registeredUser?.adminData?.defaultUserLists
     queries =
         # remember that months start from 0
-        ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
+        #ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
         ps: {ps: 1},
-        wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}},
+        all: {ps: 0, attempts: {$gt: 0}},
+        ###
         ig: {ignored: 1},
         ac: {solved: 1},
         fm_ok: {$or: [{ok: 1}, {solved: 1}], findMistake: {$ne: null}},
         fm_wa: {solved: 0, ok: 0, ignored: 0, attempts: {$gt: 0}, findMistake: {$ne: null}}
+        ###
     result = {}
     promises = []
     for key, query of queries
-        query.total = 1
+        # query.total = 1
         if key != "ps"
             query.findMistake = query.findMistake || null
             if userLists?.length

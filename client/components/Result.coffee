@@ -16,9 +16,9 @@ makeUserName = (user) ->
 export default Result = (props) ->
     r = props.result
     userHref = "/user/" + r.fullUser._id
-    problemHref = '/material/' + r.fullTable._id
-    problemName = r.fullTable.name
-    contests = r.fullTable.tables
+    problemHref = '/problem/' + r.table
+    problemName = r.fullProblem.name
+    contests = r.fullProblem.contests
     userName = makeUserName(r.fullUser)
     return <tr>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
@@ -34,6 +34,6 @@ export default Result = (props) ->
                 <Link to={problemHref}>{problemName}</Link>
             </td>
             <td className={styles.td} style={{whiteSpace: "pre-wrap"}}>
-                {contests?.join("\n")}
+                {contests?.map?((c) -> c.name)?.join?("\n")}
             </td>
         </tr>
