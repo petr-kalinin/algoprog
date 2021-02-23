@@ -26,7 +26,6 @@ Bread = (props) ->
     <Breadcrumb>
         {
         fullPath = DEFAULT_PATH.concat(props.path)
-        console.log fullPath
         fullPath.map((p) ->
             <LinkContainer to={p.href} key={p._id} isActive={() -> false}>
                  <Breadcrumb.Item active={p._id==props.id}>
