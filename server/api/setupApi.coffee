@@ -125,14 +125,13 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     #await submit.calculateHashes()
     await submit.upsert()
 
-    ###
     update = () ->
+        ###
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
-        await User.updateUser(submit.user, dirtyResults)
+        ###
+        await User.updateUser(submit.user, [problemId])
     update()  # do this async
-    ###
-    # TODO
     return undefined
 
 expandFindMistake = (mistake, admin, userKey) ->

@@ -47,9 +47,8 @@ storeToDatabase = (req, res) ->
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
-    await User.updateUser(submit.user, dirtyResults)
     ###
-    # TODO: update contest
+    await User.updateUser(submit.user, [problemId])
 
 export default setOutcome = (req, res) ->
     if req.body.result or req.body.comment

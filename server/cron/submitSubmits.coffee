@@ -96,8 +96,8 @@ submitOneSubmit = (submit) ->
         ###
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
-        await User.updateUser(submit.user, dirtyResults)
         ###
+        await User.updateUser(submit.user, [submit.problem])
         # TODO: update contest result
         return
 
@@ -123,9 +123,8 @@ submitOneSubmit = (submit) ->
         ###
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
-        await User.updateUser(submit.user, dirtyResults)
         ###
-        # TODO: update contest result
+        await User.updateUser(submit.user, [submit.problem])
 
 
 submitSubmits = () ->

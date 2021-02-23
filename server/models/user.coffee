@@ -10,8 +10,8 @@ import calculateAchieves from '../calculations/calculateAchieves'
 
 import logger from '../log'
 
-###
 import updateResults from '../calculations/updateResults'
+###
 import updateTableResults from '../calculations/updateTableResults'
 import calculateCalendar from '../calculations/calculateCalendar'
 ###
@@ -160,7 +160,7 @@ usersSchema.methods.forceSetUserList = (userList) ->
     logger.info "force-setting userList ", @_id, userList
     await @update({$set: {"userList": userList}})
     @userList = userList
-    #User.updateUser(@_id)
+    User.updateUser(@_id)
     return undefined
 
 usersSchema.methods.setDormant = (dormant) ->
@@ -217,11 +217,11 @@ usersSchema.statics.findById = (id) ->
 usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
 
-###
-usersSchema.statics.updateUser = (userId, dirtyResults) ->
+usersSchema.statics.updateUser = (userId, problems) ->
     start = new Date()
     logger.info ">>Updating user", userId
-    await updateResults(userId, dirtyResults)
+    await updateResults(userId, problems)
+    ###
     await updateTableResults(userId)
     await calculateCalendar(userId)
     u = await User.findById(userId)
@@ -233,6 +233,7 @@ usersSchema.statics.updateUser = (userId, dirtyResults) ->
     await u.updateLevel()
     await u.updateDormant()
     await u.updateAchieves()
+    ###
     logger.info "<<Updated user", userId, " spent time ", (new Date()) - start
 
 usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
@@ -261,6 +262,7 @@ usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
     await awaitAll(promises)
     logger.info("Updated all users")
 
+###
 usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"
     for u in await User.findAll()
