@@ -97,7 +97,7 @@ export SubmitHeader = (props) ->
             <Link to={"/material/#{props.submit.problem}"}>{props.submit.fullProblem.name}</Link>{": "}
             {message}
         </h1>
-        <h4>{props.submit.fullProblem.tables.join("\n")}</h4>
+        <h4>{props.submit.fullProblem.contests.map((c) -> c.name).join("\n")}</h4>
     </div>
 
 class TestResult extends React.Component

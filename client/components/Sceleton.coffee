@@ -154,7 +154,7 @@ export default class Sceleton extends React.Component
         @setState({@state..., showTree: newTree})
 
     render: () ->
-        path = @props.location.path || DEFAULT_PATH
+        path = @props.location.path || []
         {treeSize, newsSize, selfSize} = getSizes(@state)
         <div className={styles.wrapper}>
             <Helmet>
