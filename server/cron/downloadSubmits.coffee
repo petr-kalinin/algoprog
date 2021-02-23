@@ -128,7 +128,7 @@ class SubmitDownloader
         newSubmit.results = results
         newSubmit.comments = @mergeComments(newSubmit.comments, comments)
         newSubmit.downloadTime = new Date()
-        await newSubmit.calculateHashes()
+        #await newSubmit.calculateHashes()
 
         user = await User.findById(newSubmit.user)
         if user?.userList == "graduated" and newSubmit.outcome == "OK" and newSubmit.time > new Date(2020, 1, 28)

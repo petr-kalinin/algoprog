@@ -21,7 +21,7 @@ storeToDatabase = (req, res) ->
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
         submit.force = true
-        submit.calculateHashes()
+        #submit.calculateHashes()
         comments = await SubmitComment.findBySubmit(req.params.submitId)
         for c in comments
             c.outcome = submit.outcome

@@ -69,11 +69,13 @@ expandSubmit = (submit) ->
 
     submit.fullUser = await User.findById(submit.user)
     submit.fullProblem = await Problem.findById(submit.problem)
+    ###
     tableNamePromises = []
     for t in submit.fullProblem.tables
         tableNamePromises.push(Table.findById(t))
     tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
     submit.fullProblem.tables = tableNames
+    ###
     if (submit.source.length > MAX_SUBMIT_LENGTH or containsBinary(submit.source))
         submit.source = "Файл слишком длинный или бинарный"
     return submit
@@ -120,14 +122,17 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
         force: false
         testSystemData: problem.testSystemData
         findMistake: findMistake
-    await submit.calculateHashes()
+    #await submit.calculateHashes()
     await submit.upsert()
 
+    ###
     update = () ->
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
         await User.updateUser(submit.user, dirtyResults)
     update()  # do this async
+    ###
+    # TODO
     return undefined
 
 expandFindMistake = (mistake, admin, userKey) ->
@@ -163,12 +168,14 @@ export default setupApi = (app) ->
         res.json({loggedOut: true})
 
     app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
-        userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
+        #userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
         user = await User.findById(req.user.userKey())
         userObj = user?.toObject() || {}
+        ###
         if unpaidBlocked({userObj..., userPrivate...})
             res.json({unpaid: true})
             return
+        ###
         if user.dormant
             res.json({dormant: true})
             return
