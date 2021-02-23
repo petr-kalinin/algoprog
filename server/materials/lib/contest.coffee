@@ -1,17 +1,15 @@
-import MaterialList from "./MaterialList"
+import ContestModel from '../../models/Contest'
 
-class Contest extends MaterialList
-    constructor: (@title, materials) ->
-        super(materials)
+class Contest
+    constructor: (@id, @name, @contestSystem, @problems) ->
 
-    build: (context, order) ->
-        properties = 
-            _id: context.generateId()
-            type: "contest"
-            title: @title
-
-        material = await super.build(context, order, properties, {allowAsync: true})
-
+    build: (order) ->
+        return new ContestModel
+            _id: @id
+            name: @name
+            problems: []
+            contestSystemData: {system: @contestSystem}
+            order: order
         return material
 
 export default contest = (args...) -> () -> new Contest(args...)

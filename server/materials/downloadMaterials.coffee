@@ -1,14 +1,14 @@
 import logger from '../log'
-import Material from '../models/Material'
+
+import Contest from '../models/Contest'
 import Problem from '../models/problem'
 
-#import root from './data/root'
+import allContests from './data/_all'
 
-
+###
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
-###
 class Context
     constructor: (@processors) ->
         @pathToId = {}
@@ -210,9 +210,22 @@ export default downloadMaterials = () ->
 
     await contestProcessor.finalize()
     logger.info "Done downloadMaterials"
-
 ###
 
 export default downloadMaterials = () ->
     logger.info "Start downloadMaterials"
+
+    for contestFun, order in allContests
+        contestData = await contestFun()
+        problems = []
+        contest = await contestData.build(order)
+        for problemFun, problemOrder in contestData.problems
+            problemData = await problemFun()
+            problem = await problemData.build(problemOrder, contest)
+            await problem.upsert()
+            problems.push
+                _id: problem._id
+                name: problem.name
+        contest.problems = problems
+        await contest.upsert()
     logger.info "Done downloadMaterials"

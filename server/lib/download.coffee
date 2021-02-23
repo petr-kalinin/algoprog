@@ -47,12 +47,15 @@ export default download = (href, jar, options={}) ->
 requests = 0
 promises = []
 REQUESTS_LIMIT = 10
+TIMEOUT = 1000 * 6
+
 export downloadLimited = (href, jar, options) ->
         if requests >= REQUESTS_LIMIT
             await new Promise((resolve) => promises.push(resolve))
         if requests >= REQUESTS_LIMIT
             throw "Too many requests"
         requests++
+        await sleep(TIMEOUT)
         try
             result = await download(href, jar, options)
         finally

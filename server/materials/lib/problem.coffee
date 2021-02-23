@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom'
 
 import {downloadLimited} from '../../lib/download'
-import Material from '../../models/Material'
+import ProblemModel from '../../models/problem'
 
 import getTestSystem from '../../testSystems/TestSystemRegistry'
 
@@ -24,25 +24,32 @@ class Problem
         testSystem = getTestSystem(@testSystem)
         return await testSystem.downloadProblem(@options)
 
-    build: (context, order) ->
+    addContest: (contest, contests) ->
+        for c in contests
+            if c._id == contest._id
+                c.name = contest.name
+                return contests
+        contests.push({_id: contest._id, name: contest.name})
+        return contests
+
+    build: (order, contest) ->
         id = "p#{@id}"
-        material = await Material.findById(id)
+        material = await ProblemModel.findById(id)
         if not material
             {name, text} = await @download()
+            contests = []
         else
-            name = material.title
-            text = material.content
-        data = 
-            _id: id,
-            type: "problem",
-            title: name,
-            content: text,
+            name = material.name
+            text = material.text
+            contests = material.contests
+        contests = @addContest(contest, contests)
+        problem = new ProblemModel
+            _id: id
+            name: name
+            text: text
+            contests: contests
             testSystemData: @testSystemData
-            order: order
-
-        await context.process(data)
-        
-        delete data.content
-        return data
+            order: order        
+        return problem
 
 export default problem = (args...) -> () -> new Problem(args...)

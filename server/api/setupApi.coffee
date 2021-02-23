@@ -25,7 +25,6 @@ import sleep from '../lib/sleep'
 
 import notify from '../metrics/notify'
 
-import Material from '../models/Material'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
 import Result from '../models/result'
@@ -378,8 +377,10 @@ export default setupApi = (app) ->
             submits = await awaitAll(submits)
             ws.send JSON.stringify submits
 
+    ###
     app.get '/api/material/:id', wrap (req, res) ->
         res.json(await Material.findById(req.params.id))
+    ###
 
     app.get '/api/result/:id', wrap (req, res) ->
         result = (await Result.findById(req.params.id))?.toObject()
@@ -535,6 +536,7 @@ export default setupApi = (app) ->
         if req.body?.value then await user.setDormant(false)
         res.send('OK')
 
+    ###
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -546,6 +548,7 @@ export default setupApi = (app) ->
         material.force = true
         await material.upsert()
         res.send('OK')
+    ###
 
     app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

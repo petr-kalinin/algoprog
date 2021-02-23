@@ -5,10 +5,10 @@ import logger from '../log'
 problemsSchema = new mongoose.Schema
     _id: String
     name: String
-    tables: [String]
-    level: String
+    text: String
+    contests: [{name: String, _id: String}]
     testSystemData: mongoose.Schema.Types.Mixed
-    order: String
+    order: Number
 
 problemsSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
