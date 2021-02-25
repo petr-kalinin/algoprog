@@ -10,6 +10,7 @@ resultsSchema = new mongoose.Schema
     userList: String
     activated: Boolean
     table: String  # this is actually problem always
+    contest: String
     ###
     total: Number
     required: Number  # number of problems from non-star subcontests, not the number of required problems on level
@@ -19,6 +20,7 @@ resultsSchema = new mongoose.Schema
     attempts: Number
     lastSubmitId: String
     lastSubmitTime: Date
+    contestResult: mongoose.Schema.Types.Mixed
     ###
     ignored: Number
     findMistake: String
@@ -36,7 +38,7 @@ resultsSchema.methods.upsert = () ->
         return
     @userList = user.userList
     @activated = user?.activated
-    @_id = @user + "::" + (@findMistake || @table)
+    @_id = @user + "::" + (@findMistake || @table) + "::" + @contest
     await @update(this, {upsert: true}).exec()
     runMongooseCallback 'update_result', @user
 
@@ -68,10 +70,10 @@ resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
         findMistake: {$ne: null}
 ###
 
-resultsSchema.statics.findByUserAndTable = (userId, tableId) ->
-    key = userId + "::" + tableId
+resultsSchema.statics.findByUserTableAndContest = (userId, tableId, contestId) ->
+    key = userId + "::" + tableId + "::" + contestId
     return Result.findOne
-            _id: userId + "::" + tableId
+            _id: key
             # findMistake: null
 
 resultsSchema.statics.findLast = (limit) ->

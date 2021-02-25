@@ -28,8 +28,9 @@ class Problem
         for c in contests
             if c._id == contest._id
                 c.name = contest.name
+                c.contestSystem = contest.contestSystemData.system
                 return contests
-        contests.push({_id: contest._id, name: contest.name})
+        contests.push({_id: contest._id, name: contest.name, contestSystem: contest.contestSystemData.system})
         return contests
 
     build: (order, contest) ->

@@ -6,7 +6,7 @@ problemsSchema = new mongoose.Schema
     _id: String
     name: String
     text: String
-    contests: [{name: String, _id: String}]
+    contests: [{name: String, _id: String, contestSystem: String}]
     testSystemData: mongoose.Schema.Types.Mixed
     order: Number
 
