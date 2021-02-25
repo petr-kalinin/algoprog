@@ -94,7 +94,7 @@ export SubmitHeader = (props) ->
         <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
         <h1>{props.submit.fullUser && <UserName user={props.submit.fullUser}/>}
             {props.admin && " (#{getClassStartingFromJuly(props.submit.fullUser?.graduateYear)}, #{props.submit.fullUser?.level?.current}, #{props.submit.fullUser?.userList}), " || ", "}
-            <Link to={"/material/#{props.submit.problem}"}>{props.submit.fullProblem.name}</Link>{": "}
+            <Link to={"/problem/#{props.submit.problem}"}>{props.submit.fullProblem.name}</Link>{": "}
             {message}
         </h1>
         <h4>{props.submit.fullProblem.contests.map((c) -> c.name).join("\n")}</h4>

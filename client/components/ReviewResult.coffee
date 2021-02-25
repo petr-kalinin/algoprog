@@ -159,16 +159,14 @@ SubmitActions = (props) ->
                 </div>
                 }
             </div>
-            ###
-            {
+            {###
             if props.bestSubmits?.length
                 <span>
                     <a href="#" onClick={props.toggleBestSubmits}>Хорошие решения</a>
                     {" = " + props.bestSubmits.length}
                     {" " + props.bestSubmits.map((submit) -> submit.language || "unknown").join(", ")}
                 </span>
-            }
-            ###
+            ###}
             <FieldGroup
                     id="commentText"
                     label="Комментарий"
