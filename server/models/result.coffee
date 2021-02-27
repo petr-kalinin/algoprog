@@ -72,9 +72,7 @@ resultsSchema.statics.findByUserWithFindMistakeSet = (userId) ->
 
 resultsSchema.statics.findByUserTableAndContest = (userId, tableId, contestId) ->
     key = userId + "::" + tableId + "::" + contestId
-    return Result.findOne
-            _id: key
-            # findMistake: null
+    return Result.findById key
 
 resultsSchema.statics.findLast = (limit) ->
     return Result.find({

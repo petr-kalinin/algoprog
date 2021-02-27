@@ -1,3 +1,7 @@
+import awaitAll from '../../client/lib/awaitAll'
+
+import Contest from '../models/Contest'
+import ContestResult from '../models/ContestResult'
 import Problem from '../models/problem'
 import Result from '../models/result'
 import Submit from '../models/submit'
@@ -55,6 +59,32 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
             contestResult: contestResult
         await result.upsert()
 
+updateResultsForContest = (contestId, userId) ->
+    contest = await Contest.findById(contestId)
+    problemResults = []
+    for problem in contest.problems
+        problemResults.push Result.findByUserTableAndContest(userId, problem._id, contest._id)
+    problemResults = await awaitAll(problemResults)
+    contestSystem = getContestSystem(contest.contestSystemData.system)
+    cr = await contestSystem.makeContestResult(problemResults)
+    pr = {}
+    for result in problemResults
+        pr[result.table] = {
+            _id: result._id
+            table: result.table
+            ps: result.ps
+            attempts: result.attempts
+            lastSubmitId: result.lastSubmitId
+            lastSubmitTime: result.lastSubmitTime
+            contestResult: result.contestResult 
+        }
+    contestResult = new ContestResult
+        user: userId
+        contest: contest._id
+        contestResult: cr
+        problemResults: pr
+    await contestResult.upsert()
+
 updateResultsForProblem = (userId, problemId) ->
     await removeDuplicateSubmits(userId, problemId)
     submits = await Submit.findByUserAndProblem(userId, problemId)
@@ -65,6 +95,14 @@ export default updateResults = (user, problems) ->
     logger.info "updating results for user ", user
     if not problems
         problems = await Problem.findAll()
+    else
+        problems = problems.map((p) -> Problem.findById(p))
+        problems = await awaitAll problems
+    contests = {}
     for problem in problems
         await updateResultsForProblem(user, problem)
+        for c in problem.contests
+            contests[c._id] = 1
+    for c of contests
+        await updateResultsForContest(c, user)
     logger.info "updated results for user ", user, " spent time ", (new Date()) - start

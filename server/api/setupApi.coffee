@@ -26,6 +26,7 @@ import sleep from '../lib/sleep'
 import notify from '../metrics/notify'
 
 import Contest from '../models/Contest'
+import ContestResult from '../models/ContestResult'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
 import Result from '../models/result'
@@ -408,6 +409,9 @@ export default setupApi = (app) ->
         if not result
             res.json({})
             return
+        if not req.user?.admin and ""+req.user?.userKey() != ""+result.user
+            res.status(403).send('No permissions')
+            return
         result.fullUser = await User.findById(result.user)
         result.fullTable = await Problem.findById(result.table)
         res.json(result)
@@ -416,9 +420,21 @@ export default setupApi = (app) ->
         addMongooseCallback ws, 'update_result', req.user?.userKey(), ->
             result = (await Result.findById(req.params.id))?.toObject()
             if not result then return
+            if not req.user?.admin and ""+req.user?.userKey() != ""+result.user
+                return
             result.fullUser = await User.findById(result.user)
             result.fullTable = await Problem.findById(result.table)
             ws.send JSON.stringify result
+
+    app.get '/api/contestResult/:contest/:user', wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+            res.status(403).send('No permissions')
+            return
+        result = (await ContestResult.findByContestAndUser(req.params.contest, req.params.user))?.toObject()
+        if not result
+            res.json({})
+            return
+        res.json(result)
 
     app.get '/api/userResults/:userId', wrap (req, res) ->
         results = (await Result.findByUser(req.params.userId))
