@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("3 марта занятия в лицее 40 не будет", String.raw"""
+            <p>3 марта занятия в лицее 40 не будет.</p>
+        """),
         newsItem("Летняя компьютерная школа и прочие летние школы", String.raw"""
             <p>Добавлена информация <a href='/material/sis'>про ЛКШ</a> и <a href='/material/summerSchools'>про летние школы вообще</a>. <b>Обязательно прочитайте информацию про ЛКШ; я настоятельно рекомендую всем школьникам, кто может, туда поехать.</b></p>
         """),
