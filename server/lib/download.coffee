@@ -12,6 +12,7 @@ STATS_MULTIPLIER = 1 - 1.0/100
 isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'development'
 mode = if isDev then "dev" else "clone"
 USER_AGENT = process.env.USER_AGENT || "algoprog.ru [#{mode}]"
+console.log "User-Agent=", USER_AGENT
 
 addStats = (type) ->
     for t of statistics
@@ -29,7 +30,6 @@ export default download = (href, jar, options={}) ->
     maxAttempts = options?.maxAttempts || 1
     options.headers = options.headers || {}
     options.headers["User-Agent"] = USER_AGENT
-    console.log options
     for i in [1..maxAttempts]
         try
             page = await request({
