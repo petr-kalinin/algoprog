@@ -18,7 +18,7 @@ import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 SEMESTER_START = "2016-06-01"
-DORMANT_TIME = 1000 * 60 * 60 * 24 * 10
+DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
 DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 90
 
 usersSchema = new mongoose.Schema
