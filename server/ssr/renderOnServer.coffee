@@ -119,6 +119,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
             ],
             clientCookie: req.headers.cookie,
             theme: defaultTheme(req.headers.cookie)
+            needDataPromises: true
         store = createStore(initialState)
 
         component = undefined
@@ -149,6 +150,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
 
         html = renderToString(wrappedElement)
         await awaitAll(store.getState().dataPromises)
+        store.getState().needDataPromises = false
 
         wrappedElement = <Provider store={store}>
                 <div>

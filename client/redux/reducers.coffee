@@ -64,6 +64,8 @@ theme = (state = null , action) ->
 
 clientCookie = (state = null, action) -> state
 
+needDataPromises = (state = null, action) -> state
+
 export default rootReducer =
     combineReducers {
         data,
@@ -72,5 +74,6 @@ export default rootReducer =
         unpaidWarningShown,
         theme,
         notifications,
-        clientCookie
+        clientCookie,
+        needDataPromises
     }
