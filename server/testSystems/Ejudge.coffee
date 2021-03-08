@@ -158,7 +158,6 @@ export default class Ejudge extends TestSystem
 
         href = "#{@server}/cgi-bin/serve-control"
         form =
-            SID: adminUser.sid["serve-control"]
             contest_id: @baseContest
             group_id: ""
             other_login: registeredUser.ejudgeUsername
@@ -186,6 +185,67 @@ export default class Ejudge extends TestSystem
         }, "serve-control")
         if data.includes("duplicated login name")
             throw "Can't registed ejudge user #{registeredUser.ejudgeUsername}: Duplicate login name"
+        await adminUser.download("#{@server}/cgi-bin/new-master", {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded"},
+            form: {action_276: "Reload config files for ALL contests"},
+            followAllRedirects: true
+        }, "new-master")
+        await registeredUser.upsert()
+        logger.info "Done register user #{registeredUser.informaticsUsername}"
+
+    blockOrUnblockUser: (registeredUser, block) ->
+        logger.info "Block/unblock user #{registeredUser.informaticsUsername}"
+        adminUser = await @getAdmin(@baseContest)
+
+        if block
+            registeredUser.ejudgePassword = Math.random().toString(36).substr(2)
+        else
+            registeredUser.ejudgePassword = registeredUser.informaticsPassword
+        logger.info "Will set ejudge password=#{registeredUser.ejudgePassword}"
+
+        href = "#{@server}/cgi-bin/serve-control"
+        searchForm =
+            SID: adminUser.sid["serve-control"]
+            contest_id: 0
+            group_id: 0
+            action: 305
+            _search: true
+            rows: 10
+            page: 1
+            sidx: "id"
+            sord: "asc"
+            searchField: "login"
+            searchString: registeredUser.ejudgeUsername
+            searchOper: "eq"
+
+        data = await adminUser.download(href, {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded"},
+            form: searchForm,
+            followAllRedirects: true
+        }, "serve-control")
+        data = JSON.parse(data)
+        id = data?.rows?[0]?.id
+        if not id
+            throw "Can't find user id"
+
+        form =
+            SID: adminUser.sid["serve-control"]
+            other_user_id: id
+            contest_id: ""
+            group_id: ""
+            next_op: 78
+            reg_password1: registeredUser.ejudgePassword
+            reg_password2: registeredUser.ejudgePassword
+            reg_random: ""
+            action_80: "Change password"
+        data = await adminUser.download(href, {
+            method: 'POST',
+            headers: {'Content-Type': "application/x-www-form-urlencoded"},
+            form: form,
+            followAllRedirects: true
+        }, "serve-control")
         await adminUser.download("#{@server}/cgi-bin/new-master", {
             method: 'POST',
             headers: {'Content-Type': "application/x-www-form-urlencoded"},

@@ -1,21 +1,26 @@
 mongoose = require('mongoose')
 
+import awaitAll from '../../client/lib/awaitAll'
+
 import calculateChocos from '../calculations/calculateChocos'
 import calculateRatingEtc from '../calculations/calculateRatingEtc'
 import calculateLevel from '../calculations/calculateLevel'
 import calculateCfRating from '../calculations/calculateCfRating'
 import calculateAchieves from '../calculations/calculateAchieves'
-
-import logger from '../log'
-
 import updateResults from '../calculations/updateResults'
 import updateTableResults from '../calculations/updateTableResults'
 import calculateCalendar from '../calculations/calculateCalendar'
 
-import sleep from '../lib/sleep'
-import awaitAll from '../../client/lib/awaitAll'
-import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
+
+import sleep from '../lib/sleep'
+
+import logger from '../log'
+
+import RegisteredUser from '../models/registeredUser'
+
+import {REGISTRY} from '../testSystems/TestSystemRegistry'
+
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
@@ -78,7 +83,8 @@ usersSchema.methods.updateDormant = ->
     date = new Date()
     if not @activated && @lastActivated && date-@lastActivated > (if @userList=="unknown" then DORMANT_TIME else DEACTIVATED_DORMANT_TIME)
         @dormant = true
-    @update({$set: {dormant: @dormant}})
+        await @update({$set: {dormant: @dormant}})
+        await @blockOrUnblock()
 
 usersSchema.methods.updateCfRating = ->
     oldRating = @cf?.rating
@@ -104,6 +110,11 @@ usersSchema.methods.updateGraduateYear = ->
     informaticsUser = await InformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
     data = await informaticsUser.getData()
     @update({$set: {graduateYear: data.graduateYear}})
+
+usersSchema.methods.blockOrUnblock = () ->
+    registeredUser = await RegisteredUser.findByKeyWithPassword(@_id)
+    for key, system of REGISTRY
+        await system.blockOrUnblockUser(registeredUser, @dormant)
 
 usersSchema.methods.setGraduateYear = (graduateYear) ->
     logger.info "setting graduateYear id ", @_id, graduateYear
@@ -158,8 +169,9 @@ usersSchema.methods.forceSetUserList = (userList) ->
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
     await @update({$set: {"dormant": dormant}})
-    User.updateUser(@_id)
+    await User.updateUser(@_id)
     @dormant = dormant
+    await @blockOrUnblock()
 
 usersSchema.methods.setActivated = (activated) ->
     logger.info "setting activated ", @_id, activated

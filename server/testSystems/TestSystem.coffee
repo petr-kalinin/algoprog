@@ -53,3 +53,7 @@ export default class TestSystem
 
     getProblemData: (options) ->
         throw "not implemented"
+
+    blockOrUnblockUser: (registeredUser, block) ->
+        # Do nothing by default
+        null
