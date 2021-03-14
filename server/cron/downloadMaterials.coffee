@@ -311,7 +311,7 @@ class MaterialsDownloader
         id = res[1]
 
         oldMaterial = await Material.findById("p#{id}")
-        if oldMaterial?.force
+        if oldMaterial
             logger.info("Will not overwrite a forced material #{id}")
             material = oldMaterial
         else
@@ -756,7 +756,7 @@ class MaterialsDownloader
         await awaitAll(promises)
 
     run: ->
-        @admin = await Informatics.getAdmin()
+        @admin = await (new Informatics())._getAdmin()
         document = await @downloadAndParse(url)
 
         materials = []
