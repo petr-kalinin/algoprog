@@ -200,15 +200,27 @@ class MaterialsDownloader
     parseLink: (a, id, order, keepResourcesInTree, indent, icon, type, path) ->
         material = undefined
         doc = await @downloadAndParse(a.href)
+        workaround = doc.getElementsByClassName("resourceworkaround")[0]
         obj = doc.getElementById("resourceobject")
-        if obj
+        header = doc.getElementsByTagName("h2")[0]
+        if workaround
+            material = new Material
+                _id: id,
+                order: order,
+                type: "pdf",
+                indent: indent
+                content: workaround.getElementsByTagName("a")[0]?.href
+                title: header.innerHTML,
+                path: path
+                materials: []
+        else if obj
             material = new Material
                 _id: id,
                 order: order,
                 type: "pdf",
                 indent: indent
                 content: obj.data
-                title: a.innerHTML,
+                title: header.innerHTML,
                 path: path
                 materials: []
         else if icon?.src?.endsWith("pdf.gif")
