@@ -94,10 +94,11 @@ export class LoggedCodeforcesUser
         return e.toLowerCase()
         
     getRCPC: (page) ->
+        console.log "page=", page
         a = /a=toNumbers\("([^"]*)"\)/.exec(page)[1]
         b = /b=toNumbers\("([^"]*)"\)/.exec(page)[1]
         c = /c=toNumbers\("([^"]*)"\)/.exec(page)[1]
-        console.log "page=", page, " abc=", a, b, c
+        console.log "abc=", a, b, c
         return @_toHex(slowAES.decrypt(@_toNumbers(c),2,@_toNumbers(a),@_toNumbers(b)))
 
     _getCsrf: (page) ->
