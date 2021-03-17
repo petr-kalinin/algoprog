@@ -110,11 +110,12 @@ export class LoggedCodeforcesUser
             throw "Unknown user"
         try
             page = await @download("#{BASE_URL}/enter")
-            RCPC = @getRCPC(page)
-            console.log "RCPC", RCPC
-            @jar.setCookie("RCPC=#{RCPC}", BASE_URL)
-            logger.info "Cf pre-login cookie=", @jar.getCookieString(BASE_URL)
-            page = await @download("#{BASE_URL}/enter?f0a28=1")
+            if page.includes("Redirecting... Please, wait.")
+                RCPC = @getRCPC(page)
+                console.log "RCPC", RCPC
+                @jar.setCookie("RCPC=#{RCPC}", BASE_URL)
+                logger.info "Cf pre-login cookie=", @jar.getCookieString(BASE_URL)
+                page = await @download("#{BASE_URL}/enter?f0a28=1")
             csrf = @_getCsrf(page)
             @ftaa = @randomToken()
             @bfaa = @randomToken()
