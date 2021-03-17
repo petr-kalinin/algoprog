@@ -97,6 +97,7 @@ export class LoggedCodeforcesUser
         a = /a=toNumbers\("([^"]*)"\)/.exec(page)[1]
         b = /b=toNumbers\("([^"]*)"\)/.exec(page)[1]
         c = /c=toNumbers\("([^"]*)"\)/.exec(page)[1]
+        console.log "page=", page, " abc=", a, b, c
         return @_toHex(slowAES.decrypt(@_toNumbers(c),2,@_toNumbers(a),@_toNumbers(b)))
 
     _getCsrf: (page) ->
@@ -109,6 +110,7 @@ export class LoggedCodeforcesUser
         try
             page = await @download("#{BASE_URL}/enter")
             RCPC = @getRCPC(page)
+            console.log "RCPC", RCPC
             @jar.setCookie("RCPC=#{RCPC}", BASE_URL)
             logger.info "Cf pre-login cookie=", @jar.getCookieString(BASE_URL)
             page = await @download("#{BASE_URL}/enter?f0a28=1")
