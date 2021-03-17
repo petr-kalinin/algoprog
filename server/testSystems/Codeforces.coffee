@@ -118,7 +118,6 @@ export class LoggedCodeforcesUser
             @ftaa = @randomToken()
             @bfaa = @randomToken()
             tta = @tta()
-            console.log page, csrf
             page = await @download("#{BASE_URL}/enter", {
                 method: 'POST',
                 form: {
