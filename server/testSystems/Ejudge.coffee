@@ -154,7 +154,7 @@ export default class Ejudge extends TestSystem
         adminUser = await @getAdmin(@baseContest)
 
         registeredUser.ejudgeUsername = registeredUser.informaticsUsername
-        registeredUser.ejudgePassword = registeredUser.informaticsPassword
+        registeredUser.ejudgePassword = Math.random().toString(36).substr(2)
 
         href = "#{@server}/cgi-bin/serve-control"
         form =
@@ -194,15 +194,14 @@ export default class Ejudge extends TestSystem
         await registeredUser.upsert()
         logger.info "Done register user #{registeredUser.informaticsUsername}"
 
-    blockOrUnblockUser: (registeredUser, block) ->
-        logger.info "Block/unblock user #{registeredUser.informaticsUsername}"
+    randomizePassword: (registeredUsers) ->
+        if registeredUsers[0].admin
+            return
+        logger.info "Block/unblock user #{registeredUsers[0].informaticsUsername}"
         adminUser = await @getAdmin(@baseContest)
 
-        if block
-            registeredUser.ejudgePassword = Math.random().toString(36).substr(2)
-        else
-            registeredUser.ejudgePassword = registeredUser.informaticsPassword
-        logger.info "Will set ejudge password=#{registeredUser.ejudgePassword}"
+        newPassword = Math.random().toString(36).substr(2)
+        logger.info "Will set ejudge password=#{newPassword}"
 
         href = "#{@server}/cgi-bin/serve-control"
         searchForm =
@@ -216,7 +215,7 @@ export default class Ejudge extends TestSystem
             sidx: "id"
             sord: "asc"
             searchField: "login"
-            searchString: registeredUser.ejudgeUsername
+            searchString: registeredUsers[0].ejudgeUsername
             searchOper: "eq"
 
         data = await adminUser.download(href, {
@@ -236,8 +235,8 @@ export default class Ejudge extends TestSystem
             contest_id: ""
             group_id: ""
             next_op: 78
-            reg_password1: registeredUser.ejudgePassword
-            reg_password2: registeredUser.ejudgePassword
+            reg_password1: newPassword
+            reg_password2: newPassword
             reg_random: ""
             action_80: "Change password"
         data = await adminUser.download(href, {
@@ -252,8 +251,10 @@ export default class Ejudge extends TestSystem
             form: {action_276: "Reload config files for ALL contests"},
             followAllRedirects: true
         }, "new-master")
-        await registeredUser.upsert()
-        logger.info "Done register user #{registeredUser.informaticsUsername}"
+        for u in registeredUsers
+            u.ejudgePassword = newPassword
+            await u.upsert()
+        logger.info "Done register user #{registeredUsers[0].informaticsUsername}"
 
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)

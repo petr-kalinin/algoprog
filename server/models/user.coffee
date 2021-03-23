@@ -19,7 +19,7 @@ import logger from '../log'
 
 import RegisteredUser from '../models/registeredUser'
 
-import {REGISTRY} from '../testSystems/TestSystemRegistry'
+import getTestSystem from '../testSystems/TestSystemRegistry'
 
 
 SEMESTER_START = "2016-06-01"
@@ -84,7 +84,6 @@ usersSchema.methods.updateDormant = ->
     if not @activated && @lastActivated && date-@lastActivated > (if @userList=="unknown" then DORMANT_TIME else DEACTIVATED_DORMANT_TIME)
         @dormant = true
         await @update({$set: {dormant: @dormant}})
-        await @blockOrUnblock()
 
 usersSchema.methods.updateCfRating = ->
     oldRating = @cf?.rating
@@ -111,10 +110,10 @@ usersSchema.methods.updateGraduateYear = ->
     data = await informaticsUser.getData()
     @update({$set: {graduateYear: data.graduateYear}})
 
-usersSchema.methods.blockOrUnblock = () ->
-    registeredUser = await RegisteredUser.findByKeyWithPassword(@_id)
-    for key, system of REGISTRY
-        await system.blockOrUnblockUser(registeredUser, @dormant)
+usersSchema.methods.randomizeEjudgePassword = ->
+    registeredUsers = await RegisteredUser.findAllByKeyWithPassword(@_id)
+    system = getTestSystem("ejudge")
+    await system.randomizePassword(registeredUsers)
 
 usersSchema.methods.setGraduateYear = (graduateYear) ->
     logger.info "setting graduateYear id ", @_id, graduateYear
@@ -171,7 +170,6 @@ usersSchema.methods.setDormant = (dormant) ->
     await @update({$set: {"dormant": dormant}})
     await User.updateUser(@_id)
     @dormant = dormant
-    await @blockOrUnblock()
 
 usersSchema.methods.setActivated = (activated) ->
     logger.info "setting activated ", @_id, activated
@@ -263,6 +261,28 @@ usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
             promises = []
     await awaitAll(promises)
     logger.info("Updated all users")
+
+usersSchema.statics.randomizeEjudgePasswords = () ->
+    PARALLEL = 10
+    tryUpdate = (user) ->
+        try
+            await user.randomizeEjudgePassword()
+        catch e
+            logger.warn("Error while updating user: ", e.message || e, e.stack)
+
+    users = await User.findAllAll()
+    promises = []
+    count = 0
+    for u in users
+        promises.push(tryUpdate(u))
+        count++
+        if promises.length >= PARALLEL
+            logger.info("Randomizing #{PARALLEL} users, waiting for completion (#{count} / #{users.length})")
+            await awaitAll(promises)
+            logger.info("Randomized #{PARALLEL} users, continuing (#{count} / #{users.length})")
+            promises = []
+    await awaitAll(promises)
+    logger.info("Randomized all users")
 
 usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"

@@ -42,6 +42,9 @@ registeredUserSchema.statics.findAllByKey = (key) ->
 registeredUserSchema.statics.findByKeyWithPassword = (key) ->
     await RegisteredUser.findOne({informaticsId: key}).select("+informaticsPassword +ejudgePassword +codeforcesPassword")
 
+registeredUserSchema.statics.findAllByKeyWithPassword = (key) ->
+    await RegisteredUser.find({informaticsId: key}).select("+informaticsPassword +ejudgePassword +codeforcesPassword")
+
 registeredUserSchema.methods.userKey = () ->
     @informaticsId
 

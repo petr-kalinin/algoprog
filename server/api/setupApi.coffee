@@ -888,6 +888,13 @@ export default setupApi = (app) ->
         User.updateAllGraduateYears()
         res.send('OK')
 
+    app.get '/api/randomizeEjudgePasswords', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        User.randomizeEjudgePasswords()
+        res.send('OK')
+
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
