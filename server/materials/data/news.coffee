@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("21 апреля занятия в лицее не будет", String.raw"""
+            21 апреля занятия в лицее 40 не будет. Занимайтесь из дома..
+        """),
         newsItem("Олимпиада им. В. Д. Лелюха", String.raw"""
             Добавлена <a href="/material/nnoi">информация про Нижегородскую олимпиаду школьников по информатике им. В. Д. Лелюха</a>.
         """),
