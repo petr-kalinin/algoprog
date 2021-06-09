@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Летние алгопрог-сборы, окончательная информация", String.raw"""
+            <p>Летние алгопрог-сборы пройдут с 24 по 30 июля. <a href="https://docs.google.com/forms/d/e/1FAIpQLSdTnHE1ty_YPDY-hfLcjRD6-lojRVUC0VpyPUEgZaVNWJnynQ/viewform">Подробная информация и анкета для заявок</a>.</p>
+        """),
         newsItem("Очных занятий в этом учебном году больше не будет (ни в лицее 40, ни в ННГУ)", String.raw"""
             В текущем учебном году занятий в лицее 40 и в ННГУ больше не будет. Занятия возобновятся в сентябре, следите за объявлениями на сайте.
         """),
