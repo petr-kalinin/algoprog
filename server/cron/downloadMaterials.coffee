@@ -596,7 +596,8 @@ class MaterialsDownloader
     fillLevel: (material, level) ->
         if material.type == "level" or material.type == "table"
             level = material._id
-        material.level = level
+        if !material.level || material.level > level
+            material.level = level
         for m in material.materials
             @fillLevel(@materials[m._id], level)
 
