@@ -56,6 +56,7 @@ usersSchema = new mongoose.Schema
     achieves: [String]
     prefs:
         editorOn: Boolean
+    members: [String]
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -144,6 +145,11 @@ usersSchema.methods.setAchieves = (achieves) ->
     logger.info "setting achieves login ", @_id, achieves
     await @update({$set: {"achieves": achieves}})
     @achieves = achieves
+
+usersSchema.methods.setMembers = (members) ->
+    logger.info "setting members login ", @_id, members
+    await @update({$set: {"members": members}})
+    @members = members
 
 usersSchema.methods.setChocosGot = (chocosGot) ->
     logger.info "setting chocosGot ", @_id, chocosGot 
@@ -316,6 +322,9 @@ usersSchema.index
 usersSchema.index
     achieves: 1
     ratingSort: -1
+
+usersSchema.index
+    members: 1
 
 User = mongoose.model('Users', usersSchema);
 

@@ -286,12 +286,14 @@ export default setupApi = (app) ->
             price = +price
         password = req.body.password
         achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
+        members = if req.body.members.length then req.body.members.split(" ") else []
         user = await User.findById(req.params.id)
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         await user.setAchieves achieves
+        await user.setMembers members
         userPrivate = await UserPrivate.findById(req.params.id)
         if not userPrivate
             userPrivate = new UserPrivate({_id: req.params.id})
