@@ -63,6 +63,7 @@ export default class EditingUserForAdmin extends React.Component
         @handlePaidTillChange = @handlePaidTillChange.bind(this)
         @handlePriceChange = @handlePriceChange.bind(this)
         @handleAchievesChange = @handleAchievesChange.bind(this)
+        @handleMembersChange = @handleMembersChange.bind(this)
         @handlePasswordChange = @handlePasswordChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
@@ -76,6 +77,7 @@ export default class EditingUserForAdmin extends React.Component
             paidTill: if props.user.paidTill then moment(props.user.paidTill).format("YYYY-MM-DD") else ''
             price: if props.user.price? then ''+props.user.price else ''
             achieves: (props.user.achieves || []).join(' ')
+            members: (props.user.members || []).join(' ')
             password: ''
 
     componentDidUpdate: (prevProps, prevState) ->
@@ -107,6 +109,9 @@ export default class EditingUserForAdmin extends React.Component
     handleAchievesChange: (event) ->
         @handleChange("achieves", event)
 
+    handleMembersChange: (event) ->
+        @handleChange("members", event)
+
     handlePasswordChange: (event) ->
         @handleChange("password", event)
 
@@ -120,6 +125,7 @@ export default class EditingUserForAdmin extends React.Component
             paidTill: @state.paidTill
             price: @state.price
             achieves: @state.achieves
+            members: @state.members
             password: @state.password
         )
         @props.handleReload()
@@ -196,6 +202,15 @@ export default class EditingUserForAdmin extends React.Component
                         value={@state.achieves}
                         size="20"
                         onChange={@handleAchievesChange}
+                        onKeyPress={@handleKeyPressed} />
+                </div>
+                <div>
+                    Состав (для команды на Архиве): <input
+                        type="text"
+                        name="members"
+                        value={@state.members}
+                        size="20"
+                        onChange={@handleMembersChange}
                         onKeyPress={@handleKeyPressed} />
                 </div>
                 <div>

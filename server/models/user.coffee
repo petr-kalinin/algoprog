@@ -2,13 +2,18 @@ mongoose = require('mongoose')
 
 import awaitAll from '../../client/lib/awaitAll'
 
-import logger from '../log'
-
 import updateResults from '../calculations/updateResults'
 import InformaticsUser from '../informatics/InformaticsUser'
+import InformaticsUser from '../informatics/InformaticsUser'
+
 import sleep from '../lib/sleep'
+
+import logger from '../log'
+
 import RegisteredUser from '../models/registeredUser'
 import {usersDb} from '../mongo/mongo'
+import getTestSystem from '../testSystems/TestSystemRegistry'
+
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
@@ -44,6 +49,7 @@ usersSchema = new mongoose.Schema
     achieves: [String]
     prefs:
         editorOn: Boolean
+    members: [String]
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -72,7 +78,7 @@ usersSchema.methods.updateDormant = ->
     date = new Date()
     if not @activated && @lastActivated && date-@lastActivated > (if @userList=="unknown" then DORMANT_TIME else DEACTIVATED_DORMANT_TIME)
         @dormant = true
-    @update({$set: {dormant: @dormant}})
+        await @update({$set: {dormant: @dormant}})
 
 usersSchema.methods.updateCfRating = ->
     oldRating = @cf?.rating
@@ -99,6 +105,11 @@ usersSchema.methods.updateGraduateYear = ->
     informaticsUser = await InformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
     data = await informaticsUser.getData()
     @update({$set: {graduateYear: data.graduateYear}})
+
+usersSchema.methods.randomizeEjudgePassword = ->
+    registeredUsers = await RegisteredUser.findAllByKeyWithPassword(@_id)
+    system = getTestSystem("ejudge")
+    await system.randomizePassword(registeredUsers)
 
 usersSchema.methods.setGraduateYear = (graduateYear) ->
     logger.info "setting graduateYear id ", @_id, graduateYear
@@ -131,6 +142,11 @@ usersSchema.methods.setAchieves = (achieves) ->
     await @update({$set: {"achieves": achieves}})
     @achieves = achieves
 
+usersSchema.methods.setMembers = (members) ->
+    logger.info "setting members login ", @_id, members
+    await @update({$set: {"members": members}})
+    @members = members
+
 usersSchema.methods.setChocosGot = (chocosGot) ->
     logger.info "setting chocosGot ", @_id, chocosGot 
     await @update({$set: {"chocosGot": chocosGot}})
@@ -155,7 +171,7 @@ usersSchema.methods.forceSetUserList = (userList) ->
 usersSchema.methods.setDormant = (dormant) ->
     logger.info "setting dormant ", @_id, dormant
     await @update({$set: {"dormant": dormant}})
-    User.updateUser(@_id)
+    await User.updateUser(@_id)
     @dormant = dormant
 
 usersSchema.methods.setActivated = (activated) ->
@@ -251,7 +267,28 @@ usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
     await awaitAll(promises)
     logger.info("Updated all users")
 
-###
+usersSchema.statics.randomizeEjudgePasswords = () ->
+    PARALLEL = 10
+    tryUpdate = (user) ->
+        try
+            await user.randomizeEjudgePassword()
+        catch e
+            logger.warn("Error while updating user: ", e.message || e, e.stack)
+
+    users = await User.findAllAll()
+    promises = []
+    count = 0
+    for u in users
+        promises.push(tryUpdate(u))
+        count++
+        if promises.length >= PARALLEL
+            logger.info("Randomizing #{PARALLEL} users, waiting for completion (#{count} / #{users.length})")
+            await awaitAll(promises)
+            logger.info("Randomized #{PARALLEL} users, continuing (#{count} / #{users.length})")
+            promises = []
+    await awaitAll(promises)
+    logger.info("Randomized all users")
+
 usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"
     for u in await User.findAll()
@@ -285,6 +322,9 @@ usersSchema.index
 usersSchema.index
     achieves: 1
     ratingSort: -1
+
+usersSchema.index
+    members: 1
 
 User = usersDb.model('Users', usersSchema);
 

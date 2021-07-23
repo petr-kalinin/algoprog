@@ -101,7 +101,6 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     # https://github.com/HenningM/express-ws/issues/64
     if req.path.includes(".websocket")
-        console.log "Ignoring websocket path in renderOnServer: ", req.path
         next()
         return
     try
@@ -118,6 +117,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
             ],
             clientCookie: req.headers.cookie,
             theme: defaultTheme(req.headers.cookie)
+            needDataPromises: true
         store = createStore(initialState)
 
         component = undefined
@@ -148,6 +148,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
 
         html = renderToString(wrappedElement)
         await awaitAll(store.getState().dataPromises)
+        store.getState().needDataPromises = false
 
         wrappedElement = <Provider store={store}>
                 <div>

@@ -274,12 +274,14 @@ export default setupApi = (app) ->
             price = +price
         password = req.body.password
         achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
+        members = if req.body.members.length then req.body.members.split(" ") else []
         user = await User.findById(req.params.id)
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
         await user.setAchieves achieves
+        await user.setMembers members
         ###
         userPrivate = await UserPrivate.findById(req.params.id)
         if not userPrivate
@@ -646,6 +648,13 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         User.updateAllGraduateYears()
+        res.send('OK')
+
+    app.get '/api/randomizeEjudgePasswords', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        User.randomizeEjudgePasswords()
         res.send('OK')
 
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->

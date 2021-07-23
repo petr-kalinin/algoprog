@@ -20,56 +20,54 @@ class NoMatch extends React.Component
     render: () ->
         return <h2>404 Not found</h2>
 
-export default [
+BASE_ROUTES = [
     {
         path: '/contest/:id',
-        key: "contest",
         component: ContestPage,
     },
     {
         path: '/problem/:id',
-        key: "problem",
         component: ProblemPage,
     },
 
     {
         path: '/edituser/:id',
-        key: "edituser",
         component: EditUserPage,
     },
     {
         path: '/dashboard',
-        key: "dashboard",
         component: DashboardPage,
     },
     {
         path: '/reviewResult/:id',
-        key: "reviewResult",
         component: ReviewResultPage,
     },
     {
         path: '/registeredUsers',
-        key: "registeredUsers",
         component: RegisteredUsersPage,
     },
     {
         path: '/login',
-        key: "login",
         component: LoginPage,
     },
     {
         path: '/register',
-        key: "register",
         component: RegisterPage,
     },
     {
         path: '/',
-        key: "/",
         exact: true,
         component: RootPage,
     },
     {
         component: NoMatch,
-        key: "nomatch"
     },
 ]
+
+export default routes = BASE_ROUTES.map((route) => {
+        path: if route.path then [route.path, "(.*)https/algoprog.ru" + route.path] else route.path
+        key: route.path || "-"
+        component: route.component
+        exact: route.exact
+    }
+)

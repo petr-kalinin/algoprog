@@ -2,6 +2,7 @@ import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
 
 import CodeforcesSubmitDownloader from './codeforces/CodeforcesSubmitDownloader'
+import slowAES from './codeforces/aes.min'
 import TestSystem, {TestSystemUser} from './TestSystem'
 
 import download, {downloadLimited} from '../lib/download'
@@ -81,6 +82,25 @@ export class LoggedCodeforcesUser
     randomToken: () ->
         return (@randomNumber() + @randomNumber()).substring(0, 18);
 
+    _toNumbers: (d) ->
+        e=[]
+        d.replace(/(..)/g, (d) -> e.push(parseInt(d,16)))
+        return e
+        
+    _toHex: () -> 
+        `for(var d=[],d=1==arguments.length&&arguments[0].constructor==Array?arguments[0]:arguments,e="",f=0;f<d.length;f++)
+            e+=(16>d[f]?"0":"")+d[f].toString(16);
+        `
+        return e.toLowerCase()
+        
+    getRCPC: (page) ->
+        console.log "page=", page
+        a = /a=toNumbers\("([^"]*)"\)/.exec(page)[1]
+        b = /b=toNumbers\("([^"]*)"\)/.exec(page)[1]
+        c = /c=toNumbers\("([^"]*)"\)/.exec(page)[1]
+        console.log "abc=", a, b, c
+        return @_toHex(slowAES.decrypt(@_toNumbers(c),2,@_toNumbers(a),@_toNumbers(b)))
+
     _getCsrf: (page) ->
         return /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]    
 
@@ -90,6 +110,12 @@ export class LoggedCodeforcesUser
             throw "Unknown user"
         try
             page = await @download("#{BASE_URL}/enter")
+            if page.includes("Redirecting... Please, wait.")
+                RCPC = @getRCPC(page)
+                console.log "RCPC", RCPC
+                @jar.setCookie("RCPC=#{RCPC}", BASE_URL)
+                logger.info "Cf pre-login cookie=", @jar.getCookieString(BASE_URL)
+                page = await @download("#{BASE_URL}/enter?f0a28=1")
             csrf = @_getCsrf(page)
             @ftaa = @randomToken()
             @bfaa = @randomToken()

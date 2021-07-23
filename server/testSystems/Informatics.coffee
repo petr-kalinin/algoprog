@@ -17,7 +17,7 @@ import InformaticsSubmitDownloader from './informatics/InformaticsSubmitDownload
 
 REQUESTS_LIMIT = 1
 UNKNOWN_GROUP = '7647'
-TIMEOUT = 1000 * 6
+TIMEOUT = 1000
 _requests = 0
 _promises = []
 
@@ -74,7 +74,7 @@ class LoggedInformaticsUser
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
 
     getId: () ->
-        page = await @download("https://informatics.msk.ru/course/view.php?id=1135")
+        page = await @download("https://informatics.msk.ru/")
         @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
         id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]
         if not @name or not id or id.length < 2
