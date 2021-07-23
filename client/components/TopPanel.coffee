@@ -173,6 +173,14 @@ class TopPanel extends React.Component
                     {
                     if @props.me?._id
                         <ButtonGroup>
+                            {
+                            if @props.teams.length
+                                <LinkContainer to="/loginAsTeam" isActive={() -> false}>
+                                    <Button bsStyle="primary">
+                                        <FontAwesome name="users"/> Войти как команда
+                                    </Button>
+                                </LinkContainer>
+                            }
                             <Button bsStyle="success" onClick={@props.logout}>
                                 <FontAwesome name="sign-out"/> Выход
                             </Button>
@@ -205,6 +213,14 @@ class TopPanel extends React.Component
             }
             ###}
         </div>
+
+teamOptions =
+    urls: (props) ->
+        if not props.myUser
+            return {}
+        teams: "userTeams/#{props.myUser._id}"
+
+TopPanel = ConnectedComponent(TopPanel, teamOptions)
 
 options =
     urls: () ->

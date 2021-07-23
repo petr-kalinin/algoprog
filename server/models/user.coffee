@@ -4,7 +4,6 @@ import awaitAll from '../../client/lib/awaitAll'
 
 import updateResults from '../calculations/updateResults'
 import InformaticsUser from '../informatics/InformaticsUser'
-import InformaticsUser from '../informatics/InformaticsUser'
 
 import sleep from '../lib/sleep'
 
@@ -222,6 +221,9 @@ usersSchema.statics.findById = (id) ->
 usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
 
+usersSchema.statics.findByMember = (member) ->
+    User.find({members: member})
+
 usersSchema.statics.updateUser = (userId, problems) ->
     start = new Date()
     logger.info ">>Updating user", userId
@@ -267,6 +269,7 @@ usersSchema.statics.updateAllUsers = (dirtyResults, alsoDormant) ->
     await awaitAll(promises)
     logger.info("Updated all users")
 
+###
 usersSchema.statics.randomizeEjudgePasswords = () ->
     PARALLEL = 10
     tryUpdate = (user) ->
@@ -297,7 +300,6 @@ usersSchema.statics.updateAllCf = () ->
                 await User.updateUser(u._id, {})
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
-###
 
 usersSchema.statics.updateAllGraduateYears = () ->
     logger.info "Updating graduateYear"
@@ -307,6 +309,7 @@ usersSchema.statics.updateAllGraduateYears = () ->
             promises.push(u.updateGraduateYear())
     await awaitAll promises
     logger.info "Updated graduateYear"
+###
 
 usersSchema.index
     dormant: 1

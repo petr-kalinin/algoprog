@@ -701,3 +701,26 @@ export default setupApi = (app) ->
         stats = getStats()
         stats.ip = JSON.parse(await download 'https://api.ipify.org/?format=json')["ip"]
         res.json(stats)
+
+    # Archive-only methods
+    app.get '/api/userTeams/:userId', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.userId
+            res.status(403).send('No permissions')
+            return
+        teams = (await User.findByMember(req.params.userId))
+        res.json(teams)
+
+    app.post '/api/loginAsTeam', ensureLoggedIn, wrap (req, res) ->
+        teamUser = await User.findById(req.body.team)
+        if not teamUser
+            res.status(400).send("Unknown team")
+            return
+        if not (teamUser.members.includes(req.user.userKey()))
+            res.status(403).send("No permission")
+            return
+        teamRegisteredUser = await RegisteredUser.findByKey(teamUser._id)
+        req.logIn teamRegisteredUser, (err) ->
+            if (err)
+                console.log("Can not login user as a team " + err) 
+                res.send("Can not login")
+            res.json({logged: true})

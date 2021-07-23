@@ -10,6 +10,7 @@ import ContestPage from './pages/ContestPage'
 import DashboardPage from './pages/DashboardPage'
 import EditUserPage from './pages/EditUserPage'
 import LoginPage from './pages/LoginPage'
+import LoginAsTeamPage from './pages/LoginAsTeam'
 import ProblemPage from './pages/ProblemPage'
 import RegisterPage from './pages/RegisterPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
@@ -49,6 +50,10 @@ BASE_ROUTES = [
     {
         path: '/login',
         component: LoginPage,
+    },
+    {
+        path: '/loginAsTeam',
+        component: LoginAsTeamPage,
     },
     {
         path: '/register',
