@@ -69,15 +69,16 @@ updateResultsForContest = (contestId, userId) ->
     cr = await contestSystem.makeContestResult(problemResults)
     pr = {}
     for result in problemResults
-        pr[result.table] = {
-            _id: result._id
-            table: result.table
-            ps: result.ps
-            attempts: result.attempts
-            lastSubmitId: result.lastSubmitId
-            lastSubmitTime: result.lastSubmitTime
-            contestResult: result.contestResult 
-        }
+        if result
+            pr[result.table] = {
+                _id: result._id
+                table: result.table
+                ps: result.ps
+                attempts: result.attempts
+                lastSubmitId: result.lastSubmitId
+                lastSubmitTime: result.lastSubmitTime
+                contestResult: result.contestResult 
+            }
     contestResult = new ContestResult
         user: userId
         contest: contest._id

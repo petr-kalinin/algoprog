@@ -10,6 +10,7 @@ export default class Archive
         ok = 0
         attempts = 0
         for result in problemResults
-            ok += result.contestResult.ok
-            attempts += result.attempts
+            if result
+                ok += result.contestResult.ok
+                attempts += result.attempts
         return {ok, attempts}

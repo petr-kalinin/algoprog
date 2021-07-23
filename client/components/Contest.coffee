@@ -9,10 +9,14 @@ import withMyUser from '../lib/withMyUser'
 
 ProblemLine = (props) ->
     href = "/problem/#{props.problem._id}"
-    badge = props.contestSystem.problemBadge(props.result)
-    if props.result.ps > 0
-        badge = "?" + badge
-    <ListGroupItem onClick={window?.goto?(href)} href={href} bsStyle={props.contestSystem.problemStyle(props.result)}>
+    badge = null
+    style = null
+    if props.result
+        badge = props.contestSystem.problemBadge(props.result)
+        if props.result.ps > 0
+            badge = "?" + badge
+        style = props.contestSystem.problemStyle(props.result)
+    <ListGroupItem onClick={window?.goto?(href)} href={href} bsStyle={style}>
         {props.problem.name}
         {badge && <Badge>{badge}</Badge>}
     </ListGroupItem>
@@ -22,7 +26,7 @@ Contest = (props) ->
     <div>
         <h1>{props.contest.name}</h1>
         <ListGroup>
-            {props.contest.problems.map((p) -> <ProblemLine problem={p} key={p._id} contestSystem={contestSystem} result={props.contestResult.problemResults[p._id]}/>)}
+            {props.contest.problems.map((p) -> <ProblemLine problem={p} key={p._id} contestSystem={contestSystem} result={props.contestResult?.problemResults?[p._id]}/>)}
         </ListGroup>
     </div>
 
