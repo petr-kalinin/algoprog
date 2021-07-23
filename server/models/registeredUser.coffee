@@ -1,6 +1,8 @@
 mongoose = require('mongoose')
 passportLocalMongoose = require('passport-local-mongoose')
 
+import {usersDb} from '../mongo/mongo'
+
 import logger from '../log'
 
 registeredUserSchema = new mongoose.Schema
@@ -58,6 +60,6 @@ registeredUserSchema.methods.setCodeforces = (username, password) ->
     
 registeredUserSchema.plugin(passportLocalMongoose);
 
-RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);
+RegisteredUser = usersDb.model('registeredUser', registeredUserSchema);
 
 export default RegisteredUser

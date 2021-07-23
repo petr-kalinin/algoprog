@@ -1,25 +1,14 @@
 mongoose = require('mongoose')
 
-###
-import calculateChocos from '../calculations/calculateChocos'
-import calculateRatingEtc from '../calculations/calculateRatingEtc'
-import calculateLevel from '../calculations/calculateLevel'
-import calculateCfRating from '../calculations/calculateCfRating'
-import calculateAchieves from '../calculations/calculateAchieves'
-###
+import awaitAll from '../../client/lib/awaitAll'
 
 import logger from '../log'
 
 import updateResults from '../calculations/updateResults'
-###
-import updateTableResults from '../calculations/updateTableResults'
-import calculateCalendar from '../calculations/calculateCalendar'
-###
-
-import sleep from '../lib/sleep'
-import awaitAll from '../../client/lib/awaitAll'
-import RegisteredUser from '../models/registeredUser'
 import InformaticsUser from '../informatics/InformaticsUser'
+import sleep from '../lib/sleep'
+import RegisteredUser from '../models/registeredUser'
+import {usersDb} from '../mongo/mongo'
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
@@ -297,6 +286,6 @@ usersSchema.index
     achieves: 1
     ratingSort: -1
 
-User = mongoose.model('Users', usersSchema);
+User = usersDb.model('Users', usersSchema);
 
 export default User
