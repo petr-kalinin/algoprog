@@ -212,6 +212,7 @@ export default class EditingUserForAdmin extends React.Component
                         size="20"
                         onChange={@handleMembersChange}
                         onKeyPress={@handleKeyPressed} />
+                    {" (на сервере: #{@props.user.members.join(' ')})"}
                 </div>
                 <div>
                     Пароль: <input
