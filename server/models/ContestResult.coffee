@@ -6,6 +6,8 @@ contestResultsSchema = new mongoose.Schema
     contest: String
     contestResult: mongoose.Schema.Types.Mixed
     problemResults: mongoose.Schema.Types.Mixed
+    registered: { type: Boolean, default: false }
+    startTime: Date
 
 contestResultsSchema.methods.upsert = () ->
     @_id = @user + "::" + @contest
