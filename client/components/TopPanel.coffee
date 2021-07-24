@@ -19,13 +19,18 @@ import * as actions from '../redux/actions'
 
 import UserName, {color} from './UserName'
 import ThemeSwitch from './ThemeSwitch'
+import needDeactivatedWarning from '../lib/needDeactivatedWarning'
+import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './TopPanel.css'
 
-###
 needCfWarning = (user) ->
+    return false
     (not user.cf?.login?) and (user.level.current >= "1В")
+
+needUnpaidWarning = (user) ->
+    (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (not isPaid(user))
 
 DeactivatedWarning = (props) ->
     <div className="static-modal">
@@ -104,11 +109,8 @@ DormantWarning = (props) ->
 
         </Modal.Dialog>
     </div>
-###
-
 
 class TopPanel extends React.Component
-    ###
     constructor: (props) ->
         super(props)
         @state =
@@ -145,7 +147,6 @@ class TopPanel extends React.Component
             showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
         if !deepEqual(newState, prevState)
             @setState(newState)
-    ###
 
     render: ->
         <div>
@@ -201,7 +202,6 @@ class TopPanel extends React.Component
                     }
                 </Navbar.Form>
             </Navbar>
-            {###
             {
             @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
             }
@@ -211,7 +211,6 @@ class TopPanel extends React.Component
             {
             not @props.myUser?.dormant and @state.showUnpaid && <UnpaidWarning handleClose={@closeUnpaid} blocked={unpaidBlocked(@props.myUser)} myUser={@props.myUser}/>
             }
-            ###}
         </div>
 
 teamOptions =
