@@ -4,11 +4,10 @@ import Problem from '../components/Problem'
 import Sceleton from '../components/Sceleton'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
-makePath = (problem) ->
-    contest = problem.contests[0]
+makePath = (contest, problem) ->
     [
         {title: contest.name, _id: contest._id, href: "/contest/#{contest._id}"},
-        {title: problem.name, _id: problem._id, href: "/problem/#{problem._id}"},
+        {title: problem.name, _id: problem._id, href: "/problem/#{contest._id}/#{problem._id}"},
     ]
 
 class ProblemPage extends React.Component
@@ -16,11 +15,12 @@ class ProblemPage extends React.Component
         super(props)
 
     render:  () ->
-        sceletonProps = {@props..., location: {title: @props.problem?.name, path: makePath(@props.problem), _id: @props.problem?._id}}
+        sceletonProps = {@props..., location: {title: @props.problem?.name, path: makePath(@props.contest, @props.problem), _id: @props.problem?._id}}
         `<Sceleton {...sceletonProps}><Problem {...this.props} material={this.props.problem}/></Sceleton>`
 
 options =
     urls: (props) ->
-        problem: "problem/#{props.match.params.id}"
+        contest: "contest/#{props.match.params.contest}"
+        problem: "problem/#{props.match.params.contest}/#{props.match.params.id}"
 
 export default ProblemPageConnected = ConnectedComponent(ProblemPage, options)

@@ -110,7 +110,7 @@ class SubmitForm extends React.Component
                 findMistake: @props.findMistake
             if not @props.editorOn
                 dataToSend.editorOn = @state.editorOn
-            url = "submit/#{@props.problemId}"
+            url = "submit/#{@props.contestId}/#{@props.problemId}"
             data = await callApi url, dataToSend
 
             if data.submit

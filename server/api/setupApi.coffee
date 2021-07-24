@@ -16,6 +16,8 @@ import { StaticRouter } from 'react-router'
 import {UserNameRaw} from '../../client/components/UserName'
 import awaitAll from '../../client/lib/awaitAll'
 
+import getContestSystem from '../contestSystems/ContestSystemRegistry'
+
 import * as downloadSubmits from "../cron/downloadSubmits"
 import InformaticsUser from '../informatics/InformaticsUser'
 
@@ -151,6 +153,12 @@ expandFindMistake = (mistake, admin, userKey) ->
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
 
+isContestBlocked = (user, contestId) ->
+    contest = await Contest.findById(contestId)
+    contestResult = await ContestResult.findByContestAndUser(contestId, user._id)
+    contestSystem = getContestSystem(contest.contestSystemData.system)
+    return contestSystem.isBlocked(contestResult)
+
 export default setupApi = (app) ->
     app.get '/api/ping', wrap (req, res) ->
         res.send('OK')
@@ -167,7 +175,7 @@ export default setupApi = (app) ->
         req.logout()
         res.json({loggedOut: true})
 
-    app.post '/api/submit/:problemId', ensureLoggedIn, wrap (req, res) ->
+    app.post '/api/submit/:contestId/:problemId', ensureLoggedIn, wrap (req, res) ->
         #userPrivate = (await UserPrivate.findById(req.user.userKey()))?.toObject() || {}
         user = await User.findById(req.user.userKey())
         userObj = user?.toObject() || {}
@@ -178,6 +186,9 @@ export default setupApi = (app) ->
         ###
         if user.dormant
             res.json({dormant: true})
+            return
+        if await isContestBlocked(user, req.params.contestId)
+            res.json({blocked: true})
             return
         try
             await createSubmit(req.params.problemId, req.user.userKey(), user.userList, req.body.language, req.body.code, req.body.draft, req.body.findMistake)
@@ -403,7 +414,11 @@ export default setupApi = (app) ->
     app.get '/api/contest/:id', wrap (req, res) ->
         res.json(await Contest.findById(req.params.id))
 
-    app.get '/api/problem/:id', wrap (req, res) ->
+    app.get '/api/problem/:contestId/:id', wrap (req, res) ->
+        user = await User.findById(req.user.userKey())
+        if await isContestBlocked(user, req.params.contestId)
+            res.json({blocked: true})
+            return
         res.json(await Problem.findById(req.params.id))
 
     app.get '/api/result/:id', wrap (req, res) ->

@@ -1,4 +1,5 @@
-export default blockIf = (cls, condition) ->
+export default blockIf = (cls, shouldBlock) ->
     class MaybeBlocked extends cls
-        blockSubmit: (contestResults) ->
-            return condition(contestResults)
+        isBlocked: (contestResults) ->
+            console.log "isBlocked=", shouldBlock(contestResults)
+            return shouldBlock(contestResults)

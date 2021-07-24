@@ -8,7 +8,7 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 
 ProblemLine = (props) ->
-    href = "/problem/#{props.problem._id}"
+    href = "/problem/#{props.contest}/#{props.problem._id}"
     badge = null
     style = null
     if props.result
@@ -25,7 +25,7 @@ ProblemList = (props) ->
     contestSystem = props.contestSystem
     <div>
         <ListGroup>
-            {props.contest.problems.map((p) -> <ProblemLine problem={p} key={p._id} contestSystem={contestSystem} result={props.contestResult?.problemResults?[p._id]}/>)}
+            {props.contest.problems.map((p) -> <ProblemLine problem={p} key={p._id} contest={props.contest._id} contestSystem={contestSystem} result={props.contestResult?.problemResults?[p._id]}/>)}
         </ListGroup>
     </div>
 

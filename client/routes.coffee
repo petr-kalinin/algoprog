@@ -27,7 +27,7 @@ BASE_ROUTES = [
         component: ContestPage,
     },
     {
-        path: '/problem/:id',
+        path: '/problem/:contest/:id',
         component: ProblemPage,
     },
 

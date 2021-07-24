@@ -4,4 +4,4 @@ shouldBlock = (contestResults) ->
     return not contestResults?.registered
 
 export default needRegistration = (cls) ->
-    return blockIf(cls, shouldBlock, "Вы не зарегистрированы на контест")
+    return blockIf(cls, shouldBlock)

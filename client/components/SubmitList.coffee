@@ -84,6 +84,7 @@ class SubmitList extends React.Component
             ###}
             <SubmitForm material={@props.material} 
                 problemId={@props.material._id} 
+                contestId={@props.contest._id}
                 reloadSubmitList={@props.handleReload} 
                 noFile={@props.noFile} 
                 canSubmit={@props.canSubmit} 

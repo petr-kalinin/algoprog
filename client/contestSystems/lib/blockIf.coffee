@@ -1,9 +1,9 @@
 React = require('react')
 
-export default blockIf = (cls, condition, message) ->
+export default blockIf = (cls, shouldBlock, message) ->
     class MaybeBlocked extends cls
         Contest: (props) ->
-            if not condition(props.contestResult)
+            if shouldBlock(props.contestResult)
                 <div>{message}</div>
             else
                 super props

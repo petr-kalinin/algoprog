@@ -14,3 +14,6 @@ export default class Archive
                 ok += result.contestResult.ok
                 attempts += result.attempts
         return {ok, attempts}
+
+    isBlocked: () -> 
+        false
