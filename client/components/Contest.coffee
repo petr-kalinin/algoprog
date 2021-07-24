@@ -9,14 +9,15 @@ import withMyUser from '../lib/withMyUser'
 
 Contest = (props) ->
     contestSystem = getContestSystem(props.contest.contestSystemData.system)
-    ContestElement = contestSystem.Contest
+    ContestElement = contestSystem.Contest()
     <div>
         <h1>{props.contest.name}</h1>
-        <ContestElement contestSystem={contestSystem} contest={props.contest} contestResult={props.contestResult} />
+        <ContestElement contestSystem={contestSystem} contest={props.contest} contestResult={props.contestResult} handleReload={props.handleReload}/>
     </div>
 
 options =
     urls: (props) ->
         contestResult: "contestResult/#{props.contest._id}/#{props.myUser._id}"
+        contest: "contest/#{props.match.params.id}"
 
 export default withMyUser(ConnectedComponent(Contest, options))

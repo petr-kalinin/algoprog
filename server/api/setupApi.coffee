@@ -412,7 +412,11 @@ export default setupApi = (app) ->
         res.json(await Contest.findAll())
 
     app.get '/api/contest/:id', wrap (req, res) ->
-        res.json(await Contest.findById(req.params.id))
+        contest = (await Contest.findById(req.params.id))?.toObject() || {}
+        user = await User.findById(req.user.userKey())
+        if await isContestBlocked(user, req.params.id)
+            contest.problems = []
+        res.json(contest)
 
     app.get '/api/problem/:contestId/:id', wrap (req, res) ->
         user = await User.findById(req.user.userKey())
@@ -739,3 +743,12 @@ export default setupApi = (app) ->
                 console.log("Can not login user as a team " + err) 
                 res.send("Can not login")
             res.json({logged: true})
+
+    app.post '/api/startContest/:id', ensureLoggedIn, wrap (req, res) ->
+        contest = await Contest.findById(req.params.id)
+        if not contest
+            res.status(400).send("Unknown contest")
+            return
+        contestResult = await ContestResult.findByContestAndUser(contest._id, req.user.userKey())
+        await contestResult.startContest()
+        res.json({started: true})

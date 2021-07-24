@@ -19,4 +19,5 @@ export default class Archive
             when result.attempts > 0 then "danger"
             else undefined
 
-    Contest: ProblemList
+    Contest: () ->
+        ProblemList
