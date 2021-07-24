@@ -1,3 +1,7 @@
+React = require('react')
+
+import ProblemList from '../components/ProblemList'
+
 export default class Archive
     problemBadge: (result) ->
         badge = ""
@@ -14,3 +18,5 @@ export default class Archive
             when result.contestResult.ok > 0 then "success"
             when result.attempts > 0 then "danger"
             else undefined
+
+    Contest: ProblemList
