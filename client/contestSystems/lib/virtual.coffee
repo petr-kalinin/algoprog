@@ -1,5 +1,4 @@
 React = require('react')
-moment = require('moment')
 
 import Button from 'react-bootstrap/lib/Button'
 
@@ -12,7 +11,6 @@ startContest = (contestId, reload) ->
 
 Header = (props) ->
     <div>
-        {props.contestResult.startTime && <p>Время начала контеста: {moment(props.contestResult.startTime).format('DD.MM.YY HH:mm:ss')} </p>}
         {props.contestResult.virtualBlocked && 
             <div>
                 <p>Этот контест виртуальный: нажмите кнопку, чтобы стартовать контест.</p>

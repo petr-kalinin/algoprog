@@ -6,4 +6,4 @@ export default sample = contest("sample", "Пробный контест", "arch
         problem(1341),
         problem(1342),
         problem(1337),
-    ])
+    ], 300)
