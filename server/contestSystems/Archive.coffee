@@ -17,3 +17,6 @@ export default class Archive
 
     getBlockedData: () -> 
         null
+
+    shouldBlockSubmit: () ->
+        false

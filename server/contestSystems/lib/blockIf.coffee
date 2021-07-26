@@ -1,4 +1,8 @@
-export default blockIf = (cls, getBlockedDataImpl) ->
+export default blockIf = (cls, getBlockedDataImpl, blockSubmitImpl) ->
     class MaybeBlocked extends cls
         getBlockedData: (contestResults) ->
-            return getBlockedDataImpl(contestResults)
+            data = getBlockedDataImpl?(contestResults) || {}
+            return {data..., super(contestResults)...}
+
+        shouldBlockSubmit: (contest, contestResults) ->
+            return blockSubmitImpl?(contest, contestResults) || super(contest, contestResults)

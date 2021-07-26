@@ -157,7 +157,15 @@ getContestBlockedData = (userId, contestId) ->
     contest = await Contest.findById(contestId)
     contestResult = await ContestResult.findByContestAndUser(contestId, userId)
     contestSystem = getContestSystem(contest.contestSystemData.system)
-    return contestSystem.getBlockedData(contestResult)
+    data = contestSystem.getBlockedData(contestResult)
+    if data && Object.keys(data).length != 0
+        return data
+
+isSubmitBlocked = (userId, contestId) ->
+    contest = await Contest.findById(contestId)
+    contestResult = await ContestResult.findByContestAndUser(contestId, userId)
+    contestSystem = getContestSystem(contest.contestSystemData.system)
+    return contestSystem.shouldBlockSubmit(contest, contestResult)
 
 export default setupApi = (app) ->
     app.get '/api/ping', wrap (req, res) ->
@@ -187,7 +195,7 @@ export default setupApi = (app) ->
         if user.dormant
             res.json({dormant: true})
             return
-        if await getContestBlockedData(user._id, req.params.contestId)
+        if await isSubmitBlocked(user._id, req.params.contestId)
             res.json({blocked: true})
             return
         try
