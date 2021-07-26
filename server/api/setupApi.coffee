@@ -772,5 +772,15 @@ export default setupApi = (app) ->
         contestSystem = getContestSystem(contest.contestSystemData.system)
         contestResults = (r.toObject() for r in contestResults when contestSystem.shouldShowResult(r, user))
         for r in contestResults
-            r.fullUser = await User.findById(r.user)
+            r.fullUser = (await User.findById(r.user)) || {name: r.user}
         res.json(contestResults)
+
+    app.post '/api/importVirtualResult', ensureLoggedIn, wrap (req, res) ->
+        contest = await Contest.findById(req.params.id)
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        contestResult = new ContestResult(req.body)
+        await contestResult.upsert()
+        res.json({imported: true})
+

@@ -10,7 +10,7 @@ import {getClassStartingFromJuly} from '../../client/lib/graduateYearToClass'
 export default userTableHeader = (res, props) ->
     h = props.header
     cls = if h then "К" else
-        getClassStartingFromJuly(props.user.graduateYear) || ""
+        getClassStartingFromJuly(props.user?.graduateYear) || ""
     if props.theme == 'dark'
         style = backgroundColor : "#707070"
     else
@@ -24,15 +24,15 @@ export default userTableHeader = (res, props) ->
             {cls} 
         </td>
         a <td className={globalStyles.mainTable_td} key="level" title="Уровень">
-            {if h then "У" else props.user.level?.current}
+            {if h then "У" else props.user?.level?.current}
         </td>
         a <td className={globalStyles.mainTable_td} key="rating" title="Рейтинг">
-            {if h then "Р" else props.user.rating}
+            {if h then "Р" else props.user?.rating}
         </td>
         a <td className={globalStyles.mainTable_td} key="activity" title="Активность">
-            {if h then "А" else props.user.activity?.toFixed?(1)}
+            {if h then "А" else props.user?.activity?.toFixed?(1)}
         </td>
         a <td className={globalStyles.mainTable_td} key="cf" title="Codeforces">
-            {if h then "CF" else <CfStatus cf={props.user.cf}/>}
+            {if h then "CF" else <CfStatus cf={props.user?.cf}/>}
         </td>
     res

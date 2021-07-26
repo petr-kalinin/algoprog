@@ -42,7 +42,7 @@ Result = (props) ->
         className = globalStyles[className]
 
     dbClickUrl = "/problem/#{props.contest._id}/#{props.problem._id}"
-    ctrlDbClickUrl = "/reviewResult/#{props.user._id}::#{props.problem._id}"
+    ctrlDbClickUrl = "/reviewResult/#{props.user?._id}::#{props.problem._id}"
 
     dbClickHandler = (event) ->
         if event.ctrlKey
@@ -50,8 +50,8 @@ Result = (props) ->
         else
             window.goto(dbClickUrl)()
 
-
-    <td title={props.user.name + " : " + props.problem.name} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
+    username = props.user?.name || props.user
+    <td title={username + " : " + props.problem.name} className={className + " " + styles.res + " " + globalStyles.mainTable_td} onDoubleClick={dbClickHandler}>
         {text}
     </td>
 

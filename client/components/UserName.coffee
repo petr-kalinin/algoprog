@@ -41,11 +41,17 @@ export color = (user, theme) ->
 ###
 export UserNameRaw = (props) ->
     <span>
-        <Link to={"/user/" + props.user._id}>
+        {if props.user?._id
+            <Link to={"/user/" + props.user._id}>
+                <span className={styles.name} >
+                    {props.user.name}
+                </span>
+            </Link>
+        else
             <span className={styles.name} >
-                {props.user.name}
+                (v) {props.user.name}
             </span>
-        </Link>
+        }
     </span>
 
 export default withTheme(UserNameRaw)

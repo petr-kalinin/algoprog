@@ -8,9 +8,10 @@ contestResultsSchema = new mongoose.Schema
     problemResults: mongoose.Schema.Types.Mixed
     registered: { type: Boolean, default: false }
     startTime: Date
+    virtualId: String
 
 contestResultsSchema.methods.upsert = () ->
-    @_id = @user + "::" + @contest
+    @_id = @_id || @user + "::" + @contest
     try
         @update(this, {upsert: true})
     catch
