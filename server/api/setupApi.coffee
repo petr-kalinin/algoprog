@@ -773,6 +773,7 @@ export default setupApi = (app) ->
         contestResults = (r.toObject() for r in contestResults when contestSystem.shouldShowResult(r, user))
         for r in contestResults
             r.fullUser = (await User.findById(r.user)) || {name: r.virtualName}
+        contestSystem.sortMonitor(contestResults)
         res.json(contestResults)
 
     app.post '/api/importVirtualSubmit', ensureLoggedIn, wrap (req, res) ->

@@ -23,3 +23,11 @@ export default class Archive
 
     shouldShowResult: () ->
         true
+
+    sortMonitor: (results) ->
+        results.sort( (a, b) -> 
+            if a.contestResult.ok != b.contestResult.ok
+                return b.contestResult.ok - a.contestResult.ok
+            a.contestResult.attempts - b.contestResult.attempts
+        )
+        return results
