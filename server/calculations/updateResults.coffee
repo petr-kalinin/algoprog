@@ -32,6 +32,7 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
     attempts = 0
     lastSubmitId = undefined
     lastSubmitTime = undefined
+    virtualId = undefined
     for submit in submits
         if submit.outcome == "DR" or submit.outcome == "PW" or submit.outcome == "DP"
             continue
@@ -43,6 +44,9 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
             ps = 1
         else if submit.outcome != "CE" and solved == 0
             attempts++
+        if submit.virtualId and virtualId and virtualId != submit.virtualId
+            logger.warn("Different virtualId in updateResults: #{virtualId} and #{submit.virtualId}")
+        virtualId = submit.virtualId
     problem = await Problem.findById(problemId)
     for contest in problem.contests
         contestSystem = getContestSystem(contest.contestSystem)
@@ -57,9 +61,11 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
             lastSubmitId: lastSubmitId,
             lastSubmitTime: lastSubmitTime
             contestResult: contestResult
+            virtualId: virtualId
         await result.upsert()
 
 updateResultsForContest = (contestId, userId) ->
+    oldResult = await ContestResult.findByContestAndUser(contestId, userId)
     contest = await Contest.findById(contestId)
     problemResults = []
     for problem in contest.problems
@@ -68,6 +74,7 @@ updateResultsForContest = (contestId, userId) ->
     contestSystem = getContestSystem(contest.contestSystemData.system)
     cr = await contestSystem.makeContestResult(problemResults)
     pr = {}
+    vitualId = undefined
     for result in problemResults
         if result
             pr[result.table] = {
@@ -79,11 +86,20 @@ updateResultsForContest = (contestId, userId) ->
                 lastSubmitTime: result.lastSubmitTime
                 contestResult: result.contestResult 
             }
+            if result.virtualId and virtualId and virtualId != result.virtualId
+                logger.warn("Different virtualId in updateResults: #{virtualId} and #{result.virtualId}")
+            virtualId = result.virtualId
+    if oldResult.virtualId and virtualId and virtualId != oldResult.virtualId
+        logger.warn("Different virtualId in updateResults: #{virtualId} and #{oldResult.virtualId}")
     contestResult = new ContestResult
         user: userId
         contest: contest._id
         contestResult: cr
         problemResults: pr
+        virtualId: virtualId
+        virtualName: oldResult?.virtualName
+        startTime: oldResult?.startTime
+        registered: oldResult?.registered
     await contestResult.upsert()
 
 updateResultsForProblem = (userId, problemId) ->

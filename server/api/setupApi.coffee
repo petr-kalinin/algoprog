@@ -772,15 +772,28 @@ export default setupApi = (app) ->
         contestSystem = getContestSystem(contest.contestSystemData.system)
         contestResults = (r.toObject() for r in contestResults when contestSystem.shouldShowResult(r, user))
         for r in contestResults
-            r.fullUser = (await User.findById(r.user)) || {name: r.user}
+            r.fullUser = (await User.findById(r.user)) || {name: r.virtualName}
         res.json(contestResults)
 
-    app.post '/api/importVirtualResult', ensureLoggedIn, wrap (req, res) ->
-        contest = await Contest.findById(req.params.id)
+    app.post '/api/importVirtualSubmit', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
-        contestResult = new ContestResult(req.body)
-        await contestResult.upsert()
+        submit = req.body
+        submit.time = new Date(submit.time)
+        submit = new Submit(submit)
+        await submit.upsert()
+        console.log "Import submit ", submit._id, submit.virtualId
+        res.json({imported: true})
+
+    app.post '/api/importVirtualResult', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        result = req.body
+        result.startTime = new Date(result.startTime)
+        result = new ContestResult(result)
+        await result.upsert()
+        console.log "Import submit ", result._id, result.virtualId
         res.json({imported: true})
 

@@ -21,6 +21,7 @@ resultsSchema = new mongoose.Schema
     lastSubmitId: String
     lastSubmitTime: Date
     contestResult: mongoose.Schema.Types.Mixed
+    virtualId: String
     ###
     ignored: Number
     findMistake: String
@@ -35,9 +36,9 @@ resultsSchema.methods.upsert = () ->
     user = await User.findById(@user)
     if not user
         logger.warn "Unknown user #{@user} in Result.upsert, result id #{@_id}"
-        return
-    @userList = user.userList
-    @activated = user?.activated
+    else
+        @userList = user.userList
+        @activated = user?.activated
     @_id = @user + "::" + (@findMistake || @table) + "::" + @contest
     await @update(this, {upsert: true}).exec()
     runMongooseCallback 'update_result', @user

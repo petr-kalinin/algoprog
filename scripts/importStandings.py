@@ -52,87 +52,96 @@ def do_login(opener):
     user = json.loads(opener.open(server + '/api/me').read())
     assert user["admin"]
 
-def convert_result(result, contest):
+def make_user_id(name):
+    return session_id + "v" + hashlib.md5(name.encode('utf-8')).hexdigest()[:8]
+
+def make_submits(result, contest):
     """
-    { 
-        "_id" : "547820::sample", 
-        "contest" : "sample", 
-        "contestResult" : { 
-            "ok" : 0, 
-            "attempts" : 3 ,
-            "time: 123
-        }, 
-        "problemResults" : { 
-            "p1340" : { 
-                "_id" : "547820::p1340::sample", 
-                "table" : "p1340", 
-                "ps" : 0, 
-                "attempts" : 2, 
-                "lastSubmitId" : 
-                "27525148p1340", 
-                "lastSubmitTime" : ISODate("2021-07-26T09:15:34Z"), 
-                "contestResult" : { "ok" : 0 } 
-            }, 
-            ...
-        }, 
-        "user" : "547820", 
-        "registered" : false, 
-        "startTime" : ISODate("2021-07-26T09:11:35.258Z") 
-    }
+    _id: String
+    time: Date
+    downloadTime: { type: Date, default: new Date(0) }
+    user: String
+    userList: String
+    problem: String
+    outcome: String
+    source: String
+    sourceRaw: String
+    language: String
+    comments: [String]
+    results: mongoose.Schema.Types.Mixed
+    force: { type: Boolean, default: false },
+    quality: { type: Number, default: 0 },
+    testSystemData: mongoose.Schema.Types.Mixed
+    findMistake: String
     """
     name, problemResults = result
-    subid = hashlib.md5(name.encode('utf-8')).hexdigest()[:8]
-    result_id = session_id + "v" + subid
-    result = {
-        "_id": result_id + ":" + contest["_id"],
-        "virtualId": session_id,
-        "contest" : contest["_id"], 
-        "user": name,
-        "problemResults": {}
-    }
+    user_id = make_user_id(name)
     assert len(problemResults) == len(contest["problems"])
-    totalOk = 0
-    totalAttempts = 0
-    totalTime = 0
     for i in range(len(contest["problems"])):
         problem_id = contest["problems"][i]["_id"]
         prob_res, time = problemResults[i]
+        if not time:
+            continue
         ok = False
         attempts = 0
         if prob_res and prob_res != "+":
             attempts = abs(int(prob_res))
         ok = prob_res and prob_res[0] == "+"
-        
-        if ok:
-            totalOk += 1
-            totalAttempts += attempts
-            totalTime += time + 20 * attempts
 
-        result["problemResults"][problem_id] = { 
-            "_id" : f"{result_id}::{problem_id}::{contest['_id']}", 
-            "table" : problem_id, 
-            "ps" : 0, 
-            "attempts" : attempts,
-            "contestResult" : { 
-                "ok" : 1 if ok else 0,
-                "time": time
-            } 
+        submit_id = user_id + "::" + problem_id + "::"
+        fullTime = time * 60 * 1000
+        submit = {
+            "time": fullTime,
+            "user": user_id,
+            "problem": problem_id,
+            "outcome": "WA",
+            "testSystemData": {},
+            "virtualId": session_id,
+            "force": True
         }
-    result["contestResult"] = { 
-        "ok" : totalOk, 
-        "attempts" : totalAttempts,
-        "time": totalTime
-    }
+
+        for att in range(attempts):
+            submit["_id"] = submit_id + str(att)
+            submit["time"] = fullTime - att - 1
+            yield submit
+
+        if ok:
+            submit["_id"] = submit_id + "ok"
+            submit["outcome"] = "OK"
+            submit["time"] = fullTime
+            yield submit
 
     return result
 
-def upload(opener, result):
-    print(result["user"])
+def make_result(result, contest):
+    name, problemResults = result
+    user_id = make_user_id(name)
+    return { 
+        "contest" : contest["_id"],
+        "user" : user_id, 
+        "startTime" : 0,
+        "virtualName": name,
+        "virtualId": session_id
+    }
+
+def upload_submit(opener, result):
+    req = urllib.request.Request(server + "/api/importVirtualSubmit", json.dumps(result).encode("utf-8"))
+    req.add_header('Content-type', 'application/json')
+    r = opener.open(req)
+    data = json.loads(r.read())
+    assert data["imported"]
+
+def upload_result(opener, result):
+    print(result["user"] + " = " + result["virtualName"])
     req = urllib.request.Request(server + "/api/importVirtualResult", json.dumps(result).encode("utf-8"))
     req.add_header('Content-type', 'application/json')
     r = opener.open(req)
     data = json.loads(r.read())
     assert data["imported"]
+    req = urllib.request.Request(server + "/api/updateResults/" + result["user"])
+    r = opener.open(req)
+    data = r.read()
+    assert data == b'OK'
 
 server = sys.argv[1]
 login = sys.argv[2]
@@ -151,4 +160,6 @@ doc = open(fname).read()
 results = parse_nnstuicpc(doc)
 
 for result in results:
-    upload(opener, convert_result(result, contest))
+    for submit in make_submits(result, contest):
+        upload_submit(opener, submit)
+    upload_result(opener, make_result(result, contest))

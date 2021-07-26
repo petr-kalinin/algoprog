@@ -25,7 +25,7 @@ Header = (props) ->
 PassedText = (props) ->
     if props.header
         return "Прошло"
-    if not props.contestResult.startTime
+    if not props.contestResult.startTime or +(new Date(props.contestResult.startTime)) == 0
         return ""
     passed = new Date() - new Date(props.contestResult.startTime)
     "#{Math.floor(passed / 60 / 1000)} мин."

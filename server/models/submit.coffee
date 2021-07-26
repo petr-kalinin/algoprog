@@ -31,6 +31,7 @@ submitsSchema = new mongoose.Schema
     quality: { type: Number, default: 0 },
     testSystemData: mongoose.Schema.Types.Mixed
     findMistake: String
+    virtualId: String
     
 submitsSchema.methods.upsert = () ->
     await @update(this, {upsert: true, overwrite: true})

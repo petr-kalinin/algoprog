@@ -6,9 +6,11 @@ contestResultsSchema = new mongoose.Schema
     contest: String
     contestResult: mongoose.Schema.Types.Mixed
     problemResults: mongoose.Schema.Types.Mixed
+    # Don't forget to update updateResults
     registered: { type: Boolean, default: false }
     startTime: Date
     virtualId: String
+    virtualName: String
 
 contestResultsSchema.methods.upsert = () ->
     @_id = @_id || @user + "::" + @contest
