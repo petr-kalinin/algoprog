@@ -13,8 +13,6 @@ ProblemLine = (props) ->
     style = null
     if props.result
         badge = props.contestSystem.problemBadge(props.result)
-        if props.result.ps > 0
-            badge = "?" + badge
         style = props.contestSystem.problemStyle(props.result)
     <ListGroupItem onClick={window?.goto?(href)} href={href} bsStyle={style}>
         {props.problem.name}

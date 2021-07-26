@@ -20,3 +20,6 @@ export default class Archive
 
     shouldBlockSubmit: () ->
         false
+
+    shouldShowResult: () ->
+        true

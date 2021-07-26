@@ -761,3 +761,16 @@ export default setupApi = (app) ->
         contestResult = await ContestResult.findByContestAndUser(contest._id, req.user.userKey())
         await contestResult.startContest()
         res.json({started: true})
+
+    app.get '/api/monitor/:id', ensureLoggedIn, wrap (req, res) ->
+        contest = await Contest.findById(req.params.id)
+        user = await User.findById(req.user.userKey())
+        if not contest
+            res.status(400).send("Unknown contest")
+            return
+        contestResults = await ContestResult.findByContest(contest._id)
+        contestSystem = getContestSystem(contest.contestSystemData.system)
+        contestResults = (r.toObject() for r in contestResults when contestSystem.shouldShowResult(r, user))
+        for r in contestResults
+            r.fullUser = await User.findById(r.user)
+        res.json(contestResults)

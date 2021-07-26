@@ -25,4 +25,7 @@ contestResultsSchema.statics.findByContestAndUser = (contest, user) ->
     id = user + "::" + contest
     return ContestResult.findById id
 
+contestResultsSchema.statics.findByContest = (contest, user) ->
+    return ContestResult.find {contest}
+
 export default ContestResult = mongoose.model('ContestResults', contestResultsSchema);

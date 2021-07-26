@@ -11,6 +11,7 @@ import DashboardPage from './pages/DashboardPage'
 import EditUserPage from './pages/EditUserPage'
 import LoginPage from './pages/LoginPage'
 import LoginAsTeamPage from './pages/LoginAsTeam'
+import MonitorPage from './pages/MonitorPage'
 import ProblemPage from './pages/ProblemPage'
 import RegisterPage from './pages/RegisterPage'
 import RegisteredUsersPage from './pages/RegisteredUsersPage'
@@ -29,6 +30,10 @@ BASE_ROUTES = [
     {
         path: '/problem/:contest/:id',
         component: ProblemPage,
+    },
+    {
+        path: '/monitor/:id',
+        component: MonitorPage,
     },
 
     {

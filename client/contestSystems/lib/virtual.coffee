@@ -2,6 +2,7 @@ React = require('react')
 
 import Button from 'react-bootstrap/lib/Button'
 
+import globalStyles from '../../components/global.css'
 import callApi from '../../lib/callApi'
 
 startContest = (contestId, reload) ->
@@ -21,6 +22,17 @@ Header = (props) ->
         }
     </div>
 
+PassedText = (props) ->
+    if props.header
+        return "Прошло"
+    if not props.contestResult.startTime
+        return ""
+    passed = new Date() - new Date(props.contestResult.startTime)
+    "#{Math.floor(passed / 60 / 1000)} мин."
+
+UserAddInfoImpl = (props) ->
+    <td className={globalStyles.mainTable_td}><PassedText {props...}/></td>
+
 export default virtual = (cls) ->
     return class WithVirtualHeader extends cls
         Contest: () ->
@@ -30,3 +42,9 @@ export default virtual = (cls) ->
                     <Header {props...}/>
                     <Super {props...}/>
                 </div>
+
+        UserAddInfo: () ->
+            Super = super()
+            (props) ->
+                [<Super {props...}/>,
+                <UserAddInfoImpl {props...} />]

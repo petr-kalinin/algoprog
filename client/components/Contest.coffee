@@ -13,6 +13,7 @@ Header = (props) ->
         <h1>{props.contest.name}</h1>
         {props.contestResult.startTime && <p>Время начала контеста: {moment(props.contestResult.startTime).format('DD.MM.YY HH:mm:ss')} </p>}
         {props.contest.length && <p>Длительность контеста: {Math.floor(props.contest.length / 1000 / 60)} минут</p>}
+        <p><Link to="/monitor/#{props.contest._id}">Текущие результаты</Link></p>
     </div>
 
 Contest = (props) ->
