@@ -5,7 +5,7 @@ export default class Archive
         for submit in submits
             if submit.outcome in ["AC", "OK"]
                 ok = 1
-                time = (submit.time - startTime) / 1000 / 60
+                time = Math.floor((submit.time - startTime) / 1000 / 60)
                 break
         return {ok, time}
 

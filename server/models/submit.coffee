@@ -101,6 +101,14 @@ submitsSchema.statics.findByUserAndProblem = (userId, problemId) ->
         findMistake: null
     }).sort({time: 1})
 
+submitsSchema.statics.findByUserAndProblemBeforeTime = (userId, problemId, time) ->
+    Submit.find({
+        user: userId
+        problem: problemId,
+        time: {$lt: time},
+        findMistake: null
+    }).sort({time: 1})
+
 submitsSchema.statics.findByUserAndProblemWithFindMistakeSet = (userId, problemId) ->
     Submit.find({
         user: userId

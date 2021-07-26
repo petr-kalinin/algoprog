@@ -16,6 +16,8 @@ import { StaticRouter } from 'react-router'
 import {UserNameRaw} from '../../client/components/UserName'
 import awaitAll from '../../client/lib/awaitAll'
 
+import {makeVirtualResults} from '../calculations/updateResults'
+
 import getContestSystem from '../contestSystems/ContestSystemRegistry'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
@@ -768,13 +770,18 @@ export default setupApi = (app) ->
         if not contest
             res.status(400).send("Unknown contest")
             return
+        myContestResults = await ContestResult.findByContestAndUser(contest._id, user._id)
         contestResults = await ContestResult.findByContest(contest._id)
         contestSystem = getContestSystem(contest.contestSystemData.system)
-        contestResults = (r.toObject() for r in contestResults when contestSystem.shouldShowResult(r, user))
+        contestResults = (r for r in contestResults when contestSystem.shouldShowResult(r, user))
+        virtualTime = new Date() - myContestResults.startTime
+        virtualResults = []
         for r in contestResults
-            r.fullUser = (await User.findById(r.user)) || {name: r.virtualName}
-        contestSystem.sortMonitor(contestResults)
-        res.json(contestResults)
+            thisResult = (await makeVirtualResults(r.user, contest._id, virtualTime)).toObject()
+            thisResult.fullUser = (await User.findById(r.user)) || {name: r.virtualName}
+            virtualResults.push(thisResult)
+        contestSystem.sortMonitor(virtualResults)
+        res.json(virtualResults)
 
     app.post '/api/importVirtualSubmit', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

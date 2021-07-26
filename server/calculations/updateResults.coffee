@@ -26,7 +26,7 @@ removeDuplicateSubmits = (userId, problemId) ->
         else
             seenSubmits.push(submit)
 
-makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
+makeResultFromSubmitsList = (submits, userId, problemId, contestForVirtual) ->
     solved = 0
     ps = 0
     attempts = 0
@@ -49,6 +49,8 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
         virtualId = submit.virtualId
     problem = await Problem.findById(problemId)
     for contest in problem.contests
+        if contestForVirtual and contestForVirtual._id != contest._id
+            continue
         oldResult = await ContestResult.findByContestAndUser(contest._id, userId)
         contestSystem = getContestSystem(contest.contestSystem)
         contestResult = await contestSystem.makeProblemResult(submits, oldResult)
@@ -63,15 +65,20 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
             lastSubmitTime: lastSubmitTime
             contestResult: contestResult
             virtualId: virtualId
+        if contestForVirtual
+            return result  # do not save
         await result.upsert()
 
-updateResultsForContest = (contestId, userId) ->
+updateResultsForContest = (contestId, userId, problemResultsForVirtual) ->
     oldResult = await ContestResult.findByContestAndUser(contestId, userId)
     contest = await Contest.findById(contestId)
-    problemResults = []
-    for problem in contest.problems
-        problemResults.push Result.findByUserTableAndContest(userId, problem._id, contest._id)
-    problemResults = await awaitAll(problemResults)
+    if not problemResultsForVirtual
+        problemResults = []
+        for problem in contest.problems
+            problemResults.push Result.findByUserTableAndContest(userId, problem._id, contest._id)
+        problemResults = await awaitAll(problemResults)
+    else 
+        problemResults = problemResultsForVirtual
     contestSystem = getContestSystem(contest.contestSystemData.system)
     cr = await contestSystem.makeContestResult(problemResults)
     pr = {}
@@ -101,12 +108,29 @@ updateResultsForContest = (contestId, userId) ->
         virtualName: oldResult?.virtualName
         startTime: oldResult?.startTime
         registered: oldResult?.registered
+    if problemResultsForVirtual
+        return contestResult  # do not save
     await contestResult.upsert()
 
 updateResultsForProblem = (userId, problemId) ->
     await removeDuplicateSubmits(userId, problemId)
     submits = await Submit.findByUserAndProblem(userId, problemId)
     await makeResultFromSubmitsList(submits, userId, problemId)
+    
+export makeVirtualResults = (userId, contestId, virtualTime) ->
+    start = new Date()
+    contest = await Contest.findById(contestId)
+    contestResult = await ContestResult.findByContestAndUser(contestId, userId)
+    lastTime = new Date(+contestResult.startTime + virtualTime)
+    logger.info "making virtual results for user ", userId, lastTime
+    problemResults = []
+    for problemId in contest.problems
+        submits = await Submit.findByUserAndProblemBeforeTime(userId, problemId, lastTime)
+        problemResult = await makeResultFromSubmitsList(submits, userId, problemId, contest)
+        problemResults.push(problemResult)
+    contestResult = await updateResultsForContest(contestId, userId, problemResults)
+    logger.info "made results for user ", userId, " spent time ", (new Date()) - start
+    return contestResult
 
 export default updateResults = (user, problems) ->
     start = new Date()
