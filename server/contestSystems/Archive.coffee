@@ -15,5 +15,5 @@ export default class Archive
                 attempts += result.attempts
         return {ok, attempts}
 
-    isBlocked: () -> 
-        false
+    getBlockedData: () -> 
+        null

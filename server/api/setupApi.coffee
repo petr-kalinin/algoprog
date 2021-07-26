@@ -153,11 +153,11 @@ expandFindMistake = (mistake, admin, userKey) ->
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
 
-isContestBlocked = (user, contestId) ->
+getContestBlockedData = (userId, contestId) ->
     contest = await Contest.findById(contestId)
-    contestResult = await ContestResult.findByContestAndUser(contestId, user._id)
+    contestResult = await ContestResult.findByContestAndUser(contestId, userId)
     contestSystem = getContestSystem(contest.contestSystemData.system)
-    return contestSystem.isBlocked(contestResult)
+    return contestSystem.getBlockedData(contestResult)
 
 export default setupApi = (app) ->
     app.get '/api/ping', wrap (req, res) ->
@@ -187,7 +187,7 @@ export default setupApi = (app) ->
         if user.dormant
             res.json({dormant: true})
             return
-        if await isContestBlocked(user, req.params.contestId)
+        if await getContestBlockedData(user._id, req.params.contestId)
             res.json({blocked: true})
             return
         try
@@ -413,14 +413,12 @@ export default setupApi = (app) ->
 
     app.get '/api/contest/:id', wrap (req, res) ->
         contest = (await Contest.findById(req.params.id))?.toObject() || {}
-        user = await User.findById(req.user.userKey())
-        if await isContestBlocked(user, req.params.id)
+        if await getContestBlockedData(req.user.userKey(), req.params.id)
             contest.problems = []
         res.json(contest)
 
     app.get '/api/problem/:contestId/:id', wrap (req, res) ->
-        user = await User.findById(req.user.userKey())
-        if await isContestBlocked(user, req.params.contestId)
+        if await getContestBlockedData(req.user.userKey(), req.params.contestId)
             res.json({blocked: true})
             return
         res.json(await Problem.findById(req.params.id))
@@ -455,6 +453,9 @@ export default setupApi = (app) ->
         if not result
             res.json({})
             return
+        blockedData = await getContestBlockedData(req.params.user, req.params.contest)
+        if blockedData
+            result = {result..., blockedData...}
         res.json(result)
 
     app.get '/api/userResults/:userId', wrap (req, res) ->

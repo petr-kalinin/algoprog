@@ -1,12 +1,14 @@
 React = require('react')
 
-import blockIf from './blockIf'
-
-shouldBlock = (contestResults) ->
-    return not contestResults?.registered
-
-Message = (props) ->
-    <div>Вы не зарегистрированы на контест</div>
+Header = (props) ->
+    props.contestResult.needRegistration && <div>Вы не зарегистрированы на контест</div> || null
 
 export default needRegistration = (cls) ->
-    return blockIf(cls, shouldBlock, Message)
+    return class WithNeedRegistrationHeader extends cls
+        Contest: () ->
+            Super = super()
+            (props) ->
+                <div>
+                    <Header {props...}/>
+                    <Super {props...}/>
+                </div>

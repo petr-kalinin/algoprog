@@ -7,7 +7,7 @@ ArchiveWithRegistration = needRegistration(Archive)
 ArchiveVirtual = virtual(Archive)
 
 export REGISTRY = 
-    "archive": new Archive()
+    "archive": new ArchiveVirtual()
 
 export default getContestSystem = (id) ->
     REGISTRY[id]

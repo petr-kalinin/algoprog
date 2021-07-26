@@ -1,7 +1,8 @@
 import blockIf from './blockIf'
 
-shouldBlock = (contestResults) ->
-    return not contestResults?.registered
+getBlockedData = (contestResults) ->
+    if not contestResults?.registered
+        return {needRegistration: true}
 
 export default needRegistration = (cls) ->
-    return blockIf(cls, shouldBlock)
+    return blockIf(cls, getBlockedData)
