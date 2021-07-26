@@ -49,8 +49,9 @@ makeResultFromSubmitsList = (submits, userId, problemId, findMistake) ->
         virtualId = submit.virtualId
     problem = await Problem.findById(problemId)
     for contest in problem.contests
+        oldResult = await ContestResult.findByContestAndUser(contest._id, userId)
         contestSystem = getContestSystem(contest.contestSystem)
-        contestResult = await contestSystem.makeProblemResult(submits)
+        contestResult = await contestSystem.makeProblemResult(submits, oldResult)
         logger.debug "updated result ", userId, problemId, contest._id
         result = new Result
             user: userId,

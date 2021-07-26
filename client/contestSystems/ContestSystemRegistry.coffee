@@ -2,12 +2,14 @@ import needRegistration from './lib/needRegistration'
 import virtual from './lib/virtual'
 
 import Archive from './Archive'
+import Acm from './Acm'
 
-ArchiveWithVirtual = virtual(Archive)
+AcmWithVirtual = virtual(Acm)
 ArchiveWithRegistration = needRegistration(Archive)
 
 export REGISTRY = 
-    "archive": new ArchiveWithVirtual()
+    "acm": new AcmWithVirtual()
+    "archive": new Archive()
 
 export default getContestSystem = (id) ->
     REGISTRY[id]

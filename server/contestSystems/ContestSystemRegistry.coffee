@@ -3,11 +3,12 @@ import virtual from './lib/virtual'
 import withLength from './lib/withLength'
 
 import Archive from './Archive'
+import Acm from './Acm'
 
-ArchiveWithRegistration = needRegistration(Archive)
-ArchiveVirtual = withLength(virtual(Archive))
+AcmVirtual = withLength(virtual(Acm))
 
 export REGISTRY = 
+    "acm": new AcmVirtual()
     "archive": new Archive()
 
 export default getContestSystem = (id) ->
