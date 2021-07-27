@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.23.0 (bc7d9f4f)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nodejs
+  name: nodejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nodejs
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.23.0 (bc7d9f4f)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/app-network: "true"
+        io.kompose.service: nodejs
+    spec:
+      containers:
+        - env:
+            - name: MONGODB_HOST
+              value: db
+            - name: MONGODB_USERS_HOST
+              value: db
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGODB_USER
+            - name: MONGODB_USERS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGODB_USERS_USER
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGODB_PASSWORD
+            - name: MONGODB_USERS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGODB_USERS_PASSWORD
+            - name: MONGODB_USERS_HOST
+              value: db
+            - name: NODE_ENV
+              value: production
+          image: petrkalinin/algoprog-test
+          name: nodejs
+          ports:
+            - containerPort: 3000
+          resources: {}
+      initContainers:
+        - name: init-db
+          image: busybox
+          command: ['sh', '-c', 'until nc -z db:27017; do echo waiting for db; sleep 2; done;']          
+      restartPolicy: Always
+status: {}
