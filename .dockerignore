@@ -9,3 +9,4 @@ scripts/standings
 .gitignore
 Dockerfile
 .dockerignore
+k8s

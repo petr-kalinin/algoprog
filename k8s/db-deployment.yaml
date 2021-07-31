@@ -36,7 +36,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: mongo-secret
-                key: MONGODB_USERNAME        
+                key: MONGODB_USER
           image: mongo:4.1.8-xenial
           name: db
           resources: {}

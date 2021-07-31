@@ -26,32 +26,30 @@ spec:
     spec:
       containers:
         - env:
-            - name: MONGODB_HOST
+            - name: MONGO_HOST
               value: db
-            - name: MONGODB_USERS_HOST
+            - name: MONGO_USERS_HOST
               value: db
-            - name: MONGODB_USER
+            - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGODB_USER
-            - name: MONGODB_USERS_USER
+                  key: MONGO_USER
+            - name: MONGO_USERS_USER
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGODB_USERS_USER
-            - name: MONGODB_PASSWORD
+                  key: MONGO_USERS_USER
+            - name: MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGODB_PASSWORD
-            - name: MONGODB_USERS_PASSWORD
+                  key: MONGO_PASSWORD
+            - name: MONGO_USERS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGODB_USERS_PASSWORD
-            - name: MONGODB_USERS_HOST
-              value: db
+                  key: MONGO_USERS_PASSWORD
             - name: NODE_ENV
               value: production
           image: petrkalinin/algoprog-test

@@ -5,4 +5,4 @@ log
 *.orig
 t
 scripts/standings
-secret.yaml
+k8s/secret.yaml
