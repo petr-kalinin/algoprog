@@ -22,3 +22,5 @@ jobs:
         with:
           push: true
           tags: petrkalinin/algoprog-test:latest,petrkalinin/algoprog-test:${{ github.sha }}
+          cache-from: type=registry,ref=petrkalinin/algoprog-test:latest
+          cache-to: type=inline
