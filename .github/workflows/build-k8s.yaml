@@ -24,3 +24,21 @@ jobs:
           tags: petrkalinin/algoprog-test:latest,petrkalinin/algoprog-test:${{ github.sha }}
           cache-from: type=registry,ref=petrkalinin/algoprog-test:latest
           cache-to: type=inline
+
+      - 
+        name: Set kubectl context
+        uses: azure/k8s-set-context@v1
+        id: setcontext
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - 
+        name: Deploy to k8s
+        uses: Azure/k8s-deploy@v1.4
+        with:
+          manifests: |
+            k8s/nodejs-deployment.yaml
+            k8s/nodejs-service.yaml
+          images: 'petrkalinin/algoprog-test:${{ github.sha }}'
+          kubectl-version: 'latest'
