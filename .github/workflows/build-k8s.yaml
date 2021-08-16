@@ -32,6 +32,10 @@ jobs:
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
 
       - 
         name: Deploy to k8s
