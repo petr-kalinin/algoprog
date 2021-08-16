@@ -6,3 +6,4 @@ log
 t
 scripts/standings
 k8s/secret.yaml
+*~
