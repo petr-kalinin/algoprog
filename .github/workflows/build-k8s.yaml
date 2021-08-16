@@ -30,8 +30,9 @@ jobs:
         uses: azure/k8s-set-context@v1
         id: setcontext
         with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          method: service-account
+          k8s-url: ${{ secrets.K8S_URL }}
+          k8s-secret: ${{ secrets.K8S_SECRET }}
           
       - 
         name: Checkout
