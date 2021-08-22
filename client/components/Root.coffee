@@ -147,7 +147,7 @@ export default Root = (props) ->
     <div>
         <Grid fluid>
             <PageHeader>
-                <div className={styles.mainHeader}>Алгопрог: архив</div>
+                <div className={styles.mainHeader}>Алгопрог: архив TEST</div>
             </PageHeader>
         </Grid>
         {
