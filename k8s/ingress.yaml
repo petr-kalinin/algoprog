@@ -3,11 +3,16 @@ kind: Ingress
 metadata:
   name: algoprog-ingress
   annotations:
-    # use the shared ingress-nginx
     kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "letsencrypt-prod"
 spec:
+  tls:
+  - hosts:
+    - test.algoprog.ru
+    secretName: test-tls
   rules:
-  - http:
+  - host: test.algoprog.ru
+    http:
       paths:
       - path: /
         pathType: Prefix
