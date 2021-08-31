@@ -28,14 +28,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="457.89228"
-     inkscape:cy="488.70567"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="713.2352"
+     inkscape:cy="103.37594"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1013"
+     inkscape:window-width="2560"
+     inkscape:window-height="1371"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -380,6 +380,137 @@
          id="path984"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;stroke-width:0.62825358px"
          d="m 63.859072,72.894508 -0.613834,-3.026833 h -3.492499 l -0.592667,3.026833 h -2.709333 q 0.931333,-3.8735 1.883833,-7.048499 0.9525,-3.196167 1.8415,-6.053667 h 2.836333 q 0.931333,2.878667 1.8415,6.117167 0.931333,3.217333 1.799167,6.984999 z M 61.530738,62.332342 q -0.211666,0.740833 -0.402166,1.418167 -0.169333,0.656166 -0.338667,1.312333 -0.148166,0.635 -0.296333,1.291167 -0.127,0.656166 -0.254,1.354666 h 2.561166 q -0.127,-0.6985 -0.254,-1.354666 -0.127,-0.656167 -0.296333,-1.291167 -0.148167,-0.656167 -0.338667,-1.312333 -0.169333,-0.677334 -0.381,-1.418167 z" />
+    </g>
+    <g
+       inkscape:export-ydpi="254"
+       inkscape:export-xdpi="254"
+       transform="translate(-3.5333734,-6.1411183)"
+       id="g973">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="264.47604"
+         y="173.71115"
+         id="text961"
+         inkscape:export-xdpi="254"
+         inkscape:export-ydpi="254"><tspan
+           id="tspan959"
+           sodipodi:role="line"
+           x="264.47604"
+           y="173.71115"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.63888931px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332">Делаем алгопрог</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d32c2c;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="238.56236"
+         y="242.71509"
+         id="text965"
+         inkscape:export-xdpi="254"
+         inkscape:export-ydpi="254"><tspan
+           sodipodi:role="line"
+           id="tspan963"
+           x="238.56236"
+           y="242.71509"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#d32c2c;stroke-width:0.26458332">Петр Калинин, 19.07.2020</tspan></text>
+      <text
+         inkscape:export-ydpi="254"
+         inkscape:export-xdpi="254"
+         id="text971"
+         y="196.16179"
+         x="264.19891"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="196.16179"
+           x="265.21521"
+           sodipodi:role="line"
+           id="tspan967">Список пользователей, </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="209.39096"
+           x="264.19891"
+           sodipodi:role="line"
+           id="tspan969">имеющих конкретную ачивку</tspan></text>
+    </g>
+    <rect
+       id="rect975"
+       width="192"
+       height="108"
+       x="8.1637545"
+       y="311.3533"
+       style="fill:#ffffff;stroke:none;stroke-width:0.88456362"
+       inkscape:export-xdpi="254"
+       inkscape:export-ydpi="254" />
+    <text
+       inkscape:export-ydpi="254"
+       inkscape:export-xdpi="254"
+       id="text979"
+       y="338.79327"
+       x="104.96632"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+         y="338.79327"
+         x="104.96632"
+         sodipodi:role="line"
+         id="tspan977">Летние алгопрог-сборы 2021</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d32c2c;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="104.132"
+       y="368.48068"
+       id="text989"
+       inkscape:export-xdpi="254"
+       inkscape:export-ydpi="254"><tspan
+         id="tspan987"
+         sodipodi:role="line"
+         x="104.132"
+         y="368.48068"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;fill:#d32c2c;fill-opacity:1;stroke-width:0.26458332">Разбор 30 июля</tspan></text>
+    <text
+       inkscape:export-ydpi="254"
+       inkscape:export-xdpi="254"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="147.66641"
+       y="405.22491"
+       id="text1029"><tspan
+         sodipodi:role="line"
+         id="tspan1027"
+         x="147.66641"
+         y="405.22491"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">algoprog</tspan></text>
+    <g
+       inkscape:export-ydpi="254"
+       inkscape:export-xdpi="254"
+       style="stroke-width:3.10105968"
+       id="g1037"
+       transform="matrix(0.31682546,0,0,0.32821597,119.59154,380.60957)">
+      <path
+         d="m 62.006531,78.800831 -10.554397,-6.093584 -10e-7,-12.187168 10.554397,-6.093584 10.554398,6.093583 0,12.187168 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="2.0943951"
+         sodipodi:arg1="1.5707963"
+         sodipodi:r2="10.554397"
+         sodipodi:r1="12.187168"
+         sodipodi:cy="66.613663"
+         sodipodi:cx="62.006531"
+         sodipodi:sides="6"
+         id="path1031"
+         style="fill:#d32c2c;fill-opacity:1;stroke:#d32c2c;stroke-width:9.30317879;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="star" />
+      <g
+         transform="matrix(1.3059832,0,0,1.3059832,-18.379224,-20.029736)"
+         id="g1035"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;line-height:125%;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.62825358px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         aria-label="A">
+        <path
+           inkscape:connector-curvature="0"
+           id="path1033"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.16666603px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;stroke-width:0.62825358px"
+           d="m 63.859072,72.894508 -0.613834,-3.026833 h -3.492499 l -0.592667,3.026833 h -2.709333 q 0.931333,-3.8735 1.883833,-7.048499 0.9525,-3.196167 1.8415,-6.053667 h 2.836333 q 0.931333,2.878667 1.8415,6.117167 0.931333,3.217333 1.799167,6.984999 z M 61.530738,62.332342 q -0.211666,0.740833 -0.402166,1.418167 -0.169333,0.656166 -0.338667,1.312333 -0.148166,0.635 -0.296333,1.291167 -0.127,0.656166 -0.254,1.354666 h 2.561166 q -0.127,-0.6985 -0.254,-1.354666 -0.127,-0.656167 -0.296333,-1.291167 -0.148167,-0.656167 -0.338667,-1.312333 -0.169333,-0.677334 -0.381,-1.418167 z" />
+      </g>
     </g>
   </g>
 </svg>
