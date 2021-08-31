@@ -31,12 +31,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: mongo-secret
-                key: MONGODB_PASSWORD
+                key: MONGO_PASSWORD
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
                 name: mongo-secret
-                key: MONGODB_USER
+                key: MONGO_USER
           image: mongo:4.1.8-xenial
           name: db
           resources: {}

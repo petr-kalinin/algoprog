@@ -52,7 +52,7 @@ spec:
                   key: MONGO_USERS_PASSWORD
             - name: NODE_ENV
               value: production
-          image: petrkalinin/algoprog-test
+          image: petrkalinin/algoprog-master
           name: nodejs
           ports:
             - containerPort: 3000
