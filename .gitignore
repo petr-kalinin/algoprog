@@ -8,3 +8,6 @@ run_bearer.sh
 t
 scripts/start.sh
 scripts/log*
+scripts/standings
+k8s/secret.yaml
+*~

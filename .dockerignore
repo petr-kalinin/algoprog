@@ -1,0 +1,13 @@
+node_modules
+build
+/data
+log
+*.orig
+t
+scripts/standings
+.git
+.gitignore
+Dockerfile
+.dockerignore
+k8s
+.github
