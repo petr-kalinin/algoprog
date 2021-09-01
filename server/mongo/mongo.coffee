@@ -3,6 +3,7 @@ import logger from '../log'
 
 mongoose.Promise = global.Promise;
 
+logger.info "host #{process.env.MONGO_HOST} user #{process.env.MONGO_USER} pwd #{process.env.MONGO_PASSWORD}"
 if process.env.MONGO_HOST and process.env.MONGO_USER and process.env.MONGO_PASSWORD
     url = "mongodb://#{process.env.MONGO_USER}:#{process.env.MONGO_PASSWORD}@#{process.env.MONGO_HOST}/algoprog"
 else if process.env.MONGODB_ADDON_URI

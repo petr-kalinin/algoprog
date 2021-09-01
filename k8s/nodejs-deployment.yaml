@@ -1,9 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.23.0 (bc7d9f4f)
   creationTimestamp: null
   labels:
     io.kompose.service: nodejs
@@ -16,9 +13,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.23.0 (bc7d9f4f)
       creationTimestamp: null
       labels:
         io.kompose.network/app-network: "true"
@@ -53,6 +47,7 @@ spec:
             - name: NODE_ENV
               value: production
           image: petrkalinin/algoprog-master
+          imagePullPolicy: "Always"
           name: nodejs
           ports:
             - containerPort: 3000
