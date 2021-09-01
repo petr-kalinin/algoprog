@@ -46,6 +46,37 @@ spec:
                   key: MONGO_USERS_PASSWORD
             - name: NODE_ENV
               value: production
+            - name: ACCUMULATE_REQUESTS
+              value: "1"
+            - name: ADMIN_TELEGRAM_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: ADMIN_TELEGRAM_ID
+            - name: FORCE_HTTPS
+              value: "1"
+            - name: GRAPHITE_PREFIX
+              value: algoprog_test
+            - name: INN
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INN
+            - name: TELEGRAM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TELEGRAM_TOKEN
+            - name: TINKOFF_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TINKOFF_PASSWORD
+            - name: USER_AGENT
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: USER_AGENT
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
