@@ -9,9 +9,31 @@ spec:
   tls:
   - hosts:
     - test.algoprog.ru
+    - www.algoprog.ru
+    - algoprog.ru
     secretName: test-tls
   rules:
+  - host: algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs
+            port:
+              number: 3000
   - host: test.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs
+            port:
+              number: 3000
+  - host: www.algoprog.ru
     http:
       paths:
       - path: /
