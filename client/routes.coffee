@@ -40,145 +40,125 @@ class PayPage extends React.Component
     render: () ->
         return <Redirect to="/material/pay" />
 
-export default [
+BASE_ROUTES = [
     {
         path: '/userBadge/:id',
-        key: "userBadge",
         component: UserBadgePage,
     },
     {
         path: '/user/:id',
-        key: "user",
         component: FullUserPage,
     },
     {
         path: '/edituser/:id',
-        key: "edituser",
         component: EditUserPage,
     },
     {
         path: '/table/:userList/:id',
-        key: "table",
         component: TablePage
     },
     {
         path: '/dashboard',
-        key: "dashboard",
         component: DashboardPage,
     },
     {
         path: '/checkins',
-        key: "checkins",
         component: CheckinsPage,
     },
     {
         path: '/review',
-        key: "review",
         component: ReviewPage,
     },
     {
         path: '/approveFindMistake',
-        key: "approveFindMistake",
         component: ApproveFindMistakePage,
     },
     {
         path: '/solvedByWeek/:userList',
-        key: "solvedByWeek",
         component: SolvedByWeekPage,
     },
     {
         path: '/material/:id',
-        key: "material",
         component: MaterialPage,
     },
     {
         path: '/submit/:id',
-        key: "submit",
         component: SubmitPage,
     },
     {
         path: '/reviewResult/:id',
-        key: "reviewResult",
         component: ReviewResultPage,
     },
     {
         path: '/findMistake/:id',
-        key: "findMistake",
         component: FindMistakePage,
     },
     {
         path: '/findMistakeProblem/:problemId',
-        key: "findMistakeProblem",
         component: FindMistakeProblemListPage,
     },
     {
         path: '/findMistakeList',
-        key: "findMistakeList",
         component: FindMistakeListPage,
     },
     {
         path: '/news',
-        key: "news",
         component: FullNewsPage,
     },
     {
         path: '/pay',
-        key: "pay",
         component: PayPage,
     },
     {
         path: '/payment',
-        key: "payment",
         component: PaymentPage,
     },
     {
         path: '/paymentSuccess',
-        key: "paymentSuccess",
         component: PaymentSuccessPage,
     },
     {
         path: '/registeredUsers',
-        key: "registeredUsers",
         component: RegisteredUsersPage,
     },
     {
         path: '/achieves',
-        key: "achieves",
         component: AchievesPage,
     },
     {
         path: '/comments',
-        key: "comments",
         component: AllCommentsPage,
     },
     {
         path: '/usersWithAchieve/:achieve',
-        key: "usersWithAchieve",
         component: UsersWithAchievePage,
     },
     {
         path: '/login',
-        key: "login",
         component: LoginPage,
     },
     {
         path: '/register',
-        key: "register",
         component: RegisterPage,
     },
     {
         path: '/stud',
-        key: "/stud",
         component: RootPage,
     },
     {
         path: '/',
-        key: "/",
         exact: true,
         component: RootPage,
     },
     {
         component: NoMatch,
-        key: "nomatch"
     },
 ]
+
+export default routes = BASE_ROUTES.map((route) => {
+        path: if route.path then [route.path, "(.*)https/algoprog.ru" + route.path] else route.path
+        key: route.path || "-"
+        component: route.component
+        exact: route.exact
+    }
+)

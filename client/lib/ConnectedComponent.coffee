@@ -34,7 +34,7 @@ export default ConnectedComponent = (Component, options) ->
             @handleReload = @handleReload.bind(this)
             if window?
                 @requestWsData()
-            else
+            else if @props.needDataPromises
                 promises = @requestData(1000)  # allow pre-fill of state
                 @props.saveDataPromises(promises)
 
@@ -131,6 +131,7 @@ export default ConnectedComponent = (Component, options) ->
         hasData: (url) -> getters.hasData(state, url)
         isDataRejected: (url) -> getters.isDataRejected(state, url)
         clientCookie: state.clientCookie
+        needDataPromises: state.needDataPromises
 
     mapDispatchToProps = (dispatch, ownProps) ->
         invalidateData: (url) -> dispatch(actions.invalidateData(url))

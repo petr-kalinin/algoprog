@@ -16,6 +16,7 @@ LANGUAGE_TO_MONACO_STYLE =
     "Perl": "perl",
     "C#": "csharp",
     "Ruby": "ruby",
+    "Go": "go"
     
 getLanguage = (lang) ->
     for l, style of LANGUAGE_TO_MONACO_STYLE
@@ -49,5 +50,5 @@ export default Editor = (props) ->
         autoClosingQuotes: "never"
         scrollBeyondLastLine: false
         minimap: {enabled: false}
-    <BaseEditor height="600px" language={getLanguage(props.language)} value={props.value} loading={<Loader />} options={options} className={styles.editor} editorDidMount={props.editorDidMount}/>
+    <BaseEditor height="600px" language={getLanguage(props.language)} value={props.value || ""} loading={<Loader />} options={options} className={styles.editor} editorDidMount={props.editorDidMount}/>
 

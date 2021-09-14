@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nodejs
+  name: nodejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nodejs
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.network/app-network: "true"
+        io.kompose.service: nodejs
+    spec:
+      containers:
+        - env:
+            - name: MONGO_HOST
+              value: db
+            - name: MONGO_USERS_HOST
+              value: db
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_USER
+            - name: MONGO_USERS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_USERS_USER
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_PASSWORD
+            - name: MONGO_USERS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_USERS_PASSWORD
+            - name: NODE_ENV
+              value: production
+            - name: ACCUMULATE_REQUESTS
+              value: "1"
+            - name: ADMIN_TELEGRAM_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: ADMIN_TELEGRAM_ID
+            - name: FORCE_HTTPS
+              value: "1"
+            - name: GRAPHITE_PREFIX
+              value: algoprog
+            - name: INN
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INN
+            - name: TELEGRAM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TELEGRAM_TOKEN
+            - name: TINKOFF_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TINKOFF_PASSWORD
+            - name: USER_AGENT
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: USER_AGENT
+          image: petrkalinin/algoprog-master
+          imagePullPolicy: "Always"
+          name: nodejs
+          ports:
+            - containerPort: 3000
+          resources: {}
+      initContainers:
+        - name: init-db
+          image: busybox
+          command: ['sh', '-c', 'until nc -z db:27017; do echo waiting for db; sleep 2; done;']          
+      restartPolicy: Always
+status: {}
