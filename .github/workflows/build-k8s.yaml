@@ -1,9 +1,9 @@
-name: "Build docked image from master branch"
+name: "Build docked image from adina branch"
 
 on:
   push:
     branches:
-      - 'master'
+      - 'adina'
 
 jobs:
   docker:
@@ -21,8 +21,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: petrkalinin/algoprog-master:latest,petrkalinin/algoprog-master:${{ github.sha }}
-          cache-from: type=registry,ref=petrkalinin/algoprog-master:latest
+          tags: petrkalinin/algoprog-adina:latest,petrkalinin/algoprog-adina:${{ github.sha }}
+          cache-from: type=registry,ref=petrkalinin/algoprog-adina:latest
           cache-to: type=inline
 
       - 
@@ -45,5 +45,5 @@ jobs:
           manifests: |
             k8s/nodejs-deployment.yaml
             k8s/nodejs-service.yaml
-          images: 'petrkalinin/algoprog-master:${{ github.sha }}'
+          images: 'petrkalinin/algoprog-adina:${{ github.sha }}'
           kubectl-version: 'latest'

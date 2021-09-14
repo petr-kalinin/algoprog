@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.23.0 (bc7d9f4f)
   creationTimestamp: null
   labels:
-    io.kompose.service: nodejs
-  name: nodejs
+    io.kompose.service: nodejs-adina
+  name: nodejs-adina
 spec:
   type: NodePort
   ports:
@@ -15,6 +15,6 @@ spec:
       port: 3000
       targetPort: 3000
   selector:
-    io.kompose.service: nodejs
+    io.kompose.service: nodejs-adina
 status:
   loadBalancer: {}
