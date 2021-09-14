@@ -28,7 +28,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_USER
+                  key: MONGO_USER_ADINA
             - name: MONGO_USERS_USER
               valueFrom:
                 secretKeyRef:
@@ -38,7 +38,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_PASSWORD
+                  key: MONGO_PASSWORD_ADINA
             - name: MONGO_USERS_PASSWORD
               valueFrom:
                 secretKeyRef:
