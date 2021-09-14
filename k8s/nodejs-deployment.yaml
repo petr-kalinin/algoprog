@@ -57,7 +57,7 @@ spec:
               value: "1"
             - name: GRAPHITE_PREFIX
               value: algoprog_adina
-            - name: TELEGRAM_TOKEN_ADINA
+            - name: TELEGRAM_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
