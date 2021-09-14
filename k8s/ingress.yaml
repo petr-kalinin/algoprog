@@ -30,7 +30,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nodejs
+            name: nodejs-adina
             port:
               number: 3000
   - host: www.algoprog.ru
