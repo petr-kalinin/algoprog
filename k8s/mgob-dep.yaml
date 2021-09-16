@@ -55,11 +55,11 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 3Gi
+          storage: 6Gi
   - metadata:
       name: mgob-tmp
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
