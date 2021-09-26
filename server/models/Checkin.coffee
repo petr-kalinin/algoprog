@@ -25,6 +25,10 @@ checkinSchema.statics.findBySession = (session) ->
         session: session
         deleted: false
 
+checkinSchema.statics.findNotDeleted = () ->
+    Checkin.find
+        deleted: false
+
 checkinSchema.statics.findByUser = (user) ->
     Checkin.find
         user: user

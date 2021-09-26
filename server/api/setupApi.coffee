@@ -40,6 +40,7 @@ import notify from '../metrics/notify'
 import BlogPost from '../models/BlogPost'
 import Calendar from '../models/Calendar'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
+import Config from '../models/Config'
 import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
 import Payment from '../models/Payment'
@@ -727,7 +728,11 @@ export default setupApi = (app) ->
                 checkin.fullUser = await User.findById(checkin.user)
                 return checkin
             ))
-        res.json(checkins)
+        result = {
+            checkins: checkins
+            date: await Config.get("checkinDate")
+        }
+        res.json(result)
 
     app.post '/api/checkin/:user', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
@@ -754,6 +759,18 @@ export default setupApi = (app) ->
                 user: user
                 session: session
             await checkin.upsert()
+        res.json({ok: "OK"})
+
+    app.post '/api/resetCheckins', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).json({error: 'No permissions'})
+            return
+        date = new Date(req.body.date)
+        logger.info "Reset checkins to date #{date}"
+        oldCheckins = await Checkin.findNotDeleted()
+        for checkin in oldCheckins
+            await checkin.markDeleted()
+        await Config.set("checkinDate", date)
         res.json({ok: "OK"})
 
     app.get '/api/recentReceipt/:user', wrap (req, res) ->
