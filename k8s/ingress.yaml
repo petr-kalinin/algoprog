@@ -10,7 +10,9 @@ spec:
   - hosts:
     - test.algoprog.ru
     - www.algoprog.ru
+    - adina.algoprog.ru
     - algoprog.ru
+    - online.mathncode.kz
     secretName: test-tls
   rules:
   - host: algoprog.ru
@@ -23,7 +25,17 @@ spec:
             name: nodejs
             port:
               number: 3000
-  - host: test.algoprog.ru
+  - host: adina.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs-adina
+            port:
+              number: 3000
+  - host: online.mathncode.kz
     http:
       paths:
       - path: /
