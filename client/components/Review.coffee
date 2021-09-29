@@ -14,6 +14,7 @@ export default class Review extends React.Component
     gotoNext: () ->
         @setState
             results: @state.results[...-1]
+            document.getElementById("reviewBox").scrollIntoView(true)
 
     componentDidUpdate: (prevProps) ->
         if @props.data?.ok[0]?._id != prevProps.data?.ok[0]?._id
@@ -27,7 +28,7 @@ export default class Review extends React.Component
             if @state.results.length == 0
                 <div>Ревьювить больше нечего, обновите страницу</div>
             else
-                <div>
+                <div id="reviewBox">
                     <ReviewResult result={@state.results[@state.results.length-1]} handleDone={@gotoNext}/>
                     {@state.results.length > 1 &&    # prefetch next submit
                         <div style={{display: "none"}}>
