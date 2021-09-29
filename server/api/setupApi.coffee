@@ -199,7 +199,8 @@ export default setupApi = (app) ->
             res.json({error: e})
             return
         if req.body.editorOn?
-            user.setEditorOn(req.body.editorOn)
+            await user.setEditorOn(req.body.editorOn)
+        await user.setLanguage(req.body.language)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
