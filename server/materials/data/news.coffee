@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Командная олимпиада", String.raw"""
+            Добавлена информация <a href="/material/koshp">про командную олимпиаду</a>
+        """),
         newsItem("Школьная олимпиада", String.raw"""
             Школьная олимпиада в Нижегородской области в этом году будет проходить 27 октября. <a href="/material/school_olympiad">Подробная информация</a>
         """),
