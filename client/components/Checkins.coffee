@@ -90,8 +90,6 @@ export default class Checkins extends React.Component
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) — его могут спросить охранники на входе!                    
             </p>
 
-            <p>Если мест не осталось, можете все равно попробовать прийти — скорее всего, компьютеров будет больше.</p>
-
             {
             if @props.me?.admin
                 <ResetForm handleReload={@props.handleReload} newDate={newDate}/>
