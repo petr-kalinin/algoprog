@@ -168,7 +168,12 @@ export class LoggedCodeforcesUser
 
     submitWithObject: (problemId, data) ->
         {contest, problem} = data.testSystemData
-        page = await @download("#{BASE_URL}/problemset/problem/#{contest}/#{problem}")
+        if contest.startsWith("gym")
+            href = "#{BASE_URL}/#{contest}/problem/#{problem}?csrf_token=#{csrf}"
+        else
+            href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
+
+        page = await @download(href)
         csrf = @_getCsrf(page)
         data = {
                 csrf_token: csrf
@@ -185,7 +190,8 @@ export class LoggedCodeforcesUser
                     }
                 }
             }
-        page = await @download("#{BASE_URL}/problemset/problem/#{contest}/#{problem}??csrf_token=#{csrf}", {
+
+        page = await @download(href, {
             formData: data,
             method: 'POST',
             followAllRedirects: true,
@@ -233,7 +239,10 @@ export default class Codeforces extends TestSystem
         await @_getAdmin()
 
     downloadProblem: (options) ->
-        href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
+        if options.contest.startsWith("gym")
+            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}"
+        else
+            href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
         page = await downloadLimited(href, {timeout: 15 * 1000})
         document = (new JSDOM(page, {url: href})).window.document
         data = document.getElementsByClassName("problem-statement")
@@ -256,7 +265,8 @@ export default class Codeforces extends TestSystem
         return {name, text}
 
     getProblemId: (options) ->
-        return "c#{options.contest}p#{options.problem}"
+        contest = options.contest.replace("/", "")
+        return "c#{contest}p#{options.problem}"
 
     getProblemData: (options) ->
         {

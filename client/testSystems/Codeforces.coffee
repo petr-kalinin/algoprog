@@ -12,7 +12,10 @@ export default class Ejudge extends TestSystem
         return "codeforces"
 
     problemLink: (material) ->
-        href = "https://codeforces.com/problemset/problem/#{material.testSystemData.contest}/#{material.testSystemData.problem}"
+        if material.testSystemData.contest.startsWith("gym")
+            href = "https://codeforces.com/#{material.testSystemData.contest}/problem/#{material.testSystemData.problem}"
+        else
+            href = "https://codeforces.com/problemset/problem/#{material.testSystemData.contest}/#{material.testSystemData.problem}"
         <p><a href={href}>Задача на Codeforces (контест {material.testSystemData.contest}, задача {material.testSystemData.problem}, © Codeforces.com)</a></p>
 
     submitListLink: (submit) ->
