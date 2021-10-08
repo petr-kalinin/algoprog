@@ -11,6 +11,8 @@ export default calculateCalendar = (user) ->
     previousYear = (new Date()).getFullYear() - 1
     for submit in submits
         t = submit.time
+        if not t
+            continue
         month = t.getMonth() + 1
         day = t.getDate()
         year = t.getFullYear()

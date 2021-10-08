@@ -172,7 +172,6 @@ export class LoggedCodeforcesUser
             href = "#{BASE_URL}/#{contest}/problem/#{problem}?csrf_token=#{csrf}"
         else
             href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
-
         page = await @download(href)
         csrf = @_getCsrf(page)
         data = {
