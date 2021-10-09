@@ -42,11 +42,11 @@ export color = (user, theme) ->
 export UserNameRaw = (props) ->
     <span>
         {if props.user?._id
-            <Link to={"/user/" + props.user._id}>
+            <a href={"https://algoprog.ru/user/" + props.user._id}>
                 <span className={styles.name} >
                     {props.user.name}
                 </span>
-            </Link>
+            </a>
         else
             <span className={styles.name} >
                 (v) {props.user.name}
