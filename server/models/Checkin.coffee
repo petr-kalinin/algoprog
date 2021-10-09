@@ -21,8 +21,13 @@ checkinSchema.methods.markDeleted = () ->
     @update(this)
 
 checkinSchema.statics.findBySession = (session) ->
-    Checkin.find
+    Checkin.find({
         session: session
+        deleted: false
+    }).sort({checkinTime: 1})
+
+checkinSchema.statics.findNotDeleted = () ->
+    Checkin.find
         deleted: false
 
 checkinSchema.statics.findByUser = (user) ->
@@ -30,7 +35,7 @@ checkinSchema.statics.findByUser = (user) ->
         user: user
         deleted: false
 
-checkinSchema.index({ deleted: 1, session : 1 })
+checkinSchema.index({ deleted: 1, session : 1, checkinTime : 1 })
 checkinSchema.index({ deleted: 1, user : 1 })
 
 Checkin = mongoose.model('Checkins', checkinSchema);

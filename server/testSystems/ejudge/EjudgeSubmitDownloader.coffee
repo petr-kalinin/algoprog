@@ -65,7 +65,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             user = submit.User_Login
             id = "#{@options.contest}r#{submit.Run_Id}p#{problem}"
             logger.info "Found ejudge submit #{id} #{user} #{problem}"
-            if @options.ejudgeUser != user
+            if @options.ejudgeUser.trim() != user
                 logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
                 continue
             if @options.ejudgeProblem != problem

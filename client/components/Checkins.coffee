@@ -1,10 +1,12 @@
 React = require('react')
+moment = require('moment')
 
 import Table from 'react-bootstrap/lib/Table'
 import Button from 'react-bootstrap/lib/Button'
 import Alert from 'react-bootstrap/lib/Alert'
 import Panel from 'react-bootstrap/lib/Panel'
 
+import FieldGroup from './FieldGroup'
 import UserName from './UserName'
 
 import callApi from '../lib/callApi'
@@ -13,6 +15,36 @@ import callApi from '../lib/callApi'
 #SESSION_TIMES = ["12:00", "13:00", "14:00", "15:00"]
 #SESSION_TIMES = ["14:00", "15:30"]
 SESSION_TIMES = ["14:00"]
+
+class ResetForm extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            date: moment(props.newDate).format('YYYY-MM-DD')
+        @setField = @setField.bind(this)
+        @reset = @reset.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    reset: (event) ->
+        event.preventDefault()
+        data = await callApi "resetCheckins", {
+            date: @state.date
+        }
+        @props.handleReload()
+
+    render: () ->
+            <form onSubmit={@reset}>
+                <FieldGroup
+                    id="date"
+                    label="Сбросить на дату:"
+                    type="text"
+                    setField={@setField}
+                    state={@state}/>
+            </form>
 
 export default class Checkins extends React.Component
     constructor: (props) ->
@@ -35,8 +67,9 @@ export default class Checkins extends React.Component
 
     render: () ->
         wasme = [false, false]
+        newDate = if @props.data.date then moment(@props.data.date).add(1, 'week').startOf('day').toDate() else new Date()
         <div>
-            <h1>Регистрация на занятие</h1>
+            <h1>Регистрация на занятие {@props.data.date && moment(@props.data.date).format('DD.MM.YY')}</h1>
 
             <p>
             <b>Новичкам (кто не решил в курсе ни одной задачи) приходить на занятие нельзя</b> 
@@ -57,7 +90,10 @@ export default class Checkins extends React.Component
             Не забудьте с собой паспорт (если паспорта еще нет, то свидетельство о рождении) — его могут спросить охранники на входе!                    
             </p>
 
-            <p>Если мест не осталось, можете все равно попробовать прийти — скорее всего, компьютеров будет больше.</p>
+            {
+            if @props.me?.admin
+                <ResetForm handleReload={@props.handleReload} newDate={newDate}/>
+            }
             
             {
             if @state.result?.error
@@ -78,35 +114,35 @@ export default class Checkins extends React.Component
                         #for time, i in SESSION_TIMES
                         #    <th key={time}>
                         #        <h2>Занятие в {time}</h2>
-                        #        <p>Всего мест: {@props.data[i].max}</p>
+                        #        <p>Всего мест: {@props.data.checkins[i].max}</p>
                         #    </th>
                         }
                         </tr></thead>
                         <tbody>
                         {
-                        rows = Math.max(@props.data[0].max)
-                        #rows = @props.data[0].max
+                        rows = Math.max(@props.data.checkins[0].max)
+                        #rows = @props.data.checkins[0].max
                         for row in [0...rows]
                             <tr key={row}>
                                 {
                                 for _, i in SESSION_TIMES
                                     <td key={i}>
                                         {
-                                        if @props.data[i].checkins[row]
-                                            if @props.data[i].checkins[row].user == @props.myUser?._id   
+                                        if @props.data.checkins[i].checkins[row]
+                                            if @props.data.checkins[i].checkins[row].user == @props.myUser?._id   
                                                 wasme[i] = true
                                             <div>
-                                            <UserName user={@props.data[i].checkins[row].fullUser}/>
+                                            <UserName user={@props.data.checkins[i].checkins[row].fullUser}/>
                                             {
                                             if @props.me?.admin
                                                 <button type="button" 
                                                         className="close pull-left"
-                                                        onClick={@register(null, @props.data[i].checkins[row].user)}>
+                                                        onClick={@register(null, @props.data.checkins[i].checkins[row].user)}>
                                                     <span>&times;&nbsp;</span>
                                                 </button>
                                             }
                                             </div>
-                                        else if row < @props.data[i].max
+                                        else if row < @props.data.checkins[i].max
                                             <span>(свободно)</span>
                                         }                                            
                                     </td>
@@ -120,7 +156,7 @@ export default class Checkins extends React.Component
                                 for _, i in SESSION_TIMES
                                     <td key={i}>
                                         {
-                                        if @props.myUser?._id and !wasme[i] and @props.data[i].checkins.length < @props.data[i].max
+                                        if @props.myUser?._id and !wasme[i] and @props.data.checkins[i].checkins.length < @props.data.checkins[i].max
                                             <Button bsStyle="primary" onClick={@register(i, @props.myUser?._id)}>
                                                 Зарегистрироваться
                                             </Button>

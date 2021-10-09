@@ -149,6 +149,8 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         return result
 
     getSubmitsFromPage: (page) ->
+        if @contest.startsWith("gym")
+            return @getSubmitsFromGym(page)
         COUNT_PER_PAGE = 100
         url = "#{@baseUrl}/api/contest.status?contestId=#{@contest}&handle=#{@username}&from=#{page * COUNT_PER_PAGE + 1}&count=#{COUNT_PER_PAGE}&lang=ru"
         logger.debug "apiUrl=", url
@@ -156,4 +158,49 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         if submits.status != "OK"
             return []
         result = await @parseSubmits(submits.result)
+        return result
+
+    getSubmitsFromGym: (page) ->
+        if page != 0
+            return []
+        url = "#{@baseUrl}/#{@contest}/my"
+        page = await @loggedUser.download(url)
+        document = (new JSDOM(page, {url: url})).window.document
+        table = document.getElementsByClassName("status-frame-datatable")[0]
+        els = table?.getElementsByTagName("tr")
+        result = []
+        baseProbHref = "#{@baseUrl}/#{@contest}/problem/"
+        for el in els
+            id = el.children[0]?.textContent?.trim()
+            time = el.children[1]?.textContent?.trim()
+            user = el.children[2]?.textContent?.trim()
+            prob = el.children[3]?.getElementsByTagName("a")[0]?.href?.trim()
+            lang = el.children[4]?.textContent?.trim()
+            outcome = el.children[5]?.textContent?.trim()
+            if (!prob || !prob.startsWith(baseProbHref))
+                continue
+            prob = prob.substring(baseProbHref.length)
+            time = moment(time, "MMM/DD/YYYY HH:mm", true).subtract(3, 'hours').toDate()
+            if outcome == "In queue" or outcome.startsWith("Running")
+                outcome = "CT"
+            if user.toLowerCase() != @username.toLowerCase()
+                throw "Strange submit: found username  #{user}, expected #{@username}"
+            if prob != @problem
+                logger.info "Skipping submit #{id} because it is for a different problem: #{prob} vs #{@problem}"
+                continue
+            console.log "found id=#{id}, time=#{time}, user=#{user}, prob=#{prob}, lang=#{lang}, outcome=#{outcome}"
+            result.push new Submit(
+                _id: "c" + id,
+                time: time
+                user: @realUser
+                problem: @realProblem
+                outcome: outcome
+                language: lang
+                testSystemData: 
+                    runId: id
+                    contest: @contest
+                    problem: @problem
+                    system: "codeforces"
+                    username: @username
+            )
         return result

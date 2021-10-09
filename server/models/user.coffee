@@ -56,6 +56,7 @@ usersSchema = new mongoose.Schema
     achieves: [String]
     prefs:
         editorOn: Boolean
+        language: String
     members: [String]
 
 usersSchema.methods.upsert = () ->
@@ -189,6 +190,11 @@ usersSchema.methods.setActivated = (activated) ->
 usersSchema.methods.setEditorOn = (editorOn) ->
     logger.info "set editor on ", @name, editorOn
     @prefs.editorOn = editorOn
+    @save()
+
+usersSchema.methods.setLanguage = (lang) ->
+    logger.info "set lang on ", @name, lang
+    @prefs.language = lang
     @save()
 
 compareLevels = (a, b) ->
