@@ -8,11 +8,17 @@ import getContestSystem from '../contestSystems/ContestSystemRegistry'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 
+export ContestInfo = (props) ->
+    <div>
+        {props.contestResult.startTime && <p>Прошло: {Math.round(moment.duration(moment().diff(props.contestResult.startTime)).asMinutes())} минут  
+            (время начала контеста: {moment(props.contestResult.startTime).format('DD.MM.YY HH:mm:ss')})</p>}
+        {props.contest.length && <p>Длительность контеста: {Math.floor(props.contest.length / 1000 / 60)} минут</p>}
+    </div>
+
 Header = (props) ->
     <div>
         <h1>{props.contest.name}</h1>
-        {props.contestResult.startTime && <p>Время начала контеста: {moment(props.contestResult.startTime).format('DD.MM.YY HH:mm:ss')} </p>}
-        {props.contest.length && <p>Длительность контеста: {Math.floor(props.contest.length / 1000 / 60)} минут</p>}
+        <ContestInfo {props...}/>
         <p><Link to="/monitor/#{props.contest._id}">Текущие результаты</Link></p>
     </div>
 
