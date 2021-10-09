@@ -29,21 +29,11 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: MONGO_USER_ADINA
-            - name: MONGO_USERS_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_USERS_USER
             - name: MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
                   key: MONGO_PASSWORD_ADINA
-            - name: MONGO_USERS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_USERS_PASSWORD
             - name: NODE_ENV
               value: production
             - name: ACCUMULATE_REQUESTS
