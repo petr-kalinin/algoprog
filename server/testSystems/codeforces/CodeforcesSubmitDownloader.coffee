@@ -180,7 +180,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             if (!prob || !prob.startsWith(baseProbHref))
                 continue
             prob = prob.substring(baseProbHref.length)
-            time = moment(time, "MMM/DD/YYYY HH:mm", true).toDate()
+            time = moment(time, "MMM/DD/YYYY HH:mm", true).subtract(3, 'hours').toDate()
             if outcome == "In queue" or outcome.startsWith("Running")
                 outcome = "CT"
             if user.toLowerCase() != @username.toLowerCase()
