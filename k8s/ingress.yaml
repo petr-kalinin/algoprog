@@ -11,6 +11,7 @@ spec:
     - test.algoprog.ru
     - www.algoprog.ru
     - adina.algoprog.ru
+    - archive.algoprog.ru
     - algoprog.ru
     - online.mathncode.kz
     secretName: test-tls
@@ -53,5 +54,15 @@ spec:
         backend:
           service:
             name: nodejs
+            port:
+              number: 3000
+  - host: archive.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs-archive
             port:
               number: 3000
