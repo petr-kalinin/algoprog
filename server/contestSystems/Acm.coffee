@@ -1,6 +1,6 @@
-export default class Archive
+export default class Acm
     makeProblemResult: (submits, contestResult) ->
-        startTime = contestResult.startTime || new Date(0)
+        startTime = contestResult?.startTime || new Date(0)
         ok = 0
         for submit in submits
             if submit.outcome in ["AC", "OK"]

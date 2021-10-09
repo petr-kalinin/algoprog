@@ -1,4 +1,7 @@
 import sample from "./sample"
-import sample2 from "./sample2"
+import io_2017_09_30 from "./io_2017_09_30"
 
-export default allContests = [sample, sample2]
+export default allContests = [
+    #sample, 
+    io_2017_09_30
+]

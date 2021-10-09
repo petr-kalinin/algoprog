@@ -424,12 +424,12 @@ export default setupApi = (app) ->
 
     app.get '/api/contest/:id', wrap (req, res) ->
         contest = (await Contest.findById(req.params.id))?.toObject() || {}
-        if await getContestBlockedData(req.user.userKey(), req.params.id)
+        if await getContestBlockedData(req.user?.userKey(), req.params.id)
             contest.problems = []
         res.json(contest)
 
     app.get '/api/problem/:contestId/:id', wrap (req, res) ->
-        if await getContestBlockedData(req.user.userKey(), req.params.contestId)
+        if await getContestBlockedData(req.user?.userKey(), req.params.contestId)
             res.json({blocked: true})
             return
         res.json(await Problem.findById(req.params.id))
@@ -461,10 +461,7 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         result = (await ContestResult.findByContestAndUser(req.params.contest, req.params.user))?.toObject()
-        if not result
-            res.json({})
-            return
-        blockedData = await getContestBlockedData(req.params.user, req.params.contest)
+        blockedData = await getContestBlockedData(req.params?.user, req.params.contest)
         if blockedData
             result = {result..., blockedData...}
         res.json(result)
@@ -761,6 +758,7 @@ export default setupApi = (app) ->
         if not contest
             res.status(400).send("Unknown contest")
             return
+        await User.updateUser(req.user.userKey())  # to create contest result if it was not there
         contestResult = await ContestResult.findByContestAndUser(contest._id, req.user.userKey())
         await contestResult.startContest()
         res.json({started: true})
@@ -775,7 +773,7 @@ export default setupApi = (app) ->
         contestResults = await ContestResult.findByContest(contest._id)
         contestSystem = getContestSystem(contest.contestSystemData.system)
         contestResults = (r for r in contestResults when contestSystem.shouldShowResult(r, user))
-        virtualTime = new Date() - myContestResults.startTime
+        virtualTime = new Date() - (myContestResults?.startTime || new Date(0))
         virtualResults = []
         for r in contestResults
             thisResult = (await makeVirtualResults(r.user, contest._id, virtualTime)).toObject()

@@ -72,6 +72,8 @@ makeResultFromSubmitsList = (submits, userId, problemId, contestForVirtual) ->
 updateResultsForContest = (contestId, userId, problemResultsForVirtual) ->
     oldResult = await ContestResult.findByContestAndUser(contestId, userId)
     contest = await Contest.findById(contestId)
+    if not contest
+        return
     if not problemResultsForVirtual
         problemResults = []
         for problem in contest.problems
@@ -97,7 +99,7 @@ updateResultsForContest = (contestId, userId, problemResultsForVirtual) ->
             if result.virtualId and virtualId and virtualId != result.virtualId
                 logger.warn("Different virtualId in updateResults: #{virtualId} and #{result.virtualId}")
             virtualId = result.virtualId
-    if oldResult.virtualId and virtualId and virtualId != oldResult.virtualId
+    if oldResult?.virtualId and virtualId and virtualId != oldResult.virtualId
         logger.warn("Different virtualId in updateResults: #{virtualId} and #{oldResult.virtualId}")
     contestResult = new ContestResult
         user: userId
