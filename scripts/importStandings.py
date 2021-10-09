@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import bs4
 import sys
 import pprint
@@ -42,6 +43,45 @@ def parse_nnstuicpc(doc):
             continue
         result.append((teamName, problemResults))
     return result
+
+def parse_io(doc):
+    soup = bs4.BeautifulSoup(doc, 'html.parser')
+    result = []
+    for el in soup.find_all('tr'):
+        problemResults = []
+        teamName = None
+        for probEl in el.children:
+            if not isinstance(probEl, bs4.element.Tag):
+                continue
+            if probEl.get("class") and "rankl" in probEl["class"]:
+                continue
+            if probEl.get("class") and "party" in probEl["class"]:
+                teamName = probEl.string
+                continue
+            res = None
+            time = None
+            resEl = probEl.find('i')
+            ok = True
+            if not resEl:
+                resEl = probEl.find('b')
+                ok = False
+            if resEl: 
+                res = resEl.contents[0].string
+                timeEl = probEl.find('s')
+                if timeEl:
+                    time = timeEl.contents[1].string.split(':')
+                    time = int(time[0])
+            else:
+                if probEl.string != ".":
+                    continue
+            problemResults.append((res, time,))
+        if not teamName:
+            continue
+        if not problemResults:
+            continue
+        result.append((teamName, problemResults))
+        print(teamName, problemResults)
+    return result    
 
 def do_login(opener):
     req = urllib.request.Request(server + "/api/login", json.dumps({"username": login, "password": password}).encode("utf-8"))
@@ -125,6 +165,7 @@ def make_result(result, contest):
     }
 
 def upload_submit(opener, result):
+    print("Upload submit", result)
     req = urllib.request.Request(server + "/api/importVirtualSubmit", json.dumps(result).encode("utf-8"))
     req.add_header('Content-type', 'application/json')
     r = opener.open(req)
@@ -143,23 +184,29 @@ def upload_result(opener, result):
     data = r.read()
     assert data == b'OK'
 
-server = sys.argv[1]
-login = sys.argv[2]
-password = sys.argv[3]
-contest_id = sys.argv[4]
-fname = sys.argv[5]
 
-session_id = hashlib.md5(fname.encode('utf-8')).hexdigest()[:8]
+if len(sys.argv) == 2:
+    doc = open(sys.argv[1]).read()
+    results = parse_io(doc)
+else:
+    server = sys.argv[1]
+    login = sys.argv[2]
+    password = sys.argv[3]
+    contest_id = sys.argv[4]
+    fname = sys.argv[5]
 
-jar = http.cookiejar.CookieJar()
-opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    doc = open(fname).read()
+    results = parse_io(doc)
 
-do_login(opener)
-contest = json.loads(opener.open(server + "/api/contest/" + contest_id).read())
-doc = open(fname).read()
-results = parse_nnstuicpc(doc)
+    session_id = hashlib.md5(fname.encode('utf-8')).hexdigest()[:8]
 
-for result in results:
-    for submit in make_submits(result, contest):
-        upload_submit(opener, submit)
-    upload_result(opener, make_result(result, contest))
+    jar = http.cookiejar.CookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+
+    do_login(opener)
+    contest = json.loads(opener.open(server + "/api/contest/" + contest_id).read())
+
+    for result in results:
+        for submit in make_submits(result, contest):
+            upload_submit(opener, submit)
+        upload_result(opener, make_result(result, contest))
