@@ -33,7 +33,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_USERS_USER
+                  key: MONGO_USER
             - name: MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -43,7 +43,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_USERS_PASSWORD
+                  key: MONGO_PASSWORD
             - name: NODE_ENV
               value: production
             - name: ACCUMULATE_REQUESTS
