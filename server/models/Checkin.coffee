@@ -42,4 +42,4 @@ Checkin = mongoose.model('Checkins', checkinSchema);
 
 export default Checkin
 
-export MAX_CHECKIN_PER_SESSION = [20]
+export MAX_CHECKIN_PER_SESSION = [18]
