@@ -3,20 +3,20 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: nodejs
-  name: nodejs
+    io.kompose.service: nodejs-archive
+  name: nodejs-archive
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: nodejs
+      io.kompose.service: nodejs-archive
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         io.kompose.network/app-network: "true"
-        io.kompose.service: nodejs
+        io.kompose.service: nodejs-archive
     spec:
       containers:
         - env:
@@ -28,7 +28,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_USER
+                  key: MONGO_USER_ARCHIVE
             - name: MONGO_USERS_USER
               valueFrom:
                 secretKeyRef:
@@ -38,7 +38,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_PASSWORD
+                  key: MONGO_PASSWORD_ARCHIVE
             - name: MONGO_USERS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -56,30 +56,20 @@ spec:
             - name: FORCE_HTTPS
               value: "1"
             - name: GRAPHITE_PREFIX
-              value: algoprog
-            - name: INN
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: INN
+              value: algoprog_archive
             - name: TELEGRAM_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: TELEGRAM_TOKEN
-            - name: TINKOFF_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: TINKOFF_PASSWORD
+                  key: TELEGRAM_TOKEN_ARCHIVE
             - name: USER_AGENT
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: USER_AGENT
-          image: petrkalinin/algoprog-master
+                  key: USER_AGENT_ARCHIVE
+          image: petrkalinin/algoprog-archive
           imagePullPolicy: "Always"
-          name: nodejs
+          name: nodejs-archive
           ports:
             - containerPort: 3000
           resources: {}
