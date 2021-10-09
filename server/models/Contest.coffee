@@ -8,6 +8,7 @@ contestsSchema = new mongoose.Schema
     problems: [{name: String, _id: String}]
     contestSystemData: mongoose.Schema.Types.Mixed
     length: Number
+    freeze: Number
     order: Number
 
 contestsSchema.methods.upsert = () ->

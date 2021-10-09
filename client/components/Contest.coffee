@@ -9,10 +9,17 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 
 export ContestInfo = (props) ->
+    if props.contestResult.startTime
+        passed = new Date() - new Date(props.contestResult.startTime)
+        frozen = props.contest.freeze && passed < props.contest.length && passed > props.contest.freeze
+    else
+        passed = undefined
+        frozen = undefined
     <div>
-        {props.contestResult.startTime && <p>Прошло: {Math.round(moment.duration(moment().diff(props.contestResult.startTime)).asMinutes())} минут  
+        {passed && <p>Прошло: {Math.round(passed / 60 / 1000)} минут  
             (время начала контеста: {moment(props.contestResult.startTime).format('DD.MM.YY HH:mm:ss')})</p>}
         {props.contest.length && <p>Длительность контеста: {Math.floor(props.contest.length / 1000 / 60)} минут</p>}
+        {frozen && <p><b>Таблица заморожена</b></p>}
     </div>
 
 Header = (props) ->

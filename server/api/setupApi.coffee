@@ -776,6 +776,8 @@ export default setupApi = (app) ->
         contestSystem = getContestSystem(contest.contestSystemData.system)
         contestResults = (r for r in contestResults when contestSystem.shouldShowResult(r, user))
         virtualTime = new Date() - (myContestResults?.startTime || new Date(0))
+        if contest.freeze and virtualTime < contest.length and virtualTime > contest.freeze
+            virtualTime = contest.freeze
         virtualResults = []
         for r in contestResults
             thisResult = (await makeVirtualResults(r.user, contest._id, virtualTime)).toObject()
