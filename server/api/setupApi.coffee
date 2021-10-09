@@ -31,6 +31,7 @@ import notify from '../metrics/notify'
 
 import Contest from '../models/Contest'
 import ContestResult from '../models/ContestResult'
+import Config from '../models/Config'
 import Problem from '../models/problem'
 import RegisteredUser from '../models/registeredUser'
 import Result from '../models/result'
@@ -206,7 +207,8 @@ export default setupApi = (app) ->
             res.json({error: e})
             return
         if req.body.editorOn?
-            user.setEditorOn(req.body.editorOn)
+            await user.setEditorOn(req.body.editorOn)
+        await user.setLanguage(req.body.language)
         res.json({submit: true})
 
     app.get '/api/me', ensureLoggedIn, wrap (req, res) ->
@@ -556,6 +558,22 @@ export default setupApi = (app) ->
         await comment.save()
         res.send('OK')
 
+            checkins: checkins
+            date: await Config.get("checkinDate")
+        }
+        res.json(result)
+        res.json({ok: "OK"})
+
+    app.post '/api/resetCheckins', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).json({error: 'No permissions'})
+            return
+        date = new Date(req.body.date)
+        logger.info "Reset checkins to date #{date}"
+        oldCheckins = await Checkin.findNotDeleted()
+        for checkin in oldCheckins
+            await checkin.markDeleted()
+        await Config.set("checkinDate", date)
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')

@@ -64,6 +64,8 @@ submitsSchema.methods.equivalent = (other) ->
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
         return false
+    if other.outcome == "DP"
+        return false
     if @force
         return false
     otherCodes = [normalizeCode(other.source), normalizeCode(other.sourceRaw)]

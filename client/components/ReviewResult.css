@@ -16,3 +16,8 @@
 .nonpaid {
     background: white;
 }
+.actionButtons {
+    position: sticky;
+    bottom: 10px;
+    z-index: 100;
+}

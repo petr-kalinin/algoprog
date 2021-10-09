@@ -1,0 +1,49 @@
+name: "Build docked image from master branch"
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: petrkalinin/algoprog-master:latest,petrkalinin/algoprog-master:${{ github.sha }}
+          cache-from: type=registry,ref=petrkalinin/algoprog-master:latest
+          cache-to: type=inline
+
+      - 
+        name: Set kubectl context
+        uses: azure/k8s-set-context@v1
+        id: setcontext
+        with:
+          method: service-account
+          k8s-url: ${{ secrets.K8S_URL }}
+          k8s-secret: ${{ secrets.K8S_SECRET }}
+          
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+
+      - 
+        name: Deploy to k8s
+        uses: Azure/k8s-deploy@v1.4
+        with:
+          manifests: |
+            k8s/nodejs-deployment.yaml
+            k8s/nodejs-service.yaml
+          images: 'petrkalinin/algoprog-master:${{ github.sha }}'
+          kubectl-version: 'latest'

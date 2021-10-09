@@ -5,6 +5,9 @@ log
 *.orig
 t
 scripts/standings
-scripts/standings
-*~
-k8s/*secret*
+.git
+.gitignore
+Dockerfile
+.dockerignore
+k8s
+.github

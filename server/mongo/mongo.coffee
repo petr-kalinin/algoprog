@@ -3,8 +3,8 @@ import logger from '../log'
 
 mongoose.Promise = global.Promise;
 
-if process.env.MONGODB_HOST and process.env.MONGO_USER and process.env.MONGO_PASSWORD
-    url = "mongodb://#{process.env.MONGO_USER}:#{process.env.MONGO_PASSWORD}@#{process.env.MONGODB_HOST}/algoprog_archive"
+if process.env.MONGO_HOST and process.env.MONGO_USER and process.env.MONGO_PASSWORD
+    url = "mongodb://#{process.env.MONGO_USER}:#{process.env.MONGO_PASSWORD}@#{process.env.MONGO_HOST}/algoprog_archive"
 else
     url =(process.env.MONGODB_URL || 'mongodb://root:root@localhost/algoprog_archive?authSource=admin') 
 

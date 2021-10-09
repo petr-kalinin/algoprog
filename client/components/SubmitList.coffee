@@ -58,6 +58,19 @@ class SubmitList extends React.Component
         @setState
             bestSubmits: not @state.bestSubmits
 
+    componentDidUpdate: (prevProps, prevState) ->
+        if not prevProps.data? or not @props.data?
+            return
+        diff = false
+        if prevProps.data.length != @props.data.length
+            diff = true
+        else
+            for i in [0...@props.data.length]
+                if prevProps.data[i].outcome != @props.data[i].outcome
+                    diff = true
+        if diff
+            @props.handleReload()
+
     render:  () ->
         if not @props.myUser?._id
             return null

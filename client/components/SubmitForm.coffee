@@ -69,9 +69,10 @@ class SubmitForm extends React.Component
             editorOn: not @state.editorOn
 
     setStartLanguage: () ->
-        if @props.startLanguage
+        startLanguage = @props.startLanguage || @props.myUser.prefs?.language
+        if startLanguage
             for lang of LANGUAGES
-                if @props.startLanguage.includes(lang)
+                if startLanguage.includes(lang)
                     @state.lang_id = lang
                     break
 

@@ -174,7 +174,7 @@ SubmitActions = (props) ->
                     setField={props.setField}
                     style={{ height: 200 }}
                     state={props}/>
-            <FormGroup>
+            <FormGroup className={styles.actionButtons}>
                 {
                 bsSize = null
                 bsCommentSize = null
