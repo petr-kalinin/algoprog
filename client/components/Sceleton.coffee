@@ -122,8 +122,8 @@ getSizes = (props) ->
     treeSize = fixSize(props.showTree, {
         xs: 0
         sm: 0
-        md: 4
-        lg: 3
+        md: 0
+        lg: 0
     })
     newsSize = fixSize(props.showNews, {
         xs: 0
@@ -155,10 +155,7 @@ export default class Sceleton extends React.Component
 
     render: () ->
         path = @props.location.path || []
-        ###
         {treeSize, newsSize, selfSize} = getSizes(@state)
-        ###
-        selfSize = 12
         <div className={styles.wrapper}>
             <Helmet>
                 {@props.location?.title && <title>{@props.location?.title}</title>}
