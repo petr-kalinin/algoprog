@@ -155,7 +155,10 @@ export default class Sceleton extends React.Component
 
     render: () ->
         path = @props.location.path || []
+        ###
         {treeSize, newsSize, selfSize} = getSizes(@state)
+        ###
+        selfSize = 12
         <div className={styles.wrapper}>
             <Helmet>
                 {@props.location?.title && <title>{@props.location?.title}</title>}
