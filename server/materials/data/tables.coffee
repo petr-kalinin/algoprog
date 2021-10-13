@@ -36,11 +36,9 @@ export allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9"
 export default tables = () ->
     groups =
         lic40: "Лицей 40",
-        lic87: "Лицей 87",
         zaoch: "Нижегородские школьники",
         notnnov: "Остальные школьники",
         stud: "Студенты и старше"
-        sbory: "Сборы"
 
     materials = []
     for group, groupName of groups

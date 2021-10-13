@@ -956,7 +956,7 @@ export default setupApi = (app) ->
             _id: username
             name: "???"
             graduateYear: null
-            userList: "unknown",
+            userList: "team",
             activated: true,
             lastActivated: new Date()
             registerDate: new Date()
