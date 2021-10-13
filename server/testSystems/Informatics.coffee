@@ -157,7 +157,7 @@ export default class Informatics extends TestSystem
             user = await LoggedInformaticsUser.getUser(member.informaticsUsername, member.informaticsPassword)
             admin = false
         url = (page) ->
-            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}"
+            "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page + 1}"
         return new InformaticsSubmitDownloader(user, url, admin, userId, realUserId)
 
     submitNeedsFormData: () ->
