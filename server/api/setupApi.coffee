@@ -291,6 +291,7 @@ export default setupApi = (app) ->
         members = if req.body.members.length then req.body.members.split(" ") else []
         user = await User.findById(req.params.id)
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
+        await user.updateName(await User.makeTeamName(req.body.name, members))
         await user.setGraduateYear req.body.graduateYear
         await user.setBaseLevel req.body.level.base
         await user.setCfLogin cfLogin
