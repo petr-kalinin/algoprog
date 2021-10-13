@@ -145,26 +145,39 @@ export default class Informatics extends TestSystem
         return "informatics"
 
     submitDownloader: (registeredUser, problem, submitsPerPage) ->
-        userId = registeredUser.informaticsId
+        member = await @getMemberFromTeam(registeredUser)
+        realUserId = registeredUser.informaticsId
+        userId = member.informaticsId
         problemId = @_informaticsProblemId(problem._id)
         groupId = 0
         fromTimestamp = 0
         user = await @_getAdmin()
         admin = true
         if not user
-            user = await LoggedInformaticsUser.getUser(registeredUser.informaticsUsername, registeredUser.informaticsPassword)
+            user = await LoggedInformaticsUser.getUser(member.informaticsUsername, member.informaticsPassword)
             admin = false
         url = (page) ->
             "#{BASE_URL}/py/problem/#{problemId}/filter-runs?problem_id=#{problemId}&from_timestamp=-1&to_timestamp=-1&group_id=#{groupId}&user_id=#{userId}&lang_id=-1&status_id=-1&statement_id=0&count=#{submitsPerPage}&with_comment=&page=#{page}"
-        return new InformaticsSubmitDownloader(user, url, admin, userId)
+        return new InformaticsSubmitDownloader(user, url, admin, userId, realUserId)
 
     submitNeedsFormData: () ->
         true
 
+    getMemberFromTeam: (registeredUser) ->
+        if registeredUser.informaticsUsername
+            return registeredUser
+        fullUser = await User.findById(registeredUser.userKey())
+        for m in fullUser.members
+            member = await RegisteredUser.findByKeyWithPassword(m)
+            if member?.informaticsUsername
+                return member
+        throw "Can't find user with required data"
+
     submitWithObject: (user, problemId, data) ->
         informaticsProblemId = @_informaticsProblemId(problemId)
         logger.info "Try submit #{user.username}, #{user.informaticsId} #{problemId}"
-        informaticsUser = await LoggedInformaticsUser.getUser(user.informaticsUsername, user.informaticsPassword)
+        member = await @getMemberFromTeam(user)
+        informaticsUser = await LoggedInformaticsUser.getUser(member.informaticsUsername, member.informaticsPassword)
         await informaticsUser.submitWithObject(informaticsProblemId, data)
 
     registerUser: (user) ->
