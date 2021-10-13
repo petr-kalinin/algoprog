@@ -56,7 +56,7 @@ import UserPrivate from '../models/UserPrivate'
 
 import {addMongooseCallback} from '../mongo/MongooseCallbackManager'
 
-import getTestSystem from '../testSystems/TestSystemRegistry'
+import getTestSystem, {REGISTRY} from '../testSystems/TestSystemRegistry'
 import {LoggedCodeforcesUser} from '../testSystems/Codeforces'
 
 import logger from '../log'
@@ -942,6 +942,54 @@ export default setupApi = (app) ->
             return
         Submit.calculateAllHashes()
         res.send('OK')
+
+    app.get '/api/createTeam', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        logger.info("Try create new user user", username)
+        username = -Math.random().toString().substr(2)
+        password = Math.random().toString(36).substr(2)
+
+        logger.info "Register new Table User", username
+        newUser = new User(
+            _id: username
+            name: "???"
+            graduateYear: null
+            userList: "unknown",
+            activated: true,
+            lastActivated: new Date()
+            registerDate: new Date()
+        )
+        await newUser.upsert()
+        await newUser.updateLevel()
+        await newUser.updateRatingEtc()
+
+        # do not await, this can happen asynchronously
+        for _, system of REGISTRY
+            system.registerUser(newUser)
+
+        newRegisteredUser = new RegisteredUser({
+            username,
+            informaticsId: username,
+            informaticsUsername: null,
+            informaticsPassword: null,
+            aboutme: "",
+            promo: "",
+            contact: "",
+            whereFrom: ""
+            admin: false
+        })
+        RegisteredUser.register newRegisteredUser, password, (err) ->
+            if (err)
+                logger.error("Cant register user", err)
+                res.json
+                    registered:
+                        error: true
+                        message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
+            else
+                logger.info("Registered user")
+                res.redirect("/user/#{username}")
 
     app.post '/api/informatics/userData', wrap (req, res) ->
         username = req.body.username
