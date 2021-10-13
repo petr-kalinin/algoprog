@@ -211,7 +211,11 @@ export default setupApi = (app) ->
         id = req.user.informaticsId
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
-        res.json({user..., userPrivate...})
+        memberHasCf = false
+        for m in user.members
+            member = await RegisteredUser.findByKey(m)
+            memberHasCf = memberHasCf or (member.codeforcesUsername?)
+        res.json({user..., userPrivate..., memberHasCf})
 
     app.get '/api/registeredUser/:id', wrap (req, res) ->
         registeredUser = await RegisteredUser.findByKey(req.params.id)
