@@ -317,6 +317,21 @@ usersSchema.statics.updateAllGraduateYears = () ->
     logger.info "Updated graduateYear"
 ###
 
+usersSchema.statics.makeTeamName = (name, members) ->
+    if members.length == 0
+        return name
+    name = name.split(":")[0]
+    memberNames = []
+    for m in members
+        memberUser = await User.findById(m)
+        names = memberUser.name.split(" ")
+        memberNames.push names[names.length - 1]
+    memberNames.sort()
+    name += ": " + memberNames.join(", ")
+    now = new Date() 
+    name += " (" + new Date(now - 9 * 30 * 24 * 60 * 60 * 1000).getFullYear() + ")"
+    return name
+
 usersSchema.index
     dormant: 1
     userList: 1

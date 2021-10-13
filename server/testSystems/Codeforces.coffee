@@ -214,21 +214,33 @@ export default class Codeforces extends TestSystem
         return "codeforces"
 
     submitDownloader: (registeredUser, problem, submitsPerPage) ->
-        username = registeredUser.codeforcesUsername
+        member = await @getMemberFromTeam(registeredUser)
+        username = member.codeforcesUsername
         contest = problem.testSystemData.contest
         cproblem = problem.testSystemData.problem
-        loggedUser = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
+        loggedUser = await LoggedCodeforcesUser.getUser(member.codeforcesUsername, member.codeforcesPassword)
         return new CodeforcesSubmitDownloader(BASE_URL, username, contest, cproblem, registeredUser.userKey(), problem._id, loggedUser)
 
     submitNeedsFormData: () ->
         false
 
+    getMemberFromTeam: (registeredUser) ->
+        if registeredUser.codeforcesUsername
+            return registeredUser
+        fullUser = await User.findById(registeredUser.userKey())
+        for m in fullUser.members
+            member = await RegisteredUser.findByKeyWithPassword(m)
+            if member?.codeforcesUsername
+                return member
+        throw "Can't find user with required data"
+
     submitWithObject: (registeredUser, problemId, data) ->
+        member = await @getMemberFromTeam(registeredUser)
         {contest, problem} = data.testSystemData
-        logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{registeredUser.codeforcesUsername} #{problemId} #{contest} #{problem}"
-        if not registeredUser.codeforcesUsername
+        logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{member.codeforcesUsername} #{problemId} #{contest} #{problem}"
+        if not member.codeforcesUsername
             throw "No codeforces username given"
-        codeforcesUser = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
+        codeforcesUser = await LoggedCodeforcesUser.getUser(member.codeforcesUsername, member.codeforcesPassword)
         await codeforcesUser.submitWithObject(problem, data)
 
     registerUser: (user) ->
