@@ -50,7 +50,7 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
-            page = await @download('https://informatics.msk.ru/login/index.php')
+            page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 30 * 1000})
             token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
             page = await @download("https://informatics.msk.ru/login/index.php", {
                 method: 'POST',
