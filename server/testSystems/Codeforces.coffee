@@ -170,9 +170,11 @@ export class LoggedCodeforcesUser
         {contest, problem} = data.testSystemData
         if contest.startsWith("gym")
             href = "#{BASE_URL}/#{contest}/problem/#{problem}?csrf_token=#{csrf}"
+            csrfHref = "#{BASE_URL}/#{contest}"
         else
             href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
-        page = await @download(href)
+            csrfHref = href
+        page = await @download(csrfHref)
         csrf = @_getCsrf(page)
         data = {
                 csrf_token: csrf
@@ -251,7 +253,7 @@ export default class Codeforces extends TestSystem
 
     downloadProblem: (options) ->
         if options.contest.startsWith("gym")
-            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}"
+            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}?locale=ru"
         else
             href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
         page = await downloadLimited(href, {timeout: 15 * 1000})
@@ -259,7 +261,10 @@ export default class Codeforces extends TestSystem
         data = document.getElementsByClassName("problem-statement")
         if not data or data.length == 0
             logger.warn("Can't find statement for problem " + href)
-            return {"???", "???"}
+            name = options.name || "???"
+            name = "#{options.problem}. #{name}"
+            text = "<h1>#{name}</h1> <div>См. условие на codeforces:</div>"
+            return {name, text}
         data = data[0]
         nameEl = data.getElementsByClassName("title")[0]
         # Drop leading letter, dot and space
