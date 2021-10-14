@@ -9,5 +9,5 @@ export default io_2017_09_30 = contest("io.2017.09.30", "Интернет-оли
             problem({testSystem: "codeforces", contest: "gym/101551", problem: "E"})
             problem({testSystem: "codeforces", contest: "gym/101551", problem: "F"})
             problem({testSystem: "codeforces", contest: "gym/101551", problem: "G"})
-            problem({testSystem: "codeforces", contest: "gym/101551", problem: "H"})
+            problem({testSystem: "codeforces", contest: "gym/101551", problem: "H", name: "Башни"})
     ], 180, 144)
