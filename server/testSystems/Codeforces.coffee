@@ -217,11 +217,12 @@ export default class Codeforces extends TestSystem
 
     submitDownloader: (registeredUser, problem, submitsPerPage) ->
         member = await @getMemberFromTeam(registeredUser)
+        admin = await @_getAdmin()
         username = member.codeforcesUsername
         contest = problem.testSystemData.contest
         cproblem = problem.testSystemData.problem
         loggedUser = await LoggedCodeforcesUser.getUser(member.codeforcesUsername, member.codeforcesPassword)
-        return new CodeforcesSubmitDownloader(BASE_URL, username, contest, cproblem, registeredUser.userKey(), problem._id, loggedUser)
+        return new CodeforcesSubmitDownloader(BASE_URL, username, contest, cproblem, registeredUser.userKey(), problem._id, loggedUser, admin)
 
     submitNeedsFormData: () ->
         false

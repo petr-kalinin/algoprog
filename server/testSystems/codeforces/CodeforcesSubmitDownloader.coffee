@@ -37,7 +37,7 @@ downloadLimited = (href, options) ->
 
 
 export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownloader
-    constructor: (@baseUrl, @username, @contest, @problem, @realUser, @realProblem, @loggedUser) ->
+    constructor: (@baseUrl, @username, @contest, @problem, @realUser, @realProblem, @loggedUser, @admin) ->
         super()
 
     VERDICTS: 
@@ -67,7 +67,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
 
     _getSourceAndResults: (runid) ->
         runid = @_parseRunId(runid)
-        page = await @loggedUser.download("#{@baseUrl}/submissions/#{@username}")
+        page = await @admin.download("#{@baseUrl}/submissions/#{@username}")
         csrf = @_getCsrf(page)
         formData = 
             csrf_token: csrf
@@ -78,10 +78,13 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             followAllRedirects: true
             timeout: 30 * 1000
             maxAttempts: 1
-        data = await @loggedUser.download "#{@baseUrl}/data/submitSource", postData
+        data = await @admin.download "#{@baseUrl}/data/submitSource", postData
         data = JSON.parse(data)
-        data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
+        ###
+        data.protocol = await @admin.download "#{@baseUrl}/data/judgeProtocol", postData
         data.protocol = JSON.parse(data.protocol)
+        ###
+        data.protocol = ""
         return data
 
     getSource: (runid) ->
