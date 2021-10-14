@@ -262,8 +262,7 @@ export default class Codeforces extends TestSystem
             return {"???", "???"}
         data = data[0]
         nameEl = data.getElementsByClassName("title")[0]
-        # Drop leading letter, dot and space
-        name = nameEl?.innerHTML.substring(3)
+        name = nameEl?.innerHTML
         nameEl?.parentElement.removeChild(nameEl)
 
         if not name
