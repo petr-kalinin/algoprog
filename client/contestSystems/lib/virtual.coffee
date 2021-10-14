@@ -20,6 +20,13 @@ Header = (props) ->
                 </Button>
             </div>
         }
+        {!props.contestResult.virtualBlocked && props.me?.admin &&
+            <div>
+                <Button type="submit" bsStyle="primary" onClick={startContest(props.contest._id, props.handleReload)}>
+                    Рестартовать виртуальный контест!
+                </Button>
+            </div>
+        }
     </div>
 
 PassedText = (props) ->

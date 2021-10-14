@@ -34,7 +34,7 @@ Contest = (props) ->
     ContestElement = contestSystem.Contest()
     <div>
         <Header {props...} />
-        <ContestElement contestSystem={contestSystem} contest={props.contest} contestResult={props.contestResult} handleReload={props.handleReload}/>
+        <ContestElement contestSystem={contestSystem} {props...}/>
     </div>
 
 options =
