@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import TestSystem from './TestSystem'
 
-export default class Ejudge extends TestSystem
+export default class Codeforces extends TestSystem
     constructor: () ->
         super()
 

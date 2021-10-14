@@ -42,7 +42,7 @@ Result = (props) ->
         className = globalStyles[className]
 
     dbClickUrl = "/problem/#{props.contest._id}/#{props.problem._id}"
-    ctrlDbClickUrl = "/reviewResult/#{props.user?._id}::#{props.problem._id}"
+    ctrlDbClickUrl = "/reviewResult/#{props.user?._id}::#{props.problem._id}::#{props.contest._id}"
 
     dbClickHandler = (event) ->
         if event.ctrlKey
