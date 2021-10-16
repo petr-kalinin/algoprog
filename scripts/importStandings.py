@@ -188,6 +188,7 @@ def upload_result(opener, result):
 if len(sys.argv) == 2:
     doc = open(sys.argv[1]).read()
     results = parse_io(doc)
+    results = results[:30]
 else:
     server = sys.argv[1]
     login = sys.argv[2]
@@ -197,6 +198,7 @@ else:
 
     doc = open(fname).read()
     results = parse_io(doc)
+    results = results[:30]
 
     session_id = hashlib.md5(fname.encode('utf-8')).hexdigest()[:8]
 
@@ -205,6 +207,7 @@ else:
 
     do_login(opener)
     contest = json.loads(opener.open(server + "/api/contest/" + contest_id).read())
+    print(contest)
 
     for result in results:
         for submit in make_submits(result, contest):
