@@ -522,6 +522,8 @@ export default setupApi = (app) ->
         res.json(await SubmitComment.findLastByProblem(req.params.problem))
 
     app.get '/api/bestSubmits/:problem', ensureLoggedIn, wrap (req, res) ->
+        res.json([])
+        ###
         allowed = false
         if req.user?.admin
             allowed = true
@@ -532,6 +534,7 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         res.json(await Submit.findBestByProblem(req.params.problem, 5))
+        ###
 
     app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

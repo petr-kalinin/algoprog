@@ -169,7 +169,7 @@ export class LoggedCodeforcesUser
     submitWithObject: (problemId, data) ->
         {contest, problem} = data.testSystemData
         if contest.startsWith("gym")
-            href = "#{BASE_URL}/#{contest}/problem/#{problem}?csrf_token=#{csrf}"
+            href = "#{BASE_URL}/#{contest}/submit"
             csrfHref = "#{BASE_URL}/#{contest}"
         else
             href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
