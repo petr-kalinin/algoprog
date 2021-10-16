@@ -119,7 +119,7 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     if not draft
         allSubmits = await Submit.findByUserAndProblemWithFindMistakeAny(userId, problemId)
         for s in allSubmits
-            if s.outcome != "DR" and s.source == code
+            if s.outcome != "DR" and s.outcome != "PW" and s.source == code
                 throw "duplicate"
     problem = await Problem.findById(problemId)
     if not problem
