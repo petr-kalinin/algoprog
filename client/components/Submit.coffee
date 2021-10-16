@@ -114,11 +114,14 @@ class TestResult extends React.Component
     render: () ->
         canToggle = "input" of @props.result
         res = []
-        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1">
+        status = @props.result.string_status
+        if @props.result.checker_output
+            status = @props.result.checker_output.substr(0, 70)
+        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1" width="100%">
             <td>{@props.index}{" "}
                 {@props.copyTest && <span onClick={@props.copyTest(@props.result)}><FontAwesome name="chevron-circle-down"/></span>}
             </td>
-            <td>{@props.result.string_status}</td>
+            <td className={styles.status}><span>{status}</span></td>
             <td>{@props.result.time/1000}</td>
             <td>{@props.result.max_memory_used}</td>
         </tr>
