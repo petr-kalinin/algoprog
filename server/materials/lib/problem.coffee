@@ -19,7 +19,7 @@ class Problem
         @id = id
         @testSystemData = testSystemObject.getProblemData(@options)
         @testSystemData.system = @testSystem
-        @letter = options.problem || null
+        @letter = options.letter || options.problem || null
 
     download: () ->
         testSystem = getTestSystem(@testSystem)
