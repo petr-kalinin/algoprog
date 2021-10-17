@@ -21,6 +21,7 @@ Row = (props) ->
         {
         res = []
         a = (el) -> res.push(el)
+        a <td className={globalStyles.mainTable_td}>{props.place}</td>
         userTableHeader(res, props)
         a <td className={globalStyles.border} key="start"/>
         if UserAddInfo
@@ -41,12 +42,14 @@ Table = (props) ->
         <div className={globalStyles.mainTable_div}>
             <table className={globalStyles.mainTable}>
                 <tbody>
-                    <Row header={true} contest={props.contest} key="header"/>
+                    <Row header={true} contest={props.contest} key="header" place=""/>
                     {
                     res = []
                     a = (el) -> res.push(el)
+                    place = 0
                     for result in props.monitor
-                        a <Row user={result.fullUser} result={result} contest={props.contest} key={result.user._id}/>
+                        place++
+                        a <Row user={result.fullUser} result={result} contest={props.contest} key={result.user._id} place={place}/>
                     res}
                 </tbody>
             </table>
