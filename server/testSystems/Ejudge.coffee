@@ -12,6 +12,7 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 import RegisteredUser from '../models/registeredUser'
 import Problem from '../models/problem'
 import Submit from '../models/submit'
+import User from '../models/user'
 
 import * as downloadSubmits from '../cron/downloadSubmits'
 
