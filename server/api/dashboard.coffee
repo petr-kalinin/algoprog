@@ -71,7 +71,7 @@ export default dashboard = (registeredUser) ->
         # remember that months start from 0
         #ok: {ok: 1, lastSubmitTime: {$gt: START_SUBMITS_DATE}},
         ps: {ps: 1},
-        all: {ps: 0, attempts: {$gt: 0}},
+        all: {ps: 0},
         ###
         ig: {ignored: 1},
         ac: {solved: 1},
@@ -84,11 +84,12 @@ export default dashboard = (registeredUser) ->
         # query.total = 1
         if key != "ps"
             query.findMistake = query.findMistake || null
-            if userLists?.length
+            if userLists?.length && false
                 query["userList"] = {$in: userLists}
             else
                 query["userList"] = {$ne: "unknown"}
             query["activated"] = true
+            query["virtualId"] = null
         promises.push(runDashboardQuery(key, query, result))
     # promises.push(runCfQuery(result))
     await awaitAll(promises)
