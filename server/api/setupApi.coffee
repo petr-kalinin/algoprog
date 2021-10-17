@@ -836,7 +836,10 @@ export default setupApi = (app) ->
             virtualTime = contest.freeze
         virtualResults = []
         for r in contestResults
-            thisResult = (await makeVirtualResults(r.user, contest._id, virtualTime)).toObject()
+            if not req.user?.admin or r.virtualId
+                thisResult = (await makeVirtualResults(r.user, contest._id, virtualTime)).toObject()
+            else
+                thisResult = (await makeVirtualResults(r.user, contest._id, 1e10)).toObject()
             thisResult.fullUser = (await User.findById(r.user)) || {name: r.virtualName}
             virtualResults.push(thisResult)
         contestSystem.sortMonitor(virtualResults)
