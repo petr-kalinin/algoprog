@@ -19,6 +19,7 @@ class Problem
         @id = id
         @testSystemData = testSystemObject.getProblemData(@options)
         @testSystemData.system = @testSystem
+        @letter = options.problem || null
 
     download: () ->
         testSystem = getTestSystem(@testSystem)
@@ -50,7 +51,8 @@ class Problem
             text: text
             contests: contests
             testSystemData: @testSystemData
-            order: order        
+            order: order   
+            letter: @letter     
         return problem
 
 export default problem = (args...) -> () -> new Problem(args...)

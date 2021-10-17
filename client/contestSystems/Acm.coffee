@@ -59,7 +59,7 @@ Result = withTheme(Result)
 
 ProblemResult = (props) ->
     if props.header
-        <td className={styles.res + " " + globalStyles.mainTable_td}>{props.problemIndex + 1}</td>
+        <td className={styles.res + " " + globalStyles.mainTable_td}>{props.problem.letter || (props.problemIndex + 1)}</td>
     else
         <Result {props...}/>
 

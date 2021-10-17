@@ -5,7 +5,7 @@ import logger from '../log'
 contestsSchema = new mongoose.Schema
     _id: String
     name: String
-    problems: [{name: String, _id: String}]
+    problems: [{name: String, _id: String, letter: String}]
     contestSystemData: mongoose.Schema.Types.Mixed
     length: Number
     freeze: Number

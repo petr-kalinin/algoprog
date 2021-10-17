@@ -226,6 +226,7 @@ export default downloadMaterials = () ->
             problems.push
                 _id: problem._id
                 name: problem.name
+                letter: problem.letter
         contest.problems = problems
         await contest.upsert()
     logger.info "Done downloadMaterials"

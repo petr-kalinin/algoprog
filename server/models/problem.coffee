@@ -8,6 +8,7 @@ problemsSchema = new mongoose.Schema
     text: String
     contests: [{name: String, _id: String, contestSystem: String}]
     testSystemData: mongoose.Schema.Types.Mixed
+    letter: String
     order: Number
 
 problemsSchema.methods.upsert = () ->
