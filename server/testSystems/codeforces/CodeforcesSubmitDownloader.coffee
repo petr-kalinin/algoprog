@@ -183,6 +183,8 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             time = moment(time, "MMM/DD/YYYY HH:mm", true).subtract(3, 'hours').toDate()
             if outcome == "In queue" or outcome.startsWith("Running")
                 outcome = "CT"
+            if outcome == "Вы уже отправляли этот код"
+                outcome = "DP"
             if user.toLowerCase() != @username.toLowerCase()
                 throw "Strange submit: found username  #{user}, expected #{@username}"
             if prob != @problem
