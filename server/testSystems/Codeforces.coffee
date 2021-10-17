@@ -154,6 +154,7 @@ export class LoggedCodeforcesUser
         if not options
             options = {}
         options.maxAttempts = 1
+        options.timeout = 30 * 1000
         try
             result = await download(href, @jar, options)
         finally
