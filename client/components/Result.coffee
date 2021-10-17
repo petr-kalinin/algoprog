@@ -28,6 +28,9 @@ export default Result = (props) ->
                 {r.fullSubmit?.comments?.length && <FontAwesome name="comment"/>|| ""}
             </td>
             <td className={styles.td} style={{whiteSpace: "nowrap"}}>
+                {JSON.stringify(r.contestResult)}
+            </td>
+            <td className={styles.td} style={{whiteSpace: "nowrap"}}>
                 <Link to={userHref}>{userName}</Link>
             </td>
             <td className={styles.td}>
