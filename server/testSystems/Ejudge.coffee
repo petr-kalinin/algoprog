@@ -285,11 +285,13 @@ export default class Ejudge extends TestSystem
         }
 
     submitDownloader:(registeredUser, problem, submitsPerPage) ->
+        member = await @getMemberFromTeam(registeredUser)
+
         options = 
             admin: await @getAdmin(problem.testSystemData.contest)
             server: @server
             user: registeredUser.userKey()
-            ejudgeUser: registeredUser.ejudgeUsername
+            ejudgeUser: member.ejudgeUsername
             contest: problem.testSystemData.contest
             ejudgeProblem: problem.testSystemData.problem
             problem: problem._id
@@ -349,12 +351,25 @@ export default class Ejudge extends TestSystem
                 throw e
             logger.error "Though the submit appeared in submit list..."
 
+    getMemberFromTeam: (registeredUser) ->
+        if registeredUser.ejudgeUsername
+            return registeredUser
+        fullUser = await User.findById(registeredUser.userKey())
+        for m in fullUser.members
+            member = await RegisteredUser.findByKeyWithPassword(m)
+            if member?.ejudgeUsername
+                return member
+        throw "Can't find user with required data"
+
     submitWithObject: (registeredUser, problemId, data) ->
+        member = await @getMemberFromTeam(registeredUser)
         {contest, problem} = data.testSystemData
         logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{registeredUser.ejudgeUsername} #{problemId} #{contest} #{problem}"
+        ###
         if not registeredUser.ejudgeUsername
             await @registerUser(registeredUser)
-        ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, registeredUser.ejudgeUsername, registeredUser.ejudgePassword, false)
+        ###
+        ejudgeUser = await LoggedEjudgeUser.getUser(@server, contest, member.ejudgeUsername, member.ejudgePassword, false)
         await ejudgeUser.submitWithObject(problem, data)
         
     selfTest: () ->
