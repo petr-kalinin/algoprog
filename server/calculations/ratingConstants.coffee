@@ -1,6 +1,7 @@
 export startDayForWeeks =
     "lic40": "2020-01-01"
     "zaoch": "2020-01-05"
+    "unn": "2020-01-05"
     "stud": "2020-01-06"
     "team": "2020-01-06"
     "notnnov": "2020-01-06"
