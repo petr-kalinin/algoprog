@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Занятие 24 октября пройдет с 11.00 до 14.00", String.raw"""
+            Занятие 24 октября в ВШЭ пройдет с 11.00 до 14.00.
+        """),
         newsItem("Командная олимпиада", String.raw"""
             Добавлена информация <a href="/material/koshp">про командную олимпиаду</a>
         """),
