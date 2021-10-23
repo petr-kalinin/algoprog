@@ -75,7 +75,7 @@ Inner = (props) ->
                                 для остальных <Link to="/pay">платные</Link>.
                             </p>
                             <p className="lead">
-                                <Link to="/material/0">Подробная информация про курс</Link>{" | "}
+                                <Link to="/material/about">Подробная информация про курс</Link>{" | "}
                                 <Link to="/material/module-20927_5">FAQ для школьников</Link>
                             </p>
                         </Tab.Pane>
@@ -91,7 +91,7 @@ Inner = (props) ->
                                 Занятия проходят заочно. Занятия <Link to="/pay">платные</Link>.
                             </p>
                             <p className="lead">
-                                <Link to="/material/0">Подробная информация про курс</Link>{" | "}
+                                <Link to="/material/about">Подробная информация про курс</Link>{" | "}
                                 <Link to="/material/module-20927_7">FAQ для студентов и выпускников</Link>
                             </p>
                         </Tab.Pane>
@@ -124,7 +124,7 @@ Inner = (props) ->
             </div>
         }
         <h2 className={styles.whatitis}>Как начать заниматься?</h2>
-        <p className="lead"><Link to="/register">Зарегистрируйтесь</Link> на сайте и напишите мне (контактная информация в разделе <Link to="/material/0">О курсе</Link>).</p>
+        <p className="lead"><Link to="/register">Зарегистрируйтесь</Link> на сайте и напишите мне (контактная информация в разделе <Link to="/material/about">О курсе</Link>).</p>
     </div>
 
 export default Root = (props) ->

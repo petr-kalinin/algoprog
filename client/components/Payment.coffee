@@ -114,7 +114,7 @@ export default class Payment extends React.Component
             </form>
             <h2>Официальная часть</h2>
             <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064. 
-            Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/0">О курсе</Link>.)</p>
+            Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
 
             <p>Платежи осуществляются через Тинькофф Банк. Принимаются карты любых банков.</p>
             <img height="30px" src="/tinkoff.png" style={{marginRight: "15px"}}/>
