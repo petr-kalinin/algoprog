@@ -1466,10 +1466,8 @@ contacts = () ->
         <li><a href=\"https://vk.com/petr.kalinin\">https://vk.com/petr.kalinin</a>*</li>
         <li>+7(910)794-32-07**</li>
         <li>Телеграм: <a href="https://t.me/pkalinin">@pkalinin</a></li>
-        </ul>
-        <b>Телеграм:</b>
-        <ul>
-        <li><a href=\"https://t.me/algoprog_news\">Канал с важными объявлениями</a>, в первую очередь про очные занятия. 
+        <li>Телеграм-канал с важными объявлениями: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a>. 
+            Тут объявления в первую очередь про очные занятия. 
             Рекомендую всем подписаться. (Если ссылка на t.me заблокирована, просто в телеграмме поищите канал «algoprog_news».)</li>
         </ul>
         <p>Мои контактные данные можно свободно распространять по любым вопросам, связанным с работой курса или 
@@ -1485,6 +1483,7 @@ contacts = () ->
         <li>e-mail: n.m.ryabikin@yandex.ru</li>
         <li><a href=\"https://vk.com/ryabsky\">https://vk.com/ryabsky</a></li>
         <li>Телеграм: <a href="https://t.me/ryabsky">@ryabsky</a></li>
+        <li>Телеграм-канал с важными объявлениями: <a href="https://t.me/joinchat/c2vT24ZFY782Yzli">Algoprog ННГУ — Объявления</a></li>
         </ul>
         </div>
         <hr>""")
