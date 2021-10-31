@@ -11,6 +11,7 @@ import level_reg2017 from "./level_reg2017"
 import level_reg2018 from "./level_reg2018"
 import level_reg2019 from "./level_reg2019"
 import level_reg2020 from "./level_reg2020"
+import level_reg2021 from "./level_reg2021"
 
 export default level_reg = () ->
     return level("reg", "Региональные олимпиады", [
@@ -26,4 +27,5 @@ export default level_reg = () ->
         level_reg2018(),
         level_reg2019(),
         level_reg2020(),
-    ])
+        level_reg2021(),
+])
