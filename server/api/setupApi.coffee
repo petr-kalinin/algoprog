@@ -1227,7 +1227,7 @@ export default setupApi = (app) ->
                 solved = true
                 if problem._id == "p2938"
                     solved = true
-                else if level.slice(0,3) in ["reg", "roi"]
+                else if level.slice(0,3) in ["sch", "nnoi", "reg", "roi"]
                     solved = false
                 else if version.major > i
                     solved = false
