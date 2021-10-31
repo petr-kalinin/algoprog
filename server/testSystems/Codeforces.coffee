@@ -263,7 +263,6 @@ export default class Codeforces extends TestSystem
         if not data or data.length == 0
             logger.warn("Can't find statement for problem " + href)
             name = options.name || "???"
-            name = "#{options.problem}. #{name}"
             text = "<h1>#{name}</h1> <div>См. условие на codeforces:</div>"
             return {name, text}
         data = data[0]
