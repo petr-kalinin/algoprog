@@ -41,6 +41,7 @@ def parse_nnstuicpc(doc):
             problemResults.append((res, time,))
         if not teamName:
             continue
+        teamName = teamName.replace('`', '')
         result.append((teamName, problemResults))
     return result
 
@@ -79,6 +80,7 @@ def parse_io(doc):
             continue
         if not problemResults:
             continue
+        teamName = teamName.replace('`', '')
         result.append((teamName, problemResults))
         print(teamName, problemResults)
     return result    
