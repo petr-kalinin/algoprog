@@ -7,8 +7,13 @@ import urllib.request
 import json
 import random
 import hashlib
+import os
+import zipfile
+import copy
+from collections import defaultdict
 
-def parse_nnstuicpc(doc):
+def parse_nnstuicpc(fname):
+    doc = open(fname).read()
     soup = bs4.BeautifulSoup(doc, 'html.parser')
     result = []
     for el in soup.find_all('tr'):
@@ -45,7 +50,44 @@ def parse_nnstuicpc(doc):
         result.append((teamName, problemResults))
     return result
 
-def parse_io(doc):
+def load_io_runs(fname):
+    fname = os.path.splitext(fname)[0]+'.runs.zip'
+    if not os.path.exists(fname):
+        return (None, None)
+    files = zipfile.ZipFile(fname, 'r').infolist()
+    runs = {}
+    mintime = 1e9
+    for f in files:
+        this_fname = os.path.splitext(f.filename)[0]
+        team, prob, att = this_fname.split("-")
+        prob = ord(prob) - ord('a')
+        att = att.split(".")[0]
+        att = int(att) - 1
+        time = f.date_time[3] * 60 + f.date_time[4]
+        if team not in runs:
+            runs[team] = {}
+        if prob not in runs[team]:
+            runs[team][prob] = {}
+        runs[team][prob][att] = time
+        if time < mintime:
+            mintime = time
+    for team in runs:
+        team_runs = runs[team]
+        for prob in team_runs:
+            prob_runs = []
+            i = 0
+            while i in team_runs[prob]:
+                prob_runs.append(team_runs[prob][i])
+                i += 1
+            if i != len(team_runs[prob]):
+                print("Non-consequitve runs for problem ", prob, team)
+                pprint.pprint(team_runs)
+                print(prob_runs, i)
+            team_runs[prob] = prob_runs
+    return (mintime, runs)
+
+def parse_io(fname):
+    doc = open(fname).read()
     soup = bs4.BeautifulSoup(doc, 'html.parser')
     result = []
     for el in soup.find_all('tr'):
@@ -85,6 +127,66 @@ def parse_io(doc):
         print(teamName, problemResults)
     return result    
 
+def assign_runs_to_results(results, mintime, runs):
+    for team, result in results:
+        bestRun = None
+        inf = 1e9
+        bestScore = inf
+        diff = 0
+        bestDrop = {}
+        for t in runs:
+            team_runs = copy.deepcopy(runs[t])
+            score = 0
+            cnt = 0
+            sumDiff = 0
+            drop = {}
+            for i in range(len(result)):
+                prob_res, time = result[i]
+                if prob_res is None:
+                    if i in team_runs:
+                        score += inf
+                    continue
+                if i not in team_runs:
+                    score += inf
+                    continue
+                attempts = 0
+                if prob_res != "+":
+                    attempts = abs(int(prob_res))
+                ok = prob_res[0] == "+"
+                if ok:
+                    attempts += 1
+                if attempts > len(team_runs[i]):
+                    score += inf
+                    continue
+                if attempts < len(team_runs[i]):
+                    score += 100
+                    drop[i] = len(team_runs[i]) - attempts
+                    team_runs[i] = team_runs[i][:attempts]
+                if time:
+                    score += abs(team_runs[i][-1] - mintime - time)
+                    sumDiff += team_runs[i][-1] - time
+                    cnt += 1
+            if score < bestScore and cnt:
+                bestScore = score
+                bestRun = team_runs
+                diff = int(sumDiff / cnt)
+                bestDrop = drop
+        if not bestRun:
+            print("Can't find runs for ", team, result)
+            continue
+        print(team, result, bestRun, "score=", bestScore, "drop=", bestDrop)
+        for i in range(len(result)):
+            prob_res, time = result[i]
+            if not prob_res:
+                continue
+            times = [prob_res]
+            for att_time in bestRun[i]:
+                times.append(att_time - diff)
+            if time:
+                print("Diff is ", time - times[-1])
+                times[-1] = time
+            result[i] = times
+
 def do_login(opener):
     req = urllib.request.Request(server + "/api/login", json.dumps({"username": login, "password": password}).encode("utf-8"))
     req.add_header('Content-type', 'application/json')
@@ -121,8 +223,9 @@ def make_submits(result, contest):
     assert len(problemResults) == len(contest["problems"])
     for i in range(len(contest["problems"])):
         problem_id = contest["problems"][i]["_id"]
-        prob_res, time = problemResults[i]
-        if not time:
+        prob_res = problemResults[i][0]
+        times = problemResults[i][1:]
+        if not times or times[0] is None:
             continue
         ok = False
         attempts = 0
@@ -131,7 +234,7 @@ def make_submits(result, contest):
         ok = prob_res and prob_res[0] == "+"
 
         submit_id = user_id + "::" + problem_id + "::"
-        fullTime = time * 60 * 1000
+        fullTime = times[-1] * 60 * 1000
         submit = {
             "time": fullTime,
             "user": user_id,
@@ -144,7 +247,10 @@ def make_submits(result, contest):
 
         for att in range(attempts):
             submit["_id"] = submit_id + str(att)
-            submit["time"] = fullTime - att - 1
+            if att < len(times):
+                submit["time"] = times[att] * 60 * 1000
+            else:    
+                submit["time"] = fullTime - att - 1
             yield submit
 
         if ok:
@@ -186,32 +292,33 @@ def upload_result(opener, result):
     data = r.read()
     assert data == b'OK'
 
+def main():
+    results = parse_io(sys.argv[-1])
+    mintime, runs = load_io_runs(sys.argv[-1])
+    assign_runs_to_results(results, mintime, runs)
+    pprint.pprint(results)
+    if len(sys.argv) > 2:
+        global server, login, password, contest_id, session_id
+        server = sys.argv[1]
+        login = sys.argv[2]
+        password = sys.argv[3]
+        contest_id = sys.argv[4]
+        fname = sys.argv[5]
 
-if len(sys.argv) == 2:
-    doc = open(sys.argv[1]).read()
-    results = parse_io(doc)
-    results = results[:30]
-else:
-    server = sys.argv[1]
-    login = sys.argv[2]
-    password = sys.argv[3]
-    contest_id = sys.argv[4]
-    fname = sys.argv[5]
+        results = results[:30]
 
-    doc = open(fname).read()
-    results = parse_io(doc)
-    results = results[:30]
+        session_id = hashlib.md5(fname.encode('utf-8')).hexdigest()[:8]
 
-    session_id = hashlib.md5(fname.encode('utf-8')).hexdigest()[:8]
+        jar = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
 
-    jar = http.cookiejar.CookieJar()
-    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+        do_login(opener)
+        contest = json.loads(opener.open(server + "/api/contest/" + contest_id).read())
+        print(contest)
 
-    do_login(opener)
-    contest = json.loads(opener.open(server + "/api/contest/" + contest_id).read())
-    print(contest)
+        for result in results:
+            for submit in make_submits(result, contest):
+                upload_submit(opener, submit)
+            upload_result(opener, make_result(result, contest))
 
-    for result in results:
-        for submit in make_submits(result, contest):
-            upload_submit(opener, submit)
-        upload_result(opener, make_result(result, contest))
+main()
