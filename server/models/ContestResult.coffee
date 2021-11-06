@@ -20,9 +20,11 @@ contestResultsSchema.methods.upsert = () ->
         logger.info "Could not upsert a problemsSchema"
 
 contestResultsSchema.methods.startContest = () ->
-    now = new Date()
-    await @update({$set: {"startTime": now}})
-    @startTime = now
+    @setContestTime(0)
+
+contestResultsSchema.methods.setContestTime = (time) ->
+    @startTime = new Date() - time * 60 * 1000
+    await @update({$set: {"startTime": @startTime}})
 
 contestResultsSchema.statics.findByContestAndUser = (contest, user) ->
     id = user + "::" + contest

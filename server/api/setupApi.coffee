@@ -821,6 +821,19 @@ export default setupApi = (app) ->
         await contestResult.startContest()
         res.json({started: true})
 
+    app.post '/api/setContestTime/:id', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        contest = await Contest.findById(req.params.id)
+        if not contest
+            res.status(400).send("Unknown contest")
+            return
+        await User.updateUser(req.user.userKey())  # to create contest result if it was not there
+        contestResult = await ContestResult.findByContestAndUser(contest._id, req.user.userKey())
+        await contestResult.setContestTime(req.body.time)
+        res.json({started: true})
+
     app.get '/api/monitor/:id', ensureLoggedIn, wrap (req, res) ->
         contest = await Contest.findById(req.params.id)
         user = await User.findById(req.user.userKey())
