@@ -6,7 +6,7 @@ import topic from "../../lib/topic"
 export default complexity = () ->
     return {
         topic: topic("Сложность алгоритмов", null, [
-            label("<a href=\"https://notes.algoprog.ru/complexity/02_complexity_main.html\">Теория про сложность алгоритмов (читайте раздел «Простейшие основы», остальное пока не так важно)</a>"),
+            label("<a href=\"https://notes.algoprog.ru/complexity/index.html\">Теория про сложность алгоритмов (читайте раздел «Простейшие основы», остальное пока не так важно)</a>"),
         ], "complexity"),
         count: false
     }
