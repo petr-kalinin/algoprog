@@ -12,6 +12,7 @@ import Grid from 'react-bootstrap/lib/Grid'
 import Col from 'react-bootstrap/lib/Col'
 
 import {Link} from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap'
 
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import outcomeToText from '../lib/outcomeToText'
@@ -44,12 +45,23 @@ langClass = (lang) ->
 export class SubmitSource extends React.Component
     constructor: (props) ->
         super(props)
+        @state =
+            copied: false
+        @copy = @copy.bind this
+
+    copy: () ->
+        (e) =>
+            navigator.clipboard.writeText @props.submit.sourceRaw
+            @setState
+                copied: true
 
     componentDidMount: ->
         @doHighlight()
 
     componentDidUpdate:  (prevProps, prevState) ->
         if @props.submit._id != prevProps.submit._id
+            @state =
+                copied: false
             @doHighlight()
 
     doHighlight: ->
@@ -57,9 +69,18 @@ export class SubmitSource extends React.Component
             hljs.highlightBlock(el)
 
     render: () ->
+        copyClass = if @state.copied then "success" else "default"
+        copyText = if @state.copied then "Скопировано" else "Скопировать"
         <div>
             <pre dangerouslySetInnerHTML={{__html: @props.submit.source }} className={"sourcecode " + langClass(@props.submit.language)}></pre>
-            <div><a href={"/api/submitSource/#{@props.submit._id}"}>Скачать</a></div>
+            <ButtonGroup>
+                <Button bsStyle={copyClass} bsSize="xsmall" onClick={@copy()}>{copyText}</Button>
+                <LinkContainer to={"/api/submitSource/#{@props.submit._id}"}>
+                    <Button bsStyle="default" bsSize="xsmall">
+                        Скачать
+                    </Button>
+                </LinkContainer>
+            </ButtonGroup>
         </div>
 
 export SubmitHeader = (props) ->
