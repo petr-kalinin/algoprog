@@ -41,32 +41,15 @@ langClass = (lang) ->
             return style
     return ""
 
-convert = (source, encoding) ->
-    if not source
-        return ""
-    buf = Buffer.from(source, "latin1")
-    return iconv.decode(buf, encoding)
-
-ENCODINGS = ["utf8", "win1251", "cp866"]
-
 export class SubmitSource extends React.Component
     constructor: (props) ->
         super(props)
-        @state =
-            encoding: ENCODINGS[0]
-        @setEncoding = @setEncoding.bind this
-
-    setEncoding: (encoding) ->
-        (e) =>
-            e.preventDefault()
-            @setState
-                encoding: encoding
 
     componentDidMount: ->
         @doHighlight()
 
     componentDidUpdate:  (prevProps, prevState) ->
-        if @props.submit._id != prevProps.submit._id or prevState.encoding != @state.encoding
+        if @props.submit._id != prevProps.submit._id
             @doHighlight()
 
     doHighlight: ->
@@ -75,16 +58,7 @@ export class SubmitSource extends React.Component
 
     render: () ->
         <div>
-            <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
-            Кодировка:{" "}
-            <ButtonGroup>
-                {
-                ENCODINGS.map (encoding) =>
-                    <Button active={encoding==@state.encoding} onClick={@setEncoding(encoding)} key={encoding}>
-                        {encoding}
-                    </Button>
-                }
-            </ButtonGroup>
+            <pre dangerouslySetInnerHTML={{__html: @props.submit.source }} className={"sourcecode " + langClass(@props.submit.language)}></pre>
             <div><a href={"/api/submitSource/#{@props.submit._id}"}>Скачать</a></div>
         </div>
 
