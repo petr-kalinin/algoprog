@@ -1,4 +1,7 @@
 React = require('react')
+FontAwesome = require('react-fontawesome')
+
+import Button from 'react-bootstrap/lib/Button'
 
 import globalStyles from './global.css'
 import styles from './SolvedByWeek.css'
@@ -47,8 +50,10 @@ weekHeader = (weekNumber, weekCount, userList) ->
     endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1) + "-" + startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1)
 
 Header = (props) ->
+    toggleFullscreen = props.toggleFullscreen
+    fullscreenElement = <Button onClick={toggleFullscreen}><FontAwesome name={"arrows-alt"} /></Button>
     cl = props.headerClass || "h1"
-    H = React.createElement(cl, {}, 'Сданные задачи по неделям');
+    H = React.createElement(cl, {}, ['Сданные задачи по неделям ', fullscreenElement])
     <div>
         {H}
         <p className="small">
@@ -102,27 +107,38 @@ SolvedByWeekRow = (props) ->
 
 SolvedByWeekRowWithTheme = withTheme(SolvedByWeekRow)
 
-class SolvedByWeek extends React.PureComponent
-  render: () ->
-    if not @props.users?.length
-        return <table className={globalStyles.mainTable}/>
-    weeks = weekSet(@props.userList)
+class SolvedByWeek extends React.Component
+    constructor: (props) ->
+        super(props)
+        @toggleFullscreen = @toggleFullscreen.bind this
 
-    <div>
-        <Header headerClass={@props.headerClass} />
-        <div className={globalStyles.mainTable_div} ref={(d) => if d then @table_div = d }>
-          <table className={globalStyles.mainTable}>
-            <tbody>
-                {
-                res = []
-                a = (el) -> res.push(el)
-                a <SolvedByWeekRowWithTheme header={true} details={@props.details} user={@props.users[0]} userList={@props.userList} weeks={weeks} key={"header"}/>
-                for user in @props.users
-                    a <SolvedByWeekRowWithTheme details={@props.details} user={user} weeks={weeks} key={user._id}/>
-                res}
-            </tbody>
-          </table>
+    toggleFullscreen: () ->
+        (e) ->
+            el = document.getElementById("solvedByWeek")
+            rfs = el.requestFullScreen or el.webkitRequestFullScreen or el.mozRequestFullScreen or el.msRequestFullscreen
+            rfs.call(el)
+
+    render: () ->
+        console.log @props.theme
+        if not @props.users?.length
+            return <table className={globalStyles.mainTable}/>
+        weeks = weekSet(@props.userList)
+        cls = if @props.theme == "dark" then styles.solvedByWeekDark else styles.solvedByWeek
+        <div id="solvedByWeek" className={cls}>
+            <Header headerClass={@props.headerClass} toggleFullscreen={@toggleFullscreen()}/>
+            <div className={globalStyles.mainTable_div} ref={(d) => if d then @table_div = d }>
+            <table className={globalStyles.mainTable}>
+                <tbody>
+                    {
+                    res = []
+                    a = (el) -> res.push(el)
+                    a <SolvedByWeekRowWithTheme header={true} details={@props.details} user={@props.users[0]} userList={@props.userList} weeks={weeks} key={"header"}/>
+                    for user in @props.users
+                        a <SolvedByWeekRowWithTheme details={@props.details} user={user} weeks={weeks} key={user._id}/>
+                    res}
+                </tbody>
+            </table>
+            </div>
         </div>
-    </div>
 
-export default SolvedByWeek
+export default withTheme(SolvedByWeek)
