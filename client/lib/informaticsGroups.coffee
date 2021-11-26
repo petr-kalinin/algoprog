@@ -5,5 +5,6 @@ export GROUPS =
     notnnov: "8592"
     stud: "7170"
     team: "111"
+    ikhlyustov: "111"
     graduated: "7248"
     unknown: "7647"
