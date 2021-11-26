@@ -1,6 +1,5 @@
 React = require('react')
 moment = require('moment')
-iconv = require('iconv-lite')
 FontAwesome = require('react-fontawesome')
 
 import Button from 'react-bootstrap/lib/Button'
@@ -16,6 +15,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import outcomeToText from '../lib/outcomeToText'
+import toUtf8 from '../lib/toUtf8'
 
 import {DiffEditor} from './Editor'
 import UserName from './UserName'
@@ -71,8 +71,9 @@ export class SubmitSource extends React.Component
     render: () ->
         copyClass = if @state.copied then "success" else "default"
         copyText = if @state.copied then "Скопировано" else "Скопировать"
+        source = toUtf8(@props.submit.source)
         <div>
-            <pre dangerouslySetInnerHTML={{__html: @props.submit.source }} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            <pre dangerouslySetInnerHTML={{__html: source}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
             <ButtonGroup>
                 <Button bsStyle={copyClass} bsSize="xsmall" onClick={@copy()}>{copyText}</Button>
                 <LinkContainer to={"/api/submitSource/#{@props.submit._id}"}>
