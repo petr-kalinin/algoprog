@@ -5,6 +5,7 @@ import UserBadge from './UserBadge'
 import SolvedByWeek from './SolvedByWeek'
 import ContributeByWeekCalendar from './ContributeByWeekCalendar'
 import SubmitListTable from './SubmitListTable'
+import TShirts from './TShirts'
 import Table from './Table'
 
 import { Badge } from 'react-bootstrap'
@@ -57,7 +58,6 @@ Chocos = (props) ->
         </table>
     </div>
 
-
 class SubmitsOnDay extends React.Component
     render: () ->
       # inline-block shrinks table to its content size
@@ -71,6 +71,7 @@ export default class FullUser extends React.Component
     constructor: (props) ->
         super(props)
         @setChocosGot = @setChocosGot.bind this
+        @setTShirts = @setTShirts.bind this
         @showSubmitsOnDay = @showSubmitsOnDay.bind this
         @state =
             day: null
@@ -85,6 +86,11 @@ export default class FullUser extends React.Component
             await callApi "user/#{@props.user._id}/setChocosGot", {chocosGot}
             @props.handleReload()
 
+    setTShirts: (count) ->
+        () =>
+            await callApi "user/#{@props.user._id}/setTShirtsGot", {TShirts: count}
+            @props.handleReload()
+
     showSubmitsOnDay: (day) ->
         @setState {day}
 
@@ -94,6 +100,7 @@ export default class FullUser extends React.Component
     render: () ->
         <div>
             {`<UserBadge {...this.props}/>`}
+            <h2><TShirts user={@props.user} onClick={@setTShirts}/></h2>
             {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
             <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
             {if @props.calendar then <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>}

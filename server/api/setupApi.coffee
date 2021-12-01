@@ -325,6 +325,15 @@ export default setupApi = (app) ->
         await user.setChocosGot chocosGot
         res.send('OK')
 
+    app.post '/api/user/:id/setTShirtsGot', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        cnt = req.body.TShirts
+        user = await User.findById(req.params.id)
+        await user.setTShirtsGot cnt
+        res.send('OK')
+
     app.get '/api/user/:id', wrap (req, res) ->
         id = req.params.id
         user = (await User.findById(id))?.toObject() || {}

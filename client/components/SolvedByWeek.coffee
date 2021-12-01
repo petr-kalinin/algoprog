@@ -119,7 +119,6 @@ class SolvedByWeek extends React.Component
             rfs.call(el)
 
     render: () ->
-        console.log @props.theme
         if not @props.users?.length
             return <table className={globalStyles.mainTable}/>
         weeks = weekSet(@props.userList)

@@ -34,6 +34,7 @@ usersSchema = new mongoose.Schema
     activated: Boolean,
     chocos: [Number],
     chocosGot: [Number],
+    tshirtsGot: Number,
     level:
         current: String,
         start: String,
@@ -156,6 +157,11 @@ usersSchema.methods.setChocosGot = (chocosGot) ->
     logger.info "setting chocosGot ", @_id, chocosGot 
     await @update({$set: {"chocosGot": chocosGot}})
     @chocosGot = chocosGot
+
+usersSchema.methods.setTShirtsGot = (cnt) ->
+    logger.info "setting tshirtsGot ", @_id, cnt
+    await @update({$set: {"tshirtsGot": cnt}})
+    @tshirtsGot = cnt
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
