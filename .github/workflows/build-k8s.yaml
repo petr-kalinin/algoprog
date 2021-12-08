@@ -27,7 +27,7 @@ jobs:
 
       - 
         name: Set kubectl context
-        uses: azure/k8s-set-context@v1
+        uses: azure/k8s-set-context@v2
         id: setcontext
         with:
           method: service-account
