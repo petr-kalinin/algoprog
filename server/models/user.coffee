@@ -306,8 +306,11 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"
     for u in await User.findAll()
         if u.cf.login
-            if await u.updateCfRating()
-                await User.updateUser(u._id, {})
+            try
+                if await u.updateCfRating()
+                    await User.updateUser(u._id, {})
+            catch e
+                logger.warn("Error while updating cf: ", e.message || e, e.stack)
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 

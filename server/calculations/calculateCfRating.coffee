@@ -20,7 +20,7 @@ timeScore = (date) ->
 getActivityAndProgress = (user) ->
     href = "https://codeforces.com/api/user.rating?handle=" + user.cf.login
     text = await request href
-    logger.trace "cf returns ", text
+    #logger.trace "cf returns ", text
     data = JSON.parse(text)["result"]
 
     startDate = new Date("2016-09-01")
