@@ -3,6 +3,11 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Запись обсуждения районной олимпиады", String.raw"""
+            Выложена <a href="https://www.youtube.com/watch?v=ERm4nurDfk4">видеозапись занятия от 05.12.2021 про районную олимпиаду</a>.
+            Также можете посмотреть <a href="https://www.youtube.com/watch?v=9IgDerlwelY">видеозапись аналогичного занятия 2019 г.</a>, в частности, 
+            там есть обсуждение более старых задач.
+        """),
         newsItem("Зимние алгопрог-сборы", String.raw"""
             С 3 по 9 января пройдут зимние алгопрог-сборы, основная цель — подготовка к региональному этапу ВсОШ. Участвовать могут все желающие.
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScbXO-0yNOYaSrmp74TbmyCMbomx4Ic7WdwLd2uDRGxpQ-U2w/viewform?usp=sf_link">Подробная информация и анкета участника.</a>
