@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Занятие 19 декабря в ВШЭ начнется в 14.15", String.raw"""
+            19 декабря занятие в ВШЭ начнется в 14.15.
+        """),
         newsItem("Запись обсуждения районной олимпиады", String.raw"""
             Выложена <a href="https://www.youtube.com/watch?v=ERm4nurDfk4">видеозапись занятия от 05.12.2021 про районную олимпиаду</a>.
             Также можете посмотреть <a href="https://www.youtube.com/watch?v=9IgDerlwelY">видеозапись аналогичного занятия 2019 г.</a>, в частности, 
