@@ -79,7 +79,7 @@ ProblemResult = (props) ->
     </td>
 
 totalResultClass = (result) ->
-    if not result.problemName
+    if not result?.problemName
         return undefined
     if result.total == result.solved
         return "full"
