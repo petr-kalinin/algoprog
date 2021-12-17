@@ -10,8 +10,8 @@ import addTotal from '../../client/lib/addTotal'
 import awaitAll from '../../client/lib/awaitAll'
 
 export getTables = (table) ->
-    if table == "main"
-        return ["main"]
+    if table == "main" or table == "nnoi"
+        return [table]
     tableIds = table.split(",")
     if tableIds.length != 1
         return tableIds
