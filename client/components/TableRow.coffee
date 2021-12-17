@@ -97,6 +97,8 @@ totalResultClass = (result) ->
             return "none"
 
 TotalResult = (props) ->
+    if not props.result
+        return "??"
     style = globalStyles.mainTable_td
     title = ""
     if not props.header
