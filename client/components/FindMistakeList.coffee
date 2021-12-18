@@ -1,12 +1,15 @@
 React = require('react')
 moment = require('moment')
 
-import { ListGroup, ListGroupItem } from 'react-bootstrap'
+import { ListGroup, ListGroupItem, Button, ButtonGroup } from 'react-bootstrap'
 import Pagination from "react-js-pagination";
 import {Link} from 'react-router-dom'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
+
+ORDER_PROBLEM = "problem"
+ORDER_STATUS = "status"
 
 getClass = (result) ->
     if not result
@@ -36,7 +39,7 @@ FindMistakeList = (props) ->
 options = 
     urls: (props) ->
         return
-            findMistakes: if props.problem then "findMistakeProblemList/#{props.myUser?._id}/#{props.problem}/#{props.page}" else "findMistakeList/#{props.myUser?._id}/#{props.page}"
+            findMistakes: if props.problem then "findMistakeProblemList/#{props.myUser?._id}/#{props.problem}/#{props.page}" else "findMistakeList/#{props.myUser?._id}/#{props.page}?order=#{props.order}"
             results: "userResultsForFindMistake/#{props.myUser?._id}"
 
 FindMistakeListConnected = withMyUser(ConnectedComponent(FindMistakeList, options))
@@ -46,18 +49,31 @@ class FindMistakeListWithPaginator extends React.Component
         super(props);
         @state =
             activePage: 1
+            order: ORDER_PROBLEM
         @handlePageChange = @handlePageChange.bind this
+        @sortBy = @sortBy.bind this
     
     handlePageChange: (pageNumber) ->
         window.scrollTo(0, 0)
         @setState
-            activePage: pageNumber
+            order: pageNumber
+
+    sortBy: (order) ->
+        (e) =>
+            @setState
+                order: order
     
     render: () ->
         <div>
             <h1>Найди ошибку</h1>
             <p><Link to="/material/about_find_mistake">О поиске ошибок</Link></p>
-            <FindMistakeListConnected page={@state.activePage - 1} problem={@props.problem}/>
+            {@props.allowSort && 
+                <p><ButtonGroup>
+                    <Button onClick={@sortBy(ORDER_PROBLEM)} active={@state.order==ORDER_PROBLEM} bsSize="xsmall">Сортировать по задаче</Button>
+                    <Button onClick={@sortBy(ORDER_STATUS)} active={@state.order==ORDER_STATUS} bsSize="xsmall">Сортировать по статусу</Button>
+                </ButtonGroup></p>
+            }
+            <FindMistakeListConnected page={@state.activePage - 1} problem={@props.problem} order={@state.order}/>
             <Pagination
                 activePage={@state.activePage}
                 itemsCountPerPage={@props.data.perPage}
