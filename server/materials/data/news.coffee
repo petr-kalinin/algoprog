@@ -3,16 +3,11 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
-        newsItem("Областная (региональная) олимпиада", String.raw"""
-            Добавлен <a href="/material/reg_about">текст про областную (региональную) олимпиаду</a>
+        newsItem("Еще два опроса", String.raw"""
+            Заполните, пожалуйста, еще два опроса про алгопрог: <a href="https://docs.google.com/forms/d/e/1FAIpQLSctsMlVXG1gwRWMtPLdyKPWf3evZyZY617EL6Hijco1pGbDGQ/viewform">раз</a>, <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhHVBFN0Xs1Y3U31Z2gJWEvsUYrraGNPfueZK2LKNdq95BkA/viewform">два</a>.
         """),
-        newsItem("Алгопрог-Новый год: новости", String.raw"""
-            Алгопрог-Новый год состоится 6 января, приглашаются все ученики алгопрога, кто будет в Нижнем Новгороде. 
-            Напишите мне, чтобы я вас добавил в секретный телеграм-чат :)
-        """),
-        newsItem("Занятия в праздники", String.raw"""
-            26 декабря и 2 января занятий во ВШЭ не будет, следующее занятие 9 января.<br/>
-            22 декабря занятие в лицее 40 <b>будет</b>, 29 декабря и 5 января занятий в лицее 40 не будет, первое занятие в новом году — 12 января.
+        newsItem("Занятия 19 января в лицее 40 не будет", String.raw"""
+            19 января занятия в лицее 40 не будет.
         """),
         newsItem("Опрос про алгопрог", String.raw"""
             Ответьте, пожалуйста, <a href="https://docs.google.com/forms/d/e/1FAIpQLSdDXTZ1yMHp_yk3Di5ie4BcI9HXKtnlJ8iyp9iupdX4fezqag/viewform?usp=sf_link">на несколько вопросов</a>. Тем, кто уже отвечал — я там добавил несколько вопросов, можете ответить еще раз.
