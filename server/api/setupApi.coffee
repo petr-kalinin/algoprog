@@ -1022,7 +1022,8 @@ export default setupApi = (app) ->
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
-        mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page)
+        order = req.query.order
+        mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page, order)
         mistakes = mistakes.map (mistake) -> 
             expandFindMistakeResult(mistake, req.user?.admin, user)
         mistakes = await awaitAll(mistakes)

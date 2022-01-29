@@ -84,9 +84,13 @@ resultsSchema.statics.findPagesCountByUserWithFindMistakeSet = (userId) ->
         pagesCount: Math.ceil(await q.countDocuments() / PER_PAGE)
         perPage: PER_PAGE
 
-resultsSchema.statics.findPageByUserWithFindMistakeSet = (userId, page) ->
+resultsSchema.statics.findPageByUserWithFindMistakeSet = (userId, page, order) ->
     q = Result.findByUserWithFindMistakeSet(userId)
-    return q.sort({findMistakeOrder: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
+    if order == "problem"
+        q = q.sort({findMistakeOrder: 1, findMistake: 1}) 
+    else
+        q = q.sort({findMistakeAllowed: -1, solved: 1, attempts: -1, findMistakeOrder: 1})
+    return q.skip(page * PER_PAGE).limit(PER_PAGE)
 
 resultsSchema.statics.findByUserAndTableWithFindMistakeSet = (userId, tableId) ->
     return Result.find
@@ -135,6 +139,14 @@ resultsSchema.index
 resultsSchema.index
     user: 1
     findMistake: 1
+    findMistakeOrder: 1
+
+resultsSchema.index
+    user: 1
+    findMistake: 1
+    findMistakeAllowed: -1
+    solved: 1
+    attempts: -1
     findMistakeOrder: 1
 
 resultsSchema.index
