@@ -1,6 +1,8 @@
 mongoose = require('mongoose')
 import logger from '../log'
 
+import Result from './result'
+
 
 APPROVED = 2
 DISPROVED = 1
@@ -37,6 +39,15 @@ findMistakeSchema.methods.setBad = () ->
     logger.info "Bad findMistake #{@_id}"
     @approved = BAD
     @update(this)
+
+findMistakeSchema.methods.isAllowedForUser = (userKey, admin) ->
+    allowed = false
+    if admin 
+        allowed = true
+    else if userKey
+        result = await Result.findByUserAndTable(userKey, @problem)
+        allowed = result && result.solved > 0    
+    return allowed
 
 findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
     FindMistake.find

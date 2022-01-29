@@ -20,6 +20,7 @@ resultsSchema = new mongoose.Schema
     lastSubmitTime: Date
     ignored: Number
     findMistake: String
+    findMistakeAllowed: Boolean
     subFindMistakes:
         ok: Number
         wa: Number

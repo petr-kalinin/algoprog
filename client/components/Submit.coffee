@@ -96,6 +96,12 @@ export SubmitHeader = (props) ->
         <h4>{props.submit.fullProblem.tables.join("\n")}</h4>
     </div>
 
+getClassName = (status) ->
+    switch status
+        when "OK" then "success"
+        when "Превышение времени" then "info"
+        else styles.wa
+
 class TestResult extends React.Component
     constructor: (props) ->
         super(props)
@@ -113,7 +119,8 @@ class TestResult extends React.Component
         status = @props.result.string_status
         if @props.result.checker_output
             status = @props.result.checker_output.substr(0, 70)
-        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1" width="100%">
+        classname = getClassName(@props.result.string_status)
+        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1" width="100%" className={classname} title={@props.result.string_status}>
             <td>{@props.index}{" "}
                 {@props.copyTest && <span onClick={@props.copyTest(@props.result)}><FontAwesome name="chevron-circle-down"/></span>}
             </td>

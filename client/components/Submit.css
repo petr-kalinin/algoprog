@@ -15,3 +15,13 @@
 }
 
 #diffEditor {}
+
+.ok {
+    background: #b9ffb9 !important;
+}
+.wa {
+    background: #ffb9b9 !important;
+}
+.tl {
+    background: #b9b9ff !important;
+}
