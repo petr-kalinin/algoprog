@@ -55,7 +55,7 @@ class FindMistakeListWithPaginator extends React.Component
     handlePageChange: (pageNumber) ->
         window.scrollTo(0, 0)
         @setState
-            order: pageNumber
+            activePage: pageNumber
 
     sortBy: (order) ->
         (e) =>
