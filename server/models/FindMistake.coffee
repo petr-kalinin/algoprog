@@ -9,9 +9,6 @@ DISPROVED = 1
 UNKNOWN = 0
 BAD = -1
 
-PER_PAGE = 20
-
-
 findMistakeSchema = new mongoose.Schema
     _id: String
     source: String
@@ -54,29 +51,6 @@ findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
         approved: APPROVED
         problem: problem
         user: {$ne: user}
-
-findMistakeSchema.statics.findApprovedByNotUser = (user, page) ->
-    FindMistake.find({
-        approved: APPROVED
-        user: {$ne: user}
-    }).sort({order: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
-
-findMistakeSchema.statics.findApprovedByNotUserAndProblem = (user, problem, page) ->
-    FindMistake.find({
-        approved: APPROVED
-        user: {$ne: user}
-        problem
-    }).sort({order: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
-
-findMistakeSchema.statics.findPagesCountForApprovedByNotUser = (user) ->
-    return 
-        pagesCount: Math.ceil(await FindMistake.find({approved: APPROVED, user: {$ne: user}}).countDocuments() / PER_PAGE)
-        perPage: PER_PAGE
-
-findMistakeSchema.statics.findPagesCountForApprovedByNotUserAndProblem = (user, problem) ->
-    return 
-        pagesCount: Math.ceil(await FindMistake.find({approved: APPROVED, user: {$ne: user}, problem}).countDocuments() / PER_PAGE)
-        perPage: PER_PAGE
 
 findMistakeSchema.statics.findOneNotApproved = () ->
     FindMistake.findOne

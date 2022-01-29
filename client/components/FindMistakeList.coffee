@@ -27,7 +27,7 @@ FindMistakeList = (props) ->
             href = "/findMistake/" + m._id
             if not m.allowed
                 href = undefined
-            cl = getClass(props.results?[m._id])
+            cl = getClass(m.result)
             <ListGroupItem key={m._id} onClick={if m.allowed then window?.goto?(href)} href={href} bsStyle={cl} disabled={!m.allowed}>
                 {m.fullProblem.name}{" "} 
                 ({m.fullProblem.level}, {m.language}){" "} 
@@ -40,7 +40,6 @@ options =
     urls: (props) ->
         return
             findMistakes: if props.problem then "findMistakeProblemList/#{props.myUser?._id}/#{props.problem}/#{props.page}" else "findMistakeList/#{props.myUser?._id}/#{props.page}?order=#{props.order}"
-            results: "userResultsForFindMistake/#{props.myUser?._id}"
 
 FindMistakeListConnected = withMyUser(ConnectedComponent(FindMistakeList, options))
 
