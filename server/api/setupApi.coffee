@@ -151,10 +151,12 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     update()  # do this async
     return undefined
 
-expandFindMistake = (mistake, admin, userKey) ->
+expandFindMistakeResult = (result, admin, userKey) ->
+    mistake = await FindMistake.findById(result.findMistake)
     allowed = await mistake.isAllowedForUser(userKey, admin)
     mistake = mistake.toObject()
     mistake.allowed = allowed
+    mistake.result = result.toObject()
     if not allowed
         mistake.allowed = false
         mistake.source = ""
@@ -604,14 +606,6 @@ export default setupApi = (app) ->
             json[r._id] = r
         res.json(json)
 
-    app.get '/api/userResultsForFindMistake/:userId', wrap (req, res) ->
-        results = (await Result.findByUserWithFindMistakeSet(req.params.userId))
-        json = {}
-        for r in results
-            r = r.toObject()
-            json[r.findMistake] = r
-        res.json(json)
-
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
         res.status(404).send("Not found")
         return
@@ -1016,41 +1010,22 @@ export default setupApi = (app) ->
         catch
             res.json({status: false})
 
-    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
-        allowed = false
-        user = null
-        if req.params.user == "undefined"
-            allowed = true
-        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
-            allowed = true
-            user = req.params.user
-        if not allowed
-            res.status(403).json({error: 'No permissions'})
-            return
-        mistakes = await FindMistake.findApprovedByNotUser(user, req.params.page)
-        mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, user)
-        mistakes = await awaitAll(mistakes)
-        mistakes = (m for m in mistakes when m)
-        res.json(mistakes)
-
     app.get '/api/findMistakePages/:user', wrap (req, res) ->
-        allowed = false
-        user = null
-        if req.params.user == "undefined"
-            allowed = true
-        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
-            allowed = true
-            user = req.params.user
-        res.json(await FindMistake.findPagesCountForApprovedByNotUser(user))
-
-    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
-        mistakes = await FindMistake.findApprovedByNotUserAndProblem(req.params.user, req.params.problem, req.params.page)
+        user = req.params.user
+        res.json(await Result.findPagesCountByUserWithFindMistakeSet(user))
+
+    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        user = req.params.user
+        order = req.query.order
+        mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page, order)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, req.params.user)
+            expandFindMistakeResult(mistake, req.user?.admin, user)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1059,11 +1034,28 @@ export default setupApi = (app) ->
         if not req.user?.userKey()
             res.status(403).send('No permissions')
             return
-        res.json(await FindMistake.findPagesCountForApprovedByNotUserAndProblem(req.params.user, req.params.problem))
+        user = req.params.user
+        res.json(await Result.findPagesCountByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem))
 
-    app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
-        mistake = await FindMistake.findById(req.params.id)
-        mistake = await expandFindMistake(mistake, req.user?.admin, req.user?.userKey())
+    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        user = req.params.user
+        mistakes = await Result.findPageByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem, req.params.page)
+        mistakes = mistakes.map (mistake) -> 
+            expandFindMistakeResult(mistake, req.user?.admin, req.params.user)
+        mistakes = await awaitAll(mistakes)
+        mistakes = (m for m in mistakes when m)
+        res.json(mistakes)
+
+    app.get '/api/findMistake/:id/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        user = req.params.user
+        mistake = await Result.findByUserAndFindMistake(user, req.params.id)
+        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user)
         res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
