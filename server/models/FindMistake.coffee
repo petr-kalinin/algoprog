@@ -46,6 +46,9 @@ findMistakeSchema.methods.isAllowedForUser = (userKey, admin) ->
         allowed = result && result.solved > 0    
     return allowed
 
+findMistakeSchema.statics.findByProblem = (problem) ->
+    FindMistake.find({problem: problem})
+
 findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
     FindMistake.find
         approved: APPROVED
@@ -59,8 +62,10 @@ findMistakeSchema.statics.findOneNotApproved = () ->
 findMistakeSchema.statics.findNotApprovedCount = () ->
     FindMistake.find({approved: UNKNOWN}).countDocuments()
 
+
 findMistakeSchema.index({ problem : 1, user: 1, order: 1 })
 findMistakeSchema.index({ approved : 1 })
+findMistakeSchema.index({ problem : 1 })
 
 FindMistake = mongoose.model('FindMistake', findMistakeSchema);
 

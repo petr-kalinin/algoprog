@@ -1,4 +1,7 @@
+import awaitAll from '../../client/lib/awaitAll'
+
 import logger from '../log'
+import FindMistake from '../models/FindMistake'
 import Material from '../models/Material'
 import Problem from '../models/problem'
 import Table from '../models/table'
@@ -83,6 +86,18 @@ class SaveProcessor
         delete material.treeTitle
         await (new Material(material)).upsert()
 
+class FindMistakeProcessor
+    process: (material) ->
+        if material.type != "problem"
+            return
+        mistakes = await FindMistake.findByProblem(material._id)
+        promises = []
+        for fm in mistakes
+            if fm.order == material.order
+                continue
+            fm.order = material.order
+            promises.push fm.update(fm)  # do not await
+        await awaitAll promises
 
 class ContestProcessor
     constructor: () ->
@@ -201,7 +216,8 @@ export default downloadMaterials = () ->
     saveProcessor = new SaveProcessor()
     treeProcessor = new TreeProcessor()
     contestProcessor = new ContestProcessor
-    context = new Context([saveProcessor, treeProcessor, contestProcessor])
+    fmProcessor = new FindMistakeProcessor
+    context = new Context([saveProcessor, treeProcessor, contestProcessor, fmProcessor])
 
     await root()().build(context, "")
 
