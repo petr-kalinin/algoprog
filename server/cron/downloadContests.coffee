@@ -89,7 +89,7 @@ class ContestDownloader
 
     run: ->
         logger.info "Downloading base contests"
-        @admin = await Informatics.getAdmin()
+        @admin = await (new Informatics).getAdmin()
         text = await @admin.download(@url)
         re = /<a class="aalink" onclick="" href="(https:\/\/informatics.msk.ru\/mod\/statements\/view.php\?id=(\d+))"><img src="[^"]*statements[^"]*" [^\/]*\/><span class="instancename">(([^:]*): [^<]*)<span/gm
         order = 0
@@ -108,7 +108,7 @@ class RegionContestDownloader extends ContestDownloader
 
     run: ->
         logger.info "Downloading #{@prefix} contests"
-        @admin = await Informatics.getAdmin()
+        @admin = await (new Informatics).getAdmin()
         levels = []
         promises = []
         for year, cont of @contests

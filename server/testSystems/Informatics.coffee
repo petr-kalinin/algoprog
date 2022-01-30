@@ -142,6 +142,9 @@ export default class Informatics extends TestSystem
             return undefined
         return LoggedInformaticsUser.getUser(admin.informaticsUsername, admin.informaticsPassword)
 
+    getAdmin: () ->
+        @_getAdmin()
+
     id: () ->
         return "informatics"
 
