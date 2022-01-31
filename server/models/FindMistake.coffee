@@ -19,6 +19,7 @@ findMistakeSchema = new mongoose.Schema
     language: String
     approved: { type: Number, default: UNKNOWN },
     order: String
+    othersCount: Number
 
 findMistakeSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -30,7 +31,8 @@ findMistakeSchema.methods.upsert = () ->
 findMistakeSchema.methods.setApprove = (approve) ->
     logger.info "Approve findMistake #{@_id} -> #{approve}"
     @approved = if approve then APPROVED else DISPROVED
-    @update(this)
+    await @update(this)
+    await FindMistake.updateOthersCount(@problem)
 
 findMistakeSchema.methods.setBad = () ->
     logger.info "Bad findMistake #{@_id}"
@@ -49,6 +51,11 @@ findMistakeSchema.methods.isAllowedForUser = (userKey, admin) ->
 findMistakeSchema.statics.findByProblem = (problem) ->
     FindMistake.find({problem: problem})
 
+findMistakeSchema.statics.findApprovedByProblem = (problem) ->
+    FindMistake.find
+        problem: problem
+        approved: APPROVED
+
 findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
     FindMistake.find
         approved: APPROVED
@@ -56,15 +63,18 @@ findMistakeSchema.statics.findApprovedByProblemAndNotUser = (problem, user) ->
         user: {$ne: user}
 
 findMistakeSchema.statics.findOneNotApproved = () ->
-    FindMistake.findOne
-        approved: UNKNOWN
+    FindMistake.find({approved: UNKNOWN}).sort({othersCount: 1}).limit(1)
 
 findMistakeSchema.statics.findNotApprovedCount = () ->
     FindMistake.find({approved: UNKNOWN}).countDocuments()
 
+findMistakeSchema.statics.updateOthersCount = (problem) ->
+    otherFmCount = await FindMistake.findApprovedByProblem(problem).countDocuments()
+    FindMistake.updateMany({problem}, { othersCount: otherFmCount });
+
 
 findMistakeSchema.index({ problem : 1, user: 1, order: 1 })
-findMistakeSchema.index({ approved : 1 })
+findMistakeSchema.index({ approved : 1, othersCount: 1 })
 findMistakeSchema.index({ problem : 1 })
 
 FindMistake = mongoose.model('FindMistake', findMistakeSchema);

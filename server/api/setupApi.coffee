@@ -1071,7 +1071,7 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         while true
-            mistake = await FindMistake.findOneNotApproved()
+            mistake = (await FindMistake.findOneNotApproved())[0]
             if not mistake
                 res.json({})
                 return
