@@ -201,7 +201,7 @@ SubmitActions = (props) ->
             </Col>
             }
             {
-            admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars/>
+            admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars admin={admin} handleReload={props.handleReload}/>
             }
         </div>}
         {props.result.findMistake && 
