@@ -37,7 +37,7 @@ class ApproveFindMistake extends React.Component
             if not @props.data.mistake
                 <div>Тут ничего нет</div>
             else
-                <SubmitListWithDiff submits={@props.data.submits} setApprove={@setApprove} SubmitComponent={SubmitComponent} PostSubmit={PostSubmit}/>
+                <SubmitListWithDiff submits={@props.data.submits} startWithDiff={true} setApprove={@setApprove} SubmitComponent={SubmitComponent} PostSubmit={PostSubmit}/>
             }
         </>
 
