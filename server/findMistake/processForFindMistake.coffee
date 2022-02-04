@@ -22,6 +22,7 @@ export default processForFindMistake = (submits) ->
                 continue
             if submit.language == currentOk.language and distance(submit.sourceRaw, currentOk.sourceRaw) < DISTANCE_THRESHOLD
                 problem = await Problem.findById(submit.problem)
+                otherFmCount = await FindMistake.findApprovedByProblem(submit.problem).countDocuments()
                 if not problem
                     continue
                 id = submit._id + "::" + currentOk._id
@@ -34,6 +35,7 @@ export default processForFindMistake = (submits) ->
                         problem: submit.problem
                         language: submit.language
                         order: problem.order
+                        othersCount: otherFmCount
                 oldData = await FindMistake.findById(id)
                 if oldData
                     findMistake.approved = oldData.approved

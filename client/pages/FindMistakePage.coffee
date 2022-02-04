@@ -7,6 +7,7 @@ import FindMistake from '../components/FindMistake'
 import Sceleton from '../components/Sceleton'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withMyUser from '../lib/withMyUser'
 
 class FindMistakePage extends React.Component
     constructor: (props) ->
@@ -21,6 +22,6 @@ class FindMistakePage extends React.Component
 
 options =
     urls: (props) ->
-        findMistake: "findMistake/#{props.match.params.id}"
+        findMistake: "findMistake/#{props.match.params.id}/#{props.myUser?._id}"
 
-export default ConnectedComponent(FindMistakePage, options)
+export default withMyUser(ConnectedComponent(FindMistakePage, options))

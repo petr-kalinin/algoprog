@@ -15,5 +15,5 @@ export default class FindMistakeListPage extends React.Component
             @props...,
             location: {title: "Найди ошибку", _id: "findMistake"},
         }
-        `<Sceleton {...sceletonProps}><FindMistakeList/></Sceleton>`
+        `<Sceleton {...sceletonProps}><FindMistakeList allowSort={true}/></Sceleton>`
 
