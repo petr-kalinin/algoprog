@@ -91,28 +91,6 @@ UnpaidWarning = (props) ->
         </Modal.Dialog>
     </div>
 
-DormantWarning = (props) ->
-    <div className="static-modal">
-        <Modal.Dialog>
-            <Modal.Header>
-                <Modal.Title>Учетная запись не активирована</Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-                <div>
-                    <p>Ваша учетная запись еще не активирована. Если вы хотите заниматься, напишите мне,
-                    чтобы я активировал вашу учетную запись. Мои контакты — на страничке
-                    {" "}<Link to="/material/about">О курсе</Link>.</p>
-                </div>
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button bsStyle="primary" onClick={props.handleClose}>OK</Button>
-            </Modal.Footer>
-
-        </Modal.Dialog>
-    </div>
-
 
 class TopPanel extends React.Component
     constructor: (props) ->
@@ -219,7 +197,7 @@ class TopPanel extends React.Component
                 </Navbar.Form>
             </Navbar>
             {
-            @props.myUser?.dormant && <DormantWarning handleClose={@props.logout}/>
+            @props.myUser?.dormant && <DeactivatedWarning handleClose={@props.logout}/>
             }
             {
             not @props.myUser?.dormant and @state.showWarning && <DeactivatedWarning handleClose={@closeWarning}/>
