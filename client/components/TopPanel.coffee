@@ -23,7 +23,7 @@ import TShirts from './TShirts'
 import UserName, {color} from './UserName'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
-import {getClassStartingFromJuly} from '..//lib/graduateYearToClass'
+import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import needDeactivatedWarning from '../lib/needDeactivatedWarning'
 
