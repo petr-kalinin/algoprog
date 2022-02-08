@@ -32,7 +32,7 @@ class ApproveFindMistake extends React.Component
 
     render: () ->
         <>
-            <div>Всего: {@props.data.count}</div>
+            <div>Всего: {@props.data.count} / Одобрено по этой задаче: {@props.data.mistake.othersCount}</div>
             {
             if not @props.data.mistake
                 <div>Тут ничего нет</div>
