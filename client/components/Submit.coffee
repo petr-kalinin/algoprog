@@ -99,7 +99,7 @@ export SubmitHeader = (props) ->
 getClassName = (status) ->
     switch status
         when "OK" then "success"
-        when "Превышен предел времени", "Превышено максимальное время работы" then "info"
+        when "Превышен предел времени", "Превышено максимальное время работы", "Превышено максимальное общее время работы" then "info"
         else styles.wa
 
 class TestResult extends React.Component
