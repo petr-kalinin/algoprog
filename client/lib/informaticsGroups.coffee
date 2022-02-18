@@ -1,5 +1,6 @@
 export GROUPS =
     lic40: "7248"
+    lic87: "7248"
     zaoch: "7247"
     unn: "111"
     notnnov: "8592"
