@@ -72,6 +72,7 @@ def find_checker(problem_path):
     assert False
 
 def copy_tests(problem_path, target_path, id, problem_doc):
+    name = problem_doc.find("name").get("value")
     script = problem_doc.find("judging").find("script").find("testset")
     target_problem_dir = target_path + "/problems/" + chr(ord('A') + id)
     target_tests_dir = target_problem_dir + "/tests/"
@@ -91,6 +92,21 @@ def copy_tests(problem_path, target_path, id, problem_doc):
     copyfile(checker, target_problem_dir + "/check" + checker_ext)
     for file in os.listdir("modules"):
         copyfile("modules/" + file, target_problem_dir + "/" + file)
+    statement = f"""<?xml version="1.0" encoding="utf-8" ?>
+<problem
+   package = "ru.ejudge.sample_contest"
+   id = "A"
+   type = "standard">
+  <statement language="ru_RU">
+    <title>{name}</title>
+    <description></description>
+  </statement>
+  <examples>
+  </examples>
+</problem>
+"""
+    with open(target_problem_dir + "/statement.xml", "w") as f:
+        f.write(statement)
 
 def process_problem(id, contest_xml, problem_id, target_path):
     problem_path = os.path.normpath(contest_xml + "/../tests/" + problem_id)
