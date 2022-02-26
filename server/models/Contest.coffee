@@ -10,6 +10,7 @@ contestsSchema = new mongoose.Schema
     length: Number
     freeze: Number
     order: Number
+    hasStatements: Boolean
 
 contestsSchema.methods.upsert = () ->
     try

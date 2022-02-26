@@ -26,6 +26,7 @@ Header = (props) ->
     <div>
         <h1>{props.contest.name}</h1>
         <ContestInfo {props...}/>
+        {props.contest.hasStatements && <p><a href={"/api/contestStatements/#{props.contest._id}"}>Условия в pdf</a></p>}
         <p><Link to="/monitor/#{props.contest._id}">Текущие результаты</Link></p>
     </div>
 

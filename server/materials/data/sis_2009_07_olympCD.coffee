@@ -12,4 +12,4 @@ export default contest("sis.2009.07.olympCD", "Двенадцатая между
             problem({testSystem: "ejudge", contest: "2006", problem: "8"}),
             problem({testSystem: "ejudge", contest: "2006", problem: "9"}),
             problem({testSystem: "ejudge", contest: "2006", problem: "10"}),
-    ], 180, 144)
+    ], 180, 144, true)

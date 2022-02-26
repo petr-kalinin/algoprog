@@ -9,6 +9,7 @@ FileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
+fs = require('fs')
 
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
@@ -435,6 +436,23 @@ export default setupApi = (app) ->
             contest.problems = []
         res.json(contest)
 
+    app.get '/api/contestStatements/:id', wrap (req, res) ->
+        contest = (await Contest.findById(req.params.id))?.toObject() || {}
+        if await getContestBlockedData(req.user?.userKey(), req.params.id)
+            res.status(403).send('No permissions')
+            return
+        if not contest.hasStatements
+            res.status(404).send('No statements')
+            return
+        fname = "server/statements/#{contest._id}.pdf"
+        console.log("Sending statements from #{fname}")
+        file = fs.createReadStream(fname)
+        stat = fs.statSync(fname)
+        res.setHeader('Content-Length', stat.size)
+        res.setHeader('Content-Type', 'application/pdf')
+        res.setHeader("Content-Disposition", "inline; filename=#{contest._id}.pdf")
+        file.pipe(res)        
+
     app.get '/api/problem/:contestId/:id', wrap (req, res) ->
         if await getContestBlockedData(req.user?.userKey(), req.params.contestId)
             res.json({blocked: true})
@@ -716,7 +734,6 @@ export default setupApi = (app) ->
         downloadSubmits.runAll()
         res.send('OK')
 
-
     app.get '/api/createTeam', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -764,6 +781,7 @@ export default setupApi = (app) ->
             else
                 logger.info("Registered user")
                 res.redirect("/user/#{username}")
+
     app.post '/api/informatics/userData', wrap (req, res) ->
         username = req.body.username
         password = req.body.password

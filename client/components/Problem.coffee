@@ -14,6 +14,7 @@ export default Problem = (props) ->
     testSystem = getTestSystem(props.material.testSystemData.system)
     <div>
         <EditablePage material={props.material} reloadMaterial={props.handleReload}/>
+        {props.contest.hasStatements && <p><a href={"/api/contestStatements/#{props.contest._id}"}>Условия в pdf</a></p>}
         {testSystem.problemLink(props.material)}
         {`<SubmitList {...props}/>`}
     </div>
