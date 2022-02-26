@@ -11,6 +11,7 @@ import os
 import zipfile
 import copy
 from collections import defaultdict
+import xml.etree.ElementTree as ET
 
 def parse_nnstuicpc(fname):
     doc = open(fname).read()
@@ -125,7 +126,26 @@ def parse_io(fname):
         teamName = teamName.replace('`', '')
         result.append((teamName, problemResults))
         print(teamName, problemResults)
-    return result    
+    return result
+
+def parse_ije(filename):
+    doc = ET.parse(filename).getroot().find("parties")
+    result = []
+    for party in doc:
+        name = party.get("name")
+        teamResult = []
+        for problem in party:
+            solved = int(problem.get("solved"))
+            if solved > 0:
+                solved = "+" + str(solved)
+            else:
+                solved = str(solved)
+            problem_res = [solved]
+            for submit in problem:
+                problem_res.append(int(submit.get("time")))
+            teamResult.append(problem_res)
+        result.append((name, teamResult))
+    return result
 
 def assign_runs_to_results(results, mintime, runs):
     for team, result in results:
@@ -281,7 +301,7 @@ def upload_submit(opener, result):
     assert data["imported"]
 
 def upload_result(opener, result):
-    print(result["user"] + " = " + result["virtualName"])
+    print(result["user"] + " = " + str(result))
     req = urllib.request.Request(server + "/api/importVirtualResult", json.dumps(result).encode("utf-8"))
     req.add_header('Content-type', 'application/json')
     r = opener.open(req)
@@ -293,9 +313,14 @@ def upload_result(opener, result):
     assert data == b'OK'
 
 def main():
-    results = parse_io(sys.argv[-1])
-    mintime, runs = load_io_runs(sys.argv[-1])
-    assign_runs_to_results(results, mintime, runs)
+    ##io
+    #results = parse_io(sys.argv[-1])
+    #mintime, runs = load_io_runs(sys.argv[-1])
+    #assign_runs_to_results(results, mintime, runs)
+
+    #ije
+    results = parse_ije(sys.argv[-1])
+
     pprint.pprint(results)
     if len(sys.argv) > 2:
         global server, login, password, contest_id, session_id
