@@ -273,7 +273,8 @@ export default class Ejudge extends TestSystem
         for tag in ["h3", "table"]
             els = el.getElementsByTagName(tag)
             lastEl = els[els.length - 1]
-            lastEl.parentElement.removeChild(lastEl)
+            if lastEl
+                lastEl.parentElement.removeChild(lastEl)
         els = el.getElementsByTagName("table")
         firstEl = els[0]
         firstEl?.parentElement?.removeChild(firstEl)
@@ -281,7 +282,7 @@ export default class Ejudge extends TestSystem
         header = headers[0]
         return {
             name: header.innerHTML
-            text: el.innerHTML
+            text: el?.innerHTML || ""
             isReview: isReview
         }
 
