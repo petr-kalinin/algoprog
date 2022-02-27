@@ -188,11 +188,13 @@ class TopPanel extends React.Component
                         </ButtonGroup>
                     else
                         <ButtonGroup>
+                            {###
                             <LinkContainer to="/register" isActive={() -> false}>
                                 <Button bsStyle="primary">
                                     <FontAwesome name="user-plus"/> Регистрация
                                 </Button>
                             </LinkContainer>
+                            ###}
                             <LinkContainer to="/login" isActive={() -> false}>
                                 <Button bsStyle="success">
                                     <FontAwesome name="sign-in"/> Вход
