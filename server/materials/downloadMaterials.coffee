@@ -219,14 +219,16 @@ export default downloadMaterials = () ->
         contestData = await contestFun()
         problems = []
         contest = await contestData.build(order)
+        idx = 0
         for problemFun, problemOrder in contestData.problems
             problemData = await problemFun()
-            problem = await problemData.build(problemOrder, contest)
+            problem = await problemData.build(idx, problemOrder, contest)
             await problem.upsert()
             problems.push
                 _id: problem._id
                 name: problem.name
                 letter: problem.letter
+            idx++
         contest.problems = problems
         await contest.upsert()
     logger.info "Done downloadMaterials"

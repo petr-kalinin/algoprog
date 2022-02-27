@@ -15,7 +15,7 @@ ProblemLine = (props) ->
         badge = props.contestSystem.problemBadge(props.result)
         style = props.contestSystem.problemStyle(props.result)
     <ListGroupItem onClick={window?.goto?(href)} href={href} bsStyle={style}>
-        {props.problem.name}
+        {props.problem.letter}. {props.problem.name}
         {badge && <Badge>{badge}</Badge>}
     </ListGroupItem>
 

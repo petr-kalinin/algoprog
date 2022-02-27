@@ -18,6 +18,7 @@ Problem = (props) ->
     testSystem = getTestSystem(props.material.testSystemData.system)
     <div>
         <ContestHeader {props...}/>
+        <h1>{props.problem.letter}. {props.problem.name}</h1>
         <EditablePage material={props.material} reloadMaterial={props.handleReload}/>
         {props.contest.hasStatements && <p><a href={"/api/contestStatements/#{props.contest._id}"}>Условия в pdf</a></p>}
         {testSystem.problemLink(props.material)}

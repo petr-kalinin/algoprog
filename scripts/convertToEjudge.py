@@ -101,8 +101,6 @@ def copy_tests(problem_path, target_path, id, problem_doc):
     <title>{name}</title>
     <description></description>
   </statement>
-  <examples>
-  </examples>
 </problem>
 """
     with open(target_problem_dir + "/statement.xml", "w") as f:

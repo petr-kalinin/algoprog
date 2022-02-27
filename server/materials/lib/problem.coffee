@@ -19,7 +19,7 @@ class Problem
         @id = id
         @testSystemData = testSystemObject.getProblemData(@options)
         @testSystemData.system = @testSystem
-        @letter = options.letter || options.problem || null
+        @letter = options.letter || null
 
     download: () ->
         testSystem = getTestSystem(@testSystem)
@@ -34,7 +34,7 @@ class Problem
         contests.push({_id: contest._id, name: contest.name, contestSystem: contest.contestSystemData.system})
         return contests
 
-    build: (order, contest) ->
+    build: (idx, order, contest) ->
         id = "p#{@id}"
         material = await ProblemModel.findById(id)
         if not material
@@ -52,7 +52,7 @@ class Problem
             contests: contests
             testSystemData: @testSystemData
             order: order   
-            letter: @letter     
+            letter: @letter || String.fromCharCode('A'.charCodeAt(0) + idx)
         return problem
 
 export default problem = (args...) -> () -> new Problem(args...)

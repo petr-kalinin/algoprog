@@ -280,6 +280,8 @@ export default class Ejudge extends TestSystem
         firstEl?.parentElement?.removeChild(firstEl)
         headers = el.getElementsByTagName("h3")
         header = headers[0]
+        name = header.innerHTML
+        header.parentElement.removeChild(header)
         return {
             name: header.innerHTML
             text: el?.innerHTML || ""
