@@ -13,4 +13,4 @@ export default c = contest("koshp.qual.2017", "Интернет-отбор на 
             problem({testSystem: "codeforces", contest: "gym/101609", problem: "I", name: "Пицца"})
             problem({testSystem: "codeforces", contest: "gym/101609", problem: "J", name: "Ретвинтим twinter"})
             problem({testSystem: "codeforces", contest: "gym/101609", problem: "K", name: "Дробление"})
-    ], 300, 240)
+    ], 300, 240, true)

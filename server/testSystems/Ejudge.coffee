@@ -259,6 +259,11 @@ export default class Ejudge extends TestSystem
 
     parseProblem: (admin, problemHref) ->
         page = await admin.download(problemHref)
+        if page.includes("Problem statement does not exist or invalid!")
+            return {
+                name: "???"
+                text: ""
+            }
         document = (new JSDOM(page, {url: problemHref})).window.document
         isReview = document.getElementsByClassName("review-theory")[0]?
         if isReview

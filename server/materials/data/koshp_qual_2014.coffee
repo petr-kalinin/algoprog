@@ -13,4 +13,4 @@ export default c = contest("koshp.qual.2014", "Интернет-отбор на 
             problem({testSystem: "ejudge", contest: "2005", problem: "9", letter: "I", id: "cgym100529pI", name: "Безопасный путь"})
             problem({testSystem: "ejudge", contest: "2005", problem: "10", letter: "J", id: "cgym100529pJ", name: "Преобразование последовательности"})
             problem({testSystem: "ejudge", contest: "2005", problem: "11", letter: "K", id: "cgym100529pK", name: "Крестики-нолики"})
-    ], 300, 240)
+    ], 300, 240, true)

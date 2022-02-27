@@ -38,11 +38,10 @@ export default ContestHeader = (props) ->
                     </Button>
                 </LinkContainer>
             )}
-            {props.contest.hasStatements && <LinkContainer to="/api/contestStatements/#{props.contest._id}">
-                <Button>
+            {props.contest.hasStatements && 
+                <Button href="/api/contestStatements/#{props.contest._id}">
                     Условия в pdf
                 </Button>
-            </LinkContainer>
             }
             <LinkContainer to="/monitor/#{props.contest._id}">
                 <Button>

@@ -264,8 +264,7 @@ export default class Codeforces extends TestSystem
         if not data or data.length == 0
             logger.warn("Can't find statement for problem " + href)
             name = options.name || "???"
-            name = "#{options.problem}. #{name}"
-            text = "<h1>#{name}</h1> <div>См. условие на codeforces:</div>"
+            text = "<div>См. условие на codeforces:</div>"
             return {name, text}
         data = data[0]
         nameEl = data.getElementsByClassName("title")[0]
@@ -275,9 +274,12 @@ export default class Codeforces extends TestSystem
         if not name
             logger.warn Error("Can't find name for problem " + href)
             name = "???"
+        else 
+            prefix = options.problem + ". "
+            if name.startsWith(prefix)
+                name = name.substr(prefix.length)
 
-        text = "<h1>" + name + "</h1>"
-        text += "<div class='codeforces-statement'>#{data.innerHTML}</div>"
+        text = "<div class='codeforces-statement'>#{data.innerHTML}</div>"
         text = text.replace(/\$\$\$/g, "$")
         return {name, text}
 

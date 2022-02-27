@@ -44,6 +44,7 @@ class Problem
             name = material.name
             text = material.text
             contests = material.contests
+        name = @options.name || name
         contests = @addContest(contest, contests)
         problem = new ProblemModel
             _id: id
