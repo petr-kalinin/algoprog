@@ -5,7 +5,7 @@ import getContestSystem from '../contestSystems/ContestSystemRegistry'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 
-import {ContestInfo} from './Contest'
+import ContestHeader from './ContestHeader'
 import globalStyles from './global.css'
 import styles from './Monitor.css'
 import userTableHeader from './UserTableHeader'
@@ -37,8 +37,8 @@ Row = (props) ->
 
 Table = (props) ->
     <div>
-        <h1>{props.contest.name}: Результаты</h1>
-        <ContestInfo {props...}/>
+        <ContestHeader {props...}/>
+        <h2>Текущие результаты</h2>
         <div className={globalStyles.mainTable_div}>
             <table className={globalStyles.mainTable}>
                 <tbody>
