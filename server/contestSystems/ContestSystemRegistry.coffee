@@ -5,7 +5,7 @@ import withLength from './lib/withLength'
 import Archive from './Archive'
 import Acm from './Acm'
 
-AcmVirtual = withLength(virtual(Acm))
+AcmVirtual = virtual(Acm)
 
 export REGISTRY = 
     "acm": new AcmVirtual()

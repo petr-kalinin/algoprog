@@ -865,6 +865,8 @@ export default setupApi = (app) ->
         virtualTime = new Date() - (myContestResults?.startTime || new Date(0))
         if contest.freeze and virtualTime < contest.length and virtualTime > contest.freeze
             virtualTime = contest.freeze
+        if virtualTime > contest.length
+            virtualTime = contest.length
         virtualResults = []
         for r in contestResults
             if not req.user?.admin or r.virtualId
