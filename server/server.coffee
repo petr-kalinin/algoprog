@@ -80,7 +80,7 @@ app.use renderOnServer(linkClientJsCss)
 port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000)
 
 start = () ->
-    #await downloadMaterials()
+    await downloadMaterials()
 
     app.listen port, () ->
         notify "Started"
