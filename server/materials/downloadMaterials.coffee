@@ -29,6 +29,7 @@ class Context
         return "#{pathItem}#{@pathToId[pathItem]}"
 
     pushPath: (id, order, title, type) ->
+        console.log "push", id, order, title, type
         @path.push
             _id: id
             title: title
@@ -36,6 +37,7 @@ class Context
             processor.pushPath?(id, order, title, type)
 
     popPath: (id) ->
+        console.log "pop", id
         @path.pop(id)
         for processor in @processors
             processor.popPath?(id)

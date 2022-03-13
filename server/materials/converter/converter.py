@@ -132,9 +132,9 @@ async def fix_topics(materials, file):
 
 async def convert_level_like(id, data):
     idfn = id_to_filename(id)
-    if id == "tables":
+    if id in ["tables", "!tables"]:
         return None, None
-    if id == "0":
+    if id == "-1":
         id = "about"
         idfn = "about"
     if id == "main":
@@ -233,17 +233,19 @@ async def convert_comments():
 
 async def convert_material(id, file):
     data = await download(id)
-    pprint(data)
+    #pprint(data)
     if data["_id"] == "news":
         return await convert_news(id, data)
     elif data["type"] in ["level", "main"]:
         return await convert_level_like(id, data)
     elif data["type"] == "label":
         return await convert_label(id, data)
-    elif data["type"] in ["link", "image"]:
+    elif data["type"] in ["link", "image", "pdf"]:
         return await convert_link(id, data)
     elif data["type"] in ["page", "epigraph"]:
         return await convert_page_like(id, data, file)
+    elif data["type"] in ["table"]:
+        return None, None
     else:
         print("Unknown material type {}, {}".format(data["_id"], data["type"]))
         return None, None
