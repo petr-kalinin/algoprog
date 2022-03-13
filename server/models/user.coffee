@@ -127,15 +127,14 @@ usersSchema.methods.setGraduateYear = (graduateYear) ->
 
 usersSchema.methods.setLevel = (level) ->
     await @update({$set: {"level.current": level}})
-    
+    @level.base = level
+    await @updateLevel()
+    @updateRatingEtc()
+
 usersSchema.methods.updateName = (name) ->
     logger.info "Set name for user", @_id,": old name " ,@name,", new name " ,name
     await @update({$set: {"name": name}})
     @name = name
-
-    @level.base = level
-    await @updateLevel()
-    @updateRatingEtc()
 
 usersSchema.methods.setCfLogin = (cfLogin) ->
     logger.info "setting cf login ", @_id, cfLogin
