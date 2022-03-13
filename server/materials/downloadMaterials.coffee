@@ -153,7 +153,7 @@ class ContestProcessor
                 return
             @tables[id] = new Table
                 _id: id
-                name: @level() + ": " + (material.treeTitle || material.title)
+                name: (material.treeTitle || material.title)
                 problems: problemIds
                 parent: @level()
                 order: material.order

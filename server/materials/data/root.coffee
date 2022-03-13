@@ -7,6 +7,7 @@ import level_about from "./level_about"
 import level_reg from "./level_reg"
 import level_roi from "./level_roi"
 import allNews from "./news"
+import tables from "./tables"
 
 export default root = () ->
     return main([
@@ -18,4 +19,5 @@ export default root = () ->
         level_2(),
         level_reg(),
         level_roi(),
+        tables()
     ])
