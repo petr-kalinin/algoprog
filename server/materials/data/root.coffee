@@ -1,5 +1,5 @@
-import link from "../../lib/link"
-import main from "../../lib/main"
+import link from "../lib/link"
+import main from "../lib/main"
 import level_0 from "./level_0"
 import level_1 from "./level_1"
 import level_2 from "./level_2"
@@ -14,8 +14,8 @@ export default root = () ->
         allNews(),
         link("/comments", "Комментарии"),
         level_0(),
-        level_2(),
         level_1(),
+        level_2(),
         level_reg(),
         level_roi(),
     ])

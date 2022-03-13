@@ -1,5 +1,5 @@
-import label from "../../lib/label"
-import level from "../../lib/level"
+import label from "../lib/label"
+import level from "../lib/level"
 import level_1A from "./level_1A"
 import level_1B from "./level_1B"
 import level_1C from "./level_1C"

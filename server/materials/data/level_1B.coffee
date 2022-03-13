@@ -1,8 +1,8 @@
-import contest from "../../lib/contest"
-import label from "../../lib/label"
-import level from "../../lib/level"
-import link from "../../lib/link"
-import problem from "../../lib/problem"
+import contest from "../lib/contest"
+import label from "../lib/label"
+import level from "../lib/level"
+import link from "../lib/link"
+import problem from "../lib/problem"
 
 contest_42811 = () ->
     return contest("1B: Квадратичные сортировки ", [

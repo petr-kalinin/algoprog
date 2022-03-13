@@ -1,5 +1,5 @@
-import news from "../../lib/news"
-import newsItem from "../../lib/newsItem"
+import news from "../lib/news"
+import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([

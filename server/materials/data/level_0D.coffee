@@ -1,7 +1,7 @@
-import contest from "../../lib/contest"
-import label from "../../lib/label"
-import level from "../../lib/level"
-import problem from "../../lib/problem"
+import contest from "../lib/contest"
+import label from "../lib/label"
+import level from "../lib/level"
+import problem from "../lib/problem"
 
 contest_53130 = () ->
     return contest("0D: Строки #2", [

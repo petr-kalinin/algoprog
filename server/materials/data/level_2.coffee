@@ -1,5 +1,5 @@
-import label from "../../lib/label"
-import level from "../../lib/level"
+import label from "../lib/label"
+import level from "../lib/level"
 import level_2A from "./level_2A"
 
 export default level_2 = () ->

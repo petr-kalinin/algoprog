@@ -1,5 +1,5 @@
-import label from "../../lib/label"
-import level from "../../lib/level"
+import label from "../lib/label"
+import level from "../lib/level"
 
 export default level_about = () ->
     return level("about", "О курсе", [
