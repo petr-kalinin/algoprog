@@ -5,6 +5,8 @@ import json
 import os
 import re
 import shutil
+import sys
+from pprint import pprint
 
 
 SESSION = None
@@ -44,7 +46,7 @@ def lib_import(fn):
 
 
 async def download(id):
-    url = 'https://algoprog.ru/api/material/{}'.format(id)
+    url = 'https://adina.algoprog.ru/api/material/{}'.format(id)
     async with SESSION.get(url) as resp:
         return json.loads(await resp.text())
 
@@ -231,6 +233,7 @@ async def convert_comments():
 
 async def convert_material(id, file):
     data = await download(id)
+    pprint(data)
     if data["_id"] == "news":
         return await convert_news(id, data)
     elif data["type"] in ["level", "main"]:
@@ -251,6 +254,7 @@ async def main():
     shutil.rmtree("generated")
     os.mkdir("generated")
     async with aiohttp.ClientSession() as session:
+        await session.post('https://adina.algoprog.ru/api/login', json={"username": sys.argv[1], "password": sys.argv[2]})
         SESSION = session
         await convert_material("main", None)
 
