@@ -181,7 +181,9 @@ class TopPanel extends React.Component
                                         <span className={styles.separator}/>
                                     </span>}
                                 <span className={styles.separator}/>
+                                {###
                                 <TShirts user={@props.myUser} hideGot={true} title="У вас есть неполученные футболки. Напишите мне, чтобы их получить." onClick={(n)->window?.goto?("/material/tshirts")}/>
+                                ###}
                                 {needDeactivatedWarning(@props.myUser, @props.me) &&
                                     <span title="Учетная запись не активирована, напишите мне" className={"text-danger " + styles.warning} onClick={@openWarning}><FontAwesome name="exclamation-triangle"/></span>}
                                 {needUnpaidWarning(@props.myUser) &&

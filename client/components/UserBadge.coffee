@@ -27,7 +27,9 @@ export default class UserBadge extends React.Component
                 <UserName user={@props.user} noachieves={true}/>
             </h1>
             <BigAchieves achieves = {@props.user.achieves} />
+            {###
             <h2><TShirts user={@props.user} onClick={@props.onTShirtsClick}/></h2>
+            ###}
             <blockquote>
                 {cls && <div>Класс: {cls}</div>}
                 <div>Уровень: {@props.user.level?.current || "—"}</div>
