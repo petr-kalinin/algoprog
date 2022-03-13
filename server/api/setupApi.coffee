@@ -913,6 +913,7 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.get '/api/downloadMaterials', ensureLoggedIn, wrap (req, res) ->
+        return
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
@@ -927,6 +928,7 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.get '/api/downloadContests', ensureLoggedIn, wrap (req, res) ->
+        return
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
