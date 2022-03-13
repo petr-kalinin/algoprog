@@ -100,6 +100,8 @@ TotalResult = (props) ->
     style = globalStyles.mainTable_td
     title = ""
     if not props.header
+        if not props.result
+            return "??"
         s = totalResultClass(props.result)
         if s
             style += " " + styles[s]

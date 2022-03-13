@@ -38,7 +38,7 @@ EJUDGE_STATUS_TO_OUTCOME =
 
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
-    constructor: (@adminUser, @baseUrl, @admin, @userId) ->
+    constructor: (@adminUser, @baseUrl, @admin, @userId, @realUserId) ->
         super()
 
     AC: 'Зачтено/Принято'
@@ -122,7 +122,7 @@ export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloa
         rowI = 0
         for row in data
             rowI++
-            uid = row.user?.id || @userId
+            uid = @realUserId || row.user?.id || @userId
             name = "not used"
             pid = row.problem.id
             runid = row.id + "p" + pid

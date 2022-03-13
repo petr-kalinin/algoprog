@@ -1,3 +1,21 @@
 .textAdd {
     font-size: 10;
 }
+.solvedByWeek:fullscreen {
+    padding-left: 10px;
+}
+.solvedByWeek:-webkit-full-screen {
+    padding-left: 10px;
+}
+.solvedByWeekDark:fullscreen {
+    padding-left: 10px;
+}
+.solvedByWeekDark:-webkit-full-screen {
+    padding-left: 10px;
+}
+.solvedByWeek {
+    background: white;
+}
+.solvedByWeekDark {
+    background: #182121;
+}

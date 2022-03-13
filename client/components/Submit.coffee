@@ -1,6 +1,5 @@
 React = require('react')
 moment = require('moment')
-iconv = require('iconv-lite')
 FontAwesome = require('react-fontawesome')
 
 import Button from 'react-bootstrap/lib/Button'
@@ -12,9 +11,11 @@ import Grid from 'react-bootstrap/lib/Grid'
 import Col from 'react-bootstrap/lib/Col'
 
 import {Link} from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap'
 
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import outcomeToText from '../lib/outcomeToText'
+import toUtf8 from '../lib/toUtf8'
 
 import {DiffEditor} from './Editor'
 import UserName from './UserName'
@@ -41,14 +42,6 @@ langClass = (lang) ->
             return style
     return ""
 
-convert = (source, encoding) ->
-    if not source
-        return ""
-    buf = Buffer.from(source, "latin1")
-    return iconv.decode(buf, encoding)
-
-ENCODINGS = ["utf8", "win1251", "cp866"]
-
 Comment = (props) ->
     if props.comment.text
         text = "#{props.comment.text}\n-- #{props.comment.reviewer}"
@@ -60,20 +53,22 @@ export class SubmitSource extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            encoding: ENCODINGS[0]
-        @setEncoding = @setEncoding.bind this
+            copied: false
+        @copy = @copy.bind this
 
-    setEncoding: (encoding) ->
+    copy: () ->
         (e) =>
-            e.preventDefault()
+            navigator.clipboard.writeText @props.submit.sourceRaw
             @setState
-                encoding: encoding
+                copied: true
 
     componentDidMount: ->
         @doHighlight()
 
     componentDidUpdate:  (prevProps, prevState) ->
-        if @props.submit._id != prevProps.submit._id or prevState.encoding != @state.encoding
+        if @props.submit._id != prevProps.submit._id
+            @state =
+                copied: false
             @doHighlight()
 
     doHighlight: ->
@@ -81,18 +76,19 @@ export class SubmitSource extends React.Component
             hljs.highlightBlock(el)
 
     render: () ->
+        copyClass = if @state.copied then "success" else "default"
+        copyText = if @state.copied then "Скопировано" else "Скопировать"
+        source = toUtf8(@props.submit.source)
         <div>
-            <pre dangerouslySetInnerHTML={{__html: convert(@props.submit.source, @state.encoding)}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
-            Кодировка:{" "}
+            <pre dangerouslySetInnerHTML={{__html: source}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
             <ButtonGroup>
-                {
-                ENCODINGS.map (encoding) =>
-                    <Button active={encoding==@state.encoding} onClick={@setEncoding(encoding)} key={encoding}>
-                        {encoding}
+                <Button bsStyle={copyClass} bsSize="xsmall" onClick={@copy()}>{copyText}</Button>
+                <LinkContainer to={"/api/submitSource/#{@props.submit._id}"}>
+                    <Button bsStyle="default" bsSize="xsmall">
+                        Скачать
                     </Button>
-                }
+                </LinkContainer>
             </ButtonGroup>
-            <div><a href={"/api/submitSource/#{@props.submit._id}"}>Скачать</a></div>
         </div>
 
 export SubmitHeader = (props) ->
@@ -106,6 +102,12 @@ export SubmitHeader = (props) ->
         </h1>
         <h4>{props.submit.fullProblem.tables.join("\n")}</h4>
     </div>
+
+getClassName = (status) ->
+    switch status
+        when "OK" then "success"
+        when "Превышен предел времени", "Превышено максимальное время работы", "Превышено максимальное общее время работы" then "info"
+        else styles.wa
 
 class TestResult extends React.Component
     constructor: (props) ->
@@ -121,11 +123,15 @@ class TestResult extends React.Component
     render: () ->
         canToggle = "input" of @props.result
         res = []
-        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1">
+        status = @props.result.string_status
+        if @props.result.checker_output
+            status = @props.result.checker_output.substr(0, 70)
+        classname = getClassName(@props.result.string_status)
+        res.push <tr className={if canToggle then styles.toggling else ""} onClick={@toggle} key="1" width="100%" className={classname} title={@props.result.string_status}>
             <td>{@props.index}{" "}
                 {@props.copyTest && <span onClick={@props.copyTest(@props.result)}><FontAwesome name="chevron-circle-down"/></span>}
             </td>
-            <td>{@props.result.string_status}</td>
+            <td className={styles.status}><span>{status}</span></td>
             <td>{@props.result.time/1000}</td>
             <td>{@props.result.max_memory_used}</td>
         </tr>

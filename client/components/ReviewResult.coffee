@@ -68,8 +68,8 @@ export class SubmitListWithDiff extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
-            currentDiff: [undefined, undefined]
+            currentSubmit: if @props.submits and not @props.startWithDiff then @props.submits[@props.submits.length - 1] else null
+            currentDiff: if @props.submits and @props.startWithDiff then [@props.submits[1], @props.submits[0]] else [undefined, undefined]
         @props.setCurrentSubmit?(@state.currentSubmit)
         @setCurrentSubmit = @setCurrentSubmit.bind this
         @setCurrentDiff = @setCurrentDiff.bind this
@@ -77,8 +77,8 @@ export class SubmitListWithDiff extends React.Component
     componentDidUpdate: (prevProps, prevState) ->
         if !submitListEquals(prevProps.submits, @props.submits)
             @setState
-                currentSubmit: if @props.submits then @props.submits[@props.submits.length - 1] else null
-                currentDiff: [undefined, undefined]
+                currentSubmit: if @props.submits and not @props.startWithDiff then @props.submits[@props.submits.length - 1] else null
+                currentDiff: if @props.submits and @props.startWithDiff then [@props.submits[1], @props.submits[0]] else [undefined, undefined]
             @props.setCurrentSubmit?(@state.currentSubmit)
         else
             newState =
@@ -202,7 +202,7 @@ SubmitActions = (props) ->
             </Col>
             }
             {
-            admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars/>
+            admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars admin={admin} handleReload={props.handleReload}/>
             }
         </div>}
         {props.result.findMistake && 

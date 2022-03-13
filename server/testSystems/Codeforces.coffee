@@ -154,6 +154,7 @@ export class LoggedCodeforcesUser
         if not options
             options = {}
         options.maxAttempts = 1
+        options.timeout = 30 * 1000
         try
             result = await download(href, @jar, options)
         finally
@@ -169,10 +170,12 @@ export class LoggedCodeforcesUser
     submitWithObject: (problemId, data) ->
         {contest, problem} = data.testSystemData
         if contest.startsWith("gym")
-            href = "#{BASE_URL}/#{contest}/problem/#{problem}?csrf_token=#{csrf}"
+            href = "#{BASE_URL}/#{contest}/submit"
+            csrfHref = "#{BASE_URL}/#{contest}"
         else
             href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
-        page = await @download(href)
+            csrfHref = href
+        page = await @download(csrfHref)
         csrf = @_getCsrf(page)
         data = {
                 csrf_token: csrf
@@ -214,21 +217,33 @@ export default class Codeforces extends TestSystem
         return "codeforces"
 
     submitDownloader: (registeredUser, problem, submitsPerPage) ->
-        username = registeredUser.codeforcesUsername
+        member = await @getMemberFromTeam(registeredUser)
+        username = member.codeforcesUsername
         contest = problem.testSystemData.contest
         cproblem = problem.testSystemData.problem
-        loggedUser = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
+        loggedUser = await LoggedCodeforcesUser.getUser(member.codeforcesUsername, member.codeforcesPassword)
         return new CodeforcesSubmitDownloader(BASE_URL, username, contest, cproblem, registeredUser.userKey(), problem._id, loggedUser)
 
     submitNeedsFormData: () ->
         false
 
+    getMemberFromTeam: (registeredUser) ->
+        if registeredUser.codeforcesUsername
+            return registeredUser
+        fullUser = await User.findById(registeredUser.userKey())
+        for m in fullUser.members
+            member = await RegisteredUser.findByKeyWithPassword(m)
+            if member?.codeforcesUsername
+                return member
+        throw "Can't find user with required data"
+
     submitWithObject: (registeredUser, problemId, data) ->
+        member = await @getMemberFromTeam(registeredUser)
         {contest, problem} = data.testSystemData
-        logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{registeredUser.codeforcesUsername} #{problemId} #{contest} #{problem}"
-        if not registeredUser.codeforcesUsername
+        logger.info "Try submit #{registeredUser.username}, #{registeredUser.userKey()} #{member.codeforcesUsername} #{problemId} #{contest} #{problem}"
+        if not member.codeforcesUsername
             throw "No codeforces username given"
-        codeforcesUser = await LoggedCodeforcesUser.getUser(registeredUser.codeforcesUsername, registeredUser.codeforcesPassword)
+        codeforcesUser = await LoggedCodeforcesUser.getUser(member.codeforcesUsername, member.codeforcesPassword)
         await codeforcesUser.submitWithObject(problem, data)
 
     registerUser: (user) ->
@@ -239,7 +254,7 @@ export default class Codeforces extends TestSystem
 
     downloadProblem: (options) ->
         if options.contest.startsWith("gym")
-            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}"
+            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}?locale=ru"
         else
             href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
         page = await downloadLimited(href, {timeout: 15 * 1000})
@@ -247,7 +262,9 @@ export default class Codeforces extends TestSystem
         data = document.getElementsByClassName("problem-statement")
         if not data or data.length == 0
             logger.warn("Can't find statement for problem " + href)
-            return {"???", "???"}
+            name = options.name || "???"
+            text = "<h1>#{name}</h1> <div>См. условие на codeforces:</div>"
+            return {name, text}
         data = data[0]
         nameEl = data.getElementsByClassName("title")[0]
         # Drop leading letter, dot and space

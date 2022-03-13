@@ -24,8 +24,8 @@ export default class Ejudge extends TestSystem
         href = "https://codeforces.com/submissions/#{submit.testSystemData.username}/contest/#{submit.testSystemData.contest}"
         <p><a href={href}>Попытки в контесте на codeforces</a></p>
 
-    blockSubmission: (material, me) ->
-        if me?.codeforcesUsername
+    blockSubmission: (material, me, myUser) ->
+        if me?.codeforcesUsername || myUser?.memberHasCf
             return null 
         return <Alert bsStyle="danger">
                     Это задача с <a href="https://codeforces.com">Codeforces</a>. Чтобы сдавать ее, зарегистрируйтесь на Codeforces и укажите данные аккаунта (логин и пароль) в <Link to="/user/#{me.informaticsId}">своем профиле</Link>.

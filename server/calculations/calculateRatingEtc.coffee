@@ -5,8 +5,16 @@ import logger from '../log'
 
 import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK, FM_CONST} from './ratingConstants'
 
+DEBUG_USER_ID = "-------"
+
 export levelVersion = (level) ->
-    if (level.slice(0,3) == "reg")
+    if (level.slice(0,3) == "sch")
+        major = 1
+        minor = 'В'
+    else if (level.slice(0,4) == "nnoi")
+        major = 2
+        minor = 'Б'
+    else if (level.slice(0,3) == "reg")
         major = 3
         minor = 'А'
     else if (level.slice(0,3) == "roi")
@@ -15,6 +23,8 @@ export levelVersion = (level) ->
     else
         major = parseInt(level.slice(0, -1))
         minor = level[level.length - 1]
+    if isNaN(major)
+        throw new Error("Can't parse level " + level)
     return {
         major: major,
         minor: minor
@@ -87,6 +97,8 @@ export default calculateRatingEtc = (user) ->
         if r.solved == 1 
             inc(weekSolved, week)
             rating += levelScore(level)
+            if user._id == DEBUG_USER_ID
+                console.log "add rating 1 ", r.table, level, levelScore(level), rating
             activity += activityScore(level, r.lastSubmitTime)
             probSolved[r.table] = true
         else if r.solved < 0  # DQ
@@ -103,6 +115,8 @@ export default calculateRatingEtc = (user) ->
         week = weekByTime(r.lastSubmitTime)
         if r.solved == 1 or r.ok == 1
             rating += levelScore(level) * FM_CONST
+            if user._id == DEBUG_USER_ID
+                console.log "add rating 2 ", r.table, level, levelScore(level), rating
             activity += activityScore(level, r.lastSubmitTime) * FM_CONST
 
     ###
@@ -113,6 +127,8 @@ export default calculateRatingEtc = (user) ->
             if probSolved[prob._id]
                 continue
             rating += levelScore(level)
+            if user._id == DEBUG_USER_ID
+                console.log "add rating 3 ", prob._id, level, levelScore(level), rating
     ###
 
     for week of wasSubmits
@@ -125,6 +141,9 @@ export default calculateRatingEtc = (user) ->
     for w of weekOk
         if w<firstWeek
             delete weekOk[w]
+
+    if user._id == DEBUG_USER_ID
+        console.log "activity=", activity, "rating=", rating
 
     activity *= (1 - WEEK_ACTIVITY_EXP) # make this averaged
     return {

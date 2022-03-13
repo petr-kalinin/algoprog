@@ -65,12 +65,14 @@ export default class EditingUserForAdmin extends React.Component
         @handleAchievesChange = @handleAchievesChange.bind(this)
         @handleMembersChange = @handleMembersChange.bind(this)
         @handlePasswordChange = @handlePasswordChange.bind(this)
+        @handleNameChange = @handleNameChange.bind(this)
         @handleSubmit = @handleSubmit.bind(this)
         @handleKeyPressed = @handleKeyPressed.bind(this)
         @updateResults = @updateResults.bind(this)
 
     startState: (props) ->
         return
+            name: props.user.name || ''
             graduateYear: props.user.graduateYear || '',
             baseLevel: props.user.level.current || '',
             cfLogin: props.user.cf?.login || '',
@@ -112,11 +114,15 @@ export default class EditingUserForAdmin extends React.Component
     handleMembersChange: (event) ->
         @handleChange("members", event)
 
+    handleNameChange: (event) ->
+        @handleChange("name", event)
+
     handlePasswordChange: (event) ->
         @handleChange("password", event)
 
     handleSubmit: (event) ->
         await callApi('user/' + @props.user._id + '/setAdmin',
+            name: @state.name
             graduateYear: @state.graduateYear
             level:
                 current: @state.baseLevel
@@ -141,6 +147,15 @@ export default class EditingUserForAdmin extends React.Component
     render: () ->
         <div>
             <form className={styles.form} onSubmit={@handleSubmit}>
+                <div>
+                    Имя: <input
+                        type="text"
+                        name="name"
+                        value={@state.name}
+                        size="30"
+                        onChange={@handleNameChange}
+                        onKeyPress={@handleKeyPressed} />
+                </div>
                 <div>
                     Год выпуска: <input
                         type="text"

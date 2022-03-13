@@ -153,7 +153,7 @@ export default class Ejudge extends TestSystem
         logger.info "Try register user #{registeredUser.informaticsUsername}"
         adminUser = await @getAdmin(@baseContest)
 
-        registeredUser.ejudgeUsername = registeredUser.informaticsUsername
+        registeredUser.ejudgeUsername = registeredUser.informaticsUsername || registeredUser.username
         registeredUser.ejudgePassword = Math.random().toString(36).substr(2)
 
         href = "#{@server}/cgi-bin/serve-control"

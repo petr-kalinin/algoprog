@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 import outcomeToText from '../lib/outcomeToText'
+import toUtf8 from '../lib/toUtf8'
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
@@ -77,7 +78,7 @@ class SubmitList extends React.Component
             return null
         ###
         testSystem = getTestSystem(@props.material.testSystemData.system)
-        blockedByTestSystem = testSystem.blockSubmission(@props.material, @props.me)
+        blockedByTestSystem = testSystem.blockSubmission(@props.material, @props.me, @props.myUser)
         if blockedByTestSystem
             return blockedByTestSystem
         ###
@@ -105,7 +106,7 @@ class SubmitList extends React.Component
                 startLanguage={@props.startLanguage || (@props.data?.length && @props.data[@props.data.length-1].language) }
                 editorOn={@props.editorOn}
                 editorDidMount={@props.editorDidMount}
-                editorValue={@props.data?.length && @props.data[@props.data.length-1].sourceRaw || @props.defaultSource}/>
+                editorValue={@props.data?.length && toUtf8(@props.data[@props.data.length-1].sourceRaw || "") || @props.defaultSource}/>
             {
             if @state.openSubmit?._id
                 <OpenSubmit submit={@state.openSubmit} close={@closeSubmit}/>

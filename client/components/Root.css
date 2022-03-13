@@ -1,5 +1,7 @@
+@media (min-width: 767px) {
 .mainHeader {
     font-size: 150%;
+}
 }
 .item {
     text-align: center;

@@ -34,6 +34,7 @@ usersSchema = new mongoose.Schema
     activated: Boolean,
     chocos: [Number],
     chocosGot: [Number],
+    tshirtsGot: Number,
     level:
         current: String,
         start: String,
@@ -159,6 +160,11 @@ usersSchema.methods.setChocosGot = (chocosGot) ->
     logger.info "setting chocosGot ", @_id, chocosGot 
     await @update({$set: {"chocosGot": chocosGot}})
     @chocosGot = chocosGot
+
+usersSchema.methods.setTShirtsGot = (cnt) ->
+    logger.info "setting tshirtsGot ", @_id, cnt
+    await @update({$set: {"tshirtsGot": cnt}})
+    @tshirtsGot = cnt
 
 usersSchema.methods.setUserList = (userList) ->
     logger.info "setting userList ", @_id, userList
@@ -303,8 +309,11 @@ usersSchema.statics.updateAllCf = () ->
     logger.info "Updating cf ratings"
     for u in await User.findAll()
         if u.cf.login
-            if await u.updateCfRating()
-                await User.updateUser(u._id, {})
+            try
+                if await u.updateCfRating()
+                    await User.updateUser(u._id, {})
+            catch e
+                logger.warn("Error while updating cf: ", e.message || e, e.stack)
             await sleep(500)  # don't hit CF request limit
     logger.info "Updated cf ratings"
 
@@ -316,6 +325,21 @@ usersSchema.statics.updateAllGraduateYears = () ->
             promises.push(u.updateGraduateYear())
     await awaitAll promises
     logger.info "Updated graduateYear"
+
+usersSchema.statics.makeTeamName = (name, members) ->
+    if members.length == 0
+        return name
+    name = name.split(":")[0]
+    memberNames = []
+    for m in members
+        memberUser = await User.findById(m)
+        names = memberUser.name.split(" ")
+        memberNames.push names[names.length - 1]
+    memberNames.sort()
+    name += ": " + memberNames.join(", ")
+    now = new Date() 
+    name += " (" + new Date(now - 9 * 30 * 24 * 60 * 60 * 1000).getFullYear() + ")"
+    return name
 
 usersSchema.index
     dormant: 1

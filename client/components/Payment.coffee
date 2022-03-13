@@ -44,7 +44,7 @@ export default class Payment extends React.Component
                     Форма ниже приведена для примера.
                 </Alert>
             canSubmit = false
-        else if @props.myUser.userList in ["lic40", "lic87", "zaoch", "graduated", "sbory"] or @props.myUser.price == 0
+        else if @props.myUser.userList in ["lic40", "zaoch", "unn", "graduated", "team", "ikhlyustov", "lic87"] or @props.myUser.price == 0
             amount = 0
             warning = <Alert bsStyle="danger">
                     Занятия для вас бесплатны, вам не надо их оплачивать.
@@ -115,7 +115,7 @@ export default class Payment extends React.Component
             </form>
             <h2>Официальная часть</h2>
             <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064. 
-            Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/0">О курсе</Link>.)</p>
+            Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
 
             <p>Платежи осуществляются через Тинькофф Банк. Принимаются карты любых банков.</p>
             <img height="30px" src="/tinkoff.png" style={{marginRight: "15px"}}/>

@@ -1,7 +1,7 @@
 export default parseLevel = (level) ->
-    for reg in ["reg", "roi"]
+    for reg in ["sch", "nnoi", "reg", "roi"]
         if level.substr(0,3) == reg
-            if level.length == 3
+            if level == reg 
                 res = { major: reg }
             else
                 res = { major: reg, minor: level.substr(3) }

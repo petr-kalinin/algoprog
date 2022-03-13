@@ -64,7 +64,7 @@ submitsSchema.methods.equivalent = (other) ->
         return false
     if @outcome == "AC" or @outcome == "IG" or @outcome == "DQ"
         return false
-    if other.outcome == "DP"
+    if other.outcome == "DP" or other.outcome == "PW"
         return false
     if @force
         return false

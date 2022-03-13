@@ -57,7 +57,7 @@ import UserPrivate from '../models/UserPrivate'
 
 import {addMongooseCallback} from '../mongo/MongooseCallbackManager'
 
-import getTestSystem from '../testSystems/TestSystemRegistry'
+import getTestSystem, {REGISTRY} from '../testSystems/TestSystemRegistry'
 import {LoggedCodeforcesUser} from '../testSystems/Codeforces'
 
 import logger from '../log'
@@ -120,7 +120,7 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     if not draft
         allSubmits = await Submit.findByUserAndProblemWithFindMistakeAny(userId, problemId)
         for s in allSubmits
-            if s.outcome != "DR" and s.source == code
+            if s.outcome != "DR" and s.outcome != "PW" and s.source == code
                 throw "duplicate"
     problem = await Problem.findById(problemId)
     if not problem
@@ -152,15 +152,12 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     update()  # do this async
     return undefined
 
-expandFindMistake = (mistake, admin, userKey) ->
-    allowed = false
-    if admin 
-        allowed = true
-    else if userKey
-        result = await Result.findByUserAndTable(userKey, mistake.problem)
-        allowed = result && result.solved > 0
+expandFindMistakeResult = (result, admin, userKey) ->
+    mistake = await FindMistake.findById(result.findMistake)
+    allowed = await mistake.isAllowedForUser(userKey, admin)
     mistake = mistake.toObject()
     mistake.allowed = allowed
+    mistake.result = result.toObject()
     if not allowed
         mistake.allowed = false
         mistake.source = ""
@@ -212,7 +209,11 @@ export default setupApi = (app) ->
         id = req.user.informaticsId
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
-        res.json({user..., userPrivate...})
+        memberHasCf = false
+        for m in user.members
+            member = await RegisteredUser.findByKey(m)
+            memberHasCf = memberHasCf or (member.codeforcesUsername?)
+        res.json({user..., userPrivate..., memberHasCf})
 
     app.get '/api/registeredUser/:id', wrap (req, res) ->
         registeredUser = await RegisteredUser.findByKey(req.params.id)
@@ -292,6 +293,7 @@ export default setupApi = (app) ->
         members = if req.body.members.length then req.body.members.split(" ") else []
         user = await User.findById(req.params.id)
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
+        await user.updateName(await User.makeTeamName(req.body.name, members))
         await user.setGraduateYear req.body.graduateYear
         await user.setLevel req.body.level.current
         await user.setCfLogin cfLogin
@@ -319,6 +321,15 @@ export default setupApi = (app) ->
         chocosGot = req.body.chocosGot
         user = await User.findById(req.params.id)
         await user.setChocosGot chocosGot
+        res.send('OK')
+
+    app.post '/api/user/:id/setTShirtsGot', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        cnt = req.body.TShirts
+        user = await User.findById(req.params.id)
+        await user.setTShirtsGot cnt
         res.send('OK')
 
     app.get '/api/user/:id', wrap (req, res) ->
@@ -608,14 +619,6 @@ export default setupApi = (app) ->
         for r in results
             r = r.toObject()
             json[r._id] = r
-        res.json(json)
-
-    app.get '/api/userResultsForFindMistake/:userId', wrap (req, res) ->
-        results = (await Result.findByUserWithFindMistakeSet(req.params.userId))
-        json = {}
-        for r in results
-            r = r.toObject()
-            json[r.findMistake] = r
         res.json(json)
 
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
@@ -958,6 +961,54 @@ export default setupApi = (app) ->
         Submit.calculateAllHashes()
         res.send('OK')
 
+    app.get '/api/createTeam', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        logger.info("Try create new user user", username)
+        username = -Math.random().toString().substr(2)
+        password = Math.random().toString(36).substr(2)
+
+        logger.info "Register new Table User", username
+        newUser = new User(
+            _id: username
+            name: "???"
+            graduateYear: null
+            userList: "team",
+            activated: true,
+            lastActivated: new Date()
+            registerDate: new Date()
+        )
+        await newUser.upsert()
+        await newUser.updateLevel()
+        await newUser.updateRatingEtc()
+
+        # do not await, this can happen asynchronously
+        for _, system of REGISTRY
+            system.registerUser(newUser)
+
+        newRegisteredUser = new RegisteredUser({
+            username,
+            informaticsId: username,
+            informaticsUsername: null,
+            informaticsPassword: null,
+            aboutme: "",
+            promo: "",
+            contact: "",
+            whereFrom: ""
+            admin: false
+        })
+        RegisteredUser.register newRegisteredUser, password, (err) ->
+            if (err)
+                logger.error("Cant register user", err)
+                res.json
+                    registered:
+                        error: true
+                        message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
+            else
+                logger.info("Registered user")
+                res.redirect("/user/#{username}")
+
     app.post '/api/informatics/userData', wrap (req, res) ->
         username = req.body.username
         password = req.body.password
@@ -974,41 +1025,22 @@ export default setupApi = (app) ->
         catch
             res.json({status: false})
 
-    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
-        allowed = false
-        user = null
-        if req.params.user == "undefined"
-            allowed = true
-        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
-            allowed = true
-            user = req.params.user
-        if not allowed
-            res.status(403).json({error: 'No permissions'})
-            return
-        mistakes = await FindMistake.findApprovedByNotUser(user, req.params.page)
-        mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, user)
-        mistakes = await awaitAll(mistakes)
-        mistakes = (m for m in mistakes when m)
-        res.json(mistakes)
-
     app.get '/api/findMistakePages/:user', wrap (req, res) ->
-        allowed = false
-        user = null
-        if req.params.user == "undefined"
-            allowed = true
-        else if req.user?.admin or ""+req.user?.informaticsId == ""+req.params.user
-            allowed = true
-            user = req.params.user
-        res.json(await FindMistake.findPagesCountForApprovedByNotUser(user))
-
-    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
-        mistakes = await FindMistake.findApprovedByNotUserAndProblem(req.params.user, req.params.problem, req.params.page)
+        user = req.params.user
+        res.json(await Result.findPagesCountByUserWithFindMistakeSet(user))
+
+    app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        user = req.params.user
+        order = req.query.order
+        mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page, order)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistake(mistake, req.user?.admin, req.params.user)
+            expandFindMistakeResult(mistake, req.user?.admin, user)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1017,11 +1049,28 @@ export default setupApi = (app) ->
         if not req.user?.userKey()
             res.status(403).send('No permissions')
             return
-        res.json(await FindMistake.findPagesCountForApprovedByNotUserAndProblem(req.params.user, req.params.problem))
+        user = req.params.user
+        res.json(await Result.findPagesCountByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem))
 
-    app.get '/api/findMistake/:id', ensureLoggedIn, wrap (req, res) ->
-        mistake = await FindMistake.findById(req.params.id)
-        mistake = await expandFindMistake(mistake, req.user?.admin, req.user?.userKey())
+    app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        user = req.params.user
+        mistakes = await Result.findPageByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem, req.params.page)
+        mistakes = mistakes.map (mistake) -> 
+            expandFindMistakeResult(mistake, req.user?.admin, req.params.user)
+        mistakes = await awaitAll(mistakes)
+        mistakes = (m for m in mistakes when m)
+        res.json(mistakes)
+
+    app.get '/api/findMistake/:id/:user', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+            res.status(403).json({error: 'No permissions'})
+            return
+        user = req.params.user
+        mistake = await Result.findByUserAndFindMistake(user, req.params.id)
+        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user)
         res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
@@ -1037,7 +1086,7 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         while true
-            mistake = await FindMistake.findOneNotApproved()
+            mistake = (await FindMistake.findOneNotApproved())[0]
             if not mistake
                 res.json({})
                 return
@@ -1189,7 +1238,7 @@ export default setupApi = (app) ->
                 solved = true
                 if problem._id == "p2938"
                     solved = true
-                else if level.slice(0,3) in ["reg", "roi"]
+                else if level.slice(0,3) in ["sch", "nnoi", "reg", "roi"]
                     solved = false
                 else if version.major > i
                     solved = false

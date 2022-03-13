@@ -20,7 +20,7 @@ export default calculateLevel = (user, baseLevel, lastDate) ->
     if (not baseLevel) and (await isFloatsSolved(user, lastDate))
         baseLevel = "1В"
         logger.info "calculate level ", user, "baseLevel=>", baseLevel, lastDate
-    for bigLevel in [1..10]
+    for bigLevel in [1..13]
         for smallLevel in ["А", "Б", "В", "Г"]
             tableId = bigLevel + smallLevel
             level = tableId
