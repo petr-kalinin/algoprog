@@ -42,7 +42,7 @@ export default class UserBadge extends React.Component
                         <div>Логин на codeforces неизвестен. Если вы там зарегистированы, укажите логин в своём профиле.</div>
                 }
                 {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
-                {false && @props.me?.admin && if(@state.editing && +@props.user._id == @props.me?.informaticsId)
+                {if +@props.user._id == @props.me?.informaticsId
                     <Link to="/edituser/#{@props.user._id}">Редактировать профиль</Link>}
             </blockquote>
             { @props.explain &&
