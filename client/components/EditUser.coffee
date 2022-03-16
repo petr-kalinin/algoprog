@@ -211,6 +211,7 @@ class EditingUser extends React.Component
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
+                    {###
                     <h3>Данные профиля</h3>
                     <div>
                         Новое имя:
@@ -253,6 +254,7 @@ class EditingUser extends React.Component
                                 errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему аккаунту на informatics</a></div>]}
                             />
                     </div>
+                    ###}
                     <h3>Данные codeforces для отправки решений </h3>
                     <div>
                         Некоторые задачи отправляются на codeforces, а не на информатикс. 
