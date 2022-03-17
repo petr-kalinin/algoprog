@@ -1,3 +1,5 @@
+import GROUPS from '../lib/groups'
+
 export default isPaid = (myUser) ->
     if !myUser?.paidTill
         return false
@@ -16,4 +18,4 @@ export isMuchUnpaid = (myUser) ->
     return new Date() > realPaidTill
 
 export unpaidBlocked = (user) ->
-    (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (isMuchUnpaid(user))
+    (GROUPS[user?.userList]?.paid) and (user?.paidTill) && (isMuchUnpaid(user))

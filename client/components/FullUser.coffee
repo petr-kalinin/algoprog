@@ -11,6 +11,7 @@ import { Badge } from 'react-bootstrap'
 
 import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
+import GROUPS from '../lib/groups'
 
 import globalStyles from './global.css'
 import styles from './FullUser.css'
@@ -99,7 +100,7 @@ export default class FullUser extends React.Component
     render: () ->
         <div>
             {`<UserBadge {...this.props} onTShirtsClick={this.setTShirts}/>`}
-            {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
+            {GROUPS[@props.user.userList]?.chocos && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
             <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
             {if @props.calendar then <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>}
             {if @state.day

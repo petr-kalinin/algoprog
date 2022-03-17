@@ -22,6 +22,7 @@ import CommentList from './CommentList'
 import TopPanel from './TopPanel'
 
 import isPaid from '../lib/isPaid'
+import GROUPS from '../lib/groups'
 
 import styles from './Sceleton.css'
 
@@ -55,7 +56,7 @@ ColWrapper = (props) ->
 class PaidTill extends React.Component
     render: () ->
         href = "/pay"
-        if @props.myUser?.userList == "stud" or @props.myUser?.userList == "notnnov"
+        if GROUPS[@props.myUser?.userList]?.paid
             href = "/payment"
             if @props.myUser?.paidTill && isPaid(@props.myUser)
                 preLink = "Занятия оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + " "

@@ -24,6 +24,7 @@ import UserName, {color} from './UserName'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
+import GROUPS from '../lib/groups'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import needDeactivatedWarning from '../lib/needDeactivatedWarning'
 
@@ -33,7 +34,7 @@ needCfWarning = (user) ->
     (not user.cf?.login?) and (user.level.current >= "1В")
 
 needUnpaidWarning = (user) ->
-    (user?.userList == "stud" || user?.userList == "notnnov") and (user?.paidTill) && (not isPaid(user))
+    (GROUPS[user?.userList]?.paid) and (user?.paidTill) && (not isPaid(user))
 
 DeactivatedWarning = (props) ->
     <div className="static-modal">

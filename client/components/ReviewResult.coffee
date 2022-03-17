@@ -24,6 +24,7 @@ import Submit, {SubmitHeader} from './Submit'
 import SubmitListTable from './SubmitListTable'
 
 import callApi from '../lib/callApi'
+import GROUPS from '../lib/groups'
 
 import isPaid, { isMuchUnpaid } from '../lib/isPaid'
 
@@ -273,7 +274,7 @@ export class ReviewResult extends React.Component
         if (!user?.paidTill)
             styles.nonpaid
         else if isPaid(user)
-            if user.userList == "stud"
+            if GROUPS[user.userList]?.starred
                 styles.paid
             else
                 styles.nonpaid

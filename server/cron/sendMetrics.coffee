@@ -1,6 +1,6 @@
 os = require('os')
 
-import {GROUPS} from '../../client/lib/informaticsGroups'
+import GROUPS from '../../client/lib/groups'
 
 import {START_SUBMITS_DATE} from '../api/dashboard'
 

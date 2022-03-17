@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/lib/Button'
 import Alert from 'react-bootstrap/lib/Alert'
 import { Link } from 'react-router-dom'
 
+import GROUPS from '../lib/groups'
+
 import FieldGroup from './FieldGroup'
 
 export default class Payment extends React.Component
@@ -43,7 +45,7 @@ export default class Payment extends React.Component
                     Форма ниже приведена для примера.
                 </Alert>
             canSubmit = false
-        else if @props.myUser.userList in ["lic40", "zaoch", "unn", "graduated", "team", "ikhlyustov", "lic87"] or @props.myUser.price == 0
+        else if not GROUPS[@props.myUser.userList]?.paid or @props.myUser.price == 0
             amount = 0
             warning = <Alert bsStyle="danger">
                     Занятия для вас бесплатны, вам не надо их оплачивать.

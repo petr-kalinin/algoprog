@@ -1,9 +1,11 @@
+import GROUPS from '../../client/lib/groups'
+
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 import Result from '../models/result'
 import logger from '../log'
 
-import {startDayForWeeks, lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK, FM_CONST} from './ratingConstants'
+import {lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK, FM_CONST} from './ratingConstants'
 
 DEBUG_USER_ID = "-------"
 
@@ -58,7 +60,7 @@ activityScore = (level, date) ->
 export default calculateRatingEtc = (user) ->
     start = new Date()
     logger.info "calculate rating etc ", user._id
-    thisStart = new Date(startDayForWeeks[user.userList])
+    thisStart = new Date(GROUPS[user.userList].startDayForWeeks)
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
     firstWeek = nowWeek - lastWeeksToShow + 1

@@ -8,12 +8,13 @@ import styles from './SolvedByWeek.css'
 
 import userTableHeader from './UserTableHeader'
 
+import GROUPS from '../lib/groups'
 import withTheme from '../lib/withTheme'
 
-import {startDayForWeeks, lastWeeksToShow, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
+import {lastWeeksToShow, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
 
 weekSet = (userList) ->
-    thisStart = new Date(startDayForWeeks["" + userList])
+    thisStart = new Date(GROUPS["" + userList].startDayForWeeks)
     now = new Date()
     nowWeek = Math.floor((now - thisStart) / MSEC_IN_WEEK)
     res = [(nowWeek - lastWeeksToShow + 1)..nowWeek]
@@ -44,7 +45,7 @@ bgColorDark = (number) ->
         "#1ee51e"
 
 weekHeader = (weekNumber, weekCount, userList) ->
-    thisStart = new Date(startDayForWeeks[userList])
+    thisStart = new Date(GROUPS[userList].startDayForWeeks)
     endDay = new Date(+thisStart + MSEC_IN_WEEK * (weekNumber + 1) - 1)
     startDay = new Date(+endDay - MSEC_IN_WEEK * weekCount + 1)
     endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1) + "-" + startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1)

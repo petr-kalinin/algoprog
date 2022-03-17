@@ -18,7 +18,6 @@ import setDirty from '../lib/setDirty'
 
 import awaitAll from '../../client/lib/awaitAll'
 
-import * as groups from '../informatics/informaticsGroups'
 import getTestSystem, { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
 
 entities = new Entities()

@@ -17,6 +17,7 @@ import {UserNameRaw} from '../../client/components/UserName'
 import awaitAll from '../../client/lib/awaitAll'
 import ACHIEVES from '../../client/lib/achieves'
 import {getYear} from '../../client/lib/graduateYearToClass'
+import GROUPS from '../../client/lib/groups'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
 import {levelVersion} from '../calculations/calculateRatingEtc'
@@ -24,7 +25,6 @@ import {getTables, getUserResult} from '../calculations/updateTableResults'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
-import * as groups from '../informatics/informaticsGroups'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 import download, {getStats} from '../lib/download'
@@ -858,7 +858,7 @@ export default setupApi = (app) ->
         runForUser = (user) ->
             userPrivate = await UserPrivate.findById(user._id)
             registeredUser = await RegisteredUser.findByKey(user._id)
-            if registeredUser.admin or (user.userList == "stud" and userPrivate.paidTill > new Date())
+            if registeredUser.admin or (not GROUPS[user.userList]?.canResetYear and userPrivate.paidTill > new Date())
                 logger.info("Will not move user #{user._id} to unknown group")
                 return
             await user.setActivated(false)

@@ -1,8 +1,6 @@
 import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
 
-import { GROUPS } from '../../client/lib/informaticsGroups'
-
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 
