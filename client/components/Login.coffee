@@ -14,6 +14,7 @@ import { Redirect } from 'react-router-dom'
 
 import Loader from '../components/Loader'
 
+import {requestPermission} from '../lib/BrowserNotifications'
 import callApi from '../lib/callApi'
 import withMyUser from '../lib/withMyUser'
 
@@ -37,6 +38,7 @@ class Login extends React.Component
 
     tryLogin: (event) ->
         event.preventDefault()
+        requestPermission()
         newState = {
             @state...
             loading: true

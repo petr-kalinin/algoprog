@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 
 import Notifications from 'react-notification-system-redux';
 
+import {notify} from '../lib/BrowserNotifications'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import callApi from '../lib/callApi'
@@ -38,6 +39,13 @@ commentText = (comment) ->
         when "DQ" then "Решение дисквалифицировано"
         else "Решение прокомментировано"
 
+commentAdd = (comment) ->
+    MAX_LENGTH = 50
+    if comment.text.length > MAX_LENGTH
+        comment.text.substr(0, MAX_LENGTH) + "..."
+    else 
+        comment.text
+
 class CommentList extends React.Component
     constructor: (props) ->
         super(props)
@@ -62,14 +70,20 @@ class CommentList extends React.Component
             if comment._id of viewedComments
                 continue
             cl = commentClass(comment) || "error"
+            url = "/material/#{comment.problemId}"
+            message = commentText(comment)
+            add = commentAdd(comment)
+            title = comment.problemName
             notification =
-                title: comment.problemName,
-                message: commentText(comment),
+                title: title
+                message: message
                 position: 'br',
                 autoDismiss: 0,
-                children:
-                    <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
+                children: [
+                    <Link to={url}>Перейти к задаче</Link>
+                ]
             @props.showNotification(notification, cl)
+            notify(comment._id, title, message + "\n" + add, url)
 
     render:  () ->
         if not @props.myUser?._id
