@@ -86,6 +86,7 @@ class LoggedInformaticsUser
             throw "Too many requests"
         _requests++
         await sleep(TIMEOUT)
+        options.timeout = options.timeout || 30 * 1000
         try
             result = await download(href, @jar, options)
         finally
