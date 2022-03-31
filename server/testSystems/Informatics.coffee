@@ -79,7 +79,7 @@ class LoggedInformaticsUser
             return null
         return id[1]
 
-    download: (href, options) ->
+    download: (href, options={}) ->
         if _requests >= REQUESTS_LIMIT
             await new Promise((resolve) => _promises.push(resolve))
         if _requests >= REQUESTS_LIMIT
