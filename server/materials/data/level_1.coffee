@@ -11,6 +11,6 @@ export default level_1 = () ->
         level_1A(),
         level_1B(),
         level_1C(),
-		level_1D(),
+        level_1D(),
     ])
 
