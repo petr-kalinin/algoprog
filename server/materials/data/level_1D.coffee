@@ -55,7 +55,7 @@ export default level_1D = () ->
     return level("1D", [
         label("Теоретический материал Базовая теория графов:&nbsp;<a href=\"https://youtu.be/FQJCuxKpGBg\" target=\"_blank\">https://youtu.be/FQJCuxKpGBg</a>"),
         contest_graph_basics(),
-        label("Теоретический материал DFS (материал Петра Калинина), изучать с 8.1 по 8.3 включительно:&nbsp;<a href=\"https://notes.algoprog.ru/dfs/index.html" target=\"_blank\">https://notes.algoprog.ru/dfs/index.html</a>"),
+        label("Теоретический материал DFS (материал Петра Калинина), изучать с 8.1 по 8.3 включительно:&nbsp;<a href=\"https://notes.algoprog.ru/dfs/index.html\" target=\"_blank\">https://notes.algoprog.ru/dfs/index.html</a>"),
         contest_dfs1(),
         contest_dfs2(),
     ])
