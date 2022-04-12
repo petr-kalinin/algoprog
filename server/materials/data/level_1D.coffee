@@ -38,7 +38,7 @@ contest_dfs2 = () ->
     return contest("1D: DFS 2", [
         problem({testSystem: "codeforces", contest: "522", problem: "A", name: "Репосты"}),
         problem({testSystem: "codeforces", contest: "277", problem: "A", name: "Изучение языков"}),
-        problem({testSystem: "codeforces", contest: "977", problem: "Е", name: "Компоненты-циклы"}),
+        problem({testSystem: "codeforces", contest: "977", problem: "E", name: "Компоненты-циклы"}),
         problem({testSystem: "codeforces", contest: "580", problem: "C", name: "Кефа и парк"}),
         problem({testSystem: "codeforces", contest: "687", problem: "A", name: "NP-трудная задача"}),
         problem({testSystem: "codeforces", contest: "771", problem: "A", name: "Мишка и условие дружбы"}),
