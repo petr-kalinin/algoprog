@@ -66,6 +66,11 @@ class SaveProcessor
             return
         @path.push id
 
+    popPath: (id) ->
+        if id != @level()
+            return
+        @path.pop()
+
     process: (material) ->
         if (material._id of @ids) and (material.type != "problem")
             throw "Duplicate material id found: #{material._id}"
@@ -91,8 +96,12 @@ class SaveProcessor
                 sub: true
             inProblems = true
         material.materials = newSubmaterials
-        material.level = @level()
-
+        if material.type == "level"
+            material.level = material._id
+        else
+            material.level = @level()
+        if material.level == "about" || material.level == "main" || material.level?.startsWith("reg") || material.level?.startsWith("roi")
+            material.level = ""
         delete material.treeTitle
         await (new Material(material)).upsert()
 
