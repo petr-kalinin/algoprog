@@ -66,3 +66,13 @@ spec:
             name: nodejs-archive
             port:
               number: 3000
+  - host: redash.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: redash
+            port:
+              number: 5000
