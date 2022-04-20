@@ -15,6 +15,7 @@ spec:
     - algoprog.ru
     - online.mathncode.kz
     - redash.algoprog.ru
+    - notes.algoprog.ru
     secretName: test-tls
   rules:
   - host: algoprog.ru
@@ -77,3 +78,13 @@ spec:
             name: redash
             port:
               number: 5000
+  - host: notes.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: progtexts2
+            port:
+              number: 80
