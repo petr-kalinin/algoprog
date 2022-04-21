@@ -14,15 +14,16 @@ class Level extends MaterialList
         @id = id
 
     build: (context, order) ->
+        id = @id?(context.label) || @id
         if not @title
-            @title = "#{labelToName[context.label]} #{@id}"
+            @title = "#{labelToName[context.label]} #{id}"
         properties = 
-            _id: "#{@id}#{context.label}"
+            _id: "#{id}#{context.label}"
             type: "level"
-            title: @title
+            title: @title?(context.label) || @title
 
         material = await super.build(context, order, properties, {keepSubmaterials: true})
 
         return material
 
-export default level = (args...) -> () -> new Level(args...)
+export default level = (args...) -> () -> new Level(args...) 

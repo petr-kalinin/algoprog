@@ -6,8 +6,8 @@ export class Page
         data = 
             _id: if @id then "#{@id}#{context.label}" else context.generateId(),
             type: @type,
-            content: @content
-            title: @title
+            content: @content?(context.label) || @content
+            title: @title?(context.label) || @title
             order: order
 
         if @skipTree

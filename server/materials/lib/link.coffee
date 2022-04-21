@@ -6,7 +6,7 @@ class Link
             _id: context.generateId(),
             type: "link",
             content: @link
-            title: @title
+            title: @title?(context.label) || @title
             order: order
 
         await context.process(data)

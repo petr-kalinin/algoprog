@@ -9,11 +9,11 @@ class Topic extends MaterialList
         properties = 
             _id: if @id then "#{@id}#{context.label}" else context.generateId()
             type: "topic"
-            title: @title
-            treeTitle: @contestTitle
+            title: @title?(context.label) || @title
+            treeTitle: @contestTitle?(context.label) || @contestTitle
 
         material = await super.build(context, order, properties, {keepSubmaterials: true})
-        material.treeTitle = @contestTitle
+        material.treeTitle = properties.treeTitle
 
         return material
 

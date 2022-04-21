@@ -40,8 +40,16 @@ module25368 = () ->
     """, {skipTree: true})
 
 export default arithmeticalOperations = () ->
+    name = (lbl) ->
+        if lbl == "" then "Арифметические операции"
+        else if lbl == "!en" then "Arithmetic operations"
+        else throw "unknown label #{lbl}"
+    contestName = (lbl) ->
+        if lbl == "" then "Задачи на арифметические операции"
+        else if lbl == "!en" then "Problems on arithmetic operations"
+        else throw "unknown label #{lbl}"
     return {
-        topic: topic("Арифметические операции", "Задачи на арифметические операции", [
+        topic: topic(name, contestName, [
             label("<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
             problem(2938),
             problem(2939),

@@ -186,12 +186,12 @@ ALL_TOPICS = [
 ]
 
 ADDITIONAL_LEVELS =
-    '1Г': level_1D
-    '3Г': level_3D
-    '5Г': level_5D
-    '7Г': level_7D
-    '9Г': level_9D
-    '11Г': level_11D
+    '1D': level_1D
+    '3D': level_3D
+    '5D': level_5D
+    '7D': level_7D
+    '9D': level_9D
+    '11D': level_11D
 
 class TopicGenerator
     constructor: () ->
@@ -280,8 +280,8 @@ minorLevel = (generator, id) ->
     }
 
 majorLevel = (generator, id) ->
-    levelA = minorLevel(generator, "#{id}А")
-    levelB = minorLevel(generator, "#{id}Б")
+    levelA = minorLevel(generator, "#{id}A")
+    levelB = minorLevel(generator, "#{id}B")
     subLevels = [
         levelA?.level
         levelB?.level
@@ -293,12 +293,12 @@ majorLevel = (generator, id) ->
     advancedProblems = [(levelA?.advancedProblems || [])..., (levelB?.advancedProblems || [])...]
     advancedTopics = [(levelA?.advancedTopics || [])..., (levelB?.advancedTopics || [])..., contestsFromAdvancedProblems(id, advancedProblems)...]
     if advancedTopics.length != 0
-        subLevels.push level("#{id}В", [
+        subLevels.push level("#{id}C", [
             label("<p>To advance to next level, you need to solve <b>at least half of the problems</b>#{requiredNote(advancedTopics)}. When you solve them, I recommend that you move to the next level, so as not to delay the study of new theory. Return to the remaining tasks of this level later from time to time and try to gradually solve almost all of them.</p>"),
             advancedTopics...
         ])
-    if "#{id}Г" of ADDITIONAL_LEVELS
-        subLevels.push ADDITIONAL_LEVELS["#{id}Г"]()
+    if "#{id}D" of ADDITIONAL_LEVELS
+        subLevels.push ADDITIONAL_LEVELS["#{id}D"]()
     return level("#{id}", [
         subLevels...
     ])
