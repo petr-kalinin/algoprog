@@ -135,7 +135,7 @@ updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
         # Assume that if it has submits, then it is allowed.
         # Anyway we will check allowednedd in setupApi.
         result.findMistakeAllowed = true
-        result.findMistakeOrder = (await FindMistake.findById(fm)).order
+        result.findMistakeOrder = (await FindMistake.findById(fm))?.order
         await result.upsert()
         allResults.push result
     allFindMistakes = await FindMistake.findApprovedByProblemAndNotUser(problemId, userId)
