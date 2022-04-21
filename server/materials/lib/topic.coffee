@@ -7,7 +7,7 @@ class Topic extends MaterialList
 
     build: (context, order) ->
         properties = 
-            _id: @id || context.generateId()
+            _id: if @id then "#{@id}#{context.label}" else context.generateId()
             type: "topic"
             title: @title
             treeTitle: @contestTitle

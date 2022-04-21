@@ -378,7 +378,11 @@ export default class Ejudge extends TestSystem
             #logger.info "Found problem ", problem
         return result
 
-    downloadProblem: (options) ->
+    downloadProblem: (options, label) ->
+        if label != ""
+            return 
+                name: "Name #{options.contest} #{options.problem}"
+                text: "Text #{options.contest} #{options.problem}"
         {contest, problem} = options
         admin = await @getAdmin(contest)
         href = "#{@server}/cgi-bin/new-client?action=139&prob_id=#{problem}"

@@ -7,16 +7,24 @@ import Problem from '../models/problem'
 import Table from '../models/table'
 
 import root from './data/root'
+import rootEn from './data-en/root'
 
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
+correctLabel = (label) ->
+    if label != ""
+        "!#{label}"
+    else
+        ""
+
 
 class Context
-    constructor: (@processors) ->
+    constructor: (@processors, @label="") ->
         @pathToId = {}
         @path = []
+        @label = correctLabel(@label)
 
     generateId: () ->
         if @path.length
@@ -26,7 +34,7 @@ class Context
         if not (pathItem of @pathToId)
             @pathToId[pathItem] = 0
         @pathToId[pathItem]++
-        return "#{pathItem}#{@pathToId[pathItem]}"
+        return "#{pathItem}#{@pathToId[pathItem]}#{@label}"
 
     pushPath: (id, order, title, type) ->
         @path.push
@@ -211,20 +219,39 @@ class TreeProcessor
         @setTree(id, material)
 
 
-export default downloadMaterials = () ->
-    logger.info "Start downloadMaterials"
+downloadRussian = () ->
     saveProcessor = new SaveProcessor()
     treeProcessor = new TreeProcessor()
     contestProcessor = new ContestProcessor
     fmProcessor = new FindMistakeProcessor
     context = new Context([saveProcessor, treeProcessor, contestProcessor, fmProcessor])
 
-    await root()().build(context, "")
+    await root()().build(context)
 
     tree = treeProcessor.getTree("main")
     tree._id = "tree"
     await (new Material(tree)).upsert()
 
     await contestProcessor.finalize()
+
+downloadEnglish = () ->
+    saveProcessor = new SaveProcessor()
+    treeProcessor = new TreeProcessor()
+    contestProcessor = new ContestProcessor()
+    fmProcessor = new FindMistakeProcessor()
+    context = new Context([saveProcessor, treeProcessor, contestProcessor, fmProcessor], "en")
+
+    await rootEn()().build(context)
+
+    tree = treeProcessor.getTree("main!en")
+    tree._id = "tree!en"
+    await (new Material(tree)).upsert()
+
+    await contestProcessor.finalize()
+
+export default downloadMaterials = () ->
+    logger.info "Start downloadMaterials"
+    await downloadRussian()
+    await downloadEnglish()
     logger.info "Done downloadMaterials"
 

@@ -8,7 +8,7 @@ class SimpleLevel extends MaterialList
 
     build: (context, order) ->
         properties = 
-            _id: @id
+            _id: "#{@id}#{context.label}"
             type: "simpleLevel"
             title: @title
 
