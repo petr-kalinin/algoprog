@@ -12,6 +12,7 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyResults from '../lib/withMyResults'
 import requiredProblemsByLevel from '../lib/requiredProblemsByLevel'
 import withTheme from '../lib/withTheme'
+import withLang from '../lib/withLang'
 
 MAX_GLOBAL_DEPTH = 0
 MAX_LOCAL_DEPTH = 0
@@ -137,7 +138,10 @@ Tree = (props) ->
     </div>
 
 options =
-    urls: ->
-        tree: "material/tree"
+    urls: (props) ->
+        if props.lang == "ru"
+            tree: "material/tree"
+        else
+            tree: "material/tree!en"
 
-export default ConnectedComponent(withTheme(withRouter(Tree)), options)
+export default withLang(ConnectedComponent(withTheme(withRouter(Tree)), options))

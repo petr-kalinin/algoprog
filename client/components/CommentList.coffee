@@ -10,10 +10,11 @@ import { connect } from 'react-redux'
 
 import Notifications from 'react-notification-system-redux';
 
+import LANG from '../lang/lang'
 import {notify} from '../lib/BrowserNotifications'
 import ConnectedComponent from '../lib/ConnectedComponent'
-
 import callApi from '../lib/callApi'
+import withLang from '../lib/withLang'
 
 import globalStyles from './global.css'
 
@@ -89,7 +90,7 @@ class CommentList extends React.Component
         if not @props.myUser?._id
             return null
         <div>
-            <h4>Последние комментарии</h4>
+            <h4>{LANG("recent_comments", @props.lang)}</h4>
             <PanelGroup id="comments">
                 {
                 if @props.data?.length
@@ -116,14 +117,14 @@ class CommentList extends React.Component
                     )
                 }
             </PanelGroup>
-            <Link to="/comments">Все комментарии</Link>
+            <Link to="/comments">{LANG("all_comments", @props.lang)}</Link>
         </div>
 
 mapStateToProps = () -> {}
 mapDispatchToProps = (dispatch) ->
     showNotification: (notification, cl) -> dispatch(Notifications.show(notification, cl))
 
-CommentListWithNotifications = connect(mapStateToProps, mapDispatchToProps)(CommentList)
+CommentListWithNotifications = withLang(connect(mapStateToProps, mapDispatchToProps)(CommentList))
 
 
 options = {

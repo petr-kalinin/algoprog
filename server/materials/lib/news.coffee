@@ -2,7 +2,7 @@ import MaterialList from "./MaterialList"
 
 labelToName = 
     "": "Новости"
-    "en": "News"
+    "!en": "News"
 
 class News extends MaterialList
     constructor: (materials) ->

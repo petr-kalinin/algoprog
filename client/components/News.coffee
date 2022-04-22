@@ -3,11 +3,14 @@ React = require('react')
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
+import LANG from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 
 News = (props) ->
     <div>
-        <h4>Новости</h4>
+        <h4>{LANG("news", props.lang)}</h4>
         <PanelGroup id="news">
             {
             res = []
@@ -28,6 +31,6 @@ News = (props) ->
 
 options =
     urls: (props) ->
-        news: "material/news"
+        LANG("news_url", props.lang)
 
-export default ConnectedComponent(News, options)
+export default withLang(ConnectedComponent(News, options))

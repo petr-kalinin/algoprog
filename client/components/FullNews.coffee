@@ -1,8 +1,9 @@
 React = require('react')
+import LANG from '../lang/lang'
 
 export default News = (props) ->
     <div>
-        <h1>Новости</h1>
+        <h1>{LANG("news", props.lang)}</h1>
         {
         res = []
         a = (el) -> res.push(el)
