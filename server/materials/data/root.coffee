@@ -13,8 +13,8 @@ export default root = () ->
     return main([
         level_about(),
         allNews(),
-        link("/comments", "Комментарии"),
-        link("/findMistakeList", "Найди ошибку"),
+        link("/comments", "Комментарии", "comments"),
+        link("/findMistakeList", "Найди ошибку", "findMistake"),
         mainLevels()...,
         level_sch(),
         level_nnoi(),

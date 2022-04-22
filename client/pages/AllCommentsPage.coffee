@@ -13,7 +13,7 @@ export default class AllCommentsPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Комментарии", _id: "achieves"},
+            location: {title: "Комментарии", _id: "comments"},
         }
         `<Sceleton {...sceletonProps}><AllComments/></Sceleton>`
 
