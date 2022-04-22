@@ -8,17 +8,13 @@ import * as actions from '../redux/actions'
 
 export ThemeSwitch = (props) ->
     return if props.theme == "dark"
-                <span title="Светлая тема">
-                    <Button onClick={()->props.switchTheme("light")}>
-                            <FontAwesome name="sun-o"/>
-                    </Button>
-                </span>
+                <Button onClick={()->props.switchTheme("light")} title="Светлая тема">
+                        <FontAwesome name="sun-o"/>&#8203;
+                </Button>
            else 
-                <span title="Темная тема">
-                    <Button onClick={()->props.switchTheme("dark")}>
-                        <FontAwesome name="moon-o"/>
-                    </Button>
-                </span>
+                <Button onClick={()->props.switchTheme("dark")} title="Темная тема">
+                    <FontAwesome name="moon-o"/>&#8203;
+                </Button>
 
 mapStateToProps = (state) ->
     return

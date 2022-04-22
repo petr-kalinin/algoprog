@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import * as actions from '../redux/actions'
 
 import CfStatus from './CfStatus'
+import LangSwitch from './LangSwitch'
 import ThemeSwitch from './ThemeSwitch'
 import TShirts from './TShirts'
 import UserName, {color} from './UserName'
@@ -194,7 +195,10 @@ class TopPanel extends React.Component
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Form pullRight>
-                    <ThemeSwitch /> 
+                    <ButtonGroup>
+                        <LangSwitch /> 
+                        <ThemeSwitch /> 
+                    </ButtonGroup>
                     <span className={styles.separator}/>
                     {
                     if @props.me?._id
