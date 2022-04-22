@@ -11,6 +11,12 @@ _LANG =
     all_comments:
         "ru": "Все комментарии"
         "en": "All comments"
+    material_suffix:
+        "ru": ""
+        "en": "!en"
 
 export default LANG = (id, lang) ->
-    _LANG[id]?[lang] || throw "Unknown lang #{id} #{lang}"
+    res = _LANG[id]?[lang]
+    if not (res?) 
+        throw "Unknown lang #{id} #{lang}"
+    res
