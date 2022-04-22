@@ -13,6 +13,8 @@ spec:
     - adina.algoprog.ru
     - archive.algoprog.ru
     - algoprog.ru
+    - algoprog.org
+    - www.algoprog.org
     - online.mathncode.kz
     - redash.algoprog.ru
     - notes.algoprog.ru
@@ -49,6 +51,26 @@ spec:
             port:
               number: 3000
   - host: www.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs
+            port:
+              number: 3000
+  - host: algoprog.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs
+            port:
+              number: 3000
+  - host: www.algoprog.org
     http:
       paths:
       - path: /
