@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet"
 import FullNews from '../components/FullNews'
 import Sceleton from '../components/Sceleton'
 
-import LANG from '../lang/lang'
+import {LangRaw} from '../lang/lang'
 import withLang from '../lib/withLang'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
@@ -15,15 +15,12 @@ class FullNewsPage extends React.Component
         super(props)
 
     render:  () ->
-        sceletonProps = {@props..., location: {title: LANG("news", @props.lang), path: @props.news.path, _id: @props.news._id}}
+        sceletonProps = {@props..., location: {title: LangRaw("news", @props.lang), path: @props.news.path, _id: @props.news._id}}
         `<Sceleton {...sceletonProps}><FullNews {...this.props}/></Sceleton>`
 
 
 options =
     urls: (props) ->
-        if props.lang == "ru"
-            news: "material/news"
-        else
-            news: "material/news!en"
+        news: "material/news" + LangRaw("material_suffix", props.lang)
 
 export default withLang(ConnectedComponent(FullNewsPage, options))

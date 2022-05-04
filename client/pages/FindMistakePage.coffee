@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet"
 import FindMistake from '../components/FindMistake'
 import Sceleton from '../components/Sceleton'
 
-import LANG from '../lang/lang'
+import {LangRaw} from '../lang/lang'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withLang from '../lib/withLang'
 import withMyUser from '../lib/withMyUser'
@@ -18,7 +18,7 @@ class FindMistakePage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Найди ошибку: #{@props.findMistake?.fullProblem?.name}", _id: "findMistake" + LANG("material_suffix", @props.lang)},
+            location: {title: "Найди ошибку: #{@props.findMistake?.fullProblem?.name}", _id: "findMistake" + LangRaw("material_suffix", @props.lang)},
         }
         `<Sceleton {...sceletonProps}><FindMistake findMistake={this.props.findMistake}/></Sceleton>`
 

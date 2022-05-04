@@ -1,7 +1,8 @@
+React = require('react')
+
+import withLang from '../lib/withLang'
+
 _LANG = 
-    news_url:
-        "ru": "/material/news"
-        "en": "/material/news!en"
     news:
         "ru": "Новости"
         "en": "News"
@@ -15,8 +16,14 @@ _LANG =
         "ru": ""
         "en": "!en"
 
-export default LANG = (id, lang) ->
+export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
     if not (res?) 
         throw "Unknown lang #{id} #{lang}"
     res
+
+LangEl = withLang (props) ->
+    LangRaw(props.id, props.lang)
+
+export default Lang = (id) ->
+    <LangEl id={id}/>
