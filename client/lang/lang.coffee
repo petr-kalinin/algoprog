@@ -15,6 +15,15 @@ _LANG =
     material_suffix:
         "ru": ""
         "en": "!en"
+    Petr_Kalinin:
+        "ru": "Петр Калинин",
+        "en": "Petr Kalinin"
+    about_license:
+        "ru": "О лицензии на материалы сайта",
+        "en": "About license for site materials"
+    blog:
+        "ru": "Блог"
+        "en": "Blog (in Russian)"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

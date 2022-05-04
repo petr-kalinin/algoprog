@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom'
 
 import { Helmet } from "react-helmet"
 
+import Lang from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withTheme from '../lib/withTheme'
 
@@ -95,12 +97,12 @@ BottomPanel = (props) ->
                 <Col xs={12} sm={12} md={8} lg={8}>
                     <div className="text-muted">
                         <Link to="/">algoprog.ru</Link>
-                        {" © Петр Калинин, GNU AGPL, "}
+                        {" © "}{Lang('Petr_Kalinin')}{", GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
-                        <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
+                        <Link to="/material/module-29054">{Lang("about_license")}</Link>
                         {" | "}
-                        <a href="https://blog.algoprog.ru" target="_blank">Блог</a>
+                        <a href="https://blog.algoprog.ru" target="_blank">{Lang("blog")}</a>
                     </div>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>
