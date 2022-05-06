@@ -23,6 +23,8 @@ import ThemeSwitch from './ThemeSwitch'
 import TShirts from './TShirts'
 import UserName, {color} from './UserName'
 
+import Lang from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import GROUPS from '../lib/groups'
@@ -41,14 +43,13 @@ DeactivatedWarning = (props) ->
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
-                <Modal.Title>Учетная запись не активирована</Modal.Title>
+                <Modal.Title>{Lang("account_not_activated")}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <div>
-                    <p>Ваша учетная запись еще не активирована. Вы можете сдавать задачи, но напишите мне,
-                    чтобы я активировал вашу учетную запись. Мои контакты — на страничке
-                    {" "}<Link to="/material/about">О курсе</Link>.</p>
+                    <p>{Lang("account_not_activated_long")}
+                    <Link to="/material/about">{Lang("about_course_page")}</Link>.</p>
                 </div>
             </Modal.Body>
 
@@ -65,24 +66,18 @@ UnpaidWarning = (props) ->
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
-                <Modal.Title>Занятия не оплачены</Modal.Title>
+                <Modal.Title>{Lang("unpaid")}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <div>
-                    <p>Ваши занятия оплачены только до {moment(props.myUser.paidTill).format("DD.MM.YYYY")}.</p>
+                    <p>{Lang("course_was_paid_only_until")}{moment(props.myUser.paidTill).format("DD.MM.YYYY")}.</p>
                     {if props.blocked
-                        <p>
-                            Оплата просрочена более чем на 3 дня. <b>Ваш аккаунт заблокирован до <Link to="/payment">полной оплаты</Link>.</b>
-                        </p>
+                        Lang("unpaid_blocked_long")
                     else
-                        <p>
-                            Вы можете пока решать задачи, но
-                            {" "}<Link to="/payment">продлите оплату</Link> в ближайшее время.
-                        </p>
+                        Lang("unpaid_not_blocked_long")
                     }
-                    <p>Если вы на самом деле оплачивали занятия, или занятия для вас должны быть бесплатными,
-                    свяжитесь со мной.</p>
+                    <p>{Lang("if_you_have_paid_contact_me")}</p>
                 </div>
             </Modal.Body>
 
@@ -97,14 +92,13 @@ DormantWarning = (props) ->
     <div className="static-modal">
         <Modal.Dialog>
             <Modal.Header>
-                <Modal.Title>Учетная запись не активирована</Modal.Title>
+                <Modal.Title>{Lang("account_not_activated")}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <div>
-                    <p>Ваша учетная запись еще не активирована. Если вы хотите заниматься, напишите мне,
-                    чтобы я активировал вашу учетную запись. Мои контакты — на страничке
-                    {" "}<Link to="/material/about">О курсе</Link>.</p>
+                    <p>{Lang("account_not_activated_blocked_long")}
+                    {" "}<Link to="/material/about">{Lang("about_course_page")}</Link>.</p>
                 </div>
             </Modal.Body>
 
