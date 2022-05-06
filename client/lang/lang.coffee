@@ -24,6 +24,19 @@ _LANG =
     blog:
         "ru": "Блог"
         "en": "Blog (in Russian)"
+    paid_till:
+        "ru": "Занятия оплачены до"
+        "en": "Paid till"
+    was_paid_till:
+        "ru": "Занятия были оплачены до "
+        "en": "Was paid till"
+    extend_payment:
+        "ru": "Продлить"
+        "en": "Extend"
+    pay:
+        "ru": "Оплатить занятия"
+        "en": "Pay for the course"
+    
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
