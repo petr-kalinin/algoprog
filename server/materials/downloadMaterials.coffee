@@ -56,6 +56,20 @@ class Context
 class SaveProcessor
     constructor: () ->
         @ids = {}
+        @path = []
+
+    level: () ->
+        @path[@path.length - 1]
+
+    pushPath: (id, order, title, type) ->
+        if type != "level" and type != "main"
+            return
+        @path.push id
+
+    popPath: (id) ->
+        if id != @level()
+            return
+        @path.pop()
 
     process: (material) ->
         if (material._id of @ids) and (material.type != "problem")
@@ -82,7 +96,12 @@ class SaveProcessor
                 sub: true
             inProblems = true
         material.materials = newSubmaterials
-
+        if material.type == "level"
+            material.level = material._id
+        else
+            material.level = @level()
+        if material.level == "about" || material.level == "main" || material.level?.startsWith("reg") || material.level?.startsWith("roi")
+            material.level = ""
         delete material.treeTitle
         await (new Material(material)).upsert()
 
