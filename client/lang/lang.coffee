@@ -22,7 +22,7 @@ _LANG =
         "en": "Petr Kalinin"
     about_license:
         "ru": "О лицензии на материалы сайта",
-        "en": "About license for site materials"
+        "en": "About the license for the site materials"
     blog:
         "ru": "Блог"
         "en": "Blog (in Russian)"
