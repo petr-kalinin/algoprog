@@ -254,7 +254,7 @@ export default class Codeforces extends TestSystem
 
     downloadProblem: (options, label) ->
         locale = 
-            if label == "" then "ru"
+            if not label or label == "" then "ru"
             else if label == "!en" then "en"
             else throw "Don't know locale for label #{label}"
         if options.contest.startsWith("gym")
