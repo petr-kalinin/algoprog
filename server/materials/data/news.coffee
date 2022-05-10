@@ -3,6 +3,10 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("ЛКШ и летние школы в целом", String.raw"""
+            Добавлена информация про <a href="/material/sis">Летнюю компьютерную школу</a>, а также <a href="/material/summerSchools">про летние школы в целом</a>.
+        """),
+
         newsItem("Стажировка на алгопроге", String.raw"""
             В этом году летом опять будет проходить <a href="/material/internship">стажировка на алгопроге</a>. Кто хочет поучаствовать, пишите.
         """),
