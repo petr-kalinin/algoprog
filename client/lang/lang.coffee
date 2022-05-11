@@ -101,9 +101,15 @@ _LANG =
     sign_in:
         ru: "Вход"
         en: "Sign in"
-    
-    
-    
+    cf_rating:
+        ru: "Рейтинг на Codeforces"
+        en: "Codeforces rating"
+    cf_progress:
+        ru: "Взвешенный прирост рейтинга за последнее время"
+        en: "Recent weighted rating change"
+    cf_activity:
+        ru: "Взвешенное количество написанных контестов за последнее время"
+        en: "Recent weighted number of contests written"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
