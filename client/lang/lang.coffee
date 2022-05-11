@@ -110,6 +110,21 @@ _LANG =
     cf_activity:
         ru: "Взвешенное количество написанных контестов за последнее время"
         en: "Recent weighted number of contests written"
+    wrong_password:
+        ru: "Неверный логин или пароль"
+        en: "Wrong login or password"
+    sign_in_full:
+        ru: "Вход в систему"
+        en: "Sign in"
+    login:
+        ru: "Логин"
+        en: "Username"
+    password:
+        ru: "Пароль"
+        en: "Password"
+    do_sign_in:
+        ru: "Войти"
+        en: "Sign in!"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

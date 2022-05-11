@@ -14,6 +14,8 @@ import { Redirect } from 'react-router-dom'
 
 import Loader from '../components/Loader'
 
+import {LangRaw} from '../lang/lang'
+
 import {requestPermission} from '../lib/BrowserNotifications'
 import callApi from '../lib/callApi'
 import withMyUser from '../lib/withMyUser'
@@ -56,7 +58,7 @@ class Login extends React.Component
         catch
             data =
                 error: true
-                message: "Неверный логин или пароль"
+                message: LangRaw("wrong_password", @props.lang)
             newState = {
                 @state...,
                 loading: false,
@@ -70,7 +72,7 @@ class Login extends React.Component
             return <Redirect to="/user/#{@props.myUser._id}" />
         canSubmit = @state.username && @state.password && !@state.loading
         <Grid fluid>
-            <h1>Вход в систему</h1>
+            <h1>{LangRaw("sign_in_full", @props.lang)}</h1>
 
             <form onSubmit={@tryLogin} autoComplete="off">
                 <input type="text" style={{display:"none"}}/>
@@ -80,14 +82,14 @@ class Login extends React.Component
                     <div>
                         <FieldGroup
                             id="username"
-                            label="Логин"
+                            label={LangRaw("login", @props.lang)}
                             type="text"
                             setField={@setField}
                             state={@state}
                             validationState={@state.error && 'error'}/>
                         <FieldGroup
                             id="password"
-                            label="Пароль"
+                            label={LangRaw("password", @props.lang)}
                             type="password"
                             setField={@setField}
                             state={@state}
@@ -105,7 +107,7 @@ class Login extends React.Component
                 </FormGroup>
                 }
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                    Войти
+                    {LangRaw("do_sign_in", @props.lang)}
                 </Button>
             </form>
         </Grid>
