@@ -65,6 +65,44 @@ _LANG =
     if_you_have_paid_contact_me:
         "ru": "Если вы на самом деле оплачивали занятия, или занятия для вас должны быть бесплатными, свяжитесь со мной."
         "en": "If you have in fact paid for the course, please contact me."
+    class:
+        "ru": "Класс"
+        "en": "Grade"
+    level:
+        "ru": "Уровень"
+        "en": "Level"
+    rating:
+        "ru": "Рейтинг"
+        "en": "Rating"
+    activity:
+        "ru": "Активность"
+        "en": "Activity"
+    cf_login_unknown:
+        "ru": "Логин на codeforces неизвестен. Если вы там зарегистрированы, укажите логин в своём профиле."
+        "en": "Codeforces login unknown. If you have a CF account, please specify it in your profile."
+    you_have_tshirts:
+        "ru": "У вас есть неполученные футболки. Напишите мне, чтобы их получить."
+        "en": "You have earned a tshirt. Please write me to know how you can get it."
+    not_activated_top_panel:
+        ru: "Учетная запись не активирована, напишите мне"
+        en: "Account not activated, please write me"
+    not_paid_top_panel:
+        ru: "Занятия не оплачены"
+        en: "Course was not paid for"
+    unknown_user:
+        ru: "Неизвестный пользователь"
+        en: "Unknown user"
+    sign_out:
+        ru: "Выход"
+        en: "Sign out"
+    register:
+        ru: "Регистрация"
+        en: "Sign up"
+    sign_in:
+        ru: "Вход"
+        en: "Sign in"
+    
+    
     
 
 export LangRaw = (id, lang) ->
