@@ -3,6 +3,9 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("28 мая пройдет XVIII олимпиада им В. Д. Лелюха", String.raw"""
+            28 мая 2022 года состоится XVIII Нижегородская городская олимпиада школьников по информатике им. В.Д. Лелюха. <a href="/material/nnoi_about">Подробнее</a>
+        """),
         newsItem("ЛКШ и летние школы в целом", String.raw"""
             Добавлена информация про <a href="/material/sis">Летнюю компьютерную школу</a>, а также <a href="/material/summerSchools">про летние школы в целом</a>.
         """),
