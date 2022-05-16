@@ -31,6 +31,25 @@ userCache = {}
 _0xca4e = ["\x6C\x65\x6E\x67\x74\x68", "\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74", "\x66\x6C\x6F\x6F\x72"];
 # ["length", "charCodeAt", "floor"]
 
+_toNumbers = (d) ->
+    e=[]
+    d.replace(/(..)/g, (d) -> e.push(parseInt(d,16)))
+    return e
+    
+_toHex = () -> 
+    `for(var d=[],d=1==arguments.length&&arguments[0].constructor==Array?arguments[0]:arguments,e="",f=0;f<d.length;f++)
+        e+=(16>d[f]?"0":"")+d[f].toString(16);
+    `
+    return e.toLowerCase()
+    
+getRCPC = (page) ->
+    console.log "page=", page
+    a = /a=toNumbers\("([^"]*)"\)/.exec(page)[1]
+    b = /b=toNumbers\("([^"]*)"\)/.exec(page)[1]
+    c = /c=toNumbers\("([^"]*)"\)/.exec(page)[1]
+    console.log "abc=", a, b, c
+    return _toHex(slowAES.decrypt(_toNumbers(c),2,_toNumbers(a),_toNumbers(b)))
+
 export class LoggedCodeforcesUser
     @getUser: (username, password) ->
         key = username + "::" + password
@@ -82,25 +101,6 @@ export class LoggedCodeforcesUser
     randomToken: () ->
         return (@randomNumber() + @randomNumber()).substring(0, 18);
 
-    _toNumbers: (d) ->
-        e=[]
-        d.replace(/(..)/g, (d) -> e.push(parseInt(d,16)))
-        return e
-        
-    _toHex: () -> 
-        `for(var d=[],d=1==arguments.length&&arguments[0].constructor==Array?arguments[0]:arguments,e="",f=0;f<d.length;f++)
-            e+=(16>d[f]?"0":"")+d[f].toString(16);
-        `
-        return e.toLowerCase()
-        
-    getRCPC: (page) ->
-        console.log "page=", page
-        a = /a=toNumbers\("([^"]*)"\)/.exec(page)[1]
-        b = /b=toNumbers\("([^"]*)"\)/.exec(page)[1]
-        c = /c=toNumbers\("([^"]*)"\)/.exec(page)[1]
-        console.log "abc=", a, b, c
-        return @_toHex(slowAES.decrypt(@_toNumbers(c),2,@_toNumbers(a),@_toNumbers(b)))
-
     _getCsrf: (page) ->
         return /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]    
 
@@ -111,7 +111,7 @@ export class LoggedCodeforcesUser
         try
             page = await @download("#{BASE_URL}/enter")
             if page.includes("Redirecting... Please, wait.")
-                RCPC = @getRCPC(page)
+                RCPC = getRCPC(page)
                 console.log "RCPC", RCPC
                 @jar.setCookie("RCPC=#{RCPC}", BASE_URL)
                 logger.info "Cf pre-login cookie=", @jar.getCookieString(BASE_URL)
@@ -252,18 +252,33 @@ export default class Codeforces extends TestSystem
     selfTest: () ->
         await @_getAdmin()
 
-    downloadProblem: (options) ->
+    downloadProblem: (options, label) ->
+        locale = 
+            if not label or label == "" then "ru"
+            else if label == "!en" then "en"
+            else throw "Don't know locale for label #{label}"
         if options.contest.startsWith("gym")
-            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}?locale=ru"
+            href = "#{BASE_URL}/#{options.contest}/problem/#{options.problem}?locale=#{locale}"
         else
-            href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=ru"
+            href = "#{BASE_URL}/problemset/problem/#{options.contest}/#{options.problem}?locale=#{locale}"
         page = await downloadLimited(href, {timeout: 15 * 1000})
+        if page.includes("Redirecting... Please, wait.")
+            jar = request.jar()
+            RCPC = getRCPC(page)
+            console.log "RCPC", RCPC
+            jar.setCookie("RCPC=#{RCPC}", BASE_URL)
+            logger.info "Cf pre-login cookie=", jar.getCookieString(BASE_URL)
+            page = await download("#{href}&f0a28=1", jar)
         document = (new JSDOM(page, {url: href})).window.document
         data = document.getElementsByClassName("problem-statement")
+        console.log(page)
         if not data or data.length == 0
             logger.warn("Can't find statement for problem " + href)
+            seeCfStatement = 
+                if label == "" then "См. условие на codeforces"
+                else if label == "!en" then "See statement on codeforces"
             name = options.name || "???"
-            text = "<h1>#{name}</h1> <div>См. условие на codeforces:</div>"
+            text = "<h1>#{name}</h1> <div>#{seeCfStatement}:</div>"
             return {name, text}
         data = data[0]
         nameEl = data.getElementsByClassName("title")[0]
