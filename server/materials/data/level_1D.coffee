@@ -75,7 +75,30 @@ contest_B_1 = () ->
 		problem({testSystem: "codeforces", contest: "276", problem: "B", name: "Девочка и игра"}),
 	]) 
 
-
+contest_B_2 = () ->
+	return contest("1D: Ladder B Contest 2", [
+		problem({testSystem: "codeforces", contest: "362", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "279", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "469", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "509", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "493", problem: "B"}),	
+		problem({testSystem: "codeforces", contest: "387", problem: "B"}),	
+		problem({testSystem: "codeforces", contest: "365", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "157", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "34", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "330", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "116", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "4", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "282", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "122", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "155", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "352", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "133", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "289", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "366", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "58", problem: "B"}),
+	])
+	
 export default level_1D = () ->
     return level("1D", [
         label("Теоретический материал Базовая теория графов:&nbsp;<a href=\"https://youtu.be/FQJCuxKpGBg\" target=\"_blank\">https://youtu.be/FQJCuxKpGBg</a>"),
@@ -85,4 +108,5 @@ export default level_1D = () ->
         contest_dfs2(),
         label("Ladder B из codeforces - 100 задач"),
         contest_B_1(),
+        contest_B_2(),
     ])
