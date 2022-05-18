@@ -131,6 +131,21 @@ _LANG =
     close:
         ru: "Закрыть"
         en: "Close"
+    commentText_AC:
+        ru: "Решение зачтено"
+        en: "Solution has been accepted"
+    commentText_IG:
+        ru: "Решение проигнорировано"
+        en: "Solution has been ignored"
+    commentText_DQ:
+        ru: "Решение дисквалифицировано"
+        en: "Solution has been disqualified"
+    commentText_comment:
+        ru: "Решение прокомментировано"
+        en: "Solution has been commented"
+    go_to_problem:
+        ru: "Перейти к задаче"
+        en: "Go to problem"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

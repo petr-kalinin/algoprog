@@ -10,10 +10,12 @@ import { connect } from 'react-redux'
 
 import Notifications from 'react-notification-system-redux';
 
-import Lang from '../lang/lang'
+import {LangRaw} from '../lang/lang'
+
 import {notify} from '../lib/BrowserNotifications'
-import ConnectedComponent from '../lib/ConnectedComponent'
 import callApi from '../lib/callApi'
+import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 
 import globalStyles from './global.css'
 
@@ -32,12 +34,12 @@ commentPanelClass = (comment) ->
         return "dq_text"
     return commentClass(comment)
 
-commentText = (comment) ->
+commentText = (comment, lang) ->
     switch comment.outcome
-        when "AC" then "Решение зачтено"
-        when "IG" then "Решение проигнорировано"
-        when "DQ" then "Решение дисквалифицировано"
-        else "Решение прокомментировано"
+        when "AC" then LangRaw("commentText_AC", lang)
+        when "IG" then LangRaw("commentText_IG", lang)
+        when "DQ" then LangRaw("commentText_DQ", lang)
+        else LangRaw("commentText_comment", lang)
 
 commentAdd = (comment) ->
     MAX_LENGTH = 50
@@ -71,7 +73,7 @@ class CommentList extends React.Component
                 continue
             cl = commentClass(comment) || "error"
             url = "/material/#{comment.problemId}"
-            message = commentText(comment)
+            message = commentText(comment, @props.lang)
             add = commentAdd(comment)
             title = comment.problemName
             notification =
@@ -80,7 +82,7 @@ class CommentList extends React.Component
                 position: 'br',
                 autoDismiss: 0,
                 children: [
-                    <Link to={url}>Перейти к задаче</Link>
+                    <Link to={url}>{LangRaw("go_to_problem", @props.lang)}</Link>
                 ]
             @props.showNotification(notification, cl)
             notify(comment._id, title, message + "\n" + add, url)
@@ -89,7 +91,7 @@ class CommentList extends React.Component
         if not @props.myUser?._id
             return null
         <div>
-            <h4>{Lang("recent_comments")}</h4>
+            <h4>{LangRaw("recent_comments", @props.lang)}</h4>
             <PanelGroup id="comments">
                 {
                 if @props.data?.length
@@ -116,14 +118,14 @@ class CommentList extends React.Component
                     )
                 }
             </PanelGroup>
-            <Link to="/comments">{Lang("all_comments")}</Link>
+            <Link to="/comments">{LangRaw("all_comments", @props.lang)}</Link>
         </div>
 
 mapStateToProps = () -> {}
 mapDispatchToProps = (dispatch) ->
     showNotification: (notification, cl) -> dispatch(Notifications.show(notification, cl))
 
-CommentListWithNotifications = connect(mapStateToProps, mapDispatchToProps)(CommentList)
+CommentListWithNotifications = connect(mapStateToProps, mapDispatchToProps)(withLang(CommentList))
 
 
 options = {
