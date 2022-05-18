@@ -111,7 +111,7 @@ class CommentList extends React.Component
                             <Panel.Collapse>
                                 <Panel.Body>
                                     <pre dangerouslySetInnerHTML={{__html: comment.text}}></pre>
-                                    <Link to="/material/#{comment.problemId}">Перейти к задаче</Link>
+                                    <Link to="/material/#{comment.problemId}">{LangRaw("go_to_problem", @props.lang)}</Link>
                                 </Panel.Body>
                             </Panel.Collapse>
                         </Panel>
