@@ -125,6 +125,12 @@ _LANG =
     do_sign_in:
         ru: "Войти"
         en: "Sign in!"
+    good_submits:
+        ru: "Хорошие решения"
+        en: "Good submits"
+    close:
+        ru: "Закрыть"
+        en: "Close"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

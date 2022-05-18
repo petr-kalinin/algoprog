@@ -6,6 +6,8 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/lib/Button'
 import Modal from 'react-bootstrap/lib/Modal'
 
+import Lang from '../lang/lang'
+
 import callApi from '../lib/callApi'
 
 import Submit, {SubmitSource} from './Submit'
@@ -21,7 +23,7 @@ export default BestSubmits = (props) ->
 
     <Modal show={true} onHide={props.close} dialogClassName={styles.modal}>
         <Modal.Body>
-            <h2>Хорошие решения</h2>
+            <h2>{Lang("good_submits")}</h2>
             {
             props.submits.map((submit) ->
                 <div key={submit._id} className={styles.submit}>
@@ -41,6 +43,6 @@ export default BestSubmits = (props) ->
         </Modal.Body>
 
         <Modal.Footer>
-            <Button bsStyle="primary" onClick={props.close}>Закрыть</Button>
+            <Button bsStyle="primary" onClick={props.close}>{Lang("close")}</Button>
         </Modal.Footer>
     </Modal>
