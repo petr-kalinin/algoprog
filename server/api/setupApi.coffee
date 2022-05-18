@@ -579,7 +579,7 @@ export default setupApi = (app) ->
         res.json(await Material.findById(req.params.id))
 
     app.get '/api/lastBlogPosts', wrap (req, res) ->
-        res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
+        res.json(await BlogPost.findLast(5))
 
     app.get '/api/result/:id', wrap (req, res) ->
         result = (await Result.findById(req.params.id))?.toObject()
