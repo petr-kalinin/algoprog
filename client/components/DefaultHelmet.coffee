@@ -2,14 +2,11 @@ React = require('react')
 
 import {Helmet} from 'react-helmet'
 
+import {LangRaw} from '../lang/lang'
 import withLang from '../lib/withLang'
 
 DefaultHelmet = (props) ->
-    if props.lang == "ru"
-        <Helmet titleTemplate="%s — algoprog.ru" defaultTitle="Алгоритмическое программирование">
-        </Helmet>
-    else
-        <Helmet titleTemplate="%s — algoprog.org" defaultTitle="Algorithmic programming">
-        </Helmet>
+    <Helmet titleTemplate={"%s — " + LangRaw("domain", props.lang)} defaultTitle={LangRaw("default_title", props.lang)}>
+    </Helmet>
 
 export default withLang(DefaultHelmet)

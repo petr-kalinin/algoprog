@@ -110,7 +110,7 @@ _LANG =
     cf_activity:
         ru: "Взвешенное количество написанных контестов за последнее время"
         en: "Recent weighted number of contests written"
-    wrong_password:
+    wrong_login_or_password:
         ru: "Неверный логин или пароль"
         en: "Wrong login or password"
     sign_in_full:
@@ -146,6 +146,39 @@ _LANG =
     go_to_problem:
         ru: "Перейти к задаче"
         en: "Go to problem"
+    months_short:
+        ru: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+        en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    dow_short:
+        ru: ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
+        en: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+    domain:
+        ru: "algoprog.ru"
+        en: "algoprog.org"
+    default_title:
+        ru: "Алгоритмическое программирование"
+        en: "Algorithmic programming"
+    edit_profile:
+        ru: "Редактировать профиль"
+        en: "Edit profile"
+    old_password_required:
+        ru: "Старый пароль (обязательно)"
+        en: "Old password (required)"
+    wrong_password:
+        ru: "Неправильный пароль"
+        en: "Wrong password"
+    change_password:
+        ru: "Сменить пароль"
+        en: "Change password"
+    new_password:
+        ru: "Новый пароль"
+        en: "New password"
+    passwords_are_not_equal:
+        ru: "Пароли не совпадают"
+        en: "Passwords are not equal"
+    password_can_not_start_with_space:
+        ru: "Пароль не может начинаться с пробела или заканчиваться на него"
+        en: "Password can not start with space or end in space"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

@@ -58,7 +58,7 @@ class Login extends React.Component
         catch
             data =
                 error: true
-                message: LangRaw("wrong_password", @props.lang)
+                message: LangRaw("wrong_login_or_password", @props.lang)
             newState = {
                 @state...,
                 loading: false,

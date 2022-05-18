@@ -6,9 +6,12 @@ import CfStatus from './CfStatus'
 import styles from './EditUser.css'
 import Loader from './Loader'
 
+import Lang, {LangRaw} from '../lang/lang'
+
 import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
+import withLang from '../lib/withLang'
 
 class Input extends React.Component
     constructor: (props) ->
@@ -174,29 +177,30 @@ class EditingUser extends React.Component
             cls = @state.clas
             buttonDisabled = noMatch or whitespace or @state.informaticsError or @state.informaticsLoading or @state.codeforcesLoading or @state.codeforcesError
             <div>
-                <h2>Редактировать профиль</h2>
+                <h2>{LangRaw("edit_profile", @props.lang)}</h2>
                 <form className = {styles.form}>
                     <div>
-                        Старый пароль (обязательно):
+                        {LangRaw("old_password_required", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "password"
                                 value =  {@state.password}
                                 onChange = {@handlePasswordChange}
-                                errors = {[@state.passError && "Неправильный пароль"]}
+                                errors = {[@state.passError && LangRaw("wrong_password", @props.lang)]}
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
-                    <h3>Сменить пароль</h3>
+                    <h3>{LangRaw("change_password", @props.lang)}</h3>
                     <div>
-                        Новый пароль:
+                        {LangRaw("new_password", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "password"
                                 value = {@state.newPassOne}
                                 onChange = {@handleNewPassOneChange}
                                 hideErrors = {true}
-                                errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
+                                errors = {[noMatch && LangRaw("passwords_are_not_equal", @props.lang), 
+                                    whitespace && LangRaw("password_can_not_start_with_space", @props.lang)]}
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
@@ -207,7 +211,8 @@ class EditingUser extends React.Component
                                 name = "password"
                                 value = {@state.newPassTwo}
                                 onChange = {@handleNewPassTwoChange}
-                                errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
+                                errors ={[noMatch && LangRaw("passwords_are_not_equal", @props.lang), 
+                                    whitespace && LangRaw("password_can_not_start_with_space", @props.lang)]}
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
@@ -290,4 +295,4 @@ options =
     urls: (props) ->
         registeredUser: "registeredUser/#{props.user._id}"
 
-export default ConnectedComponent(EditingUser, options)
+export default ConnectedComponent(withLang(EditingUser), options)
