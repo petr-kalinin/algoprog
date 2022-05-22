@@ -50,6 +50,34 @@ contest_dfs2 = () ->
         problem({testSystem: "codeforces", contest: "1209", problem: "D", name: "Корова и вечеринка"}),
     ])
 	
+contest_bfs1 = () ->
+    return contest("1D: BFS 1", [
+        problem(160),
+        problem(161),
+        problem(162),
+        problem(1472),
+        problem(2001),
+        problem(2002),
+        problem(2003),
+    ])
+
+contest_bfs2 = () ->
+    return contest("1D: BFS 2", [
+        problem({testSystem: "codeforces", contest: "727", problem: "A"}),
+        problem({testSystem: "codeforces", contest: "520", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "602", problem: "C"}),
+		problem({testSystem: "codeforces", contest: "1105", problem: "D"}),
+		problem({testSystem: "codeforces", contest: "598", problem: "D"}),
+		problem({testSystem: "codeforces", contest: "35", problem: "C"}),
+		problem({testSystem: "codeforces", contest: "370", problem: "A"}),
+		problem({testSystem: "codeforces", contest: "329", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "242", problem: "C"}),
+		problem({testSystem: "codeforces", contest: "198", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "877", problem: "D"}),
+		problem({testSystem: "codeforces", contest: "59", problem: "E"}),
+		problem({testSystem: "codeforces", contest: "796", problem: "D"}),
+		problem({testSystem: "codeforces", contest: "821", problem: "D"}),
+    ])
 
 contest_B_1 = () ->
 	return contest("1D: Ladder B Contest 1", [
@@ -109,4 +137,7 @@ export default level_1D = () ->
         label("Ladder B из codeforces - 100 задач"),
         contest_B_1(),
         contest_B_2(),
+		label("Теоретический материал BFS (лекция Владимира Гуровца, ЛКШ 2013г): https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/"),
+		contest_bfs1(),
+        contest_bfs2(),
     ])
