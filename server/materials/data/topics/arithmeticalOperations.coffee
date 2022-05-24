@@ -43,9 +43,9 @@ export default arithmeticalOperations = () ->
     return {
         topic: topic("Арифметические операции", "Задачи на арифметические операции", [
             label("<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
-            problem(2938),
-            problem(2939),
-            problem(2941),
+            problem({testSystem: "ejudge", contest: "3003", problem: "1", id: "2938"}),
+            problem({testSystem: "ejudge", contest: "3003", problem: "1", id: "2939"}),
+            problem({testSystem: "ejudge", contest: "3003", problem: "1", id: "2941"}),
             problem(2942),
             problem(2943),
             problem(2944),
