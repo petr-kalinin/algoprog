@@ -92,11 +92,11 @@ export default ifs = () ->
         topic: topic("Условный оператор", "Задачи на условный оператор", [
             label("<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
             label("<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
-            problem(292),
-            problem(293),
-            problem(2959),
-            problem(294),
-            problem(253),
+            problem({testSystem: "ejudge", contest: "3004", problem: "1", id: "292"}),
+            problem({testSystem: "ejudge", contest: "3004", problem: "2", id: "293"}),
+            problem({testSystem: "ejudge", contest: "3004", problem: "3", id: "2959"}),
+            problem({testSystem: "ejudge", contest: "3004", problem: "4", id: "294"}),
+            problem({testSystem: "ejudge", contest: "3004", problem: "5", id: "253"}),
         ], "ifs"),
         advancedTopics: [
             contest("Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами", [
