@@ -5,11 +5,14 @@ import Button from 'react-bootstrap/lib/Button'
 import Alert from 'react-bootstrap/lib/Alert'
 import { Link } from 'react-router-dom'
 
+import {LangRaw} from '../lang/lang'
+
 import GROUPS from '../lib/groups'
+import withLang from '../lib/withLang'
 
 import FieldGroup from './FieldGroup'
 
-export default class Payment extends React.Component
+class Payment extends React.Component
     constructor: (props) ->
         super(props)
         @state =
@@ -35,27 +38,25 @@ export default class Payment extends React.Component
         if not @props.myUser?._id
             amount = 1500
             warning = <Alert bsStyle="danger">
-                    Вы не зарегистрированы, вы не можете оплачивать занятия. Форма ниже приведена для примера.
+                    {LangRaw("cant_pay_not_registered", @props.lang)}
                 </Alert>
             canSubmit = false
         else if not @props.myUser?.activated
             amount = 1500
             warning = <Alert bsStyle="danger">
-                    Ваш аккаунт не активирован. Напишите мне, чтобы я активировал ваш аккаунт и установил стоимость занятий.
-                    Форма ниже приведена для примера.
+                    {LangRaw("cant_pay_not_activated", @props.lang)}
                 </Alert>
             canSubmit = false
         else if not GROUPS[@props.myUser.userList]?.paid or @props.myUser.price == 0
             amount = 0
             warning = <Alert bsStyle="danger">
-                    Занятия для вас бесплатны, вам не надо их оплачивать.
+                    {LangRaw("cant_pay_free", @props.lang)}
                 </Alert>
             canSubmit = false
         else if not @props.myUser.price or not @props.myUser.paidTill
             amount = 1500
             warning = <Alert bsStyle="danger">
-                    Для вас не указана стоимость занятий, напишите мне.
-                    Форма ниже приведена для примера.
+                    {LangRaw("cant_pay_no_price", @props.lang)}
                 </Alert>
             canSubmit = false
         else 
@@ -80,11 +81,10 @@ export default class Payment extends React.Component
         canSubmit = canSubmit and @state.name and @state.email
 
         <div>
-            <h1>Оплата занятий</h1>
+            <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
             {warning}
-            <p>Вы оплачиваете один месяц занятий на algoprog.ru. Стоимость месяца для вас составляет {amount} рублей.</p>
-            <p><b>Оплата возможна только с карт российских банков. Если у вас нет таких карт, возможны другие варианты
-            (банковским переводом по российским реквизитам, SWIFT-переводом, биткойнами), напишите мне.</b></p>
+            <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>
+            <p><b>{LangRaw("payment_is_possible_only_from_russian_banks", @props.lang)}</b></p>
             <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <form name="TinkoffPayForm" onSubmit={@pay} id="payForm">
                 <input type="hidden" name="terminalkey" value="1539978299062"/>
@@ -95,32 +95,29 @@ export default class Payment extends React.Component
                 <input className="tinkoffPayRow" type="hidden" name="receipt" value={JSON.stringify(receipt)}/>
                 <FieldGroup
                     id="amount"
-                    label="Сумма"
+                    label={LangRaw("payment_sum", @props.lang)}
                     type="text"
                     value={amount}
                     disabled/>
                 <FieldGroup
                     id="name"
-                    label="Полные ФИО плательщика"
+                    label={LangRaw("full_payer_name", @props.lang)}
                     type="text"
                     setField={@setField}
                     state={@state}/>
                 <FieldGroup
                     id="email"
-                    label="E-mail плательщика"
+                    label={LangRaw("payer_email", @props.lang)}
                     type="text"
                     setField={@setField}
                     state={@state}/>
-                <p>Нажимая «Оплатить», вы соглашаетесь с <a href="/oferta.pdf" target="_blank">офертой</a> оказания услуг.</p>
+                <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                    Оплатить
+                    {LangRaw("do_pay", @props.lang)}
                 </Button>
             </form>
-            <h2>Официальная часть</h2>
-            <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064. 
-            Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
+            {LangRaw("payment_official", @props.lang)}
 
-            <p>Платежи осуществляются через Тинькофф Банк. Принимаются карты любых российских банков.</p>
-            <img height="30px" src="/tinkoff.png" style={{marginRight: "15px"}}/>
-            <img height="30px" src="/mastercard_visa.svg"/>
         </div>
+
+export default withLang Payment

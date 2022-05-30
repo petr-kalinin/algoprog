@@ -250,6 +250,60 @@ _LANG =
     sort_by_status:
         ru: "Сортировать по статусу"
         en: "Sort by status"
+    hide_submits:
+        ru: "Спрятать посылки"
+        en: "Hide submits"
+    results:
+        ru: "Результаты"
+        en: "Results"
+    cant_pay_not_registered:
+        ru: "Вы не зарегистрированы, вы не можете оплачивать занятия. Форма ниже приведена для примера."
+        en: "You are not registered, you cannot pay for the course. The form below is given as an example."
+    cant_pay_not_activated:
+        ru: "Ваш аккаунт не активирован. Напишите мне, чтобы я активировал ваш аккаунт и установил стоимость занятий. Форма ниже приведена для примера."
+        en: "Your account is not activated. Plase contact me so that I activate your account and set the cost of the course. The form below is given as an example."
+    cant_pay_free:
+        ru: "Занятия для вас бесплатны, вам не надо их оплачивать."
+        en: "The course is free for you, you don't need to pay."
+    cant_pay_no_price:
+        ru: "Для вас не указана стоимость занятий, напишите мне. Форма ниже приведена для примера."
+        en: "The cost of classes is not indicated for you, please contact me. The form below is given as an example."
+    payment_for_the_course:
+        ru: "Оплата занятий"
+        en: "Payment for the course"
+    you_pay_for_one_month:
+        ru: (amount) -> "Вы оплачиваете один месяц занятий на algoprog.ru. Стоимость месяца для вас составляет #{amount} рублей."
+        en: (amount) -> "You pay for one month access to algoprog.org. The price for you is #{amount} rubles."
+    payment_is_possible_only_from_russian_banks:
+        ru: "Оплата возможна только с карт российских банков. Если у вас нет таких карт, возможны другие варианты (банковским переводом по российским реквизитам, SWIFT-переводом, биткойнами), напишите мне."
+        en: "Payment is possible only with cards issued by Russian banks. If you do not have such cards, other options are possible (by bank transfer using Russian bank details, by SWIFT transfer, bitcoin), please contact me."
+    payment_sum:
+        ru: "Сумма"
+        en: "Sum"
+    full_payer_name:
+        ru: "Полные ФИО плательщика"
+        en: "Full name of the payer"
+    payer_email:
+        ru: "E-mail плательщика"
+        en: "Payer email"
+    you_agree_to_oferta:
+        ru: "Нажимая «Оплатить», вы соглашаетесь с <a href='/oferta.pdf' target='_blank'>офертой</a> оказания услуг."
+        en: ""
+    do_pay:
+        ru: "Оплатить"
+        en: "Pay"
+    payment_official: 
+        ru: <>
+                <h2>Официальная часть</h2>
+                <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064. 
+                Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
+                <p>Платежи осуществляются через Тинькофф Банк. Принимаются карты любых российских банков.</p>
+                <img height="30px" src="/tinkoff.png" style={{marginRight: "15px"}}/>
+                <img height="30px" src="/mastercard_visa.svg"/>            
+            </>
+        en: <>
+                <p>TBD</p>
+            </>
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
