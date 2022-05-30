@@ -173,12 +173,59 @@ _LANG =
     new_password:
         ru: "Новый пароль"
         en: "New password"
+    repeat_password:
+        ru: "Повторите пароль"
+        en: "Repeat password"
     passwords_are_not_equal:
         ru: "Пароли не совпадают"
         en: "Passwords are not equal"
     password_can_not_start_with_space:
         ru: "Пароль не может начинаться с пробела или заканчиваться на него"
         en: "Password can not start with space or end in space"
+    profile_data:
+        ru: "Данные профиля"
+        en: "Profile data"
+    new_name:
+        ru: "Имя"
+        en: "Name"
+    codeforces_handle:
+        ru: "Хендл (никнейм) на codeforces"
+        en: "Codeforces handle"
+    class:
+        ru: "Класс"
+        en: "School year"
+    informatics_password:
+        ru: "Пароль от informatics"
+        en: "Informatics password"
+    informatics_password_does_not_match_account:
+        ru: (id) -> <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{id}">вашему аккаунту на informatics</a></div>
+        en: (id) -> <div>Password does not match <a href="https://informatics.mccme.ru/user/view.php?id=#{id}">your informatics account</a></div>
+    codeforces_data_for_submitting_problems:
+        ru: "Данные codeforces для отправки решений"
+        en: "Codeforces data for submitting problems"
+    codeforces_data_for_submitting_problems_intro:
+        ru: "Некоторые задачи отправляются на codeforces, а не на информатикс. 
+                        Для их отправки нужны логин и пароль от какого-нибудь вашего аккаунта на cf.
+                        Вы можете указать данные того же аккаунта, что и выше, или можете зарегистрировать
+                        отдельный аккаунт только для отправки решений с алгопрога, если не хотите указывать пароль
+                        от вашего основного аккаунта."
+        en: "Some tasks are sent to codeforces, not to informatics.
+                        To send them, you need to provide a username and password from some of your cf account.
+                        You can specify the data of the same account as above, or you can register
+                        a separate account only for sending solutions from the algoprog, if you do not want to specify a password
+                        from your main account"
+    codeforces_data_for_submitting_problems_handle:
+        ru: "Хендл (никнейм) на codeforces для отправки решений"
+        en: "Codeforces handle for submitting problems"
+    codeforces_data_for_submitting_problems_password:
+        ru: "Хендл (никнейм) на codeforces для отправки решений"
+        en: "Codeforces handle for submitting problems"
+    login_and_password_do_not_match:
+        ru: "Пароль не подходит к логину"
+        en: "The password does not match the login"
+    unknown_error_check_internet:
+        ru: "Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу"
+        en: "Unknown error, check your internet connection and reload the page"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
