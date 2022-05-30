@@ -153,6 +153,8 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
 
 expandFindMistakeResult = (result, admin, userKey) ->
     mistake = await FindMistake.findById(result.findMistake)
+    if not mistake
+        return null
     allowed = await mistake.isAllowedForUser(userKey, admin)
     mistake = mistake.toObject()
     mistake.allowed = allowed

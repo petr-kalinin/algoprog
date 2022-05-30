@@ -226,6 +226,30 @@ _LANG =
     unknown_error_check_internet:
         ru: "Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу"
         en: "Unknown error, check your internet connection and reload the page"
+    copy:
+        ru: "cкопировать"
+        en: "copy"
+    copied:
+        ru: "скопировано"
+        en: "copied"
+    find_mistake:
+        ru: "Найди ошибку"
+        en: "Find mistake"
+    about_find_mistake:
+        ru: "О поиске ошибок"
+        en: "About 'find mistake'"
+    reset_changes:
+        ru: "Сбросить правки"
+        en: "Reset changes"
+    changes_of_allowed:
+        ru: (currentDistance, maxSubmits) -> "Исправлений: #{currentDistance} (можно #{maxSubmits})"
+        en: (currentDistance, maxSubmits) -> "Changed: #{currentDistance} (allowed #{maxSubmits})"
+    sort_by_problem:
+        ru: "Сортировать по задаче"
+        en: "Sort by problem"
+    sort_by_status:
+        ru: "Сортировать по статусу"
+        en: "Sort by status"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
