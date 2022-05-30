@@ -8,7 +8,10 @@ import styles from './SolvedByWeek.css'
 
 import userTableHeader from './UserTableHeader'
 
+import {LangRaw} from '../lang/lang'
+
 import GROUPS from '../lib/groups'
+import withLang from '../lib/withLang'
 import withTheme from '../lib/withTheme'
 
 import {lastWeeksToShow, MSEC_IN_WEEK} from '../../server/calculations/ratingConstants'
@@ -50,19 +53,14 @@ weekHeader = (weekNumber, weekCount, userList) ->
     startDay = new Date(+endDay - MSEC_IN_WEEK * weekCount + 1)
     endDay.getUTCDate() + "." + (endDay.getUTCMonth()+1) + "-" + startDay.getUTCDate() + "." + (startDay.getUTCMonth()+1)
 
-Header = (props) ->
+Header = withLang (props) ->
     toggleFullscreen = props.toggleFullscreen
     fullscreenElement = <Button onClick={toggleFullscreen}><FontAwesome name={"arrows-alt"} /></Button>
     cl = props.headerClass || "h1"
-    H = React.createElement(cl, {}, ['Сданные задачи по неделям ', fullscreenElement])
+    H = React.createElement(cl, {}, [LangRaw("solved_problems_by_week", props.lang) + " ", fullscreenElement])
     <div>
         {H}
-        <p className="small">
-            Количество зачтенных посылок за неделю; 0.5, если посылки были, но ни одной зачтенной
-        </p>
-        <p className="small">
-            <b>Таблица развернута: ось времени направлена влево, недавние недели находятся слева.</b>
-        </p>
+        {LangRaw("solved_by_week_notes", props.lang)}
     </div>
 
 

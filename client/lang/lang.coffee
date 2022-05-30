@@ -304,6 +304,34 @@ _LANG =
         en: <>
                 <p>TBD</p>
             </>
+    payment_successful_message:
+        ru: <>
+                <h1>Оплата успешна</h1>
+                <p>Оплата занятий успешна, срок занятий на сайте будет продлен в ближайшее время после обработки платежа.
+                Обычно обработка занимает несколько секунд, в особых случаях может продолжаться несколько часов.
+                Если через два часа срок оплаченных занятий не будет продлен, свяжитесь со мной.</p>
+
+                <p>Чек об оплате (в соответствии с законом о самозанятых; чек может появиться не сразу, а через 20-30 секунд):</p>
+            </>
+        en: <>
+                <h1>Payment successful</h1>
+                <p>The payment for course is successful, the paid-for period will be extended in the near future after the payment is processed.
+                Usually processing takes a few seconds, in some cases it can take several hours.
+                If the paid-for period is not extended after two hours, please contact me.</p>
+                <p>The receipt (according to Russia tax law; it may take 20-30 seconds to appear):</p>
+            </>
+    solved_problems_by_week:
+        ru: "Сданные задачи по неделям"
+        en: "Solved problems by week"
+    solved_by_week_notes:
+        ru: <>
+                <p className="small">Количество зачтенных посылок за неделю; 0.5, если посылки были, но ни одной зачтенной</p>
+                <p className="small"><b>Таблица развернута: ось времени направлена влево, недавние недели находятся слева.</b></p>            
+            </> 
+        en: <>
+                <p className="small">The number of accepted submits for each  week; 0.5 if there were submits, but none were accepted.</p>
+                <p className="small"><b>The table is reversed: the time axis is directed to the left, recent weeks are on the left.</b></p>            
+            </> 
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]
