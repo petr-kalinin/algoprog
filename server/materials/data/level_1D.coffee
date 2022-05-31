@@ -137,7 +137,7 @@ export default level_1D = () ->
         label("Ladder B из codeforces - 100 задач"),
         contest_B_1(),
         contest_B_2(),
-        label("Теоретический материал BFS (лекция Владимира Гуровца, ЛКШ 2013г): https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/"),
+        label("Теоретический материал BFS (лекция Владимира Гуровца, ЛКШ 2013г): <a href='https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/'>https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/</a>"),
         contest_bfs0(),
         contest_bfs1(),
     ])
