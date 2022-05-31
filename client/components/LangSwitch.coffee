@@ -21,6 +21,7 @@ mapStateToProps = (state) ->
 
 mapDispatchToProps = (dispatch, ownProps) ->
     return
-        switchLang: (newLang) -> dispatch(actions.switchLang(newLang))
+        switchLang: (newLang) -> 
+            dispatch(actions.switchLang(newLang))
 
 export default connect(mapStateToProps, mapDispatchToProps)(LangSwitch)

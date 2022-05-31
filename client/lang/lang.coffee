@@ -43,10 +43,10 @@ _LANG =
         "en": "Account was not activated"
     account_not_activated_long:
         "ru": "Ваша учетная запись еще не активирована. Вы можете сдавать задачи, но напишите мне, чтобы я активировал вашу учетную запись. Мои контакты — на страничке "
-        "en": "Your account was not activated yet. You can start solving the problems, but please write to me so that I activate your account. My contacts are on the "
+        "en": "Your account was not activated yet. You can start solving the problems, but please contact me so that I activate your account. My contacts are on the "
     account_not_activated_blocked_long:
         "ru": "Ваша учетная запись еще не активирована. Если вы хотите заниматься, напишите мне, чтобы я активировал вашу учетную запись. Мои контакты — на страничке "
-        "en": "Your account was not activated yet. Please write to me so that I activate your account. My contacts are on the "
+        "en": "Your account was not activated yet. Please contact me so that I activate your account. My contacts are on the "
     about_course_page:
         "ru": "О курсе"
         "en": "About course page"
@@ -82,10 +82,10 @@ _LANG =
         "en": "Codeforces login unknown. If you have a CF account, please specify it in your profile."
     you_have_tshirts:
         "ru": "У вас есть неполученные футболки. Напишите мне, чтобы их получить."
-        "en": "You have earned a tshirt. Please write me to know how you can get it."
+        "en": "You have earned a tshirt. Please contact me to know how you can get it."
     not_activated_top_panel:
         ru: "Учетная запись не активирована, напишите мне"
-        en: "Account not activated, please write me"
+        en: "Account not activated, please contact me"
     not_paid_top_panel:
         ru: "Занятия не оплачены"
         en: "Course was not paid for"
@@ -227,17 +227,17 @@ _LANG =
         ru: "Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу"
         en: "Unknown error, check your internet connection and reload the page"
     copy:
-        ru: "cкопировать"
-        en: "copy"
+        ru: "Скопировать"
+        en: "Copy"
     copied:
-        ru: "скопировано"
-        en: "copied"
+        ru: "Скопировано"
+        en: "Copied"
     find_mistake:
         ru: "Найди ошибку"
-        en: "Find mistake"
+        en: "Find a bug"
     about_find_mistake:
         ru: "О поиске ошибок"
-        en: "About 'find mistake'"
+        en: "About 'find a bug'"
     reset_changes:
         ru: "Сбросить правки"
         en: "Reset changes"
@@ -332,6 +332,63 @@ _LANG =
                 <p className="small">The number of accepted submits for each  week; 0.5 if there were submits, but none were accepted.</p>
                 <p className="small"><b>The table is reversed: the time axis is directed to the left, recent weeks are on the left.</b></p>            
             </> 
+    download:
+        ru: "Скачать"
+        en: "Download"
+    source_code:
+        ru: "Исходный код"
+        en: "Source"
+    comments:
+        ru: "Комментарии"
+        en: "Comments"
+    compiler_output:
+        ru: "Вывод компилятора"
+        en: "Compiler output"
+    result:
+        ru: "Результат"
+        en: "Outcome"
+    time:
+        ru: "Время"
+        en: "Time"
+    memory:
+        ru: "Память"
+        en: "Memory"
+    you_have_already_submitted:
+        ru: "Вы уже отправляли это код"
+        en: "You have already submitted this code"
+    account_blocked_unpaid:
+        ru: "Ваш аккаунт заблокирован за неуплату"
+        en: "You account is blocked due to no payment"
+    account_not_activated:
+        ru: "Ваш аккаунт не активирован"
+        en: "Your account is not activated"
+    unknown_error:
+        ru: "Неопознанная ошибка"
+        en: "Unknown error"
+    submit_solution:
+        ru: "Отправить решение"
+        en: "Submit a solution"
+    code_editor:
+        ru: "Редактор кода"
+        en: "Code editor"
+    send_as_draft:
+        ru: "Отправить как черновик, не тестировать"
+        en: "Send as draft, do not test"
+    do_submit:
+        ru: "Отправить"
+        en: "Submit"
+    submit_disclaimer:
+        ru: "Отправляя решение на проверку, я предоставляю администраторам сайта неограниченную лицензию на использование исходного кода решения в любых целях, включая, но не ограничиваясь, использование решения в разделе «Хорошие решения», «Найди ошибку» и т.д."
+        en: "By submitting the solution, I grant the site administrators an unlimited license to use the source code of the solution for any purpose, including, but not limited to, using the solution in the section 'Good Solutions', 'Find a bug', etc."
+    draft_explained:
+        ru: "Решение будет отправлено как черновик. Оно будет сохранено на сервере и доступно в списке посылок, но не будет протестировано и не будет влиять на результаты по этой задаче. Например, это вам может быть полезно, если вы хотите продолжить работу над задачей с другого компьютера."
+        en: "The solution will be sent as a draft. It will be saved on the server and will be available in the submission list, but it will not be tested and will not affect the results for this problem. For example, this may be useful to you if you want to continue working on a problem from another computer."
+    successfully_submitted:
+        ru: "Решение успешно отправлено."
+        en: "The solution has been successfully submitted"
+    submit_error:
+        ru: "Ошибка отправки"
+        en: "An error occured during submission"
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

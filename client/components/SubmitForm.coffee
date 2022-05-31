@@ -15,15 +15,17 @@ import Button from 'react-bootstrap/lib/Button'
 
 import Loader from '../components/Loader'
 
+import {LangRaw} from '../lang/lang'
+
+import ConnectedComponent from '../lib/ConnectedComponent'
 import callApi, {callApiWithBody} from '../lib/callApi'
+import LANGUAGES from '../lib/languages'
+import withLang from '../lib/withLang'
 
 import Editor from './Editor'
 import FieldGroup from './FieldGroup'
 import ShadowedSwitch from './ShadowedSwitch'
 
-import ConnectedComponent from '../lib/ConnectedComponent'
-
-import LANGUAGES from '../lib/languages'
 
 class SubmitForm extends React.Component
     constructor: (props) ->
@@ -71,9 +73,9 @@ class SubmitForm extends React.Component
     setStartLanguage: () ->
         startLanguage = @props.startLanguage || @props.myUser.prefs?.language
         if startLanguage
-            for lang of LANGUAGES
-                if startLanguage.includes(lang)
-                    @state.lang_id = lang
+            for lg of LANGUAGES
+                if startLanguage.includes(lg)
+                    @state.lang_id = lg
                     break
 
     componentDidUpdate: (prevProps, prevState) ->
@@ -123,24 +125,24 @@ class SubmitForm extends React.Component
                 data = 
                     submit:
                         error: true
-                        message: "Вы уже отправляли это код"
+                        message: LangRaw("you_have_already_submitted", @props.lang)
             else if data.unpaid
                 data = 
                     submit:
                         error: true
-                        message: "Ваш аккаунт заблокирован за неуплату"
+                        message: LangRaw("account_blocked_unpaid", @props.lang)
             else if data.dormant
                 data = 
                     submit:
                         error: true
-                        message: "Ваш аккаунт не активирован"
+                        message: LangRaw("account_not_activated", @props.lang)
             else
                 throw ""
         catch e
             data =
                 submit:
                     error: true
-                    message: "Неопознанная ошибка"
+                    message: LangRaw("unknown_error", @props.lang)
         newState = {
             @state...
             wasFile: false
@@ -160,7 +162,7 @@ class SubmitForm extends React.Component
 
         <div>
             {(@props.editorOn || @state.editorOn) && <Editor language={@state.lang_id} editorDidMount={@handleEditorDidMount} value={@editorRef.current?.getValue() || @props.editorValue}/>}
-            <h4>Отправить решение</h4>
+            <h4>{LangRaw("submit_solution", @props.lang)}</h4>
             <Form inline onSubmit={@submit} id="submitForm">
                 {(@props.noFile || @state.editorOn) || <FieldGroup
                     id="file"
@@ -185,7 +187,7 @@ class SubmitForm extends React.Component
                     </FieldGroup>
                 }
                 {@props.editorOn || <>{" "}
-                    <span onClick={@toggleEditor} title="Редактор кода">
+                    <span onClick={@toggleEditor} title={LangRaw("code_editor", @props.lang)}>
                         <ShadowedSwitch on={@state.editorOn}>
                             <FontAwesome name={"pencil-square" + if @state.editorOn then "" else "-o"} />
                         </ShadowedSwitch>
@@ -193,7 +195,7 @@ class SubmitForm extends React.Component
                 </>
                 }
                 {" "}
-                <span onClick={@toggleDraft} title="Не тестировать, отправить как черновик">
+                <span onClick={@toggleDraft} title={LangRaw("send_as_draft", @props.lang)}>
                     <ShadowedSwitch on={@state.draft}>
                         <FontAwesome name={"hourglass" + if @state.draft then "" else "-o"} />
                     </ShadowedSwitch>
@@ -206,30 +208,26 @@ class SubmitForm extends React.Component
                     </div>
                 }
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                    Отправить
+                    {LangRaw("do_submit", @props.lang)}
                 </Button>
             </Form>
-            <small>Отправляя решение на проверку, я предоставляю администраторам сайта неограниченную лицензию на использование исходного кода решения
-            в любых целях, включая, но не ограничиваясь, использование решения в разделе «Хорошие решения», «Найди ошибку» и т.д.</small>
+            <small>{LangRaw("submit_disclaimer", @props.lang)}</small>
             {
             if @state.draft
                 <Alert bsStyle="info">
-                    Решение будет отправлено как черновик. Оно будет сохранено на сервере и доступно в списке посылок,
-                    но не будет протестировано и не будет влиять на результаты по этой задаче.
-                    Например, это вам может быть полезно, если вы хотите продолжить работу над задачей
-                    с другого компьютера.
+                    {LangRaw("draft_explained", @props.lang)}
                 </Alert>
             }
             {
             if @state.submit?.result
                 <Alert bsStyle="success">
-                    Решение успешно отправлено.
+                    {LangRaw("successfully_submitted", @props.lang)}
                 </Alert>
             }
             {
             if @state.submit?.error
                 <Alert bsStyle="danger">
-                    Ошибка отправки: {@state.submit.message}
+                    {LangRaw("submit_error", @props.lang)}: {@state.submit.message}
                 </Alert>
             }
         </div>
@@ -238,4 +236,4 @@ options =
     urls: () ->
         { "myUser" }
 
-export default ConnectedComponent(SubmitForm, options)
+export default withLang(ConnectedComponent(SubmitForm, options))

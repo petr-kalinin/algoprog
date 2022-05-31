@@ -24,6 +24,7 @@ import Cookies from 'universal-cookie'
 
 renderFullPage = (html, data, helmet, linkClientJsCss) ->
     return '
+        <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8" />
