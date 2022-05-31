@@ -389,6 +389,83 @@ _LANG =
     submit_error:
         ru: "Ошибка отправки"
         en: "An error occured during submission"
+    you_will_be_able_to_find_mistake:
+        ru: "Когда вы получите Зачтено, здесь вы сможете искать ошибки в чужих решениях"
+        en: "When you get Accepted, you will be able to find bugs in others solutions"
+    here_will_be_good_submits:
+        ru: "Когда вы получите Зачтено, здесь будут хорошие решения"
+        en: "When you get Accepted, here you will see good submits"
+    attempts:
+        ru: "Попытки"
+        en: "Attempts"
+    do_not_refresh_attempts:
+        ru: "Не обновляйте страницу; список посылок обновляется автоматически."
+        en: "Do not refrest the page; the attempts list is refreshed automatically."
+    no_attempts_yet:
+        ru: "Посылок по этой задаче еще не было"
+        en: "No attempts yet on this problem"
+    problem:
+        ru: "Задача"
+        en: "Problem"
+    attempt_time:
+        ru: "Время попытки"
+        en: "Attempt time"
+    language:
+        ru: "Язык"
+        en: "Language"
+    in_seconds:
+        ru: "(секунды)"
+        en: "(seconds)"
+    in_mb:
+        ru: "(МБ)"
+        en: "(MB)"
+    original_submit:
+        ru: "(Исходное решение)"
+        en: "(Original submit)"
+    has_comments:
+        ru: "Есть комментарии"
+        en: "Has comments"
+    details:
+        ru: "Подробнее"
+        en: "Details"
+    already_got:
+        ru: "Выдана"
+        en: "Already got"
+    main_table:
+        ru: "Общая таблица"
+        en: "Main ranking table"
+    main_table_notes:
+        ru: <>
+                <p>Цвет ячеек: белая — на уровне не решено ни одной задачи, серая — на уровне решено сколько-то задач, но недостаточно, чтобы пройти уровень, темно-зеленая — уровень пройден, но решены не все задачи, ярко-зеленая — решены вообще все задачи. (На уровнях с необязательными темами бывают ошибки раскраски.)</p>
+            </>
+        en: <>
+                <p>Color of cells: white — no problem has been solved at the level, gray — some problems have been solved at the level, but not enough to pass the level, dark green — the level has been passed, but not all tasks have been solved, bright green — all tasks have been solved at all. (There may be coloring errors on levels with optional topics.)</p>
+            </>
+    table_header:
+        ru: (levels) -> "Сводная таблица по уровням " + levels
+        en: (levels) -> "Overall ranking for levels " + levels
+    colors:
+        ru: "Цвета"
+        en: "Colors"
+    accepted: 
+        ru: "Зачтено"
+        en: "Accepted"
+    ignored:
+        ru: "Проигнорировано"
+        en: "Ignored"
+    partial_solution_etc:
+        ru: "Частичное решение и т.п."
+        en: "Partial solution etc."
+    table_notes:
+        ru: <>
+                <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
+                <p>Двойной щелчок по ячейке таблицы открывает соответствующую задачу</p>
+            </>
+        en: <>  
+                <p>Hover the cursor over a table cell to find out the name of the problem</p>
+                <p>Double-clicking on a table cell opens the corresponding problem</p>
+            </>
+
 
 export LangRaw = (id, lang) ->
     res = _LANG[id]?[lang]

@@ -5,7 +5,10 @@ FontAwesome = require('react-fontawesome')
 import Table from 'react-bootstrap/lib/Table'
 import { Link } from 'react-router-dom'
 
+import {LangRaw} from '../lang/lang'
+
 import outcomeToText from '../lib/outcomeToText'
+import withLang from '../lib/withLang'
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
 import ShadowedSwitch from './ShadowedSwitch'
@@ -38,26 +41,27 @@ maxVal = (submit, field) ->
             res = val
     return if res < 0 then undefined else res
 
-export default SubmitListTable = (props) ->
+export default SubmitListTable = withLang (props) ->
     wasNotSimilar = false
     wasSimilar = false
+    LANG = (id) -> LangRaw(id, props.lang)
     <div className={styles.outerDiv}>
         <Table responsive striped condensed hover>
             <thead>
                 <tr>
                     {if props.showProblems
                         <>
-                          <th>Уровень</th>
-                          <th>Название</th>
+                          <th>{LANG("level")}</th>
+                          <th>{LANG("problem")}</th>
                         </>
                     }
-                    <th>Время попытки</th>
-                    <th>Результат</th>
-                    <th>Язык</th>
+                    <th>{LANG("attempt_time")}</th>
+                    <th>{LANG("result")}</th>
+                    <th>{LANG("language")}</th>
                     {if not props.showProblems
                         <>
-                            <th><span title="(сек)">Время</span></th>
-                            <th><span title="ОЗУ (МБ)">Память</span></th>
+                            <th><span title={LANG("in_seconds")}>{LANG("time")}</span></th>
+                            <th><span title={LANG("in_mb")}>{LANG("memory")}</span></th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                         </>
@@ -85,7 +89,7 @@ export default SubmitListTable = (props) ->
                                 <td><Link to="/material/#{submit.problem}">{submit.fullProblem.name}</Link></td>
                               </>
                         }
-                        <td>{if submit.time=="_orig" then "(Исходное решение)" else moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
+                        <td>{if submit.time=="_orig" then LANG("original_submit") else moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
                         <td>{message}</td>
                         <td>
                             <div className='visible-xs visible-sm'>{LANGUAGE_ABBREVIATED[submit.language]}</div>
@@ -93,10 +97,10 @@ export default SubmitListTable = (props) ->
                         </td>
                         {if not props.showProblems
                             <>
-                              <td><span title="(сек)">{if time? then time / 1000 else ""}</span></td>
-                              <td><span title="ОЗУ (МБ)">{if mem >= 0 then mem else ""}</span></td>
-                              <td>{submit.comments?.length && <span title="Есть комментарии"><FontAwesome name="comment"/></span> || ""}</td>
-                              <td><span title="Подробнее"><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
+                              <td><span title={LANG("in_seconds")}>{if time? then time / 1000 else ""}</span></td>
+                              <td><span title={LANG("in_mb")}>{if mem >= 0 then mem else ""}</span></td>
+                              <td>{submit.comments?.length && <span title={LANG("has_comments")}><FontAwesome name="comment"/></span> || ""}</td>
+                              <td><span title={LANG("details")}><a onClick={props.handleSubmitClick(submit)} href="#"><FontAwesome name="eye"/></a></span></td>
                             </>
                         }
                         {if props.handleDiffClick

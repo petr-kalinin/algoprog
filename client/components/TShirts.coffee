@@ -1,10 +1,13 @@
 React = require('react')
 
+import {LangRaw} from '../lang/lang'
+import withLang from '../lib/withLang'
+
 calcTShirts = (user) ->
     level = user.level?.current || 0
     letter = level.slice(-1)
     number = +level.slice(0, -1)
-    if letter >= "В"
+    if letter >= "В" || (letter >= "C" && letter < "Z")
         number++
     if number >= 12
         return 5
@@ -21,7 +24,7 @@ calcTShirts = (user) ->
 
 COLORS = ["", "#8000ff", "#0040ff", "#ff8000", "#ff0000", "#000000"]
 
-export default TShirts = (props) ->
+export default withLang TShirts = (props) ->
     cnt = calcTShirts(props.user)
     got = props.user.tshirtsGot
     <span>
@@ -36,7 +39,7 @@ export default TShirts = (props) ->
                     if props.hideGot
                         continue
                     style["filter"] = "blur(2px) opacity(30%)"
-                    title = title || "Выдана"
+                    title = title || LangRaw("already_got", props.lang)
                 a <span key={n} onClick={props.onClick?(n)} style={style} title={title}>👕</span>
         res}
     </span>
