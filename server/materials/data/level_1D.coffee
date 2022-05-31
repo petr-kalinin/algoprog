@@ -50,7 +50,7 @@ contest_dfs2 = () ->
         problem({testSystem: "codeforces", contest: "1209", problem: "D", name: "Корова и вечеринка"}),
     ])
 	
-contest_bfs1 = () ->
+contest_bfs0 = () ->
     return contest("1D: BFS 1", [
         problem(160),
         problem(161),
@@ -61,7 +61,7 @@ contest_bfs1 = () ->
         problem(2003),
     ])
 
-contest_bfs2 = () ->
+contest_bfs1 = () ->
     return contest("1D: BFS 2", [
         problem({testSystem: "codeforces", contest: "727", problem: "A"}),
         problem({testSystem: "codeforces", contest: "520", problem: "B"}),
@@ -138,6 +138,6 @@ export default level_1D = () ->
         contest_B_1(),
         contest_B_2(),
 		label("Теоретический материал BFS (лекция Владимира Гуровца, ЛКШ 2013г): https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/"),
-		contest_bfs1(),
-        contest_bfs2(),
+		contest_bfs0(),
+        contest_bfs1(),
     ])
