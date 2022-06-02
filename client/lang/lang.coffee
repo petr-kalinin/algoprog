@@ -67,7 +67,7 @@ _LANG =
         "en": "If you have in fact paid for the course, please contact me."
     class:
         "ru": "Класс"
-        "en": "Grade"
+        "en": "Grade (of school)"
     level:
         "ru": "Уровень"
         "en": "Level"
@@ -191,9 +191,6 @@ _LANG =
     codeforces_handle:
         ru: "Хендл (никнейм) на codeforces"
         en: "Codeforces handle"
-    class:
-        ru: "Класс"
-        en: "School year"
     informatics_password:
         ru: "Пароль от informatics"
         en: "Informatics password"
@@ -453,6 +450,9 @@ _LANG =
     ignored:
         ru: "Проигнорировано"
         en: "Ignored"
+    partial_solution:
+        ru: "Неполное решение"
+        en: "Partial solution"
     partial_solution_etc:
         ru: "Частичное решение и т.п."
         en: "Partial solution etc."
@@ -465,6 +465,36 @@ _LANG =
                 <p>Hover the cursor over a table cell to find out the name of the problem</p>
                 <p>Double-clicking on a table cell opens the corresponding problem</p>
             </>
+    find_mistake_table_explanation:
+        ru: (none, wa, ok) -> "Поиск ошибок: #{none} не начаты, #{wa} неуспешны, #{ok} успешны"
+        en: (none, wa, ok) -> "Find a bug: #{none} not started, #{wa} unsuccessful, #{ok} successful"
+    light_theme:
+        ru: "Светлая тема"
+        en: "Light theme"
+    dark_theme:
+        ru: "Темная тема"
+        en: "Dark theme"
+    testing:
+        ru: "Тестируется"
+        en: "Testing"
+    all_problems_solved:
+        ru: "Решены все задачи"
+        en: "All problems solved"
+    level_done:
+        ru: "Уровень пройден"
+        en: "Level done"
+    level_started:
+        ru: "Уровень начат"
+        en: "Level started"
+    codeforces_rating:
+        ru: "Рейтинг на codeforces"
+        en: "Codeforces rating"
+    edit_profile:
+        ru: "Редактировать профиль"
+        en: "Edit profile"
+    full_results:
+        ru: "Полные результаты"
+        en: "Full results"
 
 
 export LangRaw = (id, lang) ->

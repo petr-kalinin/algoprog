@@ -64,7 +64,7 @@ Header = withLang (props) ->
     </div>
 
 
-SolvedByWeekRow = (props) ->
+SolvedByWeekRow = withLang (props) ->
     <tr>
         <td className={globalStyles.border} />
         {

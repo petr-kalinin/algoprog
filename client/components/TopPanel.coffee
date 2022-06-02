@@ -35,7 +35,7 @@ import withLang from '../lib/withLang'
 import styles from './TopPanel.css'
 
 needCfWarning = (user) ->
-    (not user.cf?.login?) and (user.level.current >= "1В")
+    (not user.cf?.login?) and (user.level.current >= "1В" || (user.level.current >= "1C" && user.level.current <= "1Z"))
 
 needUnpaidWarning = (user) ->
     (GROUPS[user?.userList]?.paid) and (user?.paidTill) && (not isPaid(user))

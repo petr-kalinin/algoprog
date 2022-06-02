@@ -1,7 +1,10 @@
 React = require('react')
 FontAwesome = require('react-fontawesome')
 
+import {LangRaw} from '../lang/lang'
+
 import addTotal from '../lib/addTotal'
+import withLang from '../lib/withLang'
 import withTheme from '../lib/withTheme'
 
 import userTableHeader from './UserTableHeader'
@@ -9,7 +12,7 @@ import userTableHeader from './UserTableHeader'
 import styles from './TableRow.css'
 import globalStyles from './global.css'
 
-SubFindMistakes = (props) ->
+SubFindMistakes = withLang (props) ->
     if not props.subFindMistakes
         return null
     sfm = props.subFindMistakes
@@ -21,7 +24,7 @@ SubFindMistakes = (props) ->
         a <FontAwesome name="star-half-o"/>
     for i in [0...sfm.ok]
         a <FontAwesome name="star"/>
-    title = "Поиск ошибок: #{sfm.none} не начаты, #{sfm.wa} неуспешны, #{sfm.ok} успешны"
+    title = LangRaw("find_mistake_table_explanation", props.lang)(sfm.none, sfm.wa, sfm.ok)
     <div className={styles.subFindMistakes} title={title}>
         {res}
     </div>        
@@ -85,9 +88,10 @@ totalResultClass = (result) ->
         return "full"
     else
         needed = result.required
-        if result.problemName.slice(-1) == "В"
+        letter = result.problemName.slice(-1)
+        if letter == "В" || letter == "C"
             needed = Math.ceil(needed / 2)
-        else if result.problemName.slice(-1) == "Г"
+        else if letter == "Г" || letter == "D"
             needed = Math.ceil(needed / 3)
         if result.solved >= needed
             return "done"
@@ -125,12 +129,12 @@ Result = (props) ->
     else
         `<ResultTheme {...props}/>`
 
-Attempts = (props) ->
+Attempts = withLang (props) ->
     return <td className={globalStyles.mainTable_td}>
-        {if props.header then "Попыток" else props.result.attempts}
+        {if props.header then LangRaw("attempts", props.lang) else props.result.attempts}
     </td>
 
-export default TableRow = (props) ->
+export default TableRow = withLang (props) ->
     total = undefined
     h = props.header
     return <tr>
