@@ -127,6 +127,47 @@ contest_B_2 = () ->
 		problem({testSystem: "codeforces", contest: "58", problem: "B"}),
 	])
 	
+contest_shortcut_1 = () ->
+	return contest("1D: Дейкстра, Флойд, Форд-Беллман - базовые задачи", [
+		problem(5),
+		problem(6),
+		problem(3494),
+		problem(1745),
+		problem(1087),
+		problem(171),
+		problem(173),
+		problem(178),
+		problem(180),
+		problem(179),
+		problem(95),
+		problem(96),
+		problem(97),
+		problem(1329),
+		problem(1332),
+		problem(1334),
+		problem(1335),
+		problem(2598),
+		
+	])
+	
+contest_shortcut_2 = () ->
+	return contest("1D: Кратчайшие расстояния - другие задачи", [
+		problem({testSystem: "codeforces", contest: "601", problem: "A"}),
+		problem({testSystem: "codeforces", contest: "543", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "295", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "707", problem: "B"}),	
+		problem({testSystem: "codeforces", contest: "24", problem: "A"}),	
+		problem({testSystem: "codeforces", contest: "543", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "35", problem: "C"}),
+		problem({testSystem: "codeforces", contest: "25", problem: "C"}),
+		problem({testSystem: "codeforces", contest: "33", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "977", problem: "E"}),
+		problem({testSystem: "codeforces", contest: "771", problem: "A"}),
+		problem({testSystem: "codeforces", contest: "1106", problem: "D"}),
+		problem({testSystem: "codeforces", contest: "1321", problem: "D"}),
+		problem({testSystem: "codeforces", contest: "1681", problem: "D"}),
+	])
+	
 export default level_1D = () ->
     return level("1D", [
         label("Теоретический материал Базовая теория графов:&nbsp;<a href=\"https://youtu.be/FQJCuxKpGBg\" target=\"_blank\">https://youtu.be/FQJCuxKpGBg</a>"),
@@ -140,4 +181,11 @@ export default level_1D = () ->
         label("Теоретический материал BFS (лекция Владимира Гуровца, ЛКШ 2013г): <a href='https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/'>https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/</a>"),
         contest_bfs0(),
         contest_bfs1(),
+        label("Теоретический материал алгоритм Дейкстры (лекция Сергея Копелиовича, ЛКШ 2008г): https://sis.khashaev.ru/2008/august/b-prime/P0tGgwUjvBA/"),
+        label("Теоретический материал алгоритм Дейкстры O(MlogN) (лекция Руслана Сайфутдинова, ЛКШ 2013г): https://sis.khashaev.ru/2008/august/b-prime/P0tGgwUjvBA/"),
+        label("Теоретический материал алгоритм Дейкстры O(MlogN) (e-maxx): https://e-maxx.ru/algo/dijkstra_sparse"),
+        label("Теоретический материал алгоритм Флойда, Форда-Беллмана (лекция Руслана Сайфутдинова, ЛКШ 2013г): https://sis.khashaev.ru/2013/july/b-prime/1fCe1I5ZV64/"),
+        contest_shortcut_1(),
+        contest_shortcut_2(),
+		
     ])
