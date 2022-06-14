@@ -7,11 +7,11 @@ export default strings = () ->
     return {
         topic: topic("Символы и строки", "Задачи на символы и строки", [
             label("<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
-            problem(102),
-            problem(103),
-            problem(105),
-            problem(106),
-            problem(108),
+            problem({testSystem: "ejudge", contest: "3007", problem: "1", id: "102"}),
+            problem({testSystem: "ejudge", contest: "3007", problem: "2", id: "103"}),
+            problem({testSystem: "ejudge", contest: "3007", problem: "3", id: "105"}),
+            problem({testSystem: "ejudge", contest: "3007", problem: "4", id: "106"}),
+            problem({testSystem: "ejudge", contest: "3007", problem: "5", id: "108"}),
         ], "strings"),
         advancedTopics: [
             contest("Продвинутые задачи на строки", [
