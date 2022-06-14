@@ -496,12 +496,14 @@ _LANG =
         ru: "Полные результаты"
         en: "Full results"
 
+export LangRawAny = (data, lang, id) ->
+    res = data?[lang]
+    if not (res?) 
+        throw "Unknown lang #{id} #{data} #{lang}"
+    res
 
 export LangRaw = (id, lang) ->
-    res = _LANG[id]?[lang]
-    if not (res?) 
-        throw "Unknown lang #{id} #{lang}"
-    res
+    LangRawAny(_LANG[id], lang, id)
 
 LangEl = withLang (props) ->
     LangRaw(props.id, props.lang)

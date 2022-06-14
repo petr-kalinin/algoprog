@@ -6,56 +6,76 @@ GOLD_COLOR = "#ffd700"
 export default ACHIEVES = 
     "unknown": 
         text: "???"
-        title: "???"
+        title: 
+            ru: "???"
+            en: "???"
         color: "#ff0000"
         score: 100000
 
     "olymp:participant":
         text: "ол"
-        title: "Участник какой-либо олимпиады по информатике, проводимой по разумным правилам"
+        title: 
+            ru: "Участник какой-либо олимпиады по информатике, проводимой по разумным правилам"
+            en: "Participant of any olympiad in informatics conducted according to reasonable rules"
         color: PARTICIPANT_COLOR
         score: 10
 
     "mun:participant":
         text: "мун"
-        title: "Участник муниципального (районного) этапа Всероссийской олимпиады по информатике"
+        title:
+            ru: "Участник муниципального (районного) этапа Всероссийской олимпиады по информатике"
+            en: "Participant of municipal tier of All-Russian olympiad in informatics"
         color: PARTICIPANT_COLOR
         score: 20
 
     "koshp:participant":
         text: "нкошп"
-        title: "Участник нижегородской командной олимпиады школьников по программированию"
+        title: 
+            ru: "Участник нижегородской командной олимпиады школьников по программированию"
+            en: "Participant of Nizhny Novgorod team olympiad in informatics"
         color: PARTICIPANT_COLOR
         score: 30
     "koshp:3":
         text: "нкошп"
-        title: "3 диплом на нижегородской командной олимпиаде школьников по программированию"
+        title: 
+            ru: "3 диплом на нижегородской командной олимпиаде школьников по программированию"
+            en: "3rd diploma on Nizhny Novgorod team olympiad in informatics"
         color: BRONZE_COLOR
         score: 50
     "koshp:2":
         text: "нкошп"
-        title: "2 диплом на нижегородской командной олимпиаде школьников по программированию"
+        title: 
+            ru: "2 диплом на нижегородской командной олимпиаде школьников по программированию"
+            en: "2nd diploma on Nizhny Novgorod team olympiad in informatics"
         color: SILVER_COLOR
         score: 80
     "koshp:1":
         text: "нкошп"
-        title: "1 диплом на нижегородской командной олимпиаде школьников по программированию"
+        title: 
+            ru: "1 диплом на нижегородской командной олимпиаде школьников по программированию"
+            en: "1st diploma on Nizhny Novgorod team olympiad in informatics"
         color: GOLD_COLOR
         score: 160
 
     "nnoi:participant":
         text: "ннои"
-        title: "Участник Нижегородской городской олимпиады школьников по информатике им. В. Д. Лелюха"
+        title: 
+            ru: "Участник Нижегородской городской олимпиады школьников по информатике им. В. Д. Лелюха"
+            en: "Participant of Nizhny Novgorod city olympiad in informatics named ofter V. D. Lelyukh"
         color: PARTICIPANT_COLOR
         score: 40
     "nnoi:3":
         text: "ннои"
-        title: "3 диплом на Нижегородской городской олимпиаде школьников по информатике им. В. Д. Лелюха"
+        title: 
+            ru: "3 диплом на Нижегородской городской олимпиаде школьников по информатике им. В. Д. Лелюха"
+            en: "3rd diploma on Nizhny Novgorod city olympiad named ofter V. D. Lelyukh"
         color: BRONZE_COLOR
         score: 70
     "nnoi:2":
         text: "ннои"
-        title: "2 диплом на Нижегородской городской олимпиаде школьников по информатике им. В. Д. Лелюха"
+        title: 
+            ru: "2 диплом на Нижегородской городской олимпиаде школьников по информатике им. В. Д. Лелюха"
+            en: "2nd diploma on Nizhny Novgorod city olympiad named ofter V. D. Lelyukh"
         color: SILVER_COLOR
         score: 90
     "nnoi:1":
