@@ -495,6 +495,15 @@ _LANG =
     full_results:
         ru: "Полные результаты"
         en: "Full results"
+    all_achieves:
+        ru: "Все ачивки"
+        en: "All achieves"
+    attempt:
+        ru: "Посылка"
+        en: "Attempt"
+    users_with_achieve:
+        ru: "Пользователи с ачивкой"
+        en: "Users with achieve"
 
 export LangRawAny = (data, lang, id) ->
     res = data?[lang]

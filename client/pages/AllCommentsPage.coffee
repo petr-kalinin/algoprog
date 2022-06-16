@@ -16,7 +16,7 @@ class AllCommentsPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Комментарии", _id: "comments" + LangRaw("material_suffix", @props.lang)},
+            location: {title: LangRaw("comments", @props.lang), _id: "comments" + LangRaw("material_suffix", @props.lang)},
         }
         `<Sceleton {...sceletonProps}><AllComments/></Sceleton>`
 

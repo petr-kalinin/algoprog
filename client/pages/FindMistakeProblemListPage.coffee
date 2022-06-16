@@ -6,7 +6,9 @@ import { Helmet } from "react-helmet"
 import FindMistakeList from '../components/FindMistakeList'
 import Sceleton from '../components/Sceleton'
 
+import {LangRaw} from '../lang/lang'
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 
 class FindMistakeProblemListPage extends React.Component
     constructor: (props) ->
@@ -19,7 +21,7 @@ class FindMistakeProblemListPage extends React.Component
             title: @props.data.title
         sceletonProps = {
             @props...,
-            location: {title: "Найди ошибку", path, _id: "findMistakeProblem"}
+            location: {title: LangRaw("find_mistake", @props.lang), path, _id: "findMistakeProblem"}
         }
         `<Sceleton {...sceletonProps}><FindMistakeList problem={this.props.match.params.problemId}/></Sceleton>`
 
@@ -27,4 +29,4 @@ options =
     urls: (props) ->
         data: "material/#{props.match.params.problemId}"
 
-export default ConnectedComponent(FindMistakeProblemListPage, options)
+export default ConnectedComponent(withLang(FindMistakeProblemListPage), options)

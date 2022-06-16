@@ -17,7 +17,7 @@ class FindMistakeListPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Найди ошибку", _id: "findMistake" + LangRaw("material_suffix", @props.lang)},
+            location: {title: LangRaw("find_mistake", @props.lang), _id: "findMistake" + LangRaw("material_suffix", @props.lang)},
         }
         `<Sceleton {...sceletonProps}><FindMistakeList allowSort={true}/></Sceleton>`
 
