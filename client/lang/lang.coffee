@@ -504,6 +504,21 @@ _LANG =
     users_with_achieve:
         ru: "Пользователи с ачивкой"
         en: "Users with achieve"
+    codeforces_problem_link:
+        ru: (contest, problem) -> "Задача на Codeforces (контест #{contest}, задача #{problem}, © Codeforces.com)"
+        en: (contest, problem) -> "This problem on Codeforces (contest #{contest}, problem #{problem}, © Codeforces.com)"
+    codeforces_submits_link:
+        ru: "Попытки в контесте на codeforces"
+        en: "Attempts in codeforces contest"
+    codeforces_block_submission:
+        ru: (userId) -> <span>Это задача с <a href="https://codeforces.com">Codeforces</a>. Чтобы сдавать ее, зарегистрируйтесь на Codeforces и укажите данные аккаунта (логин и пароль) в <Link to="/edituser/#{userId}">своем профиле</Link>.</span>
+        en: (userId) -> <span>This is a problem from <a href="https://codeforces.com">Codeforces</a>. To submit, please register on Codeforces and specify your account data (login and password) in <Link to="/edituser/#{userId}">your profile</Link>.</span>
+    informatics_problem_link:
+        ru: "Задача на informatics"
+        en: "This problem on informatics"
+    informatics_submits_link:
+        ru: "Попытки на информатикс"
+        en: "Attempts on informatics"
 
 export LangRawAny = (data, lang, id) ->
     res = data?[lang]

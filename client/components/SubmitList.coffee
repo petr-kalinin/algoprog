@@ -80,7 +80,7 @@ class SubmitList extends React.Component
         if not @props.myUser?._id
             return null
         testSystem = getTestSystem(@props.material.testSystemData.system)
-        blockedByTestSystem = testSystem.blockSubmission(@props.material, @props.me, @props.myUser)
+        blockedByTestSystem = testSystem.blockSubmission(@props.material, @props.me, @props.myUser, @props.lang)
         if blockedByTestSystem
             return blockedByTestSystem
         <div>

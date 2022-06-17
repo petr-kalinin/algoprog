@@ -3,6 +3,8 @@ deepcopy = require('deepcopy')
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
+import withLang from '../lib/withLang'
+
 import SubmitList from './SubmitList'
 import EditablePage from './EditablePage'
 
@@ -16,13 +18,11 @@ stripLabel = (material) ->
         material._id = material._id.substring(0, idx)
     return material
 
-export default Problem = (props) ->
+export default Problem = withLang (props) ->
     testSystem = getTestSystem(props.material.testSystemData.system)
+    materialStripped = stripLabel(props.material)
     <div>
         <EditablePage material={props.material} reloadMaterial={props.handleReload}/>
-        {
-            materialStripped = stripLabel(props.material)
-            testSystem.problemLink(materialStripped)
-            `<SubmitList {...props} material={materialStripped}/>`
-        }
+        {testSystem.problemLink(materialStripped, props.lang)}
+        {`<SubmitList {...props} material={materialStripped}/>`}
     </div>

@@ -135,6 +135,6 @@ export default SubmitListTable = withLang (props) ->
         if props.submits?[0] and not props.showProblems
             s = props.submits[props.submits.length - 1]
             testSystem = getTestSystem(s.testSystemData?.system)
-            testSystem.submitListLink(s)
+            testSystem.submitListLink(s, props.lang)
         }
     </div>
