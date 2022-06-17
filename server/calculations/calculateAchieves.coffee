@@ -25,7 +25,7 @@ achievesConditions = (user) ->
         1900: user.cf?.rating >= 1900
     a:
         3: user.activity >= 3
-        6: user.activity >= 6 and user.level.current >= "1Б"
+        6: user.activity >= 6 and (user.level.current >= "1Б" or (user.level.current >= "1B" and user.level.current <= "1Z"))
         10: user.activity >= 10 and user.level.current >= "2"
         15: user.activity >= 15 and user.level.current >= "3"
         options:
