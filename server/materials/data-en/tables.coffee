@@ -30,9 +30,9 @@ export allTables = ["1А,1Б", "1В,1Г", "main"]
 export default tables = () ->
     materials = []
     for group, data of GROUPS
-        if not data.tableName
+        if not data.tableNameEn
             continue
-        groupName = data.tableName
+        groupName = data.tableNameEn
         thisMaterials = []
         for t in [allTables... , "byWeek"]
             thisMaterials.push(table(group, t, getTableTitle(t), getTreeTitle(t)))
