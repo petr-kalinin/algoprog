@@ -96,7 +96,8 @@ expandSubmit = (submit) ->
     tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
     submit.fullProblem.tables = tableNames
     if (submit.source.length > MAX_SUBMIT_LENGTH or containsBinary(submit.source))
-        submit.source = "Файл слишком длинный или бинарный"
+        submit.source = ""
+        submit.isBinary = true
     return submit
 
 hideTests = (submit) ->

@@ -76,14 +76,18 @@ class SubmitSource extends React.Component
         copyText = if @state.copied then LangRaw("copied", @props.lang) else LangRaw("copy", @props.lang)
         source = toUtf8(@props.submit.source)
         <div>
-            <pre dangerouslySetInnerHTML={{__html: source}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            {if @props.submit.isBinary
+                <pre>{LangRaw("file_is_binary_or_too_long", @props.lang)}</pre>
+            else
+                <pre dangerouslySetInnerHTML={{__html: source}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            }
             <ButtonGroup>
                 <Button bsStyle={copyClass} bsSize="xsmall" onClick={@copy()}>{copyText}</Button>
-                <LinkContainer to={"/api/submitSource/#{@props.submit._id}"}>
+                <a href={"/api/submitSource/#{@props.submit._id}"} target="_blank">
                     <Button bsStyle="default" bsSize="xsmall">
                         {LangRaw("download", @props.lang)}
                     </Button>
-                </LinkContainer>
+                </a>
             </ButtonGroup>
         </div>
 

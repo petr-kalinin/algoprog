@@ -519,6 +519,9 @@ _LANG =
     informatics_submits_link:
         ru: "Попытки на информатикс"
         en: "Attempts on informatics"
+    file_is_binary_or_too_long:
+        ru: "Файл слишком длинный или бинарный"
+        en: "File is too long or binary"
 
 export LangRawAny = (data, lang, id) ->
     res = data?[lang]
