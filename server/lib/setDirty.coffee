@@ -13,7 +13,7 @@ export default setDirty = (submit, dirtyResults, dirtyUsers) ->
         t = table
         while true
             t = await Table.findById(t)
-            if t._id == "main"
+            if t._id.startsWith("main")
                 break
             dirtyResults[userId + "::" + t._id] = 1
             t = t.parent

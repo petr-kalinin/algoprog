@@ -173,4 +173,5 @@ export default updateResults = (user, dirtyResults) ->
     start = new Date()
     logger.info "updating results for user ", user
     await updateResultsForTable(user, "main", dirtyResults)
+    await updateResultsForTable(user, "main!en", dirtyResults)
     logger.info "updated results for user ", user, " spent time ", (new Date()) - start
