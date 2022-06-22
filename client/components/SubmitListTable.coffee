@@ -73,7 +73,7 @@ export default SubmitListTable = withLang (props) ->
             </thead>
             <tbody>
                 {props.submits?.map?((submit) =>
-                    [cl, message] = outcomeToText(submit.outcome)
+                    [cl, message] = outcomeToText(submit.outcome, props.lang)
                     if submit._id == props.activeId
                         cl += " " + styles.active
                     if not props.showProblems

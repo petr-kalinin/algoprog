@@ -94,7 +94,7 @@ class SubmitSource extends React.Component
 export SubmitSource = withLang SubmitSource
 
 export SubmitHeader = (props) ->
-    [cl, message] = outcomeToText(props.submit.outcome)
+    [cl, message] = outcomeToText(props.submit.outcome, props.lang)
     <div className={(if props.sticky then styles.stickyHeader else "") + " " + (props.className || "")}>
         <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
         <h1>{props.submit.fullUser && <UserName user={props.submit.fullUser}/>}
@@ -108,7 +108,7 @@ export SubmitHeader = (props) ->
 getClassName = (status) ->
     switch status
         when "OK" then "success"
-        when "Превышен предел времени", "Превышено максимальное время работы", "Превышено максимальное общее время работы", "TIME_LIMIT_EXCEEDED" then "info"
+        when "Превышен предел времени", "Превышено максимальное время работы", "Превышено максимальное общее время работы", "TIME_LIMIT_EXCEEDED", "TL" then "info"
         else styles.wa
 
 class TestResult extends React.Component
@@ -125,7 +125,7 @@ class TestResult extends React.Component
     render: () ->
         canToggle = "input" of @props.result
         res = []
-        status = @props.result.string_status
+        status = outcomeToText(@props.result.string_status, @props.lang)[1]
         if @props.result.checker_output
             status = @props.result.checker_output.substr(0, 70)
         classname = getClassName(@props.result.string_status)
@@ -174,10 +174,10 @@ class Submit extends React.Component
         super(props)
 
     render: () ->
-        [cl, message] = outcomeToText(@props.submit.outcome)
+        [cl, message] = outcomeToText(@props.submit.outcome, @props.lang)
         admin = @props.me?.admin
         <div>
-            {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin} sticky={@props.headerSticky} className={@props.headerClassName}/>}
+            {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin} sticky={@props.headerSticky} className={@props.headerClassName} lang={@props.lang}/>}
             <Tabs defaultActiveKey={1} id="submitTabs">
                 <Tab eventKey={1} title={LangRaw("source_code", @props.lang)}>
                     <SubmitSource submit={@props.submit} />
@@ -214,7 +214,7 @@ class Submit extends React.Component
                             res = []
                             a = (el) -> res.push(el)
                             for index, result of (@props.submit.results?.tests || [])
-                                a <TestResult key={index} result={result} index={index} copyTest={@props.copyTest}/>
+                                a <TestResult key={index} result={result} index={index} copyTest={@props.copyTest} lang={@props.lang}/>
                             res}
                         </tbody>
                     </Table>

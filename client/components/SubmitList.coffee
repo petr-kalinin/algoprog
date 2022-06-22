@@ -14,7 +14,6 @@ import {LangRaw} from '../lang/lang'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
-import outcomeToText from '../lib/outcomeToText'
 import withLang from '../lib/withLang'
 import toUtf8 from '../lib/toUtf8'
 

@@ -523,10 +523,14 @@ _LANG =
         ru: "Файл слишком длинный или бинарный"
         en: "File is too long or binary"
 
-export LangRawAny = (data, lang, id) ->
+export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]
     if not (res?) 
-        throw "Unknown lang #{id} #{data} #{lang}"
+        message = "Unknown lang #{id} #{data} #{lang}"
+        if throwIfNotFound
+            throw "Unknown lang #{id} #{data} #{lang}"
+        else
+            console.error message
     res
 
 export LangRaw = (id, lang) ->

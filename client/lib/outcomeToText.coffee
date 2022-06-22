@@ -1,34 +1,80 @@
 import globalStyles from '../components/global.css'
+import {LangRawAny} from '../lang/lang'
 
-export default outcomeToText = (outcome) ->
-    cl = undefined
-    message = outcome
-    switch outcome
-        when "Частичное решение"
-            message = "Неполное решение"
-        when "DR"
-            message = "Черновик"
-        when "AC"
-            cl = "success"
-            message = "Зачтено"
-        when "IG"
-            cl = "info"
-            message = "Проигнорировано"
-        when "OK"
-            cl = "warning"
-        when "CE"
-            message = "Ошибка компиляции"
-        when "DQ"
-            cl = globalStyles.dq_text
-            message = "Дисквалифицировано"
-        when "CT"
-            message = "Тестируется..."
-        when "PS"
-            message = "Отправка..."
-        when "DP"
-            message = "Вы уже отправляли этот код"
-        when "PW"
-            message = "Проверьте пароль от тестирующей системы в профиле на алгопроге"
-        when "FL"
-            message = "Ошибка отправки, переотправьте"
+MESSAGES =
+    DR:
+        ru: "Черновик"
+        en: "Draft"
+    AC:
+        ru: "Зачтено"
+        en: "Accepted"
+    IG:
+        ru: "Проигнорировано"
+        en: "Ignored"
+    OK:
+        ru: "OK"
+        en: "OK"
+    CE:
+        ru: "Ошибка компиляции"
+        en: "Compilation error"
+    DQ:
+        ru: "Дисквалифицировано"
+        en: "Disqualified"
+    CT:
+        ru: "Тестируется..."
+        en: "Testing..."
+    PS:
+        ru: "Отправка..."
+        en: "Submitting..."
+    DP:
+        ru: "Вы уже отправляли этот код"
+        en: "You have already submitted this code"
+    PW:
+        ru: "Проверьте пароль от тестирующей системы в профиле на алгопроге"
+        en: "Chech the testing system password in algoprog profile"
+    FL:
+        ru: "Ошибка проверки, переотправьте"
+        en: "Internal error, please re-submit"
+    CM:
+        ru: "Ошибка проверки, свяжитесь со мной"
+        en: "Internal error, please contact me"
+    WA:
+        ru: "Неправильный ответ"
+        en: "Wrong answer"
+    RE:
+        ru: "Ошибка во время выполнения"
+        en: "Run-time error"
+    TL:
+        ru: "Превышен предел времени"
+        en: "Time limit exceeded"
+    PE:
+        ru: "Неправильный формат вывода"
+        en: "Presentation error"
+    WS:
+        ru: "Неполное решение"
+        en: "Partial solution"
+    ML:
+        ru: "Превышение предела памяти"
+        en: "Memory limit exceeded"
+    SE:
+        ru: "Security error"
+        en: "Security error"
+    SK:
+        ru: "Пропущено"
+        en: "Skipped"
+    
+
+CLASSES = 
+    AC: "success"
+    IG: "info"
+    DQ: globalStyles.dq_text
+    OK: "warning"
+
+
+export default outcomeToText = (outcome, lang, check) ->
+    cl = CLASSES[outcome]
+    message = LangRawAny(MESSAGES[outcome], lang, outcome, false)
+    if not (message?) and not check
+        message = outcome
     return [cl, message]
+
