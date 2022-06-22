@@ -28,8 +28,8 @@ getHref = (material) ->
 stripLabel = (id) ->
     idx = id.indexOf("!")
     if idx != -1
-        id = id.substring(0, idx)
-    return id.replace("A", "А").replace("B", "Б").replace("C", "В").replace("D", "Г")
+        return id.substring(0, idx)
+    return id
 
 markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
@@ -93,7 +93,9 @@ problemMark = (indent, result, LANG) ->
 
 SolutionMark = withMyResults withLang (props) ->
     LANG = (id) -> LangRaw(id, props.lang)
-    id = stripLabel(props.id)
+    id = props.id
+    if id.charAt(0) == "p"  # this is a problem
+        id = stripLabel(id)
     console.log id
     result = props.myResults?[props.myUser?._id + "::" + id]
     indent = props.indent
