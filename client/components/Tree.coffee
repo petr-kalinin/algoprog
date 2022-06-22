@@ -25,6 +25,12 @@ getHref = (material) ->
     else
         return "/material/#{material._id}"
 
+stripLabel = (id) ->
+    idx = id.indexOf("!")
+    if idx != -1
+        return id.substring(0, idx)
+    return id
+
 markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
         tree.needed = true
@@ -87,7 +93,11 @@ problemMark = (indent, result, LANG) ->
 
 SolutionMark = withMyResults withLang (props) ->
     LANG = (id) -> LangRaw(id, props.lang)
-    result = props.myResults?[props.myUser?._id + "::" + props.id]
+    id = props.id
+    if id.charAt(0) == "p"  # this is a problem
+        id = stripLabel(id)
+    console.log id
+    result = props.myResults?[props.myUser?._id + "::" + id]
     indent = props.indent
     if not result?.total?
         return null
@@ -96,7 +106,7 @@ SolutionMark = withMyResults withLang (props) ->
 
     if result.solved == result.total
         colorBox(indent, styles.full, "check", LANG("all_problems_solved"))
-    else if isLevelDone(props.id, props.myUser?._id, props.myResults)
+    else if isLevelDone(id, props.myUser?._id, props.myResults)
         colorBox(indent, styles.done, "check", LANG("laevel_done"))
     else if result.solved > 0 or result.ok > 0 or result.attempts > 0
         colorBox(indent, styles.started, undefined, LANG("level_started"))
