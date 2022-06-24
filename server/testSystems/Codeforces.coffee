@@ -179,10 +179,12 @@ export class LoggedCodeforcesUser
         csrf = @_getCsrf(page)
         logger.info "Found csrf=#{csrf}"
         href = href + "?csrf_token=#{csrf}"
+        tta = @tta()
         data = {
                 csrf_token: csrf
                 ftaa: @ftaa
                 bfaa: @bfaa
+                _tta: tta
                 action: "submitSolutionFormSubmitted"
                 submittedProblemIndex: problem
                 programTypeId: data.language
