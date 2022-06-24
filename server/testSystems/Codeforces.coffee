@@ -178,6 +178,7 @@ export class LoggedCodeforcesUser
         page = await @download(csrfHref)
         csrf = @_getCsrf(page)
         logger.info "Found csrf=#{csrf}"
+        href = href + "?csrf_token=#{csrf}"
         data = {
                 csrf_token: csrf
                 ftaa: @ftaa
