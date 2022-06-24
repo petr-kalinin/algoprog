@@ -207,6 +207,7 @@ export class LoggedCodeforcesUser
             logger.info "Submit is a duplicate"
             throw {duplicate: true}
         if not page.includes("Contest status")
+            console.log page
             logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"
