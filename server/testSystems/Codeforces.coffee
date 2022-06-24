@@ -173,10 +173,11 @@ export class LoggedCodeforcesUser
             href = "#{BASE_URL}/#{contest}/submit"
             csrfHref = "#{BASE_URL}/#{contest}"
         else
-            href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
+            href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}"
             csrfHref = href
         page = await @download(csrfHref)
         csrf = @_getCsrf(page)
+        logger.info "Found csrf=#{csrf}"
         data = {
                 csrf_token: csrf
                 ftaa: @ftaa
@@ -200,8 +201,10 @@ export class LoggedCodeforcesUser
             timeout: 30 * 1000
         })
         if page.includes("You have submitted exactly the same code before")
+            logger.info "Submit is a duplicate"
             throw {duplicate: true}
         if not page.includes("Contest status")
+            logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"
 
