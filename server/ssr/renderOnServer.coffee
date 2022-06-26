@@ -100,13 +100,16 @@ defaultTheme = (reqCookies) ->
     else
         return "light"
 
-defaultLang = (reqCookies) ->
-    cookies = new Cookies(reqCookies)
+defaultLang = (req) ->
+    cookies = new Cookies(req.headers.cookie)
+    host = req.hostname
     cookie = cookies.get('lang')
     if cookie
         return cookie
-    else
+    else if host == "algoprog.org"
         return "ru"
+    else
+        return "en"
 
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     # https://github.com/HenningM/express-ws/issues/64
@@ -127,7 +130,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
             ],
             clientCookie: req.headers.cookie,
             theme: defaultTheme(req.headers.cookie)
-            lang: defaultLang(req.headers.cookie)
+            lang: defaultLang(req)
             needDataPromises: true
         store = createStore(initialState)
 
