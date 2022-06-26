@@ -103,7 +103,6 @@ defaultTheme = (reqCookies) ->
 defaultLang = (req) ->
     cookies = new Cookies(req.headers.cookie)
     host = req.hostname
-    console.log "Host=", host
     cookie = cookies.get('lang')
     if cookie
         return cookie
