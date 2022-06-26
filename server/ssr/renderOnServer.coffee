@@ -108,9 +108,9 @@ defaultLang = (req) ->
     if cookie
         return cookie
     else if host == "algoprog.org"
-        return "ru"
-    else
         return "en"
+    else
+        return "ru"
 
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     # https://github.com/HenningM/express-ws/issues/64
