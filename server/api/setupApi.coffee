@@ -32,6 +32,7 @@ import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
+import translateProblems from '../lib/translateProblems'
 
 import {allTables} from '../materials/data/tables'
 import downloadMaterials from '../materials/downloadMaterials'
@@ -851,6 +852,13 @@ export default setupApi = (app) ->
         material.title = req.body.title
         material.force = true
         await material.upsert()
+        res.send('OK')
+
+    app.post '/api/translateProblems', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        translateProblems()
         res.send('OK')
 
     app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->

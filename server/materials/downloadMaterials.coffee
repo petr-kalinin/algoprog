@@ -56,7 +56,6 @@ class Context
     process: (material) ->
         oldMaterial = await Material.findById(material._id)
         if oldMaterial?.force
-            logger.info("Will not overwrite forced material #{material._id}")
             material.content = oldMaterial.content
             material.title = oldMaterial.title
             material.force = oldMaterial.force

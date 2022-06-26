@@ -21,6 +21,10 @@ materialsSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a material"
 
+materialsSchema.statics.findByType = (type) ->
+    Material.find
+        type: type
+
 Material = mongoose.model('Materials', materialsSchema);
 
 export default Material
