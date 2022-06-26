@@ -13,9 +13,12 @@ import Col from 'react-bootstrap/lib/Col'
 import {Link} from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 
+import {LangRaw} from '../lang/lang'
+
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import outcomeToText from '../lib/outcomeToText'
 import toUtf8 from '../lib/toUtf8'
+import withLang from '../lib/withLang'
 
 import {DiffEditor} from './Editor'
 import UserName from './UserName'
@@ -42,7 +45,7 @@ langClass = (lang) ->
             return style
     return ""
 
-export class SubmitSource extends React.Component
+class SubmitSource extends React.Component
     constructor: (props) ->
         super(props)
         @state =
@@ -70,22 +73,28 @@ export class SubmitSource extends React.Component
 
     render: () ->
         copyClass = if @state.copied then "success" else "default"
-        copyText = if @state.copied then "Скопировано" else "Скопировать"
+        copyText = if @state.copied then LangRaw("copied", @props.lang) else LangRaw("copy", @props.lang)
         source = toUtf8(@props.submit.source)
         <div>
-            <pre dangerouslySetInnerHTML={{__html: source}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            {if @props.submit.isBinary
+                <pre>{LangRaw("file_is_binary_or_too_long", @props.lang)}</pre>
+            else
+                <pre dangerouslySetInnerHTML={{__html: source}} className={"sourcecode " + langClass(@props.submit.language)}></pre>
+            }
             <ButtonGroup>
                 <Button bsStyle={copyClass} bsSize="xsmall" onClick={@copy()}>{copyText}</Button>
-                <LinkContainer to={"/api/submitSource/#{@props.submit._id}"}>
+                <a href={"/api/submitSource/#{@props.submit._id}"} target="_blank">
                     <Button bsStyle="default" bsSize="xsmall">
-                        Скачать
+                        {LangRaw("download", @props.lang)}
                     </Button>
-                </LinkContainer>
+                </a>
             </ButtonGroup>
         </div>
 
+export SubmitSource = withLang SubmitSource
+
 export SubmitHeader = (props) ->
-    [cl, message] = outcomeToText(props.submit.outcome)
+    [cl, message] = outcomeToText(props.submit.outcome, props.lang)
     <div className={(if props.sticky then styles.stickyHeader else "") + " " + (props.className || "")}>
         <h3>{moment(props.submit.time).format('YYYY-MM-DD kk:mm:ss')}</h3>
         <h1>{props.submit.fullUser && <UserName user={props.submit.fullUser}/>}
@@ -99,7 +108,7 @@ export SubmitHeader = (props) ->
 getClassName = (status) ->
     switch status
         when "OK" then "success"
-        when "Превышен предел времени", "Превышено максимальное время работы", "Превышено максимальное общее время работы", "TIME_LIMIT_EXCEEDED" then "info"
+        when "Превышен предел времени", "Превышено максимальное время работы", "Превышено максимальное общее время работы", "TIME_LIMIT_EXCEEDED", "TL" then "info"
         else styles.wa
 
 class TestResult extends React.Component
@@ -116,7 +125,7 @@ class TestResult extends React.Component
     render: () ->
         canToggle = "input" of @props.result
         res = []
-        status = @props.result.string_status
+        status = outcomeToText(@props.result.string_status, @props.lang)[1]
         if @props.result.checker_output
             status = @props.result.checker_output.substr(0, 70)
         classname = getClassName(@props.result.string_status)
@@ -160,20 +169,20 @@ class TestResult extends React.Component
             </td></tr>
         return res
 
-export default class Submit extends React.Component
+class Submit extends React.Component
     constructor: (props) ->
         super(props)
 
     render: () ->
-        [cl, message] = outcomeToText(@props.submit.outcome)
+        [cl, message] = outcomeToText(@props.submit.outcome, @props.lang)
         admin = @props.me?.admin
         <div>
-            {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin} sticky={@props.headerSticky} className={@props.headerClassName}/>}
+            {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin} sticky={@props.headerSticky} className={@props.headerClassName} lang={@props.lang}/>}
             <Tabs defaultActiveKey={1} id="submitTabs">
-                <Tab eventKey={1} title="Исходный код">
+                <Tab eventKey={1} title={LangRaw("source_code", @props.lang)}>
                     <SubmitSource submit={@props.submit} />
                 </Tab>
-                <Tab eventKey={2} title="Комментарии">
+                <Tab eventKey={2} title={LangRaw("comments", @props.lang)}>
                     {
                     res = []
                     a = (el) -> res.push(el)
@@ -181,8 +190,8 @@ export default class Submit extends React.Component
                         a <pre key={index} dangerouslySetInnerHTML={{__html: comment}}></pre>
                     res}
                 </Tab>
-                <Tab eventKey={3} title="Результаты">
-                    <h4>Вывод компилятора</h4>
+                <Tab eventKey={3} title={LangRaw("results", @props.lang)}>
+                    <h4>{LangRaw("compiler_output", @props.lang)}</h4>
                     {
                     if @props.submit.results?.compiler_output
                         <pre dangerouslySetInnerHTML={{__html: @props.submit.results?.compiler_output}}/>
@@ -195,9 +204,9 @@ export default class Submit extends React.Component
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Результат</th>
-                                <th>Время</th>
-                                <th>Память</th>
+                                <th>{LangRaw("result", @props.lang)}</th>
+                                <th>{LangRaw("time", @props.lang)}</th>
+                                <th>{LangRaw("memory", @props.lang)}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -205,10 +214,12 @@ export default class Submit extends React.Component
                             res = []
                             a = (el) -> res.push(el)
                             for index, result of (@props.submit.results?.tests || [])
-                                a <TestResult key={index} result={result} index={index} copyTest={@props.copyTest}/>
+                                a <TestResult key={index} result={result} index={index} copyTest={@props.copyTest} lang={@props.lang}/>
                             res}
                         </tbody>
                     </Table>
                 </Tab>
             </Tabs>
         </div>
+
+export default withLang Submit

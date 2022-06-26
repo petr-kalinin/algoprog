@@ -3,7 +3,7 @@ import { ActionType } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_DEACTIVATED_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, SWITCH_THEME } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SET_DEACTIVATED_WARNING_SHOWN, SET_UNPAID_WARNING_SHOWN, SWITCH_THEME, SWITCH_LANG } from './actions'
 
 import { equalUrl } from './getters'
 
@@ -62,6 +62,12 @@ theme = (state = null , action) ->
     else
         return state
 
+lang = (state = null , action) ->
+    if action.type == SWITCH_LANG
+        return action.value
+    else
+        return state
+
 clientCookie = (state = null, action) -> state
 
 needDataPromises = (state = null, action) -> state
@@ -73,6 +79,7 @@ export default rootReducer =
         deactivatedWarningShown,
         unpaidWarningShown,
         theme,
+        lang,
         notifications,
         clientCookie,
         needDataPromises

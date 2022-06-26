@@ -8,7 +8,7 @@ class Contest extends MaterialList
         properties = 
             _id: context.generateId()
             type: "contest"
-            title: @title
+            title: @title?(context.label) || @title
 
         material = await super.build(context, order, properties, {allowAsync: true})
 

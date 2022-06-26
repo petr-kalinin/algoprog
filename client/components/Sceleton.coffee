@@ -12,7 +12,10 @@ import { Link } from 'react-router-dom'
 
 import { Helmet } from "react-helmet"
 
+import Lang, {LangRaw} from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 import withTheme from '../lib/withTheme'
 
 import Tree from './Tree'
@@ -59,26 +62,26 @@ class PaidTill extends React.Component
         if GROUPS[@props.myUser?.userList]?.paid
             href = "/payment"
             if @props.myUser?.paidTill && isPaid(@props.myUser)
-                preLink = "Занятия оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + " "
-                inLink = "Продлить"
+                preLink = "#{LangRaw('paid_till', @props.lang)} #{moment(@props.myUser.paidTill).format('DD.MM.YYYY')} "
+                inLink = LangRaw('extend_payment', @props.lang)
             else if @props.myUser?.paidTill
-                preLink = "Занятия были оплачены до " + moment(@props.myUser.paidTill).format("DD.MM.YYYY") + " "
-                inLink = "Продлить"
+                preLink = "#{LangRaw('was_paid_till', @props.lang)} #{moment(@props.myUser.paidTill).format('DD.MM.YYYY')} "
+                inLink = LangRaw('extend_payment', @props.lang)
             else
                 preLink = ""
-                inLink = "Оплатить занятия"
+                inLink = LangRaw('pay', @props.lang)
         else
             preLink = ""
-            inLink = "Поддержать занятия"
+            inLink = ""
         <span>
             {preLink}
-            <Link to={href}>
+            {inLink != "" && <Link to={href}>
                 {inLink}
                 {" "}
                 <FontAwesome name="cc-visa"/>
                 {" "}
                 <FontAwesome name="cc-mastercard"/>
-            </Link>
+            </Link>}
         </span>
 
 
@@ -86,7 +89,7 @@ paidTillOptions =
     urls: (props) ->
         myUser: "myUser"
 
-PaidTillConnected = ConnectedComponent(PaidTill, paidTillOptions)
+PaidTillConnected = withLang(ConnectedComponent(PaidTill, paidTillOptions))
 
 BottomPanel = (props) ->
     <div className={ if props.theme == "dark" then styles.footer_dark else styles.footer}>
@@ -95,12 +98,12 @@ BottomPanel = (props) ->
                 <Col xs={12} sm={12} md={8} lg={8}>
                     <div className="text-muted">
                         <Link to="/">algoprog.ru</Link>
-                        {" © Петр Калинин, GNU AGPL, "}
+                        {" © "}{Lang('Petr_Kalinin')}{", GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
-                        <Link to="/material/module-29054">О лицензии на материалы сайта</Link>
+                        <Link to="/material/module-29054">{Lang("about_license")}</Link>
                         {" | "}
-                        <a href="https://blog.algoprog.ru" target="_blank">Блог</a>
+                        <a href="https://blog.algoprog.ru" target="_blank">{Lang("blog")}</a>
                     </div>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4}>

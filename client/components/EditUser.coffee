@@ -6,9 +6,12 @@ import CfStatus from './CfStatus'
 import styles from './EditUser.css'
 import Loader from './Loader'
 
+import Lang, {LangRaw} from '../lang/lang'
+
 import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
+import withLang from '../lib/withLang'
 
 class Input extends React.Component
     constructor: (props) ->
@@ -174,46 +177,48 @@ class EditingUser extends React.Component
             cls = @state.clas
             buttonDisabled = noMatch or whitespace or @state.informaticsError or @state.informaticsLoading or @state.codeforcesLoading or @state.codeforcesError
             <div>
-                <h2>Редактировать профиль</h2>
+                <h2>{LangRaw("edit_profile", @props.lang)}</h2>
                 <form className = {styles.form}>
                     <div>
-                        Старый пароль (обязательно):
+                        {LangRaw("old_password_required", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "password"
                                 value =  {@state.password}
                                 onChange = {@handlePasswordChange}
-                                errors = {[@state.passError && "Неправильный пароль"]}
+                                errors = {[@state.passError && LangRaw("wrong_password", @props.lang)]}
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
-                    <h3>Сменить пароль</h3>
+                    <h3>{LangRaw("change_password", @props.lang)}</h3>
                     <div>
-                        Новый пароль:
+                        {LangRaw("new_password", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "password"
                                 value = {@state.newPassOne}
                                 onChange = {@handleNewPassOneChange}
                                 hideErrors = {true}
-                                errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
+                                errors = {[noMatch && LangRaw("passwords_are_not_equal", @props.lang), 
+                                    whitespace && LangRaw("password_can_not_start_with_space", @props.lang)]}
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     <div>
-                        Повторите пароль:
+                        {LangRaw("repeat_password", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "password"
                                 value = {@state.newPassTwo}
                                 onChange = {@handleNewPassTwoChange}
-                                errors = {[noMatch && "Пароли не совпадают", whitespace && "Пароль не может начинаться с пробела или заканчиваться на него"]}
+                                errors ={[noMatch && LangRaw("passwords_are_not_equal", @props.lang), 
+                                    whitespace && LangRaw("password_can_not_start_with_space", @props.lang)]}
                                 onKeyPress={@handleKeyPressed}
                             />
                     </div>
-                    <h3>Данные профиля</h3>
+                    <h3>{LangRaw("profile_data", @props.lang)}</h3>
                     <div>
-                        Новое имя:
+                        {LangRaw("new_name", @props.lang)}:
                             <Input
                                 type = "text"
                                 name = "newName"
@@ -223,7 +228,7 @@ class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Хендл (никнейм) на codeforces:
+                        {LangRaw("codeforces_handle", @props.lang)}:
                             <Input
                                 type = "text"
                                 name = "newLogin"
@@ -233,7 +238,7 @@ class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Класс:
+                        {LangRaw("class", @props.lang)}:
                             <Input
                                 type = "number"
                                 name = "newClass"
@@ -243,51 +248,48 @@ class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Пароль от informatics:
+                        {LangRaw("informatics_password", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "InformsticsPassword"
                                 value = {@state.informaticsPassword}
                                 onChange = {@handleInformaticsPasswordChange}
                                 onBlur = {@updateInformatics}
-                                errors = {[@state.informaticsError && <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{@props.user._id}">вашему аккаунту на informatics</a></div>]}
+                                errors = {[@state.informaticsError && LangRaw("informatics_password_does_not_match_account", @props.lang)(@props.user._id)]}
                             />
                     </div>
-                    <h3>Данные codeforces для отправки решений </h3>
+                    <h3>{LangRaw("codeforces_data_for_submitting_problems", @props.lang)} </h3>
                     <div>
-                        Некоторые задачи отправляются на codeforces, а не на информатикс. 
-                        Для их отправки нужны логин и пароль от какого-нибудь вашего аккаунта на cf.
-                        Вы можете указать данные того же аккаунта, что и выше, или можете зарегистрировать
-                        отдельный аккаунт только для отправки решений с алгопрога, если не хотите указывать пароль
-                        от вашего основного аккаунта.<br/>
-                        Хендл (никнейм) на codeforces для отправки решений:
+                        {LangRaw("codeforces_data_for_submitting_problems_intro", @props.lang)}
+                        <br/>
+                        {LangRaw("codeforces_data_for_submitting_problems_handle", @props.lang)}:
                             <Input
                                 type = "text"
                                 name = "codeforcesUsername"
                                 value = {@state.codeforcesUsername}
                                 onChange = {@handleCodeforcesUsernameChange}
                                 onBlur = {@updateCodeforces}
-                                errors = {[@state.codeforcesError && <div>Пароль не подходит к логину</div>]}
+                                errors = {[@state.codeforcesError && <div>{LangRaw("login_and_password_do_not_match", @props.lang)}</div>]}
                             />
                     </div>
                     <div>
-                        Пароль на codeforces для отправки решений:
+                        {LangRaw("codeforces_data_for_submitting_problems_password", @props.lang)}:
                             <Input
                                 type = "password"
                                 name = "codeforcesPassword"
                                 value = {@state.codeforcesPassword}
                                 onChange = {@handleCodeforcesPasswordChange}
                                 onBlur = {@updateCodeforces}
-                                errors = {[@state.codeforcesError && <div>Пароль не подходит к логину</div>]}
+                                errors = {[@state.codeforcesError && <div>{LangRaw("login_and_password_do_not_match", @props.lang)}</div>]}
                             />
                     </div>
-                    {@state.unknownError && <div className = {styles.youHaveProblem}>Неизвестная ошибка, проверьте подключение к интернету и перезагрузите страницу</div>}
+                    {@state.unknownError && <div className = {styles.youHaveProblem}></div>}
                 </form>
-                <Button onClick = {@submit} variant="light" bsSize = "small" disabled = {buttonDisabled}>Ок</Button>
+                <Button onClick = {@submit} variant="light" bsSize = "small" disabled = {buttonDisabled}>OK</Button>
             </div>
 
 options =
     urls: (props) ->
         registeredUser: "registeredUser/#{props.user._id}"
 
-export default ConnectedComponent(EditingUser, options)
+export default ConnectedComponent(withLang(EditingUser), options)

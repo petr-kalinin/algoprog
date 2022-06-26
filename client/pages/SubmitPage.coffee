@@ -5,7 +5,10 @@ import { Helmet } from "react-helmet"
 
 import Submit from '../components/Submit'
 import Sceleton from '../components/Sceleton'
+
+import {LangRaw} from '../lang/lang'
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 
 class SubmitPage extends React.Component
     constructor: (props) ->
@@ -14,7 +17,7 @@ class SubmitPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Посылка #{@props.match.params.id}", _id: "submit"},
+            location: {title: "#{LangRaw('attempts', @props.lang)} #{@props.match.params.id}", _id: "submit"},
             showNews: "hide",
             showTree: "hide"
         }
@@ -25,4 +28,4 @@ options =
     url: (props) ->
         data: "submit/#{props.match.params.id}"
 
-export default ConnectedComponent(SubmitPage, options)
+export default ConnectedComponent(withLang(SubmitPage), options)

@@ -1,3 +1,14 @@
+import outcomeToText from '../../client/lib/outcomeToText'
+import notify from '../metrics/notify'
+
+export checkOutcome = (outcome) ->
+    [cl, msg] = outcomeToText(outcome, "ru", true)
+    notifyMessage = ""
+    if not msg
+        notifyMessage += "Unknown outcome #{outcome}\n"
+    if notifyMessage
+        notify notifyMessage
+
 export class TestSystemSubmitDownloader
     getSource: (runid) ->
         throw "not implemented"
@@ -10,7 +21,6 @@ export class TestSystemSubmitDownloader
 
     getSubmitsFromPage: (page) ->
         throw "not implemented"
-
 
 export class TestSystemUser
     profileLink: ->

@@ -1,8 +1,11 @@
-import styles from './ContributeByWeekCalendar.css'
-
 React = require('react')
 
-export default class ContributeByWeekCalendar extends React.PureComponent
+import styles from './ContributeByWeekCalendar.css'
+
+import {LangRaw} from '../lang/lang'
+import withLang from '../lib/withLang'
+
+class ContributeByWeekCalendar extends React.PureComponent
     componentDidMount: () ->
         if @table_div
             @table_div?.scrollTo?(10000, 0)
@@ -53,7 +56,8 @@ export default class ContributeByWeekCalendar extends React.PureComponent
                 column = []
             d.setDate d.getDate()+1
         months = []
-        yearMonths = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+        yearMonths = LangRaw("months_short", @props.lang)
+        dow = LangRaw("dow_short", @props.lang)
         for m of xMonth
             months.push <text key={m} x={xMonth[m] * 16} y="-8">{yearMonths[m]}</text>
         # markup of calendar is captured from github calendar html element under text "contributions in the last year"
@@ -64,16 +68,18 @@ export default class ContributeByWeekCalendar extends React.PureComponent
                         <g transform="translate(10, 20)">
                             {row}
                             {months}
-                            <text dx="-10" dy="8" style={display: "none"}>пн</text>
-                            <text dx="-10" dy="25">вт</text>
-                            <text dx="-10" dy="32" style={display: "none"}>ср</text>
-                            <text dx="-10" dy="56">чт</text>
-                            <text dx="-10" dy="57" style={display: "none"}>пт</text>
-                            <text dx="-10" dy="85">сб</text>
-                            <text dx="-10" dy="81" style={display: "none"}>вс</text>
+                            <text dx="-10" dy="8" style={display: "none"}>{dow[0]}</text>
+                            <text dx="-10" dy="25">{dow[1]}</text>
+                            <text dx="-10" dy="32" style={display: "none"}>{dow[2]}</text>
+                            <text dx="-10" dy="56">{dow[3]}</text>
+                            <text dx="-10" dy="57" style={display: "none"}>{dow[4]}</text>
+                            <text dx="-10" dy="85">{dow[5]}</text>
+                            <text dx="-10" dy="81" style={display: "none"}>{dow[6]}</text>
                         </g>
                     </svg>
                 </div>
             </div>
             <div className={styles.clearfix} ></div>
         </div>
+
+export default withLang(ContributeByWeekCalendar)

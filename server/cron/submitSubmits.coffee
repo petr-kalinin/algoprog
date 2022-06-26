@@ -94,7 +94,7 @@ submitOneSubmit = (submit) ->
     logger.info "Try submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
     if submit.sourceRaw == "" or not submit.language
         logger.info "Empty source or unknown language, failing"
-        submit.outcome = "Ошибка отправки, переотправьте"
+        submit.outcome = "FL"
         await submit.upsert()
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})

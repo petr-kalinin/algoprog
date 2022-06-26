@@ -12,6 +12,7 @@ import Pagination from "react-js-pagination";
 import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import Lang from '../lang/lang'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
 import globalStyles from './global.css'
@@ -30,13 +31,6 @@ commentPanelClass = (comment) ->
     if comment.outcome == "DQ"
         return "dq_text"
     return commentClass(comment)
-
-commentText = (comment) ->
-    switch comment.outcome
-        when "AC" then "Решение зачтено"
-        when "IG" then "Решение проигнорировано"
-        when "DQ" then "Решение дисквалифицировано"
-        else "Решение прокомментировано"
 
 AllCommentList = (props) ->
     <PanelGroup id="comments">
@@ -84,7 +78,7 @@ class AllCommentsWithPaginator extends React.Component
     
     render: () ->
         <div>
-            <h1>Все комментарии</h1>
+            <h1>{Lang("all_comments")}</h1>
             <AllCommentListConnected page={@state.activePage - 1} />
             <Pagination
                 activePage={@state.activePage}

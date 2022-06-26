@@ -5,7 +5,10 @@ import { ListGroup, ListGroupItem, Button, ButtonGroup } from 'react-bootstrap'
 import Pagination from "react-js-pagination";
 import {Link} from 'react-router-dom'
 
+import {LangRaw} from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 import withMyUser from '../lib/withMyUser'
 
 ORDER_PROBLEM = "problem"
@@ -64,12 +67,12 @@ class FindMistakeListWithPaginator extends React.Component
     
     render: () ->
         <div>
-            <h1>Найди ошибку</h1>
-            <p><Link to="/material/about_find_mistake">О поиске ошибок</Link></p>
+            <h1>{LangRaw("find_mistake", @props.lang)}</h1>
+            <p><Link to={"/material/about_find_mistake" + LangRaw("material_suffix", @props.lang)}>{LangRaw("about_find_mistake", @props.lang)}</Link></p>
             {@props.allowSort && 
                 <p><ButtonGroup>
-                    <Button onClick={@sortBy(ORDER_PROBLEM)} active={@state.order==ORDER_PROBLEM} bsSize="xsmall">Сортировать по задаче</Button>
-                    <Button onClick={@sortBy(ORDER_STATUS)} active={@state.order==ORDER_STATUS} bsSize="xsmall">Сортировать по статусу</Button>
+                    <Button onClick={@sortBy(ORDER_PROBLEM)} active={@state.order==ORDER_PROBLEM} bsSize="xsmall">{LangRaw("sort_by_problem", @props.lang)}</Button>
+                    <Button onClick={@sortBy(ORDER_STATUS)} active={@state.order==ORDER_STATUS} bsSize="xsmall">{LangRaw("sort_by_status", @props.lang)}</Button>
                 </ButtonGroup></p>
             }
             <FindMistakeListConnected page={@state.activePage - 1} problem={@props.problem} order={@state.order}/>
@@ -88,4 +91,4 @@ pageOptions = {
             data: if props.problem then "findMistakeProblemPages/#{props.myUser?._id}/#{props.problem}" else "findMistakePages/#{props.myUser?._id}"
 }
 
-export default withMyUser(ConnectedComponent(FindMistakeListWithPaginator, pageOptions))
+export default withLang(withMyUser(ConnectedComponent(FindMistakeListWithPaginator, pageOptions)))

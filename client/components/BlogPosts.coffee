@@ -5,9 +5,13 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
+import withLang from '../lib/withLang'
+
 class BlogPosts extends React.Component
     render:  () ->
         if not @props.posts.length
+            return null
+        if @props.lang != "ru"
             return null
         <div>
             <h4>Последние записи в блоге</h4>
@@ -34,4 +38,4 @@ options = {
     timeout: 5 * 60 * 1000
 }
 
-export default ConnectedComponent(BlogPosts, options)
+export default ConnectedComponent(withLang(BlogPosts), options)

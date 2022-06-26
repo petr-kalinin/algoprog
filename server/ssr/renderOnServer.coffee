@@ -24,6 +24,7 @@ import Cookies from 'universal-cookie'
 
 renderFullPage = (html, data, helmet, linkClientJsCss) ->
     return '
+        <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8" />
@@ -91,13 +92,21 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         </body>
         </html>'
 
- defaultTheme = (reqCookies) ->
+defaultTheme = (reqCookies) ->
     cookies = new Cookies(reqCookies)
     cookie = cookies.get('theme')
     if cookie
         return cookie
     else
         return "light"
+
+defaultLang = (reqCookies) ->
+    cookies = new Cookies(reqCookies)
+    cookie = cookies.get('lang')
+    if cookie
+        return cookie
+    else
+        return "ru"
 
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     # https://github.com/HenningM/express-ws/issues/64
@@ -118,6 +127,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
             ],
             clientCookie: req.headers.cookie,
             theme: defaultTheme(req.headers.cookie)
+            lang: defaultLang(req.headers.cookie)
             needDataPromises: true
         store = createStore(initialState)
 

@@ -185,7 +185,11 @@ export default class Informatics extends TestSystem
     selfTest: () ->
         await @_getAdmin()
 
-    downloadProblem: (options) ->
+    downloadProblem: (options, label) ->
+        if label != ""
+            return 
+                name: "Name #{options.id}"
+                text: "Text #{options.id}"
         href = "https://informatics.msk.ru/mod/statements/view.php?chapterid=#{options.id}"
         page = await downloadLimited(href, {timeout: 15 * 1000})
         document = (new JSDOM(page, {url: href})).window.document

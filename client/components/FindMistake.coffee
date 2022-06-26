@@ -4,8 +4,11 @@ import {Link} from 'react-router-dom'
 
 import Loader from '../components/Loader'
 
+import {LangRaw} from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
 import {DISTANCE_THRESHOLD, distance} from '../lib/findMistake'
+import withLang from '../lib/withLang'
 import withMyUser from '../lib/withMyUser'
 
 import SubmitList from './SubmitList'
@@ -47,11 +50,11 @@ FindMistake = (props) ->
     tooMuchChanges = currentDistance > maxSubmits
 
     <>
-        <h1>Найди ошибку: <Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
-        <p><Link to="/material/about_find_mistake">О поиске ошибок</Link></p>
+        <h1>{LangRaw("find_mistake", props.lang)}: <Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
+        <p><Link to={"/material/about_find_mistake" + LangRaw("material_suffix", props.lang)}>{LangRaw("about_find_mistake", props.lang)}</Link></p>
         <div className={styles.top}>
-            <div className={styles.left}><Button onClick={resetEditor}>Сбросить правки</Button></div>
-            <div className={styles.right + if tooMuchChanges then " text-danger" else ""}>Исправлений: {currentDistance} (можно {maxSubmits})</div>
+            <div className={styles.left}><Button onClick={resetEditor}>{LangRaw("reset_changes", props.lang)}</Button></div>
+            <div className={styles.right + if tooMuchChanges then " text-danger" else ""}>{LangRaw("changes_of_allowed", props.lang)(currentDistance, maxSubmits)}</div>
         </div>
         <SubmitList material={props.material} 
             noFile={true}
@@ -68,4 +71,4 @@ options =
     urls: (props) ->
         "material": "material/#{props.findMistake.problem}"
 
-export default ConnectedComponent(FindMistake, options)
+export default withLang(ConnectedComponent(FindMistake, options))

@@ -1,8 +1,11 @@
 React = require('react')
 
+import {LangRaw} from '../lang/lang'
+import withLang from '../lib/withLang'
+
 import styles from './CfStatus.css'
 
-export default class CfStatus extends React.Component
+class CfStatus extends React.Component
     render:  () ->
         cf = @props.cf
 
@@ -16,18 +19,20 @@ export default class CfStatus extends React.Component
             cfProgressColor = "#aa0000"
 
         return <span>
-                <a href={"https://codeforces.com/profile/" + cf.login}>
+                <a href={"https://codeforces.com/profile/" + cf.login} title={LangRaw("cf_rating", @props.lang)}>
                     <span className={styles.color} style={color: cf.color}>
                         {cf.rating}
                     </span>
                 </a>
                 &nbsp;(
-                <span className={styles.progress} title="Взвешенный прирост рейтинга за последнее время" style={color: cfProgressColor}>
+                <span className={styles.progress} title={LangRaw("cf_progress", @props.lang)} style={color: cfProgressColor}>
                     {(if cf.progress > 0 then "+" else "") + cf.progress.toFixed(1)}
                 </span>
                 /
-                <span title="Взвешенное количество написанных контестов за последнее время">
+                <span title={LangRaw("cf_activity", @props.lang)}>
                     {cf.activity.toFixed(1)}
                 </span>
                 )
             </span>
+
+export default withLang(CfStatus)

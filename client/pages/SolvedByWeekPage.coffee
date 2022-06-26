@@ -5,7 +5,10 @@ import { Helmet } from "react-helmet"
 
 import SolvedByWeek from '../components/SolvedByWeek'
 import Sceleton from '../components/Sceleton'
+
+import {LangRaw} from '../lang/lang'
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withLang from '../lib/withLang'
 
 class SolvedByWeekPage extends React.Component
     constructor: (props) ->
@@ -15,7 +18,7 @@ class SolvedByWeekPage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "Сданные задачи по неделям", _id: "table:#{@userList}:byWeek"},
+            location: {title: LangRaw("solved_problems_by_week", @props.lang), _id: "table:#{@userList}:byWeek"},
             showNews: "hide",
             showTree: "hide"
         }
@@ -29,4 +32,4 @@ options =
 
     timeout: 20000
 
-export default ConnectedComponent(SolvedByWeekPage, options)
+export default ConnectedComponent(withLang(SolvedByWeekPage), options)

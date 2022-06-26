@@ -4,6 +4,7 @@ export default GROUPS =
         chocos: true
         startDayForWeeks: "2020-01-01"
         tableName: "Лицей 40",
+        tableNameEn: "School 40, N.Novgorod",
         canResetYear: true
         starred: false
     lic87:
@@ -11,6 +12,7 @@ export default GROUPS =
         chocos: false
         startDayForWeeks: "2020-01-05"
         tableName: "Лицей 87",
+        tableNameEn: "School 87, N.Novgorod",
         canResetYear: true
         starred: false
     zaoch:
@@ -18,6 +20,7 @@ export default GROUPS =
         chocos: false
         startDayForWeeks: "2020-01-05"
         tableName: "Занятия во ВШЭ + нижегородские заочно",
+        tableNameEn: "HSE classes + N.Novgorod online",
         canResetYear: true
         starred: false
     unn: 
@@ -25,6 +28,7 @@ export default GROUPS =
         chocos: false
         startDayForWeeks: "2020-01-05"
         tableName: "Занятия в ННГУ"
+        tableNameEn: "UNN classes",
         canResetYear: true
         starred: false
     notnnov:
@@ -32,6 +36,7 @@ export default GROUPS =
         chocos: false
         startDayForWeeks: "2020-01-06"
         tableName: "Не-нижегородские школьники",
+        tableNameEn: "Non-N.Novgorod secondary schools",
         canResetYear: true
         starred: false
     stud:
@@ -39,6 +44,7 @@ export default GROUPS =
         chocos: false
         startDayForWeeks: "2020-01-06"
         tableName: "Студенты и старше"
+        tableNameEn: "Students and graduates",
         canResetYear: false
         starred: true
     team:
