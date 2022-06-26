@@ -67,6 +67,16 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: USER_AGENT
+            - name: TRANSLATE_FOLDER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TRANSLATE_FOLDER_ID
+            - name: TRANSLATE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TRANSLATE_API_KEY
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
