@@ -191,7 +191,7 @@ class TopPanel extends React.Component
                 </Navbar.Header>
                 <Navbar.Form pullRight>
                     <ButtonGroup>
-                        {#<LangSwitch /> 
+                        {<LangSwitch /> 
                         }
                         <ThemeSwitch /> 
                     </ButtonGroup>

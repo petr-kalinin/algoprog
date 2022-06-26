@@ -152,7 +152,7 @@ getSizes = (props) ->
 
 BottomPanel = withTheme(BottomPanel)
 
-export default class Sceleton extends React.Component
+class Sceleton extends React.Component
     constructor: (props) ->
         super(props)
         @state =
@@ -176,6 +176,11 @@ export default class Sceleton extends React.Component
             </Helmet>
             <TopPanel me={@props.me} myUser={@props.myUser} toggleTree={@toggleTree}/>
             <div className={styles.main}>
+                {@props.lang == "en" &&
+                    <div class={'alert alert-danger ' + styles.en_warning}>
+                        English version is under construction. Not all parts of the site has been translated yet.
+                    </div>
+                }
                 <Grid fluid>
                     <Row>
                         <ColWrapper size={treeSize}>
@@ -195,3 +200,5 @@ export default class Sceleton extends React.Component
             </div>
             <BottomPanel myUser={@props.myUser} />
         </div>
+
+export default withLang Sceleton
