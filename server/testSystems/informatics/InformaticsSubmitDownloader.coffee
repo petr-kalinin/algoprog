@@ -39,6 +39,7 @@ EJUDGE_STATUS_TO_OUTCOME =
 
 TEST_STATUS_TO_OUTCOME = 
     RT: "RE"
+    WT: "TL"
 
 
 export default class InformaticsSubmitDownloader extends TestSystemSubmitDownloader
