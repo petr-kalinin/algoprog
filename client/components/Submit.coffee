@@ -142,7 +142,7 @@ class TestResult extends React.Component
                 h1 = e.getOriginalEditor().getContentHeight();
                 h2 = e.getModifiedEditor().getContentHeight();
                 h = Math.min(300, Math.max(h1, h2))
-                document.getElementById(styles.diffEditor + "_" + @props.index).style.height = h
+                document.getElementById(styles.diffEditor + "_" + @props.index).style.height = "#{h}px"
                 e.layout()
 
             res.push <tr key="2"><td colSpan="4" className={styles.td}>
