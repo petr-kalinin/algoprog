@@ -96,7 +96,6 @@ SolutionMark = withMyResults withLang (props) ->
     id = props.id
     if id.charAt(0) == "p"  # this is a problem
         id = stripLabel(id)
-    console.log id
     result = props.myResults?[props.myUser?._id + "::" + id]
     indent = props.indent
     if not result?.total?

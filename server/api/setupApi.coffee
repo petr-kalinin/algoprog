@@ -580,7 +580,12 @@ export default setupApi = (app) ->
         res.json(submits)
 
     app.get '/api/material/:id', wrap (req, res) ->
-        res.json(await Material.findById(req.params.id))
+        material = await Material.findById(req.params.id)
+        if not material
+            material = new Material
+                content: "<h1>404 Not found</h1>Unknown material"
+                type: "page"
+        res.json(material)
 
     app.get '/api/lastBlogPosts', wrap (req, res) ->
         res.json(await BlogPost.findLast(5))
