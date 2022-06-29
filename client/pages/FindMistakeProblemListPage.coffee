@@ -27,6 +27,6 @@ class FindMistakeProblemListPage extends React.Component
 
 options =
     urls: (props) ->
-        data: "material/#{props.match.params.problemId}"
+        data: "material/#{props.match.params.problemId}#{LangRaw("material_suffix", props.lang)}"
 
-export default ConnectedComponent(withLang(FindMistakeProblemListPage), options)
+export default withLang ConnectedComponent(FindMistakeProblemListPage, options)

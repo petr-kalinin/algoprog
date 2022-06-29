@@ -18,7 +18,7 @@ class FindMistakePage extends React.Component
     render:  () ->
         sceletonProps = {
             @props...,
-            location: {title: "#{LangRaw('find_mistake', @props.lang)}: #{@props.findMistake?.fullProblem?.name}", _id: "findMistake" + LangRaw("material_suffix", @props.lang)},
+            location: {title: "#{LangRaw('find_mistake', @props.lang)}: #{@props.findMistake?.problemName}", _id: "findMistake" + LangRaw("material_suffix", @props.lang)},
         }
         `<Sceleton {...sceletonProps}><FindMistake findMistake={this.props.findMistake}/></Sceleton>`
 
