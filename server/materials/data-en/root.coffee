@@ -11,7 +11,7 @@ export default root = () ->
         level_about(),
         allNews(),
         link("/comments", "Comments", "comments!en"),
-        link("/findMistakeList", "Find mistake", "findMistake!en"),
+        link("/findMistakeList", "Find a bug", "findMistake!en"),
         mainLevels()...,
         tables()
     ])
