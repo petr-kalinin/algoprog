@@ -8,11 +8,11 @@ import withLang from '../lib/withLang'
 correctUrl = (url, lang) ->
     if not url.startsWith("/material/")
         return url
-    url = stripLabel(url)    
+    url = stripLabel(url)
     if lang == "ru"
-        return url
+        return url.replace("A", "А").replace("B", "Б").replace("C", "В").replace("D", "Г")
     else
-        return url + "!en"
+        return url.replace("А", "A").replace("Б", "B").replace("В", "C").replace("Г", "D") + "!en"
 
 export default LangCorrector = withLang withRouter (props) ->
     url = props.location.pathname

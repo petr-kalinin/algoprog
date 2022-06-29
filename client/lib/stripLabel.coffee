@@ -4,3 +4,5 @@ export default stripLabel = (id) ->
         return id.substring(0, idx)
     return id
 
+
+
