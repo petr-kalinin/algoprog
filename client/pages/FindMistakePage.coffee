@@ -24,6 +24,6 @@ class FindMistakePage extends React.Component
 
 options =
     urls: (props) ->
-        findMistake: "findMistake/#{props.match.params.id}/#{props.myUser?._id}"
+        findMistake: "findMistake/#{props.match.params.id}/#{props.myUser?._id}?lang=#{LangRaw("material_suffix", props.lang)}"
 
 export default withLang(withMyUser(ConnectedComponent(FindMistakePage, options)))

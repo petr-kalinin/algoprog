@@ -153,7 +153,7 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     update()  # do this async
     return undefined
 
-expandFindMistakeResult = (result, admin, userKey) ->
+expandFindMistakeResult = (result, admin, userKey, lang="") ->
     mistake = await FindMistake.findById(result.findMistake)
     if not mistake
         return null
@@ -164,7 +164,7 @@ expandFindMistakeResult = (result, admin, userKey) ->
     if not allowed
         mistake.allowed = false
         mistake.source = ""
-    mistake.fullProblem = await Problem.findById(mistake.problem)
+    mistake.fullProblem = await Problem.findById(mistake.problem + lang)
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
 
@@ -1039,9 +1039,10 @@ export default setupApi = (app) ->
             return
         user = req.params.user
         order = req.query.order
+        lang = req.query.lang || ""
         mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page, order)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistakeResult(mistake, req.user?.admin, user)
+            expandFindMistakeResult(mistake, req.user?.admin, user, lang)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1058,9 +1059,10 @@ export default setupApi = (app) ->
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
+        lang = req.query.lang || ""
         mistakes = await Result.findPageByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem, req.params.page)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistakeResult(mistake, req.user?.admin, req.params.user)
+            expandFindMistakeResult(mistake, req.user?.admin, req.params.user, lang)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1070,8 +1072,9 @@ export default setupApi = (app) ->
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
+        lang = req.query.lang || ""
         mistake = await Result.findByUserAndFindMistake(user, req.params.id)
-        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user)
+        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user, lang)
         res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->

@@ -42,9 +42,9 @@ FindMistakeList = (props) ->
 options = 
     urls: (props) ->
         return
-            findMistakes: if props.problem then "findMistakeProblemList/#{props.myUser?._id}/#{props.problem}/#{props.page}" else "findMistakeList/#{props.myUser?._id}/#{props.page}?order=#{props.order}"
+            findMistakes: if props.problem then "findMistakeProblemList/#{props.myUser?._id}/#{props.problem}/#{props.page}?lang=#{LangRaw('material_suffix', props.lang)}" else "findMistakeList/#{props.myUser?._id}/#{props.page}?order=#{props.order}&lang=#{LangRaw('material_suffix', props.lang)}"
 
-FindMistakeListConnected = withMyUser(ConnectedComponent(FindMistakeList, options))
+FindMistakeListConnected = withLang(withMyUser(ConnectedComponent(FindMistakeList, options)))
 
 class FindMistakeListWithPaginator extends React.Component
     constructor: (props) ->
