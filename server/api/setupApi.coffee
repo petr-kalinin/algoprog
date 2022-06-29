@@ -164,7 +164,9 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     if not allowed
         mistake.allowed = false
         mistake.source = ""
-    mistake.fullProblem = (await Problem.findById(mistake.problem + lang)) || (await Problem.findById(mistake.problem))
+    mistake.fullProblem = await Problem.findById(mistake.problem)
+    material = (await Material.findById(mistake.problem + lang)) || (await Material.findById(mistake.problem))
+    mistake.problemName = material.title
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
 

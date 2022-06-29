@@ -32,7 +32,7 @@ FindMistakeList = (props) ->
                 href = undefined
             cl = getClass(m.result)
             <ListGroupItem key={m._id} onClick={if m.allowed then window?.goto?(href)} href={href} bsStyle={cl} disabled={!m.allowed}>
-                {m.fullProblem.name}{" "} 
+                {m.problemName}{" "} 
                 ({m.fullProblem.level}, {m.language}){" "} 
                 <small>#{m.hash}</small>
             </ListGroupItem>

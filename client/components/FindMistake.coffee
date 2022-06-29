@@ -50,7 +50,7 @@ FindMistake = (props) ->
     tooMuchChanges = currentDistance > maxSubmits
 
     <>
-        <h1>{LangRaw("find_mistake", props.lang)}: <Link to="/material/#{props.findMistake.problem}">{props.findMistake.fullProblem.name}</Link></h1>
+        <h1>{LangRaw("find_mistake", props.lang)}: <Link to="/material/#{props.findMistake.problem}">{props.findMistake.problemName}</Link></h1>
         <p><Link to={"/material/about_find_mistake" + LangRaw("material_suffix", props.lang)}>{LangRaw("about_find_mistake", props.lang)}</Link></p>
         <div className={styles.top}>
             <div className={styles.left}><Button onClick={resetEditor}>{LangRaw("reset_changes", props.lang)}</Button></div>
