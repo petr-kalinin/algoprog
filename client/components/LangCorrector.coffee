@@ -10,9 +10,9 @@ correctUrl = (url, lang) ->
         return url
     url = stripLabel(url)
     if lang == "ru"
-        return url.replace("A", "А").replace("B", "Б").replace("C", "В").replace("D", "Г")
+        return url #.replace("A", "А").replace("B", "Б").replace("C", "В").replace("D", "Г")
     else
-        return url.replace("А", "A").replace("Б", "B").replace("В", "C").replace("Г", "D") + "!en"
+        return url + "!en" #.replace("А", "A").replace("Б", "B").replace("В", "C").replace("Г", "D") + "!en"
 
 export default LangCorrector = withLang withRouter (props) ->
     url = props.location.pathname
