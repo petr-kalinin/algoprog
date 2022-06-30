@@ -68,7 +68,10 @@ class SubmitsOnDay extends React.Component
           <SubmitListTable submits={@props.data} showProblems={true} />
       </div>
 
-SubmitsOnDayConnected = ConnectedComponent(SubmitsOnDay, {urls: (props) -> (data: "submitsByDay/#{props.userId}/#{props.day}")})
+SubmitsOnDayConnected = withLang ConnectedComponent(SubmitsOnDay, {
+    urls: (props) -> 
+        data: "submitsByDay/#{props.userId}/#{props.day}?lang=#{LangRaw("material_suffix", props.lang)}"
+})
 
 class FullUser extends React.Component
     constructor: (props) ->

@@ -79,7 +79,7 @@ wrap = (fn) ->
         catch error
             args[2](error)
 
-expandSubmit = (submit) ->
+expandSubmit = (submit, lang="") ->
     submit = submit.toObject?() || submit
     MAX_SUBMIT_LENGTH = 100000
 
@@ -90,7 +90,9 @@ expandSubmit = (submit) ->
         return false
 
     submit.fullUser = await User.findById(submit.user)
-    submit.fullProblem = await Problem.findById(submit.problem)
+    submit.fullProblem = (await Problem.findById(submit.problem))?.toObject?()
+    material = (await Material.findById(submit.problem + lang)) || (await Material.findById(submit.problem))
+    submit.fullProblem.name = material.title
     tableNamePromises = []
     for t in submit.fullProblem.tables
         tableNamePromises.push(Table.findById(t))
@@ -566,9 +568,10 @@ export default setupApi = (app) ->
 
     app.get '/api/submitsByDay/:user/:day', wrap (req, res) ->
         submits = await Submit.findByUserAndDayWithFindMistakeAny(req.params.user, req.params?.day)
+        lang = req.query.lang || ""
         submits = submits.map((submit) -> submit.toObject())
         submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
+        submits = submits.map((s) -> expandSubmit(s, lang))
         submits = await awaitAll(submits)
         submits = submits.map((submit) ->
               _id: submit._id
