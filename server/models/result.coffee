@@ -22,6 +22,7 @@ resultsSchema = new mongoose.Schema
     findMistake: String
     findMistakeAllowed: Boolean
     findMistakeOrder: String
+    isProblem: { type: Boolean, default: false }
     subFindMistakes:
         ok: Number
         wa: Number

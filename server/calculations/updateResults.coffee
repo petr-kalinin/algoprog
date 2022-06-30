@@ -1,5 +1,11 @@
-import processForFindMistake from '../findMistake/processForFindMistake'
+import awaitAll from '../../client/lib/awaitAll'
+import addTotal from '../../client/lib/addTotal'
+import GROUPS from '../../client/lib/groups'
+import isContestRequired from '../../client/lib/isContestRequired'
 
+import logger from '../log'
+
+import processForFindMistake from '../findMistake/processForFindMistake'
 import FindMistake from '../models/FindMistake'
 import Hash from '../models/Hash'
 import Result from '../models/result'
@@ -8,10 +14,6 @@ import Table from '../models/table'
 import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
 
-import addTotal from '../../client/lib/addTotal'
-import isContestRequired from '../../client/lib/isContestRequired'
-
-import logger from '../log'
 
 updateResultsForTable = (userId, tableId, dirtyResults) ->
     if dirtyResults and (not ((userId + "::" + tableId) of dirtyResults))
@@ -36,6 +38,7 @@ updateResultsForTable = (userId, tableId, dirtyResults) ->
         total...,
         user: userId,
         table: tableId
+        isProblem: false
     })
     await result.upsert()
     return result
@@ -134,6 +137,7 @@ updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
         result = makeResultFromSubmitsList(submits, userId, problemId, fm)
         # Assume that if it has submits, then it is allowed.
         # Anyway we will check allowednedd in setupApi.
+        result.isProblem = true
         result.findMistakeAllowed = true
         result.findMistakeOrder = (await FindMistake.findById(fm))?.order
         await result.upsert()
@@ -145,6 +149,7 @@ updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
             result = makeResultFromSubmitsList([], userId, problemId, fm.id)
             result.findMistakeAllowed = await fm.isAllowedForUser(userId, admin)
             result.findMistakeOrder = fm.order
+            result.isProblem = true
             await result.upsert()
             allResults.push result
     return allResults
@@ -152,6 +157,7 @@ updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
 makeProblemResult = (userId, problemId, submits, fmResults) ->
     result = makeResultFromSubmitsList(submits, userId, problemId)
     result.subFindMistakes = await makeSubFindMistakes(problemId, fmResults) 
+    result.isProblem = true
     await result.upsert()
     return result
 
@@ -169,9 +175,25 @@ makeSubFindMistakes = (problemId, results) ->
     result.none = totalFm - result.ok - result.wa
     return result
 
-export default updateResults = (user, dirtyResults) ->
+removeWrongLangResults = (userId, lang) ->
+    results = await Result.findByUser(userId)
+    promises = []
+    for r in results
+        if r.isProblem
+            continue
+        tableSplit = r.table.split("!")
+        tableLang = if tableSplit.length == 1 then "" else "!" + tableSplit[tableSplit.length - 1]
+        if tableLang != lang
+            console.log "Remove result #{r._id} because it is wrong lang"
+            promises.push r.remove()
+    await awaitAll promises
+
+export default updateResults = (userId, dirtyResults) ->
     start = new Date()
-    logger.info "updating results for user ", user
-    await updateResultsForTable(user, "main", dirtyResults)
-    await updateResultsForTable(user, "main!en", dirtyResults)
-    logger.info "updated results for user ", user, " spent time ", (new Date()) - start
+    logger.info "updating results for user ", userId
+    user = await User.findById(userId)
+    lang = GROUPS[user.userList].lang
+    await updateResultsForTable(userId, "main" + lang, dirtyResults)
+    if (not dirtyResults) || (Object.keys(dirtyResults).length == 0)
+        await removeWrongLangResults(userId, lang)
+    logger.info "updated results for user ", userId, " spent time ", (new Date()) - start

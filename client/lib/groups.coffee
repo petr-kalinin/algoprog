@@ -7,6 +7,7 @@ export default GROUPS =
         tableNameEn: "School 40, N.Novgorod",
         canResetYear: true
         starred: false
+        lang: ""
     lic87:
         paid: false
         chocos: false
@@ -15,6 +16,7 @@ export default GROUPS =
         tableNameEn: "School 87, N.Novgorod",
         canResetYear: true
         starred: false
+        lang: ""
     zaoch:
         paid: false
         chocos: false
@@ -23,6 +25,7 @@ export default GROUPS =
         tableNameEn: "HSE classes + N.Novgorod online",
         canResetYear: true
         starred: false
+        lang: ""
     unn: 
         paid: false
         chocos: false
@@ -31,6 +34,7 @@ export default GROUPS =
         tableNameEn: "UNN classes",
         canResetYear: true
         starred: false
+        lang: ""
     notnnov:
         paid: true
         chocos: false
@@ -39,6 +43,7 @@ export default GROUPS =
         tableNameEn: "Non-N.Novgorod secondary schools",
         canResetYear: true
         starred: false
+        lang: ""
     stud:
         paid: true
         chocos: false
@@ -47,27 +52,39 @@ export default GROUPS =
         tableNameEn: "Students and graduates",
         canResetYear: false
         starred: true
+        lang: ""
     team:
         paid: false
         chocos: false
         startDayForWeeks: "2020-01-06"
         canResetYear: true
         starred: false
+        lang: ""
     ikhlyustov:
         paid: false
         chocos: false
         startDayForWeeks: "2020-01-06"
         canResetYear: true
         starred: false
+        lang: ""
     graduated:
         paid: false
         chocos: false
         startDayForWeeks: "2020-01-06"
         canResetYear: true
         starred: false
+        lang: ""
+    english:
+        paid: true
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        canResetYear: false
+        starred: true
+        lang: "!en"
     unknown:
         paid: false
         chocos: false
         startDayForWeeks: "2020-01-06"
         canResetYear: true
         starred: false
+        lang: ""

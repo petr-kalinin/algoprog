@@ -79,7 +79,7 @@ export default dashboard = (registeredUser) ->
     result = {}
     promises = []
     for key, query of queries
-        query.total = 1
+        query.isProblem = true
         if key != "ps"
             query.findMistake = query.findMistake || null
             if userLists?.length
