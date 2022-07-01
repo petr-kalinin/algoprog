@@ -483,7 +483,7 @@ export default setupApi = (app) ->
         submits = submits.map((submit) -> submit.toObject())
         if not req.user?.admin
             submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
+        submits = submits.map((s) -> expandSubmit(s))
         submits = await awaitAll(submits)
         res.json(submits)
 
@@ -495,7 +495,7 @@ export default setupApi = (app) ->
             submits = submits.map((submit) -> submit.toObject())
             if not req.user?.admin
                 submits = submits.map(hideTests)
-            submits = submits.map(expandSubmit)
+            submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             ws.send JSON.stringify submits
 
@@ -529,7 +529,7 @@ export default setupApi = (app) ->
         submits.splice(0, 0, submit0)
         if not req.user?.admin
             submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
+        submits = submits.map((s) -> expandSubmit(s))
         submits = await awaitAll(submits)
         res.json(submits)
 
@@ -562,7 +562,7 @@ export default setupApi = (app) ->
             submits.splice(0, 0, submit0)
             if not req.user?.admin
                 submits = submits.map(hideTests)
-            submits = submits.map(expandSubmit)
+            submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             ws.send JSON.stringify(submits)
 
@@ -638,7 +638,7 @@ export default setupApi = (app) ->
         submit = (await Submit.findById(req.params.id)).toObject()
         similar = await findSimilarSubmits(submit, 5)
         similar = similar.map((submit) -> submit.toObject())
-        similar = similar.map(expandSubmit)
+        similar = similar.map((s) -> expandSubmit(s))
         similar = await awaitAll(similar)
         similar = similar.map (submit) ->
             return
@@ -1104,7 +1104,7 @@ export default setupApi = (app) ->
                 console.log "Bad findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
                 await mistake.setBad()
                 continue
-            submits = submits.map(expandSubmit)
+            submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             count = await FindMistake.findNotApprovedCount()
             res.json({mistake, submits, count})
