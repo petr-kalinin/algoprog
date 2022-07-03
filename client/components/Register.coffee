@@ -17,6 +17,7 @@ import {LangRaw} from '../lang/lang'
 
 import callApi from '../lib/callApi'
 import withLang from '../lib/withLang'
+import {getCurrentYearStart} from '../lib/graduateYearToClass'
 
 import * as actions from '../redux/actions'
 
@@ -53,8 +54,7 @@ class Register extends React.Component
         if @state.informaticsUsername and @state.informaticsPassword
             newState = {
                 @state...
-                informaticsData:
-                    loading: true
+                informaticsLoading: true
             }
             @setState(newState)
             try
@@ -69,7 +69,13 @@ class Register extends React.Component
                     error: true
             newState = {
                 @state...
-                informaticsData: data
+                informaticsLoading: false
+                informaticsName: data.name
+                informaticsClass: data.class
+                informaticsSchool: data.school
+                informaticsCity: data.city
+                informaticsError: data.error
+                informaticsId: data.id
             }
             @setState(newState)
 
@@ -85,8 +91,12 @@ class Register extends React.Component
             data = await callApi "register", {
                 username: @state.username
                 password: @state.password
-                informaticsUsername: @state.informaticsUsername
-                informaticsPassword: @state.informaticsPassword
+                informaticsUsername: @state.hasInformatics && @state.informaticsUsername
+                informaticsPassword: @state.hasInformatics && @state.informaticsPassword
+                informaticsName: @state.informaticsName
+                informaticsClass: @state.informaticsClass
+                informaticsSchool: @state.informaticsSchool
+                informaticsCity: @state.informaticsCity
                 promo: @state.promo
                 whereFrom: @state.whereFrom
                 contact: @state.contact
@@ -122,11 +132,11 @@ class Register extends React.Component
     render: () ->
         Lang = (id) -> LangRaw(id, @props.lang)
         validationState = null
-        if @state.informaticsData?.name
+        if (@state.informaticsName && @state.hasInformatics) || (not @state.hasInformatics && @state.informaticsName)
             validationState = 'success'
-        else if @state.informaticsData?.error
+        else if @state.informaticsError
             validationState = 'error'
-        else if @state.informaticsData?.loading
+        else if @state.informaticsLoading
             validationState = 'warning'
 
         passwordValidationState = null
@@ -150,6 +160,7 @@ class Register extends React.Component
 
         canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
         hasInformatics = @state.hasInformatics
+        yearStart = getCurrentYearStart()
 
         <Grid fluid>
             <h1>Регистрация</h1>
@@ -194,8 +205,8 @@ class Register extends React.Component
                     state={@state}
                     onBlur={@updateInformatics}
                     validationState={validationState}>
-                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", false)}>У меня нет аккаунта на informatics</Radio>
-                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", true)}>У меня есть аккаунт на informatics</Radio>
+                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", false)} className="lead">У меня нет аккаунта на informatics</Radio>
+                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", true)} className="lead">У меня есть аккаунт на informatics</Radio>
                 </FieldGroup>
 
                 {hasInformatics == true &&
@@ -236,26 +247,26 @@ class Register extends React.Component
                         <p><span>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
                         исправьте данные </span>
                         {
-                        if @state.informaticsData?.id
-                            <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"} target="_blank">в вашем профиле там.</a>
+                        if @state.informaticsId
+                            <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsId}&course=1"} target="_blank">в вашем профиле там.</a>
                         else
                             <span>в вашем профиле там.</span>
                         }
                         </p>
                         {
-                        @state.informaticsData?.loading && <div>
+                        @state.informaticsLoading && <div>
                             <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
                             <Loader />
                         </div>}
                         {
-                        @state.informaticsData?.error &&
+                        @state.informaticsError &&
                         <FormGroup>
                             <FormControl.Static>
                             Не удалось получить данные с informatics. Проверьте логин и пароль выше.
                             </FormControl.Static>
                         </FormGroup>
                         }
-                        {@state.informaticsData && !@state.informaticsData.loading &&
+                        {@state.hasInformatics && !@state.informaticsLoading &&
                         <FormGroup>
                             <Button onClick={@updateInformatics}>
                                 Обновить информацию
@@ -264,32 +275,35 @@ class Register extends React.Component
                         }
                         </>
                     }
-                    {(hasInformatics == false or @state.informaticsData?.name or not @state.informaticsData)&&
+                    {(hasInformatics == false or (@state.informaticsName and not @state.informaticsLoading))&&
                     <div>
                         <FieldGroup
                             id="informaticsName"
-                            label="Имя"
+                            label="Имя, фамилия"
                             type="text"
-                            value={@state.informaticsData?.name || ""}
+                            setField={@setField}
+                            state={@state}
                             disabled={hasInformatics}/>
                         <FieldGroup
                             id="informaticsClass"
-                            label={"Класс" + (@state.informaticsData &&
-                            " в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году" || "")}
+                            label={"Класс в #{yearStart}-#{yearStart+1} учебном году"}
                             type="text"
-                            value={@state.informaticsData?.class || ""}
+                            setField={@setField}
+                            state={@state}
                             disabled={hasInformatics}/>
                         <FieldGroup
                             id="informaticsSchool"
                             label="Школа"
                             type="text"
-                            value={@state.informaticsData?.school || ""}
+                            setField={@setField}
+                            state={@state}
                             disabled={hasInformatics}/>
                         <FieldGroup
                             id="informaticsCity"
                             label="Город"
                             type="text"
-                            value={@state.informaticsData?.city || ""}
+                            setField={@setField}
+                            state={@state}
                             disabled={hasInformatics}/>
                     </div>
                     }
