@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import Alert from 'react-bootstrap/lib/Alert'
 import Button from 'react-bootstrap/lib/Button'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import Form from 'react-bootstrap/lib/Form'
@@ -239,7 +240,12 @@ class Register extends React.Component
                             validationState={validationState}/>
                     </>
                 }
-
+                {hasInformatics == false && 
+                    <Alert bsStyle="danger">
+                        Автоматическая регистрация аккаунта на информатиксе работает в экспериментальном режиме.
+                        В случае каких-либо проблем пишите мне.
+                    </Alert>
+                }
                 {hasInformatics? &&
                     <>
                     <h2>Личная информация</h2>
@@ -379,7 +385,12 @@ class Register extends React.Component
                     </Modal.Header>
 
                     <Modal.Body>
-                        {@state.registered.loading && <Loader />}
+                        {@state.registered.loading && 
+                            <>
+                                <p>Бывает, что informatics работает медленно, регистрация может занимать до 1-2 минут. Не обновляйте страницу.</p>
+                                <Loader />
+                            </>
+                        }
                         {@state.registered.error && "Ошибка: " + @state.registered.message}
                         {@state.registered.success &&
                             <div>

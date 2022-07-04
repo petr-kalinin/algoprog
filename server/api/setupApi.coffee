@@ -16,7 +16,7 @@ import { StaticRouter } from 'react-router'
 import {UserNameRaw} from '../../client/components/UserName'
 import awaitAll from '../../client/lib/awaitAll'
 import ACHIEVES from '../../client/lib/achieves'
-import {getYear} from '../../client/lib/graduateYearToClass'
+import {getGraduateYear} from '../../client/lib/graduateYearToClass'
 import GROUPS from '../../client/lib/groups'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
@@ -267,7 +267,7 @@ export default setupApi = (app) ->
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
         if(req.body.clas !='' and req.body.clas!=null)
-            await user.setGraduateYear getYear(+req.body.clas)
+            await user.setGraduateYear getGraduateYear(+req.body.clas)
         else
             await user.setGraduateYear(undefined)
         await user.updateName newName

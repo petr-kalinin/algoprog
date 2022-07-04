@@ -10,9 +10,13 @@ export getCurrentYearStart = () ->
 
 export getClassStartingFromJuly = (year) -> return getClass(new Date(year, 6, 1))
 
-export getYear = (clas) ->
-    now = new Date()
-    return (11-clas+now.getFullYear() + Math.floor((6 + now.getMonth())/12))
+export getGraduateYear = (cl) ->
+    if not cl
+        return null
+    yearStart = getCurrentYearStart()
+    yearStartDate = new Date(yearStart, 6, 1)
+    graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
+    return new Date(graduateDate).getFullYear()
 
 export default getClass = (graduateDate) ->
     now = new Date()

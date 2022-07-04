@@ -1,9 +1,17 @@
 {ImapFlow} = require('imapflow')
 mailparser = require('mailparser')
+request = require('request-promise-native')
+
+import {getGraduateYear} from '../../client/lib/graduateYearToClass'
+
+import InformaticsUser from '../informatics/InformaticsUser'
+
+import download from '../lib/download'
+import sleep from '../lib/sleep'
+import notify from '../metrics/notify'
 
 import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
-import InformaticsUser from '../informatics/InformaticsUser'
 
 import { REGISTRY } from '../testSystems/TestSystemRegistry'
 
@@ -17,61 +25,104 @@ imapClient = new ImapFlow
         user: process.env["EMAIL_USER"],
         pass: process.env["EMAIL_PASSWORD"]
 
+imapClient.connect()
 
-registerOnInformatics = () ->
-    ###
+randomString = (len) ->
+    Math.random().toString(36).substr(2, len)
+
+filterUsername = (username) ->
+    return username.replace(/[^a-zA-Z]/gm, "")
+
+getEmails = () ->
+    lock = await imapClient.getMailboxLock('INBOX')
+    try
+        count = (await imapClient.status('INBOX', {messages: true})).messages
+        rawMessages = await imapClient.fetch("#{count-10}:#{count}", { source: true })
+        messages = []
+        `for await (let message of rawMessages) {
+            messages.push(message.source.toString('utf8'));
+        }`
+        result = []
+        for msg in messages
+            result.push((await mailparser.simpleParser(msg)).text)
+    finally
+        await lock.release()
+    return result
+
+findConfirmLink = (login) ->
+    emails = await getEmails()
+    for email in emails
+        res = RegExp("https:\\/\\/informatics\\.msk\\.ru\\/login\\/confirm\\.php\\?data=\\w+\\/#{login}").exec(email)?[0]
+        if res
+            return res
+    return undefined
+
+registerOnInformatics = (data) ->
     logger.info("Try register new user on informatics")
-    @jar = request.jar()
+    jar = request.jar()
+    page = await download("https://informatics.msk.ru/login/signup.php", jar)
+    sesskey = /input name="sesskey" type="hidden" value="(\w+)"/.exec(page)?[1]
+    logger.info "Found sesskey=#{sesskey}"
+    username = "algoprog_" + filterUsername(data.username) + "_" + randomString(4)
+    password = randomString() + "aA1-"
+    email = "algoprog+#{username}@kalinin.nnov.ru"
+    name = data.informaticsName.split(' ')
+    school = data.informaticsSchool
+    cls = data.informaticsClass
+    city = data.informaticsCity
+    logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name}")
     page = await download("https://informatics.msk.ru/login/signup.php", jar, {
         method: 'POST',
         form: {
-            # sesskey: QLYaui8PHd
+            sesskey,
             _qf__login_signup_form: 1
             mform_isexpanded_id_createuserandpass: 1
             mform_isexpanded_id_supplyinfo: 1
             mform_isexpanded_id_category_3: 1
             mform_isexpanded_id_category_1: 1
             mform_isexpanded_id_category_2: 0
-            username: pkalinintest_20220703
-            password: Pi9.8696
-            email: petr+test@kalinin.nnov.ru
-            email2: petr+test@kalinin.nnov.ru
-            firstname: Петр
-            lastname: Калинин
-            city: 
-            country: RU
-            profile_field_usertype: Школьник
-            profile_field_School: 23
-            profile_field_class: 9
+            username,
+            password,
+            email,
+            email2: email
+            firstname: name[0]
+            lastname: name[1] || ""
+            city: city || "-"
+            country: "RU"
+            profile_field_usertype: "Школьник"
+            profile_field_School: school || 123
+            profile_field_class: cls || 11
             profile_field_graduateyear: 2014
-            submitbutton: Создать мой новый аккаунт
+            submitbutton: "Создать мой новый аккаунт"
         },
         followAllRedirects: true,
         timeout: 30 * 1000
     })
-    ###
+    timeout = 100
+    for i in [1..10]
+        await sleep(timeout)
+        link = await findConfirmLink(username)
+        if link
+            break
+        timeout = timeout * 2
+    if not link
+        notify "Can't find notification link for login #{username}" 
+        throw "Can't find notification link for login #{username}"
+    await download(link)
+    return 
+        username: username,
+        password: password
 
-
-getEmails = () ->
-    await imapClient.connect()
-    lock = await imapClient.getMailboxLock('INBOX')
-    try
-        console.log "Will fetch"
-        rawMessages = await imapClient.fetch('1:10', { source: true })
-        console.log "Fetched!!"
-        messages = []
-        `for await (let message of rawMessages) {
-            messages.push(message.source.toString('utf8'));
-        }`
-        for msg in messages
-            console.log (await mailparser.simpleParser(msg)).text
-        return 1
-    finally
-        await lock.release();
 
 export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
-    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin, promo, contact, whereFrom} = req.body
+    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin, promo, contact, whereFrom, hasInformatics} = req.body
+    hasInformatics = true
+    if not informaticsUsername
+        hasInformatics = false
+        registrationResult = await registerOnInformatics(req.body)
+        informaticsUsername = registrationResult.username
+        informaticsPassword = registrationResult.password
 
     informaticsUser = await InformaticsUser.getUser(informaticsUsername, informaticsPassword)
     informaticsData = await informaticsUser.getData()
@@ -81,8 +132,8 @@ export default register = (req, res, next) ->
         logger.info "Register new Table User", informaticsData.id
         newUser = new User(
             _id: informaticsData.id,
-            name: informaticsData.name,
-            graduateYear: informaticsData.graduateYear,
+            name: (hasInformatics && informaticsData.name) || req.body.informaticsName,
+            graduateYear: (hasInformatics && informaticsData.graduateYear) || (getGraduateYear(req.body.informaticsClass)),
             userList: "unknown",
             activated: false,
             lastActivated: new Date()
@@ -125,4 +176,8 @@ export default register = (req, res, next) ->
             logger.info("Registered user")
             res.json({registered: {success: true}})
 
-getEmails()
+"""
+(() ->
+    await sleep(10000)
+    console.log await findConfirmLink("algoprog_pkalinintest_t45w"))()
+"""

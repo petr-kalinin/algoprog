@@ -7,17 +7,11 @@ import download from '../lib/download'
 
 import logger from '../log'
 
-import {getClassStartingFromJuly, getCurrentYearStart} from '../../client/lib/graduateYearToClass'
+import {getClassStartingFromJuly, getCurrentYearStart, getGraduateYear} from '../../client/lib/graduateYearToClass'
 
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 REQUESTS_LIMIT = 20
-
-getGraduateYear = (cl) ->
-    yearStart = getCurrentYearStart()
-    yearStartDate = new Date(yearStart, 6, 1)
-    graduateDate = yearStartDate.getTime() + (12 - cl) * MS_PER_YEAR
-    return new Date(graduateDate).getFullYear()
 
 userCache = {}
 
