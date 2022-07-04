@@ -77,6 +77,16 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: TRANSLATE_API_KEY
+            - name: EMAIL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: EMAIL_USER
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: EMAIL_PASSWORD
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
