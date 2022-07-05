@@ -17,15 +17,19 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 
 import logger from '../log'
 
-imapClient = new ImapFlow
-    host: 'imap.gmail.com',
-    port: 993,
-    secure: true,
-    auth:
-        user: process.env["EMAIL_USER"],
-        pass: process.env["EMAIL_PASSWORD"]
+imapClient = undefined
+if process.env["EMAIL_USER"] and process.env("EMAIL_PASSWORD")
+    imapClient = new ImapFlow
+        host: 'imap.gmail.com',
+        port: 993,
+        secure: true,
+        auth:
+            user: process.env["EMAIL_USER"],
+            pass: process.env["EMAIL_PASSWORD"]
 
-imapClient.connect()
+    imapClient.connect()
+else
+    logger.error("No imap data specified")
 
 randomString = (len) ->
     Math.random().toString(36).substr(2, len)

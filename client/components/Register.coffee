@@ -131,7 +131,7 @@ class Register extends React.Component
             @props.history.push("/")
 
     render: () ->
-        Lang = (id) -> LangRaw(id, @props.lang)
+        Lang = (id) => LangRaw(id, @props.lang)
         validationState = null
         if (@state.informaticsName && @state.hasInformatics) || (not @state.hasInformatics && @state.informaticsName)
             validationState = 'success'
@@ -145,11 +145,11 @@ class Register extends React.Component
         if @state.password and @state.password == @state.password2
             if @state.password.startsWith(' ') or @state.password.endsWith(' ')
                 passwordValidationState = 'error'
-                passwordError = 'Пароль не может начинаться с пробела или заканчиваться на него'
+                passwordError = Lang("password_cant_start_with_space")
             passwordValidationState = 'success'
         else if @state.password and @state.password2
             passwordValidationState = 'error'
-            passwordError = 'Пароли не совпадают'
+            passwordError = Lang("passwords_are_not_equal")
 
         loginValidationState = 'success'
         loginError = null
@@ -157,19 +157,19 @@ class Register extends React.Component
             loginValidationState = 'error'
         else if @state.username.startsWith(' ') or @state.username.endsWith(' ')
             loginValidationState = 'error'
-            loginError = 'Логин не может начинаться с пробела или заканчиваться на него'
+            loginError = Lang("username_cant_start_with_space")
 
         canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
         hasInformatics = @state.hasInformatics
         yearStart = getCurrentYearStart()
 
         <Grid fluid>
-            <h1>Регистрация</h1>
+            <h1>{Lang("register")}</h1>
 
             <form onSubmit={@tryRegister}>
                 <FieldGroup
                     id="username"
-                    label="Логин"
+                    label={Lang("login")}
                     type="text"
                     setField={@setField}
                     state={@state}
@@ -177,7 +177,7 @@ class Register extends React.Component
                     error={loginError}/>
                 <FieldGroup
                     id="password"
-                    label="Пароль"
+                    label={Lang("password")}
                     type="password"
                     setField={@setField}
                     state={@state}
@@ -185,18 +185,15 @@ class Register extends React.Component
                     error={passwordError}/>
                 <FieldGroup
                     id="password2"
-                    label="Подтвердите пароль"
+                    label={Lang("repeat_password")}
                     type="password"
                     setField={@setField}
                     state={@state}
                     validationState={passwordValidationState}/>
 
-                <h3>Ваш аккаунт на informatics.msk.ru</h3>
-                <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.msk.ru" target="_blank">informatics.msk.ru</a>;
-                ваши программы будут реально проверяться именно там. </p>
+                <h3>{Lang("account_on_informatics")}</h3>
+                {Lang("you_need_to_have_informatics_account")}
                 
-                <p>Аккаунт вам будет создан автоматически, или, если хотите, вы можете <a href="https://informatics.msk.ru/login/signup.php" target="_blank">зарегистрироваться самостоятельно</a>,
-                и указать данные вашего аккаунта ниже.</p>
 
                 <FieldGroup
                     id="hasInformatics"
@@ -206,25 +203,17 @@ class Register extends React.Component
                     state={@state}
                     onBlur={@updateInformatics}
                     validationState={validationState}>
-                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", false)} className="lead">У меня нет аккаунта на informatics</Radio>
-                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", true)} className="lead">У меня есть аккаунт на informatics</Radio>
+                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", false)} className="lead">{Lang("i_dont_have_informatics_account")}</Radio>
+                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", true)} className="lead">{Lang("i_have_informatics_account")}</Radio>
                 </FieldGroup>
 
                 {hasInformatics == true &&
                     <>
-                        <p>Ниже вы должны будете указать логин и пароль от informatics. Пароль будет храниться на algoprog.ru.
-                        Он нужен, чтобы отправлять решения задач от вашего имени.
-                        Если вы используете этот же пароль на других сайтах, не вводите его ниже
-                        — сначала смените пароль на informatics, и только потом продолжайте.
-                        Если вы не хотите, чтобы я имел доступ к вашему аккаунту на informatics,
-                        просто зарегистрируйте новый аккаунт там и укажите ниже именно его.</p>
-
-                        <p>Укажите в аккаунте на informatics свои настоящие данные.
-                        Если вы уже закончили школу, то не заполняйте поле "класс".</p>
+                        {Lang("please_specify_informatics_account")}
 
                         <FieldGroup
                             id="informaticsUsername"
-                            label="Ваш логин на informatics"
+                            label={Lang("your_informatics_login")}
                             type="text"
                             setField={@setField}
                             state={@state}
@@ -232,7 +221,7 @@ class Register extends React.Component
                             validationState={validationState}/>
                         <FieldGroup
                             id="informaticsPassword"
-                            label="Ваш пароль на informatics"
+                            label={Lang("your_informatics_password")}
                             type="password"
                             setField={@setField}
                             state={@state}
@@ -242,40 +231,31 @@ class Register extends React.Component
                 }
                 {hasInformatics == false && 
                     <Alert bsStyle="danger">
-                        Автоматическая регистрация аккаунта на информатиксе работает в экспериментальном режиме.
-                        В случае каких-либо проблем пишите мне.
+                        {Lang("automatic_registration_is_experimental")}
                     </Alert>
                 }
                 {hasInformatics? &&
                     <>
-                    <h2>Личная информация</h2>
+                    <h2>{Lang("personal_information")}</h2>
                     {hasInformatics == true && <>
-                        <p><span>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
-                        исправьте данные </span>
-                        {
-                        if @state.informaticsId
-                            <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsId}&course=1"} target="_blank">в вашем профиле там.</a>
-                        else
-                            <span>в вашем профиле там.</span>
-                        }
-                        </p>
+                        {Lang("it_is_downloaded_from_informatics")(@state.informatics_id)}
                         {
                         @state.informaticsLoading && <div>
-                            <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
+                            <p>{Lang("informatics_may_be_slow")}</p>
                             <Loader />
                         </div>}
                         {
                         @state.informaticsError &&
                         <FormGroup>
                             <FormControl.Static>
-                            Не удалось получить данные с informatics. Проверьте логин и пароль выше.
+                            {Lang("cant_get_your_informatics_data")}
                             </FormControl.Static>
                         </FormGroup>
                         }
                         {@state.hasInformatics && !@state.informaticsLoading &&
                         <FormGroup>
                             <Button onClick={@updateInformatics}>
-                                Обновить информацию
+                                {Lang("refresh_info")}
                             </Button>
                         </FormGroup>
                         }
@@ -283,30 +263,31 @@ class Register extends React.Component
                     }
                     {(hasInformatics == false or (@state.informaticsName and not @state.informaticsLoading))&&
                     <div>
+                        <p>{Lang("do_not_fill_class")}</p>
                         <FieldGroup
                             id="informaticsName"
-                            label="Имя, фамилия"
+                            label={Lang("name_surname")}
                             type="text"
                             setField={@setField}
                             state={@state}
                             disabled={hasInformatics}/>
                         <FieldGroup
                             id="informaticsClass"
-                            label={"Класс в #{yearStart}-#{yearStart+1} учебном году"}
+                            label={Lang("class_in_year")(yearStart)}
                             type="text"
                             setField={@setField}
                             state={@state}
                             disabled={hasInformatics}/>
                         <FieldGroup
                             id="informaticsSchool"
-                            label="Школа"
+                            label={Lang("school")}
                             type="text"
                             setField={@setField}
                             state={@state}
                             disabled={hasInformatics}/>
                         <FieldGroup
                             id="informaticsCity"
-                            label="Город"
+                            label={Lang("city")}
                             type="text"
                             setField={@setField}
                             state={@state}
@@ -314,10 +295,8 @@ class Register extends React.Component
                     </div>
                     }
 
-                    <h2>О себе (все поля ниже не обязательны)</h2>
-                    <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
-                    а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
-                    можете не писать ничего.</p>
+                    <h2>{Lang("about_yourself")}</h2>
+                    <p>{Lang("about_yourself_note")}</p>
 
                     <FormGroup controlId="aboutme">
                         <FieldGroup
@@ -328,7 +307,7 @@ class Register extends React.Component
                             state={@state}/>
                     </FormGroup>
 
-                    <p>Откуда вы узнали про курс?</p>
+                    <p>{Lang("how_did_you_find_about_course")}</p>
 
                     <FormGroup controlId="whereFrom">
                         <FieldGroup
@@ -339,7 +318,7 @@ class Register extends React.Component
                             state={@state}/>
                     </FormGroup>
 
-                    <p>Укажите какие-нибудь контактные данные (email, профиль во вКонтакте и т.п., не обязательно)</p>
+                    <p>{Lang("specify_your_contacts")}</p>
 
                     <FormGroup controlId="contact">
                         <FieldGroup
@@ -350,8 +329,7 @@ class Register extends React.Component
                             state={@state}/>
                     </FormGroup>
 
-                    <p>Укажите свой логин на codeforces, если он у вас есть. Если вы там не зарегистрированы — не страшно,
-                    просто не заполняйте поле ниже.</p>
+                    <p>{Lang("specify_your_cf")}</p>
                     <FieldGroup
                         id="cfLogin"
                         label=""
@@ -359,7 +337,7 @@ class Register extends React.Component
                         setField={@setField}
                         state={@state}/>
 
-                    <p>Промокод</p>
+                    <p>{Lang("promocode")}</p>
 
                     <FormGroup controlId="promo">
                         <FieldGroup
@@ -371,7 +349,7 @@ class Register extends React.Component
                     </FormGroup>
 
                     <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                        Зарегистрироваться
+                        {Lang("do_register")}
                     </Button>
                     </>
                 }
@@ -381,23 +359,21 @@ class Register extends React.Component
             <div className="static-modal">
                 <Modal.Dialog>
                     <Modal.Header>
-                        <Modal.Title>Регистрация</Modal.Title>
+                        <Modal.Title>{Lang("register")}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
                         {@state.registered.loading && 
                             <>
-                                <p>Бывает, что informatics работает медленно, регистрация может занимать до 1-2 минут. Не обновляйте страницу.</p>
+                                <p>{Lang("informatics_may_be_slow_so_register_is_slow")}</p>
                                 <Loader />
                             </>
                         }
-                        {@state.registered.error && "Ошибка: " + @state.registered.message}
+                        {@state.registered.error && Lang("error") + ": " + @state.registered.message}
                         {@state.registered.success &&
                             <div>
-                                <p>Регистрация успешна!</p>
-                                <p><b>Если вы еще не занимались в этом курсе, обязательно напишите мне о том, что вы зарегистрировались,
-                                чтобы я активировал вашу учетную запись. Мои контакты — на страничке
-                                {" "}<Link to="/material/about">О курсе</Link>.</b></p>
+                                <p>{Lang("register_success")}</p>
+                                <p><b>{Lang("contact_me_for_activation")}</b></p>
                             </div>}
                     </Modal.Body>
 
