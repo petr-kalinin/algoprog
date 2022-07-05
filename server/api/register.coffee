@@ -70,7 +70,7 @@ registerOnInformatics = (data) ->
     school = data.informaticsSchool
     cls = data.informaticsClass
     city = data.informaticsCity
-    logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name}")
+    logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}")
     page = await download("https://informatics.msk.ru/login/signup.php", jar, {
         method: 'POST',
         form: {
