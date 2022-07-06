@@ -35,9 +35,9 @@ contest_num_theory = () ->
 	
 export default level_1D = () ->
     return level("1E", [
-        label("Арифметические алгоритмы (ЛКШ С' август 2013, Владимир Гуровиц). Смотреть все 6 видео в данной теме: https://sis.khashaev.ru/2013/august/c-prime/lK2k26ATt38/"),
-        label("Бинарное возведение в степень (e-maxx): http://e-maxx.ru/algo/binary_pow"),
-        label("Алгоритм Евклида нахождение НОД (e-maxx): http://e-maxx.ru/algo/euclid_algorithm"),
-        label("Решето Эратосфена (e-maxx): http://e-maxx.ru/algo/eratosthenes_sieve"),
+        label("Арифметические алгоритмы (ЛКШ С' август 2013, Владимир Гуровиц). Смотреть все 6 видео в данной теме: <a href='https://sis.khashaev.ru/2013/august/c-prime/lK2k26ATt38/'>https://sis.khashaev.ru/2013/august/c-prime/lK2k26ATt38/</a>"),
+        label("Бинарное возведение в степень (e-maxx): <a href='http://e-maxx.ru/algo/binary_pow'>http://e-maxx.ru/algo/binary_pow</a>"),
+        label("Алгоритм Евклида нахождение НОД (e-maxx): <a href='http://e-maxx.ru/algo/euclid_algorithm'>http://e-maxx.ru/algo/euclid_algorithm</a>"),
+        label("Решето Эратосфена (e-maxx): <a href='http://e-maxx.ru/algo/eratosthenes_sieve'>http://e-maxx.ru/algo/eratosthenes_sieve</a>"),
         contest_num_theory(),
     ])
