@@ -153,7 +153,7 @@ contest_shortcut_1 = () ->
 contest_shortcut_2 = () ->
 	return contest("1D: Кратчайшие расстояния - другие задачи", [
 		problem({testSystem: "codeforces", contest: "601", problem: "A"}),
-=		problem({testSystem: "codeforces", contest: "543", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "543", problem: "B"}),
 		problem({testSystem: "codeforces", contest: "295", problem: "B"}),
 		problem({testSystem: "codeforces", contest: "707", problem: "B"}),	
 		problem({testSystem: "codeforces", contest: "24", problem: "A"}),	
@@ -181,11 +181,11 @@ export default level_1D = () ->
         label("Теоретический материал BFS (лекция Владимира Гуровца, ЛКШ 2013г): https://sis.khashaev.ru/2013/august/c-prime/YKxe2ZFVkHQ/"),
         contest_bfs0(),
         contest_bfs1(),
-		label("Теоретический материал алгоритм Дейкстры (лекция Сергея Копелиовича, ЛКШ 2008г): https://sis.khashaev.ru/2008/august/b-prime/P0tGgwUjvBA/"),
-		label("Теоретический материал алгоритм Дейкстры O(MlogN) (лекция Руслана Сайфутдинова, ЛКШ 2013г): https://sis.khashaev.ru/2008/august/b-prime/P0tGgwUjvBA/"),
-		label("Теоретический материал алгоритм Дейкстры O(MlogN) (e-maxx): https://e-maxx.ru/algo/dijkstra_sparse"),
-		label("Теоретический материал алгоритм Флойда, Форда-Беллмана (лекция Руслана Сайфутдинова, ЛКШ 2013г): https://sis.khashaev.ru/2013/july/b-prime/1fCe1I5ZV64/"),
-		contest_shortcut_1(),
+        label("Теоретический материал алгоритм Дейкстры (лекция Сергея Копелиовича, ЛКШ 2008г): https://sis.khashaev.ru/2008/august/b-prime/P0tGgwUjvBA/"),
+        label("Теоретический материал алгоритм Дейкстры O(MlogN) (лекция Руслана Сайфутдинова, ЛКШ 2013г): https://sis.khashaev.ru/2008/august/b-prime/P0tGgwUjvBA/"),
+        label("Теоретический материал алгоритм Дейкстры O(MlogN) (e-maxx): https://e-maxx.ru/algo/dijkstra_sparse"),
+        label("Теоретический материал алгоритм Флойда, Форда-Беллмана (лекция Руслана Сайфутдинова, ЛКШ 2013г): https://sis.khashaev.ru/2013/july/b-prime/1fCe1I5ZV64/"),
+        contest_shortcut_1(),
         contest_shortcut_2(),
 		
     ])
