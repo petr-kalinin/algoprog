@@ -147,7 +147,7 @@ export default class Ejudge extends TestSystem
 
     getAdmin: (contestId) ->
         admin = await RegisteredUser.findAdmin()
-        if admin == null
+        if not admin
             return null
         return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword, true)
 
@@ -259,8 +259,6 @@ export default class Ejudge extends TestSystem
         logger.info "Done register user #{registeredUsers[0].informaticsUsername}"
 
     parseProblem: (admin, problemHref) ->
-        if admin == null
-            return null
         page = await admin.download(problemHref)
         document = (new JSDOM(page, {url: problemHref})).window.document
         isReview = document.getElementsByClassName("review-theory")[0]?
