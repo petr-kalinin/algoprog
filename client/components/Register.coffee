@@ -25,6 +25,10 @@ import * as actions from '../redux/actions'
 import FieldGroup from './FieldGroup'
 import Loader from './Loader'
 
+ERROR_MESSAGE_TO_LANG_ID =
+    duplicate: "user_with_such_login_exists"
+    unknown: "unknown_error"
+
 class Register extends React.Component
     constructor: (props) ->
         super(props)
@@ -46,7 +50,6 @@ class Register extends React.Component
         @closeModal = @closeModal.bind(this)
 
     setField: (field, value) ->
-        console.log field, value
         newState = {@state...}
         newState[field] = value
         @setState(newState)
@@ -116,7 +119,7 @@ class Register extends React.Component
             data =
                 registered:
                     error: true
-                    message: "Неопознанная ошибка"
+                    message: "unknown"
         newState = {
             @state...
             registered: data.registered
@@ -146,7 +149,8 @@ class Register extends React.Component
             if @state.password.startsWith(' ') or @state.password.endsWith(' ')
                 passwordValidationState = 'error'
                 passwordError = Lang("password_cant_start_with_space")
-            passwordValidationState = 'success'
+            else
+                passwordValidationState = 'success'
         else if @state.password and @state.password2
             passwordValidationState = 'error'
             passwordError = Lang("passwords_are_not_equal")
@@ -369,7 +373,7 @@ class Register extends React.Component
                                 <Loader />
                             </>
                         }
-                        {@state.registered.error && Lang("error") + ": " + @state.registered.message}
+                        {@state.registered.error && Lang("error") + ": " + Lang(ERROR_MESSAGE_TO_LANG_ID[@state.registered.message] || "unknown_error")}
                         {@state.registered.success &&
                             <div>
                                 <p>{Lang("register_success")}</p>

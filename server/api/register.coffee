@@ -175,7 +175,7 @@ export default register = (req, res, next) ->
             res.json
                 registered:
                     error: true
-                    message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
+                    message: if err.name == "UserExistsError" then "duplicate" else "unknown"
         else
             logger.info("Registered user")
             res.json({registered: {success: true}})

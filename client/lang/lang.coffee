@@ -195,8 +195,8 @@ _LANG =
         ru: "Пароль от informatics"
         en: "Informatics password"
     informatics_password_does_not_match_account:
-        ru: (id) -> <div>Пароль не подходит к <a href="https://informatics.mccme.ru/user/view.php?id=#{id}">вашему аккаунту на informatics</a></div>
-        en: (id) -> <div>Password does not match <a href="https://informatics.mccme.ru/user/view.php?id=#{id}">your informatics account</a></div>
+        ru: (id) -> <div>Пароль не подходит к <a href="https://informatics.msk.ru/user/view.php?id=#{id}">вашему аккаунту на informatics</a></div>
+        en: (id) -> <div>Password does not match <a href="https://informatics.msk.ru/user/view.php?id=#{id}">your informatics account</a></div>
     codeforces_data_for_submitting_problems:
         ru: "Данные codeforces для отправки решений"
         en: "Codeforces data for submitting problems"
@@ -524,13 +524,13 @@ _LANG =
         en: "File is too long or binary"
     password_cant_start_with_space:
         ru: "Пароль не может начинаться с пробела или заканчиваться на него"
-        en: "Password cannot start with a space or end with it"
+        en: "Password cannot start with space or end with it"
     passwords_are_not_equal:
         ru: 'Пароли не совпадают'
         en: "Passwords are not equal"
     username_cant_start_with_space:
         ru: 'Логин не может начинаться с пробела или заканчиваться на него'
-        en: "Username cannot start with a space or end with it"
+        en: "Username cannot start with space or end with it"
     account_on_informatics:
         ru: "Аккаунт на informatics.msk.ru"
         en: "Account on informatics.msk.ru"
@@ -543,11 +543,11 @@ _LANG =
                 <p>Если вы не знаете, что такое информатикс, то я рекомендую выбирать автоматическую регистрацию.</p>
             </>
         en: <>
-                <p>You need to have an account on the <a href="http://informatics.mccme.ru" target="_blank">informatics.mccme.ru </a> site;
+                <p>You need to have an account on the <a href="http://informatics.msk.ru" target="_blank">informatics.msk.ru </a> site;
                 most of your programs will actually be tested there. </p>
                 <p>Your account will be created automatically, or if you want, you can <a href="https://informatics.msk.ru/login/signup.php" target="_blank">sign up yourself</a>,
                 and specify your account details below. Also, if you already have an informatics account, you can specify it below.</p>
-                <p>If you do not know what is informatics.msk.ru, then I recomment you to choose automatics registration.</p>
+                <p>If you do not know what informatics.msk.ru is, then I recommend you to choose automatic registration.</p>
             </>
     i_dont_have_informatics_account:
         ru: "У меня нет аккаунта на informatics (автоматическая регистрация аккаунта на информатиксе)"
@@ -569,11 +569,11 @@ _LANG =
                         Если вы уже закончили школу, то не заполняйте поле «класс».</p>
             </>
         en: <>
-                <p>Below you will need to specify the username and password from informatics. The password will be stored on algoprog.ru,
+                <p>Below you will need to specify the username and password from informatics. The password will be stored on algoprog.org,
                 it is needed to send solutions to problems on your behalf.
                 If you use the same password on other sites, do not enter it below
                 — first change the password on informatics, and only then continue.
-                If you don't want me to have access to your informatics account,  
+                If you don't want me to have access to your informatics account,{" "}  
                 {
                     #'  fix vs code syntax highlight
                 }
@@ -581,7 +581,7 @@ _LANG =
                 Or choose automatic informatics registration above.</p>
 
                 <p>Enter your real data in your informatics account.
-                If you have already graduated from school, then do not fill in the «class» field.</p>
+                If you have already graduated from school, then do not fill in the 'grade' field.</p>
             </>
     your_informatics_login:
         ru: "Ваш логин на informatics"
@@ -671,10 +671,13 @@ _LANG =
             </>
         en: <>If you haven't taken part in this course yet, please write me that you have registered,  {#'
                 }
-                so that I will activate your account. My contacts are on the <Link to="/material/about">About course</Link> page</>
+                so that I will activate your account. My contacts are on the <Link to="/material/about">About course</Link> page.</>
     do_not_fill_class:
         ru: "Не заполняйте поля «Класс» и «Школа», если вы уже не школьник"
         en: "Leave 'Grade' and 'School' fields blank if you have already graduated from secondary school."
+    user_with_such_login_exists:
+        ru: "Пользователь с таким логином уже существует"
+        en: "This username is already taken"
 
 export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]
