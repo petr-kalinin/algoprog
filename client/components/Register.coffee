@@ -1,26 +1,29 @@
 React = require('react')
+import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-
-import Grid from 'react-bootstrap/lib/Grid'
-import Form from 'react-bootstrap/lib/Form'
-import FormGroup from 'react-bootstrap/lib/FormGroup'
-import FormControl from 'react-bootstrap/lib/FormControl'
-import ControlLabel from 'react-bootstrap/lib/ControlLabel'
-import HelpBlock from 'react-bootstrap/lib/HelpBlock'
-import Button from 'react-bootstrap/lib/Button'
-import Modal from 'react-bootstrap/lib/Modal'
-
-import Loader from '../components/Loader'
-
 import { Link } from 'react-router-dom'
 
-import { connect } from 'react-redux'
+import Alert from 'react-bootstrap/lib/Alert'
+import Button from 'react-bootstrap/lib/Button'
+import ControlLabel from 'react-bootstrap/lib/ControlLabel'
+import Form from 'react-bootstrap/lib/Form'
+import FormControl from 'react-bootstrap/lib/FormControl'
+import FormGroup from 'react-bootstrap/lib/FormGroup'
+import Grid from 'react-bootstrap/lib/Grid'
+import HelpBlock from 'react-bootstrap/lib/HelpBlock'
+import Modal from 'react-bootstrap/lib/Modal'
+import Radio from 'react-bootstrap/lib/Radio'
+
+import {LangRaw} from '../lang/lang'
 
 import callApi from '../lib/callApi'
+import withLang from '../lib/withLang'
+import {getCurrentYearStart} from '../lib/graduateYearToClass'
 
 import * as actions from '../redux/actions'
 
 import FieldGroup from './FieldGroup'
+import Loader from './Loader'
 
 class Register extends React.Component
     constructor: (props) ->
@@ -36,12 +39,14 @@ class Register extends React.Component
             whereFrom: ""
             aboutme: ""
             cfLogin: ""
+            hasInformatics: undefined
         @setField = @setField.bind(this)
         @updateInformatics = @updateInformatics.bind(this)
         @tryRegister = @tryRegister.bind(this)
         @closeModal = @closeModal.bind(this)
 
     setField: (field, value) ->
+        console.log field, value
         newState = {@state...}
         newState[field] = value
         @setState(newState)
@@ -50,8 +55,7 @@ class Register extends React.Component
         if @state.informaticsUsername and @state.informaticsPassword
             newState = {
                 @state...
-                informaticsData:
-                    loading: true
+                informaticsLoading: true
             }
             @setState(newState)
             try
@@ -66,7 +70,13 @@ class Register extends React.Component
                     error: true
             newState = {
                 @state...
-                informaticsData: data
+                informaticsLoading: false
+                informaticsName: data.name
+                informaticsClass: data.class
+                informaticsSchool: data.school
+                informaticsCity: data.city
+                informaticsError: data.error
+                informaticsId: data.id
             }
             @setState(newState)
 
@@ -82,8 +92,12 @@ class Register extends React.Component
             data = await callApi "register", {
                 username: @state.username
                 password: @state.password
-                informaticsUsername: @state.informaticsUsername
-                informaticsPassword: @state.informaticsPassword
+                informaticsUsername: @state.hasInformatics && @state.informaticsUsername
+                informaticsPassword: @state.hasInformatics && @state.informaticsPassword
+                informaticsName: @state.informaticsName
+                informaticsClass: @state.informaticsClass
+                informaticsSchool: @state.informaticsSchool
+                informaticsCity: @state.informaticsCity
                 promo: @state.promo
                 whereFrom: @state.whereFrom
                 contact: @state.contact
@@ -117,12 +131,13 @@ class Register extends React.Component
             @props.history.push("/")
 
     render: () ->
+        Lang = (id) -> LangRaw(id, @props.lang)
         validationState = null
-        if @state.informaticsData?.name
+        if (@state.informaticsName && @state.hasInformatics) || (not @state.hasInformatics && @state.informaticsName)
             validationState = 'success'
-        else if @state.informaticsData?.error
+        else if @state.informaticsError
             validationState = 'error'
-        else if @state.informaticsData?.loading
+        else if @state.informaticsLoading
             validationState = 'warning'
 
         passwordValidationState = null
@@ -145,6 +160,8 @@ class Register extends React.Component
             loginError = 'Логин не может начинаться с пробела или заканчиваться на него'
 
         canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
+        hasInformatics = @state.hasInformatics
+        yearStart = getCurrentYearStart()
 
         <Grid fluid>
             <h1>Регистрация</h1>
@@ -173,158 +190,191 @@ class Register extends React.Component
                     setField={@setField}
                     state={@state}
                     validationState={passwordValidationState}/>
+
                 <h3>Ваш аккаунт на informatics.msk.ru</h3>
                 <p>Вам надо иметь аккаунт на сайте <a href="https://informatics.msk.ru" target="_blank">informatics.msk.ru</a>;
-                ваши программы будут реально проверяться именно там. Если у вас еще нет аккаунта на
-                informatics, <a href="https://informatics.msk.ru/login/signup.php" target="_blank">зарегистрируйтесь сейчас</a>.</p>
-
-                <p>Ниже вы должны будете указать логин и пароль от informatics. Пароль будет храниться на algoprog.ru.
-                Он нужен, чтобы отправлять решения задач от вашего имени.
-                Если вы используете этот же пароль на других сайтах, не вводите его ниже
-                — сначала смените пароль на informatics, и только потом продолжайте.
-                Если вы не хотите, чтобы я имел доступ к вашему аккаунту на informatics,
-                просто зарегистрируйте новый аккаунт там и укажите ниже именно его.</p>
-
-                <p>Укажите в аккаунте на informatics свои настоящие данные.
-                Если вы уже закончили школу, то не заполняйте поле "класс".</p>
+                ваши программы будут реально проверяться именно там. </p>
+                
+                <p>Аккаунт вам будет создан автоматически, или, если хотите, вы можете <a href="https://informatics.msk.ru/login/signup.php" target="_blank">зарегистрироваться самостоятельно</a>,
+                и указать данные вашего аккаунта ниже.</p>
 
                 <FieldGroup
-                    id="informaticsUsername"
-                    label="Ваш логин на informatics"
-                    type="text"
-                    setField={@setField}
-                    state={@state}
-                    onBlur={@updateInformatics}
-                    validationState={validationState}/>
-                <FieldGroup
-                    id="informaticsPassword"
-                    label="Ваш пароль на informatics"
-                    type="password"
-                    setField={@setField}
-                    state={@state}
-                    onBlur={@updateInformatics}
-                    validationState={validationState}/>
-
-                <h2>Личная информация</h2>
-                <p><span>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
-                исправьте данные </span>
-                {
-                if @state.informaticsData?.id
-                    <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsData?.id}&course=1"} target="_blank">в вашем профиле там.</a>
-                else
-                    <span>в вашем профиле там.</span>
-                }
-                </p>
-                {
-                @state.informaticsData?.loading && <div>
-                    <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
-                    <Loader />
-                </div>}
-                {
-                @state.informaticsData?.error &&
-                <FormGroup>
-                    <FormControl.Static>
-                    Не удалось получить данные с informatics. Проверьте логин и пароль выше.
-                    </FormControl.Static>
-                </FormGroup>
-                }
-                {@state.informaticsData && !@state.informaticsData.loading &&
-                <FormGroup>
-                    <Button onClick={@updateInformatics}>
-                        Обновить информацию
-                    </Button>
-                </FormGroup>
-                }
-                {
-                (@state.informaticsData?.name or not @state.informaticsData)&&
-                <div>
-                    <FieldGroup
-                        id="informaticsName"
-                        label="Имя"
-                        type="text"
-                        value={@state.informaticsData?.name || ""}
-                        disabled/>
-                    <FieldGroup
-                        id="informaticsClass"
-                        label={"Класс" + (@state.informaticsData &&
-                        " в #{@state.informaticsData.currentYearStart}-#{@state.informaticsData.currentYearStart+1} учебном году" || "")}
-                        type="text"
-                        value={@state.informaticsData?.class || ""}
-                        disabled/>
-                    <FieldGroup
-                        id="informaticsSchool"
-                        label="Школа"
-                        type="text"
-                        value={@state.informaticsData?.school || ""}
-                        disabled/>
-                    <FieldGroup
-                        id="informaticsCity"
-                        label="Город"
-                        type="text"
-                        value={@state.informaticsData?.city || ""}
-                        disabled/>
-                </div>
-                }
-
-                <h2>О себе (все поля ниже не обязательны)</h2>
-                <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
-                а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
-                можете не писать ничего.</p>
-
-                <FormGroup controlId="aboutme">
-                    <FieldGroup
-                        id="aboutme"
-                        label=""
-                        componentClass="textarea"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
-
-                <p>Откуда вы узнали про курс?</p>
-
-                <FormGroup controlId="whereFrom">
-                    <FieldGroup
-                        id="whereFrom"
-                        label=""
-                        componentClass="input"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
-
-                <p>Укажите какие-нибудь контактные данные (email, профиль во вКонтакте и т.п., не обязательно)</p>
-
-                <FormGroup controlId="contact">
-                    <FieldGroup
-                        id="contact"
-                        label=""
-                        componentClass="input"
-                        setField={@setField}
-                        state={@state}/>
-                </FormGroup>
-
-                <p>Укажите свой логин на codeforces, если он у вас есть. Если вы там не зарегистрированы — не страшно,
-                просто не заполняйте поле ниже.</p>
-                <FieldGroup
-                    id="cfLogin"
+                    id="hasInformatics"
                     label=""
-                    type="text"
+                    type="radio"
                     setField={@setField}
-                    state={@state}/>
+                    state={@state}
+                    onBlur={@updateInformatics}
+                    validationState={validationState}>
+                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", false)} className="lead">У меня нет аккаунта на informatics</Radio>
+                        <Radio name="hasInformatics" onChange={(e) => @setField("hasInformatics", true)} className="lead">У меня есть аккаунт на informatics</Radio>
+                </FieldGroup>
 
-                <p>Промокод</p>
+                {hasInformatics == true &&
+                    <>
+                        <p>Ниже вы должны будете указать логин и пароль от informatics. Пароль будет храниться на algoprog.ru.
+                        Он нужен, чтобы отправлять решения задач от вашего имени.
+                        Если вы используете этот же пароль на других сайтах, не вводите его ниже
+                        — сначала смените пароль на informatics, и только потом продолжайте.
+                        Если вы не хотите, чтобы я имел доступ к вашему аккаунту на informatics,
+                        просто зарегистрируйте новый аккаунт там и укажите ниже именно его.</p>
 
-                <FormGroup controlId="promo">
+                        <p>Укажите в аккаунте на informatics свои настоящие данные.
+                        Если вы уже закончили школу, то не заполняйте поле "класс".</p>
+
+                        <FieldGroup
+                            id="informaticsUsername"
+                            label="Ваш логин на informatics"
+                            type="text"
+                            setField={@setField}
+                            state={@state}
+                            onBlur={@updateInformatics}
+                            validationState={validationState}/>
+                        <FieldGroup
+                            id="informaticsPassword"
+                            label="Ваш пароль на informatics"
+                            type="password"
+                            setField={@setField}
+                            state={@state}
+                            onBlur={@updateInformatics}
+                            validationState={validationState}/>
+                    </>
+                }
+                {hasInformatics == false && 
+                    <Alert bsStyle="danger">
+                        Автоматическая регистрация аккаунта на информатиксе работает в экспериментальном режиме.
+                        В случае каких-либо проблем пишите мне.
+                    </Alert>
+                }
+                {hasInformatics? &&
+                    <>
+                    <h2>Личная информация</h2>
+                    {hasInformatics == true && <>
+                        <p><span>Она выгружается из вашего аккаунта на informatics. Если данные ниже неверны,
+                        исправьте данные </span>
+                        {
+                        if @state.informaticsId
+                            <a href={"https://informatics.msk.ru/user/edit.php?id=#{@state.informaticsId}&course=1"} target="_blank">в вашем профиле там.</a>
+                        else
+                            <span>в вашем профиле там.</span>
+                        }
+                        </p>
+                        {
+                        @state.informaticsLoading && <div>
+                            <p>Informatics бывает подтормаживает, поэтому загрузка данных может занять некоторое время.</p>
+                            <Loader />
+                        </div>}
+                        {
+                        @state.informaticsError &&
+                        <FormGroup>
+                            <FormControl.Static>
+                            Не удалось получить данные с informatics. Проверьте логин и пароль выше.
+                            </FormControl.Static>
+                        </FormGroup>
+                        }
+                        {@state.hasInformatics && !@state.informaticsLoading &&
+                        <FormGroup>
+                            <Button onClick={@updateInformatics}>
+                                Обновить информацию
+                            </Button>
+                        </FormGroup>
+                        }
+                        </>
+                    }
+                    {(hasInformatics == false or (@state.informaticsName and not @state.informaticsLoading))&&
+                    <div>
+                        <FieldGroup
+                            id="informaticsName"
+                            label="Имя, фамилия"
+                            type="text"
+                            setField={@setField}
+                            state={@state}
+                            disabled={hasInformatics}/>
+                        <FieldGroup
+                            id="informaticsClass"
+                            label={"Класс в #{yearStart}-#{yearStart+1} учебном году"}
+                            type="text"
+                            setField={@setField}
+                            state={@state}
+                            disabled={hasInformatics}/>
+                        <FieldGroup
+                            id="informaticsSchool"
+                            label="Школа"
+                            type="text"
+                            setField={@setField}
+                            state={@state}
+                            disabled={hasInformatics}/>
+                        <FieldGroup
+                            id="informaticsCity"
+                            label="Город"
+                            type="text"
+                            setField={@setField}
+                            state={@state}
+                            disabled={hasInformatics}/>
+                    </div>
+                    }
+
+                    <h2>О себе (все поля ниже не обязательны)</h2>
+                    <p>Напишите вкратце про себя. Как минимум — есть ли у вас опыт в программировании и какой;
+                    а также участвовали ли вы в олимпиадах по программированию и по математике. Если вы уже занимались в этом курсе,
+                    можете не писать ничего.</p>
+
+                    <FormGroup controlId="aboutme">
+                        <FieldGroup
+                            id="aboutme"
+                            label=""
+                            componentClass="textarea"
+                            setField={@setField}
+                            state={@state}/>
+                    </FormGroup>
+
+                    <p>Откуда вы узнали про курс?</p>
+
+                    <FormGroup controlId="whereFrom">
+                        <FieldGroup
+                            id="whereFrom"
+                            label=""
+                            componentClass="input"
+                            setField={@setField}
+                            state={@state}/>
+                    </FormGroup>
+
+                    <p>Укажите какие-нибудь контактные данные (email, профиль во вКонтакте и т.п., не обязательно)</p>
+
+                    <FormGroup controlId="contact">
+                        <FieldGroup
+                            id="contact"
+                            label=""
+                            componentClass="input"
+                            setField={@setField}
+                            state={@state}/>
+                    </FormGroup>
+
+                    <p>Укажите свой логин на codeforces, если он у вас есть. Если вы там не зарегистрированы — не страшно,
+                    просто не заполняйте поле ниже.</p>
                     <FieldGroup
-                        id="promo"
+                        id="cfLogin"
                         label=""
-                        componentClass="input"
+                        type="text"
                         setField={@setField}
                         state={@state}/>
-                </FormGroup>
 
-                <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                    Зарегистрироваться
-                </Button>
+                    <p>Промокод</p>
+
+                    <FormGroup controlId="promo">
+                        <FieldGroup
+                            id="promo"
+                            label=""
+                            componentClass="input"
+                            setField={@setField}
+                            state={@state}/>
+                    </FormGroup>
+
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        Зарегистрироваться
+                    </Button>
+                    </>
+                }
             </form>
             {
             @state.registered &&
@@ -335,7 +385,12 @@ class Register extends React.Component
                     </Modal.Header>
 
                     <Modal.Body>
-                        {@state.registered.loading && <Loader />}
+                        {@state.registered.loading && 
+                            <>
+                                <p>Бывает, что informatics работает медленно, регистрация может занимать до 1-2 минут. Не обновляйте страницу.</p>
+                                <Loader />
+                            </>
+                        }
                         {@state.registered.error && "Ошибка: " + @state.registered.message}
                         {@state.registered.success &&
                             <div>
@@ -362,4 +417,4 @@ mapDispatchToProps = (dispatch) ->
     return
         reloadMyData: () -> dispatch(actions.invalidateAllData())
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Register))
+export default withLang(withRouter(connect(mapStateToProps, mapDispatchToProps)(Register)))
