@@ -147,6 +147,8 @@ export default class Ejudge extends TestSystem
 
     getAdmin: (contestId) ->
         admin = await RegisteredUser.findAdmin()
+        if not admin
+            return null
         return LoggedEjudgeUser.getUser(@server, contestId, admin.ejudgeUsername, admin.ejudgePassword, true)
 
     registerUser: (registeredUser) ->
@@ -385,6 +387,11 @@ export default class Ejudge extends TestSystem
                 text: "Text #{options.contest} #{options.problem}"
         {contest, problem} = options
         admin = await @getAdmin(contest)
+        if admin == null
+            return 
+                name: "Name #{options.contest} #{options.problem}"
+                text: "Text #{options.contest} #{options.problem}"
+            
         href = "#{@server}/cgi-bin/new-client?action=139&prob_id=#{problem}"
         return await @parseProblem(admin, href)
 
