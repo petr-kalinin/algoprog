@@ -23,7 +23,7 @@ correctUrl = (url, lang) ->
             url = url.replace("A", "А").replace("B", "Б").replace("C", "В").replace("D", "Г")
     else
         if isLevel(url)
-            return url = url.replace("А", "A").replace("Б", "B").replace("В", "C").replace("Г", "D")
+            url = url.replace("А", "A").replace("Б", "B").replace("В", "C").replace("Г", "D")
         url = url + "!en"
     return url
 
