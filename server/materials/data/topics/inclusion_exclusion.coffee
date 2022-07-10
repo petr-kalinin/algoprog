@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default two_sat = () ->
     return {
-        topic: topic("Формула включения-исключения", "Задачи на формулу включения-исключения", [
-            label("TODO"),
+        topic: topic(
+            ruen("Формула включения-исключения", "Inclusion-exclusion formula"),
+            ruen("Задачи на формулу включения-исключения", "Problems on the inclusion-exclusion formula"),
+        [label("TODO"),
             problem(552),
         ], "inclusion_exclusion"),
         advancedProblems: [

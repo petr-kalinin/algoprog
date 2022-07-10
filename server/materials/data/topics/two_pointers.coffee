@@ -4,6 +4,7 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module16344 = () ->
     page("Краткая теория про два указателя", String.raw"""
@@ -125,8 +126,10 @@ module16344 = () ->
 
 export default two_pointers = () ->
     return {
-        topic: topic("Два указателя", "Задачи на два указателя", [
-            module16344(),
+        topic: topic(
+            ruen("Два указателя", "Two pointers"),
+            ruen("Задачи на два указателя", "Problems on two pointers"),
+        [module16344(),
             problem(2827),
             problem(111975),
             problem({testSystem: "codeforces", contest: "1354", problem: "B"}),

@@ -2,6 +2,7 @@ import contest from "../../lib/contest"
 import label from "../../lib/label"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default complexity = () ->
     return {

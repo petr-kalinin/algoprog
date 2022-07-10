@@ -3,6 +3,7 @@ import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module15986 = () ->
     page("Разбор задачи про Франциска Ксавьера (читать только тем, кто решил саму задачу!)", String.raw"""
@@ -89,8 +90,10 @@ module15986 = () ->
 
 export default ifs = () ->
     return {
-        topic: topic("Условный оператор", "Задачи на условный оператор", [
-            label("<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
+        topic: topic(
+            ruen("Условный оператор", "Conditional operator"),
+            ruen("Задачи на условный оператор", "Problems on conditional operator"),
+        [label("<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>"),
             label("<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>"),
             problem({testSystem: "ejudge", contest: "3004", problem: "1", id: "292"}),
             problem({testSystem: "ejudge", contest: "3004", problem: "2", id: "293"}),

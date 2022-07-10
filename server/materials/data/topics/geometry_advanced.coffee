@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default geometry_advanced = () ->
     return {
-        topic: topic("Сложная геометрия", "Задачи на сложную геометрию", [
-            problem(34),
+        topic: topic(
+            ruen("Сложная геометрия", "Complex geometry"),
+            ruen("Задачи на сложную геометрию", "Problems on complex geometry"),
+        [problem(34),
             problem(923),
             problem(1109),
             problem(111780),

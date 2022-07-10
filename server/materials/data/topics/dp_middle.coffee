@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default dp_middle = () ->
     return {
-        topic: topic("Задачи средней сложности на ДП", "Задачи средней сложности на ДП", [
-            problem(212),
+        topic: topic(
+            ruen("Задачи средней сложности на ДП", "Tasks of medium complexity on DP"),
+            ruen("Задачи средней сложности на ДП", "Tasks of medium complexity on DP"),
+        [problem(212),
             problem(492),
             problem(587),
             problem(515),

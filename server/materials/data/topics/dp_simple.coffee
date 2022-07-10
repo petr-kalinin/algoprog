@@ -3,6 +3,7 @@ import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module17576 = () ->
     page("О связи перебора и ДП, или Как переборные решения превращать в ДП", String.raw"""
@@ -187,8 +188,10 @@ module17576 = () ->
 
 export default arrays = () ->
     return {
-        topic: topic("Основы динамического программирования", "Простые задачи на ДП", [
-            label("<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)"),
+        topic: topic(
+            ruen("Основы динамического программирования", "Fundamentals of dynamic programming"),
+            ruen("Простые задачи на ДП", "Simple DP tasks"),
+        [label("<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)"),
             module17576(),
             label("<div style=\"display:inline-block;\">См. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Динамические программирование»<br>\nСм. также <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Динамические программирование» (в параллели B' уже есть и довольно продвинутые темы, которые вам пока не нужны)</div>"),
             problem(201),

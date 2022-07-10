@@ -4,6 +4,7 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module16828 = () ->
     page("Разбор задачи \"Резисторы\"", String.raw"""
@@ -56,8 +57,10 @@ module16828 = () ->
 export default backtrack = (count) -> () ->
     star = if count then "" else "*"
     return {
-        topic: topic("#{star}Рекурсивный перебор", "#{star}Задачи на рекурсивный перебор", [
-            if count then null else label("Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 6 (там она будет обязательной). Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас."),
+        topic: topic(
+            ruen("#{star}Рекурсивный перебор", "#{star}Recursive search"),
+            ruen("#{star}Задачи на рекурсивный перебор", "#{star}Recursive search tasks"),
+            [if count then null else label("Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 6 (там она будет обязательной). Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас."),
             label("<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»"),
             link("https://informatics.msk.ru/mod/resource/view.php?id=16016", "Красивая картинка рекурсивного дерева"),
             problem(80),
@@ -68,7 +71,7 @@ export default backtrack = (count) -> () ->
             problem(91),
             problem(485),
             problem(1182),
-        ], "backtrack" + (if count then "_req" else "")),
+            ], "backtrack" + (if count then "_req" else "")),
         advancedTopics: [
             contest("#{star}Продвинутые задачи на рекурсивный перебор", [
                 problem(157),

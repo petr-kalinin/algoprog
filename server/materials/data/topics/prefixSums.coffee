@@ -2,11 +2,14 @@ import contest from "../../lib/contest"
 import label from "../../lib/label"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default prefixSums = () ->
     return {
-        topic: topic("Префиксные суммы и смежные темы", "Задачи на префиксные суммы", [
-            label("<a href='https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html'>Теория по префиксным суммам и смежным темам</a>"),
+        topic: topic(
+            ruen("Префиксные суммы и смежные темы", "Prefix sums and related topics"),
+            ruen("Задачи на префиксные суммы", "Problems on prefix amounts"),
+        [label("<a href='https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html'>Теория по префиксным суммам и смежным темам</a>"),
             problem(2771),
             problem(2772),
             problem(3313),

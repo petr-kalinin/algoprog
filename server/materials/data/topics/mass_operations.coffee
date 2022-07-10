@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default mass_operations = () ->
     return {
-        topic: topic("Групповые операции на деревьях", "Задачи на групповые операции", [
-            label("<p>См. <a href=\"https://e-maxx.ru/algo/segment_tree#20\">теорию на e-maxx</a>.</p>"),
+        topic: topic(
+            ruen("Групповые операции на деревьях", "Group operations on trees"),
+            ruen("Задачи на групповые операции", "Problems on group operations"),
+        [label("<p>См. <a href=\"https://e-maxx.ru/algo/segment_tree#20\">теорию на e-maxx</a>.</p>"),
             problem(3327),
             problem(3329),
             problem(3328),

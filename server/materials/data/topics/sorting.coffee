@@ -3,6 +3,7 @@ import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module16475 = () ->
     page("Теория по логарифмическим сортировкам", String.raw"""
@@ -188,8 +189,10 @@ topic_16576 = () ->
 
 export default sorting = () ->
     return {
-        topic: topic("Сортировки", "Задачи на сортировки", [
-            label("Видеозаписи лекций ЛКШ по квадратичным сортировкам: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии."),
+        topic: topic(
+            ruen("Сортировки", "Sorting"),
+            ruen("Задачи на сортировки", "Problems on sorting"),
+        [label("Видеозаписи лекций ЛКШ по квадратичным сортировкам: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии."),
             label("Внимание! В задаче \"Библиотечный метод\" надо выводить очередную строку только если состояние массива при этой вставке изменилось."),
             module16475(),
             problem(230),

@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default hld = () ->
     return {
-        topic: topic("Heavy-light decomposition", "Задачи на HLD", [
-            label("TODO"),
+        topic: topic(
+            ruen("Heavy-light decomposition", "Heavy-light decomposition"),
+            ruen("Задачи на HLD", "Problems on HLD"),
+        [label("TODO"),
             label("<a href='https://codeforces.com/blog/entry/44351'>Еще теория</a>")
             problem({testSystem: "codeforces", contest: "600", problem: "E"}),
             problem({testSystem: "codeforces", contest: "570", problem: "D"}),

@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default persistency = () ->
     return {
-        topic: topic("Персистентные структуры данных", "Задачи на персистентные структуры данных", [
-            label("TODO"),
+        topic: topic(
+            ruen("Персистентные структуры данных", "Persistent data structures"),
+            ruen("Задачи на персистентные структуры данных", "Problems on persistent data structures"),
+        [label("TODO"),
             problem(114323),
             problem(1817)
             problem(2980)

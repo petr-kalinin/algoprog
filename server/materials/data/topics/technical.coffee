@@ -3,6 +3,7 @@ import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module25200 = () ->
     page("Про задачи \"на технику\"", String.raw"""

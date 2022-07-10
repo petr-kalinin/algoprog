@@ -2,11 +2,14 @@ import contest from "../../lib/contest"
 import label from "../../lib/label"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default strings = () ->
     return {
-        topic: topic("Символы и строки", "Задачи на символы и строки", [
-            label("<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
+        topic: topic(
+            ruen("Символы и строки", "Characters and strings"),
+            ruen("Задачи на символы и строки", "Problems on characters and strings"),
+        [label("<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
             problem({testSystem: "ejudge", contest: "3007", problem: "1", id: "102"}),
             problem({testSystem: "ejudge", contest: "3007", problem: "2", id: "103"}),
             problem({testSystem: "ejudge", contest: "3007", problem: "3", id: "105"}),

@@ -3,6 +3,7 @@ import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module15969 = () ->
     page("Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)", String.raw"""
@@ -272,8 +273,10 @@ module15969 = () ->
 
 export default loops = () ->
     return {
-        topic: topic("Циклы", "Задачи на циклы", [
-            label(String.raw"""
+        topic: topic(
+            ruen("Циклы", "Cycles"),
+            ruen("Задачи на циклы", "Problems on cycles"),
+        [label(String.raw"""
                 <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
                 Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
                 Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.

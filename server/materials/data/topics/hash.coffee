@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default hash = () ->
     return {
-        topic: topic("Хеширование", "Задачи на хеширование", [
-            label("Основной теории тут пока нет, поищите в интернете.<br>\nДополнительная теория (предполагает, что вы уже почитали основную теорию): <a href=\"https://blog.algoprog.ru/hash-no-multiply\">как писать хеширование без домножения</a>.<br>\nЕще полезное <a href=\"https://codeforces.com/blog/entry/4898\">про антихештесты</a>."),
+        topic: topic(
+            ruen("Хеширование", "Hashing"),
+            ruen("Задачи на хеширование", "Problems on hashing"),
+        [label("Основной теории тут пока нет, поищите в интернете.<br>\nДополнительная теория (предполагает, что вы уже почитали основную теорию): <a href=\"https://blog.algoprog.ru/hash-no-multiply\">как писать хеширование без домножения</a>.<br>\nЕще полезное <a href=\"https://codeforces.com/blog/entry/4898\">про антихештесты</a>."),
             problem(99),
             problem(100),
             problem(1042),

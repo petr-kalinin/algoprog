@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default aho_corasick = () ->
     return {
-        topic: topic("Алгоритм Ахо-Корасик", "Задачи на Ахо-Корасик", [
-            label("<p>См. <a href=\"https://e-maxx.ru/algo/aho_corasick\">теорию на e-maxx</a>.</p>"),
+        topic: topic(
+            ruen("Алгоритм Ахо-Корасик", "The Aho-Korasik algorithm"),
+            ruen("Задачи на Ахо-Корасик", "Problems on Aho-Korasik"),
+        [label("<p>См. <a href=\"https://e-maxx.ru/algo/aho_corasick\">теорию на e-maxx</a>.</p>"),
             problem(111732),
         ], "aho"),
         advancedProblems: [

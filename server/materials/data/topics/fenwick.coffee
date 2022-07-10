@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default fenwick = () ->
     return {
-        topic: topic("Дерево Фенвика и многомерные деревья", "Задачи на дерево Фенвика", [
-            label("<p>См. <a href=\"https://e-maxx.ru/algo/fenwick_tree\">теорию на e-maxx</a>.</p>"),
+        topic: topic(
+            ruen("Дерево Фенвика и многомерные деревья", "Fenwick tree and multidimensional trees"),
+            ruen("Задачи на дерево Фенвика", "Problems on fenwick tree"),
+        [label("<p>См. <a href=\"https://e-maxx.ru/algo/fenwick_tree\">теорию на e-maxx</a>.</p>"),
             label("В контесте ниже задачи можно решить и деревом отрезков (и часть из них уже была в соответствующем контесте), но решите теперь их деревом Фенвика."),
             problem(3317),
             problem(3568),

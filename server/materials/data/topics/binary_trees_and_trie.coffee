@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default binary_trees_and_trie = () ->
     return {
-        topic: topic("Бинарные деревья и бор", "Задачи на бинарные деревья и бор", [
-            label("Теории тут пока нет"),
+        topic: topic(
+            ruen("Бинарные деревья и бор", "Binary trees and boron"),
+            ruen("Задачи на бинарные деревья и бор", "Problems on binary trees and boron"),
+        [label("Теории тут пока нет"),
             problem(757),
             problem(760),
             problem(761),

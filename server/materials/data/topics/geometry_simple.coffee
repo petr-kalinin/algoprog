@@ -4,6 +4,7 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 mainPrinciples = () ->
     page("Главные правила работы с геометрией", String.raw"""
@@ -41,8 +42,10 @@ mainPrinciples = () ->
 
 export default geometry_simple = () ->
     return {
-        topic: topic("Простая геометрия", "Задачи на простую геометрию", [
-            label("<div>См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Вычислительная геометрия\".<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Вычислительная геометрия\".</div>"),
+        topic: topic(
+            ruen("Простая геометрия", "Simple geometry"),
+            ruen("Задачи на простую геометрию", "Problems on simple geometry"),
+        [label("<div>См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Вычислительная геометрия\".<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Вычислительная геометрия\".</div>"),
             mainPrinciples(),
             problem(269),
             problem(275),

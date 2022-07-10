@@ -107,7 +107,6 @@ ALL_TOPICS = [
     strings,
     floats,
     pythonAdditional,
-###
     gcd,
     prefixSums,
     recursion,
@@ -182,7 +181,6 @@ ALL_TOPICS = [
     dp_hard
     maxmatching
     persistency
-###
 ]
 
 ADDITIONAL_LEVELS =

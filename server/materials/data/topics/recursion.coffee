@@ -2,11 +2,14 @@ import contest from "../../lib/contest"
 import label from "../../lib/label"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default recursion = () ->
     return {
-        topic: topic("Рекурсия", "Задачи на рекурсию", [
-            label("<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>"),
+        topic: topic(
+            ruen("Рекурсия", "Recursion"),
+            ruen("Задачи на рекурсию", "Problems on recursion"),
+        [label("<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>"),
             label("""Имейте в виду, что многие из задач ниже на самом деле проще и правильнее решать не рекурсией, а циклом 
             (в частности, никогда не пишите факториал или числа Фибоначчи рекурсией!). 
             Но понимать, что такое рекурсия, надо, и очень полезно потренироваться на задачах ниже.""")

@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default bit_operations = () ->
     return {
-        topic: topic("Битовые операции", "Задачи на битовые операции", [
-            label("""<p>Теория: <a href='https://notes.algoprog.ru/shortideas/03_5_bitandor.html'>основная</a>, дополнительно:
+        topic: topic(
+            ruen("Битовые операции", "Bit operations"),
+            ruen("Задачи на битовые операции", "Problems on bit operations"),
+        [label("""<p>Теория: <a href='https://notes.algoprog.ru/shortideas/03_5_bitandor.html'>основная</a>, дополнительно:
             <a href='https://server.179.ru/tasks/python/2014b1/22-bits.html'>раз</a>, <a href='https://ravesli.com/urok-45-pobitovye-operatory/'>два</a>.
             Тут везде разные языки программирования, но принцип один и тот же, максимум операции могут по-разному записываться.</p>"""),
             problem(123),

@@ -2,6 +2,7 @@ import label from "../../lib/label"
 import page  from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module25368 = () ->
     page("Про \"странные числа\" в коде", String.raw"""
