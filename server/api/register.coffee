@@ -18,7 +18,7 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 import logger from '../log'
 
 imapClient = undefined
-if process.env["EMAIL_USER"] and process.env("EMAIL_PASSWORD")
+if process.env["EMAIL_USER"] and process.env["EMAIL_PASSWORD"]
     imapClient = new ImapFlow
         host: 'imap.gmail.com',
         port: 993,
