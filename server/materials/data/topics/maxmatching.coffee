@@ -11,7 +11,9 @@ export default maxmatching = () ->
         topic: topic(
             ruen("Паросочетание максимального веста, венгерский алгоритм", "Maximum West matching, a Hungarian algorithm"),
             ruen("Задачи на венгерский алгоритм", "Problems on hungarian algorithm"),
-        [label("<p>См.\n<a href=\"https://e-maxx.ru/algo/assignment_hungary\">теорию на e-maxx</a>, но <a href=\"https://e-maxx.ru/algo/assignment_mincostflow\">можно писать и mincost-maxflow</a>.\n</p>"),
+        [label(ruen(
+             "<p>См.\n<a href=\"https://e-maxx.ru/algo/assignment_hungary\">теорию на e-maxx</a>, но <a href=\"https://e-maxx.ru/algo/assignment_mincostflow\">можно писать и mincost-maxflow</a>.\n</p>",
+             "<p>See\nthe <a href=\"https://e-maxx.ru/algo/assignment_hungary\">theory on e-maxx</a>, but you <a href=\"https://e-maxx.ru/algo/assignment_mincostflow\">can also write mincost-maxflow</a>.\n</p>")),
             problem(111556),
             problem({testSystem: "codeforces", contest: "1107", problem: "F"}),
         ], "maxmatching")

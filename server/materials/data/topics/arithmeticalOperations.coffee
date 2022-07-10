@@ -51,7 +51,9 @@ export default arithmeticalOperations = () ->
         else throw "unknown label #{lbl}"
     return {
         topic: topic(name, contestName, [
-            label("<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>"),
+            label(ruen(
+                "<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>",
+                "<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Getting Started with Python and Wing IDE</a>")),
             problem({testSystem: "ejudge", contest: "3003", problem: "1", id: "2938"}),
             problem({testSystem: "ejudge", contest: "3003", problem: "2", id: "2939"}),
             problem({testSystem: "ejudge", contest: "3003", problem: "3", id: "2941"}),
@@ -66,14 +68,20 @@ export default arithmeticalOperations = () ->
         ], "arithmetical_operations"),
         advancedTopics: [
             topic("Вещественные числа", null, [
-                label("Если вы еще не решали задачи на вещественные числа из уровня 1Б, то прочитайте там теорию и прорешайте все эти задачи. Там есть тонкости, которые обязательно надо знать."),
+                label(ruen(
+                    "Если вы еще не решали задачи на вещественные числа из уровня 1Б, то прочитайте там теорию и прорешайте все эти задачи. Там есть тонкости, которые обязательно надо знать.",
+                    "If you haven't solved real numbers problems from level 1B yet, then read the theory there and solve all these problems. There are subtleties that you definitely need to know.")),
             ]),
             topic("Основы тестирования задач (без контеста)", null, [
-                label("<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Теория по тестированию задач</a>. Вы там многое не поймете (особенно в примерах и в продвинутых методиках тестирования), но поймите хотя бы основы. В будущем, на более высоких уровнях, возвращайтесь к этому тексту.")
+                label(ruen(
+                    "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Теория по тестированию задач</a>. Вы там многое не поймете (особенно в примерах и в продвинутых методиках тестирования), но поймите хотя бы основы. В будущем, на более высоких уровнях, возвращайтесь к этому тексту.",
+                    "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Theory of testing tasks</a>. You won't understand much there (especially in examples and advanced testing techniques), but at least understand the basics. In the future, at higher levels, return to this text."))
             ]),
             topic("Задачи", "Продвинутые задачи на арифметические операции: в них запрещается пользоваться if'ами и циклами", [
                 module25368(),
-                label("<br>"),
+                label(ruen(
+                    "<br>",
+                    "<br>")),
                 problem({testSystem: "ejudge", contest: "2003", problem: "1", id: "2946"}),
                 problem(2945),
                 problem(506),

@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import json
 import os
 import os.path
 import re
@@ -22,8 +23,11 @@ def translate(strings):
     result = requests.post(url, json=data, headers=headers)
     return [x["text"] for x in result.json()["translations"]]
 
-def make_ruen(ru, en):
-    return 'ruen("' + ru + '", "' + en + '")'
+def make_ruen(ru, en, indent=None):
+    if not indent:
+        return 'ruen("' + ru + '", "' + en + '")'
+    else:
+        return 'ruen(\n' + indent + '"' + ru + '",\n' + indent + '"' + en + '")'
 
 def replace_imports(match):
     imports = match.group(0).split("\n")
@@ -51,19 +55,33 @@ def replace_topic(match):
         indent + INDENT2 + make_ruen(name2, en_name2) + ",\n" +
         indent + "[")
 
+def replace_label(match):
+    indent = match.group(1)
+    head = match.group(2)
+    text = match.group(3)
+    to_tr = json.loads("\"" + text + "\"")
+    en_text = json.dumps(translate([to_tr])[0])[1:-1]
+    print(text)
+    print(en_text)
+    return (indent + head + make_ruen(text, en_text, " " * len(indent) + INDENT2) + ")")
+
 path = "server/materials/data/topics"
 topics = [os.path.join(path, f) for f in os.listdir(path)]
 topics = [f for f in topics if os.path.isfile(f)]
 
 cnt = 0
 for topic in topics:
+#for topic in [path + "/2sat.coffee"]:
     print(topic)
     with open(topic, "r") as f:
         data = f.read()
-    data = re.sub(r"(^import(.*)?$\n)*", replace_imports, data, 1, re.M)
-    data = re.sub(r"^(\s+)(topic: topic)\(\"([^\"]*)\", \"([^\"]*)\", \[\n\s*", replace_topic, data, 0, re.M)
+    #data = re.sub(r"(^import(.*)?$\n)*", replace_imports, data, 1, re.M)
+    #data = re.sub(r"^(\s+)(topic: topic)\(\"([^\"]*)\", \"([^\"]*)\", \[\n\s*", replace_topic, data, 0, re.M)
+    data = re.sub(r"^(.*)(label\()\"(([^\"]*(\\\")?)*[^\\])\"\)", replace_label, data, 0, re.M)
+    print(data)
     with open(topic, "w") as f:
         f.write(data)
+    #break
     #cnt += 1
-    #if cnt == 2:
+    #if cnt == 10:
     #    break

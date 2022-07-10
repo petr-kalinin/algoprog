@@ -11,7 +11,9 @@ export default kmp = () ->
         topic: topic(
             ruen("Алгоритм Кнута-Морриса-Пратта (КМП)", "Knuth-Morris-Pratt Algorithm (KMP)"),
             ruen("Задачи на КМП", "Problems on KMP"),
-        [label("<p>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Алгоритмы на строках\".<br>\n<a href=\"https://e-maxx.ru/algo/prefix_function\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/191454/\">Теория на хабре</a><br>\nМожете в интернете поискать еще.<br>\nПомимо собственно поиска подстроки в строке, префикс-функция также нередко имеет другие полезные применения. Задачи на это ниже тоже есть.<br>\nКакие-то из задач ниже, наверное, были ранее в задачах на хеши. Решите их повторно с использованием КМП.</p>"),
+        [label(ruen(
+             "<p>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Алгоритмы на строках\".<br>\n<a href=\"https://e-maxx.ru/algo/prefix_function\">Теория на e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/191454/\">Теория на хабре</a><br>\nМожете в интернете поискать еще.<br>\nПомимо собственно поиска подстроки в строке, префикс-функция также нередко имеет другие полезные применения. Задачи на это ниже тоже есть.<br>\nКакие-то из задач ниже, наверное, были ранее в задачах на хеши. Решите их повторно с использованием КМП.</p>",
+             "<p>\nSee the video <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">recordings of lectures LKSH.2008.B'</a>, section \"Algorithms on strings\".<br>\n<a href=\"https://e-maxx.ru/algo/prefix_function\">Theory on e-maxx</a><br>\n<a href=\"https://habrahabr.ru/post/191454/\">Theory on habr</a><br>\nYou can search the Internet for more.<br>\nIn addition to actually searching for a substring in a string, the prefix function also often has other useful uses. There are also tasks for this below.<br>\nSome of the tasks below were probably previously in hash tasks. Solve them repeatedly using the CMR.</p>")),
             problem(1323),
             problem(99),
             problem(100),

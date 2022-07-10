@@ -11,7 +11,9 @@ export default bfs = () ->
         topic: topic(
             ruen("Поиск в ширину", "Search in width"),
             ruen("Задачи на поиск в ширину", "Problems on search in width"),
-        [label("См. <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Поиск в ширину (BFS)»<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B' 2008</a>, раздел «Поиск в ширину» (там есть и довольно продвинутые темы, которые вам пока не нужны)<br>"),
+        [label(ruen(
+             "См. <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Поиск в ширину (BFS)»<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B' 2008</a>, раздел «Поиск в ширину» (там есть и довольно продвинутые темы, которые вам пока не нужны)<br>",
+             "See the <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">videos of lectures of the Parallel C'</a> LCS, section \"Breadth Search (BFS)\"<br>\nSee the <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">videos of the lectures of the Parallel B' 2008</a> LCS, the section \"Breadth search\" (there are also quite advanced topics that you don't need yet)<br>")),
             problem(160),
             problem(161),
             problem(646),

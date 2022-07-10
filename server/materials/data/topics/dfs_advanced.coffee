@@ -11,7 +11,9 @@ export default dfs_advanced = () ->
         topic: topic(
             ruen("Сложные задачи на поиск в глубину", "Difficult tasks to search in depth"),
             ruen("Сложные задачи на поиск в глубину", "Difficult tasks to search in depth"),
-        [label("<p>Теория вся есть в том же тексте про поиск в глубину (ссылка выше на уровне 3), только теперь вам уже надо знать тут вообще всё.</p>\n<p>Еще можете посмотреть на e-maxx, в частности, там есть <a href=\"https://e-maxx.ru/algo/strong_connected_components\">простое доказательство алгоритма построения сильносвязных компонент</a>.</p>"),
+        [label(ruen(
+             "<p>Теория вся есть в том же тексте про поиск в глубину (ссылка выше на уровне 3), только теперь вам уже надо знать тут вообще всё.</p>\n<p>Еще можете посмотреть на e-maxx, в частности, там есть <a href=\"https://e-maxx.ru/algo/strong_connected_components\">простое доказательство алгоритма построения сильносвязных компонент</a>.</p>",
+             "<p>The whole theory is in the same text about the search in depth (link above at level 3), only now you already need to know everything here.</p>\n<p>You can also look at e-maxx, in particular, there is a <a href=\"https://e-maxx.ru/algo/strong_connected_components\">simple proof of the algorithm for constructing strongly connected components</a>.</p>")),
             problem(111689),
             problem(111690),
             problem(1991),

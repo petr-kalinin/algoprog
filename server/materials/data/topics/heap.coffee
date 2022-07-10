@@ -11,7 +11,9 @@ export default heap = () ->
         topic: topic(
             ruen("Куча", "Heap"),
             ruen("Задачи на кучу", "Problems on a bunch"),
-        [label("См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Куча\"<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Куча\""),
+        [label(ruen(
+             "См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Куча\"<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Куча\"",
+             "See the video <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">recordings of lectures of LKSH.2013.B'</a>, section \"Heap\"<br>\nSee video <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">recordings of lectures of LKSH.2008.B'</a>, section \"Heap\"")),
             problem(755),
             problem(756),
             problem(489),

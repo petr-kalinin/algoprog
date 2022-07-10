@@ -192,8 +192,12 @@ export default sorting = () ->
         topic: topic(
             ruen("Сортировки", "Sorting"),
             ruen("Задачи на сортировки", "Problems on sorting"),
-        [label("Видеозаписи лекций ЛКШ по квадратичным сортировкам: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии."),
-            label("Внимание! В задаче \"Библиотечный метод\" надо выводить очередную строку только если состояние массива при этой вставке изменилось."),
+        [label(ruen(
+             "Видеозаписи лекций ЛКШ по квадратичным сортировкам: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии.",
+             "Video recordings of lectures of the LCS on quadratic sorting: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">bubble sorting</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">maximum selection</a>. Unfortunately, there is no theory on sorting by inserts here yet. Find it on the Internet or listen to it in class.")),
+            label(ruen(
+                "Внимание! В задаче \"Библиотечный метод\" надо выводить очередную строку только если состояние массива при этой вставке изменилось.",
+                "Attention! In the \"Library Method\" task, it is necessary to output the next line only if the state of the array has changed during this insertion.")),
             module16475(),
             problem(230),
             problem(1436),

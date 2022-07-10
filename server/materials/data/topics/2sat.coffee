@@ -11,7 +11,9 @@ export default two_sat = () ->
         topic: topic(
             ruen("2-SAT", "2-SAT"),
             ruen("Задачи на 2-SAT", "Problems on 2-SAT"),
-        [label("<a href='https://e-maxx.ru/algo/2_sat'>Теория на e-maxx</a>"),
+        [label(ruen(
+             "<a href='https://e-maxx.ru/algo/2_sat'>Теория на e-maxx</a>",
+             "<a href=\"https://e-maxx.ru/algo/2_sat\">Theory on e-maxx</a>")),
             problem({testSystem: "codeforces", contest: "587", problem: "D"}),
             problem({testSystem: "codeforces", contest: "568", problem: "C"}),
             problem({testSystem: "codeforces", contest: "1239", problem: "D"}),

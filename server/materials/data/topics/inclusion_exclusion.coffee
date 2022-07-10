@@ -11,7 +11,9 @@ export default two_sat = () ->
         topic: topic(
             ruen("Формула включения-исключения", "Inclusion-exclusion formula"),
             ruen("Задачи на формулу включения-исключения", "Problems on the inclusion-exclusion formula"),
-        [label("TODO"),
+        [label(ruen(
+             "TODO",
+             "TODO")),
             problem(552),
         ], "inclusion_exclusion"),
         advancedProblems: [

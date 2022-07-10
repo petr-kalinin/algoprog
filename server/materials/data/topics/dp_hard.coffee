@@ -11,7 +11,9 @@ export default dp_hard = () ->
         topic: topic(
             ruen("Супер-сложное ДП", "Super-complex DP"),
             ruen("Задачи на супер-сложное ДП", "Problems on super-complex DP"),
-        [label("<a href='https://codeforces.com/blog/entry/63823'>Полезный прием: convex hull trick</a>"),
+        [label(ruen(
+             "<a href='https://codeforces.com/blog/entry/63823'>Полезный прием: convex hull trick</a>",
+             "<a href=\"https://codeforces.com/blog/entry/63823\">Useful technique: convex hull trick</a>")),
             problem({testSystem: "codeforces", contest: "1083", problem: "E"}),
             problem({testSystem: "codeforces", contest: "319", problem: "C"}),
             problem({testSystem: "codeforces", contest: "311", problem: "B"}),

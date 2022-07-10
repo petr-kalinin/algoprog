@@ -11,7 +11,9 @@ export default mass_operations = () ->
         topic: topic(
             ruen("Групповые операции на деревьях", "Group operations on trees"),
             ruen("Задачи на групповые операции", "Problems on group operations"),
-        [label("<p>См. <a href=\"https://e-maxx.ru/algo/segment_tree#20\">теорию на e-maxx</a>.</p>"),
+        [label(ruen(
+             "<p>См. <a href=\"https://e-maxx.ru/algo/segment_tree#20\">теорию на e-maxx</a>.</p>",
+             "<p>See the <a href=\"https://e-maxx.ru/algo/segment_tree#20\">theory on e-maxx</a>.</p>")),
             problem(3327),
             problem(3329),
             problem(3328),

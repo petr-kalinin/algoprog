@@ -9,7 +9,9 @@ export default prefixSums = () ->
         topic: topic(
             ruen("Префиксные суммы и смежные темы", "Prefix sums and related topics"),
             ruen("Задачи на префиксные суммы", "Problems on prefix amounts"),
-        [label("<a href='https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html'>Теория по префиксным суммам и смежным темам</a>"),
+        [label(ruen(
+             "<a href='https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html'>Теория по префиксным суммам и смежным темам</a>",
+             "<a href=\"https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html\">Theory on prefix sums and related topics</a>")),
             problem(2771),
             problem(2772),
             problem(3313),

@@ -11,7 +11,9 @@ export default geometry_middle = () ->
         topic: topic(
             ruen("Геометрия средней сложности", "Geometry of medium complexity"),
             ruen("Задачи на среднюю геометрию", "Problems on average geometry"),
-        [label("<p>Материал должен быть ближе к концу соответствующей лекции <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">в ЛКШ.2013.B'</a><br>\nТакже можете смотреть нужные по каждой задаче разделы на e-maxx.</p>"),
+        [label(ruen(
+             "<p>Материал должен быть ближе к концу соответствующей лекции <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">в ЛКШ.2013.B'</a><br>\nТакже можете смотреть нужные по каждой задаче разделы на e-maxx.</p>",
+             "<p>The material should be closer to the end of the corresponding lecture <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">in LKSH.2013.B'</a><br>\nYou can also view the sections needed for each task on e-maxx.</p>")),
             problem(289),
             problem(288),
             problem(1877),

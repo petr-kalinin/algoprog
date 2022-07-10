@@ -11,7 +11,9 @@ export default simple_games = () ->
         topic: topic(
             ruen("Простые игры на графах", "Simple graph games"),
             ruen("Задачи на простые игры на графах", "Problems on simple graph games"),
-        [label("<a href=\"https://e-maxx.ru/algo/games_on_graphs\">Некоторая теория на e-maxx</a>"),
+        [label(ruen(
+             "<a href=\"https://e-maxx.ru/algo/games_on_graphs\">Некоторая теория на e-maxx</a>",
+             "<a href=\"https://e-maxx.ru/algo/games_on_graphs\">Some theory on e-maxx</a>")),
             problem(202),
             problem(366),
             problem(3344),

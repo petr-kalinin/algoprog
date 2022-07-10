@@ -191,9 +191,13 @@ export default arrays = () ->
         topic: topic(
             ruen("Основы динамического программирования", "Fundamentals of dynamic programming"),
             ruen("Простые задачи на ДП", "Simple DP tasks"),
-        [label("<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)"),
+        [label(ruen(
+             "<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)",
+             "<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Theory about DP</a> (up to the most advanced, so far read only the basics)")),
             module17576(),
-            label("<div style=\"display:inline-block;\">См. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Динамические программирование»<br>\nСм. также <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Динамические программирование» (в параллели B' уже есть и довольно продвинутые темы, которые вам пока не нужны)</div>"),
+            label(ruen(
+                "<div style=\"display:inline-block;\">См. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Динамические программирование»<br>\nСм. также <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Динамические программирование» (в параллели B' уже есть и довольно продвинутые темы, которые вам пока не нужны)</div>",
+                "<div style=\"display:inline-block;\">See also video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of Parallel C'</a> LCS, section \"Dynamic programming\"<br>\nSee also the <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">videos of lectures of the Parallel B'.2008</a> LCS, the section \"Dynamic programming\" (Parallel B' already has quite advanced topics that you don't need yet)</div>")),
             problem(201),
             problem(842),
             problem(843),

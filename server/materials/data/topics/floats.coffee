@@ -9,7 +9,9 @@ export default floats =  () ->
         topic: topic(
             ruen("Вещественные числа", "Real numbers"),
             ruen("Задачи на вещественные числа", "Problems on real numbers"),
-        [label("<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Теория по вещественным числам (в основном про питон, но читать всем независимо от языка!)</a>"),
+        [label(ruen(
+             "<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Теория по вещественным числам (в основном про питон, но читать всем независимо от языка!)</a>",
+             "<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Theory on real numbers (mostly about python, but read to everyone regardless of the language!)</a>")),
             problem(74),
             problem(3612),
             problem(596),
@@ -18,7 +20,9 @@ export default floats =  () ->
             problem(120),
         ], "floats"),
         advancedTopics: [
-            label("Две последние задачи в \"Продвинутых задачах на вещественные числа\" повторяют задачи из просто \"Задач на вещественные числа\" с уровня 1Б. Так задумано для тех, кто не решал уровень 1Б; если вы решали контест на вещественные числа на уровне 1Б, то вам пересдавать эти задачи не надо."),
+            label(ruen(
+                "Две последние задачи в \"Продвинутых задачах на вещественные числа\" повторяют задачи из просто \"Задач на вещественные числа\" с уровня 1Б. Так задумано для тех, кто не решал уровень 1Б; если вы решали контест на вещественные числа на уровне 1Б, то вам пересдавать эти задачи не надо.",
+                "The last two tasks in \"Advanced Real Number Problems\" repeat the tasks from just \"Real Number Problems\" from level 1B. This is intended for those who have not solved level 1B; if you have solved a contest on real numbers at level 1B, then you do not need to retake these tasks.")),
             contest("Продвинутые задачи на вещественные числа", [
                 problem(3609),
                 problem(3613),

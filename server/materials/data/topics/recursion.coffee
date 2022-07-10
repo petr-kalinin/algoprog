@@ -9,7 +9,9 @@ export default recursion = () ->
         topic: topic(
             ruen("Рекурсия", "Recursion"),
             ruen("Задачи на рекурсию", "Problems on recursion"),
-        [label("<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>"),
+        [label(ruen(
+             "<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>",
+             "<a href=\"https://foxford.ru/wiki/informatika/rekursiya-v-python\">Theory on Foxford</a>")),
             label("""Имейте в виду, что многие из задач ниже на самом деле проще и правильнее решать не рекурсией, а циклом 
             (в частности, никогда не пишите факториал или числа Фибоначчи рекурсией!). 
             Но понимать, что такое рекурсия, надо, и очень полезно потренироваться на задачах ниже.""")

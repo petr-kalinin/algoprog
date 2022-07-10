@@ -9,7 +9,9 @@ export default primes = () ->
         topic: topic(
             ruen("Простые числа и разложение на множители", "Prime numbers and factorization"),
             ruen("Задачи на множители", "Problems on multipliers"),
-        [label("См. <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Арифметические алгоритмы»"),
+        [label(ruen(
+             "См. <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Арифметические алгоритмы»",
+             "See video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of Parallel C'</a> LCS, section \"Arithmetic algorithms\"")),
             problem(310),
             problem(623),
             problem(973),

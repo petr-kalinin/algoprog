@@ -11,7 +11,9 @@ export default dp_bayans = () ->
         topic: topic(
             ruen("Динамическое программирование: баяны", "Dynamic programming: bayans"),
             ruen("ДП-баяны", "DP-bayans"),
-        [label("Есть ряд классических задач на динамическое программирование, которые хорошо бы знать наизусть. Большинство этих задач разобраны в теории про ДП выше. В контесте ниже, помимо этих баянов, есть еще несколько интересных задач на ДП."),
+        [label(ruen(
+             "Есть ряд классических задач на динамическое программирование, которые хорошо бы знать наизусть. Большинство этих задач разобраны в теории про ДП выше. В контесте ниже, помимо этих баянов, есть еще несколько интересных задач на ДП.",
+             "There are a number of classic dynamic programming problems that it would be good to know by heart. Most of these tasks are discussed in the theory about DP above. In the contest below, in addition to these bayans, there are several other interesting DP tasks.")),
             problem(204),
             problem(1792),
             problem(112626),

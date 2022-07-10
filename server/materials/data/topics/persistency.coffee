@@ -11,7 +11,9 @@ export default persistency = () ->
         topic: topic(
             ruen("Персистентные структуры данных", "Persistent data structures"),
             ruen("Задачи на персистентные структуры данных", "Problems on persistent data structures"),
-        [label("TODO"),
+        [label(ruen(
+             "TODO",
+             "TODO")),
             problem(114323),
             problem(1817)
             problem(2980)

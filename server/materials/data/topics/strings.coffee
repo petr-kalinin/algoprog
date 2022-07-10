@@ -9,7 +9,9 @@ export default strings = () ->
         topic: topic(
             ruen("Символы и строки", "Characters and strings"),
             ruen("Задачи на символы и строки", "Problems on characters and strings"),
-        [label("<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>"),
+        [label(ruen(
+             "<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>",
+             "<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Python: theory by symbols and strings</a>")),
             problem({testSystem: "ejudge", contest: "3007", problem: "1", id: "102"}),
             problem({testSystem: "ejudge", contest: "3007", problem: "2", id: "103"}),
             problem({testSystem: "ejudge", contest: "3007", problem: "3", id: "105"}),

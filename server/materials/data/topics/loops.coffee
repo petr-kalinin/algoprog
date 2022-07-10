@@ -294,7 +294,9 @@ export default loops = () ->
             problem({testSystem: "ejudge", contest: "3005", problem: "10", id: "3067"}),
         ], "loops"),
         advancedTopics: [
-            label("Если вы пишете на питоне, то в первых двух задачах из продвинутых задач на циклы массивами пользоваться можно — просто потому, что иначе вы не сможете считать много чисел в одной строке."),
+            label(ruen(
+                "Если вы пишете на питоне, то в первых двух задачах из продвинутых задач на циклы массивами пользоваться можно — просто потому, что иначе вы не сможете считать много чисел в одной строке.",
+                "If you write in python, then you can use arrays in the first two tasks of advanced loop tasks \u2014 simply because otherwise you will not be able to count many numbers in one line.")),
             contest("Продвинутые задачи на циклы: в них запрещается пользоваться массивами", [
                 problem(227),
                 problem(228),

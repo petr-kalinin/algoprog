@@ -11,7 +11,9 @@ export default long_arithmetics = () ->
         topic: topic(
             ruen("Длинная арифметика", "Long arithmetic"),
             ruen("Задачи на длинную арифметику", "Problems on long arithmetic"),
-        [label("Длинная арифметика сейчас не часто требуется в олимпиадных задачах (если ответ на задачу может быть большой, то чаще вас попросят посчитать остаток по некоторому модулю), но тем не менее иметь представление об алгоритмах и уметь их писать надо.<br>\n<a href=\"https://informatics.mccme.ru/file.php/17/dlinnaya-arifmetika.doc\">Теория по длинной арифметике (В. Гольдштейн)</a><br>\n<a href=\"https://www.youtube.com/watch?v=n-sT7BENNxA\">Видеозапись лекции из какой-то ЛКШ</a> (подозреваю, что ЛКШ.2008.C)<br>"),
+        [label(ruen(
+             "Длинная арифметика сейчас не часто требуется в олимпиадных задачах (если ответ на задачу может быть большой, то чаще вас попросят посчитать остаток по некоторому модулю), но тем не менее иметь представление об алгоритмах и уметь их писать надо.<br>\n<a href=\"https://informatics.mccme.ru/file.php/17/dlinnaya-arifmetika.doc\">Теория по длинной арифметике (В. Гольдштейн)</a><br>\n<a href=\"https://www.youtube.com/watch?v=n-sT7BENNxA\">Видеозапись лекции из какой-то ЛКШ</a> (подозреваю, что ЛКШ.2008.C)<br>",
+             "Long arithmetic is not often required in Olympiad problems now (if the answer to the problem can be large, then more often you will be asked to calculate the remainder by some module), but nevertheless you need to have an idea about algorithms and be able to write them.<br>\n<a href=\"https://informatics.mccme.ru/file.php/17/dlinnaya-arifmetika.doc\">Theory of long arithmetic (V. Goldstein)</a><br>\n<a href=\"https://www.youtube.com/watch?v=n-sT7BENNxA\">A video recording of a lecture from some LKSH</a> (I suspect that LKSH.2008.C)<br>")),
             problem(132),
             problem(134),
             problem(136),

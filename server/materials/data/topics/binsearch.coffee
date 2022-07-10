@@ -11,8 +11,12 @@ export default binsearch = () ->
         topic: topic(
             ruen("Бинарный поиск (поиск делением пополам)", "Binary search (halving search)"),
             ruen("Задачи на бинарный поиск", "Problems on binary search"),
-        [label("<a href=\"https://notes.algoprog.ru/binsearch/07_binsearch_main.html\">Теория по бинарному поиску</a>"),
-            label("См. также <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Бинарный поиск» (хотя там несколько устаревший подход к поиску элемента в массиве)."),
+        [label(ruen(
+             "<a href=\"https://notes.algoprog.ru/binsearch/07_binsearch_main.html\">Теория по бинарному поиску</a>",
+             "<a href=\"https://notes.algoprog.ru/binsearch/07_binsearch_main.html\">Binary Search Theory</a>")),
+            label(ruen(
+                "См. также <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Бинарный поиск» (хотя там несколько устаревший подход к поиску элемента в массиве).",
+                "See also the <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">videos of the lectures of the parallel B'</a> LCS, the section \"Binary search\" (although there is a somewhat outdated approach to searching for an element in an array).")),
             problem(3570),
             problem(4),
             problem(2),

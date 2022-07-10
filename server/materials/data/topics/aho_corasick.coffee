@@ -11,7 +11,9 @@ export default aho_corasick = () ->
         topic: topic(
             ruen("Алгоритм Ахо-Корасик", "The Aho-Korasik algorithm"),
             ruen("Задачи на Ахо-Корасик", "Problems on Aho-Korasik"),
-        [label("<p>См. <a href=\"https://e-maxx.ru/algo/aho_corasick\">теорию на e-maxx</a>.</p>"),
+        [label(ruen(
+             "<p>См. <a href=\"https://e-maxx.ru/algo/aho_corasick\">теорию на e-maxx</a>.</p>",
+             "<p>See the <a href=\"https://e-maxx.ru/algo/aho_corasick\">theory on e-maxx</a>.</p>")),
             problem(111732),
         ], "aho"),
         advancedProblems: [

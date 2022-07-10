@@ -9,7 +9,9 @@ export default arrays = () ->
         topic: topic(
             ruen("Массивы", "Arrays"),
             ruen("Задачи на массивы", "Problems on arrays"),
-        [label("<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>"),
+        [label(ruen(
+             "<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>",
+             "<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Python: theory on arrays</a>")),
             problem({testSystem: "ejudge", contest: "3006", problem: "1", id: "63"}),
             problem({testSystem: "ejudge", contest: "3006", problem: "2", id: "64"}),
             problem({testSystem: "ejudge", contest: "3006", problem: "3", id: "66"}),

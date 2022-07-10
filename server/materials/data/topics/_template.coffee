@@ -11,8 +11,12 @@ export default backtrack = () ->
         topic: topic(
             ruen("*Рекурсивный перебор", "*Recursive iteration"),
             ruen("*Задачи на рекурсивный перебор", "*Recursive search tasks"),
-        [label("Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 5А. Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас."),
-            label("<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»"),
+        [label(ruen(
+             "Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 5А. Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас.",
+             "This topic is quite complex, so if you don't understand it, you can skip it and return to it at level 5A. However, recursive brute force is a very useful technique, so try to master it now.")),
+            label(ruen(
+                "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»",
+                "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Theory of recursive iteration</a><br>\nSee also video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of the Parallel C'</a> LCS, section \"Recursive search\"")),
             link("https://informatics.msk.ru/mod/resource/view.php?id=16016", "Красивая картинка рекурсивного дерева"),
             problem(80),
             problem(84),

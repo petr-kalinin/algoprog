@@ -11,7 +11,9 @@ export default suffixes = () ->
         topic: topic(
             ruen("Суффиксные структуры данных", "Suffix data structures"),
             ruen("Задачи на суффиксные структуры", "Problems on suffix structures"),
-        [label("<p>См. теорию на e-maxx: <br>\n<a href=\"https://e-maxx.ru/algo/suffix_array\">суффиксный массив</a>, <br>\n<a href=\"https://e-maxx.ru/algo/suffix_automata\">суффиксный автомат</a>, <br>\n<a href=\"https://e-maxx.ru/algo/ukkonen\">суффиксное дерево</a>.</p>"),
+        [label(ruen(
+             "<p>См. теорию на e-maxx: <br>\n<a href=\"https://e-maxx.ru/algo/suffix_array\">суффиксный массив</a>, <br>\n<a href=\"https://e-maxx.ru/algo/suffix_automata\">суффиксный автомат</a>, <br>\n<a href=\"https://e-maxx.ru/algo/ukkonen\">суффиксное дерево</a>.</p>",
+             "<p>See the theory on e-maxx: <br>\n<a href=\"https://e-maxx.ru/algo/suffix_array\">suffix array</a>, <br>\n<a href=\"https://e-maxx.ru/algo/suffix_automata\">suffix automaton</a>, <br>\n<a href=\"https://e-maxx.ru/algo/ukkonen\">suffix tree</a>.</p>")),
             problem(111789),
         ], "suffixes"),
         advancedProblems: [

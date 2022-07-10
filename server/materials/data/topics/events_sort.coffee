@@ -11,7 +11,9 @@ export default events_sort = () ->
         topic: topic(
             ruen("Сортировка событий", "Sorting events"),
             ruen("Задачи на сортировку событий", "Problems on sorting events"),
-        [label("См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Отрезки на прямой»<br>"),
+        [label(ruen(
+             "См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Отрезки на прямой»<br>",
+             "See video <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">recordings of lectures of the Parallel B'</a> LCS, section \"Straight line segments\"<br>")),
             problem(112542),
             problem(1755),
             problem(3721),

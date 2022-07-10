@@ -11,7 +11,9 @@ export default sparse_tables = () ->
         topic: topic(
             ruen("Sparse tables, двоичный подъем", "Sparse tables, binary ascent"),
             ruen("Задачи на sparse tables", "Problems on sparse tables"),
-        [label("TODO"),
+        [label(ruen(
+             "TODO",
+             "TODO")),
             problem(113919),
             problem(113550),
         ], "sparse_tables"),

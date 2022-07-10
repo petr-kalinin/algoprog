@@ -11,7 +11,9 @@ export default divide_and_conquer = () ->
         topic: topic(
             ruen("Разделяй и влавствуй", "Divide and conquer"),
             ruen("Задачи на разделяй и влавствуй", "Problems on divide and conquer"),
-        [label("TODO"),
+        [label(ruen(
+             "TODO",
+             "TODO")),
             problem({testSystem: "codeforces", contest: "429", problem: "D"}),
             problem({testSystem: "codeforces", contest: "120", problem: "J"}),
             #problem({testSystem: "codeforces", contest: "100273", problem: "A"}),  # TODO
