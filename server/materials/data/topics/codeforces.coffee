@@ -7,8 +7,8 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module17501 = () ->
-    page("Про сайт Codeforces", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Про сайт Codeforces</h1>
+    page("Про сайт Codeforces", ruen(
+                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Про сайт Codeforces</h1>
         <p>Если вы добрались до сюда, то вы уже довольно хорошо программируете, и имеет смысл не только решать задачи нашего курса, но также и дополнительно более-менее регулярно тренироваться. Рекомендую вам зарегистрироваться на сайте <a href="https://codeforces.com">codeforces.com</a> (есди он у вас вдруг открывается на английском языке, то в правом верхнем углу можно переключиться на русский), изучить его и время от времени принимать участие в его "раундах".</p>
         
         <p>А именно, на этом сайте регулярно проводятся соревнования — "раунды". Они бывают в среднем раз в одну-две недели (каждый раунд писать не обязательно, но я бы вам рекомендовал хотя бы раз в месяц-полтора писать раунды). Это не какие-то призовые олимпиады и т.п., в них имеет смысл участвовать из интереса, и с целью тренировки. Раунды проводятся по разным правилам, ниже я опишу наиболее распространенный вариант.</p>
@@ -39,8 +39,39 @@ module17501 = () ->
         
         <h4>Полезные ссылки</h4>
         <a href="https://codeforces.com/help">Общая справка по codeforces</a><br>
-        <a href="https://codeforces.com/blog/entry/456">Полные правила раундов</a></div>
-    """, {skipTree: true})
+        <a href="https://codeforces.com/blog/entry/456">Полные правила раундов</a></div>""",
+                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>About the Codeforces website</h1>
+        <p>If you got here, then you are already pretty good at programming, and it makes sense not only to solve the problems of our course, but also to train more or less regularly. I recommend you to register on the website <a href="https://codeforces.com">codeforces.com</a> (if you suddenly have it open in English, then in the upper right corner you can switch to Russian), study it and from time to time take part in its "rounds".</p>
+        
+        <p>Namely, "rounds" competitions are regularly held on this site. They happen on average once every one to two weeks (it is not necessary to write each round, but I would recommend you to write rounds at least once a month or a month and a half). These are not some prize-winning Olympiads, etc., it makes sense to participate in them out of interest, and for the purpose of training. Rounds are held according to different rules, below I will describe the most common option.</p>
+        
+        <p>Firstly, all codeforces participants have a so-called "rating" — an integer showing how successfully you performed at codeforces rounds. If you perform well, your rating will grow, if you perform poorly, then it will fall. The color that your nickname is written on codeforces pages depends on the rating. In addition, all codeforces participants are divided into two "divisions" by rating. You initially participate in the second division, if your rating becomes high enough (1700 and above), then you move to the first division.</p>
+        
+        <p>Rounds are usually held separately by division. Two parallel rounds are most often held — for the first and for the second division; the tasks partially overlap, partially differ. There are combined rounds for two divisions, there are rounds only for the second division. There are rounds according to very special schemes and rules. Most rounds are "rated", i.e. the results of participation in them affect your rating, but there are also "unrated" rounds. Usually, the rating of the round is warned in advance.</p>
+        
+        <p>The most common rounds are held according to the following rules. To participate in the round, you need to register for this round in advance (i.e. not just register on the website, but also click the special "register for the round" button), usually registration for the round ends 5-10 minutes before the start of the round. The round lasts 2-2.5 hours. You are offered 5 tasks, ordered by complexity (at least as the authors of the tasks think). Each task has its own cost, which determines the number of points that you will receive if you successfully solve this task. Simple tasks have a low cost (usually from 500), complex tasks have a high cost (usually 2500). (These scores are not directly related to the rating scores.)</p>
+        
+        <p>You can solve problems in any order (although usually everything is solved from simple to complex), in any valid programming languages. When you think you have written a solution, you can submit it for review (similar to how you do on our website). Your task will be tested on so—called "pretests" - some set of tests that is not necessarily complete (i.e. you can pass all the pretests, even if your solution is not quite correct). If your decision has not passed at least one pretest, it is not accepted, and you are informed about it. If it has passed all the pretests, then it is "accepted for final verification", which will take place at the end of the round.</p>
+        
+        <p>If your decision has not passed the pretests, you can retake it. If it has passed all the pretests, you can still retake it — if, for example, you have found a mistake. At the same time, you will subsequently receive 50 penalty points for each extra parcel.</p>
+        
+        <p>The cost of the tasks drops over time, dropping to about half of the initial cost by the end of the contest. Accordingly, if in the end it turns out that you have solved the problem, then you will receive as many points as it was worth at the time of your last parcel, minus 50 points for each previous parcel. During the round, you can watch its current results, i.e. who has decided what at the moment.</p>
+        
+        <p>In addition to all this, there is a system of "hacks". Namely, if your solution for some problem has passed the pretests, you can "block" it (by clicking on the corresponding button in the interface). After that, you can no longer resend this task, but you get the opportunity to view the source codes of other participants for this task (only those that have passed the pretests). In order for you not to mess around in a huge table of results, all participants are divided into "rooms" in a pseudo-random way before the round, and you can view the decisions of only participants from your room. To view the participant's uod, double-click on the corresponding cell in the results table of the room.</p>
+        
+        <p>The purpose of viewing the solution is to try to find errors in it. If you think you have found a bug in the solution, you can come up with a test on which you think this solution will work incorrectly, and send this test to the system — try to "hack" this solution. The system will immediately check this solution on your test and if it really does not work, then you will get plus 100 points, if you make a mistake, then you get minus 50 points. In case of successful hacking, the participant who was hacked will see it, and (if he has not blocked the task yet) will be able to send his solution. If he has already blocked the task, then he is out of luck. Accordingly, similarly, other participants can hack your solutions; at the same time, of course, you do not see the test with which you were hacked.</p>
+        
+        <p>When viewing a solution, you cannot copy its text anywhere; you must look at the code purely with your eyes.</p>
+        
+        <p>After the end of the round time, all solutions are retested on a full set of tests. Now, if you still had the wrong decision, then it almost certainly won't pass any of the full-fledged tests. After that, the final results are calculated. Namely, for each task that you have passed, you are awarded points corresponding to the cost of the task at the moment when you sent the last solution to it, minus 50 points for each previous parcel for this task. For those tasks that you have not passed, penalty points are not awarded. The results of hacks are added (100 points for a successful hack, 50 points for an unsuccessful one), and your final score is obtained, which determines the place you eventually occupy. The growth of your rating depends on this place.</p>
+        
+        <p>After each round, brief reviews of the tasks are published (on the same day or in a day or two). I recommend you to read them. In addition, after the end of the round, you can still "finish solving" — send tasks for review just to add or correct errors that you had. Of course, this does not affect the results of the round, but you still need to figure out your mistakes.</p>
+        
+        <p>In addition, there is a lot of other useful information on this site. Firstly, there is a blog functionality, and users often write various texts and articles on topics related to programming. On many pages of the site on the right there is a list of posts that are currently being discussed. Secondly, there is a section "training" on the site, where the tasks of many past Olympiads are laid out; they can be solved independently for educational purposes.</p>
+        
+        <h4>Useful links</h4>
+        <a href="https://codeforces.com/help">General help on codeforces</a><br>
+        <a href="https://codeforces.com/blog/entry/456">Full rules of rounds</a></div>"""), {skipTree: true})
 
 
 export default codeforces = () ->

@@ -4,6 +4,7 @@ import os
 import os.path
 import re
 import requests
+from pprint import pprint
 
 INDENT2 = "    "
 
@@ -21,13 +22,15 @@ def translate(strings):
     }
     url = "https://translate.api.cloud.yandex.net/translate/v2/translate"
     result = requests.post(url, json=data, headers=headers)
+    if "translations" not in result.json():
+        pprint(result.json())
     return [x["text"] for x in result.json()["translations"]]
 
-def make_ruen(ru, en, indent=None):
+def make_ruen(ru, en, indent=None, q='"'):
     if not indent:
-        return 'ruen("' + ru + '", "' + en + '")'
+        return 'ruen(' + q + ru + q + ', ' + q + en + q + ')'
     else:
-        return 'ruen(\n' + indent + '"' + ru + '",\n' + indent + '"' + en + '")'
+        return 'ruen(\n' + indent + q + ru + q + ',\n' + indent + q + en + q + ')'
 
 def replace_imports(match):
     imports = match.group(0).split("\n")
@@ -65,19 +68,32 @@ def replace_label(match):
     print(en_text)
     return (indent + head + make_ruen(text, en_text, " " * len(indent) + INDENT2) + ")")
 
+def replace_raw_string(match):
+    global cnt
+    cnt += 1
+    indent = match.group(1)
+    head = match.group(2)
+    text = match.group(3).strip()
+    en_text = translate(text)[0] if len(text) < 9000 else text
+    print(text)
+    print(en_text)
+    return (indent + 
+        make_ruen('String.raw"""' + text + '"""', 'String.raw"""' + en_text + '"""', " " * len(indent) + INDENT2, ""))
+
 path = "server/materials/data/topics"
 topics = [os.path.join(path, f) for f in os.listdir(path)]
 topics = [f for f in topics if os.path.isfile(f)]
 
 cnt = 0
 for topic in topics:
-#for topic in [path + "/2sat.coffee"]:
+#for topic in [path + "/cpp.coffee"]:
     print(topic)
     with open(topic, "r") as f:
         data = f.read()
     #data = re.sub(r"(^import(.*)?$\n)*", replace_imports, data, 1, re.M)
     #data = re.sub(r"^(\s+)(topic: topic)\(\"([^\"]*)\", \"([^\"]*)\", \[\n\s*", replace_topic, data, 0, re.M)
-    data = re.sub(r"^(.*)(label\()\"(([^\"]*(\\\")?)*[^\\])\"\)", replace_label, data, 0, re.M)
+    #data = re.sub(r"^(.*)(label\()\"(([^\"]*(\\\")?)*[^\\])\"\)", replace_label, data, 0, re.M)
+    data = re.sub(r"^([^\n]*)(String.raw)\"\"\"(.*?)\"\"\"", replace_raw_string, data, 0, re.MULTILINE | re.DOTALL)
     print(data)
     with open(topic, "w") as f:
         f.write(data)

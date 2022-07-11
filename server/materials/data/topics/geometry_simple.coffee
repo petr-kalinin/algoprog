@@ -7,8 +7,8 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 mainPrinciples = () ->
-    page("Главные правила работы с геометрией", String.raw"""
-        <h1>Главные правила работы с геометрией</h1>
+    page("Главные правила работы с геометрией", ruen(
+                                                    String.raw"""<h1>Главные правила работы с геометрией</h1>
         <p>
         При работе с геометрией есть три главных правила. (Этот текст — в дополнение в основной теории в видеолекциях.)
         </p>
@@ -37,8 +37,37 @@ mainPrinciples = () ->
         <p>Частным случаем п. 3 является то, что не надо использовать представление прямой в виде <code>y=k*x+b</code>. 
         Мало того, что оно не симметрично относительно X и Y, оно еще и не работает для вертикальных прямых. 
         Используйте представление в виде <code>A*x+B*y+C=0</code>,
-        или через векторное произведение (что на самом деле то же самое, что и ABC), или параметрический способ.</p>
-    """, {skipTree: true})
+        или через векторное произведение (что на самом деле то же самое, что и ABC), или параметрический способ.</p>""",
+                                                    String.raw"""<h1>The main rules of working with geometry</h1>
+        <p>
+        There are three main rules when working with geometry. (This text is in addition to the basic theory in video lectures.)
+        </p>
+        <p>First, remember the rules of working with real numbers, and most importantly — do <b>not use real numbers if you can do without them</b>. 
+        If all your input data is integer (as it usually happens), then it is often possible to completely solve the whole problem in integers. 
+        And this is much more correct than using real numbers. Sometimes, of course, it happens that the problem cannot be solved in integers,
+        for example, if the answer itself can be real (for example, if you need to find the intersection point of two straight lines, then its coordinates may be non-integer,
+        even if the input data is integer).
+        But then try in any case to use real numbers only where they are needed — for example, before looking for an intersection point
+        you probably come to check if two straight lines are parallel, and this can and should be done completely in integers.
+        And if you have to use real numbers, then don't forget about <code>eps</code>.</p>
+
+        <p>Secondly, <b>your friends are a vector and scalar product</b>. Almost all problems about lines, segments, points, etc. can be solved using vector 
+        and scalar products, and such a solution will work cleaner and more reliable than any other. If you work with straight lines, you can use the straight line representation
+        in the form of coefficients A, B, C is essentially the same vector or scalar product, only side view.</p>
+
+        <p>Third, <b>try not to work separately with the X and Y coordinates</b>. If you want to consider especially the case of type <code>x==0</code>,
+        or in general you want to write a formula that includes only <code>x</code>, etc. — most likely,
+you are doing something wrong. Rather, you need to use a vector or scalar product (see rule 2), and <code>x==0</code> will not be a special case.
+        In general, most of the tasks that will be in this topic have rotational symmetry — if you rotate the whole picture at an arbitrary angle around the origin,
+        then the task will remain the same, the answer will either not change, or it will also turn. Therefore, it is logical to use only those values in the code that do not change during rotation.
+        Here the scalar and vector products do not change. And individual coordinates change. If you write the condition <code>if x == 0</code>, then when you rotate the comparison result will change.
+        And if you count a vector product and compare it with zero, the result of the comparison will not change. It is much more convenient to write code so that it does not depend on rotation.
+        (Of course, if there is no rotational symmetry in the meaning of the problem, then the main arguments no longer work here, and you will have to write asymmetric code somewhere, but there is symmetry in many problems.)
+
+        <p>A special case of point 3 is that it is not necessary to use the representation of a straight line in the form <code>y=k*x+b</code>. 
+        Not only is it not symmetrical with respect to X and Y, it also does not work for vertical lines. 
+        Use the representation as <code>A*x+B*y+C=0</code>,
+        either through a vector product (which is actually the same as ABC), or a parametric way.</p>"""), {skipTree: true})
 
 export default geometry_simple = () ->
     return {
