@@ -7,7 +7,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module16344 = () ->
-    page("Краткая теория про два указателя", ruen(
+    page(ruen(
+        "Краткая теория про два указателя",
+        "A brief theory about two pointers"), ruen(
                                                  String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Краткая теория про два указателя</h1>
         <p>К сожалению, я не нашел толкового описания метода двух указателей, поэтому напишу свой краткий текст.</p>
         <h2>Пример</h2>

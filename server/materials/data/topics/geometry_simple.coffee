@@ -7,7 +7,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 mainPrinciples = () ->
-    page("Главные правила работы с геометрией", ruen(
+    page(ruen(
+        "Главные правила работы с геометрией",
+        "The main rules of working with geometry"), ruen(
                                                     String.raw"""<h1>Главные правила работы с геометрией</h1>
         <p>
         При работе с геометрией есть три главных правила. (Этот текст — в дополнение в основной теории в видеолекциях.)

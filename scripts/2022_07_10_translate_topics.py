@@ -68,9 +68,19 @@ def replace_label(match):
     print(en_text)
     return (indent + head + make_ruen(text, en_text, " " * len(indent) + INDENT2) + ")")
 
-def replace_raw_string(match):
+def replace_page(match):
     global cnt
     cnt += 1
+    indent = match.group(1)
+    head = match.group(2)
+    text = match.group(3)
+    to_tr = json.loads("\"" + text + "\"")
+    en_text = json.dumps(translate([to_tr])[0])[1:-1]
+    print(text)
+    print(en_text)
+    return (indent + head + make_ruen(text, en_text, " " * len(indent) + INDENT2))
+
+def replace_raw_string(match):
     indent = match.group(1)
     head = match.group(2)
     text = match.group(3).strip()
@@ -93,11 +103,12 @@ for topic in topics:
     #data = re.sub(r"(^import(.*)?$\n)*", replace_imports, data, 1, re.M)
     #data = re.sub(r"^(\s+)(topic: topic)\(\"([^\"]*)\", \"([^\"]*)\", \[\n\s*", replace_topic, data, 0, re.M)
     #data = re.sub(r"^(.*)(label\()\"(([^\"]*(\\\")?)*[^\\])\"\)", replace_label, data, 0, re.M)
-    data = re.sub(r"^([^\n]*)(String.raw)\"\"\"(.*?)\"\"\"", replace_raw_string, data, 0, re.MULTILINE | re.DOTALL)
+    #data = re.sub(r"^([^\n]*)(String.raw)\"\"\"(.*?)\"\"\"", replace_raw_string, data, 0, re.MULTILINE | re.DOTALL)
+    data = re.sub(r"^(.*)(page\()\"(([^\"]*(\\\")?)*[^\\])\"", replace_page, data, 0, re.M)
     print(data)
     with open(topic, "w") as f:
         f.write(data)
     #break
     #cnt += 1
-    #if cnt == 10:
+    #if cnt == 3:
     #    break

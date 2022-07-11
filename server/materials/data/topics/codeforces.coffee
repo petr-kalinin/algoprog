@@ -7,7 +7,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module17501 = () ->
-    page("Про сайт Codeforces", ruen(
+    page(ruen(
+        "Про сайт Codeforces",
+        "About the Codeforces website"), ruen(
                                     String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Про сайт Codeforces</h1>
         <p>Если вы добрались до сюда, то вы уже довольно хорошо программируете, и имеет смысл не только решать задачи нашего курса, но также и дополнительно более-менее регулярно тренироваться. Рекомендую вам зарегистрироваться на сайте <a href="https://codeforces.com">codeforces.com</a> (есди он у вас вдруг открывается на английском языке, то в правом верхнем углу можно переключиться на русский), изучить его и время от времени принимать участие в его "раундах".</p>
         

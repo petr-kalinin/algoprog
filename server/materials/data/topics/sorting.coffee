@@ -6,7 +6,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module16475 = () ->
-    page("Теория по логарифмическим сортировкам", ruen(
+    page(ruen(
+        "Теория по логарифмическим сортировкам",
+        "Logarithmic sorting theory"), ruen(
                                                       String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Логарифмические сортировки</h2>
         <p>Логарифмические сортировки — это алгоритмы сортировки, имеющие сложность $O(N \log N)$ и использующие только сравнения элементов. Они позволяют за одну секунду отсортировать массив длиной 100&nbsp;000 — 1000&nbsp;000. Именно их вам и стоит использовать в большинстве задач, требующих сортировки.</p>
         

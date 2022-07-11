@@ -6,7 +6,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module25226 = () ->
-    page("Про жадные алгоритмы", ruen(
+    page(ruen(
+        "Про жадные алгоритмы",
+        "About greedy algorithms"), ruen(
                                      String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>"Жадные" алгоритмы</h2>
         <p>Жадные алгоритмы — это алгоритмы, которые, на каждом шагу принимают локально оптимальное решение, не заботясь о том, что будет дальше. Они не всегда верны, но есть задачи, где жадные алгоритмы работают правильно.</p>
         
@@ -81,7 +83,9 @@ module25226 = () ->
         <p>In fact, the second version of the proof actually allows you to <i>invent</i> greed in those tasks where it is not obvious (if you do not understand this paragraph, then it's not scary). If you need to arrange objects in some order in the task, and you don't know in which order, think: let you have some order. Let's swap two adjacent objects, see how the solution changes. Let the estimate of the old solution be $X$ and the new one be $Y$ (this is, of course, a solution function). Let's write the condition $X&gt;Y$, i.e. that the solution has improved. Let's try to transform it so as to reduce everything to the characteristics of the two objects that we are swapping. Then maybe we will find that the condition $X&gt;Y$ is equivalent to the condition $f(i)&gt;f(j)$, where $i$ and $j$ are the items that we swapped, and $f$ is some kind of function. Then it is obvious that in the right solution, you just need to sort the items by the value of the function $f$.</p></div>"""), {skipTree: true})
 
 module25835 = () ->
-    page("Разбор задачи \"Путешествие\", читать только тем, кто ее решил!", ruen(
+    page(ruen(
+        "Разбор задачи \"Путешествие\", читать только тем, кто ее решил!",
+        "Analysis of the \"Journey\" task, read only to those who solved it!"), ruen(
                                                                                 String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><p>Задачу "Путешествие" почему-то очень многие из вас решают очень сложно. На самом деле у этой задачи есть очень простое и короткое решение.</p>
         
         <p>Давайте для начала научимся решать задачу, когда решение существует (т.е. когда ответ не -1). Представьте, что вы едете по дороге. Вы проезжаете очередную заправку. Надо ли вам тут заправляться? Ответ очевиден: если на текущем запасе бензина вы доедете до следующей заправки, то не надо, иначе надо. Этот алгоритм элементарно реализуется, для простоты даже лучше хранить не остаток бензина (он постоянно меняется), а координату, до которой мы можем доехать на текущей заправке (она меняется только при заправках), или, что эквивалентно, информацию, где мы последний раз заправлялись (координату или номер заправки).</p>

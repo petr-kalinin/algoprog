@@ -6,7 +6,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module25200 = () ->
-    page("Про задачи \"на технику\"", ruen(
+    page(ruen(
+        "Про задачи \"на технику\"",
+        "About the tasks \"on the technique\""), ruen(
                                           String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Задачи "на технику"</h2>
         <p>Бывают задачи, в которых вроде все понятно что делать, кажется, не надо придумывать алгоритм, нет проблем со временем работы — но тем не менее задача кажется сложной, и непонятно, с какого конца к ней подступиться (это, конечно, не строгое определение). Такие задачи принято называть задачами "на технику", часто это какие-нибудь задачи на обработку текста и т.п.</p>
         
@@ -165,7 +167,9 @@ module25200 = () ->
         <p>An elementary example of how something can go wrong in the second option - let you decide to write <code>continue</code> somewhere inside the <code>i</code> loop. And that's it, you missed the assignment <code>s=0</code>.</p></div>"""), {skipTree: true})
 
 module25629 = () ->
-    page("Разбор задачи \"Смайлики\", читать только тем, кто решил", ruen(
+    page(ruen(
+        "Разбор задачи \"Смайлики\", читать только тем, кто решил",
+        "Analysis of the task \"Emoticons\", read only to those who have solved"), ruen(
                                                                          String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><p style="margin-bottom: 100px">Разбор задачи "Смайлики", читать только тем, кто решил!</p>
         
         <p>Во-первых, в этой задаче надо правильно понять условие, например, понять, что на тест <code>;:-()[]</code> ответ 1, т.к. эта строка содержит один смайлик — <code>:-(</code>. Т.е. не страшно, если вокруг смайлика есть лишние символы, важно, что сам смайлик можно выделить.</p>

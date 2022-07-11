@@ -6,7 +6,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module15986 = () ->
-    page("Разбор задачи про Франциска Ксавьера (читать только тем, кто решил саму задачу!)", ruen(
+    page(ruen(
+        "Разбор задачи про Франциска Ксавьера (читать только тем, кто решил саму задачу!)",
+        "Analysis of the problem about Francis Xavier (read only to those who solved the problem itself!)"), ruen(
                                                                                                  String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Разбор задачи про Франциска Ксавьера</h2>
         <p>Если вы еще не решили задачу про день святого Франциска Ксавьера из контеста "Продвинутые задачи на условный оператор", то не читайте дальше, сначала решите задачу.</p><br>
         -<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>

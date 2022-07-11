@@ -6,7 +6,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module15969 = () ->
-    page("Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)", ruen(
+    page(ruen(
+        "Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)",
+        "About the design of programs and indents (about Pascal, but in python and c++ everything is the same)"), ruen(
                                                                                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Оформление программ и отступы</h1>
         <h2>Общие замечания</h2>
         <p>Паскаль, как и многие другие языки программирования, допускает достаточно свободное оформление программ. Вы можете ставить пробелы и переводы строк как вам угодно (за исключением, конечно, ряда понятных требований типа пробелов в выражении <font face="courier">if a mod b=c then</font>).</p><p>

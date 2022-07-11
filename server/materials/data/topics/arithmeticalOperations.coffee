@@ -5,7 +5,9 @@ import topic from "../../lib/topic"
 import {ruen} from "../../lib/util"
 
 module25368 = () ->
-    page("Про \"странные числа\" в коде", ruen(
+    page(ruen(
+        "Про \"странные числа\" в коде",
+        "About \"strange numbers\" in the code"), ruen(
                                               String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Про "странные числа" в коде</h1>
         <p>Иногда в ваших программах вам может быть нужно использовать какие-то фиксированные числа, возникающие из смысла задачи. Например, если вы решаете задачу про часы, то, скорее всего, у вас в программе появятся числа типа 60 (минут в часах) или 24 (часов в сутках). Тогда вы прямо указываете это число в программе, как, например, в задаче "Электронные часы - 1" с уровня 1А:</p>
         <pre>b = a % 60  # питон
@@ -118,7 +120,9 @@ export default arithmeticalOperations = () ->
                 problem(506),
                 problem(534),
             ]),
-            page("Разбор задачи \"Строки в книге\" (читать только тем, кто ее решил!)", ruen(
+            page(ruen(
+                "Разбор задачи \"Строки в книге\" (читать только тем, кто ее решил!)",
+                "Analysis of the problem \"Lines in the book\" (read only to those who solved it!)"), ruen(
                                                                                             String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Разбор задачи "Строки в книге"</h1>
                 
                 <p>Первая идея, которая возникает в этой задаче -- это написать <code>N mod K</code> и <code>N div K+1</code>. Но, к сожалению, это не работает, когда <code>N</code> делится на <code>K</code>.</p>
