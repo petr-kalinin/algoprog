@@ -122,7 +122,9 @@ export default backtrack = (count) -> () ->
             problem(1182),
             ], "backtrack" + (if count then "_req" else "")),
         advancedTopics: [
-            contest("#{star}Продвинутые задачи на рекурсивный перебор", [
+            contest(ruen(
+                "#{star}Продвинутые задачи на рекурсивный перебор",
+                "#{star}Advanced recursive search tasks"), [
                 problem(157),
                 problem(1680),
                 problem(2776),

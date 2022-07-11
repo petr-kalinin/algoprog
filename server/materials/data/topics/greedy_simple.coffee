@@ -256,8 +256,10 @@ s = [int(i) for i in input().split()]
 export default arrays = () ->
     return {
         topics: [
-            topic("Простая жадность", "Задачи на простую жадность", [
-                module25226(),
+            topic(
+                ruen("Простая жадность", "Simple greed"),
+                ruen("Задачи на простую жадность", "Problems on simple greed"),
+            [module25226(),
                 problem(1576),
                 problem(2826),
                 problem(113075),

@@ -100,18 +100,24 @@ export default arithmeticalOperations = () ->
             problem({testSystem: "ejudge", contest: "3003", problem: "11", id: "2937"}),
         ], "arithmetical_operations"),
         advancedTopics: [
-            topic("Вещественные числа", null, [
-                label(ruen(
+            topic(
+                ruen("Вещественные числа", "Real numbers"),
+                null,
+            [label(ruen(
                     "Если вы еще не решали задачи на вещественные числа из уровня 1Б, то прочитайте там теорию и прорешайте все эти задачи. Там есть тонкости, которые обязательно надо знать.",
                     "If you haven't solved real numbers problems from level 1B yet, then read the theory there and solve all these problems. There are subtleties that you definitely need to know.")),
             ]),
-            topic("Основы тестирования задач (без контеста)", null, [
-                label(ruen(
+            topic(
+                ruen("Основы тестирования задач (без контеста)", "Basics of testing tasks (without a contest)"),
+                null,
+            [label(ruen(
                     "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Теория по тестированию задач</a>. Вы там многое не поймете (особенно в примерах и в продвинутых методиках тестирования), но поймите хотя бы основы. В будущем, на более высоких уровнях, возвращайтесь к этому тексту.",
                     "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Theory of testing tasks</a>. You won't understand much there (especially in examples and advanced testing techniques), but at least understand the basics. In the future, at higher levels, return to this text."))
             ]),
-            topic("Задачи", "Продвинутые задачи на арифметические операции: в них запрещается пользоваться if'ами и циклами", [
-                module25368(),
+            topic(
+                ruen("Задачи", "Tasks"),
+                ruen("Продвинутые задачи на арифметические операции: в них запрещается пользоваться if'ами и циклами", "Advanced arithmetic operations tasks: it is forbidden to use if's and cycles in them"),
+            [module25368(),
                 label(ruen(
                     "<br>",
                     "<br>")),

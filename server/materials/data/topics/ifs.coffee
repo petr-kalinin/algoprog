@@ -186,7 +186,9 @@ export default ifs = () ->
             problem({testSystem: "ejudge", contest: "3004", problem: "5", id: "253"}),
         ], "ifs"),
         advancedTopics: [
-            contest("Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами", [
+            contest(ruen(
+                "Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами",
+                "Advanced conditional operator tasks: it is forbidden to use loops and arrays in them"), [
                 problem(297),
                 problem(255),
                 problem(258),

@@ -116,7 +116,10 @@ for topic in topics:
     #data = re.sub(r"^(.*)(label\()\"(([^\"]*(\\\")?)*[^\\])\"\)", replace_label, data, 0, re.M)
     #data = re.sub(r"^([^\n]*)(String.raw)\"\"\"(.*?)\"\"\"", replace_raw_string, data, 0, re.MULTILINE | re.DOTALL)
     #data = re.sub(r"^(.*)(page\()\"(([^\"]*(\\\")?)*[^\\])\"", replace_page, data, 0, re.M)
-    data = re.sub(r"^(\s+)(topic:\s*topic)\(\"([^\"]*)\", (null), \[\n\s*", replace_null_topic, data, 0, re.M)
+    #data = re.sub(r"^(\s+)(topic:\s*topic)\(\"([^\"]*)\", (null), \[\n\s*", replace_null_topic, data, 0, re.M)
+    data = re.sub(r"^(\s+)(topic)\(\"([^\"]*)\", \"([^\"]*)\", \[\n\s*", replace_topic, data, 0, re.M)
+    data = re.sub(r"^(\s+)(topic)\(\"([^\"]*)\", (null), \[\n\s*", replace_null_topic, data, 0, re.M)
+    data = re.sub(r"^(.*)(contest\()\"(([^\"]*(\\\")?)*[^\\])\"", replace_page, data, 0, re.M)
     print(data)
     with open(topic, "w") as f:
         f.write(data)

@@ -28,7 +28,9 @@ export default backtrack = () ->
             problem(1182),
         ]),
         advancedTopics: [
-            contest("2В: *Продвинутые задачи на рекурсивный перебор", [
+            contest(ruen(
+                "2В: *Продвинутые задачи на рекурсивный перебор",
+                "2B: *Advanced recursive search tasks"), [
                 problem(157),
                 problem(1680),
                 problem(2776),

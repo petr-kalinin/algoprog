@@ -23,7 +23,9 @@ export default floats =  () ->
             label(ruen(
                 "Две последние задачи в \"Продвинутых задачах на вещественные числа\" повторяют задачи из просто \"Задач на вещественные числа\" с уровня 1Б. Так задумано для тех, кто не решал уровень 1Б; если вы решали контест на вещественные числа на уровне 1Б, то вам пересдавать эти задачи не надо.",
                 "The last two tasks in \"Advanced Real Number Problems\" repeat the tasks from just \"Real Number Problems\" from level 1B. This is intended for those who have not solved level 1B; if you have solved a contest on real numbers at level 1B, then you do not need to retake these tasks.")),
-            contest("Продвинутые задачи на вещественные числа", [
+            contest(ruen(
+                "Продвинутые задачи на вещественные числа",
+                "Advanced real number problems"), [
                 problem(3609),
                 problem(3613),
                 problem(3614),

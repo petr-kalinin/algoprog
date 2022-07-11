@@ -19,7 +19,9 @@ export default strings = () ->
             problem({testSystem: "ejudge", contest: "3007", problem: "5", id: "108"}),
         ], "strings"),
         advancedTopics: [
-            contest("Продвинутые задачи на строки", [
+            contest(ruen(
+                "Продвинутые задачи на строки",
+                "Advanced String tasks"), [
                 problem(107),
                 problem(109),
                 problem(112),

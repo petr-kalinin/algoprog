@@ -23,7 +23,9 @@ export default arrays = () ->
             problem({testSystem: "ejudge", contest: "3006", problem: "9", id: "362"}),
         ], "arrays"),
         advancedTopics: [
-            contest("Продвинутые задачи на массивы", [
+            contest(ruen(
+                "Продвинутые задачи на массивы",
+                "Advanced array tasks"), [
                 problem(1456),
                 problem(1228),
                 problem(201),
