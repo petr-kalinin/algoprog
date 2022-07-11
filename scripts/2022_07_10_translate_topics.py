@@ -58,6 +58,17 @@ def replace_topic(match):
         indent + INDENT2 + make_ruen(name2, en_name2) + ",\n" +
         indent + "[")
 
+def replace_null_topic(match):
+    indent = match.group(1)
+    head = match.group(2)
+    name = match.group(3)
+    null = match.group(4)
+    en_name = translate([name])[0]
+    return (indent + head + "(\n" +
+        indent + INDENT2 + make_ruen(name, en_name) + ",\n" +
+        indent + INDENT2 + null + ",\n" +
+        indent + "[")
+
 def replace_label(match):
     indent = match.group(1)
     head = match.group(2)
@@ -104,7 +115,8 @@ for topic in topics:
     #data = re.sub(r"^(\s+)(topic: topic)\(\"([^\"]*)\", \"([^\"]*)\", \[\n\s*", replace_topic, data, 0, re.M)
     #data = re.sub(r"^(.*)(label\()\"(([^\"]*(\\\")?)*[^\\])\"\)", replace_label, data, 0, re.M)
     #data = re.sub(r"^([^\n]*)(String.raw)\"\"\"(.*?)\"\"\"", replace_raw_string, data, 0, re.MULTILINE | re.DOTALL)
-    data = re.sub(r"^(.*)(page\()\"(([^\"]*(\\\")?)*[^\\])\"", replace_page, data, 0, re.M)
+    #data = re.sub(r"^(.*)(page\()\"(([^\"]*(\\\")?)*[^\\])\"", replace_page, data, 0, re.M)
+    data = re.sub(r"^(\s+)(topic:\s*topic)\(\"([^\"]*)\", (null), \[\n\s*", replace_null_topic, data, 0, re.M)
     print(data)
     with open(topic, "w") as f:
         f.write(data)

@@ -78,8 +78,10 @@ module17501 = () ->
 
 export default codeforces = () ->
     return {
-        topic:  topic("Про сайт codeforces", null, [
-            module17501(),
+        topic:  topic(
+            ruen("Про сайт codeforces", "About the codeforces website"),
+            null,
+        [module17501(),
             link("http://blog.algoprog.ru/other-contests/", "Как решать другие контесты и codeforces"),
         ], "codeforces"),
         count: false

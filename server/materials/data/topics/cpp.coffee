@@ -47,8 +47,10 @@ module24698 = () ->
 
 export default cpp = () ->
     return {
-        topic: topic("Про язык C++", null, [
-            module24698(),
+        topic: topic(
+            ruen("Про язык C++", "About the C++ language"),
+            null,
+        [module24698(),
         ], "cpp"),
         count: false
     }
