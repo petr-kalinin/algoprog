@@ -8,7 +8,7 @@ import {ruen} from "../../lib/util"
 module15986 = () ->
     page(ruen(
         "Разбор задачи про Франциска Ксавьера (читать только тем, кто решил саму задачу!)",
-        "Analysis of the problem about Francis Xavier (read only to those who solved the problem itself!)"), ruen(
+        "Analysis of the problem about Francis Xavier (read only if you solved it!)"), ruen(
                                                                                                  String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Разбор задачи про Франциска Ксавьера</h2>
         <p>Если вы еще не решили задачу про день святого Франциска Ксавьера из контеста "Продвинутые задачи на условный оператор", то не читайте дальше, сначала решите задачу.</p><br>
         -<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>
@@ -174,8 +174,8 @@ export default ifs = () ->
             ruen("Условный оператор", "Conditional operator"),
             ruen("Задачи на условный оператор", "Problems on conditional operator"),
         [label(ruen(
-             "<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Питон: теория по условному оператору</a>",
-             "<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Python: Conditional operator theory</a>")),
+             "<a href=\"https://notes.algoprog.ru/python_basics/1_if.html\">Теория по условному оператору</a>",
+             "<a href=\"https://notes.algoprog.ru/en/python_basics/1_if.html\">Theory on conditional operator</a>")),
             label(ruen(
                 "<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>",
                 "<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">It is not necessary to check whether the restrictions from the condition are met</a>")),
@@ -188,7 +188,7 @@ export default ifs = () ->
         advancedTopics: [
             contest(ruen(
                 "Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами",
-                "Advanced conditional operator tasks: it is forbidden to use loops and arrays in them"), [
+                "Advanced problems on conditional operator: it is forbidden to use loops and arrays here"), [
                 problem(297),
                 problem(255),
                 problem(258),

@@ -86,7 +86,7 @@ export default arithmeticalOperations = () ->
         topic: topic(name, contestName, [
             label(ruen(
                 "<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Начало работы c питоном и Wing IDE</a>",
-                "<a href=\"https://notes.algoprog.ru/python_basics/0_quick_start.html\">Getting Started with Python and Wing IDE</a>")),
+                "<a href=\"https://notes.algoprog.ru/en/python_basics/0_quick_start.html\">Getting Started with Python and Wing IDE</a>")),
             problem({testSystem: "ejudge", contest: "3003", problem: "1", id: "2938"}),
             problem({testSystem: "ejudge", contest: "3003", problem: "2", id: "2939"}),
             problem({testSystem: "ejudge", contest: "3003", problem: "3", id: "2941"}),
@@ -108,15 +108,15 @@ export default arithmeticalOperations = () ->
                     "If you haven't solved real numbers problems from level 1B yet, then read the theory there and solve all these problems. There are subtleties that you definitely need to know.")),
             ]),
             topic(
-                ruen("Основы тестирования задач (без контеста)", "Basics of testing tasks (without a contest)"),
+                ruen("Основы тестирования задач (без контеста)", "Basics of program testing (without a contest)"),
                 null,
             [label(ruen(
                     "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Теория по тестированию задач</a>. Вы там многое не поймете (особенно в примерах и в продвинутых методиках тестирования), но поймите хотя бы основы. В будущем, на более высоких уровнях, возвращайтесь к этому тексту.",
-                    "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Theory of testing tasks</a>. You won't understand much there (especially in examples and advanced testing techniques), but at least understand the basics. In the future, at higher levels, return to this text."))
+                    "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Theory of program testing</a>. You won't understand much there (especially in examples and advanced testing techniques), but at least understand the basics. In the future, at higher levels, return to this text."))
             ]),
             topic(
-                ruen("Задачи", "Tasks"),
-                ruen("Продвинутые задачи на арифметические операции: в них запрещается пользоваться if'ами и циклами", "Advanced arithmetic operations tasks: it is forbidden to use if's and cycles in them"),
+                ruen("Задачи", "Problems"),
+                ruen("Продвинутые задачи на арифметические операции: в них запрещается пользоваться if'ами и циклами", "Advanced problems on arithmetic operations: it is forbidden to use if's and loops here"),
             [module25368(),
                 label(ruen(
                     "<br>",
@@ -128,7 +128,7 @@ export default arithmeticalOperations = () ->
             ]),
             page(ruen(
                 "Разбор задачи \"Строки в книге\" (читать только тем, кто ее решил!)",
-                "Analysis of the problem \"Lines in the book\" (read only to those who solved it!)"), ruen(
+                "Analysis of the problem \"Lines in the book\" (read only if you solved it!)"), ruen(
                                                                                             String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Разбор задачи "Строки в книге"</h1>
                 
                 <p>Первая идея, которая возникает в этой задаче -- это написать <code>N mod K</code> и <code>N div K+1</code>. Но, к сожалению, это не работает, когда <code>N</code> делится на <code>K</code>.</p>
@@ -142,7 +142,7 @@ export default arithmeticalOperations = () ->
                 <p>Итого решение задачи: <code>(N-1) div K + 1</code> и <code>(N-1) mod K + 1</code>.</p>
                 
                 <p>Вообще, это очень полезная идея — если задача плохо решается при нумерации с единицы, иногда оказывается намного проще перейти к нумерации с нуля. Особенно вот в подобных задачах, где вам явно надо делить на равные части.</p></div>""",
-                                                                                            String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Analysis of the task "Lines in the book"</h1>
+                                                                                            String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Analysis of the "Lines in the book" problem</h1>
                 
                 <p>The first idea that arises in this problem is to write <code>N mod K</code> and <code>N div K+1</code>. But unfortunately, this doesn't work when <code>N</code> is divisible by <code>K.</code></p>
                 

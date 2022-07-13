@@ -10,8 +10,8 @@ export default arrays = () ->
             ruen("Массивы", "Arrays"),
             ruen("Задачи на массивы", "Problems on arrays"),
         [label(ruen(
-             "<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Питон: теория по массивам</a>",
-             "<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Python: theory on arrays</a>")),
+             "<a href=\"https://notes.algoprog.ru/python_basics/3_arrays.html\">Теория по массивам</a>",
+             "<a href=\"https://notes.algoprog.ru/en/python_basics/3_arrays.html\">Theory on arrays</a>")),
             problem({testSystem: "ejudge", contest: "3006", problem: "1", id: "63"}),
             problem({testSystem: "ejudge", contest: "3006", problem: "2", id: "64"}),
             problem({testSystem: "ejudge", contest: "3006", problem: "3", id: "66"}),
@@ -25,7 +25,7 @@ export default arrays = () ->
         advancedTopics: [
             contest(ruen(
                 "Продвинутые задачи на массивы",
-                "Advanced array tasks"), [
+                "Advanced problems on arrays"), [
                 problem(1456),
                 problem(1228),
                 problem(201),

@@ -9,7 +9,7 @@ import {ruen} from "../../lib/util"
 module16828 = () ->
     page(ruen(
         "Разбор задачи \"Резисторы\"",
-        "Analysis of the problem \"Resistors\""), ruen(
+        "Analysis of the problem \"Resistors\", read only if you have solved"), ruen(
                                             String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Разбор задачи "Резисторы"</h1>
         <p>(В этой задаче все равно — говорить про резисторы или про конденсаторы, т.к. формулы соединения аналогичны, только для резисторов для последовательного соединения формула та же, что для конденсаторов для параллельного, и наоборот. На задачу это не влияет. Я для удобства буду говорить про резисторы, а не про конденсаторы.)</p>
         <p>"Резисторы" — это задача, скажем так, "общего вида" на перебор. А именно, если в других задачах на перебор вы обычно формируете какую-нибудь <i>последовательность</i>, последовательно к текущему решению добавляя что-то еще, то здесь так просто не получится. </p>
@@ -103,15 +103,15 @@ export default backtrack = (count) -> () ->
     star = if count then "" else "*"
     return {
         topic: topic(
-            ruen("#{star}Рекурсивный перебор", "#{star}Recursive search"),
-            ruen("#{star}Задачи на рекурсивный перебор", "#{star}Recursive search tasks"),
+            ruen("#{star}Рекурсивный перебор", "#{star}Backtracking (recursive search)"),
+            ruen("#{star}Задачи на рекурсивный перебор", "#{star}Problems on backtracking"),
             [if count then null else label(ruen(
                                          "Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 6 (там она будет обязательной). Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас.",
-                                         "This topic is quite complex, so if you don't understand it, you can skip it and return to it at level 6 (it will be mandatory there). However, recursive brute force is a very useful technique, so try to master it now.")),
+                                         "This topic is quite complex, so if you don't understand it, you can skip it and return to it at level 6 (it will be mandatory there). However, recursive backtracking is a very useful technique, so try to master it now.")),
             label(ruen(
                 "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»",
-                "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Theory of recursive iteration</a><br>\nSee also video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of the Parallel C'</a> LCS, section \"Recursive search\"")),
-            link("https://informatics.msk.ru/mod/resource/view.php?id=16016", "Красивая картинка рекурсивного дерева"),
+                "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Theory on recursive backtracking</a><br>\nSee also video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of the SIS Parallel C'</a>, section \"Recursive search\"")),
+            link("https://informatics.msk.ru/mod/resource/view.php?id=16016", ruen("Красивая картинка рекурсивного дерева", "A beautiful recursive tree")),
             problem(80),
             problem(84),
             problem(85),
@@ -124,7 +124,7 @@ export default backtrack = (count) -> () ->
         advancedTopics: [
             contest(ruen(
                 "#{star}Продвинутые задачи на рекурсивный перебор",
-                "#{star}Advanced recursive search tasks"), [
+                "#{star}Advanced problems on backtracking"), [
                 problem(157),
                 problem(1680),
                 problem(2776),

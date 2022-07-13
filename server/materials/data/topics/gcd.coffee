@@ -7,11 +7,11 @@ import {ruen} from "../../lib/util"
 export default gcd = () ->
     return {
         topic: topic(
-            ruen("НОД, алгоритм Евклида", "NODE, Euclid's algorithm"),
-            ruen("Задачи на НОД", "Problems on NODE"),
+            ruen("НОД, алгоритм Евклида", "GCD, Euclidean algorithm"),
+            ruen("Задачи на НОД", "Problems on GCD"),
         [label(ruen(
              "<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Видеозаписи лекций ЛКШ параллели C' про НОД и алгоритм Евклида</a>",
-             "<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Video recordings of lectures by LCS parallels C' about the NODE and the Euclid algorithm</a>")),
+             "<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Video recordings of lectures in SIS parallels C' about the GCD and the Euclidean algorithm</a>")),
             problem(199),
             problem(27),
             problem(1838),

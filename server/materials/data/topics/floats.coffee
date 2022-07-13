@@ -11,7 +11,7 @@ export default floats =  () ->
             ruen("Задачи на вещественные числа", "Problems on real numbers"),
         [label(ruen(
              "<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Теория по вещественным числам (в основном про питон, но читать всем независимо от языка!)</a>",
-             "<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Theory on real numbers (mostly about python, but read to everyone regardless of the language!)</a>")),
+             "<a href=\"https://notes.algoprog.ru/en/python_basics/5_float.html\">Theory on real numbers (mostly about python, but must-read regardless of language!)</a>")),
             problem(74),
             problem(3612),
             problem(596),
@@ -22,10 +22,10 @@ export default floats =  () ->
         advancedTopics: [
             label(ruen(
                 "Две последние задачи в \"Продвинутых задачах на вещественные числа\" повторяют задачи из просто \"Задач на вещественные числа\" с уровня 1Б. Так задумано для тех, кто не решал уровень 1Б; если вы решали контест на вещественные числа на уровне 1Б, то вам пересдавать эти задачи не надо.",
-                "The last two tasks in \"Advanced Real Number Problems\" repeat the tasks from just \"Real Number Problems\" from level 1B. This is intended for those who have not solved level 1B; if you have solved a contest on real numbers at level 1B, then you do not need to retake these tasks.")),
+                "The last two problems in \"Advanced problems on real numbers\" repeat the problems from just \"Problems on real number\" from level 1B. This is intended for those who have not solved level 1B; if you have solved a contest on real numbers at level 1B, then you do not need to solve these problems again.")),
             contest(ruen(
                 "Продвинутые задачи на вещественные числа",
-                "Advanced real number problems"), [
+                "Advanced problems on real numbers"), [
                 problem(3609),
                 problem(3613),
                 problem(3614),

@@ -43,7 +43,7 @@ module17501 = () ->
         <a href="https://codeforces.com/help">Общая справка по codeforces</a><br>
         <a href="https://codeforces.com/blog/entry/456">Полные правила раундов</a></div>""",
                                     String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>About the Codeforces website</h1>
-        <p>If you got here, then you are already pretty good at programming, and it makes sense not only to solve the problems of our course, but also to train more or less regularly. I recommend you to register on the website <a href="https://codeforces.com">codeforces.com</a> (if you suddenly have it open in English, then in the upper right corner you can switch to Russian), study it and from time to time take part in its "rounds".</p>
+        <p>If you got here, then you are already pretty good at programming, and it makes sense not only to solve the problems of our course, but also to train more or less regularly. I recommend you to register on the website <a href="https://codeforces.com">codeforces.com</a> (if you suddenly have it open in Russian, then in the upper right corner you can switch to English), study it and from time to time take part in its "rounds".</p>
         
         <p>Namely, "rounds" competitions are regularly held on this site. They happen on average once every one to two weeks (it is not necessary to write each round, but I would recommend you to write rounds at least once a month or a month and a half). These are not some prize-winning Olympiads, etc., it makes sense to participate in them out of interest, and for the purpose of training. Rounds are held according to different rules, below I will describe the most common option.</p>
         
@@ -82,7 +82,7 @@ export default codeforces = () ->
             ruen("Про сайт codeforces", "About the codeforces website"),
             null,
         [module17501(),
-            link("http://blog.algoprog.ru/other-contests/", "Как решать другие контесты и codeforces"),
+            link("http://blog.algoprog.ru/other-contests/", ruen("Как решать другие контесты и codeforces", "How to solve other contests and codeforces")),
         ], "codeforces"),
         count: false
     }

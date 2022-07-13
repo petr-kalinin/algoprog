@@ -11,7 +11,7 @@ export default complexity = () ->
             null,
         [label(ruen(
                 "<a href=\"https://notes.algoprog.ru/complexity/index.html\">Теория про сложность алгоритмов (читайте раздел «Простейшие основы», остальное пока не так важно)</a>",
-                "<a href=\"https://notes.algoprog.ru/complexity/index.html\">Theory about the complexity of algorithms (read the section \"The simplest basics\", the rest is not so important yet)</a>")),
+                "<a href=\"https://notes.algoprog.ru/complexity/index.html\">Theory on the complexity of algorithms (read the section \"The simplest basics\", the rest is not so important yet)</a>")),
         ], "complexity"),
         count: false
     }

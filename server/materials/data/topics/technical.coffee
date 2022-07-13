@@ -8,7 +8,7 @@ import {ruen} from "../../lib/util"
 module25200 = () ->
     page(ruen(
         "Про задачи \"на технику\"",
-        "About the tasks \"on the technique\""), ruen(
+        "About \"technical\" problems"), ruen(
                                           String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Задачи "на технику"</h2>
         <p>Бывают задачи, в которых вроде все понятно что делать, кажется, не надо придумывать алгоритм, нет проблем со временем работы — но тем не менее задача кажется сложной, и непонятно, с какого конца к ней подступиться (это, конечно, не строгое определение). Такие задачи принято называть задачами "на технику", часто это какие-нибудь задачи на обработку текста и т.п.</p>
         
@@ -87,7 +87,7 @@ module25200 = () ->
         <p>Так вот, настоятельно вам рекомендую писать именно так, как в первом варианте. Потому что во втором варианте вам надо помнить, что <code>s</code> должно быть равно нулю в конце итерации цикла, а в первом варианте — нет. В первом варианте вас вообще не волнует, чему равна <code>s</code> на входе в цикл, и чему она равна в конце цикла. В первом варианте, можно сказать, вся жизнь переменной <code>s</code> ограничена тремя строками кода, вам не надо помнить и думать про нее за пределами этих трех строк. Поэтому в первом варианте вам надо меньше думать и меньше помнить, поэтому он проще и надежнее.</p>
         
         <p>Элементарный пример, как может что-то пойти не так во втором варианте — пусть вы где-то внутри цикла по <code>i</code> решили написать <code>continue</code>. И все, у вас пропустилось присваивание <code>s=0</code>.</p></div>""",
-                                          String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Tasks "for equipment"</h2>
+                                          String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>"Technical" problems</h2>
         <p>There are tasks in which everything seems to be clear what to do, it seems that there is no need to invent an algorithm, there are no problems with work time — but nevertheless the task seems difficult, and it is unclear from which end to approach it (this, of course, is not a strict definition). Such tasks are commonly called "technique" tasks, often they are some kind of text processing tasks, etc.</p>
         
         <p>It is difficult to come up with any universal recommendations for such tasks, but there are a couple of useful considerations.</p>
@@ -169,7 +169,7 @@ module25200 = () ->
 module25629 = () ->
     page(ruen(
         "Разбор задачи \"Смайлики\", читать только тем, кто решил",
-        "Analysis of the task \"Emoticons\", read only to those who have solved"), ruen(
+        "Analysis of \"Emoticons\" problem, read if you have solved!"), ruen(
                                                                          String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><p style="margin-bottom: 100px">Разбор задачи "Смайлики", читать только тем, кто решил!</p>
         
         <p>Во-первых, в этой задаче надо правильно понять условие, например, понять, что на тест <code>;:-()[]</code> ответ 1, т.к. эта строка содержит один смайлик — <code>:-(</code>. Т.е. не страшно, если вокруг смайлика есть лишние символы, важно, что сам смайлик можно выделить.</p>
@@ -197,7 +197,7 @@ module25629 = () ->
 
 export default technical = () ->
     return {
-        topics: [topic("Задачи \"на технику\"", "Задачи \"на технику\"", [
+        topics: [topic(ruen("Задачи \"на технику\"", "\"Technical\" problems"), ruen("Задачи \"на технику\"", "\"Technical\" problems"), [
                 module25200(),
                 problem(848),
                 problem(426),

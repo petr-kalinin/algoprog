@@ -12,9 +12,12 @@ export default recursion = () ->
         [label(ruen(
              "<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>",
              "<a href=\"https://foxford.ru/wiki/informatika/rekursiya-v-python\">Theory on Foxford</a>")),
-            label("""Имейте в виду, что многие из задач ниже на самом деле проще и правильнее решать не рекурсией, а циклом 
+            label(ruen("""Имейте в виду, что многие из задач ниже на самом деле проще и правильнее решать не рекурсией, а циклом 
             (в частности, никогда не пишите факториал или числа Фибоначчи рекурсией!). 
-            Но понимать, что такое рекурсия, надо, и очень полезно потренироваться на задачах ниже.""")
+            Но понимать, что такое рекурсия, надо, и очень полезно потренироваться на задачах ниже.""",
+            """Keep in mind that many of the tasks below are actually easier and more correct to solve not by recursion, but by a loop
+            (in particular, never write factorial or Fibonacci numbers by recursion!).
+            But it is necessary to understand what recursion is, and it is very useful to practice on the tasks below."""))
             problem(153),
             problem(154)
             problem(113656),

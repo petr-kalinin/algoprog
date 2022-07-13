@@ -10,8 +10,8 @@ export default strings = () ->
             ruen("Символы и строки", "Characters and strings"),
             ruen("Задачи на символы и строки", "Problems on characters and strings"),
         [label(ruen(
-             "<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Питон: теория по символам и строкам</a>",
-             "<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Python: theory by symbols and strings</a>")),
+             "<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Теория по символам и строкам</a>",
+             "<a href=\"https://notes.algoprog.ru/en/python_basics/4_strings.html\">Theory on characters and strings</a>")),
             problem({testSystem: "ejudge", contest: "3007", problem: "1", id: "102"}),
             problem({testSystem: "ejudge", contest: "3007", problem: "2", id: "103"}),
             problem({testSystem: "ejudge", contest: "3007", problem: "3", id: "105"}),
@@ -21,7 +21,7 @@ export default strings = () ->
         advancedTopics: [
             contest(ruen(
                 "Продвинутые задачи на строки",
-                "Advanced String tasks"), [
+                "Advanced problems on strings"), [
                 problem(107),
                 problem(109),
                 problem(112),

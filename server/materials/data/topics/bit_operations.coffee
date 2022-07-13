@@ -11,9 +11,12 @@ export default bit_operations = () ->
         topic: topic(
             ruen("Битовые операции", "Bit operations"),
             ruen("Задачи на битовые операции", "Problems on bit operations"),
-        [label("""<p>Теория: <a href='https://notes.algoprog.ru/shortideas/03_5_bitandor.html'>основная</a>, дополнительно:
+        [label(ruen("""<p>Теория: <a href='https://notes.algoprog.ru/shortideas/03_5_bitandor.html'>основная</a>, дополнительно:
             <a href='https://server.179.ru/tasks/python/2014b1/22-bits.html'>раз</a>, <a href='https://ravesli.com/urok-45-pobitovye-operatory/'>два</a>.
-            Тут везде разные языки программирования, но принцип один и тот же, максимум операции могут по-разному записываться.</p>"""),
+            Тут везде разные языки программирования, но принцип один и тот же, максимум операции могут по-разному записываться.</p>""",
+            """<p>Theory: <a href='https://notes.algoprog.ru/shortideas/03_5_bitandor.html '>main</a>, optional:
+            <a href='https://server.179.ru/tasks/python/2014b1/22-bits.html '>one</a>, <a href='https://ravesli.com/urok-45-pobitovye-operatory /'>two</a>.
+            There are different programming languages everywhere, but the principle is the same, only the operation notation can be different.</p>""")),
             problem(123),
             problem(128),
             problem(111588),
