@@ -9,11 +9,11 @@ import {ruen} from "../../lib/util"
 export default hash = () ->
     return {
         topic: topic(
-            ruen("Хеширование", "Hashing"),
-            ruen("Задачи на хеширование", "Problems on hashing"),
+            ruen("Хеширование", "Hashes"),
+            ruen("Задачи на хеширование", "Problems on hashes"),
         [label(ruen(
              "Основной теории тут пока нет, поищите в интернете.<br>\nДополнительная теория (предполагает, что вы уже почитали основную теорию): <a href=\"https://blog.algoprog.ru/hash-no-multiply\">как писать хеширование без домножения</a>.<br>\nЕще полезное <a href=\"https://codeforces.com/blog/entry/4898\">про антихештесты</a>.",
-             "There is no basic theory here yet, look on the Internet.<br>\nAdditional theory (assuming that you have already read the basic theory): <a href=\"https://blog.algoprog.ru/hash-no-multiply\">how to write hashing without multiplication</a>.<br>\nMore useful information <a href=\"https://codeforces.com/blog/entry/4898\">about anti-hashtests</a>.")),
+             "There is no basic theory here yet, look on the Internet.<br>\nAdditional theory (assuming that you have already read the basic theory): <a href=\"https://blog.algoprog.ru/hash-no-multiply\">how to write hashes without multiplication</a>.<br>\nMore useful information <a href=\"https://codeforces.com/blog/entry/4898\">about anti-hashtests</a>.")),
             problem(99),
             problem(100),
             problem(1042),

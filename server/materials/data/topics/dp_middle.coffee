@@ -9,8 +9,8 @@ import {ruen} from "../../lib/util"
 export default dp_middle = () ->
     return {
         topic: topic(
-            ruen("Задачи средней сложности на ДП", "Tasks of medium complexity on DP"),
-            ruen("Задачи средней сложности на ДП", "Tasks of medium complexity on DP"),
+            ruen("Задачи средней сложности на ДП", "Problems of medium difficulty on DP"),
+            ruen("Задачи средней сложности на ДП", "Problems of medium difficulty on DP"),
         [problem(212),
             problem(492),
             problem(587),

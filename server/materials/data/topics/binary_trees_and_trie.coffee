@@ -9,12 +9,9 @@ import {ruen} from "../../lib/util"
 export default binary_trees_and_trie = () ->
     return {
         topic: topic(
-            ruen("Бинарные деревья и бор", "Binary trees and boron"),
-            ruen("Задачи на бинарные деревья и бор", "Problems on binary trees and boron"),
-        [label(ruen(
-             "Теории тут пока нет",
-             "There is no theory here yet")),
-            problem(757),
+            ruen("Бинарные деревья и бор", "Binary trees and trie"),
+            ruen("Задачи на бинарные деревья и бор", "Problems on binary trees and trie"),
+        [problem(757),
             problem(760),
             problem(761),
             problem(111730),

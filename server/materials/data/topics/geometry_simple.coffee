@@ -9,7 +9,7 @@ import {ruen} from "../../lib/util"
 mainPrinciples = () ->
     page(ruen(
         "Главные правила работы с геометрией",
-        "The main rules of working with geometry"), ruen(
+        "The main rules of computational geometry"), ruen(
                                                     String.raw"""<h1>Главные правила работы с геометрией</h1>
         <p>
         При работе с геометрией есть три главных правила. (Этот текст — в дополнение в основной теории в видеолекциях.)
@@ -40,7 +40,7 @@ mainPrinciples = () ->
         Мало того, что оно не симметрично относительно X и Y, оно еще и не работает для вертикальных прямых. 
         Используйте представление в виде <code>A*x+B*y+C=0</code>,
         или через векторное произведение (что на самом деле то же самое, что и ABC), или параметрический способ.</p>""",
-                                                    String.raw"""<h1>The main rules of working with geometry</h1>
+                                                    String.raw"""<h1>The main rules of computational geometry</h1>
         <p>
         There are three main rules when working with geometry. (This text is in addition to the basic theory in video lectures.)
         </p>

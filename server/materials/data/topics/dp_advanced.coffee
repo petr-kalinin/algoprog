@@ -9,8 +9,8 @@ import {ruen} from "../../lib/util"
 export default dp_advanced = () ->
     return {
         topic: topic(
-            ruen("Сложные задачи на ДП", "Complex tasks on DP"),
-            ruen("Сложные задачи на ДП", "Complex tasks on DP"),
+            ruen("Сложные задачи на ДП", "Difficult problems on DP"),
+            ruen("Сложные задачи на ДП", "Difficult problems on DP"),
         [problem(1793),
             problem(1720),
             problem(3898),

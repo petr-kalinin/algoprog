@@ -11,12 +11,19 @@ export default sqrt_decomposition = () ->
         topic: topic(
             ruen("Sqrt-декомпозиция, она же корневая эвристика", "Sqrt decomposition, aka root heuristics"),
             ruen("Задачи на sqrt-декомпозицию", "Problems on sqrt decomposition"),
-        [label("""<p>
+        [label(ruen("""<p>
                 <a href=\"https://e-maxx.ru/algo/sqrt_decomposition\">Теория на e-maxx</a><br>
                 <a href=\"https://neerc.ifmo.ru/wiki/index.php?title=Статистики_на_отрезках._Корневая_эвристика\">Теория в конспектах ИТМО</a><br>
                 <a href=\"https://habrahabr.ru/post/138946/\">Статья на хабре</a><br/>
                 <a href=\"https://neerc.ifmo.ru/wiki/index.php?title=Алгоритм_Мо\">Еще полезный прием</a>
-                </p>"""),
+                </p>""",
+                """<p>
+                <a href=\"https://e-maxx.ru/algo/sqrt_decomposition\">Theory on e-maxx</a><br>
+                <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Statisticsreferences._corn_heuristics\">Theory in ITMO notes</a><br>
+                <a href=\"https://habrahabr.ru/post/138946/\">Article on habr</a><br/>
+                <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=ALGORITHM_MO\">Another useful technique</a>
+                </p>
+                """)),
             problem(934),
             problem(1361),
         ], "sqrt_decomposition"),

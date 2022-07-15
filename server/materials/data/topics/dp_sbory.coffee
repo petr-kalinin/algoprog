@@ -13,7 +13,7 @@ export default dp_sbory = () ->
             ruen("*Дополнительные задачи на ДП", "*Additional tasks on DP"),
         [label(ruen(
              "Это задачи на ДП с зимних сборов алгопрога 2021. Раздел не обязательный. Сложность задач очень разная.",
-             "These are the tasks for the DP from the winter training camps of the algoprog 2021. The section is optional. The complexity of the tasks is very different."))
+             "These are the tasks for the DP from the winter training camps of the algoprog 2021. The section is optional. The difficulty of the tasks is very different."))
             problem(498),
             problem(44),
             problem(631),

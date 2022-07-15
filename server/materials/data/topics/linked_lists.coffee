@@ -13,7 +13,7 @@ export default linked_lists = () ->
             ruen("Задачи на связные списки", "Problems on linked lists"),
         [label(ruen(
              "См. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B' (старой)</a>, раздел «Списки»",
-             "See video <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">recordings of lectures of the Parallel B' (old) LCS</a>, the \"Lists\" section")),
+             "See video <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">recordings of lectures of the SIS Parallel B' (old)</a>, the \"Lists\" section")),
             label(ruen(
                 "В задачах этой темы запрещается использовать стандартные реализации связных списков, а также динамических массивов.",
                 "In the tasks of this topic, it is forbidden to use standard implementations of linked lists, as well as dynamic arrays.")),
