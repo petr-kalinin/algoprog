@@ -3,7 +3,7 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
-        newsItem("Летние алгопрог-сборы", String.raw"""<
+        newsItem("Летние алгопрог-сборы", String.raw"""
             В конце августа возможно состоятся очередные алгопрог-сборы. <a href="https://docs.google.com/forms/d/e/1FAIpQLScFZsXN4hMypHOgS8XZbb84xl1ye_Wq4IEDtx1ilt_H8gh5NQ/viewform">Подробная информация и форма для подачи заявок</a>
         """),
         
