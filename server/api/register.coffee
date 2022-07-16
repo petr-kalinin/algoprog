@@ -18,18 +18,20 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 import logger from '../log'
 
 imapClient = undefined
-if process.env["EMAIL_USER"] and process.env["EMAIL_PASSWORD"]
-    imapClient = new ImapFlow
-        host: 'imap.gmail.com',
-        port: 993,
-        secure: true,
-        auth:
-            user: process.env["EMAIL_USER"],
-            pass: process.env["EMAIL_PASSWORD"]
+resetImapClient = () ->
+    if process.env["EMAIL_USER"] and process.env["EMAIL_PASSWORD"]
+        imapClient = new ImapFlow
+            host: 'imap.gmail.com',
+            port: 993,
+            secure: true,
+            auth:
+                user: process.env["EMAIL_USER"],
+                pass: process.env["EMAIL_PASSWORD"]
 
-    imapClient.connect()
-else
-    logger.error("No imap data specified")
+        await imapClient.connect()
+    else
+        logger.error("No imap data specified")
+resetImapClient()
 
 randomString = (len) ->
     Math.random().toString(36).substr(2, len)
@@ -38,6 +40,7 @@ filterUsername = (username) ->
     return username.replace(/[^a-zA-Z]/gm, "")
 
 getEmails = () ->
+    await resetImapClient()
     lock = await imapClient.getMailboxLock('INBOX')
     try
         count = (await imapClient.status('INBOX', {messages: true})).messages
@@ -54,11 +57,15 @@ getEmails = () ->
     return result
 
 findConfirmLink = (login) ->
-    emails = await getEmails()
-    for email in emails
-        res = RegExp("https:\\/\\/informatics\\.msk\\.ru\\/login\\/confirm\\.php\\?data=\\w+\\/#{login}").exec(email)?[0]
-        if res
-            return res
+    try
+        emails = await getEmails()
+        for email in emails
+            res = RegExp("https:\\/\\/informatics\\.msk\\.ru\\/login\\/confirm\\.php\\?data=\\w+\\/#{login}").exec(email)?[0]
+            if res
+                return res
+    catch e
+        logger.error(e)
+        return undefined
     return undefined
 
 registerOnInformatics = (data) ->
