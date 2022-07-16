@@ -141,7 +141,6 @@ ALL_TOPICS = [
     dp_sbory,
     hash,
     heap,
-    ###
     dijkstra_with_heap,
     backtrack(true),
     floyd_and_fb,
@@ -182,7 +181,6 @@ ALL_TOPICS = [
     dp_hard
     maxmatching
     persistency
-    ###
 ]
 
 ADDITIONAL_LEVELS =
