@@ -9,8 +9,8 @@ import {ruen} from "../../lib/util"
 export default geometry_advanced = () ->
     return {
         topic: topic(
-            ruen("Сложная геометрия", "Complex geometry"),
-            ruen("Задачи на сложную геометрию", "Problems on complex geometry"),
+            ruen("Сложная геометрия", "Advanced geometry"),
+            ruen("Задачи на сложную геометрию", "Problems on advanced geometry"),
         [problem(34),
             problem(923),
             problem(1109),

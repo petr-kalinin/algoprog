@@ -9,7 +9,7 @@ import {ruen} from "../../lib/util"
 export default maxmatching = () ->
     return {
         topic: topic(
-            ruen("Паросочетание максимального веста, венгерский алгоритм", "Maximum West matching, a Hungarian algorithm"),
+            ruen("Паросочетание максимального веса, венгерский алгоритм", "Maximum weight matching, Hungarian algorithm"),
             ruen("Задачи на венгерский алгоритм", "Problems on hungarian algorithm"),
         [label(ruen(
              "<p>См.\n<a href=\"https://e-maxx.ru/algo/assignment_hungary\">теорию на e-maxx</a>, но <a href=\"https://e-maxx.ru/algo/assignment_mincostflow\">можно писать и mincost-maxflow</a>.\n</p>",

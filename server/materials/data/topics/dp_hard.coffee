@@ -9,8 +9,8 @@ import {ruen} from "../../lib/util"
 export default dp_hard = () ->
     return {
         topic: topic(
-            ruen("Супер-сложное ДП", "Super-complex DP"),
-            ruen("Задачи на супер-сложное ДП", "Problems on super-complex DP"),
+            ruen("Супер-сложное ДП", "Super-difficult DP"),
+            ruen("Задачи на супер-сложное ДП", "Problems on super-difficult DP"),
         [label(ruen(
              "<a href='https://codeforces.com/blog/entry/63823'>Полезный прием: convex hull trick</a>",
              "<a href=\"https://codeforces.com/blog/entry/63823\">Useful technique: convex hull trick</a>")),
