@@ -101,13 +101,14 @@ def replace_raw_string(match):
     return (indent + 
         make_ruen('String.raw"""' + text + '"""', 'String.raw"""' + en_text + '"""', " " * len(indent) + INDENT2, ""))
 
-path = "server/materials/data/topics"
+#path = "server/materials/data/topics"
 topics = [os.path.join(path, f) for f in os.listdir(path)]
 topics = [f for f in topics if os.path.isfile(f)]
 
 cnt = 0
-for topic in topics:
-#for topic in [path + "/cpp.coffee"]:
+#for topic in topics:
+path_about = "server/material/data-en/level_about.coffee"
+for topic in [path_about]:
     print(topic)
     with open(topic, "r") as f:
         data = f.read()
