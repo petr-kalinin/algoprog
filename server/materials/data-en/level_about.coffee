@@ -2,489 +2,472 @@ import epigraph from "../lib/epigraph"
 import label from "../lib/label"
 import level from "../lib/level"
 import page from "../lib/page"
+import {ruen} from "../lib/util"
 
 module20927_23 = () ->
-    page("Для учителей и родителей", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Для учителей и родителей</h2>
-        <p>Я про это уже написал в FAQ, но на всякий случай повторю здесь. Я рассматриваю занятия ваших детей здесь как добровольные, и не собираюсь от них требовать чего-либо, заставлять и т.д. Если школьник не хочет заниматься, или не может себя заставить — я не буду от него ничего требовать. У меня банально нет никакого канала влияния на него.</p>
+    page(
+        "For teachers and parents", 
+                                         String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>For teachers and parents</h2>
+        <p>I've already written about this in the FAQ, but just in case I'll repeat it here. I consider your children's classes here as voluntary, and I'm not going to demand anything from them, force them, etc. If a student does not want to study, or cannot force himself, I will not demand anything from him. I simply don't have any channel of influence on him.</p>
         
-        <p>Но вы можете влиять на школьника, поэтому, если вы хотите, чтобы от занятий был какой-то результат, то следите за тем, как ваш школьник занимается. Слева, в меню сайта, есть "сводные таблицы", там можно отслеживать прогресс каждого школьника. Школьник также может показать вам, какие задачи он пытался сдавать, каков был результат проверки и т.д. Там же есть "Таблица по неделям кто что решал", в ней указывается, кто достиг какого уровня, а также по неделям кто сколько задач решил. Цвет ячейки в "таблице по неделям" обозначает, насколько хороший результат показал школьник на очередной неделе: ярко-зеленый — очень хорошо, светло-зеленый — средненько, белый — вообще ничего даже не пытался. Наконец, вы всегда можете связаться со мной.</p>
+        <p>But you can influence the student, so if you want there to be some result from classes, then watch how your student is engaged. On the left, in the site menu, there are "pivot tables", where you can track the progress of each student. The student can also show you what tasks he tried to pass, what was the result of the test, etc. There is also a "Table by week who solved what", it indicates who reached what level, as well as by week who solved how many tasks. The color of the cell in the "weekly table" indicates how good the result was shown by the student in the next week: bright green - very good, light green — average, white — did not even try anything at all. Finally, you can always contact me.</p>
         
-        <p>Отдельное обращение к учителям: часто бывает так, что сильным школьникам на школьных уроках информатики просто скучно. Если ваш школьник занимается по этому курсу, разрешите ему во время урока решать задачи, читать теорию этого курса! И, конечно, если у вас есть сильные ученики — расскажите им об этом курсе!</p>
-        
-        <p>И еще одно замечание. Пожалуйста, прочитайте раздел <a href="/material/module-20927_21" onclick="window.goto('/material/module-20927_21')();return false;">"О бесплатности занятий"</a>. А именно, если ваши школьники благодаря моим занятиям будут достигать хороших результатов, то постарайтесь сделать так, чтобы я был указан их учителем/преподавателем на тех олимпиадах и подобных мероприятиях, где они будут применять полученные здесь знания.</p></div>
-    """)
+        <p>A separate appeal to teachers: it often happens that strong schoolchildren are simply bored at school computer science lessons. If your student is engaged in this course, allow him to solve problems during the lesson, read the theory of this course! And, of course, if you have strong students — tell them about this course!</p>
+        </div>""")
 
 module20927_25 = () ->
-    page("\nПро самостоятельность", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Про самостоятельность</h2>
+    page(
+        "\nAbout independence", 
+                                        String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>About independence</h2>
         
-        <p>Отдельно хочу вас написать про вашу самостоятельность. Я ожидаю, что при работе в курсе (независимо от того, работаете вы в заочном курсе, на воскресных занятиях или в лицее 40) вы будете проявлять способность к достаточно самостоятельной работе. В заочном курсе самостоятельность подразумевается сама собой, но и в при очных занятиях я хочу, чтобы вы не просто тупо писали то, что я вам рассказал, но и могли думать сами.</p>
+        <p>Separately, I want to write you about your independence. I expect that when working in the course you will show the ability to work independently enough. I want you not only to stupidly write what I told you, but also to be able to think for yourself.</p>
         
-        <p>Это обозначает, во-первых, не будут сам вас торопить или заставлять решать задачи. Хотите — решайте, не хотите — ну и не решайте, мне же проще — меньше проверять. Я не буду стоять у вас над душой и что-то с вас требовать.</p>
+        <p>This means, firstly, they will not rush you or force you to solve problems. If you want, decide, if you don't want, well, don't decide, it's easier for me to check less. I will not stand over your soul and demand something from you.</p>
         
-        <p>Во-вторых, не ожидайте, что на занятиях или в теоретических материалах на сайте будет отражено <i>абсолютно всё</i>, что может вам потребоваться для решения задач. Вполне возможно, что в каких-нибудь задачах вы обнаружите, что требуется что-то, что мы "не проходили". Не страшно. Вы всегда можете меня спросить, а лучше — сначала исследовать вопрос самостоятельно (в вашей любимой книжке, или в интернете), а если не получится, то спросить меня. Я вас не съем за такие вопросы, наоборот, я буду очень рад, если вы увидите, что в какой-то задаче требуется что-то дополнительное, и сможете четко спросить, что именно вам требуется.</p>
+        <p>Secondly, do not expect that <i>absolutely everything</i> that you may need to solve problems will be reflected in classes or in theoretical materials on the site. It is quite possible that in some tasks you will find that something is required that we "did not pass". It's not scary. You can always ask me, but it's better to first investigate the question yourself (in your favorite book, or on the Internet), and if it doesn't work out, then ask me. I will not eat you for such questions, on the contrary, I will be very happy if you see that something additional is required in some task, and you can clearly ask what exactly you need.</p>
         
-        <p>В-третьих, если вы чего-то не поняли на занятии, в моем комментарии к вашему решению, в теоретических материалах или где еще; или если вы не понимаете, почему не работает ваша программа, то просто подойдите ко мне и спросите (или напишите мне). Не ожидайте, что я вам все очень подробно объясню с первого раза или что я вам буду писать сверхподробные комментарии к решениям. Я объясняю и пишу как раз с расчетом что, если вы что-то не поняли, то вы переспросите.</p></div>
-    """)
+        <p>Thirdly, if you didn't understand something in class, in my comments on your solution, in theoretical materials or anywhere else; or if you don't understand why your program doesn't work, then just come up to me and ask (or write to me). Do not expect that I will explain everything to you in great detail the first time or that I will write you super-detailed comments on solutions. I explain and write just with the expectation that if you do not understand something, then you will ask again.</p></div>""")
 
 module20927_9 = () ->
-    page("\nИнструкция для тех, кто здесь в первый раз (или \"Что надо сделать, чтобы начать заниматься?\")", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Инструкция для тех, кто здесь в первый раз</h1>
+    page(
+        "\nInstructions for those who are here for the first time (or \"What should I do to start studying?\")", 
+                                                                                                                  String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Instructions for those who are here for the first time</h1>
         <ul>
-        <li><a href="/register" onclick="window.goto('/register')();return false;">Зарегистрируйтесь на сайте</a> (для этого вас попросят еще зарегистрироваться на сайте informatics.mccme.ru). При регистрации укажите свое настоящее имя и правильный населенный пункт, чтобы я вас мог отличить среди других пользователей сайта.</li>
-        <li>Напишите мне любым из указанных в <a href="/material/about" onclick="window.goto('/material/about')();return false;">разделе "О курсе"</a> способов. В письме укажите, как вас зовут, где вы учитесь/работаете. Кроме того, напишите вкратце, какой ваш опыт в программировании, или вы будете заниматься "с нуля".</li>
-        <li>Прочитайте, или хотя бы просмотрите, все тексты в разделе "О курсе".</li>
-        <li>Дождитесь ответа и дальнейших инструкций от меня.
+        <li><a href="/register" onclick="window.goto('/register')();return false;">Register on the site</a> (for this you will be asked to register on the site again informatics.mccme.ru ). When registering, specify your real name and the correct locality so that I can distinguish you from other users of the site.</li>
+        <li>Write to me using any of the methods listed in the <a href="/material/about" onclick="window.goto('/material/about')();return false;">"About the Course" section</a>. In the letter, specify your name, where you study / work. In addition, write briefly what your experience in programming is, or you will be engaged "from scratch".</li>
+        <li>Read, or at least review, all the texts in the "About the Course" section.</li>
+        <li>Wait for a response and further instructions from me.
         </li>
-        </ul></div>
-    """)
+        </ul></div>""")
 
 module20927_3 = () ->
-    epigraph("There are nine and sixty ways of constructing tribal lays,\nAnd every single one of them is right!", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><div style="text-align:right;width:100%;padding-bottom:2ex;"><i>There are nine and sixty ways of constructing tribal lays,<br>
+    epigraph("There are nine and sixty ways of constructing tribal lays,\nAnd every single one of them is right!", 
+                                                                                                                       String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><div style="text-align:right;width:100%;padding-bottom:2ex;"><i>There are nine and sixty ways of constructing tribal lays,<br>
         And every single one of them is right!</i><br><br>
-        Rudyard Kipling. In the Neolithic Age<br><br><br>
-        Есть девять и шестьдесят способов писать песни племен<br>
-        И каждый из них без исключения верный!<br><br>
-        Редьярд Киплинг. В эпоху Неолита</div>
+        Rudyard Kipling. In the Neolithic Age<br></div>
         
-        <p>У каждой задачи есть очень много решений, и многие из них — верные. Не следует ожидать, что у каждой задачи есть единственное правильное решение; бывают решения лучше, бывают решения хуже, но почти всегда есть два-три существенно разных решения, которые все весьма хороши, и из которых сложно выбрать одно лучшее. Будьте готовы к этому, будьте готовы видеть эти разные решения и разные подходы.</p>
+        <p>Each task has a lot of solutions, and many of them are correct. One should not expect that every problem has a single correct solution; there are better solutions, there are worse solutions, but there are almost always two or three significantly different solutions, which are all very good, and it is difficult to choose the best one. Be prepared for this, be prepared to see these different solutions and different approaches.</p>
         
-        <p>В частности, если у вас есть ошибка в программе, то обычно есть много способов ее исправить. Поэтому не удивляйтесь, если вы меня спрашиваете, как исправить ошибку, а я вам предлагаю несколько вариантов исправления.</p></div>
-    """)
+        <p>In particular, if you have a bug in the program, then there are usually many ways to fix it. Therefore, do not be surprised if you ask me how to fix the error, and I offer you several ways to fix it.</p></div>""")
 
 pay = () ->
-    page("Стоимость и порядок оплаты занятий", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix">
-        <h1>Стоимость и порядок оплаты занятий</h1>
+    page(
+        "Cost and payment procedure of classes", 
+                                                   String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix">
+        <h1>Cost and payment procedure of classes</h1>
         
-        <p>Занятия платные. Точнее, собственно все материалы в курсе бесплатные. Большая часть из них есть на сайте informatics.msk.ru в <a href="https://informatics.msk.ru/course/view.php?id=1135">соответствующем разделе</a>, вы можете бесплатно заниматься там. Я беру деньги за то, что я добавлю вас в сводные таблицы, буду просматривать и комментировать ваши решения, отвечать на ваши вопросы (заочно) и т.д., а также за доступ к разделам «Хорошие решения» и «Найди ошибку».</p>
+        <p>Classes are paid. More precisely, actually all the materials in the course are free. Most of them are on the website informatics.msk.ru in the <a href="https://informatics.msk.ru/course/view.php?id=1135">corresponding section</a>, you can study there for free. I charge money for adding you to the summary tables, reviewing and commenting on your solutions, answering your questions (in absentia), etc., as well as for access to the "Good Solutions" and "Find a Bug" sections.</p>
         
-        <p><b>Стоимость занятий составляет 2000 рублей в месяц.</b></p>
+        <p><b>The cost of classes is 2000 rubles per month.</b></p>
 
-        <p>Оплата не обязательно привязана к 1 числу месяца; например, вы можете оплатить занятия с 20 числа одного месяца по 20 число другого месяца.</p>
+        <p>Payment is not necessarily tied to the 1st of the month; for example, you can pay for classes from the 20th of one month to the 20th of another month.</p>
 
-        <p>Для новых учащихся первая неделя занятий в курсе бесплатна.</p>
+        <p>For new students, the first week of classes in the course is free.</p>
         
-        <p>Cтоимость занятий фиксируется на момент первой оплаты и пожизненно.</p>
+        <p>The cost of classes is fixed at the time of the first payment and for life.</p>
         
-        <h2>Оплата</h2>
-        <p>Оплатить занятия можно картой российских банков <a href="/payment" onclick="window.goto('/payment')();return false;">на сайте</a>.</p>
-        <p>Если у вас нет возможности оплатить занятия картой российского банка, есть другие способы оплаты: переводом по российским реквизитам 
-        (насколько я понимаю, это возможно как минимум из Казахстана), SWIFT-переводом (хотя для ваc там наверняка будут большие комиссии), или даже биткойнами.
-        Напишите мне, обсудим.</p>
+        <h2>Payment</h2>
+        <p>You can pay for classes with a card of Russian banks <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
+        <p>If you are unable to pay for classes with a Russian bank card, there are other payment methods: transfer using Russian bank details 
+        (as far as I understand, this is possible at least from Kazakhstan), SWIFT transfer (although there will probably be large commissions for you there), or even bitcoin.
+        Write to me, we will discuss.</p>
         
-        <h2>Возможен ли возврат денег?</h2>
-        <p>Стоимость не зависит от того, насколько вы активны в курсе (если вы решаете много, то я буду на вас тратить больше времени, чем если вы решаете мало, а вы платите одну и ту же сумму). Поэтому довольно странно возвращать деньги, если вы не делали ничего. Поэтому политика такая:</p>
+        <h2>Is a refund possible?</h2>
+        <p>The cost does not depend on how active you are in the course (if you solve a lot, then I will spend more time on you than if you solve a little, and you pay the same amount). Therefore, it is quite strange to return the money if you didn't do anything. Therefore, the policy is as follows:</p>
         <ul>
-        <li>Если вы по объективным непредвиденным причинам не могли заниматься в курсе более 5 дней подряд (сломали руку и т.п.), то я вам верну деньги за весь период, когда вы не могли заниматься. Предсказуемые вещи типа поездок, сессии и т.п. сюда не считаются.</li>
-        <li>Если вы по каким бы то ни было причинам не занимались более 10 дней подряд, то я вам верну половину денег за этот период.</li>
-        <li>Если вы заранее предупреждаете меня о том, что не сможете заниматься более 10 дней подряд, то я могу вернуть вам деньги за этот период.</li>
-        <li>Конечно, если я по каким-то причинам не мог проверять ваши решения и отвечать на ваши письма в течение более чем 5 дней подряд, то я вам верну деньги за весь этот период.</li>
+        <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study. Predictable things like trips, sessions, etc. are not counted here.</li>
+        <li>If for whatever reason you have not been engaged for more than 10 days in a row, then I will refund you half of the money for this period.</li>
+        <li>If you warn me in advance that you will not be able to study for more than 10 days in a row, then I can refund you money for this period.</li>
+        <li>Of course, if for some reason I could not check your decisions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period.</li>
         </ul>
-        </div>
-    """, {id: "pay"})
+        </div>""", {id: "pay"})
 
 module20927_13 = () ->
-    page("\nПро засчитывание и игнорирование решений", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix">
-        <h2>Про засчитывание и игнорирование решений</h2> 
-        <p>Я буду просматривать, по возможности, все ваши решения, и комментировать их тем или иным образом. Тем решениям, которые я просмотрю, я буду присваивать новый статус: 
+    page(
+        "\nAbout counting and ignoring decisions", 
+                                                           String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix">
+        <h2>About counting and ignoring decisions</h2> 
+        <p>I will review, if possible, all your decisions, and comment on them in one way or another. I will assign a new status to the solutions that I review: 
         </p><ul>
-        <li>"Зачтено" — задача написана более-менее нормально, ура. На страничке просмотра кода вашей посылки (по ссылке "Подробнее") под кодом вы можете увидеть мои комментарии. Если там комментария нет, значит, задача решена весьма хорошо. Если есть комментарий, то он обычно указывает, что можно улучшить.</li>
-        <li>"Проигнорировано" — мне что-то весьма не понравилось в вашем коде. На страничке просмотра кода вашей посылки (по ссылке "Подробнее") под кодом вы увидите мои комментарии, объясняющие, что именно мне не понравилось. Исправьте это и пересдайте решение.</li></ul><p></p>
+        <li>"Accepted" — the task is written more or less normally, hooray. On the page of viewing the code of your submission (by the link "More details") under the code you can see my comments. If there is no comment there, then the problem has been solved very well. If there is a comment, it usually indicates what can be improved.</li>
+        <li>"Ignored" — I didn't like something very much in your code. On the page of viewing the code of your submission (by the link "More details") under the code you will see my comments explaining exactly what I didn't like. Fix it and retake the decision.</li></ul><p></p>
         
-        <p>Если вы не понимаете комментарий, спросите, я объясню подробнее.</p>
+        <p>If you don't understand the comment, ask, I'll explain in more detail.</p>
         
-        <p>Посылки со статусом "Зачтено" отмечаются в таблице зеленым.</p>
+        <p>Submissions with the status "Accepted" are marked in green in the table.</p>
         
-        <p>Посылки со статусом "Проигнорировано" отмечаются в таблице синим.</p>
+        <p>Submissions with the status "Ignored" are marked in blue in the table.</p>
         
-        <p>Не относитесь к "игнорам" как к издевательству над вами. Я постараюсь игнорить только те программы, которые можно довольно существенно улучшить (например, существенно сократив количество кода). Помните, что ваша цель — не только написать программу, которая пройдет все тесты, но и вообще научиться программировать. Фактически, "Проигнорировано" я ставлю тогда, когда считаю, что комментарий, который я пишу к вашей посылке, настолько важен, что вам обязательно его стоит прочитать; "игнор" — это такой способ обратить ваше внимание на комментарий.</p>
+        <p>Do not treat the "ignores" as a mockery of you. I will try to ignore only those programs that can be improved quite significantly (for example, by significantly reducing the amount of code). Remember that your goal is not only to write a program that will pass all the tests, but also to learn how to program in general. In fact, I put "Ignored" when I think that the comment I am writing to your submission is so important that you should definitely read it; "ignore" is a way to draw your attention to a comment.</p>
         
-        <p>То, что вы сумели, пусть и не самым оптимальным образом, написать программу и сдать ее — это очень круто, но еще круче будет, если вы узнаете и поймете, как то же самое можно сделать еще проще. Считайте, что в большинстве задач написать программу, чтобы она прошла все тесты — это, грубо говоря, 70% успеха, но получить по ней "Зачтено" — это оставшиеся 30%.</p>
+        <p>The fact that you managed, even if not in the most optimal way, to write a program and pass it is very cool, but it will be even cooler if you learn and understand how the same can be done even easier. Consider that in most tasks, writing a program so that it passes all the tests is, roughly speaking, 70% success, but getting it "Accepted" is the remaining 30%.</p>
         
-        <p>Все комментарии (в том числе и к зачтенным посылкам, и даже к неуспешным) вы также можете просмотреть в правой колонка не сайте.</p>
-        <p><a href="https://blog.algoprog.ru/why-ignore/">Подробнее про то, какие решения я игнорирую.</a></p>
-        </div>
-    """)
+        <p>You can also view all comments (including those to the accepted submissions, and even to unsuccessful ones) in the right column on the website.</p>
+        <p><a href="https://blog.algoprog.ru/why-ignore/">Read more about which solutions I ignore.</a></p>
+        </div>""")
 
 module20927_39 = () ->
-    page("«Стажировка» на алгопроге", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>«Стажировка» на алгопроге</h1>
-        <p>Что летом делают большинство нормальных студентов-программистов? Стажируются в IT-компаниях. Школьников обычно на такие стажировки не зовут, да и участвовать школьникам в стажировках обычно сложно.</p>
+    page(
+        "\"Internship\" at the algoprog", 
+                                          String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>"Internship" at the algoprog</h1>
+        <p>What do most normal programming students do in the summer? Internships in IT companies. Schoolchildren are usually not invited to such internships, and it is usually difficult for schoolchildren to participate in internships.</p>
         
-        <p>Поэтому я подумал, чем алгопрог хуже IT-компаний? И решил организовать возможность некоего аналога стажировок на алгопроге. А именно, если вы хотите, то можете поучаствовать в развитии самой платформы алгопрога. Если вы всегда хотели добавить на алгопрог какую-нибудь фичу, то вы сможете этим заняться. Или у меня для вас есть список вещей, которые я давно хочу сделать на алгопроге, но все не успеваю, и вы можете заняться ими.</p>
+        <p>So I thought, why is algoprog worse than IT companies? And I decided to organize the possibility of some kind of analog of internships on the algoprog. Namely, if you want, you can participate in the development of the algoprog platform itself. If you've always wanted to add some feature to the algoprog, then you can do it. Or I have a list of things for you that I've been wanting to do on algoprog for a long time, but I still don't have time, and you can do them.</p>
         
-        <p>Это, конечно, будет довольно сильно отличаться от обычных задач, которые вы решаете на алгопроге. Вам придется разбираться в довольно объемном уже существующем (и очень грязном) коде алгопрога, вам придется разбираться в наверняка незнакомом языке программирования (Coffeescript, но не бойтесь — он несложный и поначалу весьма похож на питон), вам придется разбираться со множеством технологий, с которыми вы возможно еще не работали (git, MongoDB, node.js, React, немного Redux), вам придется разбираться с HTML и браузерным Javascript, вам придется много гуглить и читать, причем скорее всего по-английски (ну или через переводчик) — но я верю, что если вы абсолютно уверенно решаете как минимум задачи уровней 1А и 1Б, и не боитесь самостоятельно разбираться с возникающими проблемами, то вы вполне можете и со всем этим разобраться.</p>
+        <p>This, of course, will be quite different from the usual tasks that you solve on the algoprog. You will have to understand the rather voluminous already existing (and very dirty) code of the algoprog, you will have to understand a programming language that is probably unfamiliar (Coffeescript, but do not be afraid — it is simple and at first very similar to python), you will have to deal with a lot of technologies that you may not have worked with yet (git, MongoDB, node.js, React, a little Redux), you will have to deal with HTML and browser Javascript, you will have to Google and read a lot, and most likely in English (well, or through a translator) - but I believe that if you absolutely confidently solve at least tasks of levels 1A and 1B, and are not afraid to figure it out yourself with the problems that arise, then you can quite deal with all this.</p>
         
-        <p>Исходный код алгопрога вот: <a href="https://github.com/petr-kalinin/algoprog">https://github.com/petr-kalinin/algoprog</a>. Список доделок, которыми вы можете заняться, вот: <a href="https://github.com/petr-kalinin/algoprog/issues">https://github.com/petr-kalinin/algoprog/issues</a>, или вы можете обсудить со мной и предложить что-то свое.</p>
+        <p>The source code of the algoprog is: <a href="https://github.com/petr-kalinin/algoprog">https://github.com/petr-kalinin/algoprog</a> . The list of finishing touches that you can do is: <a href="https://github.com/petr-kalinin/algoprog/issues">https://github.com/petr-kalinin/algoprog/issues</a> , or you can discuss with me and offer something of your own.</p>
         
-        <p>В отличие от классических стажировок, я не буду требовать от вас какой-то регулярности в работе (ну собственно как и с обычными задачами на алгопроге), и не буду вам платить денег :) — но обещаю, что буду вникать в то, что вы делаете, и помогать. А вы внесете свой вклад в развитие алгопрога, и получите много нового разнообразного опыта.</p>
+        <p>Unlike classic internships, I will not demand any regularity from you in your work (well, actually, as with ordinary tasks on the algoprog), and I will not pay you money :) - but I promise that I will delve into what you are doing and help. And you will contribute to the development of the algoprog, and get a lot of new diverse experiences.</p>
         
-        <p>Кроме того, в отличие от классических стажировок, я не смогу вам уделять столько внимания, сколько обычно уделяет руководитель стажеру в IT-компаниях. Вам придется очень во многом разбираться самостоятельно, я буду скорее направлять ваши действия, а не давать конкретные детальные указания. Будьте к этому готовы.</p>
+        <p>In addition, unlike classic internships, I will not be able to pay as much attention to you as a manager usually pays to an intern in IT companies. You will have to figure out a lot on your own, I will guide your actions rather than give specific detailed instructions. Be prepared for this.</p>
         
-        <p>В общем, если вы хотите в этом поучаствовать, пишите. Распространяется на всех, кто занимается на алгопроге (не обязательно школьников) и имеет уровень минимум 1В. Только лето (с мая по август включительно).</p></div>
-    """, {id: "internship"})
+        <p>In general, if you want to participate in this, write. It applies to everyone who is engaged in the algoproge (not necessarily schoolchildren) and has a level of at least 1B. Summer only (from May to August inclusive).</p></div>""", {id: "internship"})
 
 work_with_site = () ->
-    page("\nРабота с сайтом, отправка решений и просмотр моих комментариев", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Работа с сайтом</h2>
-        <h3>Теоретические материалы</h3>
-        <p>По многим темам на сайте представлен некоторый теоретический материал. Прежде чем приступать к решению задач, прочитайте соответствующую теорию.
-        Например, зайдите на уровень 1А (внутри уровня 1), там есть раздел "Арифметические операции", и в этом разделе две ссылки — "Начало работы c питоном и Wing IDE" и "Задачи на арифметические операции". Вот "Начало работы c питоном и Wing IDE" — это соответствующая теория (в данном случае самые основы работы на питоне, включая базовые арифметические операции). Прочитайте эту теорию, прежде чем решать соответствующие задачи. (Конечно, если вы основы своего языка программирования знаете, то нет смысла читать самую базовую теорию, но тогда вы и начинаете, наверное, со следующих тем).</p>
-        <h3>Задачи</h3>
-        <p>Основное, что вы будете делать на наших занятиях — это решать задачи. Большинство задач будут требовать написания программы, которая считывает (с клавиатуры или из файла) некоторые данные, по ним вычисляет новые данные, и результат выводит на экран или сохраняет в файл.</p>
-        <p>Написанную вами программу вы можете (и должны) отправить на проверку. Этот сайт предоставляет возможность автоматической проверки ваших программ — вы сразу (в течение максимум одной-двух минут) получаете результат проверки: работает ваша программа корректно или нет. Кроме того, я буду видеть все ваши попытки, которые вы отправляете на сайт, и смогу их комментировать, писать замечания и т.д., а вы сможете эти комментарии видеть и по ним улучшать свои программы.</p>
+    page(
+        "\nWorking with the site, sending solutions and viewing my comments", 
+                                                                                 String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Working with the site</h2>
+        <h3>Theoretical materials</h3>
+        <p>Some theoretical material is presented on many topics on the site. Before you start solving problems, read the relevant theory.
+        For example, go to level 1A (inside level 1), there is a section "Arithmetic operations", and in this section there are two links — "Getting started with Python and Wing IDE" and "Tasks for arithmetic operations". Here is "Getting Started with Python and Wing IDE" — this is the relevant theory (in this case, the very basics of working on python, including basic arithmetic operations). Read this theory before solving the corresponding problems. (Of course, if you know the basics of your programming language, then it makes no sense to read the most basic theory, but then you probably start with the following topics).</p>
+        <h3>Tasks</h3>
+        <p>The main thing you will do in our classes is to solve problems. Most tasks will require writing a program that reads (from the keyboard or from a file) some data, calculates new data from it, and displays the result on the screen or saves it to a file.</p>
+        <p>You can (and should) send the program you have written for verification. This site provides an opportunity to automatically check your programs — you immediately (within a maximum of one or two minutes) get the result of the check: your program is working correctly or not. In addition, I will see all your attempts that you send to the site, and I will be able to comment on them, write comments, etc., and you will be able to see these comments and improve your programs based on them.</p>
         
-        <h3>Пример задачи</h3>
-        <p>Зайдите на уровень 1А (внутри уровня 1). Там есть ссылка "Задачи на арифметические операции". Зайдите туда. Вы увидите список задач: "Дележ яблок - 1", "Дележ яблок - 2", и т.д., до "Разность времен". Это и есть набор задач (коротко говорят "контест"), которые вам предлагается прорешать для закрепления знаний по первой теме курса — арифметическим операциям. 
-        </p><p>Все названия задач — ссылки, по ним открывается собственно задача. Откройте задачу "Дележ яблок - 1". Вы видите ее условие: "N школьников делят K яблок поровну, неделящийся остаток остается в корзинке. Сколько яблок достанется каждому школьнику? Программа получает на вход числа N и K и должна вывести искомое количество яблок." Ниже идет пример: при вводе данных "3 14" программа должна вывести "4".</p>
-        <p>Условие задачи четко описывает, что должна делать ваша программа: для любых значений N и K она должна вычислить и вывести ответ на задачу. В более серьезных задачах в условии всегда указываются ограничения на допустимые N и K, но в задачах для начинающих на этом сайте считается, что N и K "разумные" (в частности, помещаются в тип данных int в C/C++); в "разумность" в данном случае входит и то, что оба числа положительны.</p>
-        <p>Пример нужен только для проверки того, что вы верно поняли условие, формат входных данных, и смогли проверить программу на простейшем тесте. Тем не менее, ваша программа должна работать не только на тесте из примера, но и на других допустимых тестах.</p>
-        
-        <h3>Написание решения</h3>
-        Данная задача решается достаточно легко. Нам надо, конечно, завести две переменные, N и K, считать их с клавиатуры, и вывести неполное частное от деления K на N (обратите внимание, именно K на N, а не N на K!). Программа будет выглядеть так:
+        <h3>Sample task</h3>
+        <p>Go to level 1A (inside level 1). There is a link "Tasks for arithmetic operations". Go in there. You will see a list of tasks: "Apple Division - 1", "Apple Division - 2", etc., up to "Time difference". This is a set of tasks (they say "contest" in short) that you are invited to solve in order to consolidate knowledge on the first topic of the course — arithmetic operations.
+        </p><p>All the names of the tasks are links, they open the actual task. Open the task "Apple Division - 1". You can see her condition: "N schoolchildren divide K apples equally, the non-dividing remainder remains in the basket. How many apples will each student get? The program receives the numbers N and K as input and should output the desired number of apples." Below is an example: when entering data "3 14", the program should output "4".</p>
+        <p>The problem condition clearly describes what your program should do: for any values of N and K, it should calculate and output the answer to the problem. In more serious problems, the condition always specifies restrictions on the permissible N and K, but in the problems for beginners on this site it is considered that N and K are "reasonable" (in particular, they are placed in the int data type in C/C++); "reasonableness" in this case also includes the fact that both numbers are positive.</p>
+        <p>The example is only needed to verify that you correctly understood the condition, the format of the input data, and were able to test the program on the simplest test. However, your program should work not only on the test from the example, but also on other valid tests.</p>
+
+        <h3>Writing a solution</h3>
+        This problem is solved quite easily. Of course, we need to have two variables, N and K, count them from the keyboard, and output the incomplete quotient of dividing K by N (note that it is K by N, not N by K!). The program will look like this:
         <pre>n = int(input())
         k = int(input())
         print(k // n)</pre>
-        
-        Обратите внимание на следующие особенности (в вашем учебнике может быть написано не так — надо делать так, как написано тут, а не в учебнике. Возможно, чего-то из описанного здесь вы не поймете — тогда просто пропускайте этот пункт).
+
+        Pay attention to the following features (it may not be written in your textbook — you need to do as it is written here, and not in the textbook. Perhaps you won't understand some of the things described here - then just skip this point).
         <ul>
-        <li>Мы не выводим никаких "приглашений" типа "введите N". В условии задачи четко написано, что именно наша программа должна выводить на экран, и там ничего не сказано про то, что надо выводить приглашения. Поэтому любой лишний вывод на экран будет рассмотрен как нарушение формата вывода.</li>
-        <li>Нет никаких "проверок на дурака", например, нет проверки "а вдруг N=0?", или "а вдруг ввели не число?". Аналогично предыдущему, это в наших задачах не требуется. В более серьезных задачах в условии будут стоять ограничения на допустимые значения N, и никто не будет тестировать вашу программу с N, не удовлетворяющим этим ограничениям. В этой задаче считается, что N&gt;0 всегда.</li>
-        <li>Мы не ставим в конце программы пустой <code>input()</code> (или <code>getch();</code> в c++) или другую задержку работы. Это тоже не требуется; информация, выведенная на экран, все равно сохраняется и ее все равно можно посмотреть.</li>
-        <li>Мы посчитали и сразу вывели ответ, не сохраняя его в промежуточную переменную. Можно было сохранить:
+        <li>We don't output any "prompts" like "enter N". The task condition clearly states what exactly our program should display on the screen, and there is nothing said about the fact that it is necessary to display invitations. Therefore, any extra output to the screen will be considered as a violation of the output format.</li>
+        <li>There are no "fool checks", for example, there is no check "what if N = 0?", or "what if they didn't enter a number?". Similar to the previous one, this is not required in our tasks. In more serious tasks, there will be restrictions on the permissible values of N in the condition, and no one will test your program with N that does not meet these restrictions. In this problem, it is assumed that N>0 is always.</li>
+        <li>We don't put an empty <code>input()</code> (or <code>getch();</code> in c++) or other delay at the end of the program. This is also not required; the information displayed on the screen is still saved and can still be viewed.</li>
+        <li>We calculated and immediately output the answer without saving it to an intermediate variable. It was possible to save:
         <pre>ans = k / n
         print(ans)
         </pre>
-        В этой простой программе проще вывести сразу, но если выражение будет сложнее, то можно и сохранить.</li>
+        In this simple program, it is easier to output immediately, but if the expression is more complicated, then you can save it.</li>
         </ul>
-        <p>Сохраните эту программу в какой-нибудь файл. Запомните как имя файла, так и ту директорию (папку), куда вы сохранили файл.</p>
+        <p>Save this program to some file. Remember both the file name and the directory (folder) where you saved the file.</p>
+
+        <p>Now test the program. Run it and run different tests.</p>
+
+        <p>To start, enter the test from the example: "3 14" and make sure that it outputs 4.</p>
+
+        <p>In this problem, the answer to each test is uniquely determined (for example, the answer to the example from the condition can only be 4). There are tasks when there may be several correct answers for each test, in such tasks the condition usually says "if there are several solutions, output any" or there is some similar phrase. In this case, your program is not obliged to give an answer that exactly matches what is specified in the example — it is enough that it is one of the correct ones. Similarly, in the future, when testing your program on the website (see below) for each test, any of the correct answers will be allowed.</p>
+
+        <p>Come up with some more examples for this task. Try to make them diverse: so that there are different N, K, and different answers. For example, enter "5 25" and check that the answer is 5. Come up with a few more examples yourself. Important: before entering each example into the program, first calculate the answer in your mind, and only then run the program and check that it has output exactly what you expected. Try to always know the answer to your example BEFORE starting the program.</p>
+
+        <p>If the program is written correctly, then it will work correctly on your tests. Then it can be submitted for verification to the site (they say "submit / send for verification to the testing system" or simply "submit to the system").</p>
+
+        <h3>Sending for verification</h3>
+        <p>Go back to the page with the task condition. Below the conditions there is a section "Submit a solution" (it is only there if you are registered on the site and logged in). Click the "File Selection" button and select the file with your solution. Make sure you select the file.pas/.py (with source code), not .o or .exe (already compiled program)! Make sure that the correct language is selected in the drop-down list next to it (in particular, if you write in PascalABC, then you need to select it manually), and click the "Send" button.</p>
         
-        <p>Теперь протестируйте программу. Запустите ее и повводите разные тесты.</p>
-        
-        <p>Введите для начала тест из примера: "3 14" и убедитесь, что она вывела 4.</p>
-        
-        <p>В этой задаче на каждый тест ответ однозначно определен (например, на пример из условия ответ может быть только 4). Бывают задачи, когда на каждый тест может быть несколько правильных вариантов ответа, в таких задачах в условии обычно написано "если есть несколько решений, выведите любое" или присутствует какая-нибудь подобная фраза. В таком случае ваша программа не обязана выдавать ответ, точно совпадающий с тем, что указан в примере — достаточно, чтобы он был одним из правильных. Аналогично, в дальнейшем, при тестировании вашей программы на сайте (см. ниже) по каждому тесту будет допускаться любой из правильный ответов.</p>
-        
-        <p>Придумайте еще несколько примеров к этой задаче. Постарайтесь, чтобы они были разнообразными: чтобы были разные N, K, и разные ответы. Например, введите "5 25" и проверьте, что ответ 5. Придумайте сами еще несколько примеров. Важно: прежде чем вводить каждый пример в программу, сначала в уме вычислите ответ, и только потом запустите программу и проверьте, что она вывела именно то, что вы и ожидали. Старайтесь всегда знать ответ на свой пример ДО запуска программы.</p>
-        
-        <p>Если программа написана правильно, то она правильно отработает на ваших тестах. Тогда ее можно сдавать на проверку на сайт (говорят "сдать/послать на проверку в тестирующую систему" или просто "сдать в систему").</p>
-        
-        <h3>Отправка на проверку</h3>
-        <p>Вернитесь на страницу с условием задачи. Ниже условия есть раздел "Отправить решение" (он есть только если вы зарегистрированы на сайте и залогинены). Нажмите кнопку "Выбор файла" и выберите файл с вашим решением. Убедитесь, что вы выбираете файл .pas/.py (с исходным кодом), а не .o или .exe (уже скомпилированную программу)! Убедитесь, что в выпадающем списке рядом выбран правильный язык (в частности, если вы пишете на PascalABC, то надо его выбрать вручную), и нажмите кнопку "Отправить".</p>
-        
-        <p>Ваша программа отсылается на сервер, который ее компилирует и проверяет путем запуска на нескольких тестовых примерах. Эти тестовые примеры вам неизвестны, но в каждой конкретной задаче всегда одинаковы (т.е. если вы будете посылать несколько раз, то каждый раз тестовые примеры будут одни и те же). В данном случае тестирующая система запустит вашу программу несколько раз, каждый раз сымитирует ввод с клавиатуры значений N и K из очередного тестового примера, и проверит, что ваша программа выводит правильный ответ.</p>
-        
-        <p>Под формой для отправки находится таблица, перечисляющая все ваши попытки (также говорят "посылки") по этой задаче. Изначально там, конечно, никакой таблицу нет. После того, как вы отправили ваше решение, оно появится в этой таблице (через некоторое время — примерно через минуту). В колонке "Статус" отображается результат тестирования вашей программы. Сразу после того, как вы отправили программу, вы можете увидеть там "Компилирование" или "Тестирование", что обозначает, что ваша задача тестируется. Таблица обновляется автоматически, дождитесь, пока в колонке "Статус" не появится окончательный результат проверки.</p>
-        
-        <p>Основные результаты проверки, которые вы можете увидеть:
+        <p>Your program is sent to the server, which compiles it and checks it by running on several test examples. These test cases are unknown to you, but they are always the same in each specific task (i.e. if you send several times, the test cases will be the same each time). In this case, the testing system will run your program several times, each time it will simulate keyboard input of the values N and K from the next test example, and check that your program outputs the correct answer.</p>
+
+        <p>Under the submission form there is a table listing all your attempts (also called "submissions") for this task. Initially, of course, there is no table there. After you have submitted your solution, it will appear in this table (after a while — about a minute). The "Status" column displays the result of testing your program. Immediately after you have submitted the program, you can see there "Compiling" or "Testing", which means that your task is being tested. The table is updated automatically, wait until the final result of the check appears in the "Status" column.</p>
+
+        <p>The main results of the check that you can see:
         </p><ul>
-        <li>OK — ваша программа правильно прошла все тесты, ура!</li>
-        <li>Ошибка компиляции — ваша программа не скомпилировалась</li>
-        <li>Частичное решение — ваша программа прошла не все тесты (может быть, даже не прошла ни одного). Значит, ваша программа работает не совсем верно (или совсем неверно), постарайтесь найти ошибки.</li>
-        <li>Бывают еще статусы "Зачтено" и "Проигнорировано", но они не ставятся автоматически, поэтому про них ниже.</li>
+        <li>OK — your program has passed all the tests correctly, hooray!</li>
+        <li>Compilation error — your program has not compiled</li>
+        <li>Partial solution — your program didn't pass all the tests (maybe it didn't even pass any). So, your program is not working quite right (or completely wrong), try to find errors.</li>
+        <li>There are also "Accepted" and "Ignored" statuses, but they are not set automatically, so about them below.</li>
         </ul>
-        
-        <p>На кажую строчку в таблице посылок можно нажать, после чего откроется окошко с подробной информацией о посылке. Во-первых, там будет полный код вашей программы, поэтому вы всегда сможете проверить, отправили ли вы именно то, что хотели; если вы решали задачи из школы, то придя домой, вы сможете посмотреть коды всех ваших программ, и т.д.</p>
-        
-        <p>Во-вторых, в открывшемся окне есть закладка "Протокол", где отображается протокол тестирования вашей программы. Если ваша программа не скомпилировалась (статус "Ошибка компиляции"), то там будет протокол компиляции: будут указаны ошибки, найденные в программе. Если же ваша программа скомпилировалась, то там будет протокол тестирования: по каждому тесту будет приведена информация о том, прошел этот тест (OK) или нет. В задаче "Дележ яблок - 1" всего 6 тестов, поэтому в таблице должно быть 6 строк. Если ваша посылка получила статус "ОК", то все 6 строк будут ОК; иначе какие-то тесты будут иметь другой статус (из названия статуса обычно понятно, что это значит).</p>
-        
-        <p>Таким образом, вы можете видеть, какие (по номерам) тесты у вас пройдены, а какие нет. Но вы не можете узнать, какой именно это тест (в нашей задаче — какие именно там N и K). Это сделано для того, чтобы вы учились сами тестировать свое решение и сами находить примеры, на которых оно не работает, а не рассматривали тестирующую систему как волшебный ящик, выдающий вам примеры, на которых ваша программа не работает. Поэтому если ваша программа не работает, то ищите сами примеры, на которых она ошибается. Если вы не можете их найти, то напишите мне, попробуем разобраться вместе. В крайнем случае у меня есть доступ ко всем тестовым данным, поэтому если я не смогу найти ошибку просто посмотрев код вашей программы, я смогу посмотреть, что там за тест, на котором ваша программа не работает.</p>
-        
-        <p>Но вообще, старайтесь проверять задачу до того, как ее отправлять в систему (и этому мы будем отдельно учиться). Рассматривайте неудачные попытки как конкретную неудачу, и старайтесь делать как можно меньше неудачных попыток. Вообще, на многих олимпиадах у вас будет только одна возможность сдать задачу, и если она не пройдет какие-то тесты, то возможности исправиться у вас уже не будет!</p>
-        
-        <h3>Засчитывание и игнорирование решений, комментарии к решению</h3>
-        <p>Я буду просматривать все ваши решения: при наличии времени — все вообще посылки, в том числе и неуспешные, если же у меня времени будет мало, а посылок много — то только посылки со статусом ОК.</p>
-        
-        <p>В успешных посылках я буду просматривать ваш код на предмет следующего:
+
+        <p>You can click on each line in the package table, after which a window with detailed information about the package will open. Firstly, there will be the full code of your program, so you can always check whether you have sent exactly what you wanted; if you solved problems from school, then when you come home, you will be able to see the codes of all your programs, etc.</p>
+
+        <p>Secondly, in the window that opens there is a tab "Protocol", where the test protocol of your program is displayed. If your program has not compiled (the status is "Compilation error"), then there will be a compilation protocol: errors found in the program will be indicated. If your program has compiled, then there will be a test protocol: for each test, information will be provided about whether this test passed (OK) or not. There are only 6 tests in the task "Dividing apples - 1", so there should be 6 rows in the table. If your submission has received the status "OK", then all 6 lines will be OK; otherwise, some tests will have a different status (it is usually clear from the name of the status what this means).</p>
+
+        <p>Thus, you can see which (by numbers) tests you have passed and which have not. But you can't find out which test it is (in our problem, which N and K are exactly there). This is done so that you learn to test your solution yourself and find examples on which it does not work, and do not consider the testing system as a magic box that gives you examples on which your program does not work. Therefore, if your program does not work, then look for examples on which it is wrong. If you can't find them, then write to me, we'll try to figure it out together. As a last resort, I have access to all the test data, so if I can't find an error just by looking at your program's code, I can see what kind of test your program doesn't work on.</p>
+
+        <p>But in general, try to check the task before sending it to the system (and we will learn this separately). Treat failed attempts as a specific failure, and try to make as few failed attempts as possible. In general, at many contests you will have only one opportunity to pass the task, and if it does not pass some tests, then you will no longer have the opportunity to improve!</p>
+
+        <h3>Counting and ignoring decisions, comments on the decision</h3>
+        <p>I will review all your decisions: if there is time, all submissions in general, including unsuccessful ones, if I have little time, and there are a lot of submissions, then only submissions with the OK status.</p>
+
+        <p>In successful submissions, I will review your code for the following:
         </p><ul>
-        <li>Во-первых, я буду смотреть, нет ли в коде каких-то ошибок, которые смогли миновать тесты тестирующей системы. Бывает так, что в коде какая-нибудь совсем неожиданная ошибка, и тестирующая система ее может пропустить (хотя тесты в тестирующей системе обычно подготовлены хорошо, и как правило все ошибки в коде проявляются при тестировании) — я буду смотреть, нет ли у вас таких ошибок.</li>
-        <li>Также я буду смотреть, нет ли у меня каких-либо замечаний по коду, пусть и не являющихся ошибками, но являющихся общими пожеланиями. Например, может быть, что-то можно сделать проще, или что-то надо сделать по-другому, и т.д.</li>
+        <li>First, I will look to see if there are any errors in the code that the tests of the testing system were able to pass. It happens that there is some completely unexpected error in the code, and the testing system may miss it (although the tests in the testing system are usually well prepared, and as a rule all errors in the code manifest themselves during testing) - I will see if you have such errors.</li>
+        <li>I will also look to see if I have any comments on the code, even if they are not errors, but are general wishes. For example, maybe something can be done easier, or something should be done differently, etc.</li>
         </ul>
-        <p>Если к вашей программе у меня будут какие-либо замечания или комментарии, я их напишу, и вы сможете их увидеть. Во-первых, они появятся на сайте в правой колонке в разделе "Комментарии"; во-вторых, в каждой посылке, в окошке, открываемом по ссылке "подробнее", есть специальная закладка "комментарии". Соответственно, как только я прокомментирую вашу посылку, вы увидите комментарий. Обычно я стараюсь просматривать все посылки в течение суток, хотя иногда бывают и бОльшие задержки, до нескольких дней.</p>
+        <p>If I have any comments or comments on your program, I will write them and you will be able to see them. Firstly, they will appear on the site in the right column in the "Comments" section; secondly, in each submission, in the window opened by the "more details" link, there is a special "comments" tab. Accordingly, as soon as I comment on your package, you will see a comment. Usually I try to view all the submissions during the day, although sometimes there are long delays, up to several days.</p>
+
+        <p>In addition to actually writing a comment, I make a decision on each of your submissions — either I make this decision (albeit with small comments), or I will require you to rewrite this decision taking into account my comments. In the first case, I change the status of the submission to "Accepted" (i.e. you will see exactly "Accepted" instead of "OK" in the table with your submissions), in the second case I change the status to "Ignored". Accordingly, in the first case, just take note of the comments that I wrote (and it happens that I do not write any comments), although you can rewrite the solution if you want. In the second case, be sure to rewrite the decision taking into account these comments.</p>
+        <p>(<a href="https://blog.algoprog.ru/why-ignore/">Read more about why I ignore decisions</a>.)</p>
+
+        <p>In the summary table, the "OK" solutions (i.e., which I haven't looked at yet) are displayed with a yellow background, the "Counted" solutions (i.e., which I have accepted) are displayed with a green background, ignored solutions are not taken into account in the total number of tasks you have solved, just the corresponding task in the summary table is displayed with a blue background.</p>
+
+        <p>I will also try to write comments on your unsuccessful submissions — to point out an error or advise where to look for it, etc. Of course, I will not always write them as soon as I see your attempt, and I will not always fully report the error found — after all, it will usually be useful for you to find the error more-less independently, I will try to give you suggestive advice (but, of course, it depends on the error). In general, if you tried to do a task, but it does not pass the tests, then perhaps within a day I will write you a tip in the comments to your submission.</p>
+
+        <p>Sometimes I may not have time to review all your unsuccessful submissions, or I do not write a comment for some other reasons. In that case, if you want to get a comment on any of them, just email me.</p>
+
+        <h3>Good solutions</h3>
+        <p>After I accept your solution (I set the status "Accepted"), you have access to "good solutions" for the corresponding task — on the task page, above the form for submitting the solution, a link to "good solutions" appears.</p>
+
+        <p>"Good solutions" are several (up to 5 pieces) solutions that were passed by other students of the course, and which, in my opinion, are written quite well and can be considered an example of solving this problem. Watch them, especially for those tasks where I have accepted with any comments (but in general it is useful to watch "good solutions" and for all accepted tasks in general). Compare the "good solutions" with your solution, perhaps you will see that something can be done easier, or even find other useful ideas.</p>
         
-        <p>Помимо собственно написания комментария, я по каждой вашей посылке принимаю решение — либо я принимаю это решение (пусть и с небольшими замечаниями), либо я потребую от вас это решение переписать с учетом моих замечаний. В первом случае я меняю статус посылки на "Зачтено" (т.е. вы будете видеть именно "Зачтено" вместо "ОК" в таблице с вашими посылками), во втором случае я меняю статус на "Проигнорировано". Соответственно, в первом случае просто примите к сведению замечания, которые я написал (а бывает так, что я и никаких замечаний не пишу), хотя можете и переписать решение, если хотите. Во втором случае обязательно перепишите решение с учетом этих замечаний.</p>
-        <p>(<a href="https://blog.algoprog.ru/why-ignore/">Подробнее про то, за что я игнорирую решения</a>.)</p>
-        
-        <p>В сводной таблице решения "ОК" (т.е. которые я еще не посмотрел) отображаются с желтым фоном, решения "Зачтено" (т.е. которые я принял) — с зеленым фоном, проигнорированные решения не учитываются в общем количестве решенных вами задач, просто соответствующая задача в сводной таблице отображаются с синим фоном.</p>
-        
-        <p>Я буду стараться также писать комментарии по вашим неуспешным посылкам — указывать на ошибку или советовать, где ее поискать, и т.п. Я, конечно, не всегда буду писать их сразу как увижу вашу попытку, и не всегда буду полностью сообщать о найденной ошибке — ведь обычно вам полезно будет все-таки найти ошибку более-менее самостоятельно, я постараюсь вам давать наводящие советы (но, конечно, это зависит от ошибки). В общем, если вы пытались сделать задачу, но она не проходит тесты, то возможно в течение суток я вам напишу совет в комментарии к вашей посылке.</p>
-        
-        <p>Иногда я могу не успевать просмотреть все ваши неуспешные посылки, или не пишу комментарий по каким-то еще причинам. В таком случае, если вы хотите получить комментарий по какой-нибудь из них, просто напишите мне.</p>
-        
-        <h3>Хорошие решения</h3>
-        <p>После того, как я засчитываю вам решение (ставлю статус "Зачтено"), у вас появляется доступ к "хорошим решения" по соответствующей задаче — на странице задачи, над формой для отправки решения, появляется ссылка на "хорошие решения".</p>
-        
-        <p>"Хорошие решения" — это несколько (до 5 штук) решений, которые сдавали другие ученики курса, и которые, на мой взгляд, написаны достаточно хорошо и могут считаться образцом решения этой задачи. Смотрите их, особенно по тем задачам, где я вам зачел решение с какими-либо комментариями (но вообще полезно смотреть "хорошие решения" и по всем зачтенным задачам вообще). Сравните "хорошие решения" с вашим решением, возможно, вы увидите, что что-то можно сделать проще, или вообще найдете другие полезные идеи.</p>
-        
-        <p>Я стараюсь в "хороших решениях" по возможности поддерживать баланс разных языков (т.е. как правило среди "хороших решений" есть решения на разных языках). Но смотрите и решения на вашем языке, и на других языках, даже которых вы не знаете — как правило, понять алгоритм можно даже на языках, которых вы вообще не знаете. С другой стороны, для вашего языка в "хороших решениях" вы можете найти и какие-нибудь интересные чисто языковые тонкости и приёмы.</p>
-        
-        <p>Кроме того, нередко в "хороших решениях" я показываю разные подходы к решению задачи, нередко там встречаются вообще разные алгоритмы. Если вы видите, что "хорошее решение" сильно отличается от вашего, полезно разобраться, как оно вообще работает.</p>
-        
-        <p>При этом понимайте, что на самом деле по многим задачам на сайте сданы уже сотни решений, и на самом деле "хороших" из них десятки, если не больше. Вы видите максимум пять из них, просто потому, что смотреть десятки более-менее одинаковых решений смысла нет. Вы увидите какие-то пять из них, которым повезло, что я их отметил как "хорошие", но это "везение" часто определяется случайностью, ну и указанными выше принципами про разнообразие языков и подходов. То есть вы видите не пять самых лучших решений, а пять случайных из числа достаточно хороших.</p>
-        
-        <p>Поэтому не надо считать, что если ваше личное решение не попало в "хорошие", то оно хуже "хороших". Оно может быть столь же хорошо, или даже чем-то лучше "хороших", просто ему не повезло. Если вы видите, что "хорошие" решения написаны столь же чисто и понятно, как ваше — значит, ваше тоже могло бы быть "хорошим". И наоборот, если ваше решение попало в "хорошие", это не обозначает, что оно намного лучше всех остальных :) По той же причине авторы "хороших решений" не подписаны.</p>
-        
-        <p>С другой стороны, если вы посмотрели "хорошие решения", и считаете, что ваше решение заметно лучше всех "хороших", напишите мне, может быть, я и ваше решение добавлю в "хорошие". (Хотя обычно я назначаю решение "хорошим" одновременно с тем, как я его засчитываю, поэтому если ваше решение действительно заметно лучше других хороших, как правило, я его сделаю "хорошим" еще до того, как вы сможете посмотреть "хорошие решения" :) .)</p>
-        
-        <h3>Сводная таблица</h3>
-        <p>Все ваши посылки по нашим задачам отображаются в сводных таблицах, ссылки на которые есть в меню сайта. А именно, каждая клетка в основной части этой таблицы указывает статистику посылок от конкретного школьника по конкретной задаче. Если в клетке стоит знак "+", значит, задача сдана успешно ("ОК" или "Зачтено"), если "-" — значит, человек пытался сдавать задачу, но прошел не все тесты. Число после значка (если оно есть) указывает количество неуспешных попыток (если они есть). Например:
+        <p>I try to keep the balance of different languages in the "good solutions" as much as possible (i.e., as a rule, there are solutions in different languages among the "good solutions"). But look at the solutions in your language, and in other languages that you don't even know — as a rule, you can understand the algorithm even in languages that you don't know at all. On the other hand, you can also find some interesting purely linguistic subtleties and techniques for your language in "good solutions".</p>
+
+        <p>In addition, often in "good solutions" I show different approaches to solving the problem, often there are generally different algorithms. If you see that a "good solution" is very different from yours, it is useful to understand how it works in general.</p>
+
+        <p>At the same time, understand that in fact, hundreds of solutions have already been submitted for many tasks on the site, and in fact there are dozens of "good" ones, if not more. You see a maximum of five of them, simply because there is no point in watching dozens of more or less identical solutions. You will see some five of them who were lucky that I marked them as "good", but this "luck" is often determined by chance, well, the principles mentioned above about the diversity of languages and approaches. That is, you don't see five of the best solutions, but five random ones from among the good ones.</p>
+
+        <p>Therefore, do not assume that if your personal decision did not get into the "good" ones, then it is worse than the "good" ones. It can be just as good, or even something better than the "good" ones, it's just unlucky. If you see that the "good" solutions are written as cleanly and clearly as yours, then yours could also be "good". Conversely, if your solution is in the "good", it does not mean that it is much better than all the others :) For the same reason, the authors of "good solutions" are not signed.</p>
+
+        <p>On the other hand, if you have looked at the "good solutions" and think that your solution is noticeably better than all the "good" ones, write to me, maybe I will add your solution to the "good" ones. (Although I usually designate a solution as "good" at the same time as I count it, so if your solution is really noticeably better than other good ones, as a rule, I will make it "good" even before you can see "good solutions" :) .)</p>
+
+        <h3>Summary table</h3>
+        <p>All your submissions for our tasks are displayed in summary tables, links to which are in the site menu. Namely, each cell in the main part of this table indicates the statistics of submissions from a particular student for a specific task. If there is a "+" sign in the cell, it means that the task was passed successfully ("OK" or "Accepted"), if "-" — it means that the person tried to pass the task, but did not pass all the tests. The number after the icon (if any) indicates the number of unsuccessful attempts (if any). For example:
         </p><ul>
-        <li>Пустая клетка обозначает, что задача не сдавалась вообще;</li>
-        <li>"+" обозначает, что задача сдана с первой попытки;</li>
-        <li>обозначения "-" не бывает;</li>
-        <li>"+2" обозначает, что задача сдана с третьей попытки (две неуспешные попытки и потом успешная);</li>
-        <li>"-2" обозначает, что по задаче были только две неуспешные попытки и всё.</li>
+        <li>An empty cell indicates that the task did not give up at all;</li>
+        <li>"+" indicates that the task was completed on the first attempt;</li>
+        <li>notation "-" does not happen;</li>
+        <li>"+2" means that the task was passed on the third attempt (two unsuccessful attempts and then a successful one);</li>
+        <li>"-2" means that there were only two unsuccessful attempts on the task and that's it.</li>
         </ul><p></p>
-        
-        <p>Фон ячейки обозначает статус задачи относительно вердиктов "Зачтено" и "Проигнорировано":
+
+        <p>The background of the cell indicates the status of the task relative to the verdicts "Read" and "Ignored":
         </p><ul>
-        <li>Желтый фон — статус "ОК", т.е. я еще не смотрел эту задачу;</li>
-        <li>Зеленый фон — статус "Зачтено";</li>
-        <li>Синий фон — статус "Проигнорировано", при этом сама проигнорированная попытка считается неуспешной.</li>
+        <li>Yellow background — status "OK", i.e. I haven't looked at this task yet;</li>
+        <li>Green background — status "Accepted";</li>
+        <li>The blue background indicates the status "Ignored", while the ignored attempt itself is considered unsuccessful.</li>
         </ul><p></p>
-        
-        <p>В последних двух колонках таблицы указывается общее количество решенных задач и общее количество неуспешных ("штрафных") попыток (учитываются только те задачи, по которым в итоге была получена правильная программа, проигнорированные попытки не учитываются). Таблица отсортирована по общему количеству решенных задач, а при равном числе решенных задач — по количеству штрафных попыток.</p>
-        
-        <p>Еще у таблицы есть следующая особенность: в ней появляются только школьники, которые удовлетворяют сразу двум требованиям: во-первых, я их должен активировать их учетную запись, во-вторых, у школьника должна быть хотя бы одна попытка сдачи задачи. Поэтому если вы еще ничего не пытались сдавать, не удивляйтесь, что вас нет в таблице. Если же вы уже пытались что-то сдавать, а в таблице вас нет, то напишите мне — возможно, я забыл вас активировать.</p>
-        
-        <p>Аналогично, наборы задач (контесты) появляются в сводной таблице только когда хотя бы кто-нибудь отправит какое-нибудь решение по какой-нибудь задаче этого контеста.</p>
-        
-        <h3>Терминология</h3>
-        Выше я уже ввел некоторую специфическую терминологию, которая используется в олимпиадном программировании, на всякий случай повторю ее тут:
+
+        <p>The last two columns of the table indicate the total number of solved tasks and the total number of unsuccessful ("penalty") attempts (only those tasks for which the correct program was eventually obtained are taken into account, ignored attempts are not taken into account). The table is sorted by the total number of solved problems, and with an equal number of solved problems — by the number of penalty attempts.</p>
+
+        <p>The table also has the following feature: only schoolchildren who meet two requirements at once appear in it: first, I have to activate their account, and secondly, the student must have at least one attempt to complete the task. Therefore, if you have not tried to take anything yet, do not be surprised that you are not in the table. If you have already tried to take something, but you are not in the table, then write to me - perhaps I forgot to activate you.</p>
+
+        <p>Similarly, problem sets (contests) they appear in the summary table only when at least someone submits some solution for some problem of this contest.</p>
+
+        <h3>Terminology</h3>
+        Above I have already introduced some specific terminology that is used in programming contests, just in case I will repeat it here:
         <ul>
-        <li>Контест — любой набор задач, каким-то образом сгруппированный и выделенный от остальных. В пределах контеста задачи обычно занумерованы (1, 2, 3, ... или A, B, C, ... и т.п.) Это может быть отдельный тур олимпиады, или набор задач к какому-нибудь занятию или на какую-нибудь тему, и т.д. В рамках наших занятий "контестом" мы называем набор задач, доступных по каждой отдельной ссылке со странички соответствующего уровня. Например, "Задачи на арифметические операции" — это отдельный контест.</li>
-        <li>Посылка (синонимы: попытка, сабмит) — отдельная ваша попытка сдать задачу в тестирующую систему; также программа, которую вы сдали в этой попытке.</li>
-        <li>Штрафная попытка (обычно в контексте сводного рейтинга) — попытка, которая не прошла все тесты.</li>
-        <li>Тест — это отдельный тестовый пример, подготовленный авторами задачи, чтобы на нем проверять ваши программы. Обычно по каждой задаче автор задачи подготавливает от 5 до 60 тестов, и программы, которые вы сдаете на проверку, проверяются по очереди на всех этих тестах. Чтобы попытка считалась успешной, надо, чтобы программа прошла все тесты, т.е. на все тесты дала правильный ответ. (На других олимпиадах могут быть другие правила.)</li>
-        </ul></div>
-    """)
+        <li>A contest is any set of tasks that is somehow grouped and separated from the rest. Within the contest, the tasks are usually numbered (1, 2, 3, ... or A, B, C, ... etc.) It can be a separate round of the contest, or a set of tasks for some class or on some topic, etc. As part of our classes, we call a "contest" a set of tasks available on each individual link from a page of the appropriate level. For example, "Arithmetic Operations Tasks" is a separate contest.</li>
+        <li>A submission (synonyms: attempt, submit) is your separate attempt to submit a task to the testing system; also the program that you passed in this attempt.</li>
+        <li>A penalty attempt (usually in the context of a summary rating) is an attempt that did not pass all the tests.</li>
+        <li>The test is a separate test case prepared by the authors of the task in order to test your programs on it. Usually, for each task, the author of the task prepares from 5 to 60 tests, and the programs that you submit for verification are checked in turn on all these tests. In order for the attempt to be considered successful, it is necessary that the program passes all the tests, i.e. it gives the correct answer to all the tests. (Other contests may have different rules.)</li>
+        </ul></div>""")
 
 module20927_7 = () ->
-    page("FAQ", String.raw"""
-        <h3>Что это за курс?</h3>
-        <p>Это курс по алгоритмическому программированию (алгоритмы, структуры данных и т.д.)</p>
+    page(
+        "FAQ", 
+                    String.raw"""<h3>What is this course?</h3>
+        <p>This is a course on algorithmic programming (algorithms, data structures, etc.)</p>
         
-        <p>Он в первую очередь рассчитан на школьников и в качестве подготовки к школьным олимпиадами (и многие материалы в курсе написаны именно как для школьников), но также в курсе могут заочно заниматься (и реально занимаются) вообще все желающие: студенты, выпускники вузов и т.д. Занятия для нижегородских школьников бесплатные, для всех остальных — платные.</p>
+        <p>It is primarily designed for schoolchildren and as a preparation for school programming contests (and many materials in the course are written exactly as for schoolchildren), but also everyone can study in absentia (and really do) in general: students, university graduates, etc. Classes for Nizhny Novgorod schoolchildren are free, for everyone else — paid.</p>
         
-        <p>Эта страничка — она как раз для студентов, выпускников и т.д., а не для школьников. Для школьников есть <a href="/material/module-20927_5" onclick="window.goto('/material/module-20927_5')();return false;">отдельная страничка</a>.</p>
+        <p>This page is just for students, graduates, etc., and not for schoolchildren. There is a <a href="/material/module-20927_5" onclick="window.goto('/material/module-20927_5')();return false;">separate page</a> for schoolchildren.</p>
         
-        <h3>Чему тут учат?</h3>
-        <p>Основное направление — это алгоритмическое программирование. Начиная с основ программирования, и далее в алгоритмы и структуры данных. Это то, что по-английски называется Computer Science.</p>
+        <h3>What are they teaching here?</h3>
+        <p>The main direction is algorithmic programming. Starting from the basics of programming, and further into algorithms and data structures. This is what is called Computer Science in English.</p>
         
-        <h3>Чему тут НЕ учат?</h3>
-        <p>Мы не занимаемся "техническими" вопросами:</p>
+        <h3>What is NOT taught here?</h3>
+        <p>We do not deal with "technical" issues:</p>
         <ul>
-        <li>Созданием пользовательских интерфейсов, кнопочек, окошек и т.д.</li>
-        <li>Программированием под конкретные платформы: созданием web-приложений, программированием под Android, iOS и т.п.</li>
-        <li>Использованием различных фреймворков, библиотек и т.д.</li>
+        <li>Creating user interfaces, buttons, windows, etc.</li>
+        <li>Programming for specific platforms: creating web applications, programming for Android, iOS, etc.</li>
+        <li>Using various frameworks, libraries, etc.</li>
         </ul>
-        <p>Мы будем изучать алгоритмы, которые лежат в основе многих таких программ (мы не будем обсуждать, как сделать кнопку "сортировать по алфавиту", но будем обсуждать, как реализовать сортировку, когда список объектов для сортировки уже есть).</p>
+        <p>We will study the algorithms that underlie many such programs (we will not discuss how to make the "sort alphabetically" button, but we will discuss how to implement sorting when there is already a list of objects to sort).</p>
         
-        <h3>Вы действительно будете учить?</h3>
-        <p>И да, и нет. Формат заочного курса подразумевает, что существенную часть материала вы будете изучать сами. Я буду скорее направлять вас, советуя, где можно посмотреть тот или иной вопрос, на каких задачах отладить навыки, а также буду довольно активно комментировать ваши программы. Кроме того, вы всегда можете со мной связаться (контакты в разделе "О курсе") и задать любой вопрос.</p>
+        <h3>Are you really going to teach?</h3>
+        <p>Yes and no. The format of the correspondence course implies that you will study a significant part of the material yourself. I will rather guide you, advising you where to look at this or that question, on which tasks to debug skills, and I will also comment on your programs quite actively. In addition, you can always contact me (contacts in the "About the course" section) and ask any question.</p>
         
-        <h3>Какой язык программирования?</h3>
-        <p>Вообще говоря, какой хотите, из тех, что позволяют писать консольные приложения и поддерживаются этим сайтом. Это C++, Java, Python, C#, PHP, Ruby, Perl, Pascal, Basic, даже 1С. </p>
+        <h3>What is the programming language?</h3>
+        <p>Generally speaking, whatever you want, of those that allow you to write console applications and are supported by this site. These are C++, Java, Python, C#, PHP, Ruby, Perl, Pascal, Basic, even 1C. </p>
         
-        <p>При этом, если вы еще не знаете никакого языка программирования, то я рекомендую Python. На страничке курса есть материалы для начинающих по питону. Если вы знаете какой-то из перечисленных в предыдущем абзаце языков, то можете использовать его; но вообще все продвинутые темы (начиная с уровня 2) не зависят от языка.</p>
+        <p>At the same time, if you don't know any programming language yet, then I recommend Python. On the course page there are materials for beginners in python. If you know any of the languages listed in the previous paragraph, you can use it; but in general, all advanced topics (starting from level 2) do not depend on the language.</p>
         
-        <p>Лично я лучше всего знаю C++, питон и паскаль; по этим языкам я смогу вам достаточно подробно помогать. По другим языкам я не смогу вам подсказывать по различным тонкостям языка, хотя, как показывает опыт, для алгоритмов это не очень существенно.</p>
+        <p>Personally, I know C++, python and pascal best of all; I can help you with these languages in sufficient detail. In other languages, I will not be able to tell you about various subtleties of the language, although, as experience shows, this is not very important for algorithms.</p>
         
-        <h3>А какие изначальные знания требуются?</h3>
-        <p>По программированию — от никаких и выше. Вообще, заочный формат позволяет реализовать почти индивидуальное обучение (т.е. каждый участник курса занимается в своем ритме и режиме), поэтому я ожидаю здесь людей с широким спектром начальных знаний: от студентов младших курсов, только начинающих программировать, до уже профессиональных программистов, желающих улучшить свои знания в области алгоритмов.</p>
+        <h3>And what initial knowledge is required?</h3>
+        <p>In programming — from none and above. In general, the correspondence format allows you to implement almost individual training (i.e., each participant of the course is engaged in his own rhythm and mode), so I expect people with a wide range of initial knowledge here: from junior students who are just beginning to program, to already professional programmers who want to improve their knowledge in the field of algorithms.</p>
         
-        <h3>Что надо сделать, чтобы начать заниматься?</h3>
+        <h3>What should I do to start studying?</h3>
         <ul>
-        <li><a href="/register" onclick="window.goto('/register')();return false;">Зарегистрируйтесь на сайте</a> (для этого вас попросят еще зарегистрироваться на сайте informatics.mccme.ru). При регистрации укажите свое настоящее имя и правильный населенный пункт, чтобы я вас мог отличить среди других пользователей сайта.</li>
-        <li>Напишите мне любым из указанных в <a href="/material/about" onclick="window.goto('/material/about')();return false;">разделе "О курсе"</a> способов. В письме укажите, как вас зовут, где вы учитесь/работаете. Кроме того, напишите вкратце, какой ваш опыт в программировании, или вы будете заниматься "с нуля".</li>
-        <li>Прочитайте, или хотя бы просмотрите, все тексты в разделе "О курсе".</li>
-        <li>Дождитесь ответа и дальнейших инструкций от меня.
+        <li><a href="/register" onclick="window.goto('/register')();return false;">Register on the site</a> (for this you will be asked to register on the site again informatics.mccme.ru ). When registering, specify your real name and the correct locality so that I can distinguish you from other users of the site.</li>
+        <li>Write to me using any of the methods listed in the <a href="/material/about" onclick="window.goto('/material/about')();return false;">"About the Course" section</a>. In the letter, specify your name, where you study / work. In addition, write briefly what your experience in programming is, or you will be engaged "from scratch".</li>
+        <li>Read, or at least review, all the texts in the "About the Course" section.</li>
+        <li>Wait for a response and further instructions from me.
         </li>
         </ul>
         <p></p>
         
-        <h3>Когда можно начать заниматься? Когда "следующий набор"?</h3>
-        <p>К курсу можно присоединится в любое время. Все равно занимающиеся имеют довольно разный уровень подготовки, поэтому никакой единой программы типа "на этой неделе проходим то-то, на следующей то-то, а если вы пропустили или слишком поздно узнали о курсе, то ждите следующей группы или следующего года" нет.</p>
-        <p>Единственное — во время праздников или летом у меня может быть ограничен доступ к интернету, поэтому я могу не так быстро отвечать на ваши письма, смотреть ваши решения и т.д.</p>
+        <h3>When can I start studying? When is the "next set"?</h3>
+        <p>You can join the course at any time. All the same, students have quite different levels of training, so there is no single program like "this week we are going through this, next week this, and if you missed or learned about the course too late, then wait for the next group or next year".</p>
+        <p>The only thing is that during the holidays or in the summer I may have limited access to the Internet, so I may not respond to your letters so quickly, look at your decisions, etc.</p>
         
-        <h3>Занятия только заочные?</h3>
-        <p>Да, очных занятий для не-школьников нет. А если бы и были, то стоили бы намного дороже.</p>
+        <h3>Classes only by correspondence?</h3>
+        <p>Yes, there are no full-time classes for non-schoolchildren. And if they were, they would cost much more.</p>
         
-        <h3>А кто вообще вы такой?</h3>
-        <p>Я — Петр Андреевич Калинин, к.ф.-м.н., старший разработчик компании Яндекс, выпускник ВШОПФ ННГУ. Я в свое время активно участвовал в различных олимпиадах: бронзовый призер международной олимпиады школьников по информатике (IOI) 2001 года, золотой призер IOI 2002 года; в составе команды ННГУ дважды участник финала чемпионата мира по командному программированию ACM (ACM ICPC). С 2017 по 2019 год я преподавал в Школе анализа данных Яндекса. Я ученик В.Д. Лелюха.</p>
+        <h3>And who are you anyway?</h3>
+        <p>I am Petr Andreevich Kalinin, Ph.D., Senior developer at Yandex, graduate of the NSU HSE. At one time, I actively participated in various programming contests and olympiads: bronze medalist of the International Olympiad of Schoolchildren in Computer Science (IOI) in 2001, gold medalist of the IOI in 2002; as part of the UNN team, I twice participated in the finals of the ACM World Team Programming Championship (ACM ICPC). From 2017 to 2019, I taught at the Yandex School of Data Analysis. I am a student of V.D. Lelyukh.</p>
         
-        <p>В том или ином виде я учу школьников программированию с тех пор, как сам окончил школу в 2002 году (я ездил преподавателем в различные летние школы и т.п.); этот курс существует с 2013 года. Среди моих учеников — ряд участников и один победитель заключительного этапа Всероссийской олимпиады школьников по информатике (не считая моего брата Николая, в обучении которого я тоже принимал не последнее участие и который является абсолютным победителем заключительного этапа 2013 года и дважды — в 2013 и 2014 годах — золотым призером международной олимпиады школьников по информатике).</p>
+        <p>In one form or another, I have been teaching programming to schoolchildren since I graduated from school in 2002 (I went as a teacher to various summer schools, etc.); this course has been in existence since 2013. Among my students are a number of participants and one winner of the final stage of the All—Russian Olympiad of Schoolchildren in Computer Science (not counting my brother Nikolai, in whose training I also took part not the last time and who is the absolute winner of the final stage of 2013 and twice — in 2013 and 2014 — the gold medalist of the international Olympiad of schoolchildren in computer science).</p>
         
-        <p>Команды школьников под моим руководством регулярно участвуют в Нижегородской и Всероссийской командных олимпиада школьников по программированию. На большинстве прошедших к данному моменту Нижегородских командных олимпиадах абсолютное первое место занимали мои команды; на Всероссийской командной олимпиаде мои команды регулярно становятся призерами, нередко — медалистами, а два раза — занимали абсолютное первое место.</p>
+        <p>Teams of schoolchildren under my leadership regularly participate in the Nizhny Novgorod and All-Russian team Olympiad of schoolchildren in programming. At most of the Nizhny Novgorod team Olympiads that have taken place so far, my teams took the absolute first place; at the All—Russian Team Olympiad, my teams regularly become prize—winners, often medalists, and twice they took the absolute first place.</p>
         
-        <p>Вы всегда можете связаться со мной, контактные данные указаны в разделе "О курсе".</p>
+        <p>You can always contact me, contact details are listed in the "About the course" section.</p>
         
-        <h3>А что за сайт informatics.mccme.ru?</h3>
-        <p>Informatics.mccme.ru — это сайт дистанционной подготовки по информатике, организованный Московским центром непрерывного математического образования (МЦНМО) и Московским институтом открытого образования (МИОО); он очень удобен для организации курсов подобных этому, и, как вы можете видеть на главной странице сайта, реально широко используется, но в первую очередь для организации очных занятий. Я не имею непосредственного отношения к этому сайту (хотя и знаком с людьми, которые его создали и поддерживают).</p>
+        <h3>And what kind of website informatics.mccme.ru ?</h3>
+        <p>Informatics.mccme.ru — this is a site for distance learning in computer science, organized by the Moscow Center for Continuing Mathematical Education (MCNMO) and the Moscow Institute of Open Education (MIOO); it is very convenient for organizing courses like this, and, as you can see on the main page of the site, it is really widely used, but primarily for organizing face-to-face classes. I am not directly related to this site (although I am familiar with the people who created and maintain it).</p>
         
-        <p>Мой курс строится на базе материалов с informatics и использует его в качестве тестирующей системы (а раньше вообще курс существовал только на informatics). Местами еще могли остаться ссылки на информатикс, если обнаруживаете такую, пишите мне.</p></div>
-    """)
+        <p>My course is based on materials from informatics and uses it as a testing system (and previously the course existed only on informatics). There could still be links to computer science in some places, if you find one, write to me.</p></div>""")
 
 module20927_1 = () ->
-    epigraph("Use your head to think!", String.raw"""
-        <h2>Use your head to think!</h2>
+    epigraph("Use your head to think!", 
+                                            String.raw"""<h2>Use your head to think!</h2>
         <p>The motto of our course is <i>Use your head to think!</i></p>
         
         <p>This means that you have to think all the time when working on the course. You need to think about how to solve certain tasks, how to do a lot of other things. You will not have universal recipes that will allow you to solve all the problems — on the contrary, the best, most interesting tasks are those where you are required to come up with something.</p>
         
         <p>Moreover, you should always be critical of any information you receive, of anything that is written in textbooks, of anything I tell you or that is written on the course page. Think, try to understand why it is written, why you are advised to do so, and not otherwise. In textbooks, in what other people tell you, and even more so in my materials and advice, there can easily be mistakes, typos, and finally, you may find easier ways to achieve the same — so never take for granted what you read somewhere, always think about and reflect on the information received. It may turn out that in one source you read one information, and in another source something absolutely opposite — think, experiment (see below), and understand how to do better.</p>
         
-        <p>Also, don't be afraid to experiment! If you are not sure if something is possible in python/c++/etc., if it ok to write this or that command, whether it will work as you expect — try it: write and check. If you don't remember exactly how to write a command, try several options until you succeed. If you have read completely different information about how to do something in different places, try it and check which method works! Don't be afraid to try, don't be afraid to experiment — this way you will learn a lot more than if you just strictly follow what is written in any textbooks or what  someone (even me) told you.</p></div>
-    """)
+        <p>Also, don't be afraid to experiment! If you are not sure if something is possible in python/c++/etc., if it ok to write this or that command, whether it will work as you expect — try it: write and check. If you don't remember exactly how to write a command, try several options until you succeed. If you have read completely different information about how to do something in different places, try it and check which method works! Don't be afraid to try, don't be afraid to experiment — this way you will learn a lot more than if you just strictly follow what is written in any textbooks or what  someone (even me) told you.</p></div>""")
 
 module20927_35 = () ->
-    page("\nО лицензии на материалы сайта", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>О лицензии на материалы этого сайта</h2>
-        <h3>Исходный код сайта</h3>
-        Исходный код собственно сайта algoprog.ru написан мною (Петром Калининым) и распространяется по лицензии <a href="https://www.gnu.org/licenses/agpl">GNU Affero General Public License</a>. Скачать исходный код можно с сайта <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>.
+    page(
+        "\nAbout the license for the site materials", 
+                                                String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>About the license for the materials of this site</h2>
+        <h3>The source code of the site</h3>
+        The source code of the actual site algoprog.ru written by me (Peter Kalinin) and distributed under the <a href="https://www.gnu.org/licenses/agpl">GNU Affero General Public License</a>. You can download the source code from the website <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a> .
         
-        <h3>Теоретические материалы</h3>
-        <p>На этом сайте есть различные теоретические материалы с разной степенью понятности с точки зрения лицензии.</p>
-        <p>Материалы, в которых лицензия указана явно, распространяются по указанной в них лицензии.</p>
-        <p>Материалы, размещенные на других сайтах, на которые с сайта algoprog.ru проставлена только ссылка, распространяются по лицензии, определяемой указанным сайтом.</p>
-        <p>Материалы, в которых лицензия явно не указана, но автором которых являюсь я (это большинство материалов, размещенных непосредственно на сайте algoprog.ru), распространяются по лицензии <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike (CC BY-SA) 4.0</a>.</p>
-        <p>Если вы не уверены, какая лицензия распространяется на конкретный материал, спросите меня.</p>
+        <h3>Theoretical materials</h3>
+        <p>There are various theoretical materials on this site with varying degrees of clarity from the point of view of the license.</p>
+        <p>Materials in which the license is explicitly specified are distributed under the license specified in them.</p>
+        <p>Materials posted on other sites to which from the site algoprog.ru only the link is affixed, distributed under a license determined by the specified site.</p>
+        <p>Materials in which the license is not explicitly specified, but of which I am the author (this is most of the materials posted directly on the site algoprog.ru ), distributed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike (CC BY-SA) 4.0</a> license.</p>
+        <p>If you are not sure which license applies to a particular material, ask me.</p>
         
-        <h3>Условия задач</h3>
-        <p>Условия задач взяты с сайта <a href="https://informatics.mccme.ru">informatics.mccme.ru</a>, где они в большинстве случаев собраны с различных олимпиад. Условия лицензии на них не ясны.</p>
-        </div>
-    """)
+        <h3>Task conditions</h3>
+        <p>The terms of the tasks are taken from the website <a href="https://informatics.mccme.ru">informatics.mccme.ru</a> , where they are mostly collected from various contests. The terms of the license for them are not clear.</p>
+        </div>""", {id: "license"})
 
 module20927_15 = () ->
-    page("\nПро систему уровней", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>О системе уровней</h1>
-        <p>Весь материал в нашем курсе распределен по уровням, от самого простого до очень сложного. Уровни нумеруются последовательными числами (1, 2, 3, ...), в пределах уровня также введены подуровни, нумеруемые буквами (в уровне 1 — подуровни 1А, 1Б, 1В и 1Г, и т.п.)</p>
+    page(
+        "\nAbout the level system", 
+                                      String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>About the level system</h1>
+        <p>All the material in our course is distributed by levels, from the simplest to the most complex. The levels are numbered in consecutive numbers (1, 2, 3, ...), sublevels numbered with letters are also introduced within the level (in level 1 — sublevels 1A, 1B, 1C and 1D, etc.)</p>
         
-        <p>Большинство уровней имееют следующую структуру: подуровни А и Б содержат новый материал, а подуровни В и Г (последний есть не всегда) — дополнительные задачи повышенной сложности на закрепление этого материала. Иногда в уровнях В и Г могут быть особенно сложные задачи на материал существенно более ранних уровней (например, в уровне 5В может оказаться сложная задача на материал уровня 3). Иногда в уровнях В и Г выделены контесты по отдельным темам, иногда дополнительные задачи в этих уровнях идут в случайном порядке.</p>
+        <p>Most levels have the following structure: sublevels A and B contain new material, and sublevels C and D (the latter is not always there) — additional tasks of increased complexity to consolidate this material. Sometimes in levels C and D there may be particularly difficult tasks for the material of significantly earlier levels (for example, in level 5C there may be a difficult task for the material of level 3). Sometimes there are contests on separate topics in levels C and D, sometimes additional tasks in these levels go in random order.</p>
         
-        <p>Я предполагаю, что вы будете проходить подуровни последовательно, переходя к новому подуровню как правило тогда, когда вы "прошли" предыдущий подуровень. Исключение: если вы прошли какую-то тему в подуровне А или Б, и видите в подуровне В или Г контест продвинутых задач на эту же тему, то можете его порешать.</p>
+        <p>I assume that you will go through the sublevels sequentially, moving to a new sublevel usually when you have "passed" the previous sublevel. Exception: if you have passed some topic in sublevel A or B, and you see a contest of advanced tasks on the same topic in sublevel C or D, then you can solve it.</p>
         
-        <p>Требования к "прохождению" каждого подуровня указаны под его заголовком. Как правило, для подуровней А и Б требуется прорешать все задачи, для уровней В и Г требуется прорешать часть (половину или треть) задач. Тем не менее это не обозначает, что оставшиеся задачи уровней В и Г решать не надо. Я рекомендую, если вы прорешали необходимый минимум задач уровней В и Г, переходить на следующий уровень, чтобы побыстрее приступить к изучению новой теории. Но при этом возвращайтесь регулярно к недорешенным задачам предыдущих уровней. Примерно можно оценивать так: когда вы переходите на уровень 4А, у вас должна быть решена половина задач уровня 3В, 3/4 задач уровня 2В и примерно 7/8 задач уровней 1В и 1Г. Аналогично, когда вы переходите на уровень 5А, у вас должна быть решена половина задач уровня 4В, а также 3/4 задач уровня 3В, 7/8 задач уровня 2В и почти все (за редким исключением особенно неприятных задач) задачи уровней 1В и 1Г. Аналогично для других уровней.</p>
+        <p>The requirements for the "passage" of each sublevel are indicated under its heading. As a rule, for sublevels A and B it is required to solve all the tasks, for levels C and D it is required to solve part (half or a third) of the tasks. However, this does not mean that the remaining tasks of levels C and D do not need to be solved. I recommend that if you have solved the necessary minimum of tasks of levels B and D, go to the next level in order to quickly begin studying a new theory. But at the same time, return regularly to the unfinished tasks of the previous levels. It can be estimated approximately as follows: when you move to level 4A, you should have solved half of the tasks of level 3C, 3/4 of the tasks of level 2C and about 7/8 of the tasks of levels 1C and 1D. Similarly, when you move to level 5A, you should have solved half of the tasks of level 4C, as well as 3/4 of the tasks of level 3C, 7/8 of the tasks of level 2C and almost all (with the rare exception of particularly unpleasant tasks) tasks of levels 1C and 1D. Similarly for other levels.</p>
         
-        <p>Обратите внимание, что в уровнях В и Г задачи далеко не всегда упорядочены по сложности. Поэтому решайте их в том порядке, в каком вам удобнее!</p>
+        <p>Please note that in levels C and D, the tasks are not always ordered by complexity. Therefore, solve them in the order in which it is more convenient for you!</p>
         
-        </div>
-    """)
+        </div>""")
 
 module20927_37 = () ->
-    page("\nО франшизе", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Франшиза</h1>
+    page(
+        "\nAbout the franchise", 
+                             String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Franchise</h1>
         
-        <p>Если вы уже учите кого-нибудь (школьников, студентов и т.д.) программированию, и хотите использовать алгопрог или его материалы в своих занятиях...</p>
+        <p>If you are already teaching someone (schoolchildren, students, etc.) programming, and you want to use the algoprog or its materials in your classes...</p>
         
-        <p>...или если вы хотите начать учить кого-нибудь на базе алгопрога или с использованием его материалов...</p>
+        <p>...or if you want to start teaching someone on the basis of the algprog or using its materials...</p>
         
-        <p>...или если вы хотите использовать движок алгопрога в своих занятиях, наполнив его своими материалами</p>
+        <p>... or if you want to use the algoprog engine in your classes by filling it with your own materials</p>
         
-        <p>то этот текст для вас.</p>
+        <p>then this text is for you.</p>
         
-        <h2>Материалы</h2>
+        <h2>Materials</h2>
         
-        <p>Если вам нужен не функционал алгопрога, а только <i>материалы</i> — теоретические материалы, видеолекции, задачи и т.д. — то они доступны в том или ином виде свободно. Теоретические материалы, автором которых являюсь я, как правило, распространяются под той или иной свободной лицензией, вы можете их использовать. Она обычно указана в самом материале, если там лицензия не указана, то спросите меня. Материалы, автором которых являюсь не я, взяты с других сайтов, вы обычно тоже можете их использовать. Почти все задачи взяты с общедоступных сайтов <a href="https://informatics.mccme.ru">informatics.mccme.ru</a> и <a href="https://codeforces.com">codeforces.com</a>, на обоих этих сайтах вы можете формировать свои курсы из доступных там задач и т.д. (в частности, информатикс специально сделан для проведения различных курсов). Основное (хотя уже и подустаревшее) содержимое алгопрога есть на информатиксе: <a href="https://informatics.msk.ru/course/view.php?id=1135">informatics.msk.ru/course/view.php?id=1135</a> — собственно, весь алгопрог вырос из этого моего курса на информатиксе.</p>
+        <p>If you do not need the functionality of the algprog, but only <i>materials</i> — theoretical materials, video lectures, tasks, etc. — then they are freely available in one form or another. Theoretical materials, the author of which I am, as a rule, are distributed under one or another free license, you can use them. It is usually indicated in the material itself, if the license is not specified there, then ask me. The materials that I am not the author of are taken from other sites, you can usually use them too. Almost all tasks are taken from public sites <a href="https://informatics.mccme.ru">informatics.mccme.ru</a> and <a href="https://codeforces.com">codeforces.com</a> on both of these sites, you can form your courses from the tasks available there, etc. (in particular, computer science is specially made for conducting various courses). Basic (although already outdated) the contents of the algoprog are on informatics: <a href="https://informatics.msk.ru/course/view.php?id=1135">informatics.msk.ru/course/view.php?id=1135</a> — actually, the whole algoprog grew out of my computer science course.</p>
         
-        <h2>Движок</h2>
+        <h2>Engine</h2>
         
-        <p>Сам движок алгопрога также <a href="https://github.com/petr-kalinin/algoprog">свободно доступен</a>, вы можете поднять собственный инстанс алгопрога и делать там что угодно. (Хотя, конечно, это не так просто, и я вряд ли буду вам помогать.)</p>
+        <p>The algoprog engine itself is also <a href="https://github.com/petr-kalinin/algoprog">freely available</a>, you can raise your own instance of algoprog and do anything there. (Although, of course, it's not that easy, and I'm unlikely to help you.)</p>
         
-        <h2>Отдельный инстанс</h2>
+        <h2>A separate instance</h2>
         
-        <p>Я могу поднять отдельный инстанс алгопрога для ваших учеников, с вашими материалами и задачами. Это требует отдельного обсуждения, но в принципе это возможно. Это будет платно, конкретная стоимость будет зависеть от необходимой работы по поддержке инстанса, необходимых доработок, и ожидаемого количества учеников. В качестве грубой предварительной оценки, если не требуется серьезных доработок, и ожидается 20-50 учеников, то стоимость отдельного инстанса будет составлять около 1000 рублей с ученика в месяц; если учеников будет меньше, то стоимость, конечно, будет повыше.</p>
+        <p>I can raise a separate instance of the algoprog for your students, with your materials and tasks. This requires a separate discussion, but in principle it is possible. It will be paid, the specific cost will depend on the necessary work to support the instance, the necessary improvements, and the expected number of students. As a rough preliminary assessment, if no serious improvements are required, and 20-50 students are expected, then the cost of a separate instance will be about 1000 rubles per student per month; if there are fewer students, then the cost, of course, will be higher.</p>
         
-        <h2>Занятия прямо на алгопроге по материалам алгопрога</h2>
+        <h2>Classes directly on the algoprog based on the materials of the algoprog</h2>
         
-        <p>Если вы хотите заниматься именно на алгопроге, то есть следующие варианты. Во-первых, ваши ученики может зарегистрироваться на алгопроге и заниматься как независимые ученики. С моей точки зрения это будут просто дополнительные ученики на алгопроге, вы сможете организовывать занятия, помогать ученикам и т.д., но у вас не появится никаких дополнительных возможностей на алгопроге (вы не сможете просматривать решения учеников и т.д.). Ваши ученики занимаются независимо, для них стоимость занятий будет, естественно, определяться <a href="/pay">по общим правилам</a>, с вас я, естественно, денег брать не буду (и вообще могу про вас и не знать :) ).</p>
+        <p>If you want to do it on the algoprog, then there are the following options. Firstly, your students can register on the algoproge and study as independent students. From my point of view, these will be just additional students on the algoproge, you will be able to organize classes, help students, etc., but you will not have any additional opportunities on the algoproge (you will not be able to view student decisions, etc.). Your students are engaged independently, for them the cost of classes will, of course, be determined <a href="/pay">by the general rules</a>, of course, I will not take money from you (and in general I may not know about you :)).</p>
         
-        <p>Если вы хотите иметь дополнительные возможности — просматривать решения учеников, комментировать их, засчитывать/игнорировать, иметь отдельные сводные таблицы, то напишите мне. Это все (равно как и другие запросы с вашей стороны) вполне реально, но требует отдельного обсуждения. В качестве <b>базовых</b> вариантов есть следующие:</p>
+        <p>If you want to have additional opportunities — to view students' decisions, comment on them, count/ignore them, have separate summary tables, then write to me. All of this (as well as other requests from your side) is quite realistic, but requires a separate discussion. As <b>basic</b> options , there are the following:</p>
         <ul>
-        <li>Ваши ученики занимаются на алгопроге на равных правах с остальными, я их проверяю, комментирую, засчитываю/игнорирую их решения — и плюс вы можете делать то же самое; для ваших учеников будут отдельные таблички и т.д. <b>Как правило</b>, стоимость таких занятий для ваших учеников будет такая же, как если бы они занимались независимо. (Т.е. никакой дополнительной оплаты за дополнительный функционал нет, но и скидок нет.)</li>
-        <li>Я никак не взаимодействую с вашими учениками — не смотрю их решения, не засчитываю/игнорирую. Все это делаете, если хотите, вы. <b>Как правило</b>, стоимость таких занятий для ваших учеников будет в два раза меньше, чем если бы они занимались независимо.</li>
+        <li>Your students are engaged in the algoproge on an equal footing with the rest, I check them, comment on them, count/ignore their decisions — and plus you can do the same; there will be separate signs for your students, etc.<b>As a rule</b>, the cost of such classes for your students will be the same as if they were engaged independently. (That is, there is no additional payment for additional functionality, but there are no discounts either.)</li>
+        <li>I don't interact with your students in any way — I don't look at their decisions, I don't count/ignore them. You do all this, if you want.<b>As a rule</b>, the cost of such classes for your students will be two times less than if they were engaged independently.</li>
         </ul>
-        <p>В обоих вариантах выше существенны слова «базовые» (варианты) и «как правило». Это обозначает, что, с одной стороны, это не публичная оферта — в конкретной ситуации возможны другие условия и другие цены; с другой стороны, возможны также и другие варианты по функционалу и по нашему с вами взаимодействию. Пишите, поговорим :)</p>
+        <p>In both variants above, the words "basic" (variants) and "as a rule" are essential. This means that, on the one hand, this is not a public offer — in a particular situation, other conditions and other prices are possible; on the other hand, other options are also possible in terms of functionality and in our interaction with you. Write, let's talk :)</p>
         
-        <p>В частности, если для ваших учеников занятия на алгопроге были бы бесплатными если бы они занимались на алгопроге сами, то оба варианта выше будут, как правило, бесплатными.</p>
+        <p>In particular, if algoprog classes would be free for your students if they were engaged in algoprog themselves, then both options above will be, as a rule, free.</p>
         
-        </div>
-    """)
+        </div>""")
 
 achieves = () ->
-    page(" \nПро ачивки", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Про ачивки</h1>
-        <p>На алгопроге каждый пользователь может заработать ачивки. Ачивки выдаются за разные вещи, в первую очередь за успешные занятия на алгопроге, а также за участие в различных олимпиадах. Заработанные пользователем ачивки показываются в его профиле, также три наиболее «крутые» ачивки показываются рядом с именем пользователя в сводных таблицах и т.д.</p>
+    page(
+        " \nAbout achievements", 
+                              String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>About achievements</h1>
+        <p>On the algoprog, each user can earn achievements. Achievements are given out for different things, first of all for successful classes on the algoprog, as well as for participation in various contests. The achievements earned by the user are shown in his profile, also the three most "cool" achievements are shown next to the user's name in summary tables, etc.</p>
         
-        <p>Полный список доступных ачивок можно посмотреть <a href="/achieves">здесь</a>, а также в виде исходного кода <a href="https://github.com/petr-kalinin/algoprog/blob/master/client/lib/achieves.coffee">здесь</a>. В любом месте (в том числе по ссылке в предыдущем предложении) можно кликнуть по ачивке и посмотреть список всех пользователей, имеющих данную ачивку.</p>
+        <p>The full list of available achievements can be viewed <a href="/achieves">here</a>, as well as in the form of source code <a href="https://github.com/petr-kalinin/algoprog/blob/master/client/lib/achieves.coffee">here</a>. In any place (including the link in the previous sentence), you can click on the achievement and see a list of all users who have this achievement.</p>
         
-        <p>Часть ачивок выдается автоматически, часть ачивок (в основном за олимпиады) я устанавливаю вручную. Если вы считаете, что у вас должна быть какая-то ачивка, а у вас ее нет, то напишите мне. Особенно это касается школьников из-за пределов Нижегородской области — я не всегда могу отслеживать все ваши олимпиады, поэтому пишите мне про свои олимпиады сами.</p></div>
-    """)
+        <p>Some of the achievements are issued automatically, some of the achievements (mainly for the Olympics) I install manually. If you think that you should have some kind of achievement, but you don't have it, then write to me. This is especially true for schoolchildren from outside the Nizhny Novgorod region - I can't always keep track of all your contests, so write to me about your contest results yourself.</p></div>""")
 
 tshirts = () ->
-    page("Про футболки", String.raw"""
-        <h1>Про футболки</h1>
-        <h2>Бесплатные футболки</h2>
-        <p>За достижения определенных уровней выдаются футболки по следующей схеме:</p>
+    page(
+        "About T-shirts", 
+                             String.raw"""<h1>About T-shirts</h1>
+        <h2>Free T-shirts</h2>
+        <p>For achieving certain levels , T - shirts are issued according to the following scheme:</p>
         <ul>
-        <li>Достижение уровня 3В — фиолетовая футболка «двоичный поиск»</li>
-        <li>Достижение уровня 5В — синяя футболка «пересечение прямых»</li>
-        <li>Достижение уровня 7В — оранжевая футболка «компоненты сильной связности»</li>
-        <li>Достижение уровня 9В — красная футболка «декартово дерево»</li>
-        <li>Достижение уровня 11В — черная футболка «паросочетание»</li>
+        <li>Reaching Level 3C — violet T-shirt "binary search"</li>
+        <li>Reaching Level 5C — blue T-shirt "intersection of straight lines"</li>
+        <li>Reaching Level 7C — orange T-shirt "components of strong connectivity"</li>
+        <li>Reaching Level 9C — red T-shirt "cartesian tree"</li>
+        <li>Reaching Level 11C — black T-shirt "matching"</li>
         </ul>
-        <p>Футболки выдаются бесплатно всем занимающимся на алгопроге (нижегородским школьникам, включая лицей 40, ВШЭ, ННГУ и занимающихся заочно;
-        не-нижегородским школьникам и не-школьникам). Нижегородцам я готов выдать футболки на занятии, не-нижегородцам по России я готов отправить 
-        транспортной компанией (СДЭК или Боксберри) за мой счет (за исключением труднодоступных регионов, куда не возят ни СДЭК, ни Боксберри); 
-        если вам нужна отправка в труднодоступный регион или за пределы России — то пересылка за ваш счет.</p>
-        <p>Чтобы я выдал вам футболку, напишите заранее, чтобы я ее принес на занятие. Футболки бывают в разных размерах, мужские и женские. 
-        Пишите размер и крой. Футболки за уровень 3В есть «в наличии», скорее всего, я просто принесу нужную вам футболку на ближайшее занятие,
-        или вышлю в течение пары дней. Футболки за более высокие уровни делаются на заказ, в течение нескольких недель.</p>
-        <p>Футболки также выдаются и тем, кто занимался на алгопроге раньше, а сейчас не занимается (в том числе тем, кто раньше занимался платно,
-        но у кого сейчас аккаунт не оплачен — если вы раньше назанимались на футболку, я вам с радостью ее бесплатно выдам). 
-        Тем, кто занимался на до-реформенном алгопроге 
-        (со старой системой уровней), а также тем, кто занимался до введения системы уровней в принципе, я тоже готов выдать футболки,
-        но соответствие текущих (указанных выше) уровней и тех уровней/тем, которые были раньше, я буду устанавливать каждый раз в индивидуальном порядке.
+        <p>T-shirts are given free of charge to all students studying at the algoprog. I am ready to give out T-shirts to Nizhny Novgorod residents in class, I am ready to send them to non-Nizhny Novgorod residents in Russia 
+        by a transport company (CDEK or Boxberry) at my expense (with the exception of hard-to-reach regions where neither CDEK nor Boxberry are transported); 
+        if you need to be sent to a remote region or outside of Russia, then the shipment is at your expense.</p>
+        <p>In order for me to give you a T-shirt, write in advance so that I bring it to class. T-shirts come in different sizes, men's and women's. 
+        Write the size and cut. T-shirts for level 3B are "in stock", most likely, I will just bring the T-shirt you need to the next lesson,
+        or I will send it within a couple of days. T-shirts for higher levels are made to order, within a few weeks.</p>
+        <p>T-shirts are also issued to those who were engaged in the algoprog before, but are not engaged now (including those who used to be engaged for a fee,
+        but who doesn't have an account paid for now — if you've been studying for a T-shirt before, I'll be happy to give it to you for free). 
+        Those who were engaged in the pre-reform algoprog 
+        (with the old level system), as well as those who were engaged before the introduction of the level system, in principle, I am also ready to give out T-shirts,
+        but the correspondence of the current (above) levels and those levels / those that were before, I will set each time individually.
         </p>
-        <h2>Дополнительные, платные футболки</h2>
-        <p>Для всех желающих, независимо от уровня, также возможен выпуск платных футболок — скорее всего, белых, с изображением, отличным от изображения 
-        на бесплатных футболках. Ориентировочная стоимость — 2000 рублей. Если вы хотите такую футболку, напишите мне, можете также приложить
-        набросок дизайна. (Если я выпущу футболку с вашим дизайном, я оставляю за собой право в дальнейшем выпускать футболки с таким же дизайном
-        для любых других желающих.)</p>
-        <h3>Конкурс дизайнов футболок</h3>
-        <p>В течение декабря 2021 — января 2022 можете предлагать свои дизайны дополнительных (платных) футболок. Те дизайны, которые больше всего понравятся мне,
-        я добавлю в этот раздел в число «стандартных» дизайнов, и сделаю для вас бесплатно футболку с вашим дизайном.<p>
-        <p>Основные условия — фон должен существенно отличаться от футболок «за уровни», в целом фон желательно белый. Нанесение изображения возможно
-        на любую часть футболки, особое преимущество будут иметь дизайны, предполагающие изображение по всей поверхности футболки, включая бока и т.д.
-        (<a href="https://www.vsemayki.ru/product/man_tshirt_sport/2798929?color=blue">условный пример</a>).</p>
-        <h3>Конкурс дизайна стикеров</h3>
-        <p>Я также думаю выпустить набор стикеров (наклеек) на ноутбуки. Если у вас есть идеи дизайна, можете их предлагать.</p>
-    """, {id: "tshirts"})
+        """, {id: "tshirts"})
 
 module20927_29 = () ->
-    page("\nФормулы расчета рейтинга, активности и т.д.", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Формулы расчета рейтинга и т.д.</h1>
-        <p>В сводных таблицах показывается рейтинг, активность, рейтинг на codeforces, взвешенное изменение рейтинга на codeforces и взвешенное количество контестов на codeforces.</p>
+    page(
+        "\nFormulas for calculating rating, activity, etc.", 
+                                                              String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Rating calculation formulas, etc.</h1>
+        <p>The summary tables show the rating, activity, rating on codeforces, weighted rating change on codeforces and weighted number of contests on codeforces.</p>
         
-        <h2>Рейтинг</h2>
-        <p>(Кому интересно, конкретный код расчета рейтинга и активности есть <a href="https://github.com/petr-kalinin/algoprog/blob/master/server/calculations/calculateRatingEtc.coffee">вот здесь</a>.)</p>
+        <h2>Rating</h2>
+        <p>(Who cares, the specific code for calculating the rating and activity is <a href="https://github.com/petr-kalinin/algoprog/blob/master/server/calculations/calculateRatingEtc.coffee">here</a>.)</p>
         
-        <p>Рейтинг определяется просто набором решенных задач. А именно, каждая задача стоит некоторое фиксированное количество баллов рейтинга, определяемое уровнем этой задачи.</p>
+        <p>The rating is determined simply by a set of solved problems. Namely, each task costs a certain fixed number of rating points, determined by the level of this task.</p>
         
-        <p>Задача уровня 1А стоит $2.5$ балла рейтинга. Задача уровня 2А стоит $2.5^2$ баллов рейтинга. Задача уровня 3А стоит $2.5^3$ баллов рейтинга, и т.д. Задача уровня $N$А стоит $2.5^N$ баллов рейтинга.</p>
+        <p>A Level 1A task costs $2.5$ rating points. A Level 2A task costs $2.5^2$ rating points. A level 3A task costs $2.5^3$ rating points, etc. A level $N$A task costs $2.5^N$ rating points.</p>
         
-        <p>Задачи промежуточных уровней стоят промежуточное число баллов. А именно, задача уровня $N$Б стоит $2.5^{N+0.25}$ баллов рейтинга, уровня $N$В — $2.5^{N+0.5}$, уровня $N$Г — $2.5^{N+0.75}$ баллов.</p>
+        <p>The tasks of intermediate levels are worth an intermediate number of points. Namely, the task of level $N$B costs $2.5^{N+0.25}$ rating points, level $N$C — $2.5^{N+0.5}$, level $N$D — $2.5^{N+0.75}$ points.</p>
         
-        <p>Задачи с региональных олимпиад считаются как задачи с уровня 3А. Если одна и та же задача есть на нескольких уровнях, то учитывается только самый высокий уровень этой задачи.</p>
+        <p>Tasks from regional olympiads are considered as tasks from level 3A. If the same task exists at several levels, then only the highest level of this task is taken into account.</p>
         
-        <p>При выводе рейтинга в таблицы он округляется до целых, но при подсчете все считается вещественными числами.</p>
+        <p>When displaying the rating in tables, it is rounded to integers, but when calculating everything is considered real numbers.</p>
         
-        <p>Табличка стоимости (округленная до двух знаков после запятой):</p>
-        <pre>          А          Б          В          Г
+        <p>Cost plate (rounded to two decimal places):</p>
+        <pre>          A B C D
          1       2.50       3.14       3.95       4.97
          2       6.25       7.86       9.88
          3      15.62      19.65      24.71      31.07
@@ -500,100 +483,103 @@ module20927_29 = () ->
         13  149011.61  187372.18  235608.05  296261.43
         </pre>
         
-        <h3>Идеология</h3>
-        <p>Баллы за задачу растут очень быстро, специально для того, чтобы на высоких уровнях было не так важно, что вы решали на младших уровнях. Например, если вы уже на уровне 5, то, скорее всего, задачи уровня 1 не представляют для вас вообще никакой сложности. Поэтому не важно, сколько вы решили на уровне 1. И это получается за счет того, что задачи уровня 5 стоят намного больше, чем задачи уровня 1.</p>
+        <h3>Ideology</h3>
+        <p>The scores for the task grow very quickly, especially so that at high levels it is not so important that you solve at lower levels. For example, if you are already at level 5, then most likely, level 1 tasks do not pose any difficulty at all for you. Therefore, it does not matter how much you have solved at level 1. And this is due to the fact that level 5 tasks cost much more than level 1 tasks.</p>
         
-        <h2>Активность</h2>
-        <p>(Конкретный код расчета — по той же ссылке)</p>
+        <h2>Activity</h2>
+        <p>(The specific calculation code is at the same link)</p>
         
-        <p>Активность — показатель того, насколько активно вы решали задачи последнее время. Каждая задача, которую вы когда-либо решали, дает свой вклад в активность. У каждой задачи есть "базовые" баллы активности — это квадратный корень из номера уровня. (У всех задач уровня 1 "базовый" балл равен 1, у каждой задачи уровня 2 базовый балл равен 1.4, и т.д.) Этот базовый балл умножается на $0.55^{t/\tau}$, где $t$ — время, прошедшее с того момента, как вы сдали эту задачу, а $\strut\tau$ равно 1 неделе. Например, если вы сдали задачу только что, то базовый балл учитывается полностью. Если вы сдали задачу ровно сутки назад, то базовый балл умножается на $0.55^{1/7}\approx 0.92$. Если вы сдали задачу ровно две недели назад, то базовый балл умножается на $0.55^2\approx0.3$. Если вы сдали задачу 8 недель назад, то базовый балл умножается на $0.55^8\approx0.0083$, т.е. эта задача уже почти не учитывается.</p>
+        <p>Activity is an indicator of how actively you have been solving problems lately. Every task that you have ever solved gives its contribution to activity. Each task has "basic" activity scores — this is the square root of the level number. (All level 1 tasks have a "base" score of 1, each level 2 task has a base score of 1.4, etc.) This base score is multiplied by $0.55^{t/\tau}$, where $t$ is the time elapsed since you passed this task, and $\strut\tau$ is equal to 1 week. For example, if you have just passed the task, then the base score is taken into account in full. If you passed the task exactly a day ago, then the base score is multiplied by $0.55^{1/7}\approx 0.92$. If you passed the task exactly two weeks ago, then the base score is multiplied by $0.55^2\approx.3$. If you passed the task 8 weeks ago, then the base score is multiplied by $0.55^8\approx.0083$, i.e. this task is almost not taken into account.</p>
         
-        <p>Суммарное значение активности по всем задачам делится на 0.45, в результате получается эдакое среднее число "задач" в неделю.</p>
+        <p>The total activity value for all tasks is divided by 0.45, resulting in a sort of average number of "tasks" per week.</p>
         
-        <p>Получается, что на самом деле учитываются только недавно сданные задачи, а те, которые вы решали давно, не учитываются. Но при этом падение этой "учитываемости" плавное. Если вы перестанете решать задачи, то ваша активность будет постепенно падать со временем (хотя и никогда не станет ровно нулем). В таблицах активность выводится округленной до одного знака после запятой, но на самом деле активность — настоящее вещественное число.</p>
+        <p>It turns out that in fact only recently completed tasks are taken into account, and those that you have solved for a long time are not taken into account. But at the same time, the decline in this "accountability" is smooth. If you stop solving problems, then your activity will gradually decrease over time (although it will never become exactly zero). In the tables, activity is displayed rounded to one decimal place, but in fact, activity is a real real number.</p>
         
-        <p>В ряде сводных таблиц сначала указываются школьники, активность которых больше 0.1, и только потом все остальные.</p>
+        <p>In a number of summary tables, students whose activity is greater than 0.1 are indicated first, and only then all the others.</p>
         
-        <h2>Цвет</h2>
-        <p>Имена школьников в таблицах рисуются цветом, определяемым их рейтингом и активностью. А именно, активность определяет яркость цвета (от почти черного до насыщенного), а рейтинг определяет оттенок (от фиолетового через все цвета радуги до красного). Например, школьник с рейтингом 1 и активностью 10 будет иметь ярко-фиолетовый цвет, школьник с рейтингом 1 и активностью 0.1 будет иметь темно-фиолетовый цвет, школьник с рейтингом примерно 100000 и активностью 10 будет иметь ярко-зеленый цвет, а с активностью 0.1 — темно-зеленый цвет; красный цвет соответствует рейтингу 4500000.</p>
+        <h2>Colour</h2>
+        <p>The names of schoolchildren in the tables are drawn in a color determined by their rating and activity. Namely, the activity determines the brightness of the color (from almost black to saturated), and the rating determines the shade (from purple through all the colors of the rainbow to red). For example, a student with a rating of 1 and activity of 10 will have a bright purple color, a student with a rating of 1 and activity of 0.1 will have a dark purple color, a student with a rating of about 100,000 and activity of 10 will have a bright green color, and with activity of 0.1 — dark green color; red color corresponds to a rating of 4500000.</p>
         
-        <p>Конкретная формула: в <a href="https://ru.wikipedia.org/wiki/HSV_(%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2%D0%B0%D1%8F_%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C)">модели HSV</a> цвет участника имеет следующие компоненты:</p>
+        <p>Specific formula: In the <a href="https://ru.wikipedia.org/wiki/HSV_(%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2%D0%B0%D1%8F_%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C)">HSV model</a>, the participant's color has the following components:</p>
         $h = k\cdot \log(r+r_0) + b$<br>
         $v = 0.3 + 0.7 \cdot \log(a+1) / \log(A + 1)$<br>
         $s = 1$<br>
-        <p>здесь $r$ и $a$ — рейтинг и активность, $A=7$, $r_0=200$, а константы $k$ и $b$ подбираются так, чтобы двух опорных точек (рейтинг 600 и рейтинг 4500000) получались правильные цвета (сине-фиолетовый и красный).</p>
+        <p>here $r$ and $a$ are rating and activity, $A=7$, $r_0=200$, and the constants $k$ and $b$ are selected so that the two reference points (rating 600 and rating 4500000) get the correct colors (blue-purple and red).</p>
         
-        <p>Еще есть мелкие поправки на краях возможных интервалов значений. Код <a href="https://github.com/petr-kalinin/algoprog/blob/master/client/components/UserName.coffee">здесь</a>.</p>
+        <p>There are also minor corrections at the edges of possible value intervals. The code is <a href="https://github.com/petr-kalinin/algoprog/blob/master/client/components/UserName.coffee">here</a>.</p>
         
-        <h2>Параметры codeforces</h2>
-        <p><a href="https://github.com/petr-kalinin/algoprog/blob/master/server/calculations/calculateCfRating.coffee">Код</a></p>
+        <h2>codeforces parameters</h2>
+        <p><a href="https://github.com/petr-kalinin/algoprog/blob/master/server/calculations/calculateCfRating.coffee">Code</a></p>
         
-        <p>Рейтинг на CF берется прямо с CF, обновляется раз в сутки.</p>
+        <p>The CF rating is taken directly from CF, updated once a day.</p>
         
-        <p>Взвешенное количество контестов вычисляется так: каждый написанный вами контест дает вклад, равный $0.5^{t/\tau}$, где $t$ — время, прошедшее с написания контеста, а $\tau$ равно 4 неделям. Все такие вклады суммируются. Т.е. только что написанный контест дает вклад 1, контест, написанный 4 недели назад — 0.5, и т.д.</p>
+        <p>The weighted number of contests is calculated as follows: each contest you write gives a contribution equal to $0.5^{t/\tau}$, where $t$ is the time elapsed since the contest was written, and $\tau$ is equal to 4 weeks. All such contributions are summed up. I.e., a contest just written gives a contribution of 1, a contest written 4 weeks ago — 0.5, etc.</p>
         
-        <p>Взвешенное изменение рейтинга вычисляется так: каждый написанный вами контест дает вклад, равный $\delta\cdot0.5^{t/\tau}$, где $\delta$ — изменение рейтинга в этом контесте, $t$ — время, прошедшее с написания контеста, а $\tau$ равно 4 неделям. При этом самый первый в жизни написанный контест не учитывается, т.к. там изменение рейтинга — это бессмысленная вещь.</p></div>
-    """, {id: "about_rating"})
+        <p>The weighted rating change is calculated as follows: each contest you write gives a contribution equal to $\delta\cdot0.5^{t/\tau}$, where $\delta$ is the rating change in this contest, $t$ is the time elapsed since the contest was written, and $\tau$ is 4 weeks. At the same time, the very first written contest in life is not taken into account, because there a rating change is a meaningless thing.</p></div>""", {id: "about_rating"})
 
 about_find_mistake = () ->
-    page("Про раздел «Найди ошибку»", String.raw"""
-        <h1>Про раздел «Найди ошибку»</h1>
-        <p>Когда вы сдали решение по задаче и получили по ней «Зачтено», у вас появляется возможность искать ошибки в решениях других учеников по этой задаче. А именно, на страничке задачи появляется ссылка «Найди ошибку», по которой открывается список специально отобранных неверных решений этой задачи.
-        (Конечно, ссылка появляется не в каждой задаче, а только в тех задачах, где такие специально отобранные решения есть.)
-        Также в меню сайта есть раздел «<a href='/findMistakeList'>Найди ошибку</a>», где есть ссылки на все решения, в которых вы можете искать ошибки
-        (не все из этих решений вам доступны — вам доступны решения только по тем задачам, по которым вы получили «Зачтено»).</p>
+    page(
+        "About the \"Find a bug\" section", 
+                                          String.raw"""<h1>About the "Find a bug" section</h1>
+        <p>When you have passed the solution to the problem and received an "Accepted" for it, you have the opportunity to look for bugs in the decisions of other students on this problem. Namely, a link "Find an bug" appears on the task page, which opens a list of specially selected incorrect solutions to this problem.
+        (Of course, the link does not appear in every task, but only in those tasks where there are such specially selected solutions.)
+        There is also a section in the site menu "<a href="/findMistakeList">Find the bug</a>", where there are links to all solutions in which you can look for errors
+        (not all of these solutions are available to you — solutions are available to you only for those tasks for which you received a "Accepted").</p>
 
-        <p>Про каждое из решений, в котором вам надо найти ошибку, известно, что ошибку можно исправить, сделав не более 15 правок в коде решения. Правкой считается добавление, удаление или изменение одного символа (т.е. на самом деле считается <a href='/material/p1791'>расстояние Левеншнейна</a>). Ваша задача — найти ошибку, исправить ее, и получить ОК по задаче. Вам даже с запасом дается возможность сделать до 23 правок.</p>
+        <p>About each of the solutions in which you need to find an error, it is known that the error can be corrected by making no more than 15 edits in the solution code. An edit is considered to be adding, deleting, or changing one character (i.e., the <a href="/material/p1791">Levenshnein distance</a> is actually considered). Your task is to find the error, fix it, and get OK on the task. Even with a margin, you are given the opportunity to make up to 23 edits.</p>
 
-        <p>В интерфейсе поиска ошибки вам сразу дается текстовый редактор, в котором открыт код решения. Я настоятельно рекомендую искать ошибки прямо в этом редакторе, не копируя код никуда к себе (в свою IDE или редактор), и соответственно не используя отладчика и т.п., а только вглядываясь в код глазами. Но в наиболее сложных случаях можете и скопировать код к себе и тщательнее в нем разобраться.</p>
+        <p>In the error search interface, you are immediately given a text editor in which the solution code is open. I strongly recommend looking for errors directly in this editor, without copying the code anywhere to yourself (to your IDE or editor), and accordingly not using a debugger, etc., but only looking at the code with your eyes. But in the most difficult cases, you can copy the code to yourself and understand it more thoroughly.</p>
 
-        <p>Решения в разделе «Найди ошибку» есть на разных языках программирования. Не бойтесь искать ошибки даже на тех языках, которых вы не знаете. Я стараюсь не допускать до поиска ошибок те решения, в которых ошибка вызвана именно языковыми проблемами, почти всегда ошибки имеют более алгоритмические причины, и, соответственно, вы можете их найти, даже если не знаете особенностей языка.</p>
+        <p>The solutions in the "Find a bug" section are available in different programming languages. Don't be afraid to look for bugs even in languages you don't know. I try not to allow those solutions in which the error is caused by language problems to search for errors, almost always errors have more algorithmic reasons, and, accordingly, you can find them, even if you do not know the features of the language.</p>
 
-        <p>Решения, отправленные через раздел «найди ошибку», я глазами не смотрю и не комментирую (в частности, по ним нельзя получить «зачтено»), и на ваши результаты в общей таблице они не влияют. Конечно, если у вас не получается найти ошибку, можете написать мне, я что-нибудь посоветую.</p>
+        <p>I do not look at the solutions sent through the "find a bug" section with my eyes and do not comment (in particular, it is impossible to get "accepted" for them), and they do not affect your results in the general table. Of course, if you can't find an error, you can write to me, I will advise you something.</p>
 
-        <p>Каждое решение, помимо задачи, характеризуется также индивидуальным номером (комбинация из четырех букв или цифр). Используйте этот номер, чтобы различать решения для поиска ошибок по одной и той же задаче; в частности, если вы хотите спросить меня по такому решению, то указывайте и название задачи, и номер решения (ну или просто присылайте ссылку на страничку поиска ошибок именно в этом решении).</p>
+        <p>Each solution, in addition to the problem, is also characterized by an individual number (a combination of four letters or numbers). Use this number to distinguish between solutions for finding errors for the same problem; in particular, if you want to ask me about such a solution, then specify both the name of the problem and the number of the solution (well, or just send a link to the error search page in this particular solution).</p>
 
-        <p>Пока в принципе решений, в которых можно искать ошибки, не очень много; со временем, думаю, их будет становиться больше.</p>
-    """, {id: "about_find_mistake"})
+        <p>So far, in principle, there are not very many solutions in which to look for errors; over time, I think there will be more of them.</p>""", {id: "about_find_mistake"})
 
 contacts = () ->
     label("""
         <div class=\"algoprog-contacts\">
-        <h2>Контакты</h2>
-        <b>Петр Андреевич Калинин</b>
+        <h2>Contacts</h2>
+        <b>Petr Kalinin</b>
         <ul>
         <li>e-mail: petr@kalinin.nnov.ru</li>
         <li><a href=\"https://vk.com/petr.kalinin\">https://vk.com/petr.kalinin</a>*</li>
         <li>+7(910)794-32-07**</li>
-        <li>Телеграм: <a href="https://t.me/pkalinin">@pkalinin</a></li>
-        <li>Телеграм-канал с важными объявлениями: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a>. 
-            Тут объявления в первую очередь про очные занятия. 
-            Рекомендую всем подписаться. (Если ссылка на t.me заблокирована, просто в телеграмме поищите канал «algoprog_news».)</li>
+        <li>Telegram: <a href="https://t.me/pkalinin">@pkalinin</a></li>
+        <li>Telegram channel with important announcements: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a>. </li>
         </ul>
-        <p>Мои контактные данные можно свободно распространять по любым вопросам, связанным с работой курса или 
-        с олимпиадным программированием в Нижегородской области вообще.</p>
-        <p><b>Если у вас есть какие-то проблемы с работой в курсе, какие-то вопросы и т.п., сразу пишите мне!</b></p>
-        <p>* Политика добавления в друзья во вКонтакте: я не возражаю, если вы добавите меня в друзья, 
-        но я буду добавлять только тех, кто уже давно и успешно занимается.</p>
-        <p>** Пожалуйста, звоните по телефону только в экстренных случаях. Если ваш вопрос не очень срочный и может 
-        подождать несколько часов, напишите мне любым указанным выше способом — во вКонтакте, в Телеграм или на email.</p>
+        <p>My contact details can be freely distributed for any questions related to the course or
+        with olympiad programming in general.</p>
+        <p><b>If you have any problems with working in the course, any questions, etc., write to me immediately!</b></p>
+        <p>* VKontakte friend policy: I don't mind if you add me as a friend,
+        but I will only add those who have been successfully engaged for a long time.</p>
+        <p>** Please call by phone only in emergency cases. If your question is not very urgent and can
+        wait a few hours, write to me in any way indicated above — in VKontakte, in Telegram or by email.
+        </p>
         <hr>""")
 
 export default level_about = () ->
     return level("about", "About the course", [
         module20927_1(),
         module20927_3(),
-        label("<h2>Самая главная информация</h2>\n\n<div><a href=\"https://www.youtube.com/watch?v=kTC7z1NpOb4\">\nВводная видеолекция про занятия на алгопроге (дублирует основную информацию ниже)</a></div>\n\n<div style=\"height:1ex;\"></div>\n\n<div><b>Для начала</b></div>"),
+        label(
+            "<h3>At first</h3></div>"),
         module20927_7(),
         module20927_9(),
-        label("<div style=\"height:1ex;\"></div>\n\n<div><b>Про то, как тут заниматься</b></div>"),
+        label(
+            "<h3>About how to study here</h3>"),
         work_with_site(),
         module20927_13(),
         module20927_15(),
-        label("<div style=\"height:1ex;\"></div>\n\n<div><b>Про оплату</b></div>"),
+        label(
+            "<h3>About payment</h3>"),
         pay(),
-        label("<div><a href=\"/payment\" onclick=\"window.goto('/payment')();return false;\">Оплатить занятия</a></div>"),
-        label("<div style=\"height:1ex;\"></div>\n\n<div><b>И еще немного...</b></div>"),
+        label(
+            "<div><a href=\"/payment\" onclick=\"window.goto('/payment')();return false;\">Pay for classes</a></div>"),
+        label(
+            "<h3>And a little more...</h3>"),
         module20927_23(),
         module20927_25(),
         module20927_29(),
@@ -602,7 +588,8 @@ export default level_about = () ->
         about_find_mistake(),
         module20927_35(),
         module20927_37(),
-        label("<div style=\"height:1ex;\"></div>\n\n<div><b>«Стажировка» на алгопроге</b></div>"),
+        label(
+            "<div style=\"height:1ex;\"></div>\n\n<div><b>\"Internship\" at the algoprog</b></div>"),
         module20927_39(),
         contacts(),
     ])
