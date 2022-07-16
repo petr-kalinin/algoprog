@@ -4,11 +4,16 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default dp_sbory = () ->
     return {
-        topic: topic("*Доп. задачи на ДП", "*Дополнительные задачи на ДП", [
-            label("Это задачи на ДП с зимних сборов алгопрога 2021. Раздел не обязательный. Сложность задач очень разная.")
+        topic: topic(
+            ruen("*Доп. задачи на ДП", "*Additional tasks for DP"),
+            ruen("*Дополнительные задачи на ДП", "*Additional tasks on DP"),
+        [label(ruen(
+             "Это задачи на ДП с зимних сборов алгопрога 2021. Раздел не обязательный. Сложность задач очень разная.",
+             "These are the tasks for the DP from the winter training camps of the algoprog 2021. The section is optional. The difficulty of the tasks is very different."))
             problem(498),
             problem(44),
             problem(631),

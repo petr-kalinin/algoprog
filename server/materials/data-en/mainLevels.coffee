@@ -107,7 +107,6 @@ ALL_TOPICS = [
     strings,
     floats,
     pythonAdditional,
-###
     gcd,
     prefixSums,
     recursion,
@@ -182,7 +181,6 @@ ALL_TOPICS = [
     dp_hard
     maxmatching
     persistency
-###
 ]
 
 ADDITIONAL_LEVELS =
@@ -235,12 +233,13 @@ requiredNote = (topics) ->
     for topic in topics
         t = topic()
         if t.title 
+            title = t.title?("!en") || t.title
             hasProblems = false
             for m in t.submaterials || []
                 if m?()?.testSystem
                     hasProblems = true
             if hasProblems
-                allRequired = allRequired and isContestRequired(t.title)
+                allRequired = allRequired and isContestRequired(title)
     if not allRequired
         return " (except the contests marked with asterisk)"
     return ""
@@ -272,7 +271,7 @@ minorLevel = (generator, id) ->
         return null
     return {
         level: level(id, [
-                label("<p>To advance to next level, you need to solve all problems#{requiredNote(allTopics)}.</p>"),
+                label("<p>To advance to the next level, you need to solve all problems#{requiredNote(allTopics)}.</p>"),
                 allTopics...
             ]),
         advancedTopics: allAdvancedTopics
@@ -294,7 +293,7 @@ majorLevel = (generator, id) ->
     advancedTopics = [(levelA?.advancedTopics || [])..., (levelB?.advancedTopics || [])..., contestsFromAdvancedProblems(id, advancedProblems)...]
     if advancedTopics.length != 0
         subLevels.push level("#{id}C", [
-            label("<p>To advance to next level, you need to solve <b>at least half of the problems</b>#{requiredNote(advancedTopics)}. When you solve them, I recommend that you move to the next level, so as not to delay the study of new theory. Return to the remaining tasks of this level later from time to time and try to gradually solve almost all of them.</p>"),
+            label("<p>To advance to the next level, you need to solve <b>at least half of the problems</b>#{requiredNote(advancedTopics)}. When you solve them, I recommend that you move to the next level, so as not to delay the study of new theory. Return to the remaining tasks of this level later from time to time and try to gradually solve almost all of them.</p>"),
             advancedTopics...
         ])
     if "#{id}D" of ADDITIONAL_LEVELS

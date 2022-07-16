@@ -4,11 +4,16 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default events_sort = () ->
     return {
-        topic: topic("Сортировка событий", "Задачи на сортировку событий", [
-            label("См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Отрезки на прямой»<br>"),
+        topic: topic(
+            ruen("Сортировка событий", "Sorting events"),
+            ruen("Задачи на сортировку событий", "Problems on sorting events"),
+        [label(ruen(
+             "См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ параллели B'</a>, раздел «Отрезки на прямой»<br>",
+             "See video <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">recordings of lectures of the Parallel B'</a> LCS, section \"Straight line segments\"<br>")),
             problem(112542),
             problem(1755),
             problem(3721),

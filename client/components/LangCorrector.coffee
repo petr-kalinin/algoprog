@@ -12,7 +12,7 @@ isLevel = (url) ->
     if data[0] != "" or data[1] != "material"
         return false
     level = data[2]
-    return /^\d+[А-ГA-D]$/.test(level)
+    return /^\d+[А-ГA-D]($|\.)/.test(level)
 
 correctUrl = (url, lang) ->
     if not url.startsWith("/material/")

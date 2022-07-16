@@ -4,11 +4,14 @@ import link from "../../lib/link"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 export default advanced_scanline = () ->
     return {
-        topic: topic("Продвинутый scanline", "Задачи на продвинутый scanline", [
-            problem(1217),
+        topic: topic(
+            ruen("Продвинутый scanline", "Advanced scanline"),
+            ruen("Задачи на продвинутый scanline", "Problems on advanced scanline"),
+        [problem(1217),
             problem(2866),
             problem(111800),
             problem(113809),

@@ -2,15 +2,10 @@ import contest from "../lib/contest"
 import label from "../lib/label"
 import level from "../lib/level"
 import problem from "../lib/problem"
-
-title = (num) ->
-    (label) ->
-        if label == "" then "Дополнительные задачи на разные темы — #{num}"
-        else if label == "!en" then "Additional miscellaneous problems — #{num}"
-        else throw "unknown label #{label}"
+import {ruen, levelDtitle, levelDmessage, levelDid} from '../lib/util'
 
 contest_15993 = () ->
-    return contest(title(1), [
+    return contest(levelDtitle(1), [
         problem(3469),
         problem(3466),
         problem(3477),
@@ -21,7 +16,7 @@ contest_15993 = () ->
     ])
 
 contest_15994 = () ->
-    return contest(title(2), [
+    return contest(levelDtitle(2), [
         problem(111499),
         problem(3888),
         problem(3893),
@@ -32,7 +27,7 @@ contest_15994 = () ->
     ])
 
 contest_15996 = () ->
-    return contest(title(3), [
+    return contest(levelDtitle(3), [
         problem(1421),
         problem(3745),
         problem(1406),
@@ -46,16 +41,8 @@ contest_15996 = () ->
     ])
 
 export default level_1D = () ->
-    message = (lbl) ->
-        if lbl == "" then "Чтобы перейти на следующий уровень, надо решить <b>минимум треть задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца."
-        else if lbl == "!en" then "To advance to next level, you need to solve <b>at least one third of the problems</b>. When you solve them, I recommend that you move to the next level, so as not to delay the study of new theory. Return to the remaining tasks of this level later from time to time and try to gradually solve almost all of them."
-        else throw "Unknown label #{lbl}"
-    pMessage = (lbl) -> "<p>#{message(lbl)}</p>"
-    name = (lbl) -> 
-        if lbl == "" then "1Г"
-        else if lbl == "!en" then "1D"
-    return level(name, [
-        label(pMessage),
+    return level(levelDid(1), [
+        label(levelDmessage),
         contest_15993(),
         contest_15994(),
         contest_15996(),

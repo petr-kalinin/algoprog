@@ -101,7 +101,7 @@ BottomPanel = (props) ->
                         {" © "}{Lang('Petr_Kalinin')}{", GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
-                        <Link to="/material/module-29054">{Lang("about_license")}</Link>
+                        <Link to="/material/license">{Lang("about_license")}</Link>
                         {" | "}
                         <a href="https://blog.algoprog.ru" target="_blank">{Lang("blog")}</a>
                     </div>
