@@ -70,6 +70,7 @@ class LoggedInformaticsUser
             if e.badPassword
                 throw e
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
+            throw e
 
     getId: () ->
         page = await @download("https://informatics.msk.ru/")
