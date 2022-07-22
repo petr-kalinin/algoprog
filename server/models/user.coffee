@@ -247,6 +247,9 @@ usersSchema.statics.findByAchieve = (achieve) ->
 usersSchema.statics.findByTelegram = (id) ->
     User.findOne({telegram: id})?.select("+telegram")
 
+usersSchema.statics.findByUsername = (name) ->
+    User.findOne({telegram: name})?.select("+telegram")
+
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     start = new Date()
     logger.info ">>Updating user", userId

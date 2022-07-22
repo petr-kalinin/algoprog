@@ -279,7 +279,7 @@ class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Аккаунт в Телеграм:
+                        Аккаунт в Телеграм (id или username):
                             <Input
                                 type = "text"
                                 name = "newTelegram"

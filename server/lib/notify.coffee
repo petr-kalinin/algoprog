@@ -1,9 +1,8 @@
 TelegramBot = require('node-telegram-bot-api')
-#setPrivacyDisabled у BotFather
 
-TOKEN = "5555417433:AAFw-Fzz7dXU-v2YwdK2erzj5qRRlgThKds" #Изменить при отправке на ПР
-ADMIN_CHAT_ID = "1382998623" #Изменить при отправке на ПР
-ALGOPROG_CHAT_ID = -1001729463825
+TOKEN = process.env["TELEGRAM_TOKEN"]
+ADMIN_CHAT_ID = process.env["ADMIN_TELEGRAM_ID"]
+ALGOPROG_CHAT_ID = process.env["ALGOPROG_CHAT_ID"]
 
 import logger from '../log'
 import User from '../models/user'
@@ -13,13 +12,15 @@ if TOKEN
 
     bot.on 'chat_join_request', (request) -> 
         if request.chat.id == ALGOPROG_CHAT_ID
-            user = await User.findByTelegram(String(request.from.id))
-            if not user
+            userId = await User.findByTelegram(String(request.from.id))
+            userName = await User.findByUsername(String(request.from.username))
+
+            if not userId && not userName
                 bot.declineChatJoinRequest(ALGOPROG_CHAT_ID, request.from.id)
+                logger.info "Rejected request from ", request.from.id
             else
                 bot.approveChatJoinRequest(ALGOPROG_CHAT_ID, request.from.id)
-
-        logger.info "New join request: ", request
+                logger.info "Accepted request from ", request.from.id
 else
     bot = undefined
 
