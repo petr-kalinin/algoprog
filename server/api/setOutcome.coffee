@@ -6,6 +6,7 @@ import Submit from '../models/submit'
 import Problem from '../models/problem'
 import SubmitComment from '../models/SubmitComment'
 import {notifyUser} from "../lib/telegramBot"
+import GROUPS from "../../client/lib/groups"
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
@@ -20,7 +21,13 @@ storeToDatabase = (req, res) ->
     problemId = submit.problem
     problem = await Problem.findById(problemId)
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
-    msg = "Решение задачи " + problem.name + " было "
+    user = await User.findByIdWithTelegram(submit.user)
+    lang = GROUPS[user.userList].lang
+    msg = ""
+    if lang == "!en" 
+        msg += "The solution of the " + problem.name + " problem "
+    else 
+        msg += "Решение задачи " + problem.name + " "
 
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
@@ -33,14 +40,26 @@ storeToDatabase = (req, res) ->
             await c.upsert()
 
         if req.body.result == "AC"
-            msg += "зачтено"
+            if lang == "!en"
+                msg += "accepted"
+            else
+                msg += "зачтено"
         else if req.body.result == "IG"
-            msg += "проигнорировано"
+            if lang == "!en"
+                msg += "ignored"
+            else
+                msg += "проигнорировано"
         else
-            msg += "дисквалифицировано"
+            if lang == "!en"
+                msg += "disqualified"
+            else
+                msg += "дисквалифицировано"
     else if req.body.comment 
         logger.info "testing", req.body.comment 
-        msg += "прокомментировано"
+        if lang == "!en"
+            msg += "commented"
+        else
+            msg += "прокомментировано"
 
 
     if req.body.comment
@@ -67,7 +86,7 @@ storeToDatabase = (req, res) ->
     await setDirty(submit, dirtyResults, dirtyUsers)
     await User.updateUser(submit.user, dirtyResults)
 
-    user = await User.findByIdWithTelegram(submit.user)
+    
     telegramId = user.telegram
     if telegramId
         await notifyUser telegramId, msg
