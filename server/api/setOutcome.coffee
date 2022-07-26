@@ -5,6 +5,7 @@ import User from '../models/user'
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 import SubmitComment from '../models/SubmitComment'
+import {notifyUser} from "../lib/telegramBot"
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
@@ -19,6 +20,8 @@ storeToDatabase = (req, res) ->
     problemId = submit.problem
     problem = await Problem.findById(problemId)
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
+    msg = "Решение задачи " + problem.name + " было "
+
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
@@ -28,6 +31,18 @@ storeToDatabase = (req, res) ->
         for c in comments
             c.outcome = submit.outcome
             await c.upsert()
+
+        if req.body.result == "AC"
+            msg += "зачтено"
+        else if req.body.result == "IG"
+            msg += "проигнорировано"
+        else
+            msg += "дисквалифицировано"
+    else if req.body.comment 
+        logger.info "testing", req.body.comment 
+        msg += "прокомментировано"
+
+
     if req.body.comment
         if not (req.body.comment in submit.comments.map(entities.decode))
             comment = entities.encode(req.body.comment)
@@ -44,11 +59,18 @@ storeToDatabase = (req, res) ->
                 outcome: submit.outcome
             await newComment.upsert()
             submit.comments.push(comment)
+
+            msg += "\n" + comment
     await submit.upsert()
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
     await User.updateUser(submit.user, dirtyResults)
+
+    user = await User.findByIdWithTelegram(submit.user)
+    telegramId = user.telegram
+    if telegramId
+        await notifyUser telegramId, msg
 
 export default setOutcome = (req, res) ->
     if req.body.result or req.body.comment

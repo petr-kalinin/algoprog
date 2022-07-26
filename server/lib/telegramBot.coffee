@@ -1,7 +1,7 @@
 TelegramBot = require('node-telegram-bot-api')
 
 TOKEN = process.env["TELEGRAM_TOKEN"]
-ADMIN_CHAT_ID = process.env["ADMIN_TELEGRAM_ID"]
+ADMIN_CHAT_ID = 1382998623
 ALGOPROG_CHAT_ID = process.env["ALGOPROG_CHAT_ID"]
 
 import logger from '../log'
@@ -26,8 +26,13 @@ else
 
 
 
-export default notify = (message) ->
+export notify = (message) ->
     if bot
         bot.sendMessage(ADMIN_CHAT_ID, message)
     else
         logger.warn("Notify message ", message)
+
+export notifyUser = (id, message) ->
+    if bot
+        logger.info id, " ", message
+        bot.sendMessage(id, message)

@@ -1,5 +1,5 @@
 import outcomeToText from '../../client/lib/outcomeToText'
-import notify from '../lib/notify'
+import {notify} from '../lib/telegramBot'
 
 export checkOutcome = (outcome) ->
     [cl, msg] = outcomeToText(outcome, "ru", true)
