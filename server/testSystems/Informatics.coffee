@@ -48,7 +48,7 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
-            page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 30 * 1000})
+            page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 120 * 1000})
             token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
             page = await @download("https://informatics.msk.ru/login/index.php", {
                 method: 'POST',
@@ -58,7 +58,7 @@ class LoggedInformaticsUser
                     logintoken: token
                 },
                 followAllRedirects: true,
-                timeout: 30 * 1000
+                timeout: 120 * 1000
             })
             if page.includes("Неверный логин или пароль")
                 throw { badPassword: true }
@@ -70,6 +70,7 @@ class LoggedInformaticsUser
             if e.badPassword
                 throw e
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
+            throw e
 
     getId: () ->
         page = await @download("https://informatics.msk.ru/")
@@ -86,7 +87,7 @@ class LoggedInformaticsUser
             throw "Too many requests"
         _requests++
         await sleep(TIMEOUT)
-        options.timeout = options.timeout || 30 * 1000
+        options.timeout = options.timeout || 60 * 1000
         try
             result = await download(href, @jar, options)
         finally
