@@ -16,6 +16,34 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
+generateMsg = (lang, req, nameProblem) ->
+    msg = ""
+
+    if lang == "!en"
+        msg += "The solution of the " + nameProblem + " problem "
+
+        if req.body.result == "AC"
+            msg += "accepted"
+        else if req.body.result == "IG"
+            msg += "ignored"
+        else if req.body.result == "DQ"
+            msg += "disqualified"
+        else
+            msg += "commented"
+    else
+        msg += "Решение задачи " + nameProblem + " "
+
+        if req.body.result == "AC"
+            msg += "зачтено"
+        else if req.body.result == "IG"
+            msg += "проигнорировано"
+        else if req.body.result == "DQ"
+            msg += "дисквалифицировано"
+        else
+            msg += "прокомментировано"
+
+    return msg
+
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     problemId = submit.problem
@@ -23,11 +51,7 @@ storeToDatabase = (req, res) ->
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
     user = await User.findByIdWithTelegram(submit.user)
     lang = GROUPS[user.userList].lang
-    msg = ""
-    if lang == "!en" 
-        msg += "The solution of the " + problem.name + " problem "
-    else 
-        msg += "Решение задачи " + problem.name + " "
+    msg = generateMsg(lang, req, problem.name)
 
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
@@ -38,29 +62,6 @@ storeToDatabase = (req, res) ->
         for c in comments
             c.outcome = submit.outcome
             await c.upsert()
-
-        if req.body.result == "AC"
-            if lang == "!en"
-                msg += "accepted"
-            else
-                msg += "зачтено"
-        else if req.body.result == "IG"
-            if lang == "!en"
-                msg += "ignored"
-            else
-                msg += "проигнорировано"
-        else
-            if lang == "!en"
-                msg += "disqualified"
-            else
-                msg += "дисквалифицировано"
-    else if req.body.comment 
-        logger.info "testing", req.body.comment 
-        if lang == "!en"
-            msg += "commented"
-        else
-            msg += "прокомментировано"
-
 
     if req.body.comment
         if not (req.body.comment in submit.comments.map(entities.decode))
