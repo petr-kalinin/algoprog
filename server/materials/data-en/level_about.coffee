@@ -548,7 +548,9 @@ contacts = () ->
         <li><a href=\"https://vk.com/petr.kalinin\">https://vk.com/petr.kalinin</a>*</li>
         <li>+7(910)794-32-07**</li>
         <li>Telegram: <a href="https://t.me/pkalinin">@pkalinin</a></li>
-        <li>Telegram channel with important announcements: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a>. </li>
+        <li>Telegram channel with important announcements: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a> (mainly in Russian). </li>
+        <li>Telegram chat for all algoprog students: <a href="https://t.me/+Ff0fS3PMo85iNmZi">Algoprog-chat</a>.
+        To join, you should first specify your telegram id or username in your algoprog profile.</li>
         </ul>
         <p>My contact details can be freely distributed for any questions related to the course or
         with olympiad programming in general.</p>

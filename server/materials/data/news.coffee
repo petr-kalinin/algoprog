@@ -3,6 +3,11 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Добавлен чат для учеников алгопрога", String.raw"""
+            Добавлен <a href="https://t.me/+Ff0fS3PMo85iNmZi">чат для пользователей алгопрога</a>. 
+            Чтобы вступить, надо сначала указать свой телеграм-аккаунт в профиле на алгопроге.
+        """),
+
         newsItem("Летние алгопрог-сборы", String.raw"""
             В конце августа возможно состоятся очередные алгопрог-сборы. <a href="https://docs.google.com/forms/d/e/1FAIpQLScFZsXN4hMypHOgS8XZbb84xl1ye_Wq4IEDtx1ilt_H8gh5NQ/viewform">Подробная информация и форма для подачи заявок</a>
         """),
