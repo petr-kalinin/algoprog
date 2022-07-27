@@ -5,6 +5,8 @@ import User from '../models/user'
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 import SubmitComment from '../models/SubmitComment'
+import {notifyUser} from "../lib/telegramBot"
+import GROUPS from "../../client/lib/groups"
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
@@ -14,11 +16,43 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
+generateMsg = (lang, result, problemName) ->
+    msg = ""
+
+    if lang == "!en"
+        msg += "The solution for the '" + problemName + "' problem has been "
+
+        if result == "AC"
+            msg += "accepted"
+        else if result == "IG"
+            msg += "ignored"
+        else if result == "DQ"
+            msg += "disqualified"
+        else
+            msg += "commented"
+    else
+        msg += "Решение задачи '" + problemName + "' "
+
+        if result == "AC"
+            msg += "зачтено"
+        else if result == "IG"
+            msg += "проигнорировано"
+        else if result == "DQ"
+            msg += "дисквалифицировано"
+        else
+            msg += "прокомментировано"
+
+    return msg
+
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     problemId = submit.problem
     problem = await Problem.findById(problemId)
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
+    user = await User.findByIdWithTelegram(submit.user)
+    lang = GROUPS[user.userList].lang
+    msg = generateMsg(lang, req.body.result, problem.name)
+
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
         submit.outcome = req.body.result
@@ -28,6 +62,7 @@ storeToDatabase = (req, res) ->
         for c in comments
             c.outcome = submit.outcome
             await c.upsert()
+
     if req.body.comment
         if not (req.body.comment in submit.comments.map(entities.decode))
             comment = entities.encode(req.body.comment)
@@ -44,11 +79,17 @@ storeToDatabase = (req, res) ->
                 outcome: submit.outcome
             await newComment.upsert()
             submit.comments.push(comment)
+            msg += "\n" + comment
+            
     await submit.upsert()
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
     await User.updateUser(submit.user, dirtyResults)
+
+    telegramId = user.telegram
+    if telegramId
+        await notifyUser telegramId, msg
 
 export default setOutcome = (req, res) ->
     if req.body.result or req.body.comment
