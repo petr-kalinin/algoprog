@@ -24,8 +24,6 @@ if TOKEN
 else
     bot = undefined
 
-
-
 export notify = (message) ->
     if bot
         bot.sendMessage(ADMIN_CHAT_ID, message)
@@ -35,3 +33,5 @@ export notify = (message) ->
 export notifyUser = (id, message) ->
     if bot
         bot.sendMessage(id, message)
+    else
+        logger.warn "Send message '", id, "', text: ", message

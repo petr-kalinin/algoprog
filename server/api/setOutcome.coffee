@@ -16,28 +16,28 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
-generateMsg = (lang, req, nameProblem) ->
+generateMsg = (lang, result, problemName) ->
     msg = ""
 
     if lang == "!en"
-        msg += "The solution of the " + nameProblem + " problem "
+        msg += "The solution for the '" + problemName + "' problem has been "
 
-        if req.body.result == "AC"
+        if result == "AC"
             msg += "accepted"
-        else if req.body.result == "IG"
+        else if result == "IG"
             msg += "ignored"
-        else if req.body.result == "DQ"
+        else if result == "DQ"
             msg += "disqualified"
         else
             msg += "commented"
     else
-        msg += "Решение задачи " + nameProblem + " "
+        msg += "Решение задачи '" + problemName + "' "
 
-        if req.body.result == "AC"
+        if result == "AC"
             msg += "зачтено"
-        else if req.body.result == "IG"
+        else if result == "IG"
             msg += "проигнорировано"
-        else if req.body.result == "DQ"
+        else if result == "DQ"
             msg += "дисквалифицировано"
         else
             msg += "прокомментировано"
@@ -51,7 +51,7 @@ storeToDatabase = (req, res) ->
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
     user = await User.findByIdWithTelegram(submit.user)
     lang = GROUPS[user.userList].lang
-    msg = generateMsg(lang, req, problem.name)
+    msg = generateMsg(lang, req.body.result, problem.name)
 
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
@@ -79,15 +79,14 @@ storeToDatabase = (req, res) ->
                 outcome: submit.outcome
             await newComment.upsert()
             submit.comments.push(comment)
-
             msg += "\n" + comment
+            
     await submit.upsert()
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
     await User.updateUser(submit.user, dirtyResults)
 
-    
     telegramId = user.telegram
     if telegramId
         await notifyUser telegramId, msg
