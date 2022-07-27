@@ -8,7 +8,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 import download from '../lib/download'
 import sleep from '../lib/sleep'
-import notify from '../metrics/notify'
+import notify from '../lib/notify'
 
 import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'

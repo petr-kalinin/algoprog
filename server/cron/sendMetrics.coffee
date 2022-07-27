@@ -5,7 +5,7 @@ import GROUPS from '../../client/lib/groups'
 import {START_SUBMITS_DATE} from '../api/dashboard'
 
 import send from '../metrics/graphite'
-import notify from '../metrics/notify'
+import notify from '../lib/notify'
 
 import FindMistake from '../models/FindMistake'
 import Result from "../models/result"

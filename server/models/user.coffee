@@ -59,6 +59,7 @@ usersSchema = new mongoose.Schema
         editorOn: Boolean
         language: String
     members: [String]
+    telegram: { type: String, select: false }
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -190,6 +191,12 @@ usersSchema.methods.setActivated = (activated) ->
     User.updateUser(@_id)
     @activated = activated
 
+usersSchema.methods.setTelegram = (telegram) ->
+    logger.info "setting telegram ", @_id, telegram
+    await @update({$set: {telegram}})
+    @telegram = telegram
+
+
 usersSchema.methods.setEditorOn = (editorOn) ->
     logger.info "set editor on ", @name, editorOn
     @prefs.editorOn = editorOn
@@ -236,6 +243,12 @@ usersSchema.statics.findById = (id) ->
 
 usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
+
+usersSchema.statics.findByTelegram = (id) ->
+    User.findOne({telegram: id})?.select("+telegram")
+
+usersSchema.statics.findTelegram = (id) ->
+    User.findById(id)?.select("+telegram")
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     start = new Date()
@@ -352,6 +365,9 @@ usersSchema.index
 usersSchema.index
     achieves: 1
     ratingSort: -1
+
+usersSchema.index
+    telegram: 1
 
 usersSchema.index
     members: 1
