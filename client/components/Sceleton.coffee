@@ -101,7 +101,7 @@ BottomPanel = (props) ->
                         {" © "}{Lang('Petr_Kalinin')}{", GNU AGPL, "}
                         <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>
                         {" | "}
-                        <Link to="/material/module-29054">{Lang("about_license")}</Link>
+                        <Link to="/material/license">{Lang("about_license")}</Link>
                         {" | "}
                         <a href="https://blog.algoprog.ru" target="_blank">{Lang("blog")}</a>
                     </div>
@@ -177,8 +177,8 @@ class Sceleton extends React.Component
             <TopPanel me={@props.me} myUser={@props.myUser} toggleTree={@toggleTree}/>
             <div className={styles.main}>
                 {@props.lang == "en" &&
-                    <div class={'alert alert-danger ' + styles.en_warning}>
-                        English version is under construction. Not all parts of the site has been translated yet.
+                    <div class={'alert alert-warning ' + styles.en_warning}>
+                        English version is under construction. All contents of the site should be already translated (mostly using machine translation), but some functions may not work properly. Please contact me if you find any problems.
                     </div>
                 }
                 <Grid fluid>

@@ -3,10 +3,13 @@ import label from "../../lib/label"
 import page from "../../lib/page"
 import problem from "../../lib/problem"
 import topic from "../../lib/topic"
+import {ruen} from "../../lib/util"
 
 module15969 = () ->
-    page("Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)", String.raw"""
-        <div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Оформление программ и отступы</h1>
+    page(ruen(
+        "Про оформление программ и отступы (про паскаль, но в питоне и c++ все то же самое)",
+        "About program layout and indents (about Pascal, but in python and c++ everything is the same)"), ruen(
+                                                                                                   String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Оформление программ и отступы</h1>
         <h2>Общие замечания</h2>
         <p>Паскаль, как и многие другие языки программирования, допускает достаточно свободное оформление программ. Вы можете ставить пробелы и переводы строк как вам угодно (за исключением, конечно, ряда понятных требований типа пробелов в выражении <font face="courier">if a mod b=c then</font>).</p><p>
         
@@ -122,7 +125,7 @@ module15969 = () ->
         <pre>if a=0 then 
             writeln(-1);
         else begin
-            if b=0 then begin
+            if b=0 then
                 x:=1;
             else
                 x:=b/a;
@@ -267,17 +270,283 @@ module15969 = () ->
             
         writeln(s);
         end.
-        </pre></div>
-    """, {skipTree: true})
+        </pre></div>""",
+                                                                                                   String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Program layout and margins</h1>
+                <h2>General remarks</h2>
+        <p>Pascal, like many other programming languages, allows for a fairly free design of programs. You can put spaces and line feeds as you like (except, of course, for a number of understandable requirements such as spaces in the expression <font face="courier">if a mod b=c then</font>).</p><p>
+
+        </p><p>Nevertheless, certain rules should be followed — not so that the program is compiled, but so that the program would be easier for a person to read. This is important both in a situation when your program will be read by someone else, and in a situation when your program will be read by <i>yourself</i>. In a well-formatted program, it is easier to find other compilation errors, it is easier to find logical errors in the code, it is easier to add and modify such a program, and so on.</p>
+
+        <p>The main purpose of formatting a program is to make its structure better visible, that is, to make loops, if's and other constructions that are important for understanding the sequence of actions better visible. It should be easy to understand which commands are executed in what order in the program, and first of all, which commands relate to which cycles and if's (cycles, if's and similar constructions below I will call control constructions).</p>
+
+        <p>Therefore, some rules should be followed. There are many different standards and rules on this topic; in many projects that are written by entire teams of programmers, there are official requirements, and each programmer is obliged to comply with them up to a space. In our classes, I will not be so strict about the design, but nevertheless I will demand compliance with a number of rules (this is some kind of "squeeze", that is common to almost all standards), and I will also strongly recommend following a number of rules.</p>
+
+        <p>The sections below will be updated as I remember something or see something in your programs.</p>
+
+        <h2>Mandatory requirements</h2>
+        <ul>
+        <li>Use common sense. Any of the rules listed below can be violated if common sense tells you what is better to do wrong — but such situations are the exception rather than the rule.</li>
+        <li>There should be no more than one command and/or control structure on each line.
+        <ul><li>Exception: very closely related commands like assign and reset.</li>
+        <li>Exception: a control structure with only one short command inside, for example:
+        <pre>if a&gt;0 then inc(i);
+        </pre>
+        </li>
+        <li>Exception: a for loop with a nested if, which makes sense to "pass only through elements that satisfy the condition":
+        <pre>for i:=a to b do if x[i]&lt;&gt;0 then begin // there should be no more code here!
+        </pre>
+        </li>
+        </ul>
+        </li>
+        <li>There should be indents in the code — some lines should not be written close to the left edge, but with a few spaces at the beginning:
+        <pre>if a=0 then begin
+            b:=2; // indent in this line
+            c:=c+2; // and in this one too
+        end;
+        </pre>
+        The basic principle of indentation is that the program can be imagined as a sequence of nested blocks. The main block is the program itself. It can contain simple commands, as well as complex blocks — if's, loops, etc. The code inside an if or inside a loop is a separate block nested in the main block. The code inside the loop inside an if is a block nested in another block nested in a third. Example: the following code:
+        <pre>read(n);
+        for i:=1 to n do begin
+            read(a[i]);
+            if a[i]&gt;0 then begin
+                writeln(a[i]);
+                k:=k+1;
+            end;
+        end;
+        if n&gt;0 then
+            writeln('!');
+        </pre>
+        the following block structure corresponds:
+        <pre>
+        +--------------------+
+        | main program       |
+        | +-----------+      |
+        | | for loop  |      |
+        | | +-------+ |      |
+        | | | if    | |      |
+        | | +-------+ |      |
+        | +-----------+      |
+        | +------+           |
+        | | if   |           |
+        | +------+           |
+        +--------------------+
+        </pre>
+        So, within one block, the indentation should be the same. And for each indoor unit, the indentation should be increased. (In this case, the loop or if header is considered part of the outer block and is written without indentation.)</li>
+        <li>The same can be said in another way: the internal code of the control structure must be indented. If another control structure is embedded in one, then the indentation of the internal code should be doubled, etc. As a result, all commands that are always executed one after the other must be indented (their first characters must go one under the other), and if the order can change somewhere, the indents must be different.<br>
+        Stick to the same size of the "base" indentation everywhere in the program, usually 2 or 4 spaces take it. One space is too little.<br>
+        Example of margins:
+        <pre>for i:=1 to n do begin
+            read(a); // went inside for --- indentation appeared: 4 spaces
+            if a&lt;&gt;0 then begin
+                inc(m); // they also entered inside if --- the indentation became twice as large
+                b[m]:=a;
+            end;
+        end;
+        for i:=1 to m do
+            writeln(b[i]); // if the unit indentation above was 4 spaces, then here, too, 4, not 2!
+        </pre></li>
+        <li>The elements indicating the end of part or all of the control structure (else and/or end) must be on separate lines and at the same indentation level as the beginning of the control structure. (This does not apply to begin, because the beginning of the control structure is visible and so.)<br>
+        Examples:<br>
+        <font color="red">Incorrect:
+        <pre>for i:=1 to n do begin
+            read(a);
+            s:=s+a; end; // end is very poorly visible
+        if s&gt;2 then
+            writeln(s)
+            else begin // else is very poorly visible
+            writeln('Error');
+            halt;
+            end; // end is poorly visible
+        </pre></font>
+        <font color="green">Correct:
+        <pre>for i:=1 to n do begin
+            read(a);
+            s:=s+a;
+        end; // end is immediately visible
+        if s&gt;2 then
+            writeln(s)
+        else begin // else is immediately visible and breaks the sequence of lines:
+            writeln('Error'); // it is clear that these are two branches
+            halt;
+        end; // it can be seen that the end is there and is not lost
+        </pre></font>
+        It is allowed to place the phrase <font face="courier">end else begin</font> on one line.</li>
+        <li>It happens that you have a whole chain of if constructs that analyzes several cases:
+        <pre>if dir='North' then
+            ...
+        else if dir='South' then
+            ...
+        else if dir='East' then
+            ...
+        else if dir='West' then
+            ...
+        else
+            writeln('Error!');
+        </pre>
+        According to the meaning of the program, this is a multivariate branching, here all cases are equal or almost equal. The fact that in the program each subsequent if is nested in the previous one is simply a consequence of the fact that there is no way to do multivariate branching in pascal. Therefore, such code should be designed exactly as indicated above, i.e. all branches of <font face="courier">else if</font> should be done on one indent. (Not to mention the fact that if you increase the indentation for each such if, the program will go very much to the right.)<br>
+        But distinguish this from the following case:
+        <pre>if a=0 then
+            writeln(-1);
+        else begin
+            if b=0 then
+                x:=1;
+            else 
+                x:=b/a;
+            writeln(x);
+        end;
+        </pre>
+        Here the options <code>if a=0</code> and <code>if b=0</code> are not equal: the option <code>b=0</code> is explicitly nested inside <code>else</code>.
+
+        </li><li>Commands executed sequentially must have the same stumble.
+        Examples:<br>
+        <font color="red">Incorrect:
+        <pre> read(a);
+           b:=0;
+          c:=0;
+        for i:=1 to a do begin
+              b:=b+i*i;
+            c:=c+i;
+         end;
+        </pre></font>
+        <font color="red">Still wrong (for is always executed after c:=0, so the margins should be the same):
+        <pre>   read(a);
+           b:=0;
+           c:=0;
+        for i:=1 to a do begin 
+              b:=b+i*i;
+              c:=c+i;
+        end;
+        </pre></font>
+        <font color="green">Correct:
+        <pre>read(a);
+        b:=0;
+        c:=0;
+        for i:=1 to a do begin 
+            b:=b+i*i;
+            c:=c+i;
+        end;
+        </pre></font>
+        </li>
+        <li>You should not unnecessarily move parts of the header of control structures to a new line (conditions in if, while, repeat; assignment in the for header; procedure parameters, etc.). On the other hand, if the header of the control structure turns out to be too long, then you can move it, but then the transferred part should be indented, and in general formatting should be such that it is clearly visible where the header of the control structure ends, and it would be good to highlight the header structure (paired brackets in the condition, etc.)<br>
+        Examples:<br>
+        <font color="red">Incorrect:
+        <pre>if
+        a=0 then // the condition is short, preferably in one line
+        ...
+        for
+          i:=1
+          to 10 do // similarly
+        ...
+        {too long --- better split}
+        if (((sum+min=min2+min3) or (sqrt(sumSqr)&lt;30)) and (abs(set1-set2)+eps&gt;thershold)) or (data[length(s)-i+1]=data[i]) or good then...</pre></font>
+        <font color="green">Correct:
+        <pre>if a=0 then
+        ...
+        for i:=1 to 10 do
+        ...
+        {it is clearly visible where the condition ends, plus paired brackets are highlighted}
+        if (
+              ( (sum+min=min2+min3) or (sqrt(sumSqr)&lt;30) ) and (abs(set1-set2)+eps&gt;thershold)
+            ) or (data[length(s)-i+1]=data[i]) or good
+        then...</pre></font>
+
+        </li><li>In the section <font face="courier">var</font>, all lines should be aligned so that the first letter of the first variable in each line would be one under the other; this means that the second and further lines should be indented with 4 spaces. Similarly, in the other sections going up to the code (<font face="courier">type</font>, <font face="courier">const</font>, etc.), all lines must be equalized by the first character:
+        <pre>type int=integer;
+             float=extended;
+        var i:integer;
+            s:string;
+        </pre>
+        </li><li>Separate procedures/functions from each other and from the main text with an empty line (or two); also use empty lines inside a long program text to break it into logically coherent blocks.</li>
+        </ul>
+        <h2>Not so mandatory requirements, but which I strongly recommend following</h2>
+        <ul>
+        <li>Write <font face="courier">begin</font> on the same line as the control structure, or at least on the same indentation as the control structure:<br>
+        <font color="red">Very bad:
+        <pre>for i:=1 to n do
+            begin
+            read(a[i]);
+            ...
+        </pre>
+        </font>
+        <font color="#555500">Better:
+        <pre>for i:=1 to n do
+        begin
+            read(a[i]);
+            ...
+        </pre></font>
+        <font color="green">Even better:
+        <pre>for i:=1 to n do begin
+            read(a[i]);
+            ...
+        </pre></font>
+        </li>
+        </ul>
+        <h2>Example of a well-formatted program:</h2>
+        <pre>function sum(a, b: longint): longint;
+        begin
+          sum := a + b;
+        end;
+         
+        var i, a, b, s: longint;
+            x, y: double;
+            arr: array [1..1000] of boolean;
+         
+        begin
+        read(a, b);
+         
+        arr[1] := true;
+         
+        for i := 2 to 1000 do
+          if ((a &gt; 0) and (arr[i-1])) then
+            arr[i] := true;
+         
+        for i := 1 to 1000 do
+          arr[i] := false;
+         
+        s := 0;
+        if (a &lt; 0) then begin
+          a := -a;
+          if (b &lt; 0) then begin
+            b := -b;
+            s := a + b;
+          end else begin
+            while (s &lt;= 0) do begin
+              case a of
+                1: begin
+                  s := s + 3;
+                end;
+                2: begin
+                  s := s - 4;
+                  a := a - 1;
+                end;
+                else
+                  s := 1;
+              end;
+            end;
+          end;
+        end else if (b &lt; 0) then begin
+          b := -b;
+          s := (a + b) * (a - b);
+        end else begin
+          s := sum(a, b) * sum(a, b);
+        end;
+            
+        writeln(s);
+        end.
+        </pre></div>"""), {skipTree: true})
 
 export default loops = () ->
     return {
-        topic: topic("Циклы", "Задачи на циклы", [
-            label(String.raw"""
-                <a href="https://notes.algoprog.ru/python_basics/2_loops.html">Питон: теория про циклы</a><br>
+        topic: topic(
+            ruen("Циклы", "Loops"),
+            ruen("Задачи на циклы", "Problems on loops"),
+        [label(ruen(
+                   String.raw"""<a href="https://notes.algoprog.ru/python_basics/2_loops.html">Теория про циклы</a><br>
                 Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
-                Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.
-            """),
+                Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.""",
+                   String.raw"""<a href="https://notes.algoprog.ru/en/python_basics/2_loops.html">Theory on loops</a><br>
+                Inside the theory on loops there is also a section <a href="https://notes.algoprog.ru/en/python_basics/2_loops.html#break-continue">about the break and continue commands</a>.
+                Read it, even if you don't write in python, everything is the same in other languages.""")),
             module15969(),
             problem({testSystem: "ejudge", contest: "3005", problem: "1", id: "333"}),
             problem({testSystem: "ejudge", contest: "3005", problem: "2", id: "351"}),
@@ -291,8 +560,12 @@ export default loops = () ->
             problem({testSystem: "ejudge", contest: "3005", problem: "10", id: "3067"}),
         ], "loops"),
         advancedTopics: [
-            label("Если вы пишете на питоне, то в первых двух задачах из продвинутых задач на циклы массивами пользоваться можно — просто потому, что иначе вы не сможете считать много чисел в одной строке."),
-            contest("Продвинутые задачи на циклы: в них запрещается пользоваться массивами", [
+            label(ruen(
+                "Если вы пишете на питоне, то в первых двух задачах из продвинутых задач на циклы массивами пользоваться можно — просто потому, что иначе вы не сможете считать много чисел в одной строке.",
+                "If you write in python, then you can use arrays in the first two advanced problems on loops \u2014 simply because otherwise you will not be able to count many numbers in one line.")),
+            contest(ruen(
+                "Продвинутые задачи на циклы: в них запрещается пользоваться массивами",
+                "Advanced problems on loops: it is forbidden to use arrays here"), [
                 problem(227),
                 problem(228),
                 problem(3072),

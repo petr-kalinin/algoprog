@@ -33,7 +33,10 @@ class Context
 
     generateId: () ->
         if @path.length
-            pathItem = @path[@path.length - 1]._id + "."
+            pathItem = @path[@path.length - 1]._id
+            if pathItem.endsWith(@label)
+                pathItem = pathItem.substring(0, pathItem.length - @label.length)
+            pathItem = pathItem + "."
         else
             pathItem = ""
         if not (pathItem of @pathToId)

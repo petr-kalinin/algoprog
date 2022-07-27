@@ -17,15 +17,21 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 
 import logger from '../log'
 
-imapClient = new ImapFlow
-    host: 'imap.gmail.com',
-    port: 993,
-    secure: true,
-    auth:
-        user: process.env["EMAIL_USER"],
-        pass: process.env["EMAIL_PASSWORD"]
+imapClient = undefined
+resetImapClient = () ->
+    if process.env["EMAIL_USER"] and process.env["EMAIL_PASSWORD"]
+        imapClient = new ImapFlow
+            host: 'imap.gmail.com',
+            port: 993,
+            secure: true,
+            auth:
+                user: process.env["EMAIL_USER"],
+                pass: process.env["EMAIL_PASSWORD"]
 
-imapClient.connect()
+        await imapClient.connect()
+    else
+        logger.error("No imap data specified")
+resetImapClient()
 
 randomString = (len) ->
     Math.random().toString(36).substr(2, len)
@@ -34,6 +40,7 @@ filterUsername = (username) ->
     return username.replace(/[^a-zA-Z]/gm, "")
 
 getEmails = () ->
+    await resetImapClient()
     lock = await imapClient.getMailboxLock('INBOX')
     try
         count = (await imapClient.status('INBOX', {messages: true})).messages
@@ -50,11 +57,15 @@ getEmails = () ->
     return result
 
 findConfirmLink = (login) ->
-    emails = await getEmails()
-    for email in emails
-        res = RegExp("https:\\/\\/informatics\\.msk\\.ru\\/login\\/confirm\\.php\\?data=\\w+\\/#{login}").exec(email)?[0]
-        if res
-            return res
+    try
+        emails = await getEmails()
+        for email in emails
+            res = RegExp("https:\\/\\/informatics\\.msk\\.ru\\/login\\/confirm\\.php\\?data=\\w+\\/#{login}").exec(email)?[0]
+            if res
+                return res
+    catch e
+        logger.error(e)
+        return undefined
     return undefined
 
 registerOnInformatics = (data) ->
@@ -106,6 +117,7 @@ registerOnInformatics = (data) ->
             break
         timeout = timeout * 2
     if not link
+        logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}")
         notify "Can't find notification link for login #{username}" 
         throw "Can't find notification link for login #{username}"
     await download(link)
@@ -171,7 +183,7 @@ export default register = (req, res, next) ->
             res.json
                 registered:
                     error: true
-                    message: if err.name == "UserExistsError" then "Пользователь с таким логином уже сущестует" else "Неопознанная ошибка"
+                    message: if err.name == "UserExistsError" then "duplicate" else "unknown"
         else
             logger.info("Registered user")
             res.json({registered: {success: true}})

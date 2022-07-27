@@ -234,12 +234,13 @@ requiredNote = (topics) ->
     for topic in topics
         t = topic()
         if t.title 
+            title = t.title?("") || t.title
             hasProblems = false
             for m in t.submaterials || []
                 if m?()?.testSystem
                     hasProblems = true
             if hasProblems
-                allRequired = allRequired and isContestRequired(t.title)
+                allRequired = allRequired and isContestRequired(title)
     if not allRequired
         return " (кроме контестов со звездочкой)"
     return ""

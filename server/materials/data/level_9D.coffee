@@ -2,9 +2,10 @@ import contest from "../lib/contest"
 import label from "../lib/label"
 import level from "../lib/level"
 import problem from "../lib/problem"
+import {ruen, levelDtitle, levelDmessage, levelDid} from '../lib/util'
 
 contest_1 = () ->
-    return contest("Дополнительные задачи на разные темы  - 1", [
+    return contest(levelDtitle(1), [
         problem({testSystem: "codeforces", contest: "687", problem: "C"}),
         problem({testSystem: "codeforces", contest: "685", problem: "B"}),
         problem({testSystem: "codeforces", contest: "682", problem: "D"}),
@@ -14,7 +15,7 @@ contest_1 = () ->
     ])
 
 contest_2 = () ->
-    return contest("Дополнительные задачи на разные темы - 2", [
+    return contest(levelDtitle(2), [
         problem({testSystem: "codeforces", contest: "666", problem: "B"}),
         problem({testSystem: "codeforces", contest: "662", problem: "D"}),
         problem({testSystem: "codeforces", contest: "660", problem: "D"}),
@@ -24,7 +25,7 @@ contest_2 = () ->
     ])
 
 contest_3 = () ->
-    return contest("Дополнительные задачи на разные темы - 3", [
+    return contest(levelDtitle(3), [
         problem({testSystem: "codeforces", contest: "641", problem: "E"}),
         problem({testSystem: "codeforces", contest: "633", problem: "D"}),
         problem({testSystem: "codeforces", contest: "633", problem: "C"}),
@@ -34,8 +35,8 @@ contest_3 = () ->
     ])
 
 export default level_9D = () ->
-    return level("9Г", [
-        label("<p>Чтобы перейти на следующий уровень, надо решить <b>минимум треть задач</b>. Когда вы их решите, я рекомендую вам переходить на следующий уровень, чтобы не откладывать изучение новой теории. К оставшимся задачам этого уровня возвращайтесь позже время от времени и постарайтесь со временем все-таки дорешать почти все их до конца.</p>"),
+    return level(levelDid(9), [
+        label(levelDmessage),
         contest_1(),
         contest_2(),
         contest_3(),
