@@ -87,6 +87,11 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: EMAIL_PASSWORD
+            - name: ALGOPROG_CHAT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: ALGOPROG_CHAT_ID
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
