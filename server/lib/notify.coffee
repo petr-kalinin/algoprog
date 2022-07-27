@@ -17,10 +17,10 @@ if TOKEN
 
             if not userId && not userName
                 bot.declineChatJoinRequest(ALGOPROG_CHAT_ID, request.from.id)
-                logger.info "Rejected request from ", request.from.id
+                logger.info "Rejected request from ", request.from.id, request.from.username
             else
                 bot.approveChatJoinRequest(ALGOPROG_CHAT_ID, request.from.id)
-                logger.info "Accepted request from ", request.from.id
+                logger.info "Accepted request from ", request.from.id, request.from.username
         else
             logger.info "New join request from chat: ", request.chat.id, ", algoprog chat: ", ALGOPROG_CHAT_ID
 else
