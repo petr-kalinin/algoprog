@@ -215,8 +215,8 @@ _LANG =
         ru: "Хендл (никнейм) на codeforces для отправки решений"
         en: "Codeforces handle for submitting problems"
     codeforces_data_for_submitting_problems_password:
-        ru: "Хендл (никнейм) на codeforces для отправки решений"
-        en: "Codeforces handle for submitting problems"
+        ru: "Пароль на codeforces для отправки решений"
+        en: "Codeforces password for submitting problems"
     login_and_password_do_not_match:
         ru: "Пароль не подходит к логину"
         en: "The password does not match the login"
@@ -522,6 +522,25 @@ _LANG =
     file_is_binary_or_too_long:
         ru: "Файл слишком длинный или бинарный"
         en: "File is too long or binary"
+    telegram_account:
+        ru: "Телеграм-аккаунт"
+        en: "Telegram-account"
+    telegram_account_intro:
+        ru: "Вы можете указать свой аккаунт телеграма, чтобы иметь возможность подключиться к чату учеников алгопрога, 
+            а также получать уведомления о комментариях к вашим решениям. Надо указать id или username телеграма. Если 
+            у вас нет username и вы не знаете свой id, то чтобы узнать, сделайте следующее: зайдите в телеграм и 
+            наберите в поиске @getmyid_bot, выберите из списка бота с названием 'Get My ID', нажмите на кнопку запуска 
+            (или напишите /start), бот отправит вам сообщение с вашим id."
+        en: "You can specify your telegram account to be able to connect to the algoprog students' chat, and also to 
+            receive notification about comments on your solution. You must specify your telegram id or username. If you 
+            don't have a username and don't know your id, to find out, do this: go to telegram and search for 
+            @getmyid_bot, select the bot named 'Get My ID' from the list, click on the start button (or write /start) the bot will 
+            send you a message with your id."
+    telegram_data:
+        ru: "Аккаунт в Телеграм (id или username):"
+        en: "Telegram account (id or username):"
+
+
 
 export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]

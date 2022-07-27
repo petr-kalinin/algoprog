@@ -279,16 +279,6 @@ class EditingUser extends React.Component
                             />
                     </div>
                     <div>
-                        Аккаунт в Телеграм (id или username):
-                            <Input
-                                type = "text"
-                                name = "newTelegram"
-                                value = {@state.newTelegram}
-                                onChange = {@handleTelegramChange}
-                                onKeyPress={@handleKeyPressed}
-                            />
-                    </div>
-                    <div>
                         {LangRaw("codeforces_data_for_submitting_problems_password", @props.lang)}:
                             <Input
                                 type = "password"
@@ -297,6 +287,19 @@ class EditingUser extends React.Component
                                 onChange = {@handleCodeforcesPasswordChange}
                                 onBlur = {@updateCodeforces}
                                 errors = {[@state.codeforcesError && <div>{LangRaw("login_and_password_do_not_match", @props.lang)}</div>]}
+                            />
+                    </div>
+                    <h3>{LangRaw("telegram_account", @props.lang)}</h3>
+                    <div>
+                        {LangRaw("telegram_account_intro", @props.lang)}
+                        <br/>
+                        {LangRaw("telegram_data", @props.lang)}
+                            <Input
+                                type = "text"
+                                name = "newTelegram"
+                                value = {@state.newTelegram}
+                                onChange = {@handleTelegramChange}
+                                onKeyPress={@handleKeyPressed}
                             />
                     </div>
                     {@state.unknownError && <div className = {styles.youHaveProblem}></div>}

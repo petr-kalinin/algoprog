@@ -345,11 +345,9 @@ export default setupApi = (app) ->
         id = req.params.id
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = {}
-        tg = {}
         if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
             userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
-            tg = (await User.findTelegram(userId))?.toObject() || {}
-        res.json({user..., userPrivate..., tg...})
+        res.json({user..., userPrivate...})
 
     app.get '/api/dashboard', wrap (req, res) ->
         res.json(await dashboard(req.user))
@@ -410,9 +408,11 @@ export default setupApi = (app) ->
             calendar: calendar?.toObject()
 
         userPrivate = {}
+        tg = {}
         if req.user?.admin or ""+req.user?.userKey() == ""+userId
             userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
-        result.user = {result.user..., userPrivate...}
+            tg = (await User.findTelegram(userId))?.toObject() || {}
+        result.user = {result.user..., userPrivate..., tg...}
         res.json(result)
 
     app.get '/api/users/:userList', wrap (req, res) ->
