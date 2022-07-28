@@ -24,7 +24,7 @@ import getTestSystem from '../testSystems/TestSystemRegistry'
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
-DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 90
+DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
 
 usersSchema = new mongoose.Schema
     _id: String,
@@ -247,11 +247,8 @@ usersSchema.statics.findByAchieve = (achieve) ->
 usersSchema.statics.findByTelegram = (id) ->
     User.findOne({telegram: id})?.select("+telegram")
 
-usersSchema.statics.findByIdWithTelegram = (id) ->
-    User.findOne({_id: id})?.select("+telegram")
-
-usersSchema.statics.findByUsername = (name) ->
-    User.findOne({telegram: name})?.select("+telegram")
+usersSchema.statics.findTelegram = (id) ->
+    User.findById(id)?.select("+telegram")
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     start = new Date()
