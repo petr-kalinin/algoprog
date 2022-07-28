@@ -5,11 +5,13 @@ passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 sha256 = require('sha256')
+sha1 = require('sha1')
 FileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
 
+import bodyParser from "body-parser"
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
 
@@ -71,6 +73,10 @@ ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
 PASSWORD = process.env["TINKOFF_PASSWORD"]
+XSOLLA_MERCHANT_ID = process.env['XSOLLA_MERCHANT_ID']
+XSOLLA_PROJECT_ID = process.env['XSOLLA_PROJECT_ID']
+XSOLLA_API_KEY = process.env["XSOLLA_API_KEY"]
+XSOLLA_SECRET_KEY = process.env["XSOLLA_SECRET_KEY"]
 
 wrap = (fn) ->
     (args...) ->
@@ -172,6 +178,56 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
 
+processPayment = (orderId, success, amount, payload, isReal=true) ->
+    [userId, paidTillInOrder] = orderId.split(":")
+
+    payment = new Payment
+        user: userId
+        orderId: orderId
+        success: success
+        processed: false
+        payload: payload
+    await payment.upsert()
+    if not success
+        logger.info("paymentNotify #{orderId}: unsuccessfull")
+        return
+    user = await User.findById(userId)
+    if not user
+        logger.warn("paymentNotify #{orderId}: unknown user")
+        return
+
+    userPrivate = await UserPrivate.findById(userId)
+    payment.oldPaidTill = userPrivate.paidTill
+    expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
+    if expectedPaidTill != paidTillInOrder
+        logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill})")
+        return
+    if amount and +userPrivate.price != amount
+        logger.warn("paymentNotify #{orderId}: wrong amount (price is #{userPrivate.price}, paid #{amount})")
+        return
+    if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
+        newPaidTill = new Date()
+    else
+        newPaidTill = userPrivate.paidTill
+    newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
+    userPrivate.paidTill = newPaidTill
+    await userPrivate.upsert()
+    if isReal
+        try
+            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
+            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
+        catch e
+            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
+            receipt = "---"
+    else
+        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
+        receipt = "---"
+    logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
+    payment.processed = true
+    payment.newPaidTill = newPaidTill
+    payment.receipt = receipt
+    await payment.upsert()
+
 export default setupApi = (app) ->
     app.get '/api/ping', wrap (req, res) ->
         res.send('OK')
@@ -234,7 +290,7 @@ export default setupApi = (app) ->
         if ""+req.user?.userKey() != ""+req.params.id
             res.status(403).send('No permissions')
             return
-        password = req.body.password
+        passwordf = req.body.password
         newPassword = req.body.newPassword
         try
             if newPassword != ""
@@ -1144,6 +1200,73 @@ export default setupApi = (app) ->
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
 
+    app.get '/api/xsollaToken/:order', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        url = "https://api.xsolla.com/merchant/v2/merchants/#{XSOLLA_MERCHANT_ID}/token"
+        data =
+            user:
+                id: 
+                    value: ""+req.user.userKey()
+            settings:
+                project_id: +XSOLLA_PROJECT_ID
+                mode: "sandbox"
+                external_id: req.params.order
+            purchase:
+                checkout:
+                    amount: userPrivate.price
+                    currency: "RUB"
+                description:
+                    value: "algoprog.ru"
+        console.log data
+        try
+            result = await download(url, undefined, {
+                json: data
+                method: 'POST'
+                headers:
+                    'Content-Type': 'application/json',
+                    Authorization: 'Basic ' + Buffer.from("#{XSOLLA_MERCHANT_ID}:#{XSOLLA_API_KEY}").toString('base64')
+            })
+        catch e
+            throw "Can't download xsolla api"
+        console.log result
+        res.json({token: result.token})
+
+    app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
+        console.log req.body
+        console.log req.body.toString() + XSOLLA_SECRET_KEY
+        hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)
+        signature = req.get("Authorization")
+        console.log hash, signature
+        if signature != "Signature " + hash
+            logger.error("xsollaHook: wrong hash, expected " + hash)
+            res.status(400).json
+                error:
+                    code: "INVALID_SIGNATURE",
+                    message: "Invalid signature"
+            return
+        data = JSON.parse(req.body)
+        if data.notification_type == "refund"
+            res.status(204).send('')
+            return
+        if data.notification_type != "payment"
+            res.status(400).json
+                error:
+                    code: "INVALID_PARAMETER",
+                    message: "Unsupported notification type"
+            return
+        success = true
+        orderId = data.transaction.external_id
+        amount = data.purchase.checkout.amount
+        await processPayment(orderId, success, amount, req.body, false)
+        res.status(204).send('')
+
     app.post '/api/paymentNotify', wrap (req, res) ->
         logger.info("paymentNotify #{req.body.OrderId}")
         data = deepcopy(req.body)
@@ -1161,57 +1284,9 @@ export default setupApi = (app) ->
             res.status(403).send('Wrong token')
             return
 
-        [userId, paidTillInOrder] = data.OrderId.split(":")
         success = data.Status == "CONFIRMED"
-
-        payment = new Payment
-            user: userId
-            orderId: data.OrderId
-            success: success
-            processed: false
-            payload: req.body
-        await payment.upsert()
-        if not success
-            logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull (#{data.Status})")
-            res.send('OK')
-            return
-        user = await User.findById(userId)
-        if not user
-            logger.warn("paymentNotify #{req.body.OrderId}: unknown user")
-            res.send('OK')
-            return
-
-        userPrivate = await UserPrivate.findById(userId)
-        if not userPrivate
-            userPrivate = new UserPrivate({_id: req.params.id})
-        payment.oldPaidTill = userPrivate.paidTill
-        expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
-        if expectedPaidTill != paidTillInOrder
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong paid till (current is #{expectedPaidTill})")
-            res.send('OK')
-            return
-        if +userPrivate.price * 100 != +data.Amount
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong amount (price is #{userPrivate.price}, paid #{data.Amount/100})")
-            res.send('OK')
-            return
-        if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
-            newPaidTill = new Date()
-        else
-            newPaidTill = userPrivate.paidTill
-        newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
-        userPrivate.paidTill = newPaidTill
-        await userPrivate.upsert()
-        try
-            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-            notify "Добавлен чек (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
-        catch e
-            notify "Ошибка добавления чека (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
-            receipt = "---"
-        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
-        payment.processed = true
-        payment.newPaidTill = newPaidTill
-        payment.receipt = receipt
-        await payment.upsert()
+        amount = Math.floor(req.body.Amount/100)
+        await processPayment(req.body.OrderId, success, amount, req.body)
         res.send('OK')
 
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->

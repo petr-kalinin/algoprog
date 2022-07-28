@@ -7,12 +7,13 @@ import { Link } from 'react-router-dom'
 
 import {LangRaw} from '../lang/lang'
 
+import ConnectedComponent from '../lib/ConnectedComponent'
 import GROUPS from '../lib/groups'
 import withLang from '../lib/withLang'
 
 import FieldGroup from './FieldGroup'
 
-class Payment extends React.Component
+class TinkoffPayment extends React.Component
     constructor: (props) ->
         super(props)
         @state =
@@ -34,35 +35,9 @@ class Payment extends React.Component
         return false
 
     render: () ->
-        canSubmit = true
-        if not @props.myUser?._id
-            amount = 1500
-            warning = <Alert bsStyle="danger">
-                    {LangRaw("cant_pay_not_registered", @props.lang)}
-                </Alert>
-            canSubmit = false
-        else if not @props.myUser?.activated
-            amount = 1500
-            warning = <Alert bsStyle="danger">
-                    {LangRaw("cant_pay_not_activated", @props.lang)}
-                </Alert>
-            canSubmit = false
-        else if not GROUPS[@props.myUser.userList]?.paid or @props.myUser.price == 0
-            amount = 0
-            warning = <Alert bsStyle="danger">
-                    {LangRaw("cant_pay_free", @props.lang)}
-                </Alert>
-            canSubmit = false
-        else if not @props.myUser.price or not @props.myUser.paidTill
-            amount = 1500
-            warning = <Alert bsStyle="danger">
-                    {LangRaw("cant_pay_no_price", @props.lang)}
-                </Alert>
-            canSubmit = false
-        else 
-            amount = @props.myUser.price
-            warning = null
-
+        canSubmit = @props.canSubmit
+        amount = @props.amount
+        order = @props.order
         receipt = 
             Taxation: "usn_income",
             Items: [ {
@@ -72,18 +47,9 @@ class Payment extends React.Component
                 Amount: amount * 100,
                 Tax: "none" 
             }]
-        if @props.myUser?.paidTill
-            paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
-            order = "#{@props.myUser._id}:#{paidTill}"
-        else
-            order = ""
-
         canSubmit = canSubmit and @state.name and @state.email
 
         <div>
-            <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
-            {warning}
-            <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>
             <p><b>{LangRaw("payment_is_possible_only_from_russian_banks", @props.lang)}</b></p>
             <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <form name="TinkoffPayForm" onSubmit={@pay} id="payForm">
@@ -118,6 +84,62 @@ class Payment extends React.Component
             </form>
             {LangRaw("payment_official", @props.lang)}
 
+        </div>
+
+class XSollaPayment extends React.Component
+    render: () ->
+        <iframe src={"https://sandbox-secure.xsolla.com/paystation3/?access_token=#{@props.token.token}"} width="100%" height="1200"/>
+
+options =
+    urls: (props) ->
+        token: "xsollaToken/#{props.order}"
+
+XSollaPayment = ConnectedComponent(XSollaPayment, options)
+
+class Payment extends React.Component
+    render: () ->
+        canSubmit = true
+        amount = 2000
+        if not @props.myUser?._id
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_not_registered", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else if not @props.myUser?.activated
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_not_activated", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else if not GROUPS[@props.myUser.userList]?.paid or @props.myUser.price == 0
+            amount = 0
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_free", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else if not @props.myUser.price or not @props.myUser.paidTill
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_no_price", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else 
+            amount = @props.myUser.price
+            warning = null
+        switch GROUPS[@props.myUser?.userList]?.paid
+            when "tinkoff" then Element = TinkoffPayment
+            when "xsolla" then Element = XSollaPayment
+            else
+                canSubmit = false
+                Element = TinkoffPayment
+        if @props.myUser?.paidTill
+            paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
+            order = "#{@props.myUser._id}:#{paidTill}"
+        else
+            order = ""
+        <div>
+            <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
+            {warning}
+            <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>
+            <Element {@props...} canSubmit={canSubmit} amount={amount} order={order}/>
         </div>
 
 export default withLang Payment

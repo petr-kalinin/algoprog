@@ -36,7 +36,7 @@ export default GROUPS =
         starred: false
         lang: ""
     notnnov:
-        paid: true
+        paid: "tinkoff"
         chocos: false
         startDayForWeeks: "2020-01-06"
         tableName: "Не-нижегородские школьники",
@@ -45,7 +45,7 @@ export default GROUPS =
         starred: false
         lang: ""
     stud:
-        paid: true
+        paid: "tinkoff"
         chocos: false
         startDayForWeeks: "2020-01-06"
         tableName: "Студенты и старше"
@@ -75,7 +75,7 @@ export default GROUPS =
         starred: false
         lang: ""
     english:
-        paid: true
+        paid: "xsolla"
         chocos: false
         startDayForWeeks: "2020-01-06"
         canResetYear: false

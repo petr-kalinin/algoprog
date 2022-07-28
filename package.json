@@ -97,6 +97,7 @@
     "response-time": "^2.3.2",
     "save": "^2.4.0",
     "seedrandom": "^3.0.5",
+    "sha1": "^1.1.1",
     "sha256": "^0.2.0",
     "source-map-support": "^0.5.16",
     "tinycolor2": "^1.4.1",

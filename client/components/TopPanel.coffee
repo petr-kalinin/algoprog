@@ -116,11 +116,14 @@ class TopPanel extends React.Component
         super(props)
         @state =
             showWarning: (not @props.deactivatedWarningShown) and needDeactivatedWarning(@props.myUser, @props.me)
-            showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or (unpaidBlocked(@props.myUser) and @props.history.location.pathname != "/payment")
+            showUnpaid: @defaultShowUpdaid()
         @closeWarning = @closeWarning.bind(this)
         @openWarning = @openWarning.bind(this)
         @closeUnpaid = @closeUnpaid.bind(this)
         @openUnpaid = @openUnpaid.bind(this)
+
+    defaultShowUpdaid: () ->
+        (((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)) and (@props.history.location.pathname != "/payment")
 
     closeWarning: ->
         @props.setDeactivatedWarningShown()
@@ -145,7 +148,7 @@ class TopPanel extends React.Component
     componentDidUpdate: (prevProps, prevState) ->
         newState =
             showWarning: (not @props.deactivatedWarningShown) and needDeactivatedWarning(@props.myUser, @props.me)
-            showUnpaid: ((not @props.unpaidWarningShown) and needUnpaidWarning(@props.myUser)) or unpaidBlocked(@props.myUser)
+            showUnpaid: @defaultShowUpdaid()
         if !deepEqual(newState, prevState)
             @setState(newState)
 
