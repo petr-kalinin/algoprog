@@ -1224,7 +1224,6 @@ export default setupApi = (app) ->
                     currency: "RUB"
                 description:
                     value: "algoprog.ru"
-        console.log data
         try
             result = await download(url, undefined, {
                 json: data
@@ -1235,17 +1234,13 @@ export default setupApi = (app) ->
             })
         catch e
             throw "Can't download xsolla api"
-        console.log result
         res.json({token: result.token})
 
     app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
-        console.log req.body
-        console.log req.body.toString() + XSOLLA_SECRET_KEY
         hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)
         signature = req.get("Authorization")
-        console.log hash, signature
         if signature != "Signature " + hash
-            logger.error("xsollaHook: wrong hash, expected " + hash)
+            logger.error("xsollaHook: wrong hash")
             res.status(400).json
                 error:
                     code: "INVALID_SIGNATURE",
@@ -1256,22 +1251,27 @@ export default setupApi = (app) ->
             userId = data.user.id
             user = await User.findById(userId)
             if user
+                logger.error("xsollaHook: ok user " + userId)
                 res.status(204).send('')
             else
+                logger.error("xsollaHook: bad user " + userId)
                 res.status(400).json
                     error:
                         code: "INVALID_USER",
                         message: "Invalid user"
             return
         if data.notification_type == "refund"
+            logger.error("xsollaHook: refund")
             res.status(204).send('')
             return
         if data.notification_type != "payment"
+            logger.error("xsollaHook: unsupported notification type")
             res.status(400).json
                 error:
                     code: "INVALID_PARAMETER",
                     message: "Unsupported notification type"
             return
+        logger.error("xsollaHook: payment success")
         success = true
         orderId = data.transaction.external_id
         amount = data.purchase.checkout.amount
