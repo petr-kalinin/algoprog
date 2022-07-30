@@ -1252,6 +1252,17 @@ export default setupApi = (app) ->
                     message: "Invalid signature"
             return
         data = JSON.parse(req.body)
+        if data.notification_type == "user_validation"
+            userId = data.user.id
+            user = await User.findById(userId)
+            if user
+                res.status(204).send('')
+            else
+                res.status(400).json
+                    error:
+                        code: "INVALID_USER",
+                        message: "Invalid user"
+            return
         if data.notification_type == "refund"
             res.status(204).send('')
             return
