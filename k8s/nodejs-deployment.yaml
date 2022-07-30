@@ -92,6 +92,26 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: ALGOPROG_CHAT_ID
+            - name: XSOLLA_MERCHANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: XSOLLA_MERCHANT_ID
+            - name: XSOLLA_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: XSOLLA_PROJECT_ID
+            - name: XSOLLA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: XSOLLA_API_KEY
+            - name: XSOLLA_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: XSOLLA_SECRET_KEY
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
