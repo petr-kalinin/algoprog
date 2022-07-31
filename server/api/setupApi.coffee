@@ -290,7 +290,7 @@ export default setupApi = (app) ->
         if ""+req.user?.userKey() != ""+req.params.id
             res.status(403).send('No permissions')
             return
-        passwordf = req.body.password
+        password = req.body.password
         newPassword = req.body.newPassword
         try
             if newPassword != ""
