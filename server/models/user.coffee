@@ -247,6 +247,9 @@ usersSchema.statics.findByAchieve = (achieve) ->
 usersSchema.statics.findByTelegram = (id) ->
     User.findOne({telegram: id})?.select("+telegram")
 
+usersSchema.statics.findByIdWithTelegram = (id) ->
+    User.findById(id)?.select("+telegram")
+
 usersSchema.statics.findTelegram = (id) ->
     User.findById(id)?.select("+telegram")
 
