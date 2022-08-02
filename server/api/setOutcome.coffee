@@ -49,11 +49,10 @@ generateMsg = (lang, result, problemName, problemHref) ->
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     problemId = submit.problem
-    material = await Material.findById(problemId + lang)
-    logger.info("Store to database #{req.params.submitId} #{problemId} #{material._id}")
     user = await User.findByIdWithTelegram(submit.user)
     lang = GROUPS[user.userList].lang
-
+    material = await Material.findById(problemId + lang)
+    logger.info("Store to database #{req.params.submitId} #{problemId} #{material._id}")
     msg = generateMsg(lang, req.body.result, material.title, material._id)
 
     if req.body.result in ["AC", "IG", "DQ"]
@@ -74,7 +73,7 @@ storeToDatabase = (req, res) ->
                 _id: "_#{rndId}r#{req.params.submitId}"
                 submit: req.params.submitId
                 problemId: problemId
-                problemName: material._id
+                problemName: material.title
                 userId: submit.user
                 text: comment
                 time: new Date()
