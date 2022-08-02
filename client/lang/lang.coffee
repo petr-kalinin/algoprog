@@ -610,8 +610,8 @@ _LANG =
         ru: "Ваш пароль на informatics"
         en: "Your informatics.msk.ru password"
     automatic_registration_is_experimental: 
-        ru: "Автоматическая регистрация аккаунта на информатиксе работает в экспериментальном режиме. В случае каких-либо проблем пишите мне."
-        en: "Automatic account registration on informatics.msk.ru works in experimental mode. In case of any problems, please contact me."
+        ru: "Автоматическая регистрация аккаунта на информатиксе работает в экспериментальном режиме. В случае каких-либо проблем попробуйте зарегистрироваться на информатиксе вручную, или свяжитесь со мной."
+        en: "Automatic account registration on informatics.msk.ru works in experimental mode. In case of any problems, please try registering on informatics manually, or contact me."
     personal_information: 
         ru: "Личная информация"
         en: "Personal information"
