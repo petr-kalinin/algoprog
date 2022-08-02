@@ -2,6 +2,7 @@ Entities = require('html-entities').XmlEntities
 entities = new Entities()
 
 import User from '../models/user'
+import Material from '../models/Material'
 import Submit from '../models/submit'
 import Problem from '../models/problem'
 import SubmitComment from '../models/SubmitComment'
@@ -16,11 +17,12 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
-generateMsg = (lang, result, problemName) ->
+generateMsg = (lang, result, problemName, problemHref) ->
     msg = ""
+    problemName = "'<a href='https://algoprog.ru/material/" + problemHref + "'>" + problemName + "</a>'"
 
     if lang == "!en"
-        msg += "The solution for the '" + problemName + "' problem has been "
+        msg += "The solution for the " + problemName + " problem has been "
 
         if result == "AC"
             msg += "accepted"
@@ -31,7 +33,7 @@ generateMsg = (lang, result, problemName) ->
         else
             msg += "commented"
     else
-        msg += "Решение задачи '" + problemName + "' "
+        msg += "Решение задачи " + problemName + " "
 
         if result == "AC"
             msg += "зачтено"
@@ -51,7 +53,9 @@ storeToDatabase = (req, res) ->
     logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
     user = await User.findByIdWithTelegram(submit.user)
     lang = GROUPS[user.userList].lang
-    msg = generateMsg(lang, req.body.result, problem.name)
+    material = await Material.findById(problemId + lang)
+
+    msg = generateMsg(lang, req.body.result, material.title, material._id)
 
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
@@ -84,11 +88,8 @@ storeToDatabase = (req, res) ->
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
-    await User.updateUser(submit.user, dirtyResults)
     
-    telegramId = user.telegram
-    if telegramId
-        await notifyUser telegramId, msg
+    await notifyUser submit.user, msg
 
 export default setOutcome = (req, res) ->
     if req.body.result or req.body.comment
