@@ -49,11 +49,10 @@ generateMsg = (lang, result, problemName, problemHref) ->
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     problemId = submit.problem
-    problem = await Problem.findById(problemId)
-    logger.info("Store to database #{req.params.submitId} #{problemId} #{problem?._id}")
+    material = await Material.findById(problemId + lang)
+    logger.info("Store to database #{req.params.submitId} #{problemId} #{material._id}")
     user = await User.findByIdWithTelegram(submit.user)
     lang = GROUPS[user.userList].lang
-    material = await Material.findById(problemId + lang)
 
     msg = generateMsg(lang, req.body.result, material.title, material._id)
 
@@ -75,7 +74,7 @@ storeToDatabase = (req, res) ->
                 _id: "_#{rndId}r#{req.params.submitId}"
                 submit: req.params.submitId
                 problemId: problemId
-                problemName: problem.name
+                problemName: material._id
                 userId: submit.user
                 text: comment
                 time: new Date()
@@ -88,6 +87,7 @@ storeToDatabase = (req, res) ->
     dirtyResults = {}
     dirtyUsers = {}
     await setDirty(submit, dirtyResults, dirtyUsers)
+    await User.updateUser(submit.user, dirtyResults)
     
     await notifyUser submit.user, msg
 
