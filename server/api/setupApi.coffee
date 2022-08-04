@@ -1200,10 +1200,14 @@ export default setupApi = (app) ->
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
 
-    app.get '/api/xsollaToken/:order', wrap (req, res) ->
+    app.post '/api/xsollaToken', wrap (req, res) ->
         if not req.user
             res.status(403).send('No permissions')
             return
+        order = req.body.order
+        name = req.body.name
+        email = req.body.email
+        address = req.body.address
         userId = req.user.userKey()
         userPrivate = await UserPrivate.findById(userId)
         if not userPrivate?.price
@@ -1214,16 +1218,22 @@ export default setupApi = (app) ->
             user:
                 id: 
                     value: ""+req.user.userKey()
+                email:
+                    value: email
+                name:
+                    value: name
+                attributes:
+                    address: address
             settings:
                 project_id: +XSOLLA_PROJECT_ID
                 mode: "sandbox"
-                external_id: req.params.order
+                external_id: order
             purchase:
                 checkout:
                     amount: userPrivate.price
                     currency: "RUB"
                 description:
-                    value: "algoprog.ru"
+                    value: "Payment for access to algoprog.ru for one month"
         try
             result = await download(url, undefined, {
                 json: data

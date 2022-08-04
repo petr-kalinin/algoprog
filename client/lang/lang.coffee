@@ -283,6 +283,9 @@ _LANG =
     payer_email:
         ru: "E-mail плательщика"
         en: "Payer email"
+    payer_address:
+        ru: "Адрес плательщика"
+        en: "Payer address"
     you_agree_to_oferta:
         ru: <>Нажимая «Оплатить», вы соглашаетесь с <a href='/oferta.pdf' target='_blank'>офертой</a> оказания услуг.</>
         en: ""

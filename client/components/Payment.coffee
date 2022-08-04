@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom'
 
 import {LangRaw} from '../lang/lang'
 
+import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import GROUPS from '../lib/groups'
 import withLang from '../lib/withLang'
 
 import FieldGroup from './FieldGroup'
+import Loader from './Loader'
 
 class TinkoffPayment extends React.Component
     constructor: (props) ->
@@ -87,14 +89,87 @@ class TinkoffPayment extends React.Component
         </div>
 
 class XSollaPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            name: ""
+            email: ""
+            address: ""
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "xsollaToken", {
+                order: @props.order,
+                name: @state.name,
+                email: @state.email,
+                address: @state.address
+            }
+            if not data.token
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open("https://sandbox-secure.xsolla.com/paystation3/?access_token=#{data.token}", '_blank').focus()
+
+
     render: () ->
-        <iframe src={"https://sandbox-secure.xsolla.com/paystation3/?access_token=#{@props.token.token}"} width="100%" height="1200"/>
-
-options =
-    urls: (props) ->
-        token: "xsollaToken/#{props.order}"
-
-XSollaPayment = ConnectedComponent(XSollaPayment, options)
+        canSubmit = @state.name and @state.email and @state.address
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading && 
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    <FieldGroup
+                        id="name"
+                        label={LangRaw("full_payer_name", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="email"
+                        label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="address"
+                        label={LangRaw("payer_address", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                </form>    
+            }
+        </div>
 
 class Payment extends React.Component
     render: () ->
