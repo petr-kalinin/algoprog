@@ -38,7 +38,7 @@ import translateProblems from '../lib/translateProblems'
 
 import {allTables} from '../materials/data/tables'
 import downloadMaterials from '../materials/downloadMaterials'
-import notify from '../lib/notify'
+import {notify} from '../lib/telegramBot'
 
 import BlogPost from '../models/BlogPost'
 import Calendar from '../models/Calendar'

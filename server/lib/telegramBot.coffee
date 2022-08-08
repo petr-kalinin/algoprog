@@ -26,9 +26,14 @@ if TOKEN
 else
     bot = undefined
 
+export notifyUser = (id, message) ->
+    telegramId = (await User.findByIdWithTelegram(id)).telegram
+    if bot and telegramId
+        bot.sendMessage(telegramId, message, {parse_mode: 'HTML'})
+    else
+        logger.warn "Send message '", id, "', text: ", message 
 
-
-export default notify = (message) ->
+export notify = (message) ->
     if bot
         bot.sendMessage(ADMIN_CHAT_ID, message)
     else
