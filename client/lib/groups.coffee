@@ -74,6 +74,7 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
+        autoAccept: true
     english:
         paid: "xsolla"
         chocos: false
