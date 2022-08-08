@@ -1534,6 +1534,22 @@ links = () ->
         <hr class=\"algoprog-main-page-separator\">
         <h2>Текущие олимпиады и т.п.</h2>""")
 
+telegram_bot = () ->
+    page("Про ваш телеграм-аккаунт", """
+        <h1>Про ваш телеграм-аккаунт</h1>
+        <p>В профиле на алгопроге вы можете указать id своего телеграм-аккаунта. Указать надо именно id,
+        а не username и не телефон. Чтобы узнать ваш id, зайдите в телеграм и 
+        найдите бота <a href='https://t.me/getmyid_bot'>@getmyid_bot</a> (или наберите в поиске @getmyid_bot 
+        и выберите из списка бота с названием 'Get My ID'), нажмите на кнопку запуска 
+        (или напишите /start), бот отправит вам сообщение с вашим id.</p>
+        <p>Это позволит вам:</p>
+        <ul>
+        <li>вступить <a href="https://t.me/+Ff0fS3PMo85iNmZi">в телеграм-чат для всех учеников алгопрога</a>,</li>
+        <li>получать уведомления о зачтенных/проигнорированных решениях, и о комментариях к решениям, для этого начните диалог с <a href="https://t.me/algoprog_bot">ботом алгопрога @algoprog_bot</a>.
+        </li>
+        </ul>
+        """, {id: 'telegram_bot'})
+
 
 export default level_about = () ->
     return level("about", "О курсе", [
@@ -1548,7 +1564,8 @@ export default level_about = () ->
         module20927_13(),
         module20927_15(),
         module20927_17(),
-        module20927_17_ochn_high(),
+        #module20927_17_ochn_high(),
+        telegram_bot(),
         label("<div style=\"height:1ex;\"></div>\n\n<div><b>Про оплату</b></div>"),
         pay(),
         label("<div><a href=\"/payment\" onclick=\"window.goto('/payment')();return false;\">Оплатить занятия</a></div>"),

@@ -562,6 +562,22 @@ contacts = () ->
         </p>
         <hr>""")
 
+telegram_bot = () ->
+    page("About your telegram account", """
+        <h1>About your telegram account</h1>
+        <p>In the profile on the algoprog, you can specify the id of your telegram account. It is necessary to specify the id,
+        not the username and not the phone. To find out your id, go to Telegram and
+        find the bot <a href='https://t.me/getmyid_bot'>@getmyid_bot</a> (or type @getmyid_bot in the search
+        and select a bot from the list with the name 'Get My ID'), click on the launch button
+        (or write /start), the bot will send you a message with your id.</p>
+        <p>This will allow you to:</p>
+        <ul>
+        <li>join <a href="https://t.me/+Ff0fS3PMo85iNmZi">the telegram chat for all algoprog students</a>,</li>
+        <li>receive notifications about counted/ignored solutions, and about comments on solutions, to do this, start a chat with <a href="https://t.me/algoprog_bot ">the algoprog bot @algoprog_bot</a>.
+        </li>
+        </ul>
+        """, {id: 'telegram_bot'})
+
 export default level_about = () ->
     return level("about", "About the course", [
         module20927_1(),
@@ -575,6 +591,7 @@ export default level_about = () ->
         work_with_site(),
         module20927_13(),
         module20927_15(),
+        telegram_bot(),
         label(
             "<h3>About payment</h3>"),
         pay(),
