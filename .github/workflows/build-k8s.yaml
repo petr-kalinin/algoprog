@@ -46,4 +46,4 @@ jobs:
             k8s/nodejs-deployment.yaml
             k8s/nodejs-service.yaml
           images: 'petrkalinin/algoprog-master:${{ github.sha }}'
-          kubectl-version: 'latest'
+          action: deploy
