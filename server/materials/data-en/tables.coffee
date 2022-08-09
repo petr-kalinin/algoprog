@@ -25,7 +25,7 @@ getTreeTitle = (table) ->
     else
         return "Levels " + tables.join(", ")
 
-export allTables = ["1А,1Б", "1В,1Г", "main"]
+export allTables = ["1А,1Б", "1В,1Г", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "main"]
 
 export default tables = () ->
     materials = []

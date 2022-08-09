@@ -64,6 +64,8 @@ export default GROUPS =
         paid: "xsolla"
         chocos: false
         startDayForWeeks: "2020-01-06"
+        tableName: "Не-российские ученики"
+        tableNameEn: "Non-Russian students",
         canResetYear: false
         starred: true
         lang: "!en"
