@@ -38,6 +38,8 @@ LANGUAGE_TO_HIGHLIGHT_STYLE =
     "Ruby": "ruby",
     "Haskell": "haskell",
     "BASIC": "basic",
+    "Go": "go",
+    "Kotlin": "kotlin"
 
 langClass = (lang) ->
     for l, style of LANGUAGE_TO_HIGHLIGHT_STYLE
