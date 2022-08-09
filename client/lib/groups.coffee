@@ -53,13 +53,6 @@ export default GROUPS =
         canResetYear: false
         starred: true
         lang: ""
-    team:
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-06"
-        canResetYear: true
-        starred: false
-        lang: ""
     ikhlyustov:
         paid: false
         chocos: false
@@ -67,6 +60,21 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
+    english:
+        paid: "xsolla"
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        canResetYear: false
+        starred: true
+        lang: "!en"
+    self:
+        paid: "tinkoff"
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        canResetYear: false
+        starred: false
+        lang: ""
+        autoAccept: true
     graduated:
         paid: false
         chocos: false
@@ -75,13 +83,13 @@ export default GROUPS =
         starred: false
         lang: ""
         autoAccept: true
-    english:
-        paid: "xsolla"
+    team:
+        paid: false
         chocos: false
         startDayForWeeks: "2020-01-06"
-        canResetYear: false
-        starred: true
-        lang: "!en"
+        canResetYear: true
+        starred: false
+        lang: ""
     unknown:
         paid: false
         chocos: false
