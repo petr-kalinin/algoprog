@@ -4,10 +4,13 @@ import Result from '../models/result'
 import Problem from '../models/problem'
 import Table from '../models/table'
 import TableResults from '../models/TableResults'
+import User from '../models/user'
+
 import {allTables} from '../materials/data/tables'
 
 import addTotal from '../../client/lib/addTotal'
 import awaitAll from '../../client/lib/awaitAll'
+import GROUPS from '../../client/lib/groups'
 
 export getTables = (table) ->
     if table == "main" or table == "nnoi"
@@ -58,7 +61,15 @@ recurseResults = (userId, tableId, depth) ->
         results: tableResults
         total: total
 
+correctLang = (table, lang) ->
+    if lang == ""
+        return table
+    return table.replace("А", "A").replace("Б", "B").replace("В", "C").replace("Г", "D") + lang
+
 export getUserResult = (userId, tables, depth) ->
+    user = await User.findById(userId)
+    lang = GROUPS[user.userList]?.lang
+    tables = (correctLang(t, lang) for t in tables)
     if not await needUser(userId, tables)
         return null
     total = undefined
