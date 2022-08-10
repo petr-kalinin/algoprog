@@ -8,7 +8,6 @@ passport = require('passport')
 path = require('path')
 compression = require('compression')
 responseTime = require('response-time')
-StatsD = require('node-statsd')
 
 import setupApi from './api/setupApi'
 import scheduleJobs from './cron/cron'
@@ -37,10 +36,6 @@ requireHTTPS = (req, res, next) ->
     if !req.secure and !req.headers.host.startsWith("127.0.0.1")  # the latter is to avoid inner api requests
         return res.redirect 'https://' + req.headers.host + req.url
     next()
-
-stats = new StatsD()
-stats.socket.on 'error',  (error) ->
-    logger.error(error)
 
 app = express()
 expressWs = require('express-ws')(app)

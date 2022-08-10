@@ -2694,13 +2694,6 @@ create-react-class@^15.5.1, create-react-class@^15.6.0:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-cron@^1.8.2:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/cron/-/cron-1.8.3.tgz#2a61d7b15848716885834ec56ac072f4b9744ebd"
-  integrity sha512-JYR/QZFklJCIPndBLfd/2nU1nSlCMrUdtQ2mGLXSVM/qqqEK7DOrFR0gsEiyeqs0PdWrs0ve1ggH4V7XksDwXg==
-  dependencies:
-    luxon "^1.23.x"
-
 cross-spawn@^6.0.5:
   version "6.0.5"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-6.0.5.tgz"
@@ -4288,7 +4281,7 @@ highlight.js@^10.4.1:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.4.1.tgz#d48fbcf4a9971c4361b3f95f302747afe19dbad0"
   integrity sha512-yR5lWvNz7c85OhVAEAeFhVCc/GV4C30Fjzc/rCP0aCWzc1UUOPUk55dK/qdwTZHBvMZo+eZ2jpk62ndX/xMFlg==
 
-history@^4.10.1, history@^4.9.0:
+history@^4.9.0:
   version "4.10.1"
   resolved "https://registry.npmjs.org/history/-/history-4.10.1.tgz"
   integrity sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
@@ -5008,11 +5001,6 @@ jest-worker@^26.2.1:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-jquery@^3.5.0:
-  version "3.6.0"
-  resolved "https://registry.npmjs.org/jquery/-/jquery-3.6.0.tgz"
-  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
-
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -5360,11 +5348,6 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-luxon@^1.23.x:
-  version "1.28.0"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.28.0.tgz#e7f96daad3938c06a62de0fb027115d251251fbf"
-  integrity sha512-TfTiyvZhwBYM/7QdAVDh+7dBTBA29v4ik0Ce9zda3Mnf8on1S5KJI8P2jKFZ8+5C0jhmr0KwJEO/Wdpm0VeWJQ==
-
 mailparser@^3.5.0:
   version "3.5.0"
   resolved "https://registry.npmjs.org/mailparser/-/mailparser-3.5.0.tgz"
@@ -5699,7 +5682,7 @@ moment@^2.24.0:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
-mongodb@3.7.3, mongodb@^3.1.0, mongodb@^3.5.6:
+mongodb@3.7.3, mongodb@^3.1.0:
   version "3.7.3"
   resolved "https://registry.npmjs.org/mongodb/-/mongodb-3.7.3.tgz"
   integrity sha512-Psm+g3/wHXhjBEktkxXsFMZvd3nemI0r3IPsE0bU+4//PnvNWKkzhZcEsbPcYiWqe8XqXJJEg4Tgtr7Raw67Yw==
