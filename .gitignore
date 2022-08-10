@@ -11,3 +11,4 @@ scripts/log*
 scripts/standings
 *~
 k8s/*secret*
+.yarn

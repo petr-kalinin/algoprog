@@ -1,5 +1,4 @@
 {
-  "name": "",
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"npm run build\" \"npm run start:server\"",
@@ -85,5 +84,6 @@
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.12",
     "webpack-node-externals": "^2.5.0"
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }
