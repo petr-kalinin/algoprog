@@ -40,7 +40,7 @@ jobs:
 
       - 
         name: Deploy to k8s
-        uses: Azure/k8s-deploy@v4.3
+        uses: Azure/k8s-deploy@v4.4
         with:
           manifests: |
             k8s/nodejs-deployment.yaml
