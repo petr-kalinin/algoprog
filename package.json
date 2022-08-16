@@ -80,10 +80,12 @@
     "mini-css-extract-plugin": "^0.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "terser-webpack-plugin": "^3.0.8",
-    "webpack": "^4.44.0",
-    "webpack-assets-manifest": "^3.1.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-node-externals": "^2.5.0"
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74",
+    "webpack-assets-manifest": "^5.1",
+    "webpack-cli": "^4.10",
+    "webpack-node-externals": "^3.0"
   },
   "packageManager": "yarn@3.2.2"
 }

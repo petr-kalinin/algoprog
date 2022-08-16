@@ -32,7 +32,7 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/server.bundle.css"/>
-            ' + linkClientJsCss.client.css.map((css) => '<link rel="stylesheet" href="/' + css + '"/>').join('') + '
+            ' + linkClientJsCss.client.assets.css.map((css) => '<link rel="stylesheet" href="/' + css + '"/>').join('') + '
             <link rel="stylesheet" href="/react-diff-view.css"/>
             <link rel="stylesheet" href="/testsystems.css"/>
             <link rel="stylesheet" href="/highlight.css"/>
@@ -59,7 +59,7 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         </head>
         <body>
             <div id="main" style="min-width: 100%; min-height: 100%">' + html + '</div>
-            ' + linkClientJsCss.client.js.map((js) => '<script src="/' + js + '" type="text/javascript"></script>').join('') + '
+            ' + linkClientJsCss.client.assets.js.map((js) => '<script src="/' + js + '" type="text/javascript"></script>').join('') + '
             <!-- Yandex.Metrika counter -->
             <script type="text/javascript" >
                 (function (d, w, c) {
