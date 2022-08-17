@@ -8,7 +8,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 import download from '../lib/download'
 import sleep from '../lib/sleep'
-import {notify} from '../lib/telegramBot'
+import {notify, notifyDocument} from '../lib/telegramBot'
 
 import User from '../models/user'
 import RegisteredUser from '../models/registeredUser'
@@ -118,7 +118,8 @@ registerOnInformatics = (data) ->
         timeout = timeout * 2
     if not link
         logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}")
-        notify "Can't find notification link for login #{username}" 
+        notify "Can't find notification link for login #{username}\n" + "Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}"
+        notifyDocument page, {filename: 'page.html'}
         throw "Can't find notification link for login #{username}"
     await download(link)
     return 

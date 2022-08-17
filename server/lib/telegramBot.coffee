@@ -38,3 +38,9 @@ export notify = (message) ->
         bot.sendMessage(ADMIN_CHAT_ID, message)
     else
         logger.warn("Notify message ", message)
+
+export notifyDocument = (doc, fileOptions={}) ->
+    if bot
+        bot.sendDocument(ADMIN_CHAT_ID, doc)
+    else
+        logger.warn("Notify document ", doc, undefined, fileOptions)
