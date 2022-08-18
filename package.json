@@ -4,7 +4,8 @@
     "dev": "concurrently \"npm run build\" \"npm run start:server\"",
     "start": "npm run build && npm run start:server",
     "start:server": "nodemon ./build/server/server.bundle.js",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "test": "jest"
   },
   "browserslist": "> 0.25%, not dead",
   "dependencies": {
@@ -73,6 +74,7 @@
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
+    "@types/jest": "^28.1.7",
     "clean-webpack-plugin": "^3.0.0",
     "coffee-loader": "^1.0.0",
     "concurrently": "^5.2.0",
@@ -80,6 +82,7 @@
     "mini-css-extract-plugin": "^0.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "terser-webpack-plugin": "^3.0.8",
+    "ts-jest": "^28.0.8",
     "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
     "webpack": "^5.74",
