@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import {hasWsSetKey} from './WebsocketsSet'
 
-port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '3000')
-ip = (process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1')
+port = process?.env?.PORT || '3000'
+ip = '127.0.0.1'
 export API_URL = (if (typeof window == 'undefined') then ('http://' + ip + ':' + port) else '') + '/api/'
 export WS_API_URL = (if window?.location?.protocol == "https:" then 'wss://' else 'ws://') + (if window? then (location.host) else '') + '/wsapi/'
 

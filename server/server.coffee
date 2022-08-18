@@ -68,7 +68,7 @@ app.get '/status', (req, res) ->
     logger.info "Query string", req.query
     res.send "OK"
 
-linkClientJsCss = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/manifest.json'), 'utf-8'))
+linkClientJsCss = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/assets-manifest.json'), 'utf-8'))
 
 app.use renderOnServer(linkClientJsCss)
 

@@ -29,8 +29,8 @@ const optimization = () => {
   return config
 }
 
-const resolve = {extensions: ['.coffee','.js']}
-const devtool = isDev ? 'source-map' : ''
+const resolve = {extensions: ['.coffee','.js','.ts']}
+const devtool = isDev ? 'source-map' : false
 const cssLoaderOptions = isDev ?
   {
     importLoaders: 1,
@@ -76,7 +76,12 @@ const moduleconf = () => ({
                    ],
         }
       }
-    }
+    },
+    {
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
+    },    
   ]
 })
 

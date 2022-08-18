@@ -11,3 +11,9 @@ Dockerfile
 .dockerignore
 k8s
 .github
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
