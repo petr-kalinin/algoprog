@@ -16,6 +16,9 @@ function parseMinor(minor: string) {
 }
 
 export function parseLevel(level: string): Level {
+    if (!level) {
+        return null
+    }
     level = stripLabel(level)
     for (const reg of ["sch", "nnoi", "reg", "roi"]) {
         if (level.substr(0, reg.length) == reg) {

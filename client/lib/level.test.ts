@@ -1,6 +1,6 @@
 import {parseLevel, encodeLevel} from './level'
 
-test('simpleEncode', () => {
+test('simpleParse', () => {
     expect(parseLevel('1')).toStrictEqual({major: 1})
 
     expect(parseLevel('1А')).toStrictEqual({major: 1, minor: 0})
@@ -32,7 +32,7 @@ test('simpleEncode', () => {
     expect(parseLevel('12!en')).toStrictEqual({major: 12})
 })
 
-test('regEncode', () => {
+test('regParse', () => {
     expect(parseLevel('reg')).toStrictEqual({regMajor: "reg"})
     expect(parseLevel('reg2002')).toStrictEqual({regMajor: "reg", regMinor: "2002"})
 
@@ -61,6 +61,9 @@ test('notALevel', () => {
     expect(parseLevel('1E!en')).toBe(null)
     expect(parseLevel('1Д')).toBe(null)
     expect(parseLevel('1Z1')).toBe(null)
+    expect(parseLevel('')).toBe(null)
+    expect(parseLevel(null)).toBe(null)
+    expect(parseLevel(undefined)).toBe(null)
 })
 
 test('encodeSimple', () => {
