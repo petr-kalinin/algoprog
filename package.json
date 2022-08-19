@@ -11,6 +11,7 @@
   "dependencies": {
     "@monaco-editor/react": "^3.5.7",
     "body-parser": "^1.19.0",
+    "buffer": "^6.0.3",
     "coffeescript": "^2.5.1",
     "compression": "^1.7.4",
     "connect-ensure-login": "^0.1.1",

@@ -110,7 +110,10 @@ const clientConfig = {
     new WebpackAssetsManifest({
       entrypoints: true,
       transform: assets => assets.entrypoints
-    })
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
   ],
 }
 
