@@ -30,12 +30,14 @@ import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import GROUPS from '../lib/groups'
 import isPaid, {unpaidBlocked} from '../lib/isPaid'
 import needDeactivatedWarning from '../lib/needDeactivatedWarning'
+import {parseLevel} from '../lib/level'
 import withLang from '../lib/withLang'
 
 import styles from './TopPanel.css'
 
 needCfWarning = (user) ->
-    (not user.cf?.login?) and (user.level.current >= "1В" || (user.level.current >= "1C" && user.level.current <= "1Z"))
+    level = parseLevel(user?.level?.current)
+    (not user.cf?.login?) and (level.major > 1 || level.minor >= 2)
 
 needUnpaidWarning = (user) ->
     (GROUPS[user?.userList]?.paid) and (user?.paidTill) && (not isPaid(user))
