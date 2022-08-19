@@ -29,7 +29,7 @@ const optimization = () => {
   return config
 }
 
-const resolve = {extensions: ['.coffee','.js','.ts']}
+const resolve = {extensions: ['.coffee', '.js', '.ts', '.tsx']}
 const devtool = isDev ? 'source-map' : false
 const cssLoaderOptions = isDev ?
   {
