@@ -12,7 +12,7 @@ function calcTShirts(user) {
     if (!level)
         return 0
     var number = level.major
-    if (level.minor >= 2)
+    if (level.minor >= 3)
         number++
     if (number >= 12)
         return 5

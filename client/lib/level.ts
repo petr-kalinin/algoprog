@@ -9,9 +9,9 @@ interface Level {
 
 function parseMinor(minor: string) {
     if (["A", "B", "C", "D"].includes(minor)) {
-        return minor.charCodeAt(0) - "A".charCodeAt(0);
+        return minor.charCodeAt(0) - "A".charCodeAt(0) + 1;
     } else if (["А", "Б", "В", "Г"].includes(minor)) {
-        return minor.charCodeAt(0) - "А".charCodeAt(0);
+        return minor.charCodeAt(0) - "А".charCodeAt(0) + 1;
     } else return null
 }
 
@@ -51,11 +51,11 @@ export function encodeLevel(level: Level, lang=""): string {
         return res + lang;
     }
     var letter = ""
-    if (minor != null && minor != undefined) {
+    if (minor) {
         if (lang == "") {
-            letter = ['А', 'Б', 'В', 'Г'][minor]
+            letter = ['А', 'Б', 'В', 'Г'][minor - 1]
         } else if (lang == "!en") {
-            letter = ['A', 'B', 'C', 'D'][minor]
+            letter = ['A', 'B', 'C', 'D'][minor - 1]
         } else throw `strange lang ${lang}`
     }
     return `${major}${letter}${lang}`

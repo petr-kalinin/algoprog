@@ -37,7 +37,7 @@ import styles from './TopPanel.css'
 
 needCfWarning = (user) ->
     level = parseLevel(user?.level?.current)
-    (not user.cf?.login?) and (level.major > 1 || level.minor >= 2)
+    (not user.cf?.login?) and (level.major > 1 || level.minor >= 3)
 
 needUnpaidWarning = (user) ->
     (GROUPS[user?.userList]?.paid) and (user?.paidTill) && (not isPaid(user))
