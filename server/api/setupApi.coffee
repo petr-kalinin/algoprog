@@ -22,7 +22,6 @@ import {getGraduateYear} from '../../client/lib/graduateYearToClass'
 import GROUPS from '../../client/lib/groups'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
-import {levelVersion} from '../calculations/calculateRatingEtc'
 import {getTables, getUserResult} from '../calculations/updateTableResults'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
@@ -1310,6 +1309,7 @@ export default setupApi = (app) ->
         await processPayment(req.body.OrderId, success, amount, req.body)
         res.send('OK')
 
+    ###
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -1378,3 +1378,4 @@ export default setupApi = (app) ->
             
             await User.updateUser(newUser._id)
         res.send('OK')
+    ###

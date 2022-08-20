@@ -145,7 +145,7 @@ export default calculateRatingEtc = (user) ->
     if user._id == DEBUG_USER_ID
         console.log "activity=", activity, "rating=", rating
 
-    activity *= (1 - WEEK_ACTIVITY_EXP) # make this averaged
+    activity *= (1 - WEEK_ACTIVITY_EXP)  # make this averaged
     return {
         byWeek: {
             solved: weekSolved,
