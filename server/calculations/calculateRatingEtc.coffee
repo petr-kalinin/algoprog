@@ -9,7 +9,7 @@ import {lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD
 
 DEBUG_USER_ID = "-------"
 
-export levelVersion = (level) ->
+levelVersion = (level) ->
     if (level.slice(0,3) == "sch")
         major = 1
         minor = 'В'
