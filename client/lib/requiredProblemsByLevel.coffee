@@ -1,3 +1,4 @@
+# deprecated
 export default requiredProblemsByLevel = (level, problemsNumber) ->
     needProblem = problemsNumber
     if level.endsWith("В") || level.endsWith("C")

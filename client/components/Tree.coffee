@@ -11,9 +11,12 @@ import styles from "./Tree.css"
 import {LangRaw} from '../lang/lang'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import GROUPS from '../lib/groups'
+import {parseLevel, encodeLevel} from '../lib/level'
+import stripLabel from '../lib/stripLabel'
 import withLang from '../lib/withLang'
 import withMyResults from '../lib/withMyResults'
-import requiredProblemsByLevel from '../lib/requiredProblemsByLevel'
+import requiredProblemsByLevelMinor from '../lib/requiredProblemsByLevelMinor'
 import withTheme from '../lib/withTheme'
 
 MAX_GLOBAL_DEPTH = 0
@@ -24,12 +27,6 @@ getHref = (material) ->
         return material.content
     else
         return "/material/#{material._id}"
-
-stripLabel = (id) ->
-    idx = id.indexOf("!")
-    if idx != -1
-        return id.substring(0, idx)
-    return id
 
 markNeeded = (tree, id, path, globalDepth, localDepth) ->
     if tree._id == id
@@ -60,19 +57,23 @@ colorBox = (indent, colorStyle, name, title) ->
         </div>
     </div>
 
-isLevelDone = (levelId, userId, results) ->
-    for subLevel in ["А", "Б", "В", "Г", "A", "B", "C", "D"]
-        if levelId.endsWith(subLevel)
-            result = results?[userId + "::" + levelId]
-            return result.solved >= requiredProblemsByLevel(levelId, result.required or 0)
-    if +levelId in [1..20]
-        subLevels = ["А", "Б", "В", "Г", "A", "B", "C", "D"]
+isLevelDone = (levelId, user, results) ->
+    level = parseLevel(levelId)
+    userId = user?._id
+    lang = GROUPS[user?.userList]?.lang
+    if level?.minor
+        result = results?[userId + "::" + levelId]
+        return result.solved >= requiredProblemsByLevelMinor(level.minor, result.required or 0)
+    if level?.major
         done = true
-        for subLevel in subLevels
-            result = results?[userId + "::" + levelId + subLevel]
+        for minor in [1, 2, 3, 4]
+            subLevel = deepcopy(level)
+            subLevel.minor = minor
+            subLevelId = encodeLevel(subLevel, lang)
+            result = results?[userId + "::" + subLevelId]
             if not result
                 continue
-            done = done and result.solved >= requiredProblemsByLevel(levelId + subLevel, result.required or 0)
+            done = done and result.solved >= requiredProblemsByLevelMinor(minor, result.required or 0)
         return done
     result = results?[userId + "::" + levelId]
     return result.solved and result.solved == result.total
@@ -105,8 +106,8 @@ SolutionMark = withMyResults withLang (props) ->
 
     if result.solved == result.total
         colorBox(indent, styles.full, "check", LANG("all_problems_solved"))
-    else if isLevelDone(id, props.myUser?._id, props.myResults)
-        colorBox(indent, styles.done, "check", LANG("laevel_done"))
+    else if isLevelDone(id, props.myUser, props.myResults)
+        colorBox(indent, styles.done, "check", LANG("level_done"))
     else if result.solved > 0 or result.ok > 0 or result.attempts > 0
         colorBox(indent, styles.started, undefined, LANG("level_started"))
     else
