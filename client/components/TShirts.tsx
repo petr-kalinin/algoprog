@@ -9,6 +9,8 @@ import {parseLevel} from '../lib/level'
 function calcTShirts(user) {
     const levelStr = user.level?.current || "0A"
     const level = parseLevel(levelStr)
+    if (!level)
+        return 0
     var number = level.major
     if (level.minor >= 2)
         number++
