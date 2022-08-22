@@ -12,6 +12,8 @@ export default sparse_tables = () ->
             ruen("Sparse tables, двоичный подъем", "Sparse tables, binary ascent"),
             ruen("Задачи на sparse tables", "Problems on sparse tables"),
         [   problem(113919),
-            problem(113550),
         ], "sparse_tables"),
+        advancedProblems: [
+            problem(113550),
+        ]
     }
