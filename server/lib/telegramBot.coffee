@@ -41,6 +41,6 @@ export notify = (message) ->
 
 export notifyDocument = (doc, fileOptions={}) ->
     if bot
-        bot.sendDocument(ADMIN_CHAT_ID, doc)
+        bot.sendDocument(ADMIN_CHAT_ID, Buffer.from(doc, 'utf8'), undefined, fileOptions)
     else
-        logger.warn("Notify document ", doc, undefined, fileOptions)
+        logger.warn("Notify document ", doc)

@@ -119,7 +119,7 @@ registerOnInformatics = (data) ->
     if not link
         logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}")
         notify "Can't find notification link for login #{username}\n" + "Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}"
-        notifyDocument page, {filename: 'page.html'}
+        notifyDocument page, {filename: 'page.html', contentType: "text/html"}
         throw "Can't find notification link for login #{username}"
     await download(link)
     return 
