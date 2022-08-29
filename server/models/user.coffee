@@ -79,8 +79,8 @@ usersSchema.methods.updateRatingEtc = ->
     @update({$set: res})
 
 usersSchema.methods.updateLevel = ->
-    @level.current = await calculateLevel @_id, @level.base, new Date("2100-01-01")
-    @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
+    @level.current = await calculateLevel this, new Date("2100-01-01")
+    @level.start = await calculateLevel this, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
 
 usersSchema.methods.updateDormant = ->
