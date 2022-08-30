@@ -29,7 +29,7 @@ getHeader = (results) ->
 
 Text = withLang (props) ->
     LANG = (id) -> LangRaw(id, props.lang)
-    if props.levels == "main"
+    if props.levels == "main" or  props.levels == "main!en"
         <div>
             <Helmet>
                 <title>{LANG("main_table")}</title>
