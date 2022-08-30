@@ -60,3 +60,21 @@ export function encodeLevel(level: Level, lang=""): string {
     }
     return `${major}${letter}${lang}`
 }
+
+export function compareLevels(a: Level, b: Level): Number {
+    if (a.regMajor || b.regMajor) {
+        throw "Can't compare reg levels";
+    }
+    if (a.major != b.major) {
+        if (a.major < b.major) 
+            return -1
+        else
+            return 1
+    }
+    if (a.minor < b.minor) 
+        return -1
+    else if (a.minor == b.minor)
+        return 0
+    else
+        return 1
+}
