@@ -8,9 +8,10 @@ import { Link } from 'react-router-dom'
 
 import {LangRaw} from '../lang/lang'
 
-import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
-import withLang from '../lib/withLang'
 import callApi from '../lib/callApi'
+import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
+import stripLabel from '../lib/stripLabel'
+import withLang from '../lib/withLang'
 
 import {BigAchieves} from './Achieves'
 import CfStatus from './CfStatus'
@@ -34,7 +35,7 @@ export default class UserBadge extends React.Component
             <h2><TShirts user={@props.user} onClick={@props.onTShirtsClick}/></h2>
             <blockquote>
                 {cls && <div>{LANG("class")}: {cls}</div>}
-                <div>{LANG("level")}: {@props.user.level.current}</div>
+                <div>{LANG("level")}: {stripLabel(@props.user.level.current)}</div>
                 { @props.me?.admin &&
                     <div>
                         Уровень на начало полугодия: {@props.user.level.start}

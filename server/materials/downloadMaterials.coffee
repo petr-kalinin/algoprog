@@ -1,4 +1,5 @@
 import awaitAll from '../../client/lib/awaitAll'
+import stripLabel from '../../client/lib/stripLabel'
 
 import logger from '../log'
 import FindMistake from '../models/FindMistake'
@@ -18,12 +19,6 @@ correctLabel = (label) ->
         "!#{label}"
     else
         ""
-
-dropLabel = (id) ->
-    idx = id.indexOf("!")
-    if idx != -1
-        return id.substring(0, idx)
-    return id
 
 class Context
     constructor: (@processors, @label="") ->
@@ -131,7 +126,7 @@ class ContestProcessor
             @tables[@level()].tables.push(id)
         @tables[id] = new Table
             _id: id
-            name: id
+            name: stripLabel(id)
             tables: []
             parent: @level()
             order: order
@@ -154,7 +149,7 @@ class ContestProcessor
     process: (material) ->
         id = material._id
         if material.type == "problem"
-            id = dropLabel(id)
+            id = stripLabel(id)
             if not (id of @problems)
                 @problems[id] = new Problem
                     _id: material._id,
@@ -164,12 +159,12 @@ class ContestProcessor
                     testSystemData: material.testSystemData
                     order: material.order
         else if material.type == "contest" or material.type == "topic"
-            problemIds = (dropLabel(m._id) for m in material.materials when m.type == "problem")
+            problemIds = (stripLabel(m._id) for m in material.materials when m.type == "problem")
             if problemIds.length == 0
                 return
             @tables[id] = new Table
                 _id: id
-                name: @level() + ": " + (material.treeTitle || material.title)
+                name: stripLabel(@level()) + ": " + (material.treeTitle || material.title)
                 problems: problemIds
                 parent: @level()
                 order: material.order

@@ -3,6 +3,7 @@ React = require('react')
 import {LangRaw} from '../lang/lang'
 
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
+import stripLabel from '../lib/stripLabel'
 
 import globalStyles from './global.css'
 
@@ -28,7 +29,7 @@ export default userTableHeader = (res, props) ->
             {cls} 
         </td>
         a <td className={globalStyles.mainTable_td} key="level" title={LANG("level")}>
-            {if h then LANG("level")[0] else props.user.level?.current}
+            {if h then LANG("level")[0] else stripLabel(props.user.level?.current)}
         </td>
         a <td className={globalStyles.mainTable_td} key="rating" title={LANG("rating")}>
             {if h then LANG("rating")[0] else props.user.rating}

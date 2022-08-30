@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 
 import {LangRaw} from '../lang/lang'
 
+import stripLabel from '../lib/stripLabel'
 import withLang from '../lib/withLang'
 import withTheme from '../lib/withTheme'
 
@@ -59,7 +60,7 @@ export default Table = (props) ->
         return <table className={globalStyles.mainTable}/>
 
     header = getHeader(props.data[0].results)
-    levels = (r._id for r in header).join(", ")
+    levels = (r._id for r in header).map(stripLabel).join(", ")
 
     <div>
         {props.headerText && <Text levels={levels} /> }
