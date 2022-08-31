@@ -14,7 +14,7 @@ import logger from '../log'
 // @ts-ignore
 import {lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD, MSEC_IN_WEEK, FM_CONST} from './ratingConstants'
 
-const DEBUG_USER_ID = "-------"
+const DEBUG_USER_ID = "------"
 
 function correctRegLevel(level: Level): Level {
     if (level.major) {
@@ -33,9 +33,9 @@ function correctRegLevel(level: Level): Level {
 
 function levelScore(level: Level): number {
     const correctedLevel = correctRegLevel(level)
-    const res = Math.pow(LEVEL_RATING_EXP, correctedLevel.major)
-    const minorExp = Math.pow(LEVEL_RATING_EXP, 0.25 * (correctedLevel.minor - 1))
-    logger.debug(`level ${encodeLevel(level)} res=#{res}`)
+    let res = Math.pow(LEVEL_RATING_EXP, correctedLevel.major)
+    res *= Math.pow(LEVEL_RATING_EXP, 0.25 * (correctedLevel.minor - 1))
+    logger.debug(`level ${encodeLevel(level)} res=${res}`)
     return res
 }
 
@@ -58,7 +58,7 @@ export default async function calculateRatingEtc(user) {
     const start = new Date()
     logger.info("calculate rating etc ", user._id)
     const thisStart = new Date(GROUPS[user.userList].startDayForWeeks)
-    const lang = new Date(GROUPS[user.userList].lang)
+    const lang = GROUPS[user.userList].lang
     const now = new Date()
     const nowWeek = Math.floor((+now - (+thisStart)) / MSEC_IN_WEEK)
     const firstWeek = nowWeek - lastWeeksToShow + 1
@@ -125,15 +125,23 @@ export default async function calculateRatingEtc(user) {
             activity += activityScore(level, r.lastSubmitTime) * FM_CONST
         }
     }
+    const floatsResult = await Result.findByUserAndTable(user._id, "floats" + lang)
+    let base: Level = parseLevel(user.level.base)
+    const isFloatsSolved = floatsResult && (floatsResult.solved == floatsResult.total)
+    if (isFloatsSolved) {
+        base = {major: 1, minor: 3}
+    }
     for (const minor of [1, 2]) {
         const level: Level = {major: 1, minor: minor}
-        const base: Level = parseLevel(user.level.base)
-        // TODO: consider floats
-        if ((!user.level.base) || (compareLevels(level, base) >= 0))
+        if ((!base) || (compareLevels(level, base) >= 0)) {
             break
-        for (const prob of await Problem.findByLevel(encodeLevel(level), lang)) {
-            if (probSolved[prob._id])
+        }
+        // This is not quite correct, because we take problems from RU level even for other langs.
+        // But probSolved has keys without lang.
+        for (const prob of await Problem.findByLevel(encodeLevel(level))) {
+            if (probSolved[prob._id]) {
                 continue
+            }
             rating += levelScore(level)
             if (user._id == DEBUG_USER_ID)
                 console.log("add rating 3 ", prob._id, encodeLevel(level), levelScore(level), rating)
