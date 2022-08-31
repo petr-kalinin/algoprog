@@ -1,6 +1,6 @@
 import stripLabel from './stripLabel'
 
-interface Level {
+export interface Level {
     major?: number,
     minor?: number
     regMajor?: string,
