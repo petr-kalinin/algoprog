@@ -38,7 +38,7 @@ export default class UserBadge extends React.Component
                 <div>{LANG("level")}: {stripLabel(@props.user.level?.current)}</div>
                 { @props.me?.admin &&
                     <div>
-                        Уровень на начало полугодия: {@props.user.level.start}
+                        Уровень на начало полугодия: {@props.user.level?.start}
                     </div> }
                 <div>{LANG("rating")}: {@props.user.rating}</div>
                 <div>{LANG("activity")}: {@props.user.activity.toFixed(1)}</div>
