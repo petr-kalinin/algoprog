@@ -37,7 +37,7 @@ randomString = (len) ->
     Math.random().toString(36).substr(2, len)
 
 filterUsername = (username) ->
-    return username.replace(/[^a-zA-Z]/gm, "")
+    return username.replace(/[^a-zA-Z]/gm, "").toLowerCase()
 
 getEmails = () ->
     await resetImapClient()
