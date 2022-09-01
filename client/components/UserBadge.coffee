@@ -35,7 +35,7 @@ export default class UserBadge extends React.Component
             <h2><TShirts user={@props.user} onClick={@props.onTShirtsClick}/></h2>
             <blockquote>
                 {cls && <div>{LANG("class")}: {cls}</div>}
-                <div>{LANG("level")}: {stripLabel(@props.user.level.current)}</div>
+                <div>{LANG("level")}: {stripLabel(@props.user.level?.current)}</div>
                 { @props.me?.admin &&
                     <div>
                         Уровень на начало полугодия: {@props.user.level.start}
