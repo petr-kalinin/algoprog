@@ -1,7 +1,8 @@
 import logger from '../log'
 
-import Result from '../models/result'
+import Material from '../models/Material'
 import Problem from '../models/problem'
+import Result from '../models/result'
 import Table from '../models/table'
 import TableResults from '../models/TableResults'
 import User from '../models/user'
@@ -21,11 +22,18 @@ export getTables = (table) ->
     table = await Table.findById(tableIds[0])
     return table.tables
 
-getResult = (userId, tableId, collection) ->
-    table = await collection.findById(tableId)
+getTableName = (tableId) ->
+    table = await Table.findById(tableId)
+    table.name
+
+getProblemName = (problemId, lang) ->
+    material = await Material.findById(problemId + lang)
+    material.title
+
+getResult = (userId, tableId, tableNamePromise) ->
     result = await Result.findByUserAndTable(userId, tableId)
     result = result?.toObject() || {}
-    result.problemName = table.name
+    result.problemName = await tableNamePromise
     return result
 
 needUser = (userId, tables) ->
@@ -35,7 +43,7 @@ needUser = (userId, tables) ->
             return true
     return false
 
-recurseResults = (userId, tableId, depth) ->
+recurseResults = (userId, lang, tableId, depth) ->
     table = await Table.findById(tableId)
     if not table
         return null
@@ -43,15 +51,17 @@ recurseResults = (userId, tableId, depth) ->
     total = undefined
     if depth > 0
         for subtableId in table.tables
-            subtableResults = await recurseResults(userId, subtableId, depth-1)
+            subtableResults = await recurseResults(userId, lang, subtableId, depth-1)
             total = addTotal(total, subtableResults.total)
             delete subtableResults.total
             tableResults.push(subtableResults)
     else
         for subtableId in table.tables
-            tableResults.push(getResult(userId, subtableId , Table))
+            namePromise = getTableName(subtableId)
+            tableResults.push(getResult(userId, subtableId, namePromise))
         for subtableId in table.problems
-            tableResults.push(getResult(userId, subtableId , Problem))
+            namePromise = getProblemName(subtableId, lang)
+            tableResults.push(getResult(userId, subtableId, namePromise))
         tableResults = await awaitAll(tableResults)
         for r in tableResults
             total = addTotal(total, r)
@@ -75,7 +85,7 @@ export getUserResult = (userId, tables, depth) ->
     total = undefined
     results = []
     for tableId in tables
-        tableResults = await recurseResults(userId, tableId, depth)
+        tableResults = await recurseResults(userId, lang, tableId, depth)
         if not tableResults
             continue
         total = addTotal(total, tableResults.total)
