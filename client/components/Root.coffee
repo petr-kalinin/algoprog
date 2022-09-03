@@ -104,13 +104,13 @@ InnerRu = (props) ->
         <h2 className={styles.whatitis}>Как это работает?</h2>
         {
             items = [
-                {image: "about-1-levels-2.png", text: "Темы разбиты по уровням по возрастанию сложности: от основ синтаксиса до продвинутых алгоритмов. По большинству тем есть теоретические материалы (статьи, советы, видеолекции) и задачи."},
+                {image: "about-1-levels.png", text: "Темы разбиты по уровням по возрастанию сложности: от основ синтаксиса до продвинутых алгоритмов. По большинству тем есть теоретические материалы (статьи, советы, видеолекции) и задачи."},
                 {image: "about-2-submit.png", text: "Вы изучаете теорию и решаете задачи на своем любимом языке программирования. Задачи отправляете на сайт, и они автоматически проверяются."},
                 {image: "about-3-results.png", text: "Через минуту вы узнаете, правильное решение у вас или неправильное. Если правильное — двигаетесь дальше; если неправильное, думаете, как это исправить."},
                 {image: "about-4-comments.png", text: "Все неправильные решения я вижу и могу вам подсказать, в чем у вас ошибка. Все правильные решения я тоже вижу и просматриваю глазами — насколько оптимально они написаны."},
                 {image: "about-5-ac.png", text: "Если решение написано достаточно хорошо, я его засчитываю. Могу еще написать небольшие комментарии по вашему коду."},
                 {image: "about-6-ig.png", text: "Если решение написано не очень хорошо, я его не засчитываю — «игнорирую». К игнорированным решениям я пишу комментарий, и вам надо будет переделать решение."},
-                {image: "about-7-best.png", text: "Когда ваше решение зачтено, вы получаете доступ к «хорошим решениям», чтобы видеть, как эту задачу решали другие ученики."},
+                {image: "about-7-best.png", text: "Когда ваше решение зачтено, вы можете посмотреть «хорошие решения», чтобы видеть, как эту задачу решали другие ученики. Также вы получаете доступ к разделу «поиск ошибок», где вы можете искать ошибки в решениях других учеников по этой задаче."},
             ]
             index = 0
             <div className="howitworks_table">
@@ -174,19 +174,19 @@ InnerEn = (props) ->
             </p>
             <p className="lead">
                 <Link to="/material/about">Detailed information about the couse</Link>{" | "}
-                <Link to="/material/module-20927_7">FAQ</Link>
+                <Link to="/material/about.4!en">FAQ</Link>
             </p>
         </div>
         <h2 className={styles.whatitis}>How does the couse work?</h2>
         {
             items = [
-                {image: "about-1-levels-2.png", text: "The topics are divided into levels by increasing complexity: from the basics of syntax to advanced algorithms. There are theoretical materials (articles, tips, video lectures) and practice problems on most topics."},
-                {image: "about-2-submit.png", text: "You study theory and solve problems in your favorite programming language. You send solutions to the site, and they are automatically checked."},
-                {image: "about-3-results.png", text: "In a minute you will know whether your solution is correct. If it's right, you move on; if it's wrong, you think how to fix it."},
-                {image: "about-4-comments.png", text: "I see all the wrong solutions and can tell you what your mistake is. I also see all the correct solutions and check them manually — how optimally they are written."},
-                {image: "about-5-ac.png", text: "If the solution is written well enough, I accept it. I can also write small comments on your code."},
-                {image: "about-6-ig.png", text: "If the solution is not written very well, I do not accept  it — I `ignore' it. In this case I always write a comment, and you will need to redo the solution."},
-                {image: "about-7-best.png", text: "When your solution is accepted, you can look at 'good solutions' to see how other students solved this problem. You also get access to 'find mistake' section where you can try to find mistakes in solutions by other students."},
+                {image: "about-1-levels-en.png", text: "The topics are divided into levels by increasing complexity: from the basics of syntax to advanced algorithms. There are theoretical materials (articles, tips, video lectures) and practice problems on most topics."},
+                {image: "about-2-submit-en.png", text: "You study theory and solve problems in your favorite programming language. You send solutions to the site, and they are automatically checked."},
+                {image: "about-3-results-en.png", text: "In a minute you will know whether your solution is correct. If it's right, you move on; if it's wrong, you think how to fix it."},
+                {image: "about-4-comments-en.png", text: "I see all the wrong solutions and can tell you what your mistake is. I also see all the correct solutions and check them manually — how optimally they are written."},
+                {image: "about-5-ac-en.png", text: "If the solution is written well enough, I accept it. I can also write small comments on your code."},
+                {image: "about-6-ig-en.png", text: "If the solution is not written very well, I do not accept  it — I 'ignore' it. In this case I always write a comment, and you will need to redo the solution."},
+                {image: "about-7-best-en.png", text: "When your solution is accepted, you can look at 'good solutions' to see how other students solved this problem. You also get access to 'find mistake' section where you can try to find mistakes in solutions by other students."},
             ]
             index = 0
             <div className="howitworks_table">

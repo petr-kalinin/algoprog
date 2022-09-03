@@ -267,10 +267,8 @@ module20927_7 = () ->
         
         <p>It is primarily designed for schoolchildren and as a preparation for school programming contests (and many materials in the course are written exactly as for schoolchildren), but also everyone can study in absentia (and really do) in general: students, university graduates, etc. Classes for Nizhny Novgorod schoolchildren are free, for everyone else — paid.</p>
         
-        <p>This page is just for students, graduates, etc., and not for schoolchildren. There is a <a href="/material/module-20927_5" onclick="window.goto('/material/module-20927_5')();return false;">separate page</a> for schoolchildren.</p>
-        
-        <h3>What are they teaching here?</h3>
-        <p>The main direction is algorithmic programming. Starting from the basics of programming, and further into algorithms and data structures. This is what is called Computer Science in English.</p>
+        <h3>What is being taught here?</h3>
+        <p>The main topic is algorithmic programming. Starting from the basics of programming, and further into algorithms and data structures. This is what is called Computer Science in English.</p>
         
         <h3>What is NOT taught here?</h3>
         <p>We do not deal with "technical" issues:</p>
