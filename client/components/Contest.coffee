@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import stripLabel from '../lib/stripLabel'
 import withMyResults from '../lib/withMyResults'
 
 getClass = (result) ->
@@ -20,7 +21,8 @@ export ProblemList = withMyResults (props) ->
         res = []
         a = (el) -> res.push(el)
         for m in props.problems
-            id = props.myUser?._id + "::" + m._id
+            probId = stripLabel(m._id)
+            id = props.myUser?._id + "::" + probId
             if props.myResults?[id]?
                 cl = getClass(props.myResults[id])
             else
