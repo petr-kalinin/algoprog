@@ -209,7 +209,7 @@ export class LoggedCodeforcesUser
             throw {duplicate: true}
         if not page.includes("Contest status")
             notify "Can't submit to CF"
-            notifyDocument page
+            notifyDocument page, {filename: 'page.html', contentType: "text/html"}
             logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"
