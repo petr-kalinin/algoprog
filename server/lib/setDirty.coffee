@@ -18,3 +18,4 @@ export default setDirty = (submit, dirtyResults, dirtyUsers) ->
             dirtyResults[userId + "::" + t._id] = 1
             t = t.parent
     dirtyResults[userId + "::main"] = 1
+    dirtyResults[userId + "::main!en"] = 1
