@@ -61,7 +61,6 @@ recurseResults = (userId, tableId, depth) ->
         results: tableResults
         total: total
 
-#fix level usage
 correctLang = (table, lang) ->
     if lang == ""
         return table
