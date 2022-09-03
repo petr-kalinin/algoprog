@@ -7,6 +7,7 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 
 import download, {downloadLimited} from '../lib/download'
 import sleep from '../lib/sleep'
+import {notify, notifyDocument} from '../lib/telegramBot'
 
 import logger from '../log'
 
@@ -207,7 +208,8 @@ export class LoggedCodeforcesUser
             logger.info "Submit is a duplicate"
             throw {duplicate: true}
         if not page.includes("Contest status")
-            console.log page
+            notify "Can't submit to CF"
+            notifyDocument page
             logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"
