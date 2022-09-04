@@ -178,6 +178,12 @@ SubmitActions = (props) ->
                     setField={props.setField}
                     style={{ height: 200 }}
                     state={props}/>
+            {if admin and props.currentSubmit and not props.currentSubmit.similar
+                <FormGroup>
+                    <Button onClick={props.translateComment} bsSize="xsmall">translate</Button>
+                    <Button onClick={props.downloadSubmits} bsSize="xsmall">re-download submits</Button>
+                </FormGroup>
+            }
             <FormGroup className={styles.actionButtons}>
                 {
                 bsSize = null
@@ -195,7 +201,6 @@ SubmitActions = (props) ->
                 </ButtonGroup>
                 }
             </FormGroup>
-            <Button onClick={props.downloadSubmits} bsSize="xsmall">re-download submits</Button>
             {
             admin and props.currentSubmit and not props.currentSubmit.similar and <Col xs={12} sm={12} md={12} lg={12}>
                 <ConnectedProblemCommentsLists problemId={props.result.fullTable._id} handleCommentClicked={props.setComment}/>
@@ -231,6 +236,7 @@ export class ReviewResult extends React.Component
         @setComment = @setComment.bind this
         @copyTest = @copyTest.bind this
         @setCurrentSubmit = @setCurrentSubmit.bind this
+        @translateComment = @translateComment.bind this
 
     componentDidUpdate: (prevProps, prevState) ->
         if !submitListEquals(prevProps.submits, @props.submits)
@@ -263,6 +269,10 @@ export class ReviewResult extends React.Component
             if @state.commentText.length
                 newText = @state.commentText + "\n\n" + newText
             @setState({commentText: newText})
+
+    translateComment: () ->
+        newText = await callApi 'translate', {text: @state.commentText}
+        @setState({commentText: newText.text})
 
     setField: (field, value) ->
         newState = {@state...}
@@ -324,7 +334,7 @@ export class ReviewResult extends React.Component
 
     render:  () ->
         <div className={@paidStyle()}>
-            {`<SubmitListWithDiff {...this.props} {...this.state} SubmitComponent={SubmitForReviewResults} PostSubmit={SubmitActions} setCurrentSubmit={this.setCurrentSubmit} accept={this.accept} ignore={this.ignore} disqualify={this.disqualify} comment={this.comment} setField={this.setField} setQuality={this.setQuality} toggleBestSubmits={this.toggleBestSubmits} downloadSubmits={this.downloadSubmits} setComment={this.setComment} copyTest={this.copyTest} headerClassName={this.paidStyle()}/>`}
+            {`<SubmitListWithDiff {...this.props} {...this.state} SubmitComponent={SubmitForReviewResults} PostSubmit={SubmitActions} setCurrentSubmit={this.setCurrentSubmit} accept={this.accept} ignore={this.ignore} disqualify={this.disqualify} comment={this.comment} setField={this.setField} setQuality={this.setQuality} toggleBestSubmits={this.toggleBestSubmits} downloadSubmits={this.downloadSubmits} setComment={this.setComment} translateComment={this.translateComment} copyTest={this.copyTest} headerClassName={this.paidStyle()}/>`}
         </div>
 
 SubmitsAndSimilarMerger = (props) ->

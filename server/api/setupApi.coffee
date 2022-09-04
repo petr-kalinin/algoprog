@@ -33,6 +33,7 @@ import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
+import translate from '../lib/translate'
 import translateProblems from '../lib/translateProblems'
 
 import {allTables} from '../materials/data/tables'
@@ -929,6 +930,14 @@ export default setupApi = (app) ->
             return
         translateProblems()
         res.send('OK')
+
+    app.post '/api/translate', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        text = req.body.text
+        result = (await translate([text]))[0]
+        res.json({text: result})
 
     app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
