@@ -178,7 +178,7 @@ class Sceleton extends React.Component
             <div className={styles.main}>
                 {@props.lang == "en" &&
                     <div class={'alert alert-warning ' + styles.en_warning}>
-                        English version is under construction. All contents of the site should be already translated (mostly using machine translation), but some functions may not work properly. Please contact me if you find any problems.
+                        English version is in beta. All contents of the site should be already translated (mostly using machine translation), and everything should work properly. However, if you find any problems, please contact me.
                     </div>
                 }
                 <Grid fluid>
