@@ -65,12 +65,12 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             problem = problemMap[submit.Prob]
             user = submit.User_Login
             id = "#{@options.contest}r#{submit.Run_Id}p#{problem}"
-            logger.info "Found ejudge submit #{id} #{user} #{problem}"
+            #logger.info "Found ejudge submit #{id} #{user} #{problem}"
             if @options.ejudgeUser.trim() != user
-                logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
+                #logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
                 continue
             if @options.ejudgeProblem != problem
-                logger.info "Ignoring submit #{id} #{user} #{problem} because it is for a different problem (vs #{@options.ejudgeProblem})"
+                #logger.info "Ignoring submit #{id} #{user} #{problem} because it is for a different problem (vs #{@options.ejudgeProblem})"
                 continue
             outcome = submit.Stat_Short
             if outcome of @STATUS_MAP
