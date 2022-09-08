@@ -29,6 +29,7 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         <head>
             <meta charset="UTF-8" />
             <meta name="yandex-verification" content="4f0059cd93dfb218" />
+            <meta name="verification" content="9562bf97c8461c1a2399c3922d2252" />
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/server.bundle.css"/>
