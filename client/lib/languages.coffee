@@ -38,7 +38,7 @@ export default LANGUAGES = {
     "Kotlin": {
         extensions: ["kt"],
         informatics: 71,
-        ejudge: null
+        ejudge: 71,
         codeforces: 48
     },
     "GNU Go": {
