@@ -1323,6 +1323,36 @@ export default setupApi = (app) ->
         await processPayment(orderId, success, amount, req.body, false)
         res.status(204).send('')
 
+    app.get '/api/unitpayNotify', wrap (req, res) ->
+        order = req.query.params.account
+        logger.info("unitpayNotify #{order}")
+        data = deepcopy(req.query.params)
+        signature = data.signature
+        method = req.query.method
+        delete data.signature
+        keys = (key for own key, value of data)
+        keys.sort()
+        str = ""
+        for key in keys
+            str += data[key] + "{up}"
+        str += UNITPAY_SECRET_KEY
+        str = method + "{up}" + str
+        hash = sha256(str)
+        if hash != signature
+            logger.warn("unitpayNotify #{order}: wrong signature")
+            res.status(403).send('Wrong signature')
+            return
+
+        if method != "pay"
+            logger.info("unitpayNotify #{order}: method #{method}")
+            res.json({result: {message: "OK"}})
+            return
+
+        success = true
+        amount = data.orderSum
+        await processPayment(orderId, success, amount, req.query)
+        res.send('OK')
+
     app.post '/api/paymentNotify', wrap (req, res) ->
         logger.info("paymentNotify #{req.body.OrderId}")
         data = deepcopy(req.body)
