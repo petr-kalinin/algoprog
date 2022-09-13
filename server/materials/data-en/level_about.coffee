@@ -147,33 +147,33 @@ work_with_site = () ->
         k = int(input())
         print(k // n)</pre>
 
-        Pay attention to the following features (it may not be written in your textbook — you need to do as it is written here, and not in the textbook. Perhaps you won't understand some of the things described here - then just skip this point).
+        Pay attention to the following features (it may not agree with your textbook — you need to do as it is written here, and not in the textbook. Perhaps you won't understand some of the things described here - then just skip this point).
         <ul>
-        <li>We don't output any "prompts" like "enter N". The task condition clearly states what exactly our program should display on the screen, and there is nothing said about the fact that it is necessary to display invitations. Therefore, any extra output to the screen will be considered as a violation of the output format.</li>
+        <li>We don't output any "prompts" like <code>print("please enter N")</code>. The task condition clearly states what exactly our program should display on the screen, and there is nothing said about the fact that it is necessary to display prompts. Therefore, any extra output to the screen will be considered as a violation of the output format.</li>
         <li>There are no "fool checks", for example, there is no check "what if N = 0?", or "what if they didn't enter a number?". Similar to the previous one, this is not required in our tasks. In more serious tasks, there will be restrictions on the permissible values of N in the condition, and no one will test your program with N that does not meet these restrictions. In this problem, it is assumed that N>0 is always.</li>
         <li>We don't put an empty <code>input()</code> (or <code>getch();</code> in c++) or other delay at the end of the program. This is also not required; the information displayed on the screen is still saved and can still be viewed.</li>
         <li>We calculated and immediately output the answer without saving it to an intermediate variable. It was possible to save:
-        <pre>ans = k / n
+        <pre>ans = k // n
         print(ans)
         </pre>
         In this simple program, it is easier to output immediately, but if the expression is more complicated, then you can save it.</li>
         </ul>
         <p>Save this program to some file. Remember both the file name and the directory (folder) where you saved the file.</p>
 
-        <p>Now test the program. Run it and run different tests.</p>
+        <p>Now test the program. Run it and try different tests.</p>
 
-        <p>To start, enter the test from the example: "3 14" and make sure that it outputs 4.</p>
+        <p>To start, enter the test from the example: "7 26" (in different lines, like in the example) and make sure that it outputs 3.</p>
 
-        <p>In this problem, the answer to each test is uniquely determined (for example, the answer to the example from the condition can only be 4). There are tasks when there may be several correct answers for each test, in such tasks the condition usually says "if there are several solutions, output any" or there is some similar phrase. In this case, your program is not obliged to give an answer that exactly matches what is specified in the example — it is enough that it is one of the correct ones. Similarly, in the future, when testing your program on the website (see below) for each test, any of the correct answers will be allowed.</p>
+        <p>In this problem, the answer to each test is uniquely determined (for example, the answer to the example from the statement can only be 3). There are problems when there may be several correct answers for each test, in such problems the condition usually says "if there are several solutions, output any" or there is some similar phrase. In this case, your program is not obliged to give an answer that exactly matches what is specified in the example — it is enough that it is one of the correct ones. Similarly, in the future, when your program will be tested on the website (see below), any of the correct answers for each test will be allowed.</p>
 
         <p>Come up with some more examples for this task. Try to make them diverse: so that there are different N, K, and different answers. For example, enter "5 25" and check that the answer is 5. Come up with a few more examples yourself. Important: before entering each example into the program, first calculate the answer in your mind, and only then run the program and check that it has output exactly what you expected. Try to always know the answer to your example BEFORE starting the program.</p>
 
-        <p>If the program is written correctly, then it will work correctly on your tests. Then it can be submitted for verification to the site (they say "submit / send for verification to the testing system" or simply "submit to the system").</p>
+        <p>If the program is written correctly, then it will work correctly on your tests. Then it can be submitted for verification to the site (we say "submit / send for testing to the testing system" or simply "submit to the system").</p>
 
-        <h3>Sending for verification</h3>
-        <p>Go back to the page with the task condition. Below the conditions there is a section "Submit a solution" (it is only there if you are registered on the site and logged in). Click the "File Selection" button and select the file with your solution. Make sure you select the file.pas/.py (with source code), not .o or .exe (already compiled program)! Make sure that the correct language is selected in the drop-down list next to it (in particular, if you write in PascalABC, then you need to select it manually), and click the "Send" button.</p>
+        <h3>Sending for testing</h3>
+        <p>Go back to the page with the problem statement. Below the statement there is a section "Submit a solution" (it is only there if you are registered on the site and logged in). Click the file selection button and select the file with your solution. Make sure you select the file .py or .cpp (with source code), not .pyc, .o or .exe (already compiled program)! Make sure that the correct language is selected in the drop-down list next to it, and click the "Send" button.</p>
         
-        <p>Your program is sent to the server, which compiles it and checks it by running on several test examples. These test cases are unknown to you, but they are always the same in each specific task (i.e. if you send several times, the test cases will be the same each time). In this case, the testing system will run your program several times, each time it will simulate keyboard input of the values N and K from the next test example, and check that your program outputs the correct answer.</p>
+        <p>Your program is sent to the server, which checks it by running on several test examples. These test cases are unknown to you, but they are always the same in each specific problem (i.e. if you send several times, the test cases will be the same each time). In this case, the testing system will run your program several times, each time it will simulate keyboard input of the values N and K from the next test example, and check that your program outputs the correct answer.</p>
 
         <p>Under the submission form there is a table listing all your attempts (also called "submissions") for this task. Initially, of course, there is no table there. After you have submitted your solution, it will appear in this table (after a while — about a minute). The "Status" column displays the result of testing your program. Immediately after you have submitted the program, you can see there "Compiling" or "Testing", which means that your task is being tested. The table is updated automatically, wait until the final result of the check appears in the "Status" column.</p>
 
