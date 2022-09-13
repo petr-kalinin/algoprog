@@ -77,6 +77,8 @@ XSOLLA_MERCHANT_ID = process.env['XSOLLA_MERCHANT_ID']
 XSOLLA_PROJECT_ID = process.env['XSOLLA_PROJECT_ID']
 XSOLLA_API_KEY = process.env["XSOLLA_API_KEY"]
 XSOLLA_SECRET_KEY = process.env["XSOLLA_SECRET_KEY"]
+UNITPAY_PUBLIC_KEY = process.env["UNITPAY_PUBLIC_KEY"]
+UNITPAY_SECRET_KEY = process.env["UNITPAY_SECRET_KEY"]
 
 wrap = (fn) ->
     (args...) ->
@@ -1253,6 +1255,31 @@ export default setupApi = (app) ->
         catch e
             throw "Can't download xsolla api"
         res.json({token: result.token})
+
+    app.post '/api/unitpaySignature', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        order = req.body.order
+        name = req.body.name
+        email = req.body.email
+        address = req.body.address
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        currency = 'RUB'
+        desc = "algoprog.ru"
+        sum = userPrivate.price
+        console.log hashStr, sha256(hashStr)
+        res.json
+            signature: sha256(hashStr)
+            desc: desc
+            order: order
+            currency: currency
+            sum: sum
+            publicKey: UNITPAY_PUBLIC_KEY
 
     app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
         hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)

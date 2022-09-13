@@ -171,6 +171,89 @@ class XSollaPayment extends React.Component
             }
         </div>
 
+class UnitpayPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            name: ""
+            email: ""
+            address: ""
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "unitpaySignature", {
+                order: @props.order,
+                name: @state.name,
+                email: @state.email,
+                address: @state.address
+            }
+            if (not data.signature) or (not data.publicKey) or (not data.desc) or (not data.currency) or (not data.order) or (not data.sum)
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open("https://unitpay.ru/pay/#{data.publicKey}?sum=#{data.sum}&account=#{data.order}&desc=#{data.desc}&currency=#{data.currency}&signature=#{data.signature}", '_blank').focus()
+
+
+    render: () ->
+        canSubmit = @state.name and @state.email and @state.address
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading && 
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    <FieldGroup
+                        id="name"
+                        label={LangRaw("full_payer_name", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="email"
+                        label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="address"
+                        label={LangRaw("payer_address", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                </form>    
+            }
+        </div>
+
 class Payment extends React.Component
     render: () ->
         canSubmit = true
@@ -202,6 +285,7 @@ class Payment extends React.Component
         switch GROUPS[@props.myUser?.userList]?.paid
             when "tinkoff" then Element = TinkoffPayment
             when "xsolla" then Element = XSollaPayment
+            when "unitpay" then Element = UnitpayPayment
             else
                 canSubmit = false
                 Element = TinkoffPayment

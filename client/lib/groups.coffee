@@ -70,7 +70,7 @@ export default GROUPS =
         starred: false
         lang: ""
     english:
-        paid: "xsolla"
+        paid: "unitpay"
         chocos: false
         startDayForWeeks: "2020-01-06"
         tableName: "Не-российские ученики"
