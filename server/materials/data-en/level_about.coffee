@@ -78,7 +78,7 @@ pay = () ->
         <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study. Predictable things like trips, exams, etc. are not counted here.</li>
         <li>If for whatever reason you have not been engaged for more than 10 days in a row, then I will refund you half of the money for this period.</li>
         <li>If you warn me in advance that you will not be able to study for more than 10 days in a row, then I can refund you money for this period.</li>
-        <li>Of course, if for some reason I could not check your decisions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period.</li>
+        <li>Of course, if for some reason I could not check your solutions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period.</li>
         </ul>
         </div>""", {id: "pay"})
 
@@ -194,7 +194,7 @@ work_with_site = () ->
         <p>But in general, try to check the problem before sending it to the system (and we will learn this separately). Treat failed attempts as a real failure, and try to make as few failed attempts as possible. In general, at many programming contests you will have only one opportunity to submit the problem, and if it does not pass some tests, then you will no longer have the opportunity to improve!</p>
 
         <h3>Accepting and ignoring submits, comments on submits</h3>
-        <p>I will review all your decisions: if I have time, all submissions in general, including unsuccessful ones, or if I have little time, and there are a lot of submissions, then only submissions with the OK status.</p>
+        <p>I will review all your solutions: if I have time, all submissions in general, including unsuccessful ones, or if I have little time, and there are a lot of submissions, then only submissions with the OK status.</p>
 
         <p>In successful submissions, I will review your code for the following:
         </p><ul>
@@ -204,7 +204,7 @@ work_with_site = () ->
         <p>If I have any comments or comments on your program, I will write them and you will be able to see them. Firstly, they will appear on the site in the right column in the "Comments" section; secondly, in each submission, in the window opened by clicking the submit link, there is a special "comments" tab; finally, there is a separate Comments section in the lefthand menu. Accordingly, as soon as I comment on your package, you will see a comment. Usually I try to view all the submissions during the day, although sometimes there are long delays, up to several days.</p>
 
         <p>In addition to actually writing a comment, I make a decision on each of your submissions — either I accept this submit (albeit with small comments), or I will require you to rewrite this submit taking into account my comments. In the first case, I change the status of the submission to "Accepted" (i.e. you will see exactly "Accepted" instead of "OK" in the table with your submissions), in the second case I change the status to "Ignored". Accordingly, in the first case, just take note of the comments that I wrote (and it happens that I do not write any comments), although you can rewrite the solution if you want. In the second case, be sure to rewrite the solution taking into account these comments.</p>
-        <p>(<a href="https://blog.algoprog.ru/why-ignore/">Read more about why I ignore decisions</a> (in Russian).)</p>
+        <p>(<a href="https://blog.algoprog.ru/why-ignore/">Read more about why I ignore solutions</a> (in Russian).)</p>
 
         <p>In the summary table, the "OK" solutions (i.e., which I haven't looked at yet) are displayed with a yellow background, the "Accepted" solutions (i.e., which I have accepted) are displayed with a green background, ignored solutions are not taken into account in the total number of problems you have solved, just the corresponding problem in the summary table is displayed with a blue background.</p>
 
@@ -304,7 +304,7 @@ module20927_7 = () ->
         
         <h3>When can I start studying? When does the "next group" start?</h3>
         <p>You can join the course at any time. All the same, students have quite different levels of training, so there is no single program like "this week we are going through this, next week this, and if you missed or learned about the course too late, then wait for the next group or next year".</p>
-        <p>The only thing is that during the holidays or in the summer I may have limited access to the Internet, so I may not respond to your letters so quickly, look at your decisions, etc.</p>
+        <p>The only thing is that during the holidays or in the summer I may have limited access to the Internet, so I may not respond to your letters so quickly, look at your solutions, etc.</p>
         
         <h3>And who are you anyway?</h3>
         <p>I am Petr Kalinin, Ph.D., Senior developer at Yandex, graduate of the Nizhny Novgorod State University. At one time, I actively participated in various programming contests and olympiads: bronze medalist of the International Olympiad in Informatics (IOI) in 2001, gold medalist of the IOI in 2002; as part of the UNN team, I twice participated in the finals of the ACM International Collegiate Programming Contest (ACM ICPC). From 2017 to 2019, I taught at the Yandex School of Data Analysis. I am a student of V.D. Lelyukh.</p>
