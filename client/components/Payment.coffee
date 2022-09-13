@@ -197,7 +197,8 @@ class UnitpayPayment extends React.Component
                 order: @props.order,
                 name: @state.name,
                 email: @state.email,
-                address: @state.address
+                address: @state.address,
+                desc: LangRaw("payment_for_one_month", @props.lang)
             }
             if (not data.signature) or (not data.publicKey) or (not data.desc) or (not data.currency) or (not data.order) or (not data.sum)
                 throw "Error"

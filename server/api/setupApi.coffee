@@ -1270,9 +1270,9 @@ export default setupApi = (app) ->
             res.status(403).send('No price set')
             return
         currency = 'RUB'
-        desc = "algoprog.ru"
+        desc = req.body.desc
         sum = userPrivate.price
-        console.log hashStr, sha256(hashStr)
+        hashStr = "#{order}{up}#{currency}{up}#{desc}{up}#{sum}{up}#{UNITPAY_SECRET_KEY}"
         res.json
             signature: sha256(hashStr)
             desc: desc

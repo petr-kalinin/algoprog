@@ -271,6 +271,9 @@ _LANG =
     you_pay_for_one_month:
         ru: (amount) -> "Вы оплачиваете один месяц занятий на algoprog.ru. Стоимость месяца для вас составляет #{amount} рублей."
         en: (amount) -> "You pay for one month access to algoprog.org. The price for you is #{amount} rubles."
+    payment_for_one_month:
+        ru: "Payment for one month of classes on algoprog.ru"  # apparently unitpay has problems with encoding for russian desc
+        en: "Payment for one month of classes on algoprog.ru"
     payment_is_possible_only_from_russian_banks:
         ru: "Оплата возможна только с карт российских банков. Если у вас нет таких карт, возможны другие варианты (банковским переводом по российским реквизитам, SWIFT-переводом, биткойнами), напишите мне."
         en: "Payment is possible only with cards issued by Russian banks. If you do not have such cards, other options are possible (by bank transfer using Russian bank details, by SWIFT transfer, bitcoin), please contact me."
