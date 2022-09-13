@@ -173,90 +173,90 @@ work_with_site = () ->
         <h3>Sending for testing</h3>
         <p>Go back to the page with the problem statement. Below the statement there is a section "Submit a solution" (it is only there if you are registered on the site and logged in). Click the file selection button and select the file with your solution. Make sure you select the file .py or .cpp (with source code), not .pyc, .o or .exe (already compiled program)! Make sure that the correct language is selected in the drop-down list next to it, and click the "Send" button.</p>
         
-        <p>Your program is sent to the server, which checks it by running on several test examples. These test cases are unknown to you, but they are always the same in each specific problem (i.e. if you send several times, the test cases will be the same each time). In this case, the testing system will run your program several times, each time it will simulate keyboard input of the values N and K from the next test example, and check that your program outputs the correct answer.</p>
+        <p>Your program is sent to the server, which checks it by running on several test cases. These test cases are unknown to you, but they are always the same in each specific problem (i.e. if you send several times, the test cases will be the same each time). So, the testing system will run your program several times, each time it will simulate keyboard input of the values N and K from the next test cases, and check that your program outputs the correct answer.</p>
 
-        <p>Under the submission form there is a table listing all your attempts (also called "submissions") for this task. Initially, of course, there is no table there. After you have submitted your solution, it will appear in this table (after a while — about a minute). The "Status" column displays the result of testing your program. Immediately after you have submitted the program, you can see there "Compiling" or "Testing", which means that your task is being tested. The table is updated automatically, wait until the final result of the check appears in the "Status" column.</p>
+        <p>Under the submission form there is a table listing all your attempts (also called "submissions" or "submits") for this task. Initially, of course, there is no table there. After you have submitted your solution, it will appear in this table. The "Status" column displays the result of testing your program. Immediately after you have submitted the program, you can see there "Compiling" or "Testing", which means that your task is being tested. The table is updated automatically, wait until the final result of the check appears in the "Status" column.</p>
 
         <p>The main results of the check that you can see:
         </p><ul>
         <li>OK — your program has passed all the tests correctly, hooray!</li>
-        <li>Compilation error — your program has not compiled</li>
-        <li>Partial solution — your program didn't pass all the tests (maybe it didn't even pass any). So, your program is not working quite right (or completely wrong), try to find errors.</li>
-        <li>There are also "Accepted" and "Ignored" statuses, but they are not set automatically, so about them below.</li>
+        <li>Compilation error — your program was not compiled</li>
+        <li>Partial solution — your program didn't pass all the tests (maybe it didn't even pass any). So, your program is not working quite right (or works completely wrong), try to find mistakes.</li>
+        <li>There are also "Accepted" and "Ignored" statuses, but they are not set automatically, see about them below.</li>
         </ul>
 
-        <p>You can click on each line in the package table, after which a window with detailed information about the package will open. Firstly, there will be the full code of your program, so you can always check whether you have sent exactly what you wanted; if you solved problems from school, then when you come home, you will be able to see the codes of all your programs, etc.</p>
+        <p>You can click on each line in the submission table, after which a window with detailed information about the submission will open. Firstly, there will be the full code of your program, so you can always check whether you have sent exactly what you wanted; if you had been solving problems from school, then when you come home, you will be able to see the codes of all your programs, etc.</p>
 
-        <p>Secondly, in the window that opens there is a tab "Protocol", where the test protocol of your program is displayed. If your program has not compiled (the status is "Compilation error"), then there will be a compilation protocol: errors found in the program will be indicated. If your program has compiled, then there will be a test protocol: for each test, information will be provided about whether this test passed (OK) or not. There are only 6 tests in the task "Dividing apples - 1", so there should be 6 rows in the table. If your submission has received the status "OK", then all 6 lines will be OK; otherwise, some tests will have a different status (it is usually clear from the name of the status what this means).</p>
+        <p>Secondly, in the window that opens there is a tab "Protocol", where the test protocol of your program is displayed. If your program was not compiled (the status is "Compilation error"), then there will be a compilation protocol: errors found in the program will be indicated. If your program was compiled, then there will be a test protocol: for each test, information will be provided about whether this test passed (OK) or not. There are only 8 tests in the task "Pears", so there should be 8 rows in the table. If your submission has received the status "OK", then all 8 lines will be OK; otherwise, some tests will have a different status (it is usually clear from the name of the status what this means).</p>
 
-        <p>Thus, you can see which (by numbers) tests you have passed and which have not. But you can't find out which test it is (in our problem, which N and K are exactly there). This is done so that you learn to test your solution yourself and find examples on which it does not work, and do not consider the testing system as a magic box that gives you examples on which your program does not work. Therefore, if your program does not work, then look for examples on which it is wrong. If you can't find them, then write to me, we'll try to figure it out together. As a last resort, I have access to all the test data, so if I can't find an error just by looking at your program's code, I can see what kind of test your program doesn't work on.</p>
+        <p>Thus, you can see which (by numbers) tests you have passed and which have not. But you can't find out the contents of the test (in our problem, which N and K are exactly there). This is done so that you learn to test your solution yourself and find examples on which it does not work, and not consider the testing system as a magic box that gives you examples on which your program does not work. Therefore, if your program does not work, then try to find the examples on which it is wrong. If you can't find them, then contact me, we'll try to figure it out together. As a last resort, I have access to all the test data, so if I can't find an error just by looking at your program's code, I can see what kind of test your program doesn't work on.</p>
 
-        <p>But in general, try to check the task before sending it to the system (and we will learn this separately). Treat failed attempts as a specific failure, and try to make as few failed attempts as possible. In general, at many contests you will have only one opportunity to pass the task, and if it does not pass some tests, then you will no longer have the opportunity to improve!</p>
+        <p>But in general, try to check the task before sending it to the system (and we will learn this separately). Treat failed attempts as a real failure, and try to make as few failed attempts as possible. In general, at many programming contests you will have only one opportunity to submit the task, and if it does not pass some tests, then you will no longer have the opportunity to improve!</p>
 
-        <h3>Counting and ignoring decisions, comments on the decision</h3>
-        <p>I will review all your decisions: if there is time, all submissions in general, including unsuccessful ones, if I have little time, and there are a lot of submissions, then only submissions with the OK status.</p>
+        <h3>Accepting and ignoring submits, comments on submits</h3>
+        <p>I will review all your decisions: if I have time, all submissions in general, including unsuccessful ones, or if I have little time, and there are a lot of submissions, then only submissions with the OK status.</p>
 
         <p>In successful submissions, I will review your code for the following:
         </p><ul>
-        <li>First, I will look to see if there are any errors in the code that the tests of the testing system were able to pass. It happens that there is some completely unexpected error in the code, and the testing system may miss it (although the tests in the testing system are usually well prepared, and as a rule all errors in the code manifest themselves during testing) - I will see if you have such errors.</li>
+        <li>First, I will look to see if there are any errors in the code that the tests of the testing system did not catch. It happens that there is some completely unexpected error in the code, and the testing system may miss it (although the tests in the testing system are usually well prepared, and as a rule all errors in the code manifest themselves during testing) - I will see if you have such errors.</li>
         <li>I will also look to see if I have any comments on the code, even if they are not errors, but are general wishes. For example, maybe something can be done easier, or something should be done differently, etc.</li>
         </ul>
-        <p>If I have any comments or comments on your program, I will write them and you will be able to see them. Firstly, they will appear on the site in the right column in the "Comments" section; secondly, in each submission, in the window opened by the "more details" link, there is a special "comments" tab. Accordingly, as soon as I comment on your package, you will see a comment. Usually I try to view all the submissions during the day, although sometimes there are long delays, up to several days.</p>
+        <p>If I have any comments or comments on your program, I will write them and you will be able to see them. Firstly, they will appear on the site in the right column in the "Comments" section; secondly, in each submission, in the window opened by clicking the submit link, there is a special "comments" tab; finally, there is a separate Comments section in the lefthand menu. Accordingly, as soon as I comment on your package, you will see a comment. Usually I try to view all the submissions during the day, although sometimes there are long delays, up to several days.</p>
 
-        <p>In addition to actually writing a comment, I make a decision on each of your submissions — either I make this decision (albeit with small comments), or I will require you to rewrite this decision taking into account my comments. In the first case, I change the status of the submission to "Accepted" (i.e. you will see exactly "Accepted" instead of "OK" in the table with your submissions), in the second case I change the status to "Ignored". Accordingly, in the first case, just take note of the comments that I wrote (and it happens that I do not write any comments), although you can rewrite the solution if you want. In the second case, be sure to rewrite the decision taking into account these comments.</p>
-        <p>(<a href="https://blog.algoprog.ru/why-ignore/">Read more about why I ignore decisions</a>.)</p>
+        <p>In addition to actually writing a comment, I make a decision on each of your submissions — either I accept this submit (albeit with small comments), or I will require you to rewrite this submit taking into account my comments. In the first case, I change the status of the submission to "Accepted" (i.e. you will see exactly "Accepted" instead of "OK" in the table with your submissions), in the second case I change the status to "Ignored". Accordingly, in the first case, just take note of the comments that I wrote (and it happens that I do not write any comments), although you can rewrite the solution if you want. In the second case, be sure to rewrite the solution taking into account these comments.</p>
+        <p>(<a href="https://blog.algoprog.ru/why-ignore/">Read more about why I ignore decisions</a> (in Russian).)</p>
 
-        <p>In the summary table, the "OK" solutions (i.e., which I haven't looked at yet) are displayed with a yellow background, the "Counted" solutions (i.e., which I have accepted) are displayed with a green background, ignored solutions are not taken into account in the total number of tasks you have solved, just the corresponding task in the summary table is displayed with a blue background.</p>
+        <p>In the summary table, the "OK" solutions (i.e., which I haven't looked at yet) are displayed with a yellow background, the "Accepted" solutions (i.e., which I have accepted) are displayed with a green background, ignored solutions are not taken into account in the total number of tasks you have solved, just the corresponding task in the summary table is displayed with a blue background.</p>
 
         <p>I will also try to write comments on your unsuccessful submissions — to point out an error or advise where to look for it, etc. Of course, I will not always write them as soon as I see your attempt, and I will not always fully report the error found — after all, it will usually be useful for you to find the error more-less independently, I will try to give you suggestive advice (but, of course, it depends on the error). In general, if you tried to do a task, but it does not pass the tests, then perhaps within a day I will write you a tip in the comments to your submission.</p>
 
-        <p>Sometimes I may not have time to review all your unsuccessful submissions, or I do not write a comment for some other reasons. In that case, if you want to get a comment on any of them, just email me.</p>
+        <p>Sometimes I may not have time to review all your unsuccessful submissions, or I do not write a comment for some other reasons. In that case, if you want to get a comment on any of them, just contact me.</p>
 
         <h3>Good solutions</h3>
         <p>After I accept your solution (I set the status "Accepted"), you have access to "good solutions" for the corresponding task — on the task page, above the form for submitting the solution, a link to "good solutions" appears.</p>
 
-        <p>"Good solutions" are several (up to 5 pieces) solutions that were passed by other students of the course, and which, in my opinion, are written quite well and can be considered an example of solving this problem. Watch them, especially for those tasks where I have accepted with any comments (but in general it is useful to watch "good solutions" and for all accepted tasks in general). Compare the "good solutions" with your solution, perhaps you will see that something can be done easier, or even find other useful ideas.</p>
+        <p>"Good solutions" are several (up to 5) solutions that were submitted by other students of the course, and which, in my opinion, are written quite well and can be considered an example of solving this problem. Watch them, especially for those tasks where I have accepted with any comments (but in general it is useful to watch "good solutions" and for all accepted tasks in general). Compare the "good solutions" with your solution, perhaps you will see that something can be done easier, or even find other useful ideas.</p>
         
         <p>I try to keep the balance of different languages in the "good solutions" as much as possible (i.e., as a rule, there are solutions in different languages among the "good solutions"). But look at the solutions in your language, and in other languages that you don't even know — as a rule, you can understand the algorithm even in languages that you don't know at all. On the other hand, you can also find some interesting purely linguistic subtleties and techniques for your language in "good solutions".</p>
 
         <p>In addition, often in "good solutions" I show different approaches to solving the problem, often there are generally different algorithms. If you see that a "good solution" is very different from yours, it is useful to understand how it works in general.</p>
 
-        <p>At the same time, understand that in fact, hundreds of solutions have already been submitted for many tasks on the site, and in fact there are dozens of "good" ones, if not more. You see a maximum of five of them, simply because there is no point in watching dozens of more or less identical solutions. You will see some five of them who were lucky that I marked them as "good", but this "luck" is often determined by chance, well, the principles mentioned above about the diversity of languages and approaches. That is, you don't see five of the best solutions, but five random ones from among the good ones.</p>
+        <p>At the same time, understand that in fact, hundreds of solutions have already been submitted for many tasks on the site, and in fact there are dozens of "good" ones, if not more. You see a maximum of five of them, simply because there is no point in reading dozens of more or less identical solutions. You will see some five of them which were lucky that I marked them as "good", but this "luck" is often determined by chance, well, and the principles mentioned above about the diversity of languages and approaches. That is, you don't see the top-five best solutions, but five random ones from among those that are sufficiently good.</p>
 
-        <p>Therefore, do not assume that if your personal decision did not get into the "good" ones, then it is worse than the "good" ones. It can be just as good, or even something better than the "good" ones, it's just unlucky. If you see that the "good" solutions are written as cleanly and clearly as yours, then yours could also be "good". Conversely, if your solution is in the "good", it does not mean that it is much better than all the others :) For the same reason, the authors of "good solutions" are not signed.</p>
+        <p>Therefore, do not assume that if your personal submit did not get into the "good" ones, then it is worse than the "good" ones. It can be just as good, or even something better than the "good" ones, it's just unlucky. If you see that the "good" solutions are written as cleanly and clearly as yours, then yours could also be "good". Conversely, if your solution is in the "good", it does not mean that it is much better than all the others :) For the same reason, the authors of "good solutions" are not signed.</p>
 
         <p>On the other hand, if you have looked at the "good solutions" and think that your solution is noticeably better than all the "good" ones, write to me, maybe I will add your solution to the "good" ones. (Although I usually designate a solution as "good" at the same time as I count it, so if your solution is really noticeably better than other good ones, as a rule, I will make it "good" even before you can see "good solutions" :) .)</p>
 
-        <h3>Summary table</h3>
-        <p>All your submissions for our tasks are displayed in summary tables, links to which are in the site menu. Namely, each cell in the main part of this table indicates the statistics of submissions from a particular student for a specific task. If there is a "+" sign in the cell, it means that the task was passed successfully ("OK" or "Accepted"), if "-" — it means that the person tried to pass the task, but did not pass all the tests. The number after the icon (if any) indicates the number of unsuccessful attempts (if any). For example:
+        <h3>Rankings tables</h3>
+        <p>All your submissions for our tasks are displayed in rankings tables, links to which are in the site menu. Namely, each cell in the main part of this table indicates the statistics of submissions from a particular student for a specific task. If there is a "+" sign in the cell, it means that the task was done successfully ("OK" or "Accepted"), if "-" — it means that the person tried to pass the task, but did not pass all the tests. The number after the icon (if any) indicates the number of unsuccessful attempts (if any). For example:
         </p><ul>
-        <li>An empty cell indicates that the task did not give up at all;</li>
-        <li>"+" indicates that the task was completed on the first attempt;</li>
+        <li>An empty cell indicates that the student did not attempt on the task at all;</li>
+        <li>"+" indicates that the task was solved successfully on the first attempt;</li>
         <li>notation "-" does not happen;</li>
-        <li>"+2" means that the task was passed on the third attempt (two unsuccessful attempts and then a successful one);</li>
+        <li>"+2" means that the task was solved on the third attempt (two unsuccessful attempts and then a successful one);</li>
         <li>"-2" means that there were only two unsuccessful attempts on the task and that's it.</li>
         </ul><p></p>
 
-        <p>The background of the cell indicates the status of the task relative to the verdicts "Read" and "Ignored":
+        <p>The background of the cell indicates the status of the task relative to the verdicts "Accepted" and "Ignored":
         </p><ul>
         <li>Yellow background — status "OK", i.e. I haven't looked at this task yet;</li>
         <li>Green background — status "Accepted";</li>
-        <li>The blue background indicates the status "Ignored", while the ignored attempt itself is considered unsuccessful.</li>
+        <li>The blue background indicates the status "Ignored", while the ignored attempt itself is considered neither successfull nor unsuccessful.</li>
         </ul><p></p>
 
         <p>The last two columns of the table indicate the total number of solved tasks and the total number of unsuccessful ("penalty") attempts (only those tasks for which the correct program was eventually obtained are taken into account, ignored attempts are not taken into account). The table is sorted by the total number of solved problems, and with an equal number of solved problems — by the number of penalty attempts.</p>
 
-        <p>The table also has the following feature: only schoolchildren who meet two requirements at once appear in it: first, I have to activate their account, and secondly, the student must have at least one attempt to complete the task. Therefore, if you have not tried to take anything yet, do not be surprised that you are not in the table. If you have already tried to take something, but you are not in the table, then write to me - perhaps I forgot to activate you.</p>
+        <p>The table also has the following feature: only students who meet two requirements at once appear in it: first, I have to activate their account, and secondly, the student must have at least one attempt to complete the task. Therefore, if you have not tried to take anything yet, do not be surprised that you are not in the table. If you have already tried to take something, but you are not in the table, then write to me - perhaps I forgot to activate you.</p>
 
         <p>Similarly, problem sets (contests) they appear in the summary table only when at least someone submits some solution for some problem of this contest.</p>
 
         <h3>Terminology</h3>
         Above I have already introduced some specific terminology that is used in programming contests, just in case I will repeat it here:
         <ul>
-        <li>A contest is any set of tasks that is somehow grouped and separated from the rest. Within the contest, the tasks are usually numbered (1, 2, 3, ... or A, B, C, ... etc.) It can be a separate round of the contest, or a set of tasks for some class or on some topic, etc. As part of our classes, we call a "contest" a set of tasks available on each individual link from a page of the appropriate level. For example, "Arithmetic Operations Tasks" is a separate contest.</li>
-        <li>A submission (synonyms: attempt, submit) is your separate attempt to submit a task to the testing system; also the program that you passed in this attempt.</li>
+        <li>A contest is any set of tasks that is somehow grouped and separated from the rest. Within the contest, the tasks are usually numbered (1, 2, 3, ... or A, B, C, ... etc.) It can be a separate round of some competition, or a set of tasks for some class or on some topic, etc. As part of our classes, we call a "contest" a set of tasks available on each individual link from a page of the appropriate level. For example, "Problems on arithmetic operations" is a separate contest.</li>
+        <li>A submission (synonyms: attempt, submit) is your separate attempt to submit a task to the testing system; also the program that you submitted in this attempt.</li>
         <li>A penalty attempt (usually in the context of a summary rating) is an attempt that did not pass all the tests.</li>
-        <li>The test is a separate test case prepared by the authors of the task in order to test your programs on it. Usually, for each task, the author of the task prepares from 5 to 60 tests, and the programs that you submit for verification are checked in turn on all these tests. In order for the attempt to be considered successful, it is necessary that the program passes all the tests, i.e. it gives the correct answer to all the tests. (Other contests may have different rules.)</li>
+        <li>The test is a separate test case prepared by the authors of the task in order to test your programs on it. Usually, for each task, the author of the task prepares from 5 to 60 tests, and the programs that you submit for verification are checked in turn on all these tests. On our site, in order for the attempt to be considered successful, it is necessary that the program passes all the tests, i.e. it gives the correct answer to all the tests. (Other contests may have different rules.)</li>
         </ul></div>""")
 
 module20927_7 = () ->
@@ -265,10 +265,10 @@ module20927_7 = () ->
                     String.raw"""<h3>What is this course?</h3>
         <p>This is a course on algorithmic programming (algorithms, data structures, etc.)</p>
         
-        <p>It is primarily designed for schoolchildren and as a preparation for school programming contests (and many materials in the course are written exactly as for schoolchildren), but also everyone can study in absentia (and really do) in general: students, university graduates, etc. Classes for Nizhny Novgorod schoolchildren are free, for everyone else — paid.</p>
+        <p>It is primarily designed for schoolchildren and as a preparation for school programming contests (and many materials in the course are written exactly as for schoolchildren), but also everyone can (and do) study: students, university graduates, etc. Classes for Nizhny Novgorod schoolchildren are free, for everyone else — paid.</p>
         
         <h3>What is being taught here?</h3>
-        <p>The main topic is algorithmic programming. Starting from the basics of programming, and further into algorithms and data structures. This is what is called Computer Science in English.</p>
+        <p>The main topic is algorithmic programming. Starting from the basics of programming, and further into algorithms and data structures.</p>
         
         <h3>What is NOT taught here?</h3>
         <p>We do not deal with "technical" issues:</p>
@@ -280,48 +280,39 @@ module20927_7 = () ->
         <p>We will study the algorithms that underlie many such programs (we will not discuss how to make the "sort alphabetically" button, but we will discuss how to implement sorting when there is already a list of objects to sort).</p>
         
         <h3>Are you really going to teach?</h3>
-        <p>Yes and no. The format of the correspondence course implies that you will study a significant part of the material yourself. I will rather guide you, advising you where to look at this or that question, on which tasks to debug skills, and I will also comment on your programs quite actively. In addition, you can always contact me (contacts in the "About the course" section) and ask any question.</p>
+        <p>Yes and no. The format of the online course implies that you will study a significant part of the material yourself. I will rather guide you, advising you where to look at this or that question, on which tasks to debug skills, and I will also comment on your programs quite actively. In addition, you can always contact me (contacts in the "About the course" section) and ask any question.</p>
         
         <h3>What is the programming language?</h3>
-        <p>Generally speaking, whatever you want, of those that allow you to write console applications and are supported by this site. These are C++, Java, Python, C#, PHP, Ruby, Perl, Pascal, Basic, even 1C. </p>
+        <p>Generally speaking, whatever you want, of those that allow you to write console applications and are supported by this site. These are C++, Java, Python, C#, PHP, Perl, Kotlin, etc. </p>
         
         <p>At the same time, if you don't know any programming language yet, then I recommend Python. On the course page there are materials for beginners in python. If you know any of the languages listed in the previous paragraph, you can use it; but in general, all advanced topics (starting from level 2) do not depend on the language.</p>
         
-        <p>Personally, I know C++, python and pascal best of all; I can help you with these languages in sufficient detail. In other languages, I will not be able to tell you about various subtleties of the language, although, as experience shows, this is not very important for algorithms.</p>
+        <p>Personally, I know C++ and Python best of all; I can help you with these languages in sufficient detail. In other languages, I will not be able to tell you about various subtleties of the language, although, as experience shows, this is not very important for algorithms.</p>
         
         <h3>And what initial knowledge is required?</h3>
-        <p>In programming — from none and above. In general, the correspondence format allows you to implement almost individual training (i.e., each participant of the course is engaged in his own rhythm and mode), so I expect people with a wide range of initial knowledge here: from junior students who are just beginning to program, to already professional programmers who want to improve their knowledge in the field of algorithms.</p>
+        <p>In programming — from none and above. In general, the online format allows you to implement almost individual training (i.e., each participant of the course is engaged in his own rhythm and mode), so I expect people with a wide range of initial knowledge here: from junior schoolchildren who are just beginning to program, to already professional programmers who want to improve their knowledge in the field of algorithms.</p>
         
         <h3>What should I do to start studying?</h3>
         <ul>
-        <li><a href="/register" onclick="window.goto('/register')();return false;">Register on the site</a> (for this you will be asked to register on the site again informatics.mccme.ru ). When registering, specify your real name and the correct locality so that I can distinguish you from other users of the site.</li>
-        <li>Write to me using any of the methods listed in the <a href="/material/about" onclick="window.goto('/material/about')();return false;">"About the Course" section</a>. In the letter, specify your name, where you study / work. In addition, write briefly what your experience in programming is, or you will be engaged "from scratch".</li>
+        <li><a href="/register" onclick="window.goto('/register')();return false;">Register on the site</a>.</li>
+        <li>Contact me using any of the methods listed in the <a href="/material/about" onclick="window.goto('/material/about')();return false;">"About the Course" section</a>. In the letter, specify your name, where you study / work. In addition, write briefly what your experience in programming is, or you will be studying "from scratch".</li>
         <li>Read, or at least review, all the texts in the "About the Course" section.</li>
         <li>Wait for a response and further instructions from me.
         </li>
         </ul>
         <p></p>
         
-        <h3>When can I start studying? When is the "next set"?</h3>
+        <h3>When can I start studying? When does the "next group" start?</h3>
         <p>You can join the course at any time. All the same, students have quite different levels of training, so there is no single program like "this week we are going through this, next week this, and if you missed or learned about the course too late, then wait for the next group or next year".</p>
         <p>The only thing is that during the holidays or in the summer I may have limited access to the Internet, so I may not respond to your letters so quickly, look at your decisions, etc.</p>
         
-        <h3>Classes only by correspondence?</h3>
-        <p>Yes, there are no full-time classes for non-schoolchildren. And if they were, they would cost much more.</p>
-        
         <h3>And who are you anyway?</h3>
-        <p>I am Petr Andreevich Kalinin, Ph.D., Senior developer at Yandex, graduate of the Nizhny Novgorod State University. At one time, I actively participated in various programming contests and olympiads: bronze medalist of the International Olympiad of Schoolchildren in Computer Science (IOI) in 2001, gold medalist of the IOI in 2002; as part of the UNN team, I twice participated in the finals of the ACM World Team Programming Championship (ACM ICPC). From 2017 to 2019, I taught at the Yandex School of Data Analysis. I am a student of V.D. Lelyukh.</p>
+        <p>I am Petr Kalinin, Ph.D., Senior developer at Yandex, graduate of the Nizhny Novgorod State University. At one time, I actively participated in various programming contests and olympiads: bronze medalist of the International Olympiad in Informatics (IOI) in 2001, gold medalist of the IOI in 2002; as part of the UNN team, I twice participated in the finals of the ACM International Collegiate Programming Contest (ACM ICPC). From 2017 to 2019, I taught at the Yandex School of Data Analysis. I am a student of V.D. Lelyukh.</p>
         
         <p>In one form or another, I have been teaching programming to schoolchildren since I graduated from school in 2002 (I went as a teacher to various summer schools, etc.); this course has been in existence since 2013. Among my students are a number of participants and one winner of the final stage of the All—Russian Olympiad of Schoolchildren in Computer Science (not counting my brother Nikolai, in whose training I also took part not the last time and who is the absolute winner of the final stage of 2013 and twice — in 2013 and 2014 — the gold medalist of the international Olympiad of schoolchildren in computer science).</p>
         
-        <p>Teams of schoolchildren under my leadership regularly participate in the Nizhny Novgorod and All-Russian team Olympiad of schoolchildren in programming. At most of the Nizhny Novgorod team Olympiads that have taken place so far, my teams took the absolute first place; at the All—Russian Team Olympiad, my teams regularly become prize—winners, often medalists, and twice they took the absolute first place.</p>
-        
         <p>You can always contact me, contact details are listed in the "About the course" section.</p>
-        
-        <h3>And what kind of website informatics.mccme.ru ?</h3>
-        <p>Informatics.mccme.ru — this is a site for distance learning in computer science, organized by the Moscow Center for Continuing Mathematical Education (MCNMO) and the Moscow Institute of Open Education (MIOO); it is very convenient for organizing courses like this, and, as you can see on the main page of the site, it is really widely used, but primarily for organizing face-to-face classes. I am not directly related to this site (although I am familiar with the people who created and maintain it).</p>
-        
-        <p>My course is based on materials from informatics and uses it as a testing system (and previously the course existed only on informatics). There could still be links to computer science in some places, if you find one, write to me.</p></div>""")
+""")
 
 module20927_1 = () ->
     epigraph("Use your head to think!", 
@@ -332,33 +323,33 @@ module20927_1 = () ->
         
         <p>Moreover, you should always be critical of any information you receive, of anything that is written in textbooks, of anything I tell you or that is written on the course page. Think, try to understand why it is written, why you are advised to do so, and not otherwise. In textbooks, in what other people tell you, and even more so in my materials and advice, there can easily be mistakes, typos, and finally, you may find easier ways to achieve the same — so never take for granted what you read somewhere, always think about and reflect on the information received. It may turn out that in one source you read one information, and in another source something absolutely opposite — think, experiment (see below), and understand how to do better.</p>
         
-        <p>Also, don't be afraid to experiment! If you are not sure if something is possible in python/c++/etc., if it ok to write this or that command, whether it will work as you expect — try it: write and check. If you don't remember exactly how to write a command, try several options until you succeed. If you have read completely different information about how to do something in different places, try it and check which method works! Don't be afraid to try, don't be afraid to experiment — this way you will learn a lot more than if you just strictly follow what is written in any textbooks or what  someone (even me) told you.</p></div>""")
+        <p>Also, don't be afraid to experiment! If you are not sure if something is possible in python/c++/etc., if it ok to write this or that command, whether it will work as you expect — try it: write and check. If you don't remember exactly how to write a command, try several options until you succeed. If you have read completely different information about how to do something in different places, try it and check which method works! Don't be afraid to try, don't be afraid to experiment — this way you will learn a lot more than if you just strictly follow what is written in any textbooks or what someone (even me) told you.</p></div>""")
 
 module20927_35 = () ->
     page(
         "\nAbout the license for the site materials", 
                                                 String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>About the license for the materials of this site</h2>
         <h3>The source code of the site</h3>
-        The source code of the actual site algoprog.ru written by me (Peter Kalinin) and distributed under the <a href="https://www.gnu.org/licenses/agpl">GNU Affero General Public License</a>. You can download the source code from the website <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a> .
+        The source code of the actual site algoprog.org written by me (Petr Kalinin) and is distributed under the <a href="https://www.gnu.org/licenses/agpl">GNU Affero General Public License</a>. You can download the source code from the website <a href="https://github.com/petr-kalinin/algoprog">github.com/petr-kalinin/algoprog</a>.
         
         <h3>Theoretical materials</h3>
         <p>There are various theoretical materials on this site with varying degrees of clarity from the point of view of the license.</p>
         <p>Materials in which the license is explicitly specified are distributed under the license specified in them.</p>
-        <p>Materials posted on other sites to which from the site algoprog.ru only the link is affixed, distributed under a license determined by the specified site.</p>
-        <p>Materials in which the license is not explicitly specified, but of which I am the author (this is most of the materials posted directly on the site algoprog.ru ), distributed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike (CC BY-SA) 4.0</a> license.</p>
+        <p>Materials posted on other sites to which from the site algoprog.org only the link is affixed, are distributed under a license determined by the specified site.</p>
+        <p>Materials in which the license is not explicitly specified, but of which I am the author (this is most of the materials posted directly on the site algoprog.org ), are distributed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike (CC BY-SA) 4.0</a> license.</p>
         <p>If you are not sure which license applies to a particular material, ask me.</p>
         
-        <h3>Task conditions</h3>
-        <p>The terms of the tasks are taken from the website <a href="https://informatics.mccme.ru">informatics.mccme.ru</a> , where they are mostly collected from various contests. The terms of the license for them are not clear.</p>
+        <h3>Task statements</h3>
+        <p>Most of the the task statements are taken from the website <a href="https://informatics.mccme.ru">informatics.mccme.ru</a> , where they are mostly collected from various contests. The terms of the license for them are not clear.</p>
         </div>""", {id: "license"})
 
 module20927_15 = () ->
     page(
         "\nAbout the level system", 
                                       String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>About the level system</h1>
-        <p>All the material in our course is distributed by levels, from the simplest to the most complex. The levels are numbered in consecutive numbers (1, 2, 3, ...), sublevels numbered with letters are also introduced within the level (in level 1 — sublevels 1A, 1B, 1C and 1D, etc.)</p>
+        <p>All the material in our course is grouped into levels, from the simplest to the most complex. The levels are numbered in consecutive numbers (1, 2, 3, ...), sublevels numbered with letters are also introduced within the level (in level 1 — sublevels 1A, 1B, 1C and 1D, etc.)</p>
         
-        <p>Most levels have the following structure: sublevels A and B contain new material, and sublevels C and D (the latter is not always there) — additional tasks of increased complexity to consolidate this material. Sometimes in levels C and D there may be particularly difficult tasks for the material of significantly earlier levels (for example, in level 5C there may be a difficult task for the material of level 3). Sometimes there are contests on separate topics in levels C and D, sometimes additional tasks in these levels go in random order.</p>
+        <p>Most levels have the following structure: sublevels A and B contain new material, and sublevels C and D (the latter is not always there) — additional problems of increased complexity to consolidate this material. Sometimes in levels C and D there may be particularly difficult problems for the material of significantly earlier levels (for example, in level 5C there may be a difficult problem for the material of level 3). Sometimes there are contests on separate topics in levels C and D, sometimes additional problems in these levels go in random order.</p>
         
         <p>I assume that you will go through the sublevels sequentially, moving to a new sublevel usually when you have "passed" the previous sublevel. Exception: if you have passed some topic in sublevel A or B, and you see a contest of advanced tasks on the same topic in sublevel C or D, then you can solve it.</p>
         
