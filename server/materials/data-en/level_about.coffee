@@ -353,7 +353,7 @@ module20927_15 = () ->
         
         <p>I assume that you will go through the sublevels sequentially, moving to a new sublevel usually when you have "passed" the previous sublevel. Exception: if you have passed some topic in sublevel A or B, and you see a contest of advanced tasks on the same topic in sublevel C or D, then you can solve it.</p>
         
-        <p>The requirements for the "passage" of each sublevel are indicated under its heading. As a rule, for sublevels A and B it is required to solve all the tasks, for levels C and D it is required to solve part (half or a third) of the tasks. However, this does not mean that the remaining tasks of levels C and D do not need to be solved. I recommend that if you have solved the necessary minimum of tasks of levels B and D, go to the next level in order to quickly begin studying a new theory. But at the same time, return regularly to the unfinished tasks of the previous levels. It can be estimated approximately as follows: when you move to level 4A, you should have solved half of the tasks of level 3C, 3/4 of the tasks of level 2C and about 7/8 of the tasks of levels 1C and 1D. Similarly, when you move to level 5A, you should have solved half of the tasks of level 4C, as well as 3/4 of the tasks of level 3C, 7/8 of the tasks of level 2C and almost all (with the rare exception of particularly unpleasant tasks) tasks of levels 1C and 1D. Similarly for other levels.</p>
+        <p>The requirements for the "passing" of each sublevel are indicated under its heading. As a rule, for sublevels A and B it is required to solve all the tasks, for levels C and D it is required to solve part (half or a third) of the tasks. However, this does not mean that the remaining tasks of levels C and D do not need to be solved. I recommend that if you have solved the necessary minimum of tasks of levels C and D, go to the next level in order to quickly begin studying a new theory. But at the same time, return regularly to the unfinished tasks of the previous levels. It can be estimated approximately as follows: when you move to level 4A, you should have solved half of the tasks of level 3C, 3/4 of the tasks of level 2C and about 7/8 of the tasks of levels 1C and 1D. Similarly, when you move to level 5A, you should have solved half of the tasks of level 4C, as well as 3/4 of the tasks of level 3C, 7/8 of the tasks of level 2C and almost all (with the rare exception of particularly unpleasant tasks) tasks of levels 1C and 1D. Similarly for other levels.</p>
         
         <p>Please note that in levels C and D, the tasks are not always ordered by complexity. Therefore, solve them in the order in which it is more convenient for you!</p>
         
@@ -366,7 +366,7 @@ module20927_37 = () ->
         
         <p>If you are already teaching someone (schoolchildren, students, etc.) programming, and you want to use the algoprog or its materials in your classes...</p>
         
-        <p>...or if you want to start teaching someone on the basis of the algprog or using its materials...</p>
+        <p>...or if you want to start teaching someone on the algprog or using its materials...</p>
         
         <p>... or if you want to use the algoprog engine in your classes by filling it with your own materials</p>
         
@@ -374,28 +374,26 @@ module20927_37 = () ->
         
         <h2>Materials</h2>
         
-        <p>If you do not need the functionality of the algprog, but only <i>materials</i> — theoretical materials, video lectures, tasks, etc. — then they are freely available in one form or another. Theoretical materials, the author of which I am, as a rule, are distributed under one or another free license, you can use them. It is usually indicated in the material itself, if the license is not specified there, then ask me. The materials that I am not the author of are taken from other sites, you can usually use them too. Almost all tasks are taken from public sites <a href="https://informatics.mccme.ru">informatics.mccme.ru</a> and <a href="https://codeforces.com">codeforces.com</a> on both of these sites, you can form your courses from the tasks available there, etc. (in particular, computer science is specially made for conducting various courses). Basic (although already outdated) the contents of the algoprog are on informatics: <a href="https://informatics.msk.ru/course/view.php?id=1135">informatics.msk.ru/course/view.php?id=1135</a> — actually, the whole algoprog grew out of my computer science course.</p>
+        <p>If you do not need the functionality of the algprog, but only <i>materials</i> — theoretical materials, video lectures, tasks, etc. — then they are freely available in one form or another. Theoretical materials, the author of which I am, as a rule, are distributed under one or another free license, you can use them. It is usually indicated in the material itself, if the license is not specified there, then ask me. The materials that I am not the author of are taken from other sites, you can usually use them too. Almost all tasks are taken from public sites <a href="https://informatics.msk.ru">informatics.msk.ru</a> and <a href="https://codeforces.com">codeforces.com</a>, on both of these sites you can form your courses from the tasks available there, etc. Basic (although already outdated) contents of the algoprog are on informatics: <a href="https://informatics.msk.ru/course/view.php?id=1135">informatics.msk.ru/course/view.php?id=1135</a> — actually, the whole algoprog grew out of my informatics course.</p>
         
         <h2>Engine</h2>
         
-        <p>The algoprog engine itself is also <a href="https://github.com/petr-kalinin/algoprog">freely available</a>, you can raise your own instance of algoprog and do anything there. (Although, of course, it's not that easy, and I'm unlikely to help you.)</p>
+        <p>The algoprog engine itself is also <a href="https://github.com/petr-kalinin/algoprog">freely available</a>, you can set up your own instance of algoprog and do anything there. (Although, of course, it's not that easy, and I'm unlikely to help you.)</p>
         
         <h2>A separate instance</h2>
         
-        <p>I can raise a separate instance of the algoprog for your students, with your materials and tasks. This requires a separate discussion, but in principle it is possible. It will be paid, the specific cost will depend on the necessary work to support the instance, the necessary improvements, and the expected number of students. As a rough preliminary assessment, if no serious improvements are required, and 20-50 students are expected, then the cost of a separate instance will be about 1000 rubles per student per month; if there are fewer students, then the cost, of course, will be higher.</p>
+        <p>I can set up a separate instance of the algoprog for your students, with your materials and tasks. This requires a separate discussion, but in principle it is possible. The cost will depend on the necessary work to support the instance, the necessary improvements, and the expected number of students. As a rough preliminary assessment, if no serious improvements are required, and 20-50 students are expected, then the cost of a separate instance will be about 1000 rubles per student per month; if there are fewer students, then the cost, of course, will be higher.</p>
         
         <h2>Classes directly on the algoprog based on the materials of the algoprog</h2>
         
-        <p>If you want to do it on the algoprog, then there are the following options. Firstly, your students can register on the algoproge and study as independent students. From my point of view, these will be just additional students on the algoproge, you will be able to organize classes, help students, etc., but you will not have any additional opportunities on the algoproge (you will not be able to view student decisions, etc.). Your students are engaged independently, for them the cost of classes will, of course, be determined <a href="/pay">by the general rules</a>, of course, I will not take money from you (and in general I may not know about you :)).</p>
+        <p>If you want to do it on the algoprog, then there are the following options. Firstly, your students can register on the algoproge and study as independent students. From my point of view, these will be just additional students on the algoprog, you will be able to organize classes, help students, etc., but you will not have any additional rights on the algoprog itself (you will not be able to view student submissions, etc.). Your students are engaged independently, for them the cost of classes will, of course, be determined <a href="/pay">by the general rules</a>, of course, I will not take money from you (and in general I may not know about you at all :)).</p>
         
-        <p>If you want to have additional opportunities — to view students' decisions, comment on them, count/ignore them, have separate summary tables, then write to me. All of this (as well as other requests from your side) is quite realistic, but requires a separate discussion. As <b>basic</b> options , there are the following:</p>
+        <p>If you want to have additional features — to view students' submissions, comment on them, accept/ignore them, have separate summary tables, then contact me. All of this (as well as other requests from your side) is quite realistic, but requires a separate discussion. As <b>basic</b> options , there are the following:</p>
         <ul>
-        <li>Your students are engaged in the algoproge on an equal footing with the rest, I check them, comment on them, count/ignore their decisions — and plus you can do the same; there will be separate signs for your students, etc.<b>As a rule</b>, the cost of such classes for your students will be the same as if they were engaged independently. (That is, there is no additional payment for additional functionality, but there are no discounts either.)</li>
-        <li>I don't interact with your students in any way — I don't look at their decisions, I don't count/ignore them. You do all this, if you want.<b>As a rule</b>, the cost of such classes for your students will be two times less than if they were engaged independently.</li>
+        <li>Your students are studying in the algoprog on an equal footing with the rest, I check their submissions, comment on them, accept/ignore — and plus you can do the same; there will be separate rankings for your students, etc.<b>As a rule</b>, the cost of such classes for your students will be the same as if they were studying independently. (That is, there is no additional payment for additional functionality, but there are no discounts either.)</li>
+        <li>I don't interact with your students in any way — I don't look at their code, I don't accept/ignore them. You do all this, if you want.<b>As a rule</b>, the cost of such classes for your students will be two times less than if they were engaged independently.</li>
         </ul>
         <p>In both variants above, the words "basic" (variants) and "as a rule" are essential. This means that, on the one hand, this is not a public offer — in a particular situation, other conditions and other prices are possible; on the other hand, other options are also possible in terms of functionality and in our interaction with you. Write, let's talk :)</p>
-        
-        <p>In particular, if algoprog classes would be free for your students if they were engaged in algoprog themselves, then both options above will be, as a rule, free.</p>
         
         </div>""")
 
@@ -403,49 +401,43 @@ achieves = () ->
     page(
         " \nAbout achievements", 
                               String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>About achievements</h1>
-        <p>On the algoprog, each user can earn achievements. Achievements are given out for different things, first of all for successful classes on the algoprog, as well as for participation in various contests. The achievements earned by the user are shown in his profile, also the three most "cool" achievements are shown next to the user's name in summary tables, etc.</p>
+        <p>On the algoprog, each user can earn achievements. Achievements are given out for different things, first of all for successful study on the algoprog itself, as well as for participation in various programming contests. The achievements earned by the user are shown in his profile, also the three most "cool" achievements are shown next to the user's name in rankings, etc.</p>
         
         <p>The full list of available achievements can be viewed <a href="/achieves">here</a>, as well as in the form of source code <a href="https://github.com/petr-kalinin/algoprog/blob/master/client/lib/achieves.coffee">here</a>. In any place (including the link in the previous sentence), you can click on the achievement and see a list of all users who have this achievement.</p>
         
-        <p>Some of the achievements are issued automatically, some of the achievements (mainly for the Olympics) I install manually. If you think that you should have some kind of achievement, but you don't have it, then write to me. This is especially true for schoolchildren from outside the Nizhny Novgorod region - I can't always keep track of all your contests, so write to me about your contest results yourself.</p></div>""")
+        <p>Some of the achievements are issued automatically, some of the achievements (mainly for the contests) I assign manually. If you think that you should have some achievement, but you don't have it, then write to me. This is especially true for schoolchildren from outside the Nizhny Novgorod region - I can't always keep track of all your contests, so write to me about your contest results yourself.</p></div>""")
 
 tshirts = () ->
     page(
         "About T-shirts", 
                              String.raw"""<h1>About T-shirts</h1>
         <h2>Free T-shirts</h2>
-        <p>For achieving certain levels , T - shirts are issued according to the following scheme:</p>
+        <p>For achieving certain levels, T - shirts are issued according to the following scheme:</p>
         <ul>
         <li>Reaching Level 3C — violet T-shirt "binary search"</li>
-        <li>Reaching Level 5C — blue T-shirt "intersection of straight lines"</li>
+        <li>Reaching Level 5C — blue T-shirt "intersection of lines"</li>
         <li>Reaching Level 7C — orange T-shirt "components of strong connectivity"</li>
         <li>Reaching Level 9C — red T-shirt "cartesian tree"</li>
         <li>Reaching Level 11C — black T-shirt "matching"</li>
         </ul>
-        <p>T-shirts are given free of charge to all students studying at the algoprog. I am ready to give out T-shirts to Nizhny Novgorod residents in class, I am ready to send them to non-Nizhny Novgorod residents in Russia 
+        <p>T-shirts are given free of charge to all students studying at the algoprog. I am ready to send them to non-Nizhny Novgorod residents in Russia 
         by a transport company (CDEK or Boxberry) at my expense (with the exception of hard-to-reach regions where neither CDEK nor Boxberry are transported); 
-        if you need to be sent to a remote region or outside of Russia, then the shipment is at your expense.</p>
-        <p>In order for me to give you a T-shirt, write in advance so that I bring it to class. T-shirts come in different sizes, men's and women's. 
-        Write the size and cut. T-shirts for level 3B are "in stock", most likely, I will just bring the T-shirt you need to the next lesson,
-        or I will send it within a couple of days. T-shirts for higher levels are made to order, within a few weeks.</p>
-        <p>T-shirts are also issued to those who were engaged in the algoprog before, but are not engaged now (including those who used to be engaged for a fee,
-        but who doesn't have an account paid for now — if you've been studying for a T-shirt before, I'll be happy to give it to you for free). 
-        Those who were engaged in the pre-reform algoprog 
-        (with the old level system), as well as those who were engaged before the introduction of the level system, in principle, I am also ready to give out T-shirts,
-        but the correspondence of the current (above) levels and those levels / those that were before, I will set each time individually.
-        </p>
+        if you want me to sent a tshirt to a remote region or outside of Russia, then the shipment is at your expense.</p>
+        <p>In order for me to give you a T-shirt, contact me. T-shirts come in different sizes, men's and women's. 
+        Write the size and style. T-shirts for level 3B are "in stock", most likely, I will just send the T-shirt you need within a few days. 
+        T-shirts for higher levels are made to order, within a few weeks.</p>
         """, {id: "tshirts"})
 
 module20927_29 = () ->
     page(
         "\nFormulas for calculating rating, activity, etc.", 
-                                                              String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Rating calculation formulas, etc.</h1>
-        <p>The summary tables show the rating, activity, rating on codeforces, weighted rating change on codeforces and weighted number of contests on codeforces.</p>
+                                                              String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Rating formulas, etc.</h1>
+        <p>The rankings tables show the rating, activity, rating on codeforces, weighted rating change on codeforces and weighted number of contests on codeforces.</p>
         
         <h2>Rating</h2>
         <p>(Who cares, the specific code for calculating the rating and activity is <a href="https://github.com/petr-kalinin/algoprog/blob/master/server/calculations/calculateRatingEtc.coffee">here</a>.)</p>
         
-        <p>The rating is determined simply by a set of solved problems. Namely, each task costs a certain fixed number of rating points, determined by the level of this task.</p>
+        <p>The rating is determined simply by a set of solved problems. Namely, each problem costs a certain fixed number of rating points, determined by the level of this problem.</p>
         
         <p>A Level 1A task costs $2.5$ rating points. A Level 2A task costs $2.5^2$ rating points. A level 3A task costs $2.5^3$ rating points, etc. A level $N$A task costs $2.5^N$ rating points.</p>
         
@@ -455,8 +447,8 @@ module20927_29 = () ->
         
         <p>When displaying the rating in tables, it is rounded to integers, but when calculating everything is considered real numbers.</p>
         
-        <p>Cost plate (rounded to two decimal places):</p>
-        <pre>          A B C D
+        <p>Cost table (rounded to two decimal places):</p>
+        <pre>          A            B        C         D
          1       2.50       3.14       3.95       4.97
          2       6.25       7.86       9.88
          3      15.62      19.65      24.71      31.07
@@ -473,23 +465,23 @@ module20927_29 = () ->
         </pre>
         
         <h3>Ideology</h3>
-        <p>The scores for the task grow very quickly, especially so that at high levels it is not so important that you solve at lower levels. For example, if you are already at level 5, then most likely, level 1 tasks do not pose any difficulty at all for you. Therefore, it does not matter how much you have solved at level 1. And this is due to the fact that level 5 tasks cost much more than level 1 tasks.</p>
+        <p>The scores for the task grow very quickly, because at high levels it is not so important what you have solved at lower levels. For example, if you are already at level 5, then most likely, level 1 problems do not pose any difficulty at all for you. Therefore, it does not matter how much you have solved at level 1. And this is due to the fact that level 5 problems cost much more than level 1 problems.</p>
         
         <h2>Activity</h2>
-        <p>(The specific calculation code is at the same link)</p>
+        <p>(The calculation code is at the same link)</p>
         
-        <p>Activity is an indicator of how actively you have been solving problems lately. Every task that you have ever solved gives its contribution to activity. Each task has "basic" activity scores — this is the square root of the level number. (All level 1 tasks have a "base" score of 1, each level 2 task has a base score of 1.4, etc.) This base score is multiplied by $0.55^{t/\tau}$, where $t$ is the time elapsed since you passed this task, and $\strut\tau$ is equal to 1 week. For example, if you have just passed the task, then the base score is taken into account in full. If you passed the task exactly a day ago, then the base score is multiplied by $0.55^{1/7}\approx 0.92$. If you passed the task exactly two weeks ago, then the base score is multiplied by $0.55^2\approx.3$. If you passed the task 8 weeks ago, then the base score is multiplied by $0.55^8\approx.0083$, i.e. this task is almost not taken into account.</p>
+        <p>Activity is an indicator of how actively you have been solving problems lately. Every problem that you have ever solved gives its contribution to activity. Each problem has "basic" activity score — this is the square root of the level number. (All level 1 problems have a "base" score of 1, each level 2 problem has a base score of 1.4, etc.) This base score is multiplied by $0.55^{t/\tau}$, where $t$ is the time elapsed since you solved this problems, and $\strut\tau$ is equal to 1 week. For example, if you have just solved the problem, then the base score is taken into account in full. If you solved the problem exactly a day ago, then the base score is multiplied by $0.55^{1/7}\approx 0.92$. If you solved the problem exactly two weeks ago, then the base score is multiplied by $0.55^2\approx.3$. If you solved the problem 8 weeks ago, then the base score is multiplied by $0.55^8\approx.0083$, i.e. this problem is almost not taken into account.</p>
         
-        <p>The total activity value for all tasks is divided by 0.45, resulting in a sort of average number of "tasks" per week.</p>
+        <p>The total activity value for all problems is divided by 0.45, resulting in a sort of average number of "problems" per week.</p>
         
-        <p>It turns out that in fact only recently completed tasks are taken into account, and those that you have solved for a long time are not taken into account. But at the same time, the decline in this "accountability" is smooth. If you stop solving problems, then your activity will gradually decrease over time (although it will never become exactly zero). In the tables, activity is displayed rounded to one decimal place, but in fact, activity is a real real number.</p>
+        <p>As a result, only recently solved problems are taken into account, and those that you have solved a long time ago are not taken into account. But at the same time, the decline in this "accountability" is smooth. If you stop solving problems, then your activity will gradually decrease over time (although it will never become exactly zero). In the rankings, activity is displayed rounded to one decimal place, but in fact, activity is a real real number.</p>
         
-        <p>In a number of summary tables, students whose activity is greater than 0.1 are indicated first, and only then all the others.</p>
+        <p>In some ranking tables, students whose activity is greater than 0.1 are indicated first, and only then all the others.</p>
         
         <h2>Colour</h2>
-        <p>The names of schoolchildren in the tables are drawn in a color determined by their rating and activity. Namely, the activity determines the brightness of the color (from almost black to saturated), and the rating determines the shade (from purple through all the colors of the rainbow to red). For example, a student with a rating of 1 and activity of 10 will have a bright purple color, a student with a rating of 1 and activity of 0.1 will have a dark purple color, a student with a rating of about 100,000 and activity of 10 will have a bright green color, and with activity of 0.1 — dark green color; red color corresponds to a rating of 4500000.</p>
+        <p>The names of students in the tables are drawn in a color determined by their rating and activity. Namely, the activity determines the brightness of the color (from almost black to saturated), and the rating determines the shade (from purple through all the colors of the rainbow to red). For example, a student with a rating of 1 and activity of 10 will have a bright purple color, a student with a rating of 1 and activity of 0.1 will have a dark purple color, a student with a rating of about 100,000 and activity of 10 will have a bright green color, and with activity of 0.1 — dark green color; red color corresponds to a rating of 4500000.</p>
         
-        <p>Specific formula: In the <a href="https://ru.wikipedia.org/wiki/HSV_(%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2%D0%B0%D1%8F_%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C)">HSV model</a>, the participant's color has the following components:</p>
+        <p>Specific formula: In the <a href="https://en.wikipedia.org/wiki/HSV_color_space">HSV model</a>, the participant's color has the following components:</p>
         $h = k\cdot \log(r+r_0) + b$<br>
         $v = 0.3 + 0.7 \cdot \log(a+1) / \log(A + 1)$<br>
         $s = 1$<br>
@@ -497,7 +489,7 @@ module20927_29 = () ->
         
         <p>There are also minor corrections at the edges of possible value intervals. The code is <a href="https://github.com/petr-kalinin/algoprog/blob/master/client/components/UserName.coffee">here</a>.</p>
         
-        <h2>codeforces parameters</h2>
+        <h2>Codeforces parameters</h2>
         <p><a href="https://github.com/petr-kalinin/algoprog/blob/master/server/calculations/calculateCfRating.coffee">Code</a></p>
         
         <p>The CF rating is taken directly from CF, updated once a day.</p>
@@ -510,22 +502,21 @@ about_find_mistake = () ->
     page(
         "About the \"Find a bug\" section", 
                                           String.raw"""<h1>About the "Find a bug" section</h1>
-        <p>When you have passed the solution to the problem and received an "Accepted" for it, you have the opportunity to look for bugs in the decisions of other students on this problem. Namely, a link "Find an bug" appears on the task page, which opens a list of specially selected incorrect solutions to this problem.
+        <p>When you have solved a problem and received an "Accepted" for it, you have the opportunity to look for bugs in the submits of other students on this problem. Namely, a link "Find an bug" appears on the task page, which opens a list of specially selected incorrect solutions to this problem.
         (Of course, the link does not appear in every task, but only in those tasks where there are such specially selected solutions.)
-        There is also a section in the site menu "<a href="/findMistakeList">Find the bug</a>", where there are links to all solutions in which you can look for errors
+        There is also a section in the site menu "<a href="/findMistakeList">Find a bug</a>", where there are links to all solutions in which you can look for errors
         (not all of these solutions are available to you — solutions are available to you only for those tasks for which you received a "Accepted").</p>
 
-        <p>About each of the solutions in which you need to find an error, it is known that the error can be corrected by making no more than 15 edits in the solution code. An edit is considered to be adding, deleting, or changing one character (i.e., the <a href="/material/p1791">Levenshnein distance</a> is actually considered). Your task is to find the error, fix it, and get OK on the task. Even with a margin, you are given the opportunity to make up to 23 edits.</p>
+        <p>For each of the solutions in which you need to find an error, it is known that the error can be corrected by making no more than 15 edits in the solution code. An edit is considered to be adding, deleting, or changing one character (i.e., the <a href="/material/p1791">Levenshnein distance</a> is actually considered). Your task is to find the error, fix it, and get OK on the task. To give you some margin, you are allowed to make up to 23 edits.</p>
 
-        <p>In the error search interface, you are immediately given a text editor in which the solution code is open. I strongly recommend looking for errors directly in this editor, without copying the code anywhere to yourself (to your IDE or editor), and accordingly not using a debugger, etc., but only looking at the code with your eyes. But in the most difficult cases, you can copy the code to yourself and understand it more thoroughly.</p>
+        <p>In the "Find a bug" interface, you are immediately given a text editor in which the solution code is open. I strongly recommend looking for errors directly in this editor, without copying the code anywhere (like your IDE or editor), and accordingly not using a debugger, etc., but only looking at the code with your eyes. But in the most difficult cases, you can copy the code and understand it more thoroughly.</p>
 
         <p>The solutions in the "Find a bug" section are available in different programming languages. Don't be afraid to look for bugs even in languages you don't know. I try not to allow those solutions in which the error is caused by language problems to search for errors, almost always errors have more algorithmic reasons, and, accordingly, you can find them, even if you do not know the features of the language.</p>
 
-        <p>I do not look at the solutions sent through the "find a bug" section with my eyes and do not comment (in particular, it is impossible to get "accepted" for them), and they do not affect your results in the general table. Of course, if you can't find an error, you can write to me, I will advise you something.</p>
+        <p>I do not look at the solutions sent through the "find a bug" section with my eyes and do not comment (in particular, it is impossible to get "accepted" for them), and they do not affect your results in the rankings. Of course, if you can't find an error, you can write to me, I will advise you something.</p>
 
         <p>Each solution, in addition to the problem, is also characterized by an individual number (a combination of four letters or numbers). Use this number to distinguish between solutions for finding errors for the same problem; in particular, if you want to ask me about such a solution, then specify both the name of the problem and the number of the solution (well, or just send a link to the error search page in this particular solution).</p>
-
-        <p>So far, in principle, there are not very many solutions in which to look for errors; over time, I think there will be more of them.</p>""", {id: "about_find_mistake"})
+        """, {id: "about_find_mistake"})
 
 contacts = () ->
     label("""
@@ -539,12 +530,12 @@ contacts = () ->
         <li>Telegram: <a href="https://t.me/pkalinin">@pkalinin</a></li>
         <li>Telegram channel with important announcements: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a> (mainly in Russian). </li>
         <li>Telegram chat for all algoprog students: <a href="https://t.me/+Ff0fS3PMo85iNmZi">Algoprog-chat</a>.
-        To join, you should first specify your telegram id or username in your algoprog profile.</li>
+        To join, you should first specify your telegram id in your algoprog profile.</li>
         </ul>
         <p>My contact details can be freely distributed for any questions related to the course or
         with olympiad programming in general.</p>
         <p><b>If you have any problems with working in the course, any questions, etc., write to me immediately!</b></p>
-        <p>* VKontakte friend policy: I don't mind if you add me as a friend,
+        <p>* VK friend policy: I don't mind if you add me as a friend,
         but I will only add those who have been successfully engaged for a long time.</p>
         <p>** Please call by phone only in emergency cases. If your question is not very urgent and can
         wait a few hours, write to me in any way indicated above — in VKontakte, in Telegram or by email.
@@ -576,7 +567,7 @@ export default level_about = () ->
         module20927_7(),
         module20927_9(),
         label(
-            "<h3>About how to study here</h3>"),
+            "<h3>How to study here</h3>"),
         work_with_site(),
         module20927_13(),
         module20927_15(),
@@ -587,7 +578,7 @@ export default level_about = () ->
         label(
             "<div><a href=\"/payment\" onclick=\"window.goto('/payment')();return false;\">Pay for classes</a></div>"),
         label(
-            "<h3>And a little more...</h3>"),
+            "<h3>And a bit more...</h3>"),
         module20927_23(),
         module20927_25(),
         module20927_29(),
