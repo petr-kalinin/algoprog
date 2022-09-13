@@ -112,6 +112,16 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: XSOLLA_SECRET_KEY
+            - name: UNITPAY_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: UNITPAY_PUBLIC_KEY
+            - name: UNITPAY_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: UNITPAY_SECRET_KEY
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs

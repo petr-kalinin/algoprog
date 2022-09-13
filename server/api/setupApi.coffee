@@ -1350,7 +1350,7 @@ export default setupApi = (app) ->
 
         success = true
         amount = data.orderSum
-        await processPayment(orderId, success, amount, req.query)
+        await processPayment(order, success, amount, req.query)
         res.send('OK')
 
     app.post '/api/paymentNotify', wrap (req, res) ->
