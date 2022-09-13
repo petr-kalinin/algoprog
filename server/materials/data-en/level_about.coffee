@@ -10,9 +10,9 @@ module20927_23 = () ->
                                          String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>For teachers and parents</h2>
         <p>I've already written about this in the FAQ, but just in case I'll repeat it here. I consider your children's classes here as voluntary, and I'm not going to demand anything from them, force them, etc. If a student does not want to study, or cannot force himself, I will not demand anything from him. I simply don't have any channel of influence on him.</p>
         
-        <p>But you can influence the student, so if you want there to be some result from classes, then watch how your student is engaged. On the left, in the site menu, there are "pivot tables", where you can track the progress of each student. The student can also show you what tasks he tried to pass, what was the result of the test, etc. There is also a "Table by week who solved what", it indicates who reached what level, as well as by week who solved how many tasks. The color of the cell in the "weekly table" indicates how good the result was shown by the student in the next week: bright green - very good, light green — average, white — did not even try anything at all. Finally, you can always contact me.</p>
+        <p>But you can influence the student, so if you want there to be some result from classes, then watch how your student is engaged. On the left, in the site menu, there are "Rankings", where you can track the progress of each student. The student can also show you what tasks he tried to solve, what was the result of his attempts, etc. There is also a "Rankings by week" table, it indicates who reached what level, as well as by week who solved how many tasks. The color of the cell in the "Rankings by week" indicates how good the result was shown by the student in the next week: bright green - very good, light green — average, white — did not even try anything at all. Finally, you can always contact me.</p>
         
-        <p>A separate appeal to teachers: it often happens that strong schoolchildren are simply bored at school computer science lessons. If your student is engaged in this course, allow him to solve problems during the lesson, read the theory of this course! And, of course, if you have strong students — tell them about this course!</p>
+        <p>A separate appeal to teachers: it often happens that strong schoolchildren are simply bored at school computer classes. If your student is engaged in this course, allow him to solve problems during the lesson, read the theory of this course! And, of course, if you have strong students — tell them about this course!</p>
         </div>""")
 
 module20927_25 = () ->
@@ -22,19 +22,19 @@ module20927_25 = () ->
         
         <p>Separately, I want to write you about your independence. I expect that when working in the course you will show the ability to work independently enough. I want you not only to stupidly write what I told you, but also to be able to think for yourself.</p>
         
-        <p>This means, firstly, they will not rush you or force you to solve problems. If you want, decide, if you don't want, well, don't decide, it's easier for me to check less. I will not stand over your soul and demand something from you.</p>
+        <p>This means, firstly, I will not rush you or force you to solve problems. If you want to solve, then solve, if you don't want, well, don't solve, it's easier for me — I'll have less to check. I will not stand over your soul and demand something from you.</p>
         
-        <p>Secondly, do not expect that <i>absolutely everything</i> that you may need to solve problems will be reflected in classes or in theoretical materials on the site. It is quite possible that in some tasks you will find that something is required that we "did not pass". It's not scary. You can always ask me, but it's better to first investigate the question yourself (in your favorite book, or on the Internet), and if it doesn't work out, then ask me. I will not eat you for such questions, on the contrary, I will be very happy if you see that something additional is required in some task, and you can clearly ask what exactly you need.</p>
+        <p>Secondly, do not expect that <i>absolutely everything</i> that you may need to solve problems will be reflected in classes or in theoretical materials on the site. It is quite possible that in some tasks you will find that something is required that was not in theory. It's not scary. You can always ask me, but it's better to first investigate the question yourself (in your favorite book, or on the Internet), and if it doesn't work out, then ask me. I will not eat you for such questions, on the contrary, I will be very happy if you see that something additional is required in some task, and you can clearly ask what exactly you need.</p>
         
-        <p>Thirdly, if you didn't understand something in class, in my comments on your solution, in theoretical materials or anywhere else; or if you don't understand why your program doesn't work, then just come up to me and ask (or write to me). Do not expect that I will explain everything to you in great detail the first time or that I will write you super-detailed comments on solutions. I explain and write just with the expectation that if you do not understand something, then you will ask again.</p></div>""")
+        <p>Thirdly, if you didn't understand something in class, in my comments on your solution, in theoretical materials or anywhere else; or if you don't understand why your program doesn't work, then just contact me and ask. Do not expect that I will explain everything to you in great detail the first time or that I will write you super-detailed comments on solutions. I explain and write just with the expectation that if you do not understand something, then you will ask again.</p></div>""")
 
 module20927_9 = () ->
     page(
         "\nInstructions for those who are here for the first time (or \"What should I do to start studying?\")", 
                                                                                                                   String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>Instructions for those who are here for the first time</h1>
         <ul>
-        <li><a href="/register" onclick="window.goto('/register')();return false;">Register on the site</a> (for this you will be asked to register on the site again informatics.mccme.ru ). When registering, specify your real name and the correct locality so that I can distinguish you from other users of the site.</li>
-        <li>Write to me using any of the methods listed in the <a href="/material/about" onclick="window.goto('/material/about')();return false;">"About the Course" section</a>. In the letter, specify your name, where you study / work. In addition, write briefly what your experience in programming is, or you will be engaged "from scratch".</li>
+        <li><a href="/register" onclick="window.goto('/register')();return false;">Register on the site</a>. </li>
+        <li>Contact me using any of the methods listed in the <a href="/material/about" onclick="window.goto('/material/about')();return false;">"About the Course" section</a>. In the letter, specify your name, where you study / work. In addition, write briefly what your experience in programming is, or you will be start studying "from scratch".</li>
         <li>Read, or at least review, all the texts in the "About the Course" section.</li>
         <li>Wait for a response and further instructions from me.
         </li>
@@ -52,30 +52,30 @@ module20927_3 = () ->
 
 pay = () ->
     page(
-        "Cost and payment procedure of classes", 
+        "Cost of the course and and payment procedure", 
                                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix">
-        <h1>Cost and payment procedure of classes</h1>
+        <h1>Cost of the course and and payment procedure</h1>
         
-        <p>Classes are paid. More precisely, actually all the materials in the course are free. Most of them are on the website informatics.msk.ru in the <a href="https://informatics.msk.ru/course/view.php?id=1135">corresponding section</a>, you can study there for free. I charge money for adding you to the summary tables, reviewing and commenting on your solutions, answering your questions (in absentia), etc., as well as for access to the "Good Solutions" and "Find a Bug" sections.</p>
+        <p>The course is for-fee. More precisely, actually all the materials in the course are free. Some of them are on the website informatics.msk.ru in the <a href="https://informatics.msk.ru/course/view.php?id=1135">corresponding section</a> (in Russian), you can study there for free. I charge money for adding you to the summary rankings, reviewing and commenting on your solutions, answering your questions, etc., as well as for access to the "Good Solutions" and "Find a Bug" sections.</p>
         
-        <p><b>The cost of classes is 2000 rubles per month.</b></p>
+        <p><b>The cost the course is 2000 Russian rubles per month.</b></p>
 
-        <p>Payment is not necessarily tied to the 1st of the month; for example, you can pay for classes from the 20th of one month to the 20th of another month.</p>
+        <p>Payment is not necessarily tied to the 1st of the month; for example, you can pay for the course from the 20th of one month to the 20th of another month.</p>
 
-        <p>For new students, the first week of classes in the course is free.</p>
+        <p>For new students, the first week of study is free.</p>
         
-        <p>The cost of classes is fixed at the time of the first payment and for life.</p>
+        <p>The cost of the course is fixed at the time of the first payment and for life.</p>
         
         <h2>Payment</h2>
-        <p>You can pay for classes with a card of Russian banks <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
-        <p>If you are unable to pay for classes with a Russian bank card, there are other payment methods: transfer using Russian bank details 
+        <p>You can pay for the course with a card of Russian banks <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
+        <p>If you are unable to pay for the course with a Russian bank card, there are other payment methods: transfer using Russian bank details 
         (as far as I understand, this is possible at least from Kazakhstan), SWIFT transfer (although there will probably be large commissions for you there), or even bitcoin.
-        Write to me, we will discuss.</p>
+        Contact me, we will discuss.</p>
         
         <h2>Is a refund possible?</h2>
         <p>The cost does not depend on how active you are in the course (if you solve a lot, then I will spend more time on you than if you solve a little, and you pay the same amount). Therefore, it is quite strange to return the money if you didn't do anything. Therefore, the policy is as follows:</p>
         <ul>
-        <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study. Predictable things like trips, sessions, etc. are not counted here.</li>
+        <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study. Predictable things like trips, exams, etc. are not counted here.</li>
         <li>If for whatever reason you have not been engaged for more than 10 days in a row, then I will refund you half of the money for this period.</li>
         <li>If you warn me in advance that you will not be able to study for more than 10 days in a row, then I can refund you money for this period.</li>
         <li>Of course, if for some reason I could not check your decisions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period.</li>
@@ -84,43 +84,43 @@ pay = () ->
 
 module20927_13 = () ->
     page(
-        "\nAbout counting and ignoring decisions", 
+        "\nAbout accepting and ignoring solutions", 
                                                            String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix">
-        <h2>About counting and ignoring decisions</h2> 
-        <p>I will review, if possible, all your decisions, and comment on them in one way or another. I will assign a new status to the solutions that I review: 
+        <h2>About accepting and ignoring solutions</h2> 
+        <p>I will review, if possible, all your solutions, and comment on them in one way or another. I will assign a new status to the successfull (OK) solutions that I review: 
         </p><ul>
-        <li>"Accepted" — the task is written more or less normally, hooray. On the page of viewing the code of your submission (by the link "More details") under the code you can see my comments. If there is no comment there, then the problem has been solved very well. If there is a comment, it usually indicates what can be improved.</li>
-        <li>"Ignored" — I didn't like something very much in your code. On the page of viewing the code of your submission (by the link "More details") under the code you will see my comments explaining exactly what I didn't like. Fix it and retake the decision.</li></ul><p></p>
+        <li>"Accepted" — the task is written more or less normally, hooray. On the page of viewing the code of your submission (by clicking the submission row) in a special tab you can see my comments. If there is no comment there, then the problem has been solved very well. If there is a comment, it usually indicates what can be improved.</li>
+        <li>"Ignored" — I didn't like something very much in your code. On the page of viewing the code of your submission (by clicking the submission row) in a special tab you will see my comments explaining exactly what I didn't like. Fix it and resubmit.</li></ul><p></p>
         
-        <p>If you don't understand the comment, ask, I'll explain in more detail.</p>
+        <p>If you don't understand the comment, ask me, I'll explain in more detail.</p>
         
-        <p>Submissions with the status "Accepted" are marked in green in the table.</p>
+        <p>Submissions with the status "Accepted" are marked green in the rankings.</p>
         
-        <p>Submissions with the status "Ignored" are marked in blue in the table.</p>
+        <p>Submissions with the status "Ignored" are marked blue in the rankings.</p>
         
         <p>Do not treat the "ignores" as a mockery of you. I will try to ignore only those programs that can be improved quite significantly (for example, by significantly reducing the amount of code). Remember that your goal is not only to write a program that will pass all the tests, but also to learn how to program in general. In fact, I put "Ignored" when I think that the comment I am writing to your submission is so important that you should definitely read it; "ignore" is a way to draw your attention to a comment.</p>
         
-        <p>The fact that you managed, even if not in the most optimal way, to write a program and pass it is very cool, but it will be even cooler if you learn and understand how the same can be done even easier. Consider that in most tasks, writing a program so that it passes all the tests is, roughly speaking, 70% success, but getting it "Accepted" is the remaining 30%.</p>
+        <p>The fact that you managed, even if not in the most optimal way, to write a program and pass all tests — it is very cool, but it will be even cooler if you learn and understand how the same can be done even easier. Consider that in most tasks, writing a program so that it passes all the tests is, roughly speaking, 70% success, but getting it "Accepted" is the remaining 30%.</p>
         
-        <p>You can also view all comments (including those to the accepted submissions, and even to unsuccessful ones) in the right column on the website.</p>
-        <p><a href="https://blog.algoprog.ru/why-ignore/">Read more about which solutions I ignore.</a></p>
+        <p>You can also view all comments (including those to the accepted submissions, and even to unsuccessful ones) in the right column on the website, and in the Comments section in the left menu.</p>
+        <p><a href="https://blog.algoprog.ru/why-ignore/">Read more about which solutions I ignore (in Russian).</a></p>
         </div>""")
 
 module20927_39 = () ->
     page(
         "\"Internship\" at the algoprog", 
                                           String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>"Internship" at the algoprog</h1>
-        <p>What do most normal programming students do in the summer? Internships in IT companies. Schoolchildren are usually not invited to such internships, and it is usually difficult for schoolchildren to participate in internships.</p>
+        <p>What do most normal programming students do in the summer? They work as interns in IT companies. Schoolchildren are usually not invited to such internships, and it is usually difficult for schoolchildren to participate in internships.</p>
         
-        <p>So I thought, why is algoprog worse than IT companies? And I decided to organize the possibility of some kind of analog of internships on the algoprog. Namely, if you want, you can participate in the development of the algoprog platform itself. If you've always wanted to add some feature to the algoprog, then you can do it. Or I have a list of things for you that I've been wanting to do on algoprog for a long time, but I still don't have time, and you can do them.</p>
+        <p>So I thought, why is algoprog worse than IT companies? And I decided to organize the possibility of some kind of analogue of internships on the algoprog. Namely, if you want, you can participate in the development of the algoprog platform itself. If you've always wanted to add some feature to the algoprog, then you can do it. Or I have a list of things for you that I've been wanting to do on algoprog for a long time, but I still don't have time, and you can do them.</p>
         
-        <p>This, of course, will be quite different from the usual tasks that you solve on the algoprog. You will have to understand the rather voluminous already existing (and very dirty) code of the algoprog, you will have to understand a programming language that is probably unfamiliar (Coffeescript, but do not be afraid — it is simple and at first very similar to python), you will have to deal with a lot of technologies that you may not have worked with yet (git, MongoDB, node.js, React, a little Redux), you will have to deal with HTML and browser Javascript, you will have to Google and read a lot, and most likely in English (well, or through a translator) - but I believe that if you absolutely confidently solve at least tasks of levels 1A and 1B, and are not afraid to figure it out yourself with the problems that arise, then you can quite deal with all this.</p>
+        <p>This, of course, will be quite different from the usual tasks that you solve on the algoprog. You will have to understand the rather voluminous already existing (and very dirty) code of the algoprog, you will have to understand a programming language that is probably unfamiliar (Coffeescript, but do not be afraid — it is simple and at first very similar to python), you will have to deal with a lot of technologies that you may not have worked with yet (git, MongoDB, node.js, React, a little Redux), you will have to deal with HTML and browser Javascript, you will have to Google and read a lot - but I believe that if you absolutely confidently solve at least tasks of levels 1A and 1B, and are not afraid to figure it out yourself with the problems that arise, then you can quite deal with all this.</p>
         
-        <p>The source code of the algoprog is: <a href="https://github.com/petr-kalinin/algoprog">https://github.com/petr-kalinin/algoprog</a> . The list of finishing touches that you can do is: <a href="https://github.com/petr-kalinin/algoprog/issues">https://github.com/petr-kalinin/algoprog/issues</a> , or you can discuss with me and offer something of your own.</p>
+        <p>The source code of the algoprog is: <a href="https://github.com/petr-kalinin/algoprog">https://github.com/petr-kalinin/algoprog</a> . The list of improvements that you can do is: <a href="https://github.com/petr-kalinin/algoprog/issues">https://github.com/petr-kalinin/algoprog/issues</a> , or you can discuss with me and offer something of your own.</p>
         
         <p>Unlike classic internships, I will not demand any regularity from you in your work (well, actually, as with ordinary tasks on the algoprog), and I will not pay you money :) - but I promise that I will delve into what you are doing and help. And you will contribute to the development of the algoprog, and get a lot of new diverse experiences.</p>
         
-        <p>In addition, unlike classic internships, I will not be able to pay as much attention to you as a manager usually pays to an intern in IT companies. You will have to figure out a lot on your own, I will guide your actions rather than give specific detailed instructions. Be prepared for this.</p>
+        <p>In addition, unlike classic internships, I will not be able to pay as much attention to you as a mentor usually pays to an intern in IT companies. You will have to figure out a lot on your own, I will guide your actions rather than give specific detailed instructions. Be prepared for this.</p>
         
         <p>In general, if you want to participate in this, write. It applies to everyone who is engaged in the algoproge (not necessarily schoolchildren) and has a level of at least 1B. Summer only (from May to August inclusive).</p></div>""", {id: "internship"})
 
@@ -130,19 +130,19 @@ work_with_site = () ->
                                                                                  String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>Working with the site</h2>
         <h3>Theoretical materials</h3>
         <p>Some theoretical material is presented on many topics on the site. Before you start solving problems, read the relevant theory.
-        For example, go to level 1A (inside level 1), there is a section "Arithmetic operations", and in this section there are two links — "Getting started with Python and Wing IDE" and "Tasks for arithmetic operations". Here is "Getting Started with Python and Wing IDE" — this is the relevant theory (in this case, the very basics of working on python, including basic arithmetic operations). Read this theory before solving the corresponding problems. (Of course, if you know the basics of your programming language, then it makes no sense to read the most basic theory, but then you probably start with the following topics).</p>
-        <h3>Tasks</h3>
-        <p>The main thing you will do in our classes is to solve problems. Most tasks will require writing a program that reads (from the keyboard or from a file) some data, calculates new data from it, and displays the result on the screen or saves it to a file.</p>
-        <p>You can (and should) send the program you have written for verification. This site provides an opportunity to automatically check your programs — you immediately (within a maximum of one or two minutes) get the result of the check: your program is working correctly or not. In addition, I will see all your attempts that you send to the site, and I will be able to comment on them, write comments, etc., and you will be able to see these comments and improve your programs based on them.</p>
+        For example, go to level 1A (inside level 1), there is a section "Arithmetic operations", and in this section there are two links — "Getting started with Python and Wing IDE" and "Tasks for arithmetic operations". Here "Getting Started with Python and Wing IDE" — this is the relevant theory (in this case, the very basics of working on python, including basic arithmetic operations). Read this theory before solving the corresponding problems. (Of course, if you know the basics of your programming language, then it makes no sense to read the most basic theory, but then you probably start with the following topics, or at least skim the theory).</p>
+        <h3>Problems</h3>
+        <p>The main thing you will do in our classes is to solve problems. Most problems will require writing a program that reads (from the keyboard or from a file) some data, calculates new data from it, and displays the result on the screen or saves it to a file.</p>
+        <p>You can (and should) send the program you have written for verification. This site provides an opportunity to automatically check your programs — you immediately (usually within a couple of minutes) get the result of the check: your program is working correctly or not. In addition, I will see all your attempts that you send to the site, and I will be able to comment on them, write comments, etc., and you will be able to see these comments and improve your programs based on them.</p>
         
-        <h3>Sample task</h3>
-        <p>Go to level 1A (inside level 1). There is a link "Tasks for arithmetic operations". Go in there. You will see a list of tasks: "Apple Division - 1", "Apple Division - 2", etc., up to "Time difference". This is a set of tasks (they say "contest" in short) that you are invited to solve in order to consolidate knowledge on the first topic of the course — arithmetic operations.
-        </p><p>All the names of the tasks are links, they open the actual task. Open the task "Apple Division - 1". You can see her condition: "N schoolchildren divide K apples equally, the non-dividing remainder remains in the basket. How many apples will each student get? The program receives the numbers N and K as input and should output the desired number of apples." Below is an example: when entering data "3 14", the program should output "4".</p>
-        <p>The problem condition clearly describes what your program should do: for any values of N and K, it should calculate and output the answer to the problem. In more serious problems, the condition always specifies restrictions on the permissible N and K, but in the problems for beginners on this site it is considered that N and K are "reasonable" (in particular, they are placed in the int data type in C/C++); "reasonableness" in this case also includes the fact that both numbers are positive.</p>
-        <p>The example is only needed to verify that you correctly understood the condition, the format of the input data, and were able to test the program on the simplest test. However, your program should work not only on the test from the example, but also on other valid tests.</p>
+        <h3>Sample problem</h3>
+        <p>Go to level 1A (inside level 1). There is a link "Problems for arithmetic operations". Go in there. You will see a list of tasks: "Pears", "Pears too", etc., up to "After and before". This is a set of problems (they say "contest" in short) that you are invited to solve in order to consolidate knowledge on the first topic of the course — arithmetic operations.
+        </p><p>All the names of the problems are links, they open the actual task. Open the task "Pears". You can see her condition: "N friends have K pears. They want to divide these pears among themselves so that everyone gets as much as possible, but at the same time so that all the guys have the same number of pears. How many pears will each have?" Below is an example: when entering data "7 26", the program should output "3".</p>
+        <p>The problem condition clearly describes what your program should do: for any values of N and K, it should calculate and output the answer to the problem. In more serious problems, the condition always specifies restrictions on the permissible N and K, but in the problems for beginners on this site it is considered that N and K are "reasonable" (in particular, they are fit into <code>int</code> data type in C/C++); "reasonableness" in this case also includes the fact that both numbers are positive.</p>
+        <p>The example is only needed to verify that you correctly understood the statement, the format of the input data, and to help you test the program on the simplest test. However, your program should work not only on the test from the example, but also on other valid tests.</p>
 
         <h3>Writing a solution</h3>
-        This problem is solved quite easily. Of course, we need to have two variables, N and K, count them from the keyboard, and output the incomplete quotient of dividing K by N (note that it is K by N, not N by K!). The program will look like this:
+        This problem is solved quite easily. Of course, we need to have two variables, N and K, read them from the keyboard, and output the incomplete quotient of dividing K by N (note that it is K by N, not N by K!). The program will look like this:
         <pre>n = int(input())
         k = int(input())
         print(k // n)</pre>
