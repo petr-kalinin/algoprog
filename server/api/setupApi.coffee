@@ -204,7 +204,7 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
     if expectedPaidTill != paidTillInOrder
         logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill})")
         return
-    if amount and +userPrivate.price != amount
+    if amount and Math.abs(+userPrivate.price - amount) > 0.5
         logger.warn("paymentNotify #{orderId}: wrong amount (price is #{userPrivate.price}, paid #{amount})")
         return
     if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
