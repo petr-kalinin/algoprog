@@ -216,7 +216,7 @@ class UnitpayPayment extends React.Component
 
 
     render: () ->
-        canSubmit = @state.name and @state.email and @state.address
+        canSubmit = @state.name and @state.email
         amount = @props.amount
         <div>
             {@state.loading && <Loader /> }
