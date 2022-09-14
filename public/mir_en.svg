@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="99.363632mm"
+   height="34.514542mm"
+   viewBox="0 0 99.363632 34.514542"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="mir.svg">
+  <defs
+     id="defs2">
+    <clipPath
+       id="clipPath850"
+       clipPathUnits="userSpaceOnUse">
+      <path
+         inkscape:connector-curvature="0"
+         id="path848"
+         d="M 0,253.223 H 595.276 V 0 H 0 Z" />
+    </clipPath>
+    <clipPath
+       id="clipPath862"
+       clipPathUnits="userSpaceOnUse">
+      <path
+         inkscape:connector-curvature="0"
+         id="path860"
+         d="m 314.293,162.59 c 0.136,-2.62 0.518,-5.171 1.095,-7.647 v 0 c 0.142,-0.551 0.263,-1.11 0.423,-1.651 v 0 c 0.061,-0.224 0.124,-0.445 0.191,-0.666 v 0 c 5.589,-17.731 22.156,-30.589 41.735,-30.589 v 0 h 57.815 c 0.354,1.979 0.572,4.007 0.572,6.092 v 0 c 0,10.056 -4.335,19.081 -11.21,25.382 v 0 c -6.135,5.621 -14.282,9.079 -23.259,9.079 v 0 z" />
+    </clipPath>
+    <linearGradient
+       id="linearGradient872"
+       spreadMethod="pad"
+       gradientTransform="matrix(101.83077,0,0,-101.83077,314.29282,142.31421)"
+       gradientUnits="userSpaceOnUse"
+       y2="0"
+       x2="1"
+       y1="0"
+       x1="0">
+      <stop
+         id="stop868"
+         offset="0"
+         style="stop-opacity:1;stop-color:#50a9df" />
+      <stop
+         id="stop870"
+         offset="1"
+         style="stop-opacity:1;stop-color:#2d3e91" />
+    </linearGradient>
+    <clipPath
+       id="clipPath882"
+       clipPathUnits="userSpaceOnUse">
+      <path
+         inkscape:connector-curvature="0"
+         id="path880"
+         d="M 0,253.223 H 595.276 V 0 H 0 Z" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-280.79763"
+     inkscape:cy="-249.06139"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="2560"
+     inkscape:window-height="1371"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-35.740802,-48.421298)">
+    <g
+       transform="matrix(0.35277777,0,0,-0.35277777,-11.694861,105.77993)"
+       inkscape:label="logo_MIR_eng_Rus"
+       id="g842">
+      <g
+         id="g844">
+        <g
+           clip-path="url(#clipPath850)"
+           id="g846">
+          <g
+             transform="translate(415.0275,116.1089)"
+             id="g852">
+            <path
+               inkscape:connector-curvature="0"
+               id="path854"
+               style="fill:#006644;fill-opacity:1;fill-rule:nonzero;stroke:none"
+               d="m 0,0 h -98.744 v -6.022 -45.319 -0.013 h 31.308 v 28.918 h 13.212 l 17.748,-28.918 H -0.893 L -21.792,-20.01 C -11.744,-16.423 -3.78,-9.128 0,0" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g856">
+        <g
+           clip-path="url(#clipPath862)"
+           id="g858">
+          <g
+             id="g864">
+            <g
+               id="g866">
+              <path
+                 inkscape:connector-curvature="0"
+                 id="path874"
+                 style="fill:url(#linearGradient872);stroke:none"
+                 d="m 314.293,162.59 c 0.136,-2.62 0.518,-5.171 1.095,-7.647 v 0 c 0.142,-0.551 0.263,-1.11 0.423,-1.651 v 0 c 0.061,-0.224 0.124,-0.445 0.191,-0.666 v 0 c 5.589,-17.731 22.156,-30.589 41.735,-30.589 v 0 h 57.815 c 0.354,1.979 0.572,4.007 0.572,6.092 v 0 c 0,10.056 -4.335,19.081 -11.21,25.382 v 0 c -6.135,5.621 -14.282,9.079 -23.259,9.079 v 0 z" />
+            </g>
+          </g>
+        </g>
+      </g>
+      <g
+         id="g876">
+        <g
+           clip-path="url(#clipPath882)"
+           id="g878">
+          <g
+             transform="translate(210.8133,149.7324)"
+             id="g884">
+            <path
+               inkscape:connector-curvature="0"
+               id="path886"
+               style="fill:#006644;fill-opacity:1;fill-rule:nonzero;stroke:none"
+               d="m 0,0 -12.967,-44.954 h -2.226 L -28.163,0 c -2.195,7.615 -9.167,12.859 -17.093,12.859 H -76.35 v -97.835 h 31.137 v 57.812 h 2.222 L -25.2,-84.976 h 22.239 l 17.791,57.812 h 2.224 V -84.976 H 48.189 V 12.859 H 17.094 C 9.169,12.859 2.197,7.615 0,0" />
+          </g>
+          <path
+             inkscape:connector-curvature="0"
+             id="path888"
+             style="fill:#006644;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             d="m 272.345,64.756 h 31.135 v 97.835 h -31.135 z" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

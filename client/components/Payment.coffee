@@ -84,7 +84,7 @@ class TinkoffPayment extends React.Component
                     {LangRaw("do_pay", @props.lang)}
                 </Button>
             </form>
-            {LangRaw("payment_official", @props.lang)}
+            {LangRaw("payment_official_tinkoff", @props.lang)}
 
         </div>
 
@@ -164,6 +164,7 @@ class XSollaPayment extends React.Component
                     {@state.error && <Alert bsStyle="danger">
                         {LangRaw("unknown_error", @props.lang)}
                     </Alert>}
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
                     <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
                         {LangRaw("do_pay", @props.lang)}
                     </Button>
@@ -239,18 +240,14 @@ class UnitpayPayment extends React.Component
                         type="text"
                         setField={@setField}
                         state={@state}/>
-                    <FieldGroup
-                        id="address"
-                        label={LangRaw("payer_address", @props.lang)}
-                        type="text"
-                        setField={@setField}
-                        state={@state}/>
                     {@state.error && <Alert bsStyle="danger">
                         {LangRaw("unknown_error", @props.lang)}
                     </Alert>}
                     <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
                         {LangRaw("do_pay", @props.lang)}
                     </Button>
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
+                    {LangRaw("payment_official_unitpay", @props.lang)}
                 </form>    
             }
         </div>

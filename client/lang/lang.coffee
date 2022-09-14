@@ -291,11 +291,11 @@ _LANG =
         en: "Payer address"
     you_agree_to_oferta:
         ru: <>Нажимая «Оплатить», вы соглашаетесь с <a href='/oferta.pdf' target='_blank'>офертой</a> оказания услуг, <a href='/privacy.pdf'>политикой</a> обработки персональных данных и <a href='/ib.pdf'>политикой</a> информационной безопасности.</>
-        en: ""
+        en: <>By pressing Pay button, you agree to <a href='/oferta.pdf' target='_blank'>oferta</a>, <a href='/privacy.pdf'>privacy policy</a> and <a href='/ib.pdf'>information security policy</a>.</>
     do_pay:
         ru: "Оплатить"
         en: "Pay"
-    payment_official: 
+    payment_official_tinkoff: 
         ru: <>
                 <h2>Официальная часть</h2>
                 <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064. 
@@ -306,6 +306,33 @@ _LANG =
             </>
         en: <>
                 <p>TBD</p>
+            </>
+    payment_official_unitpay: 
+        ru: <>
+                <h2>Официальная часть</h2>
+                <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064.<br/>
+                Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
+                <p className="small">Оплатить заказ можно банковскими картами Visa, Master Card, «Мир». Чтобы оплатить покупку, вы будете перенаправлены на сервер платежной системы Unitpay, на котором нужно ввести необходимые данные. При оплате банковской картой безопасность платежей гарантирует процессинговый центр Unitpay.</p>
+                <p className="small">Если Ваша карта подключена к услуге 3D-Secure, Вы будете автоматически переадресованы на страницу банка, выпустившего карту, для прохождения процедуры аутентификации. Информацию о правилах и методах дополнительной идентификации уточняйте в Банке, выдавшем Вам банковскую карту.</p>
+                <p className="small">Платежная система Unitpay обладает подтвержденным сертификатом соответствия требованиям стандарта PCI DSS в части хранения, обработки и передачи данных держателей карт. Стандарт безопасности банковских карт PCI DSS поддерживается международными платежными системами, включая MasterCard и Visa, Inc. Система Unitpay также является участником программы непрерывного соответствия Compliance Control PCI DSS Compliance Process (P.D.C.P.). Ваши конфиденциальные данные, необходимые для оплаты (реквизиты карты, регистрационные данные и др.), не поступают в интернет-магазин — их обработка производится на стороне процессингового центра Unitpay и полностью защищена.</p>
+                <img height="30px" src="/qiwi.svg" style={{marginRight: "30px"}}/> 
+                <img height="30px" src="/mastercard.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/visa.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/mir_ru.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/sbp.svg" style={{marginRight: "30px"}}/>
+            </>
+        en: <>
+                <h2>Official part</h2>
+                <p>Service privider: IE Petr Andreevich Kalinin, OGRNIP 318527500120581, INN 526210494064. <br/>
+                Contacts: petr@kalinin.nnov.ru, +7-910-794-32-07. (Full contacts are in <Link to="/material/about">About course</Link> section.)</p>
+                <p className="small">You can pay for the order with Visa, Master Card, Mir bank cards. To pay for the course, you will be redirected to the Unitpay payment system server, where you need to enter the necessary data. When paying with a bank card, the security of payments is guaranteed by the Unitpay processing center.</p>
+                <p className="small">If your card is connected to the 3D-Secure service, you will be automatically redirected to the page of the bank that issued the card to pass the authentication procedure. For information about the rules and methods of additional identification, check with the bank that issued you a bank card.</p>
+                <p className="small">The Unitpay payment system has a confirmed certificate of compliance with the requirements of the PCI DSS standard in terms of storing, processing and transmitting cardholder data. The PCI DSS bank card security standard is supported by international payment systems, including MasterCard and Visa, Inc. The Unitpay system is also a participant in the Continuous Compliance Control PCI DSS Compliance Process (P.D.C.P.) program. Your confidential data required for payment (card details, registration data, etc.) are not received by the algoprog.ru website - their processing is carried out on the side of the Unitpay processing center and is fully protected.</p>
+                <img height="30px" src="/qiwi.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/mastercard.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/visa.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/mir_en.svg" style={{marginRight: "30px"}}/>
+                <img height="30px" src="/sbp.svg" style={{marginRight: "30px"}}/>
             </>
     payment_successful_message:
         ru: <>
