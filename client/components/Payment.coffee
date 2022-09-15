@@ -286,7 +286,7 @@ class Payment extends React.Component
             when "unitpay" then Element = UnitpayPayment
             else
                 canSubmit = false
-                Element = TinkoffPayment
+                Element = UnitpayPayment
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"
