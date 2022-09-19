@@ -33,7 +33,7 @@ process.on 'unhandledRejection', (r) ->
     logger.error r
 
 requireHTTPS = (req, res, next) ->
-    if !req.secure and !req.headers.host.startsWith("127.0.0.1")  # the latter is to avoid inner api requests
+    if !req.secure and !req.headers.host.startsWith("127.0.0.1") and req.path != '/api/ping'
         return res.redirect 'https://' + req.headers.host + req.url
     next()
 
