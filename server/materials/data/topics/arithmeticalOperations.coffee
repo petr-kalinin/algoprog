@@ -121,10 +121,10 @@ export default arithmeticalOperations = () ->
                 label(ruen(
                     "<br>",
                     "<br>")),
-                problem({testSystem: "ejudge", contest: "2003", problem: "1", id: "2946"}),
-                problem(2945),
-                problem(506),
-                problem(534),
+                problem({testSystem: "ejudge", contest: "3009", problem: "1", id: "2946"}),
+                problem({testSystem: "ejudge", contest: "3009", problem: "2", id: "2945"}),
+                problem({testSystem: "ejudge", contest: "3009", problem: "3", id: "506"}),
+                problem({testSystem: "ejudge", contest: "3009", problem: "4", id: "534"}),
             ]),
             page(ruen(
                 "Разбор задачи \"Строки в книге\" (читать только тем, кто ее решил!)",

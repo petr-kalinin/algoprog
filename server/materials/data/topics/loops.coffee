@@ -566,11 +566,11 @@ export default loops = () ->
             contest(ruen(
                 "Продвинутые задачи на циклы: в них запрещается пользоваться массивами",
                 "Advanced problems on loops: it is forbidden to use arrays here"), [
-                problem(227),
-                problem(228),
-                problem(3072),
-                problem(3077),
-                problem(1430),
+                problem({testSystem: "ejudge", contest: "3011", problem: "1", id: "227"}),
+                problem({testSystem: "ejudge", contest: "3011", problem: "2", id: "228"}),
+                problem({testSystem: "ejudge", contest: "3011", problem: "3", id: "3072"}),
+                problem({testSystem: "ejudge", contest: "3011", problem: "4", id: "3077"}),
+                problem({testSystem: "ejudge", contest: "3011", problem: "5", id: "1430"}),
             ])
         ]
     }
