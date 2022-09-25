@@ -30,8 +30,8 @@ export default GROUPS =
         paid: false
         chocos: false
         startDayForWeeks: "2020-01-05"
-        tableName: "Занятия во ВШЭ + нижегородские заочно",
-        tableNameEn: "HSE classes + N.Novgorod online",
+        tableName: "Нижегородские школьники заочно",
+        tableNameEn: "N.Novgorod online",
         canResetYear: true
         starred: false
         lang: ""
