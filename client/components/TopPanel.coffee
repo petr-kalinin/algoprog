@@ -171,7 +171,7 @@ class TopPanel extends React.Component
                                 <span className={styles.separator}/>
                                 <span title={LangRaw("class", @props.lang)}>{getClassStartingFromJuly(@props.myUser.graduateYear)}</span>
                                 <span className={styles.separator}/>
-                                <span title={LangRaw("level", @props.lang)}>{stripLabel(@props.myUser.level.current)}</span>
+                                <span title={LangRaw("level", @props.lang)}><Link to={"/material/" + @props.myUser.level.current}>{stripLabel(@props.myUser.level.current)}</Link></span>
                                 <span className={styles.separator}/>
                                 <span title={LangRaw("rating", @props.lang)} style={color: color(@props.myUser, @props.theme)}>{@props.myUser.rating}</span>
                                 {" / "}
