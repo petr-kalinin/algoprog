@@ -77,13 +77,13 @@ registerOnInformatics = (data) ->
     username = "algoprog_" + filterUsername(data.username) + "_" + randomString(4)
     password = randomString() + "aA1-"
     email = "algoprog+#{username}@kalinin.nnov.ru"
-    name = data.informaticsName.split(' ')
+    name = data.informaticsName.trim().split(' ')
     school = data.informaticsSchool
     cls = +data.informaticsClass
     if isNaN(cls)
         cls = null
     city = data.informaticsCity
-    logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}")
+    logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} city=#{city} school=#{school} cls=#{cls}")
     page = await download("https://informatics.msk.ru/login/signup.php", jar, {
         method: 'POST',
         form: {

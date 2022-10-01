@@ -163,7 +163,18 @@ class Register extends React.Component
             loginValidationState = 'error'
             loginError = Lang("username_cant_start_with_space")
 
-        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success')
+        nameValidationState = 'success'
+        nameError = null
+        if not @state.hasInformatics
+            if not @state.informaticsName
+                nameValidationState = 'error'
+            else
+                name = @state.informaticsName.trim().split(' ')
+                if name.length < 2 or name[0].length < 1 or name[1].length < 1
+                    nameValidationState = 'error'
+                    nameError = Lang("please_enter_first_name_last_name")
+
+        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success' and nameValidationState == 'success')
         hasInformatics = @state.hasInformatics
         yearStart = getCurrentYearStart()
 
@@ -274,7 +285,9 @@ class Register extends React.Component
                             type="text"
                             setField={@setField}
                             state={@state}
-                            disabled={hasInformatics}/>
+                            disabled={hasInformatics}
+                            validationState={nameValidationState}
+                            error={nameError}/>
                         <FieldGroup
                             id="informaticsClass"
                             label={Lang("class_in_year")(yearStart)}

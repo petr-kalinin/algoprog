@@ -676,7 +676,10 @@ _LANG =
         en: "Refresh info"
     name_surname:
         ru: "Имя, фамилия"
-        en: "Name, surname"
+        en: "First name, last name"
+    please_enter_first_name_last_name:
+        ru: "Укажите имя и фамилию через пробел (например, Василий Пупкин)"
+        en: "Please enter your first and last name separated by space (e.g. John Doe)"
     class_in_year:
         ru: (yearStart) -> "Класс в #{yearStart}-#{yearStart+1} учебном году"
         en: (yearStart) -> "School grade in #{yearStart}-#{yearStart+1} academic year"
