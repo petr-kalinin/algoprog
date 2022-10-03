@@ -6,12 +6,12 @@ import {ruen, levelDtitle, levelDmessage, levelDid} from '../lib/util'
 
 contest_15993 = () ->
     return contest(levelDtitle(1), [
-        problem(3469),
-        problem(3466),
-        problem(3477),
-        problem(3472),
-        problem(2954),
-        problem(1370),
+        problem({testSystem: "ejudge", contest: "3015", problem: "1", id: "3469"}),
+        problem({testSystem: "ejudge", contest: "3015", problem: "2", id: "3466"}),
+        problem({testSystem: "ejudge", contest: "3015", problem: "3", id: "3477"}),
+        problem({testSystem: "ejudge", contest: "3015", problem: "4", id: "3472"}),
+        problem({testSystem: "ejudge", contest: "3015", problem: "5", id: "2954"}),
+        problem({testSystem: "ejudge", contest: "3015", problem: "6", id: "1370"}),
         problem({testSystem: "codeforces", contest: "381", problem: "B"}),
     ])
 
@@ -20,24 +20,24 @@ contest_15994 = () ->
         problem(111499),
         problem(3888),
         problem(3893),
-        problem(507),
-        problem(511),
-        problem(482),
-        problem(483),
+        problem({testSystem: "ejudge", contest: "3016", problem: "1", id: "507"}),
+        problem({testSystem: "ejudge", contest: "3016", problem: "2", id: "511"}),
+        problem({testSystem: "ejudge", contest: "3016", problem: "3", id: "482"}),
+        problem({testSystem: "ejudge", contest: "3016", problem: "4", id: "483"}),
     ])
 
 contest_15996 = () ->
     return contest(levelDtitle(3), [
-        problem(1421),
-        problem(3745),
-        problem(1406),
-        problem(592),
-        problem(1209),
-        problem(855),
-        problem(1435),
-        problem(993),
-        problem(111580),
-        problem(2958),
+        problem({testSystem: "ejudge", contest: "3017", problem: "1", id: "1421"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "2", id: "3745"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "3", id: "1406"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "4", id: "592"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "5", id: "1209"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "6", id: "855"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "7", id: "1435"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "8", id: "993"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "9", id: "111580"}),
+        problem({testSystem: "ejudge", contest: "3017", problem: "10", id: "2958"}),
     ])
 
 export default level_1D = () ->

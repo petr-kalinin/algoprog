@@ -26,12 +26,13 @@ export default floats =  () ->
             contest(ruen(
                 "Продвинутые задачи на вещественные числа",
                 "Advanced problems on real numbers"), [
-                problem(3609),
-                problem(3613),
-                problem(3614),
-                problem(3622),
-                problem(74),
-                problem(595),
+                problem({testSystem: "ejudge", contest: "3014", problem: "1", id: "3609"}),
+                problem({testSystem: "ejudge", contest: "3014", problem: "2", id: "3613"}),
+                problem({testSystem: "ejudge", contest: "3014", problem: "3", id: "3614"}),
+                problem({testSystem: "ejudge", contest: "3014", problem: "4", id: "3622"}),
+                
+                problem({testSystem: "ejudge", contest: "3008", problem: "1", id: "74"}),
+                problem({testSystem: "ejudge", contest: "3008", problem: "5", id: "595"}),
             ])
         ]
     }
