@@ -100,10 +100,11 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
 
     getSource: (runid) ->
         [contest, run] = @_parseRunId(runid)
-        return await @options.admin.download(
+        source = await @options.admin.download(
             "#{@options.server}/cgi-bin/new-master?action=91&run_id=#{run}", 
             {encoding: null}, 
             "new-master")
+        return source.toString('latin1')
 
     getComments: (runid) ->
         [contest, run] = @_parseRunId(runid)
