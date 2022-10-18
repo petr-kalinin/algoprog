@@ -109,6 +109,9 @@ resultsSchema.statics.findPageByUserAndTableWithFindMistakeSet = (userId, tableI
     q = Result.findByUserAndTableWithFindMistakeSet(userId, tableId)
     return q.sort({findMistakeOrder: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
 
+resultsSchema.statics.findPendingResults = () ->
+    return Result.find({ps: 1, isProblem: true})
+
 resultsSchema.statics.findLastWA = (limit) ->
     return Result.find({
         total: 1,  # this is a problem, not a contest
