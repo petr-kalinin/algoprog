@@ -1,8 +1,10 @@
 React = require('react')
 moment = require('moment')
 
-import Button from 'react-bootstrap/lib/Button'
 import Alert from 'react-bootstrap/lib/Alert'
+import Button from 'react-bootstrap/lib/Button'
+import Radio from 'react-bootstrap/lib/Radio'
+
 import { Link } from 'react-router-dom'
 
 import {LangRaw} from '../lang/lang'
@@ -52,7 +54,6 @@ class TinkoffPayment extends React.Component
         canSubmit = canSubmit and @state.name and @state.email
 
         <div>
-            <p><b>{LangRaw("payment_is_possible_only_from_russian_banks", @props.lang)}</b></p>
             <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <form name="TinkoffPayForm" onSubmit={@pay} id="payForm">
                 <input type="hidden" name="terminalkey" value="1539978299062"/>
@@ -131,7 +132,7 @@ class XSollaPayment extends React.Component
 
 
     render: () ->
-        canSubmit = @state.name and @state.email and @state.address
+        canSubmit = @props.canSubmit and @state.name and @state.email and @state.address
         amount = @props.amount
         <div>
             {@state.loading && <Loader /> }
@@ -216,7 +217,7 @@ class UnitpayPayment extends React.Component
 
 
     render: () ->
-        canSubmit = @state.name and @state.email
+        canSubmit = @props.canSubmit and @state.name and @state.email
         amount = @props.amount
         <div>
             {@state.loading && <Loader /> }
@@ -252,6 +253,33 @@ class UnitpayPayment extends React.Component
             }
         </div>
 
+class PaymentSelector extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            provider: @props.provider
+        @setField = @setField.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    render: () ->
+        <div>
+            <FieldGroup
+                id="provider"
+                label=""
+                type="radio"
+                setField={@setField}
+                state={@state}>
+                    <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>
+                    <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>
+            </FieldGroup>        
+            {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
+            {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
+        </div>
+
 class Payment extends React.Component
     render: () ->
         canSubmit = true
@@ -281,12 +309,12 @@ class Payment extends React.Component
             amount = @props.myUser.price
             warning = null
         switch GROUPS[@props.myUser?.userList]?.paid
-            when "tinkoff" then Element = TinkoffPayment
-            when "xsolla" then Element = XSollaPayment
-            when "unitpay" then Element = UnitpayPayment
+            when "tinkoff" then provider = ""
+            #when "xsolla" then Element = XSollaPayment
+            when "unitpay" then provider = ""
             else
                 canSubmit = false
-                Element = UnitpayPayment
+                provider = "unitpay"
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"
@@ -296,7 +324,7 @@ class Payment extends React.Component
             <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
             {warning}
             <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>
-            <Element {@props...} canSubmit={canSubmit} amount={amount} order={order}/>
+            <PaymentSelector provider={provider} {@props...} canSubmit={canSubmit} amount={amount} order={order}/>
         </div>
 
 export default withLang Payment

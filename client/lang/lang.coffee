@@ -274,9 +274,6 @@ _LANG =
     payment_for_one_month:
         ru: "Payment for one month of classes on algoprog.ru"  # apparently unitpay has problems with encoding for russian desc
         en: "Payment for one month of classes on algoprog.ru"
-    payment_is_possible_only_from_russian_banks:
-        ru: "Оплата возможна только с карт российских банков. Если у вас нет таких карт, возможны другие варианты (банковским переводом по российским реквизитам, SWIFT-переводом, биткойнами), напишите мне."
-        en: "Payment is possible only with cards issued by Russian banks. If you do not have such cards, other options are possible (by bank transfer using Russian bank details, by SWIFT transfer, bitcoin), please contact me."
     payment_sum:
         ru: "Сумма"
         en: "Sum"
@@ -734,6 +731,12 @@ _LANG =
     user_with_such_login_exists:
         ru: "Пользователь с таким логином уже существует"
         en: "This username is already taken"
+    pay_with_russian_card:
+        ru: "Оплатить картой российского банка"
+        en: "Pay with Russian bank card"
+    pay_with_foreign_card:
+        ru: "Оплатить картой не-российского банка"
+        en: "Pay with non-Russian bank card"
 
 export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]
