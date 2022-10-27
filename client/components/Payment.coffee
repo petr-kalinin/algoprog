@@ -54,7 +54,6 @@ class TinkoffPayment extends React.Component
         canSubmit = canSubmit and @state.name and @state.email
 
         <div>
-            <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <form name="TinkoffPayForm" onSubmit={@pay} id="payForm">
                 <input type="hidden" name="terminalkey" value="1539978299062"/>
                 <input type="hidden" name="frame" value="true"/>
@@ -321,6 +320,7 @@ class Payment extends React.Component
         else
             order = ""
         <div>
+            <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
             {warning}
             <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>

@@ -302,7 +302,11 @@ _LANG =
                 <img height="30px" src="/mastercard_visa.svg"/>            
             </>
         en: <>
-                <p>TBD</p>
+                <h2>Official part</h2>
+                <p>Service privider: IE Petr Andreevich Kalinin, OGRNIP 318527500120581, INN 526210494064. <br/>
+                Contacts: petr@kalinin.nnov.ru, +7-910-794-32-07. (Full contacts are in <Link to="/material/about">About course</Link> section.)</p>
+                <img height="30px" src="/tinkoff.png" style={{marginRight: "15px"}}/>
+                <img height="30px" src="/mastercard_visa.svg"/>            
             </>
     payment_official_unitpay: 
         ru: <>
