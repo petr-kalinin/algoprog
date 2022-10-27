@@ -3,8 +3,8 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
-        newsItem("Школьная олимпиада", String.raw"""
-            <p>Добавлена/обновлена <a href="/material/school_olympiad">информация про школьную олимпиаду</a>.</p>
+        newsItem("Возможность оплаты не-российскими картами", String.raw"""
+            Появилась возможность оплаты занятий на алгопроге не-российскими картами
         """),
 
         newsItem("Командная олимпиада", String.raw"""
