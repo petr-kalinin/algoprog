@@ -67,19 +67,19 @@ pay = () ->
         <p>The cost of the course is fixed at the time of the first payment and for life.</p>
         
         <h2>Payment</h2>
-        <p>You can pay for the course with a card of Russian banks <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
-        <p>If you are unable to pay for the course with a Russian bank card, there are other payment methods: transfer using Russian bank details 
-        (as far as I understand, this is possible at least from Kazakhstan), SWIFT transfer (although there will probably be large commissions for you there), or even bitcoin.
-        Contact me, we will discuss.</p>
+        <p>You can pay for the course with any bank card <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
+        <p>Most bank cards from most countries should be supported. If you encounter problems, please contact me, we can discuss other payment methods.</p>
         
         <h2>Is a refund possible?</h2>
         <p>The cost does not depend on how active you are in the course (if you solve a lot, then I will spend more time on you than if you solve a little, and you pay the same amount). Therefore, it is quite strange to return the money if you didn't do anything. Therefore, the policy is as follows:</p>
         <ul>
-        <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study. Predictable things like trips, exams, etc. are not counted here.</li>
-        <li>If for whatever reason you have not been engaged for more than 10 days in a row, then I will refund you half of the money for this period.</li>
+        <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study*. Predictable things like trips, exams, etc. are not counted here.</li>
+        <li>If for whatever reason you have not been engaged for more than 10 days in a row, then I will refund you half of the money for this period*.</li>
         <li>If you warn me in advance that you will not be able to study for more than 10 days in a row, then I can refund you money for this period.</li>
-        <li>Of course, if for some reason I could not check your solutions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period.</li>
+        <li>Of course, if for some reason I could not check your solutions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period*.</li>
         </ul>
+        <p>* Any refunds should be discussed no later than 14 days after the end of the period for which you request a refund. If you contact me later, I have the right to refuse a refund.</p>
+        <p>Of course, in any case, instead of a refund, I can simply extend the paid period by a period corresponding to the refund amount.</p>
         </div>""", {id: "pay"})
 
 module20927_13 = () ->
