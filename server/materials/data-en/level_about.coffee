@@ -79,7 +79,7 @@ pay = () ->
         <li>Of course, if for some reason I could not check your solutions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period*.</li>
         </ul>
         <p>* Any refunds should be discussed no later than 14 days after the end of the period for which you request a refund. If you contact me later, I have the right to refuse a refund.</p>
-        <p>Of course, in any case, instead of a refund, I can simply extend the paid period by a period corresponding to the refund amount.</p>
+        <p>Of course, in any case, instead of a refund, if you want, I can simply extend the paid period by a period corresponding to the refund amount.</p>
         </div>""", {id: "pay"})
 
 module20927_13 = () ->
