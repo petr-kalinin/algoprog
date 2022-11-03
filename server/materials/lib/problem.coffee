@@ -25,6 +25,8 @@ class Problem
         return await testSystem.downloadProblem(@options, label)
 
     build: (context, order) ->
+        if @options.onlyForLabel and not (context.label in @options.onlyForLabel)
+            return null
         id = "p#{@id}#{context.label}"
         material = await Material.findById(id)
         if not material

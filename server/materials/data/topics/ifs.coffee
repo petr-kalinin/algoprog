@@ -195,7 +195,7 @@ export default ifs = () ->
                 problem({testSystem: "ejudge", contest: "3010", problem: "4", id: "38"}),
                 problem({testSystem: "ejudge", contest: "3010", problem: "5", id: "264"}),
                 problem({testSystem: "ejudge", contest: "3010", problem: "6", id: "235"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "7", id: "303"}),
+                problem({testSystem: "ejudge", contest: "3010", problem: "7", id: "303", onlyForLabel: [""]}),
                 problem({testSystem: "ejudge", contest: "3010", problem: "8", id: "481"}),
                 problem({testSystem: "ejudge", contest: "3010", problem: "9", id: "234"}),
             ]),

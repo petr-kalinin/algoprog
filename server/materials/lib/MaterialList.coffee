@@ -20,6 +20,8 @@ export default class MaterialList
             submaterials = []
             for submaterial, i in @submaterials
                 submaterials.push(await submaterial().build(context, makeOrder(order, i)))
+                
+        submaterials = (s for s in submaterials when s)
 
         context.popPath(properties._id)
 
