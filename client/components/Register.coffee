@@ -174,7 +174,16 @@ class Register extends React.Component
                     nameValidationState = 'error'
                     nameError = Lang("please_enter_first_name_last_name")
 
-        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success' and nameValidationState == 'success')
+        classValidationState = 'success'
+        classError = null
+        if not @state.hasInformatics
+            if @state.informaticsClass
+                cls = +@state.informaticsClass
+                if cls < 1 || cls > 11 || ("" + cls != @state.informaticsClass)
+                    classValidationState = 'error'
+                    classError = Lang("please_enter_class")
+
+        canSubmit = (validationState == 'success' and passwordValidationState == 'success' and loginValidationState == 'success' and nameValidationState == 'success' and classValidationState == 'success')
         hasInformatics = @state.hasInformatics
         yearStart = getCurrentYearStart()
 
@@ -294,7 +303,9 @@ class Register extends React.Component
                             type="text"
                             setField={@setField}
                             state={@state}
-                            disabled={hasInformatics}/>
+                            disabled={hasInformatics}
+                            validationState={classValidationState}
+                            error={classError}/>
                         <FieldGroup
                             id="informaticsSchool"
                             label={Lang("school")}

@@ -684,6 +684,9 @@ _LANG =
     class_in_year:
         ru: (yearStart) -> "Класс в #{yearStart}-#{yearStart+1} учебном году"
         en: (yearStart) -> "School grade in #{yearStart}-#{yearStart+1} academic year"
+    please_enter_class:
+        ru: "Укажите ваш класс от 1 до 11. Если вы не учитесь в школе, не заполняйте поле вообще."
+        en: "Please specify your school grade (from 1 to 11). If you do not study in secondary school, or you have different grade system, do not enter enything here."
     school:
         ru: "Школа"
         en: "School"
