@@ -529,7 +529,7 @@ contacts = () ->
         <li>+7(910)794-32-07**</li>
         <li>Telegram: <a href="https://t.me/pkalinin">@pkalinin</a></li>
         <li>Telegram channel with important announcements: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a> (mainly in Russian). </li>
-        <li>Telegram chat for all algoprog students: <a href="https://t.me/+Ff0fS3PMo85iNmZi">Algoprog-chat</a>.
+        <li>Telegram chat for all algoprog students (mostly in Russian): <a href="https://t.me/+Ff0fS3PMo85iNmZi">Algoprog-chat</a>.
         To join, you should first specify your telegram id in your algoprog profile.</li>
         </ul>
         <p>My contact details can be freely distributed for any questions related to the course or
@@ -552,7 +552,7 @@ telegram_bot = () ->
         (or write /start), the bot will send you a message with your id.</p>
         <p>This will allow you to:</p>
         <ul>
-        <li>join <a href="https://t.me/+Ff0fS3PMo85iNmZi">the telegram chat for all algoprog students</a>,</li>
+        <li>join <a href="https://t.me/+Ff0fS3PMo85iNmZi">the telegram chat for all algoprog students</a> (mostly in Russian),</li>
         <li>receive notifications about counted/ignored solutions, and about comments on solutions, to do this, start a chat with <a href="https://t.me/algoprog_bot ">the algoprog bot @algoprog_bot</a>.
         </li>
         </ul>
