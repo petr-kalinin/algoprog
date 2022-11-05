@@ -77,7 +77,8 @@ export default geometry_simple = () ->
             ruen("Простая геометрия", "Simple geometry"),
             ruen("Задачи на простую геометрию", "Problems on simple geometry"),
         [label(ruen(
-             "<div>См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Вычислительная геометрия\".<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Вычислительная геометрия\".</div>",
+             "<div>См. <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">видеозаписи лекций ЛКШ.2013.B'</a>, раздел \"Вычислительная геометрия\".<br>\nСм. <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ.2008.B'</a>, раздел \"Вычислительная геометрия\".<br/>
+             См. <a href=\"https://e-maxx.ru/bookz/files/andreeva.pdf\">серию статей Е.В. Андреевой</a>.</div>",
              "<div>See the video <a href=\"https://sis.khashaev.ru/2013/july/b-prime/\">recordings of lectures of LKSH.2013.B'</a>, section \"Computational Geometry\".<br>\nSee the video <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">recordings of lectures of LKSH.2008.B'</a>, section \"Computational Geometry\".</div>")),
             mainPrinciples(),
             problem(269),
