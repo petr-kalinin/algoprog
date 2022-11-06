@@ -8,7 +8,7 @@ import {ruen} from "../../lib/util"
 module17576 = () ->
     page(ruen(
         "О связи перебора и ДП, или Как переборные решения превращать в ДП",
-        "About the connection of brute force and DP, or How to turn recursive backtracking solutions into DP"), ruen(
+        "About the connection of backtracking and DP, or How to turn recursive backtracking solutions into DP"), ruen(
                                                                                   String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h1>О связи перебора и ДП, или Как переборные решения превращать в ДП</h1>
         <p>(Со временем я добавлю этот текст в основной текст про ДП. Этот материал не является обязательным на уровне 3. Если вы не освоили рекурсивный перебор, то пропустите и этот материал. Если вы освоили рекурсивный перебор, то прочитайте этот текст и постарайтесь его понять, хотя на самом деле для решения задач уровня 3 идеи, изложенные ниже, не обязательны, на уровне 3 в ДП задачи довольно простые.)</p>
         
@@ -369,11 +369,13 @@ export default arrays = () ->
             ruen("Простые задачи на ДП", "Simple DP tasks"),
         [label(ruen(
              "<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Теория про ДП</a> (вплоть до самой провинутой, пока читайте только основы)",
-             "<a href=\"https://notes.algoprog.ru/dynprog/index.html\">Theory on DP</a> (up to the most advanced, so far read only the basics)")),
+             "Another wide topic, bu fortunately you don't need to study advanced parts of DP now.
+             <a href=\"https://www.geeksforgeeks.org/dynamic-programming/\">Theory on GeeksForGeeks</a> (read \"Basic Concepts\" and some \"Basic Problems\"),<br/>
+             <a href='https://soi.ch/wiki/basic-dp/'>Basic theory on SOI.ch</a>")),
             module17576(),
             label(ruen(
                 "<div style=\"display:inline-block;\">См. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Динамические программирование»<br>\nСм. также <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">видеозаписи лекций ЛКШ параллели B'.2008</a>, раздел «Динамические программирование» (в параллели B' уже есть и довольно продвинутые темы, которые вам пока не нужны)</div>",
-                "<div style=\"display:inline-block;\">See also video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of SIS Parallel C'</a> LCS, section \"Dynamic programming\"<br>\nSee also the <a href=\"https://sis.khashaev.ru/2008/august/b-prime/\">videos of lectures of SIS Parallel B'.2008</a>, the section \"Dynamic programming\" (Parallel B' already has quite advanced topics that you don't need yet)</div>")),
+                null)),
             problem(201),
             problem(842),
             problem(843),

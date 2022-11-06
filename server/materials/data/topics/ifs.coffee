@@ -178,7 +178,9 @@ export default ifs = () ->
              "<a href=\"https://notes.algoprog.ru/en/python_basics/1_if.html\">Theory on conditional operator</a>")),
             label(ruen(
                 "<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">Не надо проверять, выполняются ли ограничения из условия</a>",
-                "<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">It is not necessary to check whether the restrictions from the condition are met</a>")),
+                "")),
+                # TODO: en
+                #"<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">It is not necessary to check whether the restrictions from the condition are met</a>")),
             problem({testSystem: "ejudge", contest: "3004", problem: "1", id: "292"}),
             problem({testSystem: "ejudge", contest: "3004", problem: "2", id: "293"}),
             problem({testSystem: "ejudge", contest: "3004", problem: "3", id: "2959"}),

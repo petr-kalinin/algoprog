@@ -107,10 +107,13 @@ export default backtrack = (count) -> () ->
             ruen("#{star}Задачи на рекурсивный перебор", "#{star}Problems on backtracking"),
             [if count then null else label(ruen(
                                          "Эта тема является довольно сложной, поэтому, если вы в ней не разберетесь, то можете пропустить, и вернуться к ней на уровне 6 (там она будет обязательной). Тем не менее, рекурсивный перебор является очень полезной техникой, поэтому постарайтесь ее освоить уже сейчас.",
-                                         "This topic is quite complex, so if you don't understand it, you can skip it and return to it at level 6 (it will be mandatory there). However, recursive backtracking is a very useful technique, so try to master it now.")),
+                                         "This topic is quite complex, so if you don't understand it, you can skip it and return to it at level 6 (it will be mandatory there). However, recursive backtracking is a very useful technique, so try to master it now.<br/>
+                                         I've found some theory texts that will be useful for you, but the topic is indeed complex, and the theory presented below may not cover all the problems. Anyway, as always, think with your own head.")),
             label(ruen(
                 "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Теория по рекурсивному перебору</a><br>\nСм. также <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Рекурсивный перебор»",
-                "<a href=\"https://notes.algoprog.ru/backtrack/index.html\">Theory on recursive backtracking</a><br>\nSee also video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of the SIS Parallel C'</a>, section \"Recursive search\"")),
+                "<a href=\"https://www.geeksforgeeks.org/introduction-to-backtracking-data-structure-and-algorithm-tutorials/\">Theory on recursive backtracking on GeeksForGeeks</a><br>\n
+                <a href='https://medium.com/swlh/recursive-backtracking-for-combinatorial-path-finding-and-sudoku-solver-algorithms-1bf46ba2838c'>Some other theory</a>
+                ")),
             link("https://informatics.msk.ru/mod/resource/view.php?id=16016", ruen("Красивая картинка рекурсивного дерева", "A beautiful recursive tree")),
             problem(80),
             problem(84),

@@ -11,7 +11,9 @@ export default prefixSums = () ->
             ruen("Задачи на префиксные суммы", "Problems on prefix sums"),
         [label(ruen(
              "<a href='https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html'>Теория по префиксным суммам и смежным темам</a>",
-             "<a href=\"https://notes.algoprog.ru/shortideas/03_x_prefix_sums.html\">Theory on prefix sums and related topics</a>")),
+             "USACO guide: <a href=\"https://usaco.guide/silver/prefix-sums\">part one</a>, <a href=\"https://usaco.guide/silver/more-prefix-sums\">part two</a>,<br/>
+             <a href=\"https://medium.com/codefight-on/prefix-sums-2128ea7c51d0\">Some other theory on prefix sums</a><br/>
+             You would also need prefix maximums in the problems below.")),
             problem(2771),
             problem(2772),
             problem(3313),

@@ -545,7 +545,7 @@ export default loops = () ->
                 Внутри теории про циклы есть также раздел <a href="https://notes.algoprog.ru/python_basics/2_loops.html#break-continue">про команды break и continue</a>.
                 Прочитайте его, даже если вы пишете не на питоне, в других языках все аналогично.""",
                    String.raw"""<a href="https://notes.algoprog.ru/en/python_basics/2_loops.html">Theory on loops</a><br>
-                Inside the theory on loops there is also a section <a href="https://notes.algoprog.ru/en/python_basics/2_loops.html#break-continue">about the break and continue commands</a>.
+                Inside the theory on loops there is also a section <a href="https://notes.algoprog.ru/en/python_basics/2_loops.html#break-and-continue">about the break and continue commands</a>.
                 Read it, even if you don't write in python, everything is the same in other languages.""")),
             module15969(),
             problem({testSystem: "ejudge", contest: "3005", problem: "1", id: "333"}),

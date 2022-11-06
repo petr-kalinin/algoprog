@@ -11,7 +11,9 @@ export default gcd = () ->
             ruen("Задачи на НОД", "Problems on GCD"),
         [label(ruen(
              "<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Видеозаписи лекций ЛКШ параллели C' про НОД и алгоритм Евклида</a>",
-             "<a href=\"https://sis.khashaev.ru/2013/august/c-prime/2MBSsJ0TEMg/\">Video recordings of lectures in SIS parallels C' about the GCD and the Euclidean algorithm</a>")),
+             "<a href=\"https://cp-algorithms.com/algebra/euclid-algorithm.html#time-complexity\">Cp-algorithms theory</a>,<br/>
+             <a href=\"https://en.wikipedia.org/wiki/Euclidean_algorithm#Description\">Wikipedia theory</a>,<br/>
+             <a href=\"https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm\">Khan academy theory</a>")),
             problem(199),
             problem(27),
             problem(1838),

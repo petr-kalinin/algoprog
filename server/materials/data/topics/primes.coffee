@@ -11,7 +11,7 @@ export default primes = () ->
             ruen("Задачи на множители", "Problems on factorization"),
         [label(ruen(
              "См. <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">видеозаписи лекций ЛКШ параллели C'</a>, раздел «Арифметические алгоритмы»",
-             "See video <a href=\"https://sis.khashaev.ru/2013/august/c-prime/\">recordings of lectures of SIS Parallel C'</a>, section \"Arithmetic algorithms\"")),
+             "Theory on cp-algorithms: <a href='https://cp-algorithms.com/algebra/sieve-of-eratosthenes.html'>section one</a>, <a href='https://cp-algorithms.com/algebra/primality_tests.html'>section two</a>, <a href='https://cp-algorithms.com/algebra/factorization.html'>section three</a> (you don't need advanced topics like Fermat's or Miller-Rabin methods)")),
             problem(310),
             problem(623),
             problem(973),

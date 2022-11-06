@@ -11,7 +11,7 @@ export default recursion = () ->
             ruen("Задачи на рекурсию", "Problems on recursion"),
         [label(ruen(
              "<a href='https://foxford.ru/wiki/informatika/rekursiya-v-python'>Теория на фоксфорде</a>",
-             "<a href=\"https://foxford.ru/wiki/informatika/rekursiya-v-python\">Theory on Foxford</a>")),
+             "<a href=\"https://www.geeksforgeeks.org/introduction-to-recursion-data-structure-and-algorithm-tutorials/\">Theory on GeeksForGeeks</a>")),
             label(ruen("""Имейте в виду, что многие из задач ниже на самом деле проще и правильнее решать не рекурсией, а циклом 
             (в частности, никогда не пишите факториал или числа Фибоначчи рекурсией!). 
             Но понимать, что такое рекурсия, надо, и очень полезно потренироваться на задачах ниже.""",

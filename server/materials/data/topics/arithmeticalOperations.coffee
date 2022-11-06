@@ -108,11 +108,13 @@ export default arithmeticalOperations = () ->
                     "If you haven't solved real numbers problems from level 1B yet, then read the theory there and solve all these problems. There are subtleties that you definitely need to know.")),
             ]),
             topic(
-                ruen("Основы тестирования задач (без контеста)", "Basics of program testing (without a contest)"),
+                # TODO: en
+                ruen("Основы тестирования задач (без контеста)", null),
                 null,
             [label(ruen(
                     "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Теория по тестированию задач</a>. Вы там многое не поймете (особенно в примерах и в продвинутых методиках тестирования), но поймите хотя бы основы. В будущем, на более высоких уровнях, возвращайтесь к этому тексту.",
-                    "<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Theory of program testing</a>. You won't understand much there (especially in examples and advanced testing techniques), but at least understand the basics. In the future, at higher levels, return to this text."))
+                    null))
+                    #"<a href=\"https://notes.algoprog.ru/testing/06_testing_main.html\">Theory of program testing</a>. You won't understand much there (especially in examples and advanced testing techniques), but at least understand the basics. In the future, at higher levels, return to this text."))
             ]),
             topic(
                 ruen("Задачи", "Problems"),
