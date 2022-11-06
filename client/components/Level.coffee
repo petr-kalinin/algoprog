@@ -27,6 +27,7 @@ InternalLink = (props) ->
 
 MaterialLink = (props) ->
     <div className={if props.className then styles[props.className]}>
+        {props.head && <><FontAwesome name={props.head}/> </>}
         <Link to={"/material/" + props.material._id}>{props.material.title}</Link>
     </div>
 
@@ -42,7 +43,7 @@ Material = (props) ->
         when 'pdf' then `<ExternalLink head="file-pdf-o" {...props}/>`
         when 'image' then `<ExternalLink head="picture-o" {...props}/>`
         when 'link' then `<ExternalLink head="external-link" {...props}/>`
-        when 'contest' then `<MaterialLink {...props}/>`
+        when 'contest' then `<MaterialLink head="keyboard-o" {...props}/>`
         when 'level' then `<SubLevel {...props}/>`
         when 'simpleLevel' then `<SubLevel {...props}/>`
         when 'topic' then `<SubLevel {...props} noLink={true}/>`
