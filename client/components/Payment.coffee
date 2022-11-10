@@ -266,6 +266,7 @@ class PaymentSelector extends React.Component
 
     render: () ->
         <div>
+            {!@props.provider &&
             <FieldGroup
                 id="provider"
                 label=""
@@ -274,7 +275,8 @@ class PaymentSelector extends React.Component
                 state={@state}>
                     <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>
                     <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>
-            </FieldGroup>        
+            </FieldGroup>
+            } 
             {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
             {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
         </div>
@@ -310,7 +312,7 @@ class Payment extends React.Component
         switch GROUPS[@props.myUser?.userList]?.paid
             when "tinkoff" then provider = ""
             #when "xsolla" then Element = XSollaPayment
-            when "unitpay" then provider = ""
+            when "unitpay" then provider = "unitpay"
             else
                 canSubmit = false
                 provider = "unitpay"
