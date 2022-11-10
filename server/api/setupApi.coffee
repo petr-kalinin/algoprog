@@ -79,6 +79,8 @@ XSOLLA_API_KEY = process.env["XSOLLA_API_KEY"]
 XSOLLA_SECRET_KEY = process.env["XSOLLA_SECRET_KEY"]
 UNITPAY_PUBLIC_KEY = process.env["UNITPAY_PUBLIC_KEY"]
 UNITPAY_SECRET_KEY = process.env["UNITPAY_SECRET_KEY"]
+UNITPAY_PUBLIC_KEY_ORG = process.env["UNITPAY_PUBLIC_KEY_ORG"]
+UNITPAY_SECRET_KEY_ORG = process.env["UNITPAY_SECRET_KEY_ORG"]
 
 wrap = (fn) ->
     (args...) ->
@@ -1272,14 +1274,24 @@ export default setupApi = (app) ->
         currency = 'RUB'
         desc = req.body.desc
         sum = userPrivate.price
-        hashStr = "#{order}{up}#{currency}{up}#{desc}{up}#{sum}{up}#{UNITPAY_SECRET_KEY}"
+        is_org = req.host.endsWith(".org")
+        if UNITPAY_PUBLIC_KEY_ORG && is_org
+            logger.info("Payment form opened on org domain")
+            publicKey = UNITPAY_PUBLIC_KEY_ORG
+            secretKey = UNITPAY_SECRET_KEY_ORG
+        else
+            logger.info("Payment form opened on ru domain")
+            publicKey = UNITPAY_PUBLIC_KEY
+            secretKey = UNITPAY_SECRET_KEY
+        hashStr = "#{order}{up}#{currency}{up}#{desc}{up}#{sum}{up}#{secretKey}"
         res.json
             signature: sha256(hashStr)
             desc: desc
             order: order
             currency: currency
             sum: sum
-            publicKey: UNITPAY_PUBLIC_KEY
+            publicKey: publicKey
+            is_org: is_org
 
     app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
         hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)
