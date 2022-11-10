@@ -273,7 +273,7 @@ _LANG =
         en: (amount) -> "You pay for one month access to algoprog.org. The price for you is #{amount} rubles."
     payment_for_one_month:
         ru: "Payment for one month of classes on algoprog.ru"  # apparently unitpay has problems with encoding for russian desc
-        en: "Payment for one month of classes on algoprog.ru"
+        en: "Payment for one month of classes on algoprog.org"
     payment_sum:
         ru: "Сумма"
         en: "Sum"
