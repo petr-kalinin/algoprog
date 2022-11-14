@@ -357,10 +357,7 @@ export default sorting = () ->
             ruen("Задачи на сортировки", "Problems on sorting"),
         [label(ruen(
              "Видеозаписи лекций ЛКШ по квадратичным сортировкам: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">сортировка пузырьком</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">выбором максимума</a>. К сожалению, теории по сортировкой вставками тут пока нет. Найдите в интернете или прослушайте на занятии.",
-             "Video recordings of lectures of the SIS on quadratic sorting: <a href=\"https://sis.khashaev.ru/2013/august/c-prime/kBHwr_e_aAg/\">bubble sort</a>, <a href=\"https://sis.khashaev.ru/2013/august/c-prime/gZGwKXwjffg/\">selecting maximum</a>. Unfortunately, there is no theory on insertion sort here yet. Find it on the Internet.")),
-            label(ruen(
-                "Внимание! В задаче \"Библиотечный метод\" надо выводить очередную строку только если состояние массива при этой вставке изменилось.",
-                "Attention! In the \"Library Method\" problem , it is necessary to output the next line only if the state of the array has changed during this insertion.")),
+             "Quadratic sorting algorithms: <a href='https://staffwww.fullcoll.edu/aclifton/cs133/lecture-9b-quadratic-sorting.html'>one</a>, <a href='https://swaminathanj.github.io/algo/05_Quadratic_sorting.html'>two</a> (you need the simplest bubble sort, insertion sort and selection sort)")),
             module16475(),
             problem(230),
             problem(1436),

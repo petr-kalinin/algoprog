@@ -13,7 +13,7 @@ export default dp_bayans = () ->
             ruen("ДП-баяны", "DP-classics"),
         [label(ruen(
              "Есть ряд классических задач на динамическое программирование, которые хорошо бы знать наизусть. Большинство этих задач разобраны в теории про ДП на уровне 2. В контесте ниже, помимо этих баянов, есть еще несколько интересных задач на ДП.",
-             "There are a number of classic dynamic programming problems that it would be good to know by heart. Most of these tasks are discussed in the theory about DP on level 2. In the contest below, in addition to these classical problems, there are several other interesting DP problems.")),
+             "There are a number of classic dynamic programming problems that it would be good to know by heart. Think on them, and you can find the algorithms on the internet if you can't come up with an algorithm yourself. Just make sure that you do not blindly copy code, but that you understand how and why the dynamic programming works in each problem.")),
             problem(204),
             problem(1792),
             problem(112626),
