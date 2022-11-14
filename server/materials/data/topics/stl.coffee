@@ -19,7 +19,7 @@ export default stl = () ->
             <p>В других языках напрямую таких же структур нет, но можете поискать что-нибудь похожее. В Java скорее всего найдете, в питоне только для части задач, в паскале ничего такого по сути нет.</p>""",
             """<p>The topic is optional, but it will be useful in the future. The problems of this topic can be solved using theory from high levels, but there are useful standard structures in C++,
             which will allow you to solve these tasks easier. Perhaps the tasks will still seem difficult to you — but the topic is not mandatory, you can return to them later.</p>
-            <p>C++ theory: <a href='https://inf.1sept.ru/view_article.php?ID=200800106'>one</a>, <a href='https://codeforces.com/blog/entry/9702'>two</a>, <a href='https://tproger.ru/articles/stl-cpp/'>three</a>.
+            <p>You mostly need to know the following C++ templates: <code>std::vector</code>, <code>std::set</code>, <code>std::map</code>, optionally their <code>unordered</code> variants and <code>std::list</code> and <code>std::queue</code>. And <code>std::sort</code> function. You can read about them in your favorite reference book, or use some links that I found: <a href='https://www.geeksforgeeks.org/the-c-standard-template-library-stl/'>one</a>, <a href='https://abhiarrathore.medium.com/the-magic-of-c-stl-standard-template-library-e910f43379ea'>two</a>.
             You don't have to learn everything by heart, you just need to understand what happens.</p>
             <p>There are no such structures directly in other languages, but you can look for something similar. In Java, you will most likely find it, in python only for part of the tasks, in pascal there is nothing like that in fact.</p>""")),
             problem(112536),

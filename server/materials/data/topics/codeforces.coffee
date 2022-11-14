@@ -82,7 +82,7 @@ export default codeforces = () ->
             ruen("Про сайт codeforces", "About the codeforces website"),
             null,
         [module17501(),
-            link("http://blog.algoprog.ru/other-contests/", ruen("Как решать другие контесты и codeforces", "How to solve other contests and codeforces")),
+            link("http://blog.algoprog.ru/other-contests/", ruen("Как решать другие контесты и codeforces", "How to solve other contests and codeforces (in Russian, but use any translation service)")),
         ], "codeforces"),
         count: false
     }

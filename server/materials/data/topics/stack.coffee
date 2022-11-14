@@ -11,7 +11,9 @@ export default stack = () ->
             ruen("Задачи на стек, очередь и дек", "Problems on stack, queue and dequeue"),
         [label(ruen(
              "Теории по этим темам тут пока нет, но очень много теории есть в интернете. Вот, например, что я нашел: <a href=\"https://algolist.manual.ru/ds/basic/\">раз</a>, <a href=\"https://brestprog.by/topics/datastructures/\">два</a>.",
-             "There is no theory on these topics here yet, but there is a lot of theory on the Internet. Here, for example, is what I found: <a href=\"https://algolist.manual.ru/ds/basic/\">one</a>, <a href=\"https://brestprog.by/topics/datastructures/\">two</a>.")),
+             "Some theory:<br/>
+             <a href='https://people.orie.cornell.edu/snp32/orie_6125/data-structures/stack-queue-deque.html'>one</a> (do not bother with doubling the array yet, use fixed-size arrays),<br/>
+             <a href='https://www.happycoders.eu/algorithms/stack-data-structure/'>two part 1</a>, <a href='https://www.happycoders.eu/algorithms/queue-data-structure/'>two part 2</a>, <a href='https://www.happycoders.eu/algorithms/deque-data-structure/'>two part 3</a> (in all these three parts, read mainly the into section and Implement using an Array section).")),
             problem(54),
             problem(58),
             problem(61),
