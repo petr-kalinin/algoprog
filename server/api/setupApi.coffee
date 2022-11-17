@@ -81,6 +81,8 @@ UNITPAY_PUBLIC_KEY = process.env["UNITPAY_PUBLIC_KEY"]
 UNITPAY_SECRET_KEY = process.env["UNITPAY_SECRET_KEY"]
 UNITPAY_PUBLIC_KEY_ORG = process.env["UNITPAY_PUBLIC_KEY_ORG"]
 UNITPAY_SECRET_KEY_ORG = process.env["UNITPAY_SECRET_KEY_ORG"]
+EVOCA_LOGIN = process.env["EVOCA_LOGIN"]
+EVOCA_PASSWORD = process.env["EVOCA_PASSWORD"]
 
 wrap = (fn) ->
     (args...) ->
@@ -204,7 +206,7 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
     payment.oldPaidTill = userPrivate.paidTill
     expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
     if expectedPaidTill != paidTillInOrder
-        logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill})")
+        logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill}, found #{paidTillInOrder})")
         return
     if amount and Math.abs(+userPrivate.price - amount) > 0.5
         logger.warn("paymentNotify #{orderId}: wrong amount (price is #{userPrivate.price}, paid #{amount})")
@@ -1293,6 +1295,35 @@ export default setupApi = (app) ->
             publicKey: publicKey
             is_org: is_org
 
+    app.post '/api/evocaData', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        order = req.body.order + ":" + Math.random().toString(36).substr(2, 4)
+        name = req.body.name
+        email = req.body.email
+        address = req.body.address
+        desc = req.body.desc
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        # TODO: convert
+        rubToAmd = 6
+        desc = req.body.desc
+        sum = userPrivate.price * rubToAmd * 100
+        returnUrl = encodeURIComponent("#{req.protocol}://#{req.get('host')}/evocaPaymentSuccess")
+        url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}"
+        result = JSON.parse(await download(url))
+        logger.info "Evoca register request answer", result, result.errorCode
+        if result.errorCode == 1
+            url = "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}"
+            result = JSON.parse(await download(url))
+            console.log "Evoca getOrderStatusExtended answer", result
+        res.json
+            formUrl: result.formUrl
+
     app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
         hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)
         signature = req.get("Authorization")
@@ -1386,6 +1417,21 @@ export default setupApi = (app) ->
         amount = Math.floor(req.body.Amount/100)
         await processPayment(req.body.OrderId, success, amount, req.body)
         res.send('OK')
+
+    app.get '/api/evocaStatus/:orderId', wrap (req, res) ->
+        orderId = req.params.orderId
+        if not orderId
+            res.status(400).send('No orderId')
+            return
+        url = "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderId=#{orderId}"
+        data = await download(url)
+        result = JSON.parse(data)
+        # TODO: convert
+        rubToAmd = 6
+        success = result.actionCode == 0
+        await processPayment(result.orderNumber, result.actionCode == 0, result.amount / 6 / 100, result)
+        res.json
+            status: success
 
     ###
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->

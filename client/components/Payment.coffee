@@ -252,11 +252,91 @@ class UnitpayPayment extends React.Component
             }
         </div>
 
+class EvocaPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            name: ""
+            email: ""
+            address: ""
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "evocaData", {
+                order: @props.order,
+                name: @state.name,
+                email: @state.email,
+                address: @state.address,
+                desc: LangRaw("payment_for_one_month", @props.lang)
+            }
+            if not data.formUrl
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open(data.formUrl, '_blank').focus()
+
+
+    render: () ->
+        canSubmit = @props.canSubmit and @state.name and @state.email
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading && 
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    <FieldGroup
+                        id="name"
+                        label={LangRaw("full_payer_name", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="email"
+                        label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
+                    {LangRaw("payment_official_evoca", @props.lang)}
+                </form>    
+            }
+        </div>
+
 class PaymentSelector extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            provider: @props.provider
+            provider: null
         @setField = @setField.bind(this)
 
     setField: (field, value) ->
@@ -266,19 +346,19 @@ class PaymentSelector extends React.Component
 
     render: () ->
         <div>
-            {!@props.provider &&
             <FieldGroup
                 id="provider"
                 label=""
                 type="radio"
                 setField={@setField}
                 state={@state}>
-                    <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>
-                    <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>
+                    {"tinkoff" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>}
+                    {"unitpay" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>}
+                    {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_alt", @props.lang)}</Radio>}
             </FieldGroup>
-            } 
             {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
             {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
+            {@state.provider == "evoca" && <EvocaPayment {@props...}/> }
         </div>
 
 class Payment extends React.Component
@@ -310,9 +390,9 @@ class Payment extends React.Component
             amount = @props.myUser.price
             warning = null
         switch GROUPS[@props.myUser?.userList]?.paid
-            when "tinkoff" then provider = ""
-            #when "xsolla" then Element = XSollaPayment
-            when "unitpay" then provider = "unitpay"
+            when "tinkoff" then providers = ["tinkoff", "unitpay"]
+            when "unitpay" then providers = ["tinkoff", "unitpay"]
+            when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
             else
                 canSubmit = false
                 provider = "unitpay"
@@ -326,7 +406,7 @@ class Payment extends React.Component
             <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
             {warning}
             <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>
-            <PaymentSelector provider={provider} {@props...} canSubmit={canSubmit} amount={amount} order={order}/>
+            <PaymentSelector providers={providers} {@props...} canSubmit={canSubmit} amount={amount} order={order}/>
         </div>
 
 export default withLang Payment

@@ -78,6 +78,13 @@ export default GROUPS =
         canResetYear: false
         starred: true
         lang: "!en"
+    test:
+        paid: "evoca"
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        canResetYear: false
+        starred: true
+        lang: "!en"
     self:
         paid: "tinkoff"
         chocos: false

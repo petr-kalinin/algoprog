@@ -335,6 +335,17 @@ _LANG =
                 <img height="30px" src="/mir_en.svg" style={{marginRight: "30px"}}/>
                 <img height="30px" src="/sbp.svg" style={{marginRight: "30px"}}/>
             </>
+    payment_official_evoca: 
+        ru: <>
+                <h2>Официальная часть</h2>
+                <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064.<br/>
+                Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
+            </>
+        en: <>
+                <h2>Official part</h2>
+                <p>Service privider: IE Petr Andreevich Kalinin, OGRNIP 318527500120581, INN 526210494064. <br/>
+                Contacts: petr@kalinin.nnov.ru, +7-910-794-32-07. (Full contacts are in <Link to="/material/about">About course</Link> section.)</p>
+            </>
     payment_successful_message:
         ru: <>
                 <h1>Оплата успешна</h1>
@@ -350,6 +361,15 @@ _LANG =
                 Usually processing takes a few seconds, in some cases it can take several hours.
                 If the paid-for period is not extended after two hours, please contact me.</p>
                 <p>The receipt (according to Russia tax law; it may take 20-30 seconds to appear):</p>
+            </>
+    payment_error:
+        ru: <>
+                <h1>Ошибка оплаты</h1>
+                <p>Произошла ошибка. Проверьте, списались ли деньги с вашей карты, и в любом случае свяжитесь со мной.</p>
+            </>
+        en: <>
+                <h1>An error occured</h1>
+                <p>There was an error. Please check whether your card has been charged, and contact me.</p>
             </>
     solved_problems_by_week:
         ru: "Сданные задачи по неделям"
@@ -744,6 +764,9 @@ _LANG =
     pay_with_foreign_card:
         ru: "Оплатить картой не-российского банка"
         en: "Pay with non-Russian bank card"
+    pay_with_foreign_card_alt:
+        ru: "Оплатить картой не-российского банка (альтернативный способ)"
+        en: "Pay with non-Russian bank card (alternative way)"
 
 export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]
