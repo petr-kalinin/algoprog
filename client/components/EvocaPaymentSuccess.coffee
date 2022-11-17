@@ -18,7 +18,7 @@ class EvocaPaymentSuccess extends React.Component
 
     render: () ->
         <Grid>
-            {if !@props.status.status
+            {if @props.status.status
                 <>
                     {Lang("payment_successful_message")}
                     <img src={@props.recentReceipt?.receipt} />
