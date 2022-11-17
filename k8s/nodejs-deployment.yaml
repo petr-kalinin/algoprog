@@ -122,6 +122,16 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: UNITPAY_SECRET_KEY
+            - name: EVOCA_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: EVOCA_LOGIN
+            - name: EVOCA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: EVOCA_PASSWORD
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
