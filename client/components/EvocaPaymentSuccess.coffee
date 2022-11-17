@@ -25,7 +25,7 @@ class EvocaPaymentSuccess extends React.Component
                 </>
              else
                 <>
-                    {Lang("payment_successful_message")}
+                    {Lang("payment_error")}
                 </>
             }
         </Grid>
