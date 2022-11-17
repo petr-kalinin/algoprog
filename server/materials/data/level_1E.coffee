@@ -61,7 +61,7 @@ contest_greedy = () ->
         problem({testSystem: "codeforces", contest: "45", problem: "D"}), 
     ])
 	
-export default level_1D = () ->
+export default level_1E = () ->
     return level("1E", [
         label("Арифметические алгоритмы (ЛКШ С' август 2013, Владимир Гуровиц). Смотреть все 6 видео в данной теме: https://sis.khashaev.ru/2013/august/c-prime/lK2k26ATt38/"),
         label("Бинарное возведение в степень (e-maxx): http://e-maxx.ru/algo/binary_pow"),
