@@ -2,8 +2,7 @@ import contest from "../lib/contest"
 import label from "../lib/label"
 import level from "../lib/level"
 import problem from "../lib/problem"
-import page from "../../lib/page"
-import {ruen} from "../../lib/util"
+import page from "../lib/page"
 
 
 contest_num_theory = () ->
@@ -18,13 +17,13 @@ contest_num_theory = () ->
         problem({testSystem: "codeforces", contest: "762", problem: "A"}),
         problem({testSystem: "codeforces", contest: "158", problem: "D"}),
         problem({testSystem: "codeforces", contest: "743", problem: "C"}),
-        problem({testSystem: "codeforces", contest: "158", problem: "D"}),	
+        problem({testSystem: "codeforces", contest: "158", problem: "D"}),    
         problem({testSystem: "codeforces", contest: "757", problem: "B"}),
         problem({testSystem: "codeforces", contest: "158", problem: "D"}),
         problem({testSystem: "codeforces", contest: "271", problem: "B"}),
         problem({testSystem: "codeforces", contest: "343", problem: "A"}),
         problem({testSystem: "codeforces", contest: "633", problem: "B"}),
-		
+        
         problem({testSystem: "codeforces", contest: "235", problem: "A"}), 
         problem({testSystem: "codeforces", contest: "735", problem: "D"}), 
         problem({testSystem: "codeforces", contest: "375", problem: "A"}), 
@@ -34,7 +33,7 @@ contest_num_theory = () ->
         problem({testSystem: "codeforces", contest: "264", problem: "B"}), 
         problem({testSystem: "codeforces", contest: "546", problem: "D"}), 
     ])
-	
+    
 contest_greedy = () ->
     return contest("1E: Жадные алгоритмы", [
         problem({testSystem: "codeforces", contest: "118", problem: "C"}),
@@ -47,7 +46,7 @@ contest_greedy = () ->
         problem({testSystem: "codeforces", contest: "756", problem: "B"}),
         problem({testSystem: "codeforces", contest: "830", problem: "A"}),
         problem({testSystem: "codeforces", contest: "471", problem: "C"}),
-        problem({testSystem: "codeforces", contest: "727", problem: "D"}),	
+        problem({testSystem: "codeforces", contest: "727", problem: "D"}),    
         problem({testSystem: "codeforces", contest: "384", problem: "B"}),
         problem({testSystem: "codeforces", contest: "436", problem: "A"}),
         problem({testSystem: "codeforces", contest: "205", problem: "B"}),
@@ -62,12 +61,11 @@ contest_greedy = () ->
         problem({testSystem: "codeforces", contest: "gym/101149", problem: "B", name: "Не время для драконов"}), 
         problem({testSystem: "codeforces", contest: "45", problem: "D"}), 
     ])
-	
-	module25226 = () ->
-    page(ruen(
-        "Про жадные алгоритмы",
-        "About greedy algorithms"), ruen(
-                                     String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>"Жадные" алгоритмы</h2>
+    
+greedy_theory = () -> 
+    return page(
+        "Про жадные алгоритмы", 
+                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix"><h2>"Жадные" алгоритмы</h2>
         <p>Жадные алгоритмы — это алгоритмы, которые, на каждом шагу принимают локально оптимальное решение, не заботясь о том, что будет дальше. Они не всегда верны, но есть задачи, где жадные алгоритмы работают правильно.</p>
         
         <p>Пример жадного алгоритма следующий. Вспомните <a href="/material/p915" onclick="window.goto('/material/p915')();return false;">задачу "Платная лестница"</a> из контеста на ДП. Правильное решение в этой задаче — это именно динамика, но в этой задаче можно также придумать и следующее жадное решение (правда, неправильное). На каждом шагу у нас есть два варианта — подняться на следующую ступеньку или перепрыгнуть через ступеньку. Вот посмотрим, какой из этих двух вариантов дешевле, т.е. на какой из этих ступенек меньше цена, и сделаем такой шаг.</p>
@@ -103,9 +101,10 @@ contest_greedy = () ->
         <p>(Оба доказательства выше в принципе можно переформулировать на доказательства от противного: что если оптимальное решение сильно отличается от жадного, то мы меняем оптимальное решение, получаем решение, которое строго лучше, значит, оптимальное решение было не оптимальным. Да, так доказывать тоже можно, но надо аккуратно обойтись со случаем равных значений — случаем $t_i=t_j$ или случаем двух вещей одного веса в первой задаче.)</p>
         
         <p>На самом деле, второй вариант доказательства на самом деле позволяет <i>придумывать</i> жадность в тех задачах, где она не очевидна (если не поймете этот абзац, то не страшно). Если вам в задаче надо расположить объекты в некотором порядке, и вы не знаете, в каком, подумайте: пусть у вас есть некоторый порядок. Поменяем местами два соседних предмета, посмотрим, как изменится решение. Пусть оценка старого решения была $X$, а нового — $Y$ (это, конечно, функция решения). Напишем условие $X&gt;Y$, т.е. что решение улучшилось. Попробуем его преобразовать так, чтобы свести все к характеристикам двух объектов, которые мы меняем местами. Тогда, может быть, мы обнаружим, что условие $X&gt;Y$ эквивалентно условию $f(i)&gt;f(j)$, где $i$ и $j$ — предметы, которые мы поменяли местами, а $f$ — какая-то функция. Тогда очевидно, что в правильном решении надо просто отсортировать предметы по значению функции $f$.</p>
-		
-		<p>Жадные алгоритмы (Algoprog, Петр Калинин: <a href='https://algoprog.ru/material/greedy_simple.1'>https://algoprog.ru/material/greedy_simple.1</a></p></div>"""), {skipTree: true})
-	
+        
+        <p>Жадные алгоритмы (Algoprog, Петр Калинин: <a href='https://algoprog.ru/material/greedy_simple.1'>https://algoprog.ru/material/greedy_simple.1</a>)</p></div>""", 
+        {skipTree: true})
+        
 export default level_1E = () ->
     return level("1E", [
         label("Арифметические алгоритмы (ЛКШ С' август 2013, Владимир Гуровиц). Смотреть все 6 видео в данной теме: https://sis.khashaev.ru/2013/august/c-prime/lK2k26ATt38/"),
@@ -113,9 +112,9 @@ export default level_1E = () ->
         label("Алгоритм Евклида нахождение НОД (e-maxx): http://e-maxx.ru/algo/euclid_algorithm"),
         label("Решето Эратосфена (e-maxx): http://e-maxx.ru/algo/eratosthenes_sieve"),
         contest_num_theory(),
-		
-		module25226(),
-		label("Жадные алгоритмы (Алгоритмика от Tinkoff Generation: <a href='https://ru.algorithmica.org/cs/combinatorial-optimization/greedy/'>https://ru.algorithmica.org/cs/combinatorial-optimization/greedy/</a>"),
-		label("При решении задач обязательно нужно применить 'жадный' подход"),
-		contest_greedy(),
+        
+        greedy_theory(),
+        label("Жадные алгоритмы (Алгоритмика от Tinkoff Generation: <a href='https://ru.algorithmica.org/cs/combinatorial-optimization/greedy/'>https://ru.algorithmica.org/cs/combinatorial-optimization/greedy/</a>"),
+        label("При решении задач обязательно нужно применить 'жадный' подход"),
+        contest_greedy(),
     ])
