@@ -42,6 +42,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         "Run-time error": "RE"
         "Time-limit exceeded": "TL"
         "Wall time-limit exceeded": "TL"
+        "Memory limit exceeded": "ML"
 
     constructor: (@options) ->
         super()
