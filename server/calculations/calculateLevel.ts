@@ -23,6 +23,8 @@ async function isFloatsSolved(userId: number, lastDate: Date, lang: String) {
 }
 
 export default async function calculateLevel(user, lastDate: Date) {
+    // level calculations disabled on adina branch
+    return
     let userId = user._id
     let baseLevelId = user.level.base
     let lang = GROUPS[user.userList].lang

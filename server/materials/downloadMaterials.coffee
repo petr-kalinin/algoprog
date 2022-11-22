@@ -8,7 +8,7 @@ import Problem from '../models/problem'
 import Table from '../models/table'
 
 import root from './data/root'
-import rootEn from './data-en/root'
+#import rootEn from './data-en/root'
 
 
 clone = (material) ->
@@ -251,6 +251,7 @@ downloadRussian = (processors) ->
     tree._id = "tree"
     await (new Material(tree)).upsert()
 
+###
 downloadEnglish = (processors) ->
     treeProcessor = new TreeProcessor()
     context = new Context(processors.concat(treeProcessor), "en")
@@ -260,6 +261,7 @@ downloadEnglish = (processors) ->
     tree = treeProcessor.getTree("main!en")
     tree._id = "tree!en"
     await (new Material(tree)).upsert()
+###
 
 
 export default downloadMaterials = () ->

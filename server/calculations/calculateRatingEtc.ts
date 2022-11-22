@@ -17,7 +17,7 @@ import {lastWeeksToShow, WEEK_ACTIVITY_EXP, LEVEL_RATING_EXP, ACTIVITY_THRESHOLD
 const DEBUG_USER_ID = "------"
 
 function correctRegLevel(level: Level): Level {
-    if (level.major) {
+    if (level.major != null && level.major != undefined) {
         return level
     } if (level.regMajor == "sch") {
         return {major: 1, minor: 3}
@@ -33,7 +33,7 @@ function correctRegLevel(level: Level): Level {
 
 function levelScore(level: Level): number {
     const correctedLevel = correctRegLevel(level)
-    let res = Math.pow(LEVEL_RATING_EXP, correctedLevel.major)
+    let res = Math.pow(LEVEL_RATING_EXP, (correctedLevel.major + 1))
     res *= Math.pow(LEVEL_RATING_EXP, 0.25 * (correctedLevel.minor - 1))
     logger.debug(`level ${encodeLevel(level)} res=${res}`)
     return res
@@ -51,7 +51,7 @@ function timeScore(date: Date): number {
 
 function activityScore(level: Level, date: Date) {
     const v = correctRegLevel(level)
-    return Math.sqrt(v.major) * timeScore(date)
+    return Math.sqrt(v.major + 1) * timeScore(date)
 }
 
 export default async function calculateRatingEtc(user) {
@@ -138,6 +138,7 @@ export default async function calculateRatingEtc(user) {
         }
         // This is not quite correct, because we take problems from RU level even for other langs.
         // But probSolved has keys without lang.
+        /*
         for (const prob of await Problem.findByLevel(encodeLevel(level))) {
             if (probSolved[prob._id]) {
                 continue
@@ -146,6 +147,7 @@ export default async function calculateRatingEtc(user) {
             if (user._id == DEBUG_USER_ID)
                 console.log("add rating 3 ", prob._id, encodeLevel(level), levelScore(level), rating)
         }
+        */
     }
 
     for (const week in wasSubmits) {
