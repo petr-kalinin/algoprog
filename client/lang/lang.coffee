@@ -153,11 +153,11 @@ _LANG =
         ru: ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
         en: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
     domain:
-        ru: "algoprog.ru"
-        en: "algoprog.org"
+        ru: "online.mathncode.kz"
+        en: "online.mathncode.kz"
     default_title:
-        ru: "Алгоритмическое программирование"
-        en: "Algorithmic programming"
+        ru: "Учебный Центр M&C"
+        en: "Учебный Центр M&C"
     edit_profile:
         ru: "Редактировать профиль"
         en: "Edit profile"
@@ -203,13 +203,14 @@ _LANG =
     codeforces_data_for_submitting_problems_intro:
         ru: "Некоторые задачи отправляются на codeforces, а не на информатикс. 
                         Для их отправки нужны логин и пароль от какого-нибудь вашего аккаунта на cf.
-                        Вы можете указать данные того же аккаунта, что и выше, или можете зарегистрировать
-                        отдельный аккаунт только для отправки решений с алгопрога, если не хотите указывать пароль
-                        от вашего основного аккаунта."
+                        Вы можете указать данные своего основного аккаунта, или можете зарегистрировать
+                        отдельный аккаунт только для отправки решений, если не хотите указывать пароль
+                        от вашего основного аккаунта.<br/>
+                        Хендл (никнейм) на codeforces для отправки решений:"
         en: "Some tasks are sent to codeforces, not to informatics.
                         To send them, you need to provide a username and password from some of your cf account.
-                        You can specify the data of the same account as above, or you can register
-                        a separate account only for sending solutions from the algoprog, if you do not want to specify a password
+                        You can specify the data of your main account, or you can register
+                        a separate account only for sending solutions from here, if you do not want to specify a password
                         from your main account"
     codeforces_data_for_submitting_problems_handle:
         ru: "Хендл (никнейм) на codeforces для отправки решений"
