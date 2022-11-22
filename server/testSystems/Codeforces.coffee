@@ -7,6 +7,7 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 
 import download, {downloadLimited} from '../lib/download'
 import sleep from '../lib/sleep'
+import {notify, notifyDocument} from '../lib/telegramBot'
 
 import logger from '../log'
 
@@ -173,14 +174,18 @@ export class LoggedCodeforcesUser
             href = "#{BASE_URL}/#{contest}/submit"
             csrfHref = "#{BASE_URL}/#{contest}"
         else
-            href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}?csrf_token=#{csrf}"
+            href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}"
             csrfHref = href
         page = await @download(csrfHref)
         csrf = @_getCsrf(page)
+        logger.info "Found csrf=#{csrf}"
+        href = href + "?csrf_token=#{csrf}"
+        tta = @tta()
         data = {
                 csrf_token: csrf
                 ftaa: @ftaa
                 bfaa: @bfaa
+                _tta: tta
                 action: "submitSolutionFormSubmitted"
                 submittedProblemIndex: problem
                 programTypeId: data.language
@@ -200,8 +205,12 @@ export class LoggedCodeforcesUser
             timeout: 30 * 1000
         })
         if page.includes("You have submitted exactly the same code before")
+            logger.info "Submit is a duplicate"
             throw {duplicate: true}
         if not page.includes("Contest status")
+            #notify "Can't submit to CF"
+            #notifyDocument page, {filename: 'page.html', contentType: "text/html"}
+            logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"
 

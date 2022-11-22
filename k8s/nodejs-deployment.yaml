@@ -63,6 +63,18 @@ spec:
           ports:
             - containerPort: 3000
           resources: {}
+          livenessProbe:
+            httpGet:
+              path: /api/ping
+              port: 3000
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/ping
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 2
       initContainers:
         - name: init-db
           image: busybox

@@ -3,7 +3,7 @@ iconv = require('iconv-lite')
 
 import { JSDOM } from 'jsdom'
 
-import TestSystemSubmitDownloader from '../TestSystem'
+import TestSystemSubmitDownloader, {checkOutcome} from '../TestSystem'
 
 import logger from '../../log'
 import download from '../../lib/download'
@@ -41,23 +41,23 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         super()
 
     VERDICTS: 
-        FAILED: "Ошибка проверки", 
+        FAILED: "FL", 
         OK: "OK", 
-        PARTIAL: "Неполное решение", 
+        PARTIAL: "WA", 
         COMPILATION_ERROR: "CE", 
-        RUNTIME_ERROR: "Ошибка времени выполнения", 
-        WRONG_ANSWER: "Неверный ответ", 
-        PRESENTATION_ERROR: "Неправильный формат выходных данных", 
-        TIME_LIMIT_EXCEEDED: "Превышен предел времени", 
-        MEMORY_LIMIT_EXCEEDED: "Превышен предел памяти", 
-        IDLENESS_LIMIT_EXCEEDED: "Превышен предел времени простоя", 
-        SECURITY_VIOLATED: "Нарушение правил", 
-        CRASHED: "Ошибка времени выполнения", 
-        INPUT_PREPARATION_CRASHED: "Ошибка проверки", 
-        CHALLENGED: "Взломано", 
-        SKIPPED: "Пропущено", 
+        RUNTIME_ERROR: "RE", 
+        WRONG_ANSWER: "WA", 
+        PRESENTATION_ERROR: "PE", 
+        TIME_LIMIT_EXCEEDED: "TL", 
+        MEMORY_LIMIT_EXCEEDED: "ML", 
+        IDLENESS_LIMIT_EXCEEDED: "TL", 
+        SECURITY_VIOLATED: "SV", 
+        CRASHED: "RE", 
+        INPUT_PREPARATION_CRASHED: "FL", 
+        CHALLENGED: "WA", 
+        SKIPPED: "SK", 
         TESTING: "CT", 
-        REJECTED: "Отклонено"
+        REJECTED: "WA"
 
     _parseRunId: (runid) ->
         return runid.substr(1)
@@ -107,7 +107,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             for i in [1..1000]
                 if not ("input##{i}" of data)
                     break
-                result.tests.push
+                r = 
                     input: data?["input##{i}"]
                     output: data?["output##{i}"]
                     corr: data?["answer##{i}"]
@@ -116,9 +116,12 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                     string_status: data?["verdict##{i}"]
                     time: data?["timeConsumed##{i}"]
                     max_memory_used: data?["memoryConsumed##{i}"]
+                r.string_status = @VERDICTS[r.string_status] || r.string_status
+                checkOutcome(r.string_status)
+                result.tests.push r
             return result
         catch e
-            logger.warn "Can't download results ", runid, href, e, e.stack
+            logger.warn "Can't download results ", runid, e, e.stack
             throw e
 
     parseSubmits: (submits) ->
@@ -132,6 +135,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                 logger.info "Skipping submit #{submit.id} because it is for a different problem: #{submit.problem.index} vs #{@problem}"
                 continue
             outcome = @VERDICTS[submit.verdict] || submit.verdict || "CT"
+            checkOutcome(outcome)
             result.push new Submit(
                 _id: "c" + submit.id,
                 time: new Date(submit.creationTimeSeconds * 1000),
@@ -183,6 +187,8 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             time = moment(time, "MMM/DD/YYYY HH:mm", true).subtract(3, 'hours').toDate()
             if outcome == "In queue" or outcome.startsWith("Running")
                 outcome = "CT"
+            if outcome == "Compilation error"
+                outcome = "CE"
             if outcome.startsWith("Perfect result")
                 outcome = "OK"
             if outcome == "Вы уже отправляли этот код"
@@ -207,4 +213,5 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                     system: "codeforces"
                     username: @username
             )
+            checkOutcome(outcome)
         return result

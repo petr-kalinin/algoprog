@@ -22,3 +22,8 @@
   flex: 1;
   padding-bottom: 10px;
 }
+.en_warning {
+  position: sticky;
+  top: 50px;
+  z-index: 100;  
+}

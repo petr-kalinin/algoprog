@@ -29,8 +29,8 @@ const optimization = () => {
   return config
 }
 
-const resolve = {extensions: ['.coffee','.js']}
-const devtool = isDev ? 'source-map' : ''
+const resolve = {extensions: ['.coffee', '.js', '.ts', '.tsx']}
+const devtool = isDev ? 'source-map' : false
 const cssLoaderOptions = isDev ?
   {
     importLoaders: 1,
@@ -76,7 +76,12 @@ const moduleconf = () => ({
                    ],
         }
       }
-    }
+    },
+    {
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
+    },    
   ]
 })
 
@@ -105,7 +110,10 @@ const clientConfig = {
     new WebpackAssetsManifest({
       entrypoints: true,
       transform: assets => assets.entrypoints
-    })
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
   ],
 }
 

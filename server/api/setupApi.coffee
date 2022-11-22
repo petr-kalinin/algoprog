@@ -5,26 +5,27 @@ passport = require('passport')
 iconv = require('iconv-lite')
 Entities = require('html-entities').XmlEntities
 sha256 = require('sha256')
+sha1 = require('sha1')
 FileType = require('file-type')
 deepcopy = require('deepcopy')
 moment = require('moment')
 XRegExp = require('xregexp')
 
+import bodyParser from "body-parser"
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router'
 
 import {UserNameRaw} from '../../client/components/UserName'
 import awaitAll from '../../client/lib/awaitAll'
 import ACHIEVES from '../../client/lib/achieves'
-import {getYear} from '../../client/lib/graduateYearToClass'
+import {getGraduateYear} from '../../client/lib/graduateYearToClass'
+import GROUPS from '../../client/lib/groups'
 import {unpaidBlocked} from '../../client/lib/isPaid'
 
-import {levelVersion} from '../calculations/calculateRatingEtc'
 import {getTables, getUserResult} from '../calculations/updateTableResults'
 
 import * as downloadSubmits from "../cron/downloadSubmits"
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
-import * as groups from '../informatics/informaticsGroups'
 import InformaticsUser from '../informatics/InformaticsUser'
 
 import download, {getStats} from '../lib/download'
@@ -32,11 +33,12 @@ import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
+import translate from '../lib/translate'
+import translateProblems from '../lib/translateProblems'
 
 import {allTables} from '../materials/data/tables'
 import downloadMaterials from '../cron/downloadMaterials'
-import * as downloadContests from '../cron/downloadContests'
-import notify from '../metrics/notify'
+import {notify} from '../lib/telegramBot'
 
 import BlogPost from '../models/BlogPost'
 import Calendar from '../models/Calendar'
@@ -71,6 +73,16 @@ ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
 PASSWORD = process.env["TINKOFF_PASSWORD"]
+XSOLLA_MERCHANT_ID = process.env['XSOLLA_MERCHANT_ID']
+XSOLLA_PROJECT_ID = process.env['XSOLLA_PROJECT_ID']
+XSOLLA_API_KEY = process.env["XSOLLA_API_KEY"]
+XSOLLA_SECRET_KEY = process.env["XSOLLA_SECRET_KEY"]
+UNITPAY_PUBLIC_KEY = process.env["UNITPAY_PUBLIC_KEY"]
+UNITPAY_SECRET_KEY = process.env["UNITPAY_SECRET_KEY"]
+UNITPAY_PUBLIC_KEY_ORG = process.env["UNITPAY_PUBLIC_KEY_ORG"]
+UNITPAY_SECRET_KEY_ORG = process.env["UNITPAY_SECRET_KEY_ORG"]
+EVOCA_LOGIN = process.env["EVOCA_LOGIN"]
+EVOCA_PASSWORD = process.env["EVOCA_PASSWORD"]
 
 wrap = (fn) ->
     (args...) ->
@@ -79,7 +91,7 @@ wrap = (fn) ->
         catch error
             args[2](error)
 
-expandSubmit = (submit) ->
+expandSubmit = (submit, lang="") ->
     submit = submit.toObject?() || submit
     MAX_SUBMIT_LENGTH = 100000
 
@@ -90,14 +102,17 @@ expandSubmit = (submit) ->
         return false
 
     submit.fullUser = await User.findById(submit.user)
-    submit.fullProblem = await Problem.findById(submit.problem)
+    submit.fullProblem = (await Problem.findById(submit.problem))?.toObject?()
+    material = (await Material.findById(submit.problem + lang)) || (await Material.findById(submit.problem))
+    submit.fullProblem.name = material.title
     tableNamePromises = []
     for t in submit.fullProblem.tables
         tableNamePromises.push(Table.findById(t))
     tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
     submit.fullProblem.tables = tableNames
     if (submit.source.length > MAX_SUBMIT_LENGTH or containsBinary(submit.source))
-        submit.source = "Файл слишком длинный или бинарный"
+        submit.source = ""
+        submit.isBinary = true
     return submit
 
 hideTests = (submit) ->
@@ -152,8 +167,10 @@ createSubmit = (problemId, userId, userList, language, codeRaw, draft, findMista
     update()  # do this async
     return undefined
 
-expandFindMistakeResult = (result, admin, userKey) ->
+expandFindMistakeResult = (result, admin, userKey, lang="") ->
     mistake = await FindMistake.findById(result.findMistake)
+    if not mistake
+        return null
     allowed = await mistake.isAllowedForUser(userKey, admin)
     mistake = mistake.toObject()
     mistake.allowed = allowed
@@ -162,8 +179,60 @@ expandFindMistakeResult = (result, admin, userKey) ->
         mistake.allowed = false
         mistake.source = ""
     mistake.fullProblem = await Problem.findById(mistake.problem)
+    material = (await Material.findById(mistake.problem + lang)) || (await Material.findById(mistake.problem))
+    mistake.problemName = material.title
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
+
+processPayment = (orderId, success, amount, payload, isReal=true) ->
+    [userId, paidTillInOrder] = orderId.split(":")
+
+    payment = new Payment
+        user: userId
+        orderId: orderId
+        success: success
+        processed: false
+        payload: payload
+    await payment.upsert()
+    if not success
+        logger.info("paymentNotify #{orderId}: unsuccessfull")
+        return
+    user = await User.findById(userId)
+    if not user
+        logger.warn("paymentNotify #{orderId}: unknown user")
+        return
+
+    userPrivate = await UserPrivate.findById(userId)
+    payment.oldPaidTill = userPrivate.paidTill
+    expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
+    if expectedPaidTill != paidTillInOrder
+        logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill}, found #{paidTillInOrder})")
+        return
+    if amount and Math.abs(+userPrivate.price - amount) > 0.5
+        logger.warn("paymentNotify #{orderId}: wrong amount (price is #{userPrivate.price}, paid #{amount})")
+        return
+    if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
+        newPaidTill = new Date()
+    else
+        newPaidTill = userPrivate.paidTill
+    newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
+    userPrivate.paidTill = newPaidTill
+    await userPrivate.upsert()
+    if isReal
+        try
+            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
+            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
+        catch e
+            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
+            receipt = "---"
+    else
+        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
+        receipt = "---"
+    logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
+    payment.processed = true
+    payment.newPaidTill = newPaidTill
+    payment.receipt = receipt
+    await payment.upsert()
 
 export default setupApi = (app) ->
     app.get '/api/ping', wrap (req, res) ->
@@ -260,10 +329,12 @@ export default setupApi = (app) ->
         user = await User.findById(req.params.id)
         await user.setCfLogin cfLogin
         if(req.body.clas !='' and req.body.clas!=null)
-            await user.setGraduateYear getYear(+req.body.clas)
+            await user.setGraduateYear getGraduateYear(+req.body.clas)
         else
             await user.setGraduateYear(undefined)
         await user.updateName newName
+        if req.body.telegram
+            await user.setTelegram req.body.telegram
         if req.body.codeforcesPassword
             cfUser = await LoggedCodeforcesUser.getUser(req.body.codeforcesUsername, req.body.codeforcesPassword)
             for registeredUser in registeredUsers
@@ -407,9 +478,11 @@ export default setupApi = (app) ->
             calendar: calendar?.toObject()
 
         userPrivate = {}
+        tg = {}
         if req.user?.admin or ""+req.user?.userKey() == ""+userId
             userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
-        result.user = {result.user..., userPrivate...}
+            tg = (await User.findTelegram(userId))?.toObject() || {}
+        result.user = {result.user..., userPrivate..., tg...}
         res.json(result)
 
     app.get '/api/users/:userList', wrap (req, res) ->
@@ -484,7 +557,7 @@ export default setupApi = (app) ->
         submits = submits.map((submit) -> submit.toObject())
         if not req.user?.admin
             submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
+        submits = submits.map((s) -> expandSubmit(s))
         submits = await awaitAll(submits)
         res.json(submits)
 
@@ -496,7 +569,7 @@ export default setupApi = (app) ->
             submits = submits.map((submit) -> submit.toObject())
             if not req.user?.admin
                 submits = submits.map(hideTests)
-            submits = submits.map(expandSubmit)
+            submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             ws.send JSON.stringify submits
 
@@ -530,7 +603,7 @@ export default setupApi = (app) ->
         submits.splice(0, 0, submit0)
         if not req.user?.admin
             submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
+        submits = submits.map((s) -> expandSubmit(s))
         submits = await awaitAll(submits)
         res.json(submits)
 
@@ -563,15 +636,16 @@ export default setupApi = (app) ->
             submits.splice(0, 0, submit0)
             if not req.user?.admin
                 submits = submits.map(hideTests)
-            submits = submits.map(expandSubmit)
+            submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             ws.send JSON.stringify(submits)
 
     app.get '/api/submitsByDay/:user/:day', wrap (req, res) ->
         submits = await Submit.findByUserAndDayWithFindMistakeAny(req.params.user, req.params?.day)
+        lang = req.query.lang || ""
         submits = submits.map((submit) -> submit.toObject())
         submits = submits.map(hideTests)
-        submits = submits.map(expandSubmit)
+        submits = submits.map((s) -> expandSubmit(s, lang))
         submits = await awaitAll(submits)
         submits = submits.map((submit) ->
               _id: submit._id
@@ -588,13 +662,17 @@ export default setupApi = (app) ->
         id = req.user?.userKey()
         user = await User.findById(id)
         material = await Material.findById(req.params.id)
-        if not material.allowedForUser(user)
+        if not material?.allowedForUser(user)
             res.json({"error": "level"})
         else
+            if not material
+                material = new Material
+                    content: "<h1>404 Not found</h1>Unknown material"
+                    type: "page"
             res.json(material)
 
     app.get '/api/lastBlogPosts', wrap (req, res) ->
-        res.json(await BlogPost.findLast(5, 1000 * 60 * 60 * 24 * 60))
+        res.json(await BlogPost.findLast(5))
 
     app.get '/api/result/:id', wrap (req, res) ->
         result = (await Result.findById(req.params.id))?.toObject()
@@ -639,7 +717,7 @@ export default setupApi = (app) ->
         submit = (await Submit.findById(req.params.id)).toObject()
         similar = await findSimilarSubmits(submit, 5)
         similar = similar.map((submit) -> submit.toObject())
-        similar = similar.map(expandSubmit)
+        similar = similar.map((s) -> expandSubmit(s))
         similar = await awaitAll(similar)
         similar = similar.map (submit) ->
             return
@@ -865,6 +943,21 @@ export default setupApi = (app) ->
         await material.upsert()
         res.send('OK')
 
+    app.post '/api/translateProblems', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        translateProblems()
+        res.send('OK')
+
+    app.post '/api/translate', ensureLoggedIn, wrap (req, res) ->
+        if not req.user?.admin
+            res.status(403).send('No permissions')
+            return
+        text = req.body.text
+        result = (await translate([text]))[0]
+        res.json({text: result})
+
     app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -873,7 +966,7 @@ export default setupApi = (app) ->
         runForUser = (user) ->
             userPrivate = await UserPrivate.findById(user._id)
             registeredUser = await RegisteredUser.findByKey(user._id)
-            if registeredUser.admin or (user.userList == "stud" and userPrivate.paidTill > new Date())
+            if registeredUser.admin or (not GROUPS[user.userList]?.canResetYear and userPrivate.paidTill > new Date())
                 logger.info("Will not move user #{user._id} to unknown group")
                 return
             await user.setActivated(false)
@@ -1040,9 +1133,10 @@ export default setupApi = (app) ->
             return
         user = req.params.user
         order = req.query.order
+        lang = req.query.lang || ""
         mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page, order)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistakeResult(mistake, req.user?.admin, user)
+            expandFindMistakeResult(mistake, req.user?.admin, user, lang)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1059,9 +1153,10 @@ export default setupApi = (app) ->
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
+        lang = req.query.lang || ""
         mistakes = await Result.findPageByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem, req.params.page)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistakeResult(mistake, req.user?.admin, req.params.user)
+            expandFindMistakeResult(mistake, req.user?.admin, req.params.user, lang)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1071,8 +1166,9 @@ export default setupApi = (app) ->
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
+        lang = req.query.lang || ""
         mistake = await Result.findByUserAndFindMistake(user, req.params.id)
-        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user)
+        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user, lang)
         res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
@@ -1097,7 +1193,7 @@ export default setupApi = (app) ->
                 console.log "Bad findmistake ", mistake._id, mistake.submit, mistake.correctSubmit
                 await mistake.setBad()
                 continue
-            submits = submits.map(expandSubmit)
+            submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             count = await FindMistake.findNotApprovedCount()
             res.json({mistake, submits, count})
@@ -1133,6 +1229,188 @@ export default setupApi = (app) ->
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
 
+    app.post '/api/xsollaToken', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        order = req.body.order
+        name = req.body.name
+        email = req.body.email
+        address = req.body.address
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        url = "https://api.xsolla.com/merchant/v2/merchants/#{XSOLLA_MERCHANT_ID}/token"
+        data =
+            user:
+                id: 
+                    value: ""+req.user.userKey()
+                email:
+                    value: email
+                name:
+                    value: name
+                attributes:
+                    address: address
+            settings:
+                project_id: +XSOLLA_PROJECT_ID
+                mode: "sandbox"
+                external_id: order
+            purchase:
+                checkout:
+                    amount: userPrivate.price
+                    currency: "RUB"
+                description:
+                    value: "Payment for access to algoprog.ru for one month"
+        try
+            result = await download(url, undefined, {
+                json: data
+                method: 'POST'
+                headers:
+                    'Content-Type': 'application/json',
+                    Authorization: 'Basic ' + Buffer.from("#{XSOLLA_MERCHANT_ID}:#{XSOLLA_API_KEY}").toString('base64')
+            })
+        catch e
+            throw "Can't download xsolla api"
+        res.json({token: result.token})
+
+    app.post '/api/unitpaySignature', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        order = req.body.order
+        name = req.body.name
+        email = req.body.email
+        address = req.body.address
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        currency = 'RUB'
+        desc = req.body.desc
+        sum = userPrivate.price
+        is_org = req.host.endsWith(".org")
+        if UNITPAY_PUBLIC_KEY_ORG && is_org
+            logger.info("Payment form opened on org domain")
+            publicKey = UNITPAY_PUBLIC_KEY_ORG
+            secretKey = UNITPAY_SECRET_KEY_ORG
+        else
+            logger.info("Payment form opened on ru domain")
+            publicKey = UNITPAY_PUBLIC_KEY
+            secretKey = UNITPAY_SECRET_KEY
+        hashStr = "#{order}{up}#{currency}{up}#{desc}{up}#{sum}{up}#{secretKey}"
+        res.json
+            signature: sha256(hashStr)
+            desc: desc
+            order: order
+            currency: currency
+            sum: sum
+            publicKey: publicKey
+            is_org: is_org
+
+    app.post '/api/evocaData', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        order = req.body.order + ":" + Math.random().toString(36).substr(2, 4)
+        name = req.body.name
+        email = req.body.email
+        address = req.body.address
+        desc = req.body.desc
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        # TODO: convert
+        rubToAmd = 6
+        desc = req.body.desc
+        sum = userPrivate.price * rubToAmd * 100
+        returnUrl = encodeURIComponent("#{req.protocol}://#{req.get('host')}/evocaPaymentSuccess")
+        url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}"
+        result = JSON.parse(await download(url))
+        logger.info "Evoca register request answer", result, result.errorCode
+        if result.errorCode == 1
+            url = "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}"
+            result = JSON.parse(await download(url))
+            console.log "Evoca getOrderStatusExtended answer", result
+        res.json
+            formUrl: result.formUrl
+
+    app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
+        hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)
+        signature = req.get("Authorization")
+        if signature != "Signature " + hash
+            logger.error("xsollaHook: wrong hash")
+            res.status(400).json
+                error:
+                    code: "INVALID_SIGNATURE",
+                    message: "Invalid signature"
+            return
+        data = JSON.parse(req.body)
+        if data.notification_type == "user_validation"
+            userId = data.user.id
+            user = await User.findById(userId)
+            if user
+                logger.error("xsollaHook: ok user " + userId)
+                res.status(204).send('')
+            else
+                logger.error("xsollaHook: bad user " + userId)
+                res.status(400).json
+                    error:
+                        code: "INVALID_USER",
+                        message: "Invalid user"
+            return
+        if data.notification_type == "refund"
+            logger.error("xsollaHook: refund")
+            res.status(204).send('')
+            return
+        if data.notification_type != "payment"
+            logger.error("xsollaHook: unsupported notification type")
+            res.status(400).json
+                error:
+                    code: "INVALID_PARAMETER",
+                    message: "Unsupported notification type"
+            return
+        logger.error("xsollaHook: payment success")
+        success = true
+        orderId = data.transaction.external_id
+        amount = data.purchase.checkout.amount
+        await processPayment(orderId, success, amount, req.body, false)
+        res.status(204).send('')
+
+    app.get '/api/unitpayNotify', wrap (req, res) ->
+        order = req.query.params.account
+        logger.info("unitpayNotify #{order}")
+        data = deepcopy(req.query.params)
+        signature = data.signature
+        method = req.query.method
+        delete data.signature
+        keys = (key for own key, value of data)
+        keys.sort()
+        str = ""
+        for key in keys
+            str += data[key] + "{up}"
+        str += UNITPAY_SECRET_KEY
+        str = method + "{up}" + str
+        hash = sha256(str)
+        if hash != signature
+            logger.warn("unitpayNotify #{order}: wrong signature")
+            res.status(403).send('Wrong signature')
+            return
+
+        if method != "pay"
+            logger.info("unitpayNotify #{order}: method #{method}")
+            res.json({result: {message: "OK"}})
+            return
+
+        success = true
+        amount = data.orderSum
+        await processPayment(order, success, amount, req.query)
+        res.json({result: {message: "OK"}})
+
     app.post '/api/paymentNotify', wrap (req, res) ->
         logger.info("paymentNotify #{req.body.OrderId}")
         data = deepcopy(req.body)
@@ -1150,59 +1428,27 @@ export default setupApi = (app) ->
             res.status(403).send('Wrong token')
             return
 
-        [userId, paidTillInOrder] = data.OrderId.split(":")
         success = data.Status == "CONFIRMED"
-
-        payment = new Payment
-            user: userId
-            orderId: data.OrderId
-            success: success
-            processed: false
-            payload: req.body
-        await payment.upsert()
-        if not success
-            logger.info("paymentNotify #{req.body.OrderId}: unsuccessfull (#{data.Status})")
-            res.send('OK')
-            return
-        user = await User.findById(userId)
-        if not user
-            logger.warn("paymentNotify #{req.body.OrderId}: unknown user")
-            res.send('OK')
-            return
-
-        userPrivate = await UserPrivate.findById(userId)
-        if not userPrivate
-            userPrivate = new UserPrivate({_id: req.params.id})
-        payment.oldPaidTill = userPrivate.paidTill
-        expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
-        if expectedPaidTill != paidTillInOrder
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong paid till (current is #{expectedPaidTill})")
-            res.send('OK')
-            return
-        if +userPrivate.price * 100 != +data.Amount
-            logger.warn("paymentNotify #{req.body.OrderId}: wrong amount (price is #{userPrivate.price}, paid #{data.Amount/100})")
-            res.send('OK')
-            return
-        if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
-            newPaidTill = new Date()
-        else
-            newPaidTill = userPrivate.paidTill
-        newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
-        userPrivate.paidTill = newPaidTill
-        await userPrivate.upsert()
-        try
-            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-            notify "Добавлен чек (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
-        catch e
-            notify "Ошибка добавления чека (#{req.body.OrderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
-            receipt = "---"
-        logger.info("paymentNotify #{req.body.OrderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
-        payment.processed = true
-        payment.newPaidTill = newPaidTill
-        payment.receipt = receipt
-        await payment.upsert()
+        amount = Math.floor(req.body.Amount/100)
+        await processPayment(req.body.OrderId, success, amount, req.body)
         res.send('OK')
 
+    app.get '/api/evocaStatus/:orderId', wrap (req, res) ->
+        orderId = req.params.orderId
+        if not orderId
+            res.status(400).send('No orderId')
+            return
+        url = "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderId=#{orderId}"
+        data = await download(url)
+        result = JSON.parse(data)
+        # TODO: convert
+        rubToAmd = 6
+        success = result.actionCode == 0
+        await processPayment(result.orderNumber, result.actionCode == 0, result.amount / 6 / 100, result)
+        res.json
+            status: success
+
+    ###
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
@@ -1271,3 +1517,4 @@ export default setupApi = (app) ->
             
             await User.updateUser(newUser._id)
         res.send('OK')
+    ###

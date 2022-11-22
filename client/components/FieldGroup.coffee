@@ -11,8 +11,12 @@ export default FieldGroup = ({ id, label, help, setField, state, validationState
         setField(id, e.target.value)
     value = if "value" of props then props.value else state[id]
     <FormGroup controlId={id} validationState={validationState}>
-        <ControlLabel>{label}</ControlLabel>
-        {`<FormControl {...props} value={value} onChange={onChange} name={id}/>`}
+        {label && <ControlLabel>{label}</ControlLabel>}
+        {if props.type == "radio" 
+            props.children
+        else
+            `<FormControl {...props} value={value} onChange={onChange} name={id}/>`
+        }
         {help && <HelpBlock>{help}</HelpBlock>}
         {error && <Alert  bsStyle="danger">{error}</Alert>}
     </FormGroup>

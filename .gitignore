@@ -11,3 +11,10 @@ scripts/log*
 scripts/standings
 *~
 k8s/*secret*
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -9,8 +9,12 @@ import Table from './Table'
 
 import { Badge } from 'react-bootstrap'
 
+import {LangRaw} from '../lang/lang'
+
 import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
+import GROUPS from '../lib/groups'
+import withLang from '../lib/withLang'
 
 import globalStyles from './global.css'
 import styles from './FullUser.css'
@@ -64,9 +68,12 @@ class SubmitsOnDay extends React.Component
           <SubmitListTable submits={@props.data} showProblems={true} />
       </div>
 
-SubmitsOnDayConnected = ConnectedComponent(SubmitsOnDay, {urls: (props) -> (data: "submitsByDay/#{props.userId}/#{props.day}")})
+SubmitsOnDayConnected = withLang ConnectedComponent(SubmitsOnDay, {
+    urls: (props) -> 
+        data: "submitsByDay/#{props.userId}/#{props.day}?lang=#{LangRaw("material_suffix", props.lang)}"
+})
 
-export default class FullUser extends React.Component
+class FullUser extends React.Component
     constructor: (props) ->
         super(props)
         @setChocosGot = @setChocosGot.bind this
@@ -99,16 +106,16 @@ export default class FullUser extends React.Component
     render: () ->
         <div>
             {`<UserBadge {...this.props} onTShirtsClick={this.setTShirts}/>`}
-            {@props.user.userList == "lic40" && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
+            {GROUPS[@props.user.userList]?.chocos && <Chocos chocos={@props.user.chocos} chocosGot={@props.user.chocosGot} onClick={@setChocosGot}/> }
             <SolvedByWeek users={[@props.user]} userList={@props.user.userList} details={false} headerClass="h2"/>
             {if @props.calendar then <ContributeByWeekCalendar calendar={@props.calendar} clickOnDay={@showSubmitsOnDay}/>}
             {if @state.day
                 <>
-                    <div><Button onClick={@hideSubmitsOnDay} bsSize="xsmall">Спрятать посылки</Button></div>
+                    <div><Button onClick={@hideSubmitsOnDay} bsSize="xsmall">{LangRaw("hide_submits", @props.lang)}</Button></div>
                     <SubmitsOnDayConnected day={@state.day} userId={@props.user._id}/>
                 </>
             }
-            <h2>Результаты</h2>
+            <h2>{LangRaw("results", @props.lang)}</h2>
             {
             res = []
             a =  (el) -> res.push(el)
@@ -119,3 +126,5 @@ export default class FullUser extends React.Component
                 a <Table data={[data]} details={false} me={@props.me} headerText={false} key={result[0]._id}/>
             res}
         </div>
+
+export default withLang FullUser

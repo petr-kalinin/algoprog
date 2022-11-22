@@ -11,14 +11,14 @@ jobs:
     steps:
       -
         name: Login to DockerHub
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v2 
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: petrkalinin/algoprog-adina:latest,petrkalinin/algoprog-adina:${{ github.sha }}
@@ -27,7 +27,7 @@ jobs:
 
       - 
         name: Set kubectl context
-        uses: azure/k8s-set-context@v1
+        uses: azure/k8s-set-context@v3
         id: setcontext
         with:
           method: service-account
@@ -36,14 +36,14 @@ jobs:
           
       - 
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - 
         name: Deploy to k8s
-        uses: Azure/k8s-deploy@v1.4
+        uses: Azure/k8s-deploy@v4.3
         with:
           manifests: |
             k8s/nodejs-deployment.yaml
             k8s/nodejs-service.yaml
           images: 'petrkalinin/algoprog-adina:${{ github.sha }}'
-          kubectl-version: 'latest'
+          action: deploy

@@ -9,7 +9,7 @@ import callApi from '../lib/callApi'
 
 import styles from './EditUser.css'
 
-import { GROUPS } from '../lib/informaticsGroups'
+import GROUPS from '../lib/groups'
 
 
 class GroupSelector extends React.Component
@@ -41,7 +41,7 @@ class GroupSelector extends React.Component
                 {
                 res = []
                 a = (el) -> res.push(el)
-                for name, id of GROUPS
+                for name, _ of GROUPS
                     a <Button key={name} active={name==@props.user.userList} onClick={@handleMove(name)}>
                         {name}
                     </Button>

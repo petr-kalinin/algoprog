@@ -24,14 +24,16 @@ import Cookies from 'universal-cookie'
 
 renderFullPage = (html, data, helmet, linkClientJsCss) ->
     return '
+        <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8" />
             <meta name="yandex-verification" content="4f0059cd93dfb218" />
+            <meta name="verification" content="9562bf97c8461c1a2399c3922d2252" />
             ' + helmet.title + '
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             <link rel="stylesheet" href="/server.bundle.css"/>
-            ' + linkClientJsCss.client.css.map((css) => '<link rel="stylesheet" href="/' + css + '"/>').join('') + '
+            ' + linkClientJsCss.client.assets.css.map((css) => '<link rel="stylesheet" href="/' + css + '"/>').join('') + '
             <link rel="stylesheet" href="/react-diff-view.css"/>
             <link rel="stylesheet" href="/testsystems.css"/>
             <link rel="stylesheet" href="/highlight.css"/>
@@ -59,7 +61,7 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         </head>
         <body>
             <div id="main" style="min-width: 100%; min-height: 100%">' + html + '</div>
-            ' + linkClientJsCss.client.js.map((js) => '<script src="/' + js + '" type="text/javascript"></script>').join('') + '
+            ' + linkClientJsCss.client.assets.js.map((js) => '<script src="/' + js + '" type="text/javascript"></script>').join('') + '
             <!-- Yandex.Metrika counter -->
             <script type="text/javascript" >
             (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -84,13 +86,24 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
         </body>
         </html>'
 
- defaultTheme = (reqCookies) ->
+defaultTheme = (reqCookies) ->
     cookies = new Cookies(reqCookies)
     cookie = cookies.get('theme')
     if cookie
         return cookie
     else
         return "light"
+
+defaultLang = (req) ->
+    cookies = new Cookies(req.headers.cookie)
+    host = req.hostname
+    cookie = cookies.get('lang')
+    if cookie
+        return cookie
+    else if host == "algoprog.org"
+        return "en"
+    else
+        return "ru"
 
 export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
     # https://github.com/HenningM/express-ws/issues/64
@@ -111,6 +124,7 @@ export default renderOnServer = (linkClientJsCss) => (req, res, next) =>
             ],
             clientCookie: req.headers.cookie,
             theme: defaultTheme(req.headers.cookie)
+            lang: defaultLang(req)
             needDataPromises: true
         store = createStore(initialState)
 

@@ -3,11 +3,15 @@ FontAwesome = require('react-fontawesome')
 
 import { Helmet } from "react-helmet";
 
-import TableRow from './TableRow'
+import {LangRaw} from '../lang/lang'
 
+import stripLabel from '../lib/stripLabel'
+import withLang from '../lib/withLang'
+import withTheme from '../lib/withTheme'
+
+import TableRow from './TableRow'
 import globalStyles from './global.css'
 import styles from './Table.css'
-import withTheme from '../lib/withTheme'
 
 getHeader = (results) ->
     if not results
@@ -25,31 +29,29 @@ getHeader = (results) ->
         res.push(t)
     return res
 
-Text = (props) ->
-    if props.levels == "main"
+Text = withLang (props) ->
+    LANG = (id) -> LangRaw(id, props.lang)
+    if props.levels == "main" or  props.levels == "main!en"
         <div>
             <Helmet>
-                <title>Общая таблица</title>
+                <title>{LANG("main_table")}</title>
             </Helmet>
-            <h1>Общая таблица</h1>
-            <p>Цвет ячеек: белая — на уровне не решено ни одной задачи, серая — на уровне решено сколько-то задач, но недостаточно, чтобы пройти уровень, темно-зеленая — уровень пройден, но решены не все задачи, ярко-зеленая — решены вообще все задачи. (На уровнях с необязательными темами бывают ошибки раскраски.)</p>
-            <p>Имена школьников — ссылки на странички с результатами каждого конкретного школьника.</p>
+            <h1>{LANG("main_table")}</h1>
+            {LANG("main_table_notes")}
         </div>
     else
         <div>
             <Helmet>
-                <title>{"Сводная таблица по уровням " + props.levels}</title>
+                <title>{LANG("table_header")(props.levels)}</title>
             </Helmet>
-            <h1>Сводная таблица по уровням {props.levels}</h1>
-            <p>Цвета:{" "}
-                <span className={ if props.theme == "dark" then globalStyles.darkac else globalStyles.ac + " " + styles.example}>Зачтено/Принято</span>{" "}
-                <span className={globalStyles.ig + " " + styles.example}>Проигнорировано</span>{" "}
+            <h1>{LANG("table_header")(props.levels)}</h1>
+            <p>{LANG("colors")}:{" "}
+                <span className={ if props.theme == "dark" then globalStyles.darkac else globalStyles.ac + " " + styles.example}>{LANG("accepted")}</span>{" "}
+                <span className={globalStyles.ig + " " + styles.example}>{LANG("ignored")}</span>{" "}
                 <span className={ if props.theme == "dark" then globalStyles.darkok else globalStyles.ok + " " + styles.example}>OK</span>{" "}
-                <span className={globalStyles.wa + " " + styles.example}>Частичное решение и т.п.</span>
+                <span className={globalStyles.wa + " " + styles.example}>{LANG("partial_solution_etc")}</span>
             </p>
-            <p>Наведите курсор на ячейку таблицы, чтобы узнать название задачи</p>
-            <p>Двойной щелчок по ячейке таблицы открывает соответствующую задачу и, если по ней были посылки, то последнюю посылку по ней</p>
-            <p>Имена школьников — ссылки на странички с результатами каждого конкретного школьника</p>
+            {LANG("table_notes")}
         </div>
 
 Text = withTheme(Text)
@@ -65,7 +67,7 @@ export default Table = (props) ->
         return <table className={globalStyles.mainTable}/>
 
     header = getHeader(props.data[0].results)
-    levels = (r._id for r in header).join(", ")
+    levels = (r._id for r in header).map(stripLabel).join(", ")
 
     <div>
         {props.headerText && <Text levels={levels} /> }

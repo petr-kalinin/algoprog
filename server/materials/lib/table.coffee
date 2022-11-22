@@ -11,7 +11,7 @@ class Table
 
     build: (context, order) ->
         data =
-            _id: "table:" + @group + ":" + @table
+            _id: "table:" + @group + ":" + @table + context.label
             type: "table"
             title: @title
             treeTitle: @treeTitle

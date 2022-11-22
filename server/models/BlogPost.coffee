@@ -15,9 +15,8 @@ blogPostSchema.methods.upsert = () ->
     catch
         logger.info "Could not upsert a material"
 
-blogPostSchema.statics.findLast = (limit, time) ->
-    BlogPost.find({date: {$gt: new Date(new Date() - time)}}) \
-        .sort({date: -1}).limit(limit)
+blogPostSchema.statics.findLast = (limit) ->
+    BlogPost.find().sort({date: -1}).limit(limit)
 
 
 blogPostSchema.index({ date : -1 })

@@ -1,8 +1,10 @@
 import ACHIEVES from '../../client/lib/achieves'
+import {parseLevel} from '../../client/lib/level'
 import logger from '../log'
 
 achievesConditions = (user) ->
     chocos0 = (user.chocos?[0] || 0) - 1
+    level = parseLevel(user.level.current)
     fullcontests:
         30: 3 * chocos0 >= 30
         15: 3 * chocos0 >= 15
@@ -25,9 +27,9 @@ achievesConditions = (user) ->
         1900: user.cf?.rating >= 1900
     a:
         3: user.activity >= 3
-        6: user.activity >= 6 and user.level.current >= "1Б"
-        10: user.activity >= 10 and user.level.current >= "2"
-        15: user.activity >= 15 and user.level.current >= "3"
+        6: user.activity >= 6 and (level.major >= 2 or (level.major == 1 and level.minor >= 2))
+        10: user.activity >= 10 and level.major >= 2
+        15: user.activity >= 15 and level.major >= 3
         options:
             doNoRevoke: true
 

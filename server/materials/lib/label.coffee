@@ -5,7 +5,7 @@ export class Label
         data = 
             _id: context.generateId(),
             type: "label",
-            content: @content
+            content: @content?(context.label) || @content
             order: order
 
         await context.process(data)

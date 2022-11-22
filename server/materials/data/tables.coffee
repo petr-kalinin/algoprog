@@ -1,3 +1,5 @@
+import GROUPS from '../../../client/lib/groups'
+
 import table from '../lib/table'
 import simpleLevel from '../lib/simpleLevel'
 
@@ -42,19 +44,11 @@ getTreeTitle = (table) ->
 export allTables = ["0", "1", "2", "main", "reg", "roi"]
 
 export default tables = () ->
-    groups =
-        pk: "Все школьники"
-        ###
-        lic40: "Лицей 40",
-        zaoch: "Занятия во ВШЭ + нижегородские заочно",
-        unn: "Занятия в ННГУ"
-        lic87: "Лицей 87",
-        notnnov: "Остальные школьники",
-        stud: "Студенты и старше"
-        ###
-
     materials = []
-    for group, groupName of groups
+    for group, data of GROUPS
+        if not data.tableName
+            continue
+        groupName = data.tableName
         thisMaterials = []
         for t in [allTables... , "byWeek"]
             thisMaterials.push(table(group, t, getTableTitle(t), getTreeTitle(t)))

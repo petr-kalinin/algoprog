@@ -24,7 +24,7 @@ import getTestSystem from '../testSystems/TestSystemRegistry'
 
 SEMESTER_START = "2016-06-01"
 DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
-DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 90
+DEACTIVATED_DORMANT_TIME = 1000 * 60 * 60 * 24 * 3
 
 usersSchema = new mongoose.Schema
     _id: String,
@@ -59,6 +59,7 @@ usersSchema = new mongoose.Schema
         editorOn: Boolean
         language: String
     members: [String]
+    telegram: { type: String, select: false }
 
 usersSchema.methods.upsert = () ->
     # https://jira.mongodb.org/browse/SERVER-14322
@@ -80,8 +81,8 @@ usersSchema.methods.updateRatingEtc = ->
 usersSchema.methods.updateLevel = ->
     # level calculations are disabled
     return
-    @level.current = await calculateLevel @_id, @level.base, new Date("2100-01-01")
-    @level.start = await calculateLevel @_id, @level.base, new Date(SEMESTER_START)
+    @level.current = await calculateLevel this, new Date("2100-01-01")
+    @level.start = await calculateLevel this, new Date(SEMESTER_START)
     @update({$set: {level: @level}})
 
 usersSchema.methods.updateDormant = ->
@@ -192,6 +193,12 @@ usersSchema.methods.setActivated = (activated) ->
     User.updateUser(@_id)
     @activated = activated
 
+usersSchema.methods.setTelegram = (telegram) ->
+    logger.info "setting telegram ", @_id, telegram
+    await @update({$set: {telegram}})
+    @telegram = telegram
+
+
 usersSchema.methods.setEditorOn = (editorOn) ->
     logger.info "set editor on ", @name, editorOn
     @prefs.editorOn = editorOn
@@ -238,6 +245,15 @@ usersSchema.statics.findById = (id) ->
 
 usersSchema.statics.findByAchieve = (achieve) ->
     User.find({achieves: achieve}).sort({ratingSort: -1})
+
+usersSchema.statics.findByTelegram = (id) ->
+    User.findOne({telegram: id})?.select("+telegram")
+
+usersSchema.statics.findByIdWithTelegram = (id) ->
+    User.findById(id)?.select("+telegram")
+
+usersSchema.statics.findTelegram = (id) ->
+    User.findById(id)?.select("+telegram")
 
 usersSchema.statics.updateUser = (userId, dirtyResults) ->
     start = new Date()
@@ -354,6 +370,9 @@ usersSchema.index
 usersSchema.index
     achieves: 1
     ratingSort: -1
+
+usersSchema.index
+    telegram: 1
 
 usersSchema.index
     members: 1

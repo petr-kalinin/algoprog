@@ -1,13 +1,23 @@
 React = require('react')
 moment = require('moment')
 
-import Button from 'react-bootstrap/lib/Button'
 import Alert from 'react-bootstrap/lib/Alert'
+import Button from 'react-bootstrap/lib/Button'
+import Radio from 'react-bootstrap/lib/Radio'
+
 import { Link } from 'react-router-dom'
 
-import FieldGroup from './FieldGroup'
+import {LangRaw} from '../lang/lang'
 
-export default class Payment extends React.Component
+import callApi from '../lib/callApi'
+import ConnectedComponent from '../lib/ConnectedComponent'
+import GROUPS from '../lib/groups'
+import withLang from '../lib/withLang'
+
+import FieldGroup from './FieldGroup'
+import Loader from './Loader'
+
+class TinkoffPayment extends React.Component
     constructor: (props) ->
         super(props)
         @state =
@@ -30,37 +40,9 @@ export default class Payment extends React.Component
 
     render: () ->
         return null
-        canSubmit = true
-        if not @props.myUser?._id
-            amount = 1500
-            warning = <Alert bsStyle="danger">
-                    Вы не зарегистрированы, вы не можете оплачивать занятия. Форма ниже приведена для примера.
-                </Alert>
-            canSubmit = false
-        else if not @props.myUser?.activated
-            amount = 1500
-            warning = <Alert bsStyle="danger">
-                    Ваш аккаунт не активирован. Напишите мне, чтобы я активировал ваш аккаунт и установил стоимость занятий.
-                    Форма ниже приведена для примера.
-                </Alert>
-            canSubmit = false
-        else if @props.myUser.userList in ["lic40", "zaoch", "unn", "graduated", "team", "ikhlyustov", "lic87"] or @props.myUser.price == 0
-            amount = 0
-            warning = <Alert bsStyle="danger">
-                    Занятия для вас бесплатны, вам не надо их оплачивать.
-                </Alert>
-            canSubmit = false
-        else if not @props.myUser.price or not @props.myUser.paidTill
-            amount = 1500
-            warning = <Alert bsStyle="danger">
-                    Для вас не указана стоимость занятий, напишите мне.
-                    Форма ниже приведена для примера.
-                </Alert>
-            canSubmit = false
-        else 
-            amount = @props.myUser.price
-            warning = null
-
+        canSubmit = @props.canSubmit
+        amount = @props.amount
+        order = @props.order
         receipt = 
             Taxation: "usn_income",
             Items: [ {
@@ -70,19 +52,9 @@ export default class Payment extends React.Component
                 Amount: amount * 100,
                 Tax: "none" 
             }]
-        if @props.myUser?.paidTill
-            paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
-            order = "#{@props.myUser._id}:#{paidTill}"
-        else
-            order = ""
-
         canSubmit = canSubmit and @state.name and @state.email
 
         <div>
-            <h1>Оплата занятий</h1>
-            {warning}
-            <p>Вы оплачиваете один месяц занятий на algoprog.ru. Стоимость месяца для вас составляет {amount} рублей.</p>
-            <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
             <form name="TinkoffPayForm" onSubmit={@pay} id="payForm">
                 <input type="hidden" name="terminalkey" value="1539978299062"/>
                 <input type="hidden" name="frame" value="true"/>
@@ -92,32 +64,350 @@ export default class Payment extends React.Component
                 <input className="tinkoffPayRow" type="hidden" name="receipt" value={JSON.stringify(receipt)}/>
                 <FieldGroup
                     id="amount"
-                    label="Сумма"
+                    label={LangRaw("payment_sum", @props.lang)}
                     type="text"
                     value={amount}
                     disabled/>
                 <FieldGroup
                     id="name"
-                    label="Полные ФИО плательщика"
+                    label={LangRaw("full_payer_name", @props.lang)}
                     type="text"
                     setField={@setField}
                     state={@state}/>
                 <FieldGroup
                     id="email"
-                    label="E-mail плательщика"
+                    label={LangRaw("payer_email", @props.lang)}
                     type="text"
                     setField={@setField}
                     state={@state}/>
-                <p>Нажимая «Оплатить», вы соглашаетесь с <a href="/oferta.pdf" target="_blank">офертой</a> оказания услуг.</p>
+                <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
                 <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
-                    Оплатить
+                    {LangRaw("do_pay", @props.lang)}
                 </Button>
             </form>
-            <h2>Официальная часть</h2>
-            <p>Получатель платежа — ИП Калинин Петр Андреевич, ОГРНИП 318527500120581, ИНН 526210494064. 
-            Контакты: petr@kalinin.nnov.ru, +7-910-794-32-07. (Полностью контакты указаны в разделе <Link to="/material/about">О курсе</Link>.)</p>
+            {LangRaw("payment_official_tinkoff", @props.lang)}
 
-            <p>Платежи осуществляются через Тинькофф Банк. Принимаются карты любых банков.</p>
-            <img height="30px" src="/tinkoff.png" style={{marginRight: "15px"}}/>
-            <img height="30px" src="/mastercard_visa.svg"/>
         </div>
+
+class XSollaPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            name: ""
+            email: ""
+            address: ""
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "xsollaToken", {
+                order: @props.order,
+                name: @state.name,
+                email: @state.email,
+                address: @state.address
+            }
+            if not data.token
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open("https://sandbox-secure.xsolla.com/paystation3/?access_token=#{data.token}", '_blank').focus()
+
+
+    render: () ->
+        canSubmit = @props.canSubmit and @state.name and @state.email and @state.address
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading && 
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    <FieldGroup
+                        id="name"
+                        label={LangRaw("full_payer_name", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="email"
+                        label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="address"
+                        label={LangRaw("payer_address", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                </form>    
+            }
+        </div>
+
+class UnitpayPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            name: ""
+            email: ""
+            address: ""
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "unitpaySignature", {
+                order: @props.order,
+                name: @state.name,
+                email: @state.email,
+                address: @state.address,
+                desc: LangRaw("payment_for_one_month", @props.lang)
+            }
+            if (not data.signature) or (not data.publicKey) or (not data.desc) or (not data.currency) or (not data.order) or (not data.sum)
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open("https://unitpay.ru/pay/#{data.publicKey}?sum=#{data.sum}&account=#{data.order}&desc=#{data.desc}&currency=#{data.currency}&signature=#{data.signature}", '_blank').focus()
+
+
+    render: () ->
+        canSubmit = @props.canSubmit and @state.name and @state.email
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading && 
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    <FieldGroup
+                        id="name"
+                        label={LangRaw("full_payer_name", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="email"
+                        label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
+                    {LangRaw("payment_official_unitpay", @props.lang)}
+                </form>    
+            }
+        </div>
+
+class EvocaPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            name: ""
+            email: ""
+            address: ""
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "evocaData", {
+                order: @props.order,
+                name: @state.name,
+                email: @state.email,
+                address: @state.address,
+                desc: LangRaw("payment_for_one_month", @props.lang)
+            }
+            if not data.formUrl
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open(data.formUrl, '_blank').focus()
+
+
+    render: () ->
+        canSubmit = @props.canSubmit and @state.name and @state.email
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading && 
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    <FieldGroup
+                        id="name"
+                        label={LangRaw("full_payer_name", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="email"
+                        label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <Button type="submit" bsStyle="primary" disabled={!canSubmit}>
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
+                    {LangRaw("payment_official_evoca", @props.lang)}
+                </form>    
+            }
+        </div>
+
+class PaymentSelector extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            provider: null
+        @setField = @setField.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    render: () ->
+        <div>
+            <FieldGroup
+                id="provider"
+                label=""
+                type="radio"
+                setField={@setField}
+                state={@state}>
+                    {"tinkoff" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>}
+                    {"unitpay" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>}
+                    {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_alt", @props.lang)}</Radio>}
+            </FieldGroup>
+            {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
+            {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
+            {@state.provider == "evoca" && <EvocaPayment {@props...}/> }
+        </div>
+
+class Payment extends React.Component
+    render: () ->
+        canSubmit = true
+        amount = 2000
+        if not @props.myUser?._id
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_not_registered", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else if not @props.myUser?.activated
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_not_activated", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else if not GROUPS[@props.myUser.userList]?.paid or @props.myUser.price == 0
+            amount = 0
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_free", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else if not @props.myUser.price or not @props.myUser.paidTill
+            warning = <Alert bsStyle="danger">
+                    {LangRaw("cant_pay_no_price", @props.lang)}
+                </Alert>
+            canSubmit = false
+        else 
+            amount = @props.myUser.price
+            warning = null
+        switch GROUPS[@props.myUser?.userList]?.paid
+            when "tinkoff" then providers = ["tinkoff", "unitpay"]
+            when "unitpay" then providers = ["tinkoff", "unitpay"]
+            when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
+            else
+                canSubmit = false
+                provider = "unitpay"
+        if @props.myUser?.paidTill
+            paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
+            order = "#{@props.myUser._id}:#{paidTill}"
+        else
+            order = ""
+        <div>
+            <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
+            <h1>{LangRaw("payment_for_the_course", @props.lang)}</h1>
+            {warning}
+            <p>{LangRaw("you_pay_for_one_month", @props.lang)(amount)}</p>
+            <PaymentSelector providers={providers} {@props...} canSubmit={canSubmit} amount={amount} order={order}/>
+        </div>
+
+export default withLang Payment

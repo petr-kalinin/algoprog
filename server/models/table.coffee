@@ -1,4 +1,3 @@
-import parseLevel from '../lib/parseLevel'
 import Problem from './problem'
 import logger from '../log'
 

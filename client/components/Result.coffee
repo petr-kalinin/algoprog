@@ -3,11 +3,13 @@ moment = require('moment');
 FontAwesome = require('react-fontawesome')
 import {Link} from 'react-router-dom'
 
+import GROUPS from '../lib/groups'
+
 import styles from './Result.css'
 
 makeUserName = (user) ->
     star = ""
-    if user.userList == "stud"
+    if GROUPS[user.userList]?.starred
         star = "*"
     if not user?.activated
         star = "(na) "

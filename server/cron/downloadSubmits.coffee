@@ -17,8 +17,8 @@ import download from '../lib/download'
 import setDirty from '../lib/setDirty'
 
 import awaitAll from '../../client/lib/awaitAll'
+import GROUPS from '../../client/lib/groups'
 
-import * as groups from '../informatics/informaticsGroups'
 import getTestSystem, { REGISTRY as testSystemsRegistry } from '../testSystems/TestSystemRegistry'
 
 entities = new Entities()
@@ -132,7 +132,7 @@ class SubmitDownloader
         await newSubmit.calculateHashes()
 
         user = await User.findById(newSubmit.user)
-        if user?.userList == "graduated" and newSubmit.outcome == "OK" and newSubmit.time > new Date(2020, 1, 28)
+        if GROUPS[user?.userList]?.autoAccept and newSubmit.outcome == "OK" and newSubmit.time > new Date(2020, 1, 28)
             newSubmit.outcome = "AC"
             newSubmit.force = true
 

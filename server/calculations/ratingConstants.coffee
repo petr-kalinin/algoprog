@@ -1,7 +1,3 @@
-export startDayForWeeks =
-    "pk": "2019-08-05"
-    "unknown": "2019-08-05"
-
 # для общего заголовка в три колонки нужна кратность трём
 export lastWeeksToShow = 17 * 3
 

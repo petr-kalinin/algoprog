@@ -1,11 +1,15 @@
-FROM node:12
+FROM node:16
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN mkdir -p /home/node/app/node_modules
+RUN mkdir -p /home/node/app/.yarn/releases
+RUN chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
 
 COPY package*.json ./
 COPY yarn.lock ./
+COPY .yarnrc.yml ./
+COPY .yarn/releases/* ./.yarn/releases
 
 USER node
 
@@ -15,8 +19,8 @@ COPY --chown=node:node . .
 
 ENV NODE_ENV production
 
-RUN npm run build
+RUN yarn run build
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start:server" ]
+CMD [ "yarn", "run", "start:server" ]

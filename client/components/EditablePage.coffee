@@ -5,22 +5,25 @@ import Button from 'react-bootstrap/lib/Button'
 import FieldGroup from './FieldGroup'
 import ConnectedComponent from '../lib/ConnectedComponent'
 
+import {LangRaw} from '../lang/lang'
+
+import withLang from '../lib/withLang'
 import callApi from '../lib/callApi'
 
 class SimplePage extends React.Component
     updatePreElements: () =>
         preElements = @statementEl.querySelectorAll("pre")
-        preElements.forEach (preElement) ->
+        preElements.forEach (preElement) =>
             copyBtn = document.createElement "button"
             copyBtn.className = "btn btn-default btn-xs"
-            copyBtn.appendChild document.createTextNode "скопировать"
+            copyBtn.appendChild document.createTextNode LangRaw("copy", @props.lang)
             copyBtn.onclick = () =>
                 navigator.clipboard.writeText preElement.innerText
-                copyBtn.textContent = "скопировано"
+                copyBtn.textContent = LangRaw("copied", @props.lang)
                 copyBtn.className = "btn btn-success btn-xs"
                 clearSuccess = () => 
                     copyBtn.className = "btn btn-default btn-xs"
-                    copyBtn.textContent = "скопировать"
+                    copyBtn.textContent = LangRaw("copy", @props.lang)
                 setTimeout clearSuccess, 1000
             preElement.before(copyBtn)
 
@@ -36,6 +39,8 @@ class SimplePage extends React.Component
             <div dangerouslySetInnerHTML={{__html: @props.material.content}} ref={(el) => @statementEl = el}>
             </div>
         </div>
+
+SimplePage = withLang SimplePage
 
 class EditablePage extends React.Component
     constructor: (props) ->

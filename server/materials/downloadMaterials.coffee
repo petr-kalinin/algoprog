@@ -1,4 +1,5 @@
 import awaitAll from '../../client/lib/awaitAll'
+import stripLabel from '../../client/lib/stripLabel'
 
 import logger from '../log'
 import FindMistake from '../models/FindMistake'
@@ -7,26 +8,36 @@ import Problem from '../models/problem'
 import Table from '../models/table'
 
 import root from './data/root'
+import rootEn from './data-en/root'
 
 
 clone = (material) ->
     JSON.parse(JSON.stringify(material))
 
+correctLabel = (label) ->
+    if label != ""
+        "!#{label}"
+    else
+        ""
 
 class Context
-    constructor: (@processors) ->
+    constructor: (@processors, @label="") ->
         @pathToId = {}
         @path = []
+        @label = correctLabel(@label)
 
     generateId: () ->
         if @path.length
-            pathItem = @path[@path.length - 1]._id + "."
+            pathItem = @path[@path.length - 1]._id
+            if pathItem.endsWith(@label)
+                pathItem = pathItem.substring(0, pathItem.length - @label.length)
+            pathItem = pathItem + "."
         else
             pathItem = ""
         if not (pathItem of @pathToId)
             @pathToId[pathItem] = 0
         @pathToId[pathItem]++
-        return "#{pathItem}#{@pathToId[pathItem]}"
+        return "#{pathItem}#{@pathToId[pathItem]}#{@label}"
 
     pushPath: (id, order, title, type) ->
         @path.push
@@ -43,7 +54,6 @@ class Context
     process: (material) ->
         oldMaterial = await Material.findById(material._id)
         if oldMaterial?.force
-            logger.info("Will not overwrite forced material #{material._id}")
             material.content = oldMaterial.content
             material.title = oldMaterial.title
             material.force = oldMaterial.force
@@ -135,7 +145,7 @@ class ContestProcessor
             @tables[@level()].tables.push(id)
         @tables[id] = new Table
             _id: id
-            name: id
+            name: stripLabel(id)
             tables: []
             parent: @level()
             order: order
@@ -158,6 +168,7 @@ class ContestProcessor
     process: (material) ->
         id = material._id
         if material.type == "problem"
+            id = stripLabel(id)
             if not (id of @problems)
                 @problems[id] = new Problem
                     _id: material._id,
@@ -167,7 +178,7 @@ class ContestProcessor
                     testSystemData: material.testSystemData
                     order: material.order
         else if material.type == "contest" or material.type == "topic"
-            problemIds = (m._id for m in material.materials when m.type == "problem")
+            problemIds = (stripLabel(m._id) for m in material.materials when m.type == "problem")
             if problemIds.length == 0
                 return
             @tables[id] = new Table
@@ -230,20 +241,36 @@ class TreeProcessor
         @setTree(id, material)
 
 
-export default downloadMaterials = () ->
-    logger.info "Start downloadMaterials"
-    saveProcessor = new SaveProcessor()
+downloadRussian = (processors) ->
     treeProcessor = new TreeProcessor()
-    contestProcessor = new ContestProcessor
-    fmProcessor = new FindMistakeProcessor
-    context = new Context([saveProcessor, treeProcessor, contestProcessor, fmProcessor])
+    context = new Context(processors.concat(treeProcessor))
 
-    await root()().build(context, "")
+    await root()().build(context)
 
     tree = treeProcessor.getTree("main")
     tree._id = "tree"
     await (new Material(tree)).upsert()
 
+downloadEnglish = (processors) ->
+    treeProcessor = new TreeProcessor()
+    context = new Context(processors.concat(treeProcessor), "en")
+
+    await rootEn()().build(context)
+
+    tree = treeProcessor.getTree("main!en")
+    tree._id = "tree!en"
+    await (new Material(tree)).upsert()
+
+
+export default downloadMaterials = () ->
+    contestProcessor = new ContestProcessor()
+    processors = [new SaveProcessor(),
+        contestProcessor,
+        new FindMistakeProcessor()]
+
+    logger.info "Start downloadMaterials"
+    await downloadRussian(processors)
+    #await downloadEnglish(processors)
     await contestProcessor.finalize()
     logger.info "Done downloadMaterials"
 

@@ -4,7 +4,7 @@ parseCsv = require('csv-parse/lib/sync')
 import { JSDOM } from 'jsdom'
 Entities = require('html-entities').XmlEntities
 
-import TestSystemSubmitDownloader from '../TestSystem'
+import TestSystemSubmitDownloader, {checkOutcome} from '../TestSystem'
 
 import Submit from '../../models/submit'
 
@@ -27,16 +27,22 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         OK: "OK"
         AC: "AC"
         IG: "IG"
-        WA: "Неправильный ответ"
-        PT: "Неправильный ответ"
-        TL: "Превышен предел времени"
-        PE: "Нарушение формата выходных данных"
-        RT: "Runtime error (crash)"
-        ML: "Превышен предел памяти"
+        WA: "WA"
+        PT: "WS"
+        TL: "TL"
+        PE: "PE"
+        RT: "RE"
+        ML: "ML"
         DQ: "DQ"
         PD: "CT"
         CG: "CT"
         RU: "CT"
+        "Wrong answer": "WA"
+        "Presentation error": "PE"
+        "Run-time error": "RE"
+        "Time-limit exceeded": "TL"
+        "Wall time-limit exceeded": "TL"
+        "Memory limit exceeded": "ML"
 
     constructor: (@options) ->
         super()
@@ -58,19 +64,20 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         data = parseCsv data, {delimiter: ";", relax_column_count: true, columns: true}
         results = []
         for submit in data
-            outcome = submit.Stat_Short
-            if outcome of @STATUS_MAP
-                outcome = @STATUS_MAP[outcome]
             problem = problemMap[submit.Prob]
             user = submit.User_Login
             id = "#{@options.contest}r#{submit.Run_Id}p#{problem}"
-            logger.info "Found ejudge submit #{id} #{user} #{problem}"
+            #logger.info "Found ejudge submit #{id} #{user} #{problem}"
             if @options.ejudgeUser.trim() != user
-                logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
+                #logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
                 continue
             if @options.ejudgeProblem != problem
-                logger.info "Ignoring submit #{id} #{user} #{problem} because it is for a different problem (vs #{@options.ejudgeProblem})"
+                #logger.info "Ignoring submit #{id} #{user} #{problem} because it is for a different problem (vs #{@options.ejudgeProblem})"
                 continue
+            outcome = submit.Stat_Short
+            if outcome of @STATUS_MAP
+                outcome = @STATUS_MAP[outcome]
+            checkOutcome(outcome)
             results.push new Submit(
                 _id: id,
                 time: new Date(submit.Time * 1000),
@@ -94,10 +101,11 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
 
     getSource: (runid) ->
         [contest, run] = @_parseRunId(runid)
-        return await @options.admin.download(
+        source = await @options.admin.download(
             "#{@options.server}/cgi-bin/new-master?action=91&run_id=#{run}", 
             {encoding: null}, 
             "new-master")
+        return source.toString('latin1')
 
     getComments: (runid) ->
         [contest, run] = @_parseRunId(runid)
@@ -174,10 +182,13 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
             td = Array.from(row.getElementsByTagName("td"))
             if not td.length
                 continue
-            result.tests.push
+            r = 
                 string_status: td[1].textContent
                 time:  +td[2].textContent * 1000
                 max_memory_used: +td[4].textContent
+            r.string_status = @STATUS_MAP[r.string_status] || r.string_status
+            checkOutcome(r.string_status)
+            result.tests.push r
         if pre
             @parseResults(pre.innerHTML, result.tests)
         return result

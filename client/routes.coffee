@@ -12,6 +12,7 @@ import ApproveFindMistakePage from './pages/ApproveFindMistakePage'
 import CheckinsPage from './pages/CheckinsPage'
 import DashboardPage from './pages/DashboardPage'
 import EditUserPage from './pages/EditUserPage'
+import EvocaPaymentSuccess from './components/EvocaPaymentSuccess'
 import FindMistakeListPage from './pages/FindMistakeListPage'
 import FindMistakeProblemListPage from './pages/FindMistakeProblemListPage'
 import FindMistakePage from './pages/FindMistakePage'
@@ -116,6 +117,10 @@ BASE_ROUTES = [
     {
         path: '/paymentSuccess',
         component: PaymentSuccessPage,
+    },
+    {
+        path: '/evocaPaymentSuccess',
+        component: EvocaPaymentSuccess,
     },
     {
         path: '/registeredUsers',

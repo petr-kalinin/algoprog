@@ -37,6 +37,10 @@ materialsSchema.methods.allowedForUser = (user) ->
     return isLevelAllowedForUser(@level, user)
 
 
+materialsSchema.statics.findByType = (type) ->
+    Material.find
+        type: type
+
 Material = mongoose.model('Materials', materialsSchema);
 
 export default Material

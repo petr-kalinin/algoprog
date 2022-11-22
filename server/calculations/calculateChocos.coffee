@@ -64,6 +64,10 @@ export default calculateChocos = (userId) ->
     for table in tables
         if table.problems.length == 0  # not a single contest
             continue
+        tableResult = await Result.findByUserAndTable(userId, table._id)
+        if not tableResult
+            # this may be a wrong lang
+            continue
         results = []
         for problem in table.problems
             results.push(await Result.findByUserAndTable(userId, problem))

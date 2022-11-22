@@ -6,7 +6,7 @@ class Main extends MaterialList
 
     build: (context, order) ->
         properties = 
-            _id: "main"
+            _id: "main#{context.label}"
             type: "main"
             title: "/"
 

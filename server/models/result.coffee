@@ -22,6 +22,7 @@ resultsSchema = new mongoose.Schema
     findMistake: String
     findMistakeAllowed: Boolean
     findMistakeOrder: String
+    isProblem: { type: Boolean, default: false }
     subFindMistakes:
         ok: Number
         wa: Number
@@ -107,6 +108,9 @@ resultsSchema.statics.findPagesCountByUserAndTableWithFindMistakeSet = (userId, 
 resultsSchema.statics.findPageByUserAndTableWithFindMistakeSet = (userId, tableId, page) ->
     q = Result.findByUserAndTableWithFindMistakeSet(userId, tableId)
     return q.sort({findMistakeOrder: 1}).skip(page * PER_PAGE).limit(PER_PAGE)
+
+resultsSchema.statics.findPendingResults = () ->
+    return Result.find({ps: 1, isProblem: true})
 
 resultsSchema.statics.findLastWA = (limit) ->
     return Result.find({

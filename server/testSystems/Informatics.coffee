@@ -1,8 +1,6 @@
 import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
 
-import { GROUPS } from '../../client/lib/informaticsGroups'
-
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 
@@ -50,7 +48,7 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
-            page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 30 * 1000})
+            page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 120 * 1000})
             token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
             page = await @download("https://informatics.msk.ru/login/index.php", {
                 method: 'POST',
@@ -60,7 +58,7 @@ class LoggedInformaticsUser
                     logintoken: token
                 },
                 followAllRedirects: true,
-                timeout: 30 * 1000
+                timeout: 120 * 1000
             })
             if page.includes("Неверный логин или пароль")
                 throw { badPassword: true }
@@ -72,6 +70,7 @@ class LoggedInformaticsUser
             if e.badPassword
                 throw e
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
+            throw e
 
     getId: () ->
         page = await @download("https://informatics.msk.ru/")
@@ -81,13 +80,14 @@ class LoggedInformaticsUser
             return null
         return id[1]
 
-    download: (href, options) ->
+    download: (href, options={}) ->
         if _requests >= REQUESTS_LIMIT
             await new Promise((resolve) => _promises.push(resolve))
         if _requests >= REQUESTS_LIMIT
             throw "Too many requests"
         _requests++
         await sleep(TIMEOUT)
+        options.timeout = options.timeout || 60 * 1000
         try
             result = await download(href, @jar, options)
         finally
@@ -190,7 +190,11 @@ export default class Informatics extends TestSystem
     selfTest: () ->
         await @_getAdmin()
 
-    downloadProblem: (options) ->
+    downloadProblem: (options, label) ->
+        if label != ""
+            return 
+                name: "Name #{options.id}"
+                text: "Text #{options.id}"
         href = "https://informatics.msk.ru/mod/statements/view.php?chapterid=#{options.id}"
         page = await downloadLimited(href, {timeout: 15 * 1000})
         document = (new JSDOM(page, {url: href})).window.document

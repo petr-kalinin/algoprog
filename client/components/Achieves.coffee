@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom'
 
 import styles from './Achieves.css'
 
+import {LangRawAny} from '../lang/lang'
+
 import ACHIEVES from '../lib/achieves'
+import withLang from '../lib/withLang'
 
 expandAchieve = (key) ->
     if key of ACHIEVES
@@ -15,7 +18,7 @@ expandAchieve = (key) ->
     return achieve
 
 
-export Achieves = (props) ->
+export Achieves = withLang (props) ->
     if not props.achieves
         return null
     achieves = props.achieves.map(expandAchieve)
@@ -30,7 +33,9 @@ export Achieves = (props) ->
     <div className={styles.achieves}>
         {achieves.map((achieve, index) ->
             <Link to="/usersWithAchieve/#{achieve.key}" key={achieve.key + index}> 
-                <div title={(if props.score then "(#{achieve.score}) " else "") + achieve.title} className={className} style={{background: achieve.color}}>{achieve.text}</div>
+                <div title={(if props.score then "(#{achieve.score}) " else "") + LangRawAny(achieve.title, props.lang, achieve.key)} className={className} style={{background: achieve.color}}>
+                    {LangRawAny(achieve.text, props.lang, achieve.key)}
+                </div>
             </Link>
         )}
     </div>

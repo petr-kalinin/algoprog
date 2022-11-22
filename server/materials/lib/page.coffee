@@ -1,15 +1,13 @@
 export class Page
     constructor: (@title, @content, options={}) ->
         {@type="page", @skipTree=false, @id} = options
-        if options.id
-            console.log "Have id in options: id=#{@id}"
 
     build: (context, order) ->
         data = 
-            _id: @id || context.generateId(),
+            _id: if @id then "#{@id}#{context.label}" else context.generateId(),
             type: @type,
-            content: @content
-            title: @title
+            content: @content?(context.label) || @content
+            title: @title?(context.label) || @title
             order: order
 
         if @skipTree

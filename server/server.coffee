@@ -8,7 +8,6 @@ passport = require('passport')
 path = require('path')
 compression = require('compression')
 responseTime = require('response-time')
-StatsD = require('node-statsd')
 
 import setupApi from './api/setupApi'
 import scheduleJobs from './cron/cron'
@@ -17,7 +16,7 @@ import sleep from './lib/sleep'
 import downloadMaterials from './materials/downloadMaterials'
 import sendToGraphite from './metrics/graphite'
 import setupMetrics from './metrics/metrics'
-import notify from './metrics/notify'
+import {notify} from './lib/telegramBot'
 import db from './mongo/mongo'
 import Submit from './models/submit'
 import Result from './models/result'
@@ -34,13 +33,9 @@ process.on 'unhandledRejection', (r) ->
     logger.error r
 
 requireHTTPS = (req, res, next) ->
-    if !req.secure and !req.headers.host.startsWith("127.0.0.1")  # the latter is to avoid inner api requests
+    if !req.secure and !req.headers.host.startsWith("127.0.0.1") and req.path != '/api/ping'
         return res.redirect 'https://' + req.headers.host + req.url
     next()
-
-stats = new StatsD()
-stats.socket.on 'error',  (error) ->
-    logger.error(error)
 
 app = express()
 expressWs = require('express-ws')(app)
@@ -73,7 +68,7 @@ app.get '/status', (req, res) ->
     logger.info "Query string", req.query
     res.send "OK"
 
-linkClientJsCss = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/manifest.json'), 'utf-8'))
+linkClientJsCss = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/assets-manifest.json'), 'utf-8'))
 
 app.use renderOnServer(linkClientJsCss)
 

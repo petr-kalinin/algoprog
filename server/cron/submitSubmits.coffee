@@ -1,5 +1,6 @@
 iconv = require('iconv-lite')
 
+import Result from '../models/result'
 import SubmitProcess from '../models/SubmitProcess'
 import Submit from '../models/submit'
 import User from '../models/user'
@@ -94,7 +95,7 @@ submitOneSubmit = (submit) ->
     logger.info "Try submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
     if submit.sourceRaw == "" or not submit.language
         logger.info "Empty source or unknown language, failing"
-        submit.outcome = "Ошибка отправки, переотправьте"
+        submit.outcome = "FL"
         await submit.upsert()
         dirtyResults = {}
         await setDirty(submit, dirtyResults, {})
@@ -124,10 +125,29 @@ submitOneSubmit = (submit) ->
         await setDirty(submit, dirtyResults, {})
         await User.updateUser(submit.user, dirtyResults)
 
+maybeUpdatePendingResult = (result) ->
+    submits = []
+    if result.findMistake
+        submits = await Submit.findByUserAndFindMistake(result.user, result.findMistake)
+    else
+        submits = await Submit.findByUserAndProblem(result.user, result.table)
+    if submits.length == 0
+        return
+    for s in submits
+        if s.outcome in ["PS", "CT"]
+            return
+    logger.info "MaybeUpdatePendingResult", result.user, result.table, result.findMistake
+    dirtyResults = {}
+    await setDirty(submits[0], dirtyResults, {})
+    await User.updateUser(result.user, dirtyResults)
+    
 
 submitSubmits = () ->
     pendingSubmits = await Submit.findPendingSubmits()
     await awaitAll(pendingSubmits.map(submitOneSubmit))
+    pendingResults = await Result.findPendingResults()
+    await awaitAll(pendingResults.map(maybeUpdatePendingResult))
+
 
 running_ = false
 

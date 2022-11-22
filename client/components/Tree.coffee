@@ -8,9 +8,15 @@ FontAwesome = require('react-fontawesome')
 
 import styles from "./Tree.css"
 
+import {LangRaw} from '../lang/lang'
+
 import ConnectedComponent from '../lib/ConnectedComponent'
+import GROUPS from '../lib/groups'
+import {parseLevel, encodeLevel} from '../lib/level'
+import stripLabel from '../lib/stripLabel'
+import withLang from '../lib/withLang'
 import withMyResults from '../lib/withMyResults'
-import requiredProblemsByLevel from '../lib/requiredProblemsByLevel'
+import requiredProblemsByLevelMinor from '../lib/requiredProblemsByLevelMinor'
 import withTheme from '../lib/withTheme'
 
 MAX_GLOBAL_DEPTH = 0
@@ -51,55 +57,61 @@ colorBox = (indent, colorStyle, name, title) ->
         </div>
     </div>
 
-isLevelDone = (levelId, userId, results) ->
-    for subLevel in ["А", "Б", "В", "Г"]
-        if levelId.endsWith(subLevel)
-            result = results?[userId + "::" + levelId]
-            return result.solved >= requiredProblemsByLevel(levelId, result.required or 0)
-    if +levelId in [1..20]
-        subLevels = ["А", "Б", "В", "Г"]
+isLevelDone = (levelId, user, results) ->
+    level = parseLevel(levelId)
+    userId = user?._id
+    lang = GROUPS[user?.userList]?.lang
+    if level?.minor
+        result = results?[userId + "::" + levelId]
+        return result.solved >= requiredProblemsByLevelMinor(level.minor, result.required or 0)
+    if level?.major
         done = true
-        for subLevel in subLevels
-            result = results?[userId + "::" + levelId + subLevel]
+        for minor in [1, 2, 3, 4]
+            subLevel = deepcopy(level)
+            subLevel.minor = minor
+            subLevelId = encodeLevel(subLevel, lang)
+            result = results?[userId + "::" + subLevelId]
             if not result
                 continue
-            done = done and result.solved >= requiredProblemsByLevel(levelId + subLevel, result.required or 0)
+            done = done and result.solved >= requiredProblemsByLevelMinor(minor, result.required or 0)
         return done
     result = results?[userId + "::" + levelId]
     return result.solved and result.solved == result.total
 
-problemMark = (indent, result) ->
+problemMark = (indent, result, LANG) ->
     if result.ps == 1
-        colorBox(indent, styles.null, "question-circle-o", "Тестируется")
+        colorBox(indent, styles.null, "question-circle-o", LANG("testing"))
     else if result.solved == 1
-        colorBox(indent, styles.full, "check", "Зачтено")
+        colorBox(indent, styles.full, "check", LANG("accepted"))
     else if result.ok == 1
         colorBox(indent, styles.ok, "circle", "OK")
     else if result.ignored == 1
-        colorBox(indent, styles.ignored, "repeat", "Проигнорировано")
+        colorBox(indent, styles.ignored, "repeat", LANG("ignored"))
     else if result.attempts > 0
-        colorBox(indent, styles.wa, "times", "Неполное решение")
+        colorBox(indent, styles.wa, "times", LANG("partial_solution"))
     else
         colorBox(indent, styles.null)
 
-SolutionMark_ = (props) ->
-    result = props.myResults?[props.myUser?._id + "::" + props.id]
+SolutionMark = withMyResults withLang (props) ->
+    LANG = (id) -> LangRaw(id, props.lang)
+    id = props.id
+    if id.charAt(0) == "p"  # this is a problem
+        id = stripLabel(id)
+    result = props.myResults?[props.myUser?._id + "::" + id]
     indent = props.indent
     if not result?.total?
         return null
     if result.total == 1
-        return problemMark(indent, result)
+        return problemMark(indent, result, LANG)
 
     if result.solved == result.total
-        colorBox(indent, styles.full, "check", "Решены все задачи")
-    else if isLevelDone(props.id, props.myUser?._id, props.myResults)
-        colorBox(indent, styles.done, "check", "Уровень пройден")
+        colorBox(indent, styles.full, "check", LANG("all_problems_solved"))
+    else if isLevelDone(id, props.myUser, props.myResults)
+        colorBox(indent, styles.done, "check", LANG("level_done"))
     else if result.solved > 0 or result.ok > 0 or result.attempts > 0
-        colorBox(indent, styles.started, undefined, "Уровень начат")
+        colorBox(indent, styles.started, undefined, LANG("level_started"))
     else
         colorBox(indent, styles.null)
-
-SolutionMark = withMyResults(SolutionMark_)
 
 recTree = (tree, id, indent, theme, prefix) ->
     res = []
@@ -137,7 +149,10 @@ Tree = (props) ->
     </div>
 
 options =
-    urls: ->
-        tree: "material/tree"
+    urls: (props) ->
+        if props.lang == "ru"
+            tree: "material/tree"
+        else
+            tree: "material/tree!en"
 
-export default ConnectedComponent(withTheme(withRouter(Tree)), options)
+export default withLang(ConnectedComponent(withTheme(withRouter(Tree)), options))

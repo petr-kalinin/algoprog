@@ -42,7 +42,7 @@ export default download = (href, jar, options={}) ->
             addStats("ok")
             return page
         catch e
-            logger.info "Error downloading " + href + " " + i + " will re-download", e.message, delay
+            logger.info "Error downloading " + href + " " + i + " will re-download", e.message, delay, options?.timeout
             await sleep(delay)
             delay *= 2
     addStats("fail")
