@@ -193,6 +193,8 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                 outcome = "OK"
             if outcome == "Вы уже отправляли этот код"
                 outcome = "DP"
+            if outcome == "Accepter"
+                outcome = "OK"
             if user.toLowerCase() != @username.toLowerCase()
                 throw "Strange submit: found username  #{user}, expected #{@username}"
             if prob != @problem
