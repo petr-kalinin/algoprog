@@ -8,17 +8,17 @@ test('test', () => {
     expect(correctUrl('/material/1!en', '!en')).toStrictEqual('/material/1!en')
 
     // ---
-    expect(correctUrl('/material/1Б', '')).toStrictEqual('/material/1Б')
+    expect(correctUrl('/material/1Б', '')).toStrictEqual('/material/1B')
     expect(correctUrl('/material/1Б', '!en')).toStrictEqual('/material/1B!en')
 
-    expect(correctUrl('/material/1B!en', '')).toStrictEqual('/material/1Б')
+    expect(correctUrl('/material/1B!en', '')).toStrictEqual('/material/1B')
     expect(correctUrl('/material/1B!en', '!en')).toStrictEqual('/material/1B!en')
 
     // ---
-    expect(correctUrl('/material/1Б.5', '')).toStrictEqual('/material/1Б.5')
+    expect(correctUrl('/material/1Б.5', '')).toStrictEqual('/material/1B.5')
     expect(correctUrl('/material/1Б.5', '!en')).toStrictEqual('/material/1B.5!en')
 
-    expect(correctUrl('/material/1B.5!en', '')).toStrictEqual('/material/1Б.5')
+    expect(correctUrl('/material/1B.5!en', '')).toStrictEqual('/material/1B.5')
     expect(correctUrl('/material/1B.5!en', '!en')).toStrictEqual('/material/1B.5!en')
 
     // ---

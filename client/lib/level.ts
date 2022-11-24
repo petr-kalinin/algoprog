@@ -8,9 +8,9 @@ export interface Level {
 }
 
 function parseMinor(minor: string) {
-    if (["A", "B", "C", "D", "E", "F", "G", "H", "I"].includes(minor)) {
+    if (minor >= "A" && minor <= "Z") {
         return minor.charCodeAt(0) - "A".charCodeAt(0) + 1;
-    } else if (["А", "Б", "В", "Г", "Д", "Е"].includes(minor)) {
+    } else if (minor >= "А" && minor <= "Я") {
         return minor.charCodeAt(0) - "А".charCodeAt(0) + 1;
     } else return null
 }
@@ -59,7 +59,7 @@ export function encodeLevel(level: Level, lang=""): string {
             letter = ['A', 'B', 'C', 'D', "E", "F", "G"][minor - 1]
         } else throw `strange lang ${lang}`
         */
-        letter = ['A', 'B', 'C', 'D', "E", "F", "G"][minor - 1]
+        letter = String.fromCharCode("A".charCodeAt(0) + minor - 1);
     }
     return `${major}${letter}${lang}`
 }
