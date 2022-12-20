@@ -1311,12 +1311,18 @@ export default setupApi = (app) ->
             res.status(403).send('No price set')
             return
         currency = "AMD"
-        amdToRub = await getCbRfRate(currency)
+        try
+            amdToRub = await getCbRfRate(currency)
+        catch e
+            notify "Can't download cbrf rates", e
+            throw e
         fee = 0.1
         desc = req.body.desc
         sum = Math.floor(userPrivate.price / amdToRub * 100 * (1 + fee))
         returnUrl = encodeURIComponent("#{req.protocol}://#{req.get('host')}/evocaPaymentSuccess")
-        url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}"
+        req.user.setPaymentEmail(email)    
+        jsonParams = encodeURIComponent(JSON.stringify({email}))
+        url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}&jsonParams=#{jsonParams}"
         result = JSON.parse(await download(url))
         logger.info "Evoca register request answer", result, result.errorCode
         if result.errorCode == 1
