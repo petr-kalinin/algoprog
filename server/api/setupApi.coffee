@@ -1434,10 +1434,18 @@ export default setupApi = (app) ->
         url = "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderId=#{orderId}"
         data = await download(url)
         result = JSON.parse(data)
-        # TODO: convert
-        rubToAmd = 6
+
+        currency = "AMD"
+        try
+            amdToRub = await getCbRfRate(currency)
+        catch e
+            notify "Can't download cbrf rates", e
+            throw e
+        fee = 0.1
+        desc = req.body.desc
+
         success = result.actionCode == 0
-        await processPayment(result.orderNumber, result.actionCode == 0, result.amount / 6 / 100, result)
+        await processPayment(result.orderNumber, result.actionCode == 0, result.amount * amdToRub / 100 / (1 + fee), result)
         res.json
             status: success
 
