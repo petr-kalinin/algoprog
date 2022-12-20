@@ -52,9 +52,9 @@ module20927_3 = () ->
 
 pay = () ->
     page(
-        "Cost of the course and and payment procedure", 
+        "Cost of the course and and payment process", 
                                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix">
-        <h1>Cost of the course and and payment procedure</h1>
+        <h1>Cost of the course and and payment process</h1>
         
         <p>The course is for-fee. More precisely, actually all the materials in the course are free. Some of them are on the website informatics.msk.ru in the <a href="https://informatics.msk.ru/course/view.php?id=1135">corresponding section</a> (in Russian), you can study there for free. I charge money for adding you to the summary rankings, reviewing and commenting on your solutions, answering your questions, etc., as well as for access to the "Good Solutions" and "Find a Bug" sections.</p>
         
@@ -68,7 +68,8 @@ pay = () ->
         
         <h2>Payment</h2>
         <p>You can pay for the course with any bank card <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
-        <p>Most bank cards from most countries should be supported. If you encounter problems, please contact me, we can discuss other payment methods.</p>
+        <p>Most bank cards from most countries should be supported. If you encounter problems, please contact me, we can discuss other payment methods.
+        If you pay with a non-Russian bank card, the payment currency may be different, not rubles (the sum to pay will be converted according to the official exchange rate of the Central Bank of Russia), and an additional fee of 10% may be collected. The exact fee will be shown on payment page.</p>
         
         <h2>Is a refund possible?</h2>
         <p>The cost does not depend on how active you are in the course (if you solve a lot, then I will spend more time on you than if you solve a little, and you pay the same amount). Therefore, it is quite strange to return the money if you didn't do anything. Therefore, the policy is as follows:</p>

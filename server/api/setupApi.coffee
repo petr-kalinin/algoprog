@@ -28,6 +28,7 @@ import * as downloadSubmits from "../cron/downloadSubmits"
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
 import InformaticsUser from '../informatics/InformaticsUser'
 
+import getCbRfRate from '../lib/cbrf'
 import download, {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
@@ -1309,10 +1310,11 @@ export default setupApi = (app) ->
         if not userPrivate?.price
             res.status(403).send('No price set')
             return
-        # TODO: convert
-        rubToAmd = 6
+        currency = "AMD"
+        amdToRub = await getCbRfRate(currency)
+        fee = 0.1
         desc = req.body.desc
-        sum = userPrivate.price * rubToAmd * 100
+        sum = Math.floor(userPrivate.price / amdToRub * 100 * (1 + fee))
         returnUrl = encodeURIComponent("#{req.protocol}://#{req.get('host')}/evocaPaymentSuccess")
         url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}"
         result = JSON.parse(await download(url))

@@ -226,7 +226,7 @@ class UnitpayPayment extends React.Component
                         id="amount"
                         label={LangRaw("payment_sum", @props.lang)}
                         type="text"
-                        value={amount}
+                        value={amount + " + 10%"}
                         disabled/>
                     <FieldGroup
                         id="name"
@@ -354,7 +354,7 @@ class PaymentSelector extends React.Component
                 state={@state}>
                     {"tinkoff" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>}
                     {"unitpay" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>}
-                    {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_alt", @props.lang)}</Radio>}
+                    {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_evoca", @props.lang)}</Radio>}
             </FieldGroup>
             {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
             {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
@@ -395,7 +395,7 @@ class Payment extends React.Component
             when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
             else
                 canSubmit = false
-                provider = "unitpay"
+                providers = ["tinkoff", "unitpay", "evoca"]
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"

@@ -764,9 +764,9 @@ _LANG =
     pay_with_foreign_card:
         ru: "Оплатить картой не-российского банка"
         en: "Pay with non-Russian bank card"
-    pay_with_foreign_card_alt:
-        ru: "Оплатить картой не-российского банка (альтернативный способ)"
-        en: "Pay with non-Russian bank card (alternative way)"
+    pay_with_foreign_card_evoca:
+        ru: "Оплатить картой не-российского банка (альтернативный способ, комиссия 10%)"
+        en: "Pay with non-Russian bank card (alternative way, 10% fee)"
 
 export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]
