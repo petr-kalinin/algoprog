@@ -189,6 +189,9 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     return mistake
 
 processPayment = (orderId, success, amount, payload, isReal=true) ->
+    payment = await Payment.findSuccessfulByOrderId(orderId)
+    if payment
+        return
     if amount.amount?
         {amount, taxAmount} = amount
     else
@@ -1465,7 +1468,7 @@ export default setupApi = (app) ->
         if not orderId
             res.status(400).send('No orderId')
             return
-        payment = await Payment.findByOrderId(orderId)
+        payment = await Payment.findSuccessfulByOrderId(orderId)
         if not payment
             res.status(400).send('Wrong orderId')
             return
