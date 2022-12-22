@@ -84,6 +84,9 @@ UNITPAY_PUBLIC_KEY_ORG = process.env["UNITPAY_PUBLIC_KEY_ORG"]
 UNITPAY_SECRET_KEY_ORG = process.env["UNITPAY_SECRET_KEY_ORG"]
 EVOCA_LOGIN = process.env["EVOCA_LOGIN"]
 EVOCA_PASSWORD = process.env["EVOCA_PASSWORD"]
+INVOICE_PASSWORD = process.env["INVOICE_PASSWORD"]
+INVOICE_IP_DATA = process.env["INVOICE_IP_DATA"]
+INVOICE_IP_SIGNATURE = process.env["INVOICE_IP_SIGNATURE"]
 
 wrap = (fn) ->
     (args...) ->
@@ -186,6 +189,10 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     return mistake
 
 processPayment = (orderId, success, amount, payload, isReal=true) ->
+    if amount.amount?
+        {amount, taxAmount} = amount
+    else
+        taxAmount = amount
     [userId, paidTillInOrder] = orderId.split(":")
 
     payment = new Payment
@@ -221,13 +228,13 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
     await userPrivate.upsert()
     if isReal
         try
-            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
+            receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
+            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
         catch e
-            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
+            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
             receipt = "---"
     else
-        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
+        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
     logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
     payment.processed = true
@@ -1445,9 +1452,36 @@ export default setupApi = (app) ->
         desc = req.body.desc
 
         success = result.actionCode == 0
-        await processPayment(result.orderNumber, result.actionCode == 0, result.amount * amdToRub / 100 / (1 + fee), result)
+        await processPayment(result.orderNumber, result.actionCode == 0, {amount: result.amount * amdToRub / 100 / (1 + fee), taxAmount: result.amount * amdToRub / 100}, result)
         res.json
             status: success
+
+    app.get '/api/invoice/:orderId', wrap (req, res) ->
+        if req.query.password != INVOICE_PASSWORD or not INVOICE_PASSWORD
+            res.status(403).send('No permission')
+            return
+        orderId = req.params.orderId
+        if not orderId
+            res.status(400).send('No orderId')
+            return
+        payment = await Payment.findByOrderId(orderId)
+        if not payment
+            res.status(400).send('Wrong orderId')
+            return
+        currency = payment.payload?.currency
+        if currency == "051"
+            currency = "֏"
+        else
+            currency = " ?#{currency}? "
+        res.json
+            ip_data: INVOICE_IP_DATA
+            orderId: orderId
+            date: payment.time
+            userName: payment.payload?.cardAuthInfo?.cardholderName
+            userEmail: payment.payload?.merchantOrderParams?[0]?.value
+            amount: payment.payload?.amount / 100
+            currency: currency
+            signature: INVOICE_IP_SIGNATURE
 
     ###
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->

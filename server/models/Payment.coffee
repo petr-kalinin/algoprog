@@ -22,10 +22,14 @@ paymentSchema.methods.upsert = () ->
 
 paymentSchema.statics.findLastReceiptByUserId = (userId) ->
     return (await Payment.find({user: userId}).sort("-time").limit(1))[0]
-    
+
+paymentSchema.statics.findByOrderId = (orderId) ->
+    return Payment.findOne({orderId})
+
 
 paymentSchema.index({ user : 1, time: -1 })
 paymentSchema.index({ time : 1 })
+paymentSchema.index({ orderId : 1 })
 
 Payment = mongoose.model('Payments', paymentSchema);
 
