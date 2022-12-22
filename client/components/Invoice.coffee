@@ -64,8 +64,7 @@ Invoice = (props) ->
 
         <Col xs={12} sm={6}>
             <div id={styles.total}>
-                <div><b>TOTAL:</b></div>
-                <div><b>{invoice.currency} {invoice.amount}</b></div>
+                <b>TOTAL: {invoice.currency} {invoice.amount}</b>
             </div>
         </Col>
         <Col xs={12} sm={6}>
