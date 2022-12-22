@@ -1308,6 +1308,27 @@ export default setupApi = (app) ->
             publicKey: publicKey
             is_org: is_org
 
+    app.get '/api/evocaPreData', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        currency = "AMD"
+        try
+            amdToRub = await getCbRfRate(currency)
+        catch e
+            notify "Can't download cbrf rates", e
+            throw e
+        fee = 0.1
+        sum = Math.floor(userPrivate.price / amdToRub * (1 + fee))
+        res.json
+            amount: sum
+            currency: currency
+
     app.post '/api/evocaData', wrap (req, res) ->
         if not req.user
             res.status(403).send('No permissions')

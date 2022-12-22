@@ -226,7 +226,7 @@ class UnitpayPayment extends React.Component
                         id="amount"
                         label={LangRaw("payment_sum", @props.lang)}
                         type="text"
-                        value={amount + " + 10%"}
+                        value={amount}
                         disabled/>
                     <FieldGroup
                         id="name"
@@ -306,7 +306,7 @@ class EvocaPayment extends React.Component
                         id="amount"
                         label={LangRaw("payment_sum", @props.lang)}
                         type="text"
-                        value={amount}
+                        value={"#{@props.evocaPreData.amount} #{@props.evocaPreData.currency} (#{amount} RUB + 10%)" }
                         disabled/>
                     <FieldGroup
                         id="name"
@@ -331,6 +331,12 @@ class EvocaPayment extends React.Component
                 </form>    
             }
         </div>
+
+evocaOptions =
+    urls: (props) ->
+        evocaPreData: "evocaPreData"
+
+EvocaPayment = ConnectedComponent(EvocaPayment, evocaOptions)
 
 class PaymentSelector extends React.Component
     constructor: (props) ->
