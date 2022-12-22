@@ -132,6 +132,21 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: EVOCA_PASSWORD
+            - name: INVOICE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INVOICE_PASSWORD
+            - name: INVOICE_IP_DATA
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INVOICE_IP_DATA
+            - name: INVOICE_IP_SIGNATURE
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INVOICE_IP_SIGNATURE
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs
