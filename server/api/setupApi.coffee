@@ -196,6 +196,7 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
         {amount, taxAmount} = amount
     else
         taxAmount = amount
+    taxAmount = Math.ceil(taxAmount)
     [userId, paidTillInOrder] = orderId.split(":")
 
     payment = new Payment
