@@ -229,10 +229,11 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
     if isReal
         try
             receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
-            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
+            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt)
         catch e
             notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
             receipt = "---"
+        notify "Invoice: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
     else
         notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
