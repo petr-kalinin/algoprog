@@ -210,7 +210,7 @@ export class LoggedCodeforcesUser
         if page.includes("the programming language of these submissions differs from the selected language")
             logger.info "The programming language of these submissions differs from the selected language"
             throw {contactMe: true}
-        if not page.includes("Contest status")
+        if not page.includes("Contest status") and not page.includes("My Submissions")
             notify "Can't submit to CF"
             notifyDocument page, {filename: 'page.html', contentType: "text/html"}
             logger.error "Can't submit"
