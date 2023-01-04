@@ -37,7 +37,8 @@ Invoice = (props) ->
             </div>
         </Col>
         <Col xs={12}>
-            <div id={styles.header}><b>BILL TO: {invoice.userName}</b> {invoice.userEmail}</div>
+            <div id={styles.header}><b>BILL TO: {invoice.userName}</b> {invoice.userEmail}<br/>
+            {invoice.userAddress}</div>
         </Col>
         <Col xs={12}>
             <div>

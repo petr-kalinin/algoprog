@@ -296,7 +296,7 @@ class EvocaPayment extends React.Component
 
 
     render: () ->
-        canSubmit = @props.canSubmit and @state.name and @state.email
+        canSubmit = @props.canSubmit and @state.name and @state.email and @state.address
         amount = @props.amount
         <div>
             {@state.loading && <Loader /> }
@@ -317,6 +317,12 @@ class EvocaPayment extends React.Component
                     <FieldGroup
                         id="email"
                         label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="address"
+                        label={LangRaw("payer_address", @props.lang)}
                         type="text"
                         setField={@setField}
                         state={@state}/>

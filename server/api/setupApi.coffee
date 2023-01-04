@@ -1354,7 +1354,7 @@ export default setupApi = (app) ->
         sum = Math.floor(userPrivate.price / amdToRub * 100 * (1 + fee))
         returnUrl = encodeURIComponent("#{req.protocol}://#{req.get('host')}/evocaPaymentSuccess")
         req.user.setPaymentEmail(email)    
-        jsonParams = encodeURIComponent(JSON.stringify({email}))
+        jsonParams = encodeURIComponent(JSON.stringify({email, address}))
         url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}&jsonParams=#{jsonParams}"
         result = JSON.parse(await download(url))
         logger.info "Evoca register request answer", result, result.errorCode
@@ -1499,12 +1499,20 @@ export default setupApi = (app) ->
             currency = "֏"
         else
             currency = " ?#{currency}? "
+        email = ""
+        address = ""
+        for el in payment.payload?.merchantOrderParams || []
+            if el.name == "email"
+                email = el.value
+            if el.name == "address"
+                address = el.value
         res.json
             ip_data: INVOICE_IP_DATA
             orderId: orderId
             date: payment.time
             userName: payment.payload?.cardAuthInfo?.cardholderName
-            userEmail: payment.payload?.merchantOrderParams?[0]?.value
+            userEmail: email
+            userAddress: address
             amount: payment.payload?.amount / 100
             currency: currency
             signature: INVOICE_IP_SIGNATURE
