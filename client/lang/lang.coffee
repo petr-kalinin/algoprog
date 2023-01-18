@@ -767,6 +767,9 @@ _LANG =
     pay_with_foreign_card_evoca:
         ru: "Оплатить картой не-российского банка (альтернативный способ, комиссия 10%)"
         en: "Pay with non-Russian bank card (alternative way, 10% fee)"
+    outcome_points:
+        ru: (points) -> "(#{points} баллов)"
+        en: (points) -> "(#{points} points)"
 
 export LangRawAny = (data, lang, id, throwIfNotFound) ->
     res = data?[lang]

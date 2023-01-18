@@ -58,6 +58,9 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         SKIPPED: "SK", 
         TESTING: "CT", 
         REJECTED: "WA"
+        "Partial result": "WS"
+        "Perfect result": "OK"
+        "Wrong answer": "WA"
 
     _parseRunId: (runid) ->
         return runid.substr(1)
@@ -83,6 +86,16 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
         data.protocol = JSON.parse(data.protocol)
         return data
+
+    correctOutcome: (outcome) ->
+        parts = /([^:]*) on test \d+/.exec(outcome)
+        if parts
+            outcome = @VERDICTS[parts[1]] || parts[1]
+        parts = /([^:]*):\s+(\d+)\s+points/.exec(outcome)
+        if not parts
+            return outcome
+        realOutcome = @VERDICTS[parts[1]] || parts[1]
+        return realOutcome + ":" + parts[2]
 
     getSource: (runid) ->
         try
@@ -135,6 +148,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                 logger.info "Skipping submit #{submit.id} because it is for a different problem: #{submit.problem.index} vs #{@problem}"
                 continue
             outcome = @VERDICTS[submit.verdict] || submit.verdict || "CT"
+            outcome = @correctOutcome(outcome)
             checkOutcome(outcome)
             result.push new Submit(
                 _id: "c" + submit.id,
@@ -189,8 +203,6 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                 outcome = "CT"
             if outcome == "Compilation error"
                 outcome = "CE"
-            if outcome.startsWith("Perfect result")
-                outcome = "OK"
             if outcome == "Вы уже отправляли этот код"
                 outcome = "DP"
             if outcome == "Accepted"
@@ -200,6 +212,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             if prob != @problem
                 logger.info "Skipping submit #{id} because it is for a different problem: #{prob} vs #{@problem}"
                 continue
+            outcome = @correctOutcome(outcome)
             console.log "found id=#{id}, time=#{time}, user=#{user}, prob=#{prob}, lang=#{lang}, outcome=#{outcome}"
             result.push new Submit(
                 _id: "c" + id,
