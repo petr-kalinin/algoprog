@@ -22,5 +22,6 @@ export default mass_operations = () ->
         advancedProblems: [
             problem(113563),
             problem(113775),
+            problem(113287),
         ]
     }
