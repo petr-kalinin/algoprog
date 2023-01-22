@@ -582,14 +582,15 @@ _LANG =
     telegram_account_intro:
         ru: <div>Вы можете указать id свого аккаунта телеграма, чтобы иметь возможность подключиться к чату учеников алгопрога, 
             а также получать уведомления о комментариях к вашим решениям
-            (<a href='/material/telegram_bot'>подробнее</a>). Надо указать именно id телеграма. Если вы не знаете свой id, 
+            (<a href='/material/telegram_bot'>подробнее</a>). Надо указать именно id телеграма, <b>он состоит только из цифр</b>, а не username и не телефон. Если вы не знаете свой id, 
             то чтобы узнать, зайдите в телеграм и 
             найдите бота <a href='https://t.me/getmyid_bot'>@getmyid_bot</a> (или наберите в поиске @getmyid_bot 
             и выберите из списка бота с названием 'Get My ID'), нажмите на кнопку запуска 
             (или напишите /start), бот отправит вам сообщение с вашим id.</div>
         en: <div>You can specify your telegram account id to be able to join the algoprog students' chat, 
             and also to 
-            receive notification about comments on your solution (<a href='/material/telegram_bot'>details</a>). You must specify your telegram id, not username or phone. If you 
+            receive notification about comments on your solution (<a href='/material/telegram_bot'>details</a>). You must specify your telegram id
+            (it consistd of <b>digits only</b>), not username or phone. If you 
             don't know your id, to find out go to telegram and find <a href='https://t.me/getmyid_bot'>@getmyid_bot</a> (or 
             search for @getmyid_bot and select the bot named 'Get My ID'), click on the start button (or write /start), and the bot will 
             send you a message with your id.</div>
