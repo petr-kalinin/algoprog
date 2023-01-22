@@ -44,6 +44,15 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
+    unn2: 
+        paid: false
+        chocos: false
+        startDayForWeeks: "2020-01-05"
+        tableName: "Занятия в ННГУ (продвинутые)"
+        tableNameEn: "UNN classes (advanced)",
+        canResetYear: true
+        starred: false
+        lang: ""
     notnnov:
         paid: "tinkoff"
         chocos: false
