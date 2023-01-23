@@ -284,8 +284,8 @@ _LANG =
         ru: "E-mail плательщика"
         en: "Payer email"
     payer_address:
-        ru: "Адрес плательщика для выставления счета (включая страну)"
-        en: "Payer billing address (including country)"
+        ru: "Адрес плательщика для выставления счета (включая страну и город)"
+        en: "Payer billing address (including country and city)"
     you_agree_to_oferta:
         ru: <>Нажимая «Оплатить», вы соглашаетесь с <a href='/oferta.pdf' target='_blank'>офертой</a> оказания услуг, <a href='/privacy.pdf'>политикой</a> обработки персональных данных и <a href='/ib.pdf'>политикой</a> информационной безопасности.</>
         en: <>By pressing Pay button, you agree to <a href='/oferta.pdf' target='_blank'>oferta</a>, <a href='/privacy.pdf'>privacy policy</a> and <a href='/ib.pdf'>information security policy</a>.</>

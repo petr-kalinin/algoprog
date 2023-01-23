@@ -306,7 +306,7 @@ class EvocaPayment extends React.Component
                         id="amount"
                         label={LangRaw("payment_sum", @props.lang)}
                         type="text"
-                        value={"#{@props.evocaPreData.amount} #{@props.evocaPreData.currency} (#{amount} RUB + 10%)" }
+                        value={"#{@props.evocaPreData.amount} #{@props.evocaPreData.currency} (#{@props.evocaPreData.amountRub} RUB + 10%)" }
                         disabled/>
                     <FieldGroup
                         id="name"

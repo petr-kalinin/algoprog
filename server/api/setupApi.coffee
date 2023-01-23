@@ -1323,11 +1323,13 @@ export default setupApi = (app) ->
         catch e
             notify "Can't download cbrf rates", e
             throw e
+        amountRub = userPrivate.price || 2000
         fee = 0.1
-        sum = Math.floor(userPrivate.price / amdToRub * (1 + fee))
+        sum = Math.floor(amountRub / amdToRub * (1 + fee))
         res.json
             amount: sum
             currency: currency
+            amountRub: amountRub
 
     app.post '/api/evocaData', wrap (req, res) ->
         if not req.user
