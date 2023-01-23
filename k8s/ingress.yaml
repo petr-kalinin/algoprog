@@ -19,6 +19,7 @@ spec:
     - redash.algoprog.ru
     - notes.algoprog.ru
     - notes.algoprog.org
+    - algoprog.kalinin.nnov.ru
     secretName: test-tls
   rules:
   - host: algoprog.ru
@@ -52,6 +53,16 @@ spec:
             port:
               number: 3000
   - host: www.algoprog.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nodejs
+            port:
+              number: 3000
+  - host: algoprog.kalinin.nnov.ru
     http:
       paths:
       - path: /
