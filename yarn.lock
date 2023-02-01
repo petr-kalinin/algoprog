@@ -6581,9 +6581,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongoose@npm:^5.9.9":
-  version: 5.13.14
-  resolution: "mongoose@npm:5.13.14"
+"mongoose@npm:^5.13.15":
+  version: 5.13.15
+  resolution: "mongoose@npm:5.13.15"
   dependencies:
     "@types/bson": 1.x || 4.0.x
     "@types/mongodb": ^3.5.27
@@ -6599,7 +6599,7 @@ __metadata:
     safe-buffer: 5.2.1
     sift: 13.5.2
     sliced: 1.0.1
-  checksum: ce750775f38ebd55d6015d4039a0f7f9876aeaa3475a48b6da1768f97c19166fe839e764162983225b31d111b9878d7bb95cbcc0b0aa2df7f94521fffcd79ab5
+  checksum: 74edc47c7819b82220e44402b3607faee622dfe6ac52947e812a7a179feebc295d1f7e7802da9353f8fc1f095b1b4eed775ed2c3914ee4baa332a36cb4679e18
   languageName: node
   linkType: hard
 
@@ -8834,7 +8834,7 @@ __metadata:
     mailparser: ^3.5.0
     mini-css-extract-plugin: ^0.9.0
     moment: ^2.24.0
-    mongoose: ^5.9.9
+    mongoose: ^5.13.15
     node-cron: ^2.0.3
     node-statsd: ^0.1.1
     node-telegram-bot-api: ^0.58.0
