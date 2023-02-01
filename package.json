@@ -37,7 +37,7 @@
     "log4js": "^6.2.0",
     "mailparser": "^3.5.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.9.9",
+    "mongoose": "^5.13.15",
     "node-cron": "^2.0.3",
     "node-statsd": "^0.1.1",
     "node-telegram-bot-api": "^0.58.0",
