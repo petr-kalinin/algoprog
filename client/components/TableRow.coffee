@@ -70,7 +70,7 @@ ProblemResult = (props) ->
     ctrlDbClickUrl = "/reviewResult/#{props.user._id}::#{r.table}"
 
     dbClickHandler = (event) ->
-        if event.ctrlKey
+        if event.ctrlKey or event.metaKey
             window.goto(ctrlDbClickUrl)()
         else
             window.goto(dbClickUrl)()
