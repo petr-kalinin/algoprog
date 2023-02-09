@@ -407,7 +407,7 @@ class Payment extends React.Component
             when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
             else
                 canSubmit = false
-                providers = ["tinkoff", "unitpay", "evoca"]
+                providers = ["unitpay"]
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"
