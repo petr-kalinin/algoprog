@@ -403,7 +403,7 @@ class Payment extends React.Component
             warning = null
         switch GROUPS[@props.myUser?.userList]?.paid
             when "tinkoff" then providers = ["tinkoff", "unitpay", "evoca"]
-            when "unitpay" then providers = ["tinkoff", "unitpay", "evoca"]
+            when "unitpay" then providers = ["unitpay"]
             when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
             else
                 canSubmit = false
