@@ -358,7 +358,7 @@ class PaymentSelector extends React.Component
 
     render: () ->
         <div>
-            <FieldGroup
+            {@props.providers.length  > 1 && <FieldGroup
                 id="provider"
                 label=""
                 type="radio"
@@ -367,7 +367,7 @@ class PaymentSelector extends React.Component
                     {"tinkoff" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>}
                     {"unitpay" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>}
                     {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_evoca", @props.lang)}</Radio>}
-            </FieldGroup>
+            </FieldGroup>}
             {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
             {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
             {@state.provider == "evoca" && <EvocaPayment {@props...}/> }
