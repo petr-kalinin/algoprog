@@ -348,7 +348,7 @@ class PaymentSelector extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            provider: null
+            provider: if @props.providers.length == 1 then @props.providers[0] else null
         @setField = @setField.bind(this)
 
     setField: (field, value) ->
