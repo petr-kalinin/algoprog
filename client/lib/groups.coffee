@@ -88,7 +88,7 @@ export default GROUPS =
         starred: true
         lang: "!en"
     test:
-        paid: "evoca"
+        paid: "unitpay"
         chocos: false
         startDayForWeeks: "2020-01-06"
         canResetYear: false
