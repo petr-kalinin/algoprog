@@ -26,6 +26,15 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
+    lic38_2:
+        paid: false
+        chocos: false
+        startDayForWeeks: "2020-01-05"
+        tableName: "Лицей 38 (начинающие)",
+        tableNameEn: "School 38 (beginners), N.Novgorod",
+        canResetYear: true
+        starred: false
+        lang: ""
     zaoch:
         paid: false
         chocos: false
