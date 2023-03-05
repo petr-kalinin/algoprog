@@ -158,7 +158,7 @@ export default ACHIEVES =
             ru: "рег"
             en: "reg"
         title: 
-            ru: "Призер регионального (областного) этапа Всероссийской олимпиады школьников по информатике"
+            ru: "Призер регионального (областного) этапа Всероссийской олимпиады школьников по информатике (до 2022 г.)"
             en: "Diploma on the regional tier of the All-Russian olympiad in informatics"
         color: SILVER_COLOR
         score: 130
@@ -167,8 +167,27 @@ export default ACHIEVES =
             ru: "рег"
             en: "reg"
         title: 
-            ru: "Победитель регионального (областного) этапа Всероссийской олимпиады школьников по информатике"
+            ru: "Победитель регионального (областного) этапа Всероссийской олимпиады школьников по информатике (до 2022 г.)"
             en: "Winner diploma on the regional tier of the All-Russian olympiad in informatics"
+        color: GOLD_COLOR
+        score: 200
+
+    "reg:400":
+        text: 
+            ru: "рег"
+            en: "reg"
+        title: 
+            ru: "Минимум 400 баллов на региональном (областном) этапе Всероссийской олимпиады школьников по информатике (с 2023 г.)"
+            en: "400+ points on the regional tier of the All-Russian olympiad in informatics"
+        color: SILVER_COLOR
+        score: 130
+    "reg:500":
+        text: 
+            ru: "рег"
+            en: "reg"
+        title: 
+            ru: "Минимум 500 баллов на региональном (областном) этапе Всероссийской олимпиады школьников по информатике (с 2023 г.)"
+            en: "500+ points on the regional tier of the All-Russian olympiad in informatics"
         color: GOLD_COLOR
         score: 200
 
