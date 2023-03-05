@@ -1882,6 +1882,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/xml2js@npm:^0.4.11":
+  version: 0.4.11
+  resolution: "@types/xml2js@npm:0.4.11"
+  dependencies:
+    "@types/node": "*"
+  checksum: d0e7d2a8c7e0a53147c777a6756bdea0eb26a3de0d3c1f42c17e63332e4e2dc532f687c19ca26a0518336f5de60e1ec4345d7ef71e7ba0656fcf3390c9388eb5
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 21.0.0
   resolution: "@types/yargs-parser@npm:21.0.0"
@@ -8792,6 +8801,7 @@ __metadata:
     "@babel/preset-react": ^7.10.4
     "@monaco-editor/react": ^3.5.7
     "@types/jest": ^28.1.7
+    "@types/xml2js": ^0.4.11
     body-parser: ^1.19.0
     buffer: ^6.0.3
     clean-webpack-plugin: ^3.0.0

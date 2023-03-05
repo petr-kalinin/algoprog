@@ -207,9 +207,12 @@ export class LoggedCodeforcesUser
         if page.includes("You have submitted exactly the same code before")
             logger.info "Submit is a duplicate"
             throw {duplicate: true}
-        if not page.includes("Contest status")
-            #notify "Can't submit to CF"
-            #notifyDocument page, {filename: 'page.html', contentType: "text/html"}
+        if page.includes("the programming language of these submissions differs from the selected language")
+            logger.info "The programming language of these submissions differs from the selected language"
+            throw {contactMe: true}
+        if not page.includes("Contest status") and not page.includes("My Submissions")
+            notify "Can't submit to CF"
+            notifyDocument page, {filename: 'page.html', contentType: "text/html"}
             logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"

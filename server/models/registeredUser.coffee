@@ -18,6 +18,7 @@ registeredUserSchema = new mongoose.Schema
     contact: String
     whereFrom: String
     aboutme: String
+    paymentEmail: {type: String, select: false}
 
 
 registeredUserSchema.methods.upsert = () ->
@@ -25,7 +26,7 @@ registeredUserSchema.methods.upsert = () ->
     try
         @update(this, {upsert: true})
     catch
-        logger.info "Could not upsert a registereduser"    
+        logger.info "Could not upsert a registereduser"  
 
 registeredUserSchema.statics.findAdmin = (list) ->
     RegisteredUser.findOne({admin: true, username: "pkalinin"}).select("+informaticsPassword +ejudgePassword +codeforcesPassword")
@@ -59,6 +60,11 @@ registeredUserSchema.methods.setCodeforces = (username, password) ->
     @codeforcesUsername = username
     @codeforcesPassword = password
     
+registeredUserSchema.methods.setPaymentEmail = (email) ->
+    logger.info "setting payment email ", @_id, email
+    await @update({$set: {"paymentEmail": email}})
+    @paymentEmail = email
+
 registeredUserSchema.plugin(passportLocalMongoose);
 
 RegisteredUser = mongoose.model('registeredUser', registeredUserSchema);

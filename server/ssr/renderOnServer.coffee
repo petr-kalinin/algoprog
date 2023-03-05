@@ -54,7 +54,6 @@ renderFullPage = (html, data, helmet, linkClientJsCss) ->
                     "HTML-CSS": { availableFonts: ["TeX"] }
                 });
             </script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
             <script src="/highlight.pack.js"></script>
             <script type="text/javascript" src="https://vk.com/js/api/openapi.js?162"></script>

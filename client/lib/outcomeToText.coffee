@@ -1,5 +1,5 @@
 import globalStyles from '../components/global.css'
-import {LangRawAny} from '../lang/lang'
+import {LangRawAny, LangRaw} from '../lang/lang'
 
 MESSAGES =
     DR:
@@ -72,8 +72,11 @@ CLASSES =
 
 
 export default outcomeToText = (outcome, lang, check) ->
+    [outcome, points] = outcome.split(":")
     cl = CLASSES[outcome]
     message = LangRawAny(MESSAGES[outcome], lang, outcome, false)
+    if message and points
+        message += " " + LangRaw("outcome_points", lang)(points)
     if not (message?) and not check
         message = outcome
     return [cl, message]

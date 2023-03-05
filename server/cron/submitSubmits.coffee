@@ -115,6 +115,11 @@ submitOneSubmit = (submit) ->
             submit.outcome = "PW"
             await submit.upsert()
             await SubmitProcess.remove({_id: submit._id})
+        else if e.contactMe
+            logger.info "Contact me"
+            submit.outcome = "CM"
+            await submit.upsert()
+            await SubmitProcess.remove({_id: submit._id})
         else
             logger.info "Can not submit pending submit #{submit.user} #{submit.problem} attempt #{submitProcess.attempts}"
             logger.info e, e.message, e.stack

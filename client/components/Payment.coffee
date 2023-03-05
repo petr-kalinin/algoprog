@@ -297,7 +297,7 @@ class EvocaPayment extends React.Component
 
 
     render: () ->
-        canSubmit = @props.canSubmit and @state.name and @state.email
+        canSubmit = @props.canSubmit and @state.name and @state.email and @state.address
         amount = @props.amount
         <div>
             {@state.loading && <Loader /> }
@@ -307,7 +307,7 @@ class EvocaPayment extends React.Component
                         id="amount"
                         label={LangRaw("payment_sum", @props.lang)}
                         type="text"
-                        value={amount}
+                        value={"#{@props.evocaPreData.amount} #{@props.evocaPreData.currency} (#{@props.evocaPreData.amountRub} RUB + 10%)" }
                         disabled/>
                     <FieldGroup
                         id="name"
@@ -318,6 +318,12 @@ class EvocaPayment extends React.Component
                     <FieldGroup
                         id="email"
                         label={LangRaw("payer_email", @props.lang)}
+                        type="text"
+                        setField={@setField}
+                        state={@state}/>
+                    <FieldGroup
+                        id="address"
+                        label={LangRaw("payer_address", @props.lang)}
                         type="text"
                         setField={@setField}
                         state={@state}/>
@@ -333,11 +339,17 @@ class EvocaPayment extends React.Component
             }
         </div>
 
+evocaOptions =
+    urls: (props) ->
+        evocaPreData: "evocaPreData"
+
+EvocaPayment = ConnectedComponent(EvocaPayment, evocaOptions)
+
 class PaymentSelector extends React.Component
     constructor: (props) ->
         super(props)
         @state =
-            provider: null
+            provider: if @props.providers.length == 1 then @props.providers[0] else null
         @setField = @setField.bind(this)
 
     setField: (field, value) ->
@@ -347,7 +359,7 @@ class PaymentSelector extends React.Component
 
     render: () ->
         <div>
-            <FieldGroup
+            {@props.providers.length  > 1 && <FieldGroup
                 id="provider"
                 label=""
                 type="radio"
@@ -355,8 +367,8 @@ class PaymentSelector extends React.Component
                 state={@state}>
                     {"tinkoff" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>}
                     {"unitpay" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>}
-                    {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_alt", @props.lang)}</Radio>}
-            </FieldGroup>
+                    {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_evoca", @props.lang)}</Radio>}
+            </FieldGroup>}
             {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
             {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
             {@state.provider == "evoca" && <EvocaPayment {@props...}/> }
@@ -391,12 +403,12 @@ class Payment extends React.Component
             amount = @props.myUser.price
             warning = null
         switch GROUPS[@props.myUser?.userList]?.paid
-            when "tinkoff" then providers = ["tinkoff", "unitpay"]
-            when "unitpay" then providers = ["tinkoff", "unitpay"]
+            when "tinkoff" then providers = ["tinkoff", "unitpay", "evoca"]
+            when "unitpay" then providers = ["unitpay"]
             when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
             else
                 canSubmit = false
-                provider = "unitpay"
+                providers = ["unitpay"]
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"

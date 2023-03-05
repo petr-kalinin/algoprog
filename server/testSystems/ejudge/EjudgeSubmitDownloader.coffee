@@ -43,6 +43,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         "Time-limit exceeded": "TL"
         "Wall time-limit exceeded": "TL"
         "Memory limit exceeded": "ML"
+        "Security violation": "SE"
 
     constructor: (@options) ->
         super()
@@ -171,7 +172,10 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
         page = await @options.admin.download href, {}, "new-master"
         document = (new JSDOM(page, {url: href})).window.document
         result = {tests: []}
-        pre = document.getElementsByTagName("pre")[0]
+        pre = undefined
+        for pre_el in document.getElementsByTagName("pre")
+            if pre_el.innerHTML.includes("====== Test #1 =======")
+                pre = pre_el
         if page.includes("Compilation error") or page.includes("Coding style violation")
             result.compiler_output = pre?.textContent
             pre = null

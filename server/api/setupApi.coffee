@@ -28,6 +28,7 @@ import * as downloadSubmits from "../cron/downloadSubmits"
 import findSimilarSubmits from '../hashes/findSimilarSubmits'
 import InformaticsUser from '../informatics/InformaticsUser'
 
+import getCbRfRate from '../lib/cbrf'
 import download, {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
@@ -83,6 +84,9 @@ UNITPAY_PUBLIC_KEY_ORG = process.env["UNITPAY_PUBLIC_KEY_ORG"]
 UNITPAY_SECRET_KEY_ORG = process.env["UNITPAY_SECRET_KEY_ORG"]
 EVOCA_LOGIN = process.env["EVOCA_LOGIN"]
 EVOCA_PASSWORD = process.env["EVOCA_PASSWORD"]
+INVOICE_PASSWORD = process.env["INVOICE_PASSWORD"]
+INVOICE_IP_DATA = process.env["INVOICE_IP_DATA"]
+INVOICE_IP_SIGNATURE = process.env["INVOICE_IP_SIGNATURE"]
 
 wrap = (fn) ->
     (args...) ->
@@ -185,6 +189,14 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     return mistake
 
 processPayment = (orderId, success, amount, payload, isReal=true) ->
+    payment = await Payment.findSuccessfulByOrderId(orderId)
+    if payment
+        return
+    if amount.amount?
+        {amount, taxAmount} = amount
+    else
+        taxAmount = amount
+    taxAmount = Math.ceil(taxAmount)
     [userId, paidTillInOrder] = orderId.split(":")
 
     payment = new Payment
@@ -220,13 +232,14 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
     await userPrivate.upsert()
     if isReal
         try
-            receipt = await addIncome("Оплата занятий на algoprog.ru", +userPrivate.price)
-            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt) 
+            receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
+            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt)
         catch e
-            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
+            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
             receipt = "---"
+        notify "Invoice: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
     else
-        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
+        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
     logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
     payment.processed = true
@@ -1310,6 +1323,29 @@ export default setupApi = (app) ->
             publicKey: publicKey
             is_org: is_org
 
+    app.get '/api/evocaPreData', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        currency = "AMD"
+        try
+            amdToRub = await getCbRfRate(currency)
+        catch e
+            notify "Can't download cbrf rates", e
+            throw e
+        amountRub = userPrivate.price || 2000
+        fee = 0.1
+        sum = Math.floor(amountRub / amdToRub * (1 + fee))
+        res.json
+            amount: sum
+            currency: currency
+            amountRub: amountRub
+
     app.post '/api/evocaData', wrap (req, res) ->
         if not req.user
             res.status(403).send('No permissions')
@@ -1324,12 +1360,19 @@ export default setupApi = (app) ->
         if not userPrivate?.price
             res.status(403).send('No price set')
             return
-        # TODO: convert
-        rubToAmd = 6
+        currency = "AMD"
+        try
+            amdToRub = await getCbRfRate(currency)
+        catch e
+            notify "Can't download cbrf rates", e
+            throw e
+        fee = 0.1
         desc = req.body.desc
-        sum = userPrivate.price * rubToAmd * 100
+        sum = Math.floor(userPrivate.price / amdToRub * 100 * (1 + fee))
         returnUrl = encodeURIComponent("#{req.protocol}://#{req.get('host')}/evocaPaymentSuccess")
-        url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}"
+        req.user.setPaymentEmail(email)    
+        jsonParams = encodeURIComponent(JSON.stringify({email, address}))
+        url = "https://ipay.arca.am/payment/rest/register.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderNumber=#{order}&amount=#{sum}&description=#{desc}&returnUrl=#{returnUrl}&jsonParams=#{jsonParams}"
         result = JSON.parse(await download(url))
         logger.info "Evoca register request answer", result, result.errorCode
         if result.errorCode == 1
@@ -1441,12 +1484,55 @@ export default setupApi = (app) ->
         url = "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do?userName=#{EVOCA_LOGIN}&password=#{EVOCA_PASSWORD}&orderId=#{orderId}"
         data = await download(url)
         result = JSON.parse(data)
-        # TODO: convert
-        rubToAmd = 6
+
+        currency = "AMD"
+        try
+            amdToRub = await getCbRfRate(currency)
+        catch e
+            notify "Can't download cbrf rates", e
+            throw e
+        fee = 0.1
+        desc = req.body.desc
+
         success = result.actionCode == 0
-        await processPayment(result.orderNumber, result.actionCode == 0, result.amount / 6 / 100, result)
+        await processPayment(result.orderNumber, result.actionCode == 0, {amount: result.amount * amdToRub / 100 / (1 + fee), taxAmount: result.amount * amdToRub / 100}, result)
         res.json
             status: success
+
+    app.get '/api/invoice/:orderId', wrap (req, res) ->
+        if req.query.password != INVOICE_PASSWORD or not INVOICE_PASSWORD
+            res.status(403).send('No permission')
+            return
+        orderId = req.params.orderId
+        if not orderId
+            res.status(400).send('No orderId')
+            return
+        payment = await Payment.findSuccessfulByOrderId(orderId)
+        if not payment
+            res.status(400).send('Wrong orderId')
+            return
+        currency = payment.payload?.currency
+        if currency == "051"
+            currency = "֏"
+        else
+            currency = " ?#{currency}? "
+        email = ""
+        address = ""
+        for el in payment.payload?.merchantOrderParams || []
+            if el.name == "email"
+                email = el.value
+            if el.name == "address"
+                address = el.value
+        res.json
+            ip_data: INVOICE_IP_DATA
+            orderId: orderId
+            date: payment.time
+            userName: payment.payload?.cardAuthInfo?.cardholderName
+            userEmail: email
+            userAddress: address
+            amount: payment.payload?.amount / 100
+            currency: currency
+            signature: INVOICE_IP_SIGNATURE
 
     ###
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->

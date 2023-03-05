@@ -58,6 +58,21 @@ spec:
                   name: mongo-secret
                   key: USER_AGENT_ADINA
           image: petrkalinin/algoprog-adina
+            - name: INVOICE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INVOICE_PASSWORD
+            - name: INVOICE_IP_DATA
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INVOICE_IP_DATA
+            - name: INVOICE_IP_SIGNATURE
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: INVOICE_IP_SIGNATURE
           imagePullPolicy: "Always"
           name: nodejs-adina
           ports:

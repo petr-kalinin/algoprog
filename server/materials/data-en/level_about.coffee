@@ -52,9 +52,9 @@ module20927_3 = () ->
 
 pay = () ->
     page(
-        "Cost of the course and and payment procedure", 
+        "Cost of the course and and payment process", 
                                                    String.raw"""<div class="box generalbox generalboxcontent boxaligncenter clearfix">
-        <h1>Cost of the course and and payment procedure</h1>
+        <h1>Cost of the course and and payment process</h1>
         
         <p>The course is for-fee. More precisely, actually all the materials in the course are free. Some of them are on the website informatics.msk.ru in the <a href="https://informatics.msk.ru/course/view.php?id=1135">corresponding section</a> (in Russian), you can study there for free. I charge money for adding you to the summary rankings, reviewing and commenting on your solutions, answering your questions, etc., as well as for access to the "Good Solutions" and "Find a Bug" sections.</p>
         
@@ -68,18 +68,20 @@ pay = () ->
         
         <h2>Payment</h2>
         <p>You can pay for the course with any bank card <a href="/payment" onclick="window.goto('/payment')();return false;">on the website</a>.</p>
-        <p>Most bank cards from most countries should be supported. If you encounter problems, please contact me, we can discuss other payment methods.</p>
+        <p>Most bank cards from most countries should be supported. If you encounter problems, please contact me, we can discuss other payment methods.
+        If you pay with a non-Russian bank card, the payment currency may be different, not rubles (the sum to pay will be converted according to the official exchange rate of the Central Bank of Russia), and an additional fee of 10% may be collected. The exact fee will be shown on payment page.</p>
         
-        <h2>Is a refund possible?</h2>
-        <p>The cost does not depend on how active you are in the course (if you solve a lot, then I will spend more time on you than if you solve a little, and you pay the same amount). Therefore, it is quite strange to return the money if you didn't do anything. Therefore, the policy is as follows:</p>
+        <h2>Rules about breaks and refunds</h2>
+        <p>The cost does not depend on how active you are in the course (if you solve a lot, then I will spend more time on you than if you solve a little, and you pay the same amount). Moreover, many people, of course, do not study every day, but it is rather strange to take money only for those days when you did study, because it punishes active students. Therefore, the unit of payment is a month, and even if you do not study for a small number of days, these days must still be paid. The formal policy is as follows:</p>
         <ul>
-        <li>If, for objective unforeseen reasons, you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study*. Predictable things like trips, exams, etc. are not counted here.</li>
-        <li>If for whatever reason you have not been engaged for more than 10 days in a row, then I will refund you half of the money for this period*.</li>
-        <li>If you warn me in advance that you will not be able to study for more than 10 days in a row, then I can refund you money for this period.</li>
-        <li>Of course, if for some reason I could not check your solutions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period*.</li>
+        <li>If you prolong the payment no later than 6 days after the end of the previous paid term, the new paid term is calculated "end-to-end" to the previous one, i.e. not from the date of payment, but from the date of the end of the previous term. If you prolong the payment later than 6 days after the end of the paid period, the new paid period is calculated from the date of payment.</li>
+        <li>If for objective unforeseen reasons you could not study in the course for more than 5 days in a row (broke your arm, etc.), then I will refund you the money for the entire period when you could not study*. Predictable things like trips, exams, etc. do not count here.</li>
+        <li>If for whatever reason you did not study for more than 10 days in a row, then I will refund you half of the money for this period*.</li>
+        <li>If you warn me in advance that you will not be able to study for more than 10 days in a row, then I may refund your money for this period.</li>
+        <li>Of course, if for some reason I could not check your submissions and respond to your emails for more than 5 days in a row, then I will refund you for the entire period*.</li>
         </ul>
-        <p>* Any refunds should be discussed no later than 14 days after the end of the period for which you request a refund. If you contact me later, I have the right to refuse a refund.</p>
-        <p>Of course, in any case, instead of a refund, if you want, I can simply extend the paid period by a period corresponding to the refund amount.</p>
+        <p>* Any refunds are discussed no later than 14 days from the end of the period for which you request a refund. If you contact me later, I have the right to refuse.</p>
+        <p>Of course, in any case, instead of a refund, if you want, I can simply extend the paid period for a period corresponding to the refund amount.</p>
         </div>""", {id: "pay"})
 
 module20927_13 = () ->

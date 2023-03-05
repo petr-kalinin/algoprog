@@ -48,6 +48,9 @@ generateMsg = (lang, result, problemName, problemHref) ->
 
     return msg
 
+decodeComment = (comment) ->
+    entities.decode(comment.text || comment)
+
 storeToDatabase = (req, res) ->
     submit = await Submit.findById(req.params.submitId)
     problemId = submit.problem
