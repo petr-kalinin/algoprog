@@ -17,8 +17,6 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
-decodeComment = (comment) ->
-    entities.decode(comment.text || comment)
 generateMsg = (lang, result, problemName, problemHref) ->
     msg = ""
     problemName = "'<a href='https://algoprog.ru/material/" + problemHref + "'>" + problemName + "</a>'"
