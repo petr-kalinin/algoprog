@@ -62,6 +62,113 @@ contest_greedy = () ->
         problem({testSystem: "codeforces", contest: "45", problem: "D"}), 
     ])
     
+contest_ladderB3 = () ->
+    return contest("1E: Ladder B Contest 3", [
+        problem({testSystem: "codeforces", contest: "514", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "408", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "357", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "578", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "416", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "492", problem: "C"}),
+        problem({testSystem: "codeforces", contest: "110", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "756", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "66", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "312", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "337", problem: "B"}),	
+        problem({testSystem: "codeforces", contest: "384", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "361", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "205", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "182", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "234", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "746", problem: "D"}), 
+        problem({testSystem: "codeforces", contest: "151", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "359", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "129", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "143", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "437", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "233", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "219", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "205", problem: "B"}),		
+    ])
+
+contest_ladderB4 = () ->
+    return contest("1E: Ladder B Contest 4", [
+        problem({testSystem: "codeforces", contest: "192", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "228", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "342", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "96", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "320", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "195", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "231", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "197", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "260", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "214", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "225", problem: "B"}),	
+        problem({testSystem: "codeforces", contest: "63", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "281", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "189", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "94", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "244", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "216", problem: "D"}), 
+        problem({testSystem: "codeforces", contest: "374", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "69", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "14", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "149", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "254", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "61", problem: "B"}), 
+        problem({testSystem: "codeforces", contest: "103", problem: "B"}),
+		problem({testSystem: "codeforces", contest: "9", problem: "B"}),		
+    ])
+	
+contest_ladderB5 = () ->
+    return contest("1E: Ladder B Contest 5", [
+        problem({testSystem: "codeforces", contest: "27", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "99", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "275", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "190", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "56", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "114", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "41", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "22", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "31", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "75", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "340", problem: "B"}),	
+        problem({testSystem: "codeforces", contest: "29", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "53", problem: "B"}),
+        problem({testSystem: "codeforces", contest: "393", problem: "B"}),	
+    ])
+	
+	
+contest_geometry = () ->
+    return contest("1E: Геометрия база", [
+		problem(269),
+        problem(270),
+		problem(271),
+		problem(274),
+		problem(275),
+		problem(433),
+        problem(447),
+        problem(434),
+        problem(448),
+        problem(435),
+        problem(436),
+        problem(437),
+        problem(451),
+        problem(438),
+        problem(452),
+        problem(439),
+        problem(440),
+        problem(441),
+        problem(442),
+        problem(443),
+        problem(444),
+        problem(446),
+		problem(280),
+        problem(281),
+        problem(288),
+    ])
+	
+	
 greedy_theory = () -> 
     return page(
         "Про жадные алгоритмы", 
@@ -113,8 +220,17 @@ export default level_1E = () ->
         label("Решето Эратосфена (e-maxx): <a href='http://e-maxx.ru/algo/eratosthenes_sieve'>http://e-maxx.ru/algo/eratosthenes_sieve</a>"),
         contest_num_theory(),
         
+        contest_ladderB3(),
         greedy_theory(),
         label("Жадные алгоритмы (Алгоритмика от Tinkoff Generation: <a href='https://ru.algorithmica.org/cs/combinatorial-optimization/greedy/'>https://ru.algorithmica.org/cs/combinatorial-optimization/greedy/</a>"),
         label("При решении задач обязательно нужно применить 'жадный' подход"),
         contest_greedy(),
+        
+        contest_ladderB4(),
+
+        label("Геометрия (ЛКШ B' июль 2013, Петр Калинин). Смотреть все видео в данной теме: https://sis.khashaev.ru/2013/july/b-prime/SHKJoyngn9E/"),
+        label("Геометрия (Алгоритмика от Tinkoff Generation: <a href='https://ru.algorithmica.org/cs/geometry-basic/'>https://ru.algorithmica.org/cs/geometry-basic/</a>"),
+        contest_geometry(),
+
+        contest_ladderB5(),
     ])
