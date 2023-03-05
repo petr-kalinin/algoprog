@@ -88,7 +88,7 @@ contest_ladderB3 = () ->
         problem({testSystem: "codeforces", contest: "437", problem: "B"}), 
         problem({testSystem: "codeforces", contest: "233", problem: "B"}), 
         problem({testSystem: "codeforces", contest: "219", problem: "B"}),
-		problem({testSystem: "codeforces", contest: "205", problem: "B"}),		
+        problem({testSystem: "codeforces", contest: "205", problem: "B"}),
     ])
 
 contest_ladderB4 = () ->
@@ -117,7 +117,7 @@ contest_ladderB4 = () ->
         problem({testSystem: "codeforces", contest: "254", problem: "B"}), 
         problem({testSystem: "codeforces", contest: "61", problem: "B"}), 
         problem({testSystem: "codeforces", contest: "103", problem: "B"}),
-		problem({testSystem: "codeforces", contest: "9", problem: "B"}),		
+        problem({testSystem: "codeforces", contest: "9", problem: "B"}),		
     ])
 	
 contest_ladderB5 = () ->
@@ -141,12 +141,12 @@ contest_ladderB5 = () ->
 	
 contest_geometry = () ->
     return contest("1E: Геометрия база", [
-		problem(269),
+        problem(269),
         problem(270),
-		problem(271),
-		problem(274),
-		problem(275),
-		problem(433),
+        problem(271),
+        problem(274),
+        problem(275),
+        problem(433),
         problem(447),
         problem(434),
         problem(448),
@@ -163,7 +163,7 @@ contest_geometry = () ->
         problem(443),
         problem(444),
         problem(446),
-		problem(280),
+        problem(280),
         problem(281),
         problem(288),
     ])
