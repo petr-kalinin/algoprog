@@ -1421,7 +1421,11 @@ export default setupApi = (app) ->
         str = ""
         for key in keys
             str += data[key] + "{up}"
-        str += UNITPAY_SECRET_KEY
+        is_org = req.host.endsWith(".org")
+        if UNITPAY_PUBLIC_KEY_ORG && is_org
+            str += UNITPAY_SECRET_KEY_ORG
+        else
+            str += UNITPAY_SECRET_KEY
         str = method + "{up}" + str
         hash = sha256(str)
         if hash != signature
