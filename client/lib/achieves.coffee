@@ -585,8 +585,8 @@ export default ACHIEVES =
 
     "mosh:1":
         text: 
-            ru: "МОШ"
-            en: "МОШ"
+            ru: "мош"
+            en: "moi"
         title:
             ru: "1 диплом на Московской олимпиаде школьников"
             en: "I diploma on Moscow olympiad in informatics"
@@ -594,8 +594,8 @@ export default ACHIEVES =
         score: 199
     "mosh:2":
         text: 
-            ru: "МОШ"
-            en: "МОШ"
+            ru: "мош"
+            en: "moi"
         title:
             ru: "2 диплом на Московской олимпиаде школьников"
             en: "II diploma on Moscow olympiad in informatics"
@@ -603,8 +603,8 @@ export default ACHIEVES =
         score: 129
     "mosh:3":
         text: 
-            ru: "МОШ"
-            en: "МОШ"
+            ru: "мош"
+            en: "moi"
         title:
             ru: "3 диплом на Московской олимпиаде школьников"
             en: "III diploma on Moscow olympiad in informatics"
@@ -612,8 +612,8 @@ export default ACHIEVES =
         score: 109
     "mosh:participant":
         text: 
-            ru: "МОШ"
-            en: "МОШ"
+            ru: "мош"
+            en: "moi"
         title:
             ru: "Участник заключительного тура Московской олимпиаде школьников"
             en: "Participant of the Moscow olympiad in informatics"
@@ -622,8 +622,8 @@ export default ACHIEVES =
 
     "lksh:1":
         text: 
-            ru: "ЛКШ"
-            en: "ЛКШ"
+            ru: "лкш"
+            en: "sis"
         title:
             ru: "Учился в ЛКШ 1 раз"
             en: "Studied in SIS once"
@@ -631,8 +631,8 @@ export default ACHIEVES =
         score: 65
     "lksh:2":
         text: 
-            ru: "ЛКШ"
-            en: "ЛКШ"
+            ru: "лкш"
+            en: "sis"
         title:
             ru: "Учился в ЛКШ 2 раза"
             en: "Studied in SIS twice"
@@ -640,8 +640,8 @@ export default ACHIEVES =
         score: 105
     "lksh:3":
         text: 
-            ru: "ЛКШ"
-            en: "ЛКШ"
+            ru: "лкш"
+            en: "sis"
         title:
             ru: "Учился в ЛКШ 3 раза"
             en: "Studied in SIS three times"
@@ -649,8 +649,8 @@ export default ACHIEVES =
         score: 127
     "lksh:4":
         text: 
-            ru: "ЛКШ"
-            en: "ЛКШ"
+            ru: "лкш"
+            en: "sis"
         title:
             ru: "Учился в ЛКШ 4+ раз"
             en: "Studied in SIS four+ times"
