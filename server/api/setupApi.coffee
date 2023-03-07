@@ -1411,7 +1411,7 @@ export default setupApi = (app) ->
 
     app.get '/api/unitpayNotify', wrap (req, res) ->
         order = req.query.params.account
-        logger.info("unitpayNotify #{order}")
+        logger.info("unitpayNotify #{order} #{req.host}")
         data = deepcopy(req.query.params)
         signature = data.signature
         method = req.query.method

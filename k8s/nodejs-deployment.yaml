@@ -122,6 +122,16 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: UNITPAY_SECRET_KEY
+            - name: UNITPAY_PUBLIC_KEY_ORG
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: UNITPAY_PUBLIC_KEY_ORG
+            - name: UNITPAY_SECRET_KEY_ORG
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: UNITPAY_SECRET_KEY_ORG
             - name: EVOCA_LOGIN
               valueFrom:
                 secretKeyRef:

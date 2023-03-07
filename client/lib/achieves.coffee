@@ -582,3 +582,77 @@ export default ACHIEVES =
             en: "Activity was 15 and level was at least 3 at some moment"
         color: GOLD_COLOR
         score: 53
+
+    "mosh:1":
+        text: 
+            ru: "МОШ"
+            en: "МОШ"
+        title:
+            ru: "1 диплом на Московской олимпиаде школьников"
+            en: "I diploma on Moscow olympiad in informatics"
+        color: GOLD_COLOR
+        score: 199
+    "mosh:2":
+        text: 
+            ru: "МОШ"
+            en: "МОШ"
+        title:
+            ru: "2 диплом на Московской олимпиаде школьников"
+            en: "II diploma on Moscow olympiad in informatics"
+        color: SILVER_COLOR
+        score: 129
+    "mosh:3":
+        text: 
+            ru: "МОШ"
+            en: "МОШ"
+        title:
+            ru: "3 диплом на Московской олимпиаде школьников"
+            en: "III diploma on Moscow olympiad in informatics"
+        color: BRONZE_COLOR
+        score: 109
+    "mosh:participant":
+        text: 
+            ru: "МОШ"
+            en: "МОШ"
+        title:
+            ru: "Участник заключительного тура Московской олимпиаде школьников"
+            en: "Participant of the Moscow olympiad in informatics"
+        color: PARTICIPANT_COLOR
+        score: 59
+
+    "lksh:1":
+        text: 
+            ru: "ЛКШ"
+            en: "ЛКШ"
+        title:
+            ru: "Учился в ЛКШ 1 раз"
+            en: "Studied in SIS once"
+        color: PARTICIPANT_COLOR
+        score: 65
+    "lksh:2":
+        text: 
+            ru: "ЛКШ"
+            en: "ЛКШ"
+        title:
+            ru: "Учился в ЛКШ 2 раза"
+            en: "Studied in SIS twice"
+        color: BRONZE_COLOR
+        score: 105
+    "lksh:3":
+        text: 
+            ru: "ЛКШ"
+            en: "ЛКШ"
+        title:
+            ru: "Учился в ЛКШ 3 раза"
+            en: "Studied in SIS three times"
+        color: SILVER_COLOR
+        score: 127
+    "lksh:4":
+        text: 
+            ru: "ЛКШ"
+            en: "ЛКШ"
+        title:
+            ru: "Учился в ЛКШ 4+ раз"
+            en: "Studied in SIS four+ times"
+        color: GOLD_COLOR
+        score: 165
