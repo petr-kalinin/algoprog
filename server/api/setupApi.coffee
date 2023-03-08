@@ -189,7 +189,7 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     return mistake
 
 processPayment = (orderId, success, amount, payload, options={}) ->
-    {isReal, system} = options
+    {isTest, system} = options
     payment = await Payment.findSuccessfulByOrderId(orderId)
     if payment
         return
@@ -231,7 +231,7 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
     userPrivate.paidTill = newPaidTill
     await userPrivate.upsert()
-    if isReal
+    if not isTest
         try
             receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
             notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + makeReceiptLink(receipt)
@@ -1407,7 +1407,7 @@ export default setupApi = (app) ->
         success = true
         orderId = data.transaction.external_id
         amount = data.purchase.checkout.amount
-        await processPayment(orderId, success, amount, req.body, {isReal: false})
+        await processPayment(orderId, success, amount, req.body, {isTest: true})
         res.status(204).send('')
 
     app.get '/api/unitpayNotify', wrap (req, res) ->
