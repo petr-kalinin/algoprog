@@ -188,7 +188,8 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
     mistake.hash = sha256(mistake._id).substring(0, 4)
     return mistake
 
-processPayment = (orderId, success, amount, payload, isReal=true) ->
+processPayment = (orderId, success, amount, payload, options={}) ->
+    {isReal, system} = options
     payment = await Payment.findSuccessfulByOrderId(orderId)
     if payment
         return
@@ -237,7 +238,7 @@ processPayment = (orderId, success, amount, payload, isReal=true) ->
         catch e
             notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
             receipt = "---"
-        notify "Invoice: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
+        notify "Invoice #{system}: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
     else
         notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
@@ -1406,7 +1407,7 @@ export default setupApi = (app) ->
         success = true
         orderId = data.transaction.external_id
         amount = data.purchase.checkout.amount
-        await processPayment(orderId, success, amount, req.body, false)
+        await processPayment(orderId, success, amount, req.body, {isReal: false})
         res.status(204).send('')
 
     app.get '/api/unitpayNotify', wrap (req, res) ->
@@ -1440,7 +1441,7 @@ export default setupApi = (app) ->
 
         success = true
         amount = data.orderSum
-        await processPayment(order, success, amount, req.query)
+        await processPayment(order, success, amount, req.query, {system: "unitpay"})
         res.json({result: {message: "OK"}})
 
     app.post '/api/paymentNotify', wrap (req, res) ->
@@ -1462,7 +1463,7 @@ export default setupApi = (app) ->
 
         success = data.Status == "CONFIRMED"
         amount = Math.floor(req.body.Amount/100)
-        await processPayment(req.body.OrderId, success, amount, req.body)
+        await processPayment(req.body.OrderId, success, amount, req.body, {system: "tinkoff"})
         res.send('OK')
 
     app.get '/api/evocaStatus/:orderId', wrap (req, res) ->
@@ -1484,7 +1485,7 @@ export default setupApi = (app) ->
         desc = req.body.desc
 
         success = result.actionCode == 0
-        await processPayment(result.orderNumber, result.actionCode == 0, {amount: result.amount * amdToRub / 100 / (1 + fee), taxAmount: result.amount * amdToRub / 100}, result)
+        await processPayment(result.orderNumber, result.actionCode == 0, {amount: result.amount * amdToRub / 100 / (1 + fee), taxAmount: result.amount * amdToRub / 100}, result, {system: "evoca"})
         res.json
             status: success
 
