@@ -58,7 +58,6 @@ contest_bfs0 = () ->
         problem(1472),
         problem(2001),
         problem(2002),
-        problem(2003),
     ])
 
 contest_bfs1 = () ->
