@@ -230,7 +230,7 @@ export default level_1E = () ->
 
         label("Геометрия (ЛКШ B' июль 2013, Петр Калинин). Смотреть все видео в данной теме: https://sis.khashaev.ru/2013/july/b-prime/SHKJoyngn9E/"),
         label("Геометрия (Алгоритмика от Tinkoff Generation: <a href='https://ru.algorithmica.org/cs/geometry-basic/'>https://ru.algorithmica.org/cs/geometry-basic/</a>"),
-		label("В задачах на геометрию все входные данные целочисленные.")
+        label("В задачах на геометрию все входные данные целочисленные.")
         contest_geometry(),
 
         contest_ladderB5(),
