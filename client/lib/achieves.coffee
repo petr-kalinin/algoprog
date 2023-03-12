@@ -656,3 +656,40 @@ export default ACHIEVES =
             en: "Studied in SIS four+ times"
         color: GOLD_COLOR
         score: 165
+
+    "sirius:1":
+        text: 
+            ru: "сириус"
+            en: "sirius"
+        title:
+            ru: "Ездил на олимпиадные смены в Сириус 1 раз"
+            en: "Participated in olympiad sessions in Sirius once"
+        color: PARTICIPANT_COLOR
+        score: 64
+    "sirius:2":
+        text: 
+            ru: "сириус"
+            en: "sirius"
+        title:
+            ru: "Ездил на олимпиадные смены в Сириус 2 раза"
+            en: "Participated in olympiad sessions in Sirius twice"
+        color: BRONZE_COLOR
+        score: 104
+    "sirius:4":
+        text: 
+            ru: "сириус"
+            en: "sirius"
+        title:
+            ru: "Ездил на олимпиадные смены в Сириус 4 раза"
+            en: "Participated in olympiad sessions in Sirius 4 times"
+        color: SILVER_COLOR
+        score: 126
+    "sirius:6":
+        text: 
+            ru: "сириус"
+            en: "sirius"
+        title:
+            ru: "Ездил на олимпиадные смены в Сириус 6 раз"
+            en: "Participated in olympiad sessions in Sirius 6 times"
+        color: GOLD_COLOR
+        score: 164
