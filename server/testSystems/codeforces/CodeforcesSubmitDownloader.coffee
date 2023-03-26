@@ -95,6 +95,8 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         if not parts
             return outcome
         realOutcome = @VERDICTS[parts[1]] || parts[1]
+        if realOutcome == "OK"
+            return "OK"
         return realOutcome + ":" + parts[2]
 
     getSource: (runid) ->
