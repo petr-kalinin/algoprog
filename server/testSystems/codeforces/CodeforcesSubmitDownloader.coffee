@@ -9,6 +9,7 @@ import logger from '../../log'
 import download from '../../lib/download'
 import normalizeCode from '../../lib/normalizeCode'
 import sleep from '../../lib/sleep'
+import {notify, notifyDocument} from '../../lib/telegramBot'
 import Submit from '../../models/submit'
 
 import LANGUAGES from '../../../client/lib/languages'
@@ -190,6 +191,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         els = table?.getElementsByTagName("tr")
         result = []
         baseProbHref = "#{@baseUrl}/#{@contest}/problem/"
+        count = 0
         for el in els
             id = el.children[0]?.textContent?.trim()
             time = el.children[1]?.textContent?.trim()
@@ -198,7 +200,9 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             lang = el.children[4]?.textContent?.trim()
             outcome = el.children[5]?.textContent?.trim()
             if (!prob || !prob.startsWith(baseProbHref))
+                logger.info "Ignoring problem ", prob
                 continue
+            count += 1
             prob = prob.substring(baseProbHref.length)
             time = moment(time, "MMM/DD/YYYY HH:mm", true).subtract(3, 'hours').toDate()
             if outcome == "In queue" or outcome.startsWith("Running")
@@ -231,4 +235,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
                     username: @username
             )
             checkOutcome(outcome)
+        if count == 0
+            notify "No submits found in CF table"
+            notifyDocument page, {filename: 'page.html', contentType: "text/html"}
         return result
