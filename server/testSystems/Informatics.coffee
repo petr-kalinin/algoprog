@@ -19,6 +19,9 @@ TIMEOUT = 1000
 _requests = 0
 _promises = []
 
+LOGIN_TIMEOUT = 1000 * 10
+
+
 class InformaticsUser extends TestSystemUser
     constructor: (@id) ->
         super()
@@ -48,8 +51,10 @@ class LoggedInformaticsUser
     _login: () ->
         logger.info "Logging in new InformaticsUser ", @username
         try
+            await sleep(LOGIN_TIMEOUT)
             page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 120 * 1000})
             token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
+            await sleep(LOGIN_TIMEOUT)
             page = await @download("https://informatics.msk.ru/login/index.php", {
                 method: 'POST',
                 form: {
@@ -73,6 +78,7 @@ class LoggedInformaticsUser
             throw e
 
     getId: () ->
+        await sleep(LOGIN_TIMEOUT)
         page = await @download("https://informatics.msk.ru/")
         @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
         id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]

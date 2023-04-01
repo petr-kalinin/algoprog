@@ -4,6 +4,7 @@ request = require('request-promise-native')
 import RegisteredUser from '../models/registeredUser'
 
 import download from '../lib/download'
+import sleep from '../lib/sleep'
 
 import logger from '../log'
 
@@ -12,13 +13,15 @@ import {getClassStartingFromJuly, getCurrentYearStart, getGraduateYear} from '..
 # this will give some mistake due to leap years, but we will neglect it
 MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25
 REQUESTS_LIMIT = 20
+LOGIN_TIMEOUT = 1000 * 10
+COOKIE_LIFETIME = 1000 * 60 * 60 * 12
 
 userCache = {}
 
 export default class InformaticsUser
     @getUser: (username, password) ->
         key = username + "::" + password
-        if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
+        if not userCache[key] or (new Date() - userCache[key].loginTime > COOKIE_LIFETIME)
             logger.info "Creating new InformaticsUser ", username
             newUser = new InformaticsUser(username, password)
             await newUser.doLogin()
@@ -39,6 +42,7 @@ export default class InformaticsUser
     doLogin: () ->
         page = await download('https://informatics.msk.ru/login/index.php', @jar)
         token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
+        await sleep(LOGIN_TIMEOUT)
         page = await download("https://informatics.msk.ru/login/index.php", @jar, {
             method: 'POST',
             form: {
@@ -49,6 +53,7 @@ export default class InformaticsUser
             followAllRedirects: true,
             timeout: 30 * 1000
         })
+        await sleep(LOGIN_TIMEOUT)
         page = await download("https://informatics.msk.ru/", @jar)
         @name = /<span class="userbutton"><span class="usertext mr-1">([^<]*)</.exec(page)?[1]
         @id = /<a href="https:\/\/informatics.msk.ru\/user\/profile.php\?id=(\d+)"/.exec(page)?[1]
