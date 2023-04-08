@@ -14,16 +14,6 @@ export default ACHIEVES =
         color: "#ff0000"
         score: 100000
 
-    "olymp:participant":
-        text:
-            ru: "ол"
-            en: "ol"
-        title: 
-            ru: "Участник какой-либо олимпиады по информатике, проводимой по разумным правилам"
-            en: "Participant of any olympiad in informatics conducted according to reasonable rules"
-        color: PARTICIPANT_COLOR
-        score: 10
-
     "mun:participant":
         text: 
             ru: "мун"
