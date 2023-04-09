@@ -139,6 +139,7 @@ export class LoggedCodeforcesUser
                 throw {badPassword: true}
             @handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(page)?[1]
             if not @handle
+                notifyDocument page, {filename: 'page.html', contentType: "text/html"}
                 throw "Can not log user #{@username} in"
             logger.info "Logged in new CodeforcesUser ", @username, @handle
         catch e
