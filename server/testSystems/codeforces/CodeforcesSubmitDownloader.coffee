@@ -62,6 +62,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         "Partial result": "WS"
         "Perfect result": "OK"
         "Wrong answer": "WA"
+        "Runtime error": "RE"
 
     _parseRunId: (runid) ->
         return runid.substr(1)
