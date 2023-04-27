@@ -65,12 +65,6 @@ export default LANGUAGES = {
         ejudge: 14
         codeforces: 13
     },
-    "Mono C#": {
-        extensions: ["cs"],
-        informatics: 25,
-        ejudge: 19
-        codeforces: 9
-    },
     "Haskell GHC": {
         extensions: [],
         informatics: 28,
