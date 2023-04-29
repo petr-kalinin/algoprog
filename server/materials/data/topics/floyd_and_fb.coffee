@@ -12,7 +12,7 @@ export default floyd_and_fb = () ->
             ruen("Алгоритмы Флойда и Форда-Беллмана", "Floyd and Ford-Bellman algorithms"),
             ruen("Задачи на алгоритмы Флойда и Форда-Беллмана", "Problems on Floyd and Ford-Bellman algorithms"),
         [label(ruen(
-             "<b>Алгоритм Флойда</b><br>\n<a href=\"https://sis.khashaev.ru/2013/july/b-prime/C-y1_dlKRdY/\">Видеозаписи ЛКШ, 2013, B'</a><br>\n<a href=\"https://sis.khashaev.ru/2008/august/b-prime/kXYH8tIsOEQ/\">Видеозаписи ЛКШ, 2008, B'</a><br>\n<b>Алгоритм Форла-Беллмана</b><br>\n<a href=\"https://sis.khashaev.ru/2013/july/b-prime/1fCe1I5ZV64/\">Видеозаписи ЛКШ, 2013, B'</a><br>\n<a href=\"https://sis.khashaev.ru/2008/august/b-prime/YvdwkhFS2_U/\">Видеозаписи ЛКШ, 2008, B'</a>",
+             "<b>Алгоритм Флойда</b><br>\n<a href=\"https://sis.khashaev.ru/2013/july/b-prime/C-y1_dlKRdY/\">Видеозаписи ЛКШ, 2013, B'</a><br>\n<a href=\"https://sis.khashaev.ru/2008/august/b-prime/kXYH8tIsOEQ/\">Видеозаписи ЛКШ, 2008, B'</a><br>\n<b>Алгоритм Форда-Беллмана</b><br>\n<a href=\"https://sis.khashaev.ru/2013/july/b-prime/1fCe1I5ZV64/\">Видеозаписи ЛКШ, 2013, B'</a><br>\n<a href=\"https://sis.khashaev.ru/2008/august/b-prime/YvdwkhFS2_U/\">Видеозаписи ЛКШ, 2008, B'</a>",
              "<b>Floyd 's Algorithm</b><br>\n<a href=\"https://sis.khashaev.ru/2013/july/b-prime/C-y1_dlKRdY/\">SIS videos, 2013, B'</a><br>\n<a href=\"https://sis.khashaev.ru/2008/august/b-prime/kXYH8tIsOEQ/\">SIS videos, 2008, B'</a><br>\n<b>The Forl-Bellman algorithm</b><br>\n<a href=\"https://sis.khashaev.ru/2013/july/b-prime/1fCe1I5ZV64/\">SIS videos, 2013, B'</a><br>\n<a href=\"https://sis.khashaev.ru/2008/august/b-prime/YvdwkhFS2_U/\">SIS videos, 2008, B'</a>")),
             problem(171),
             problem(97),
