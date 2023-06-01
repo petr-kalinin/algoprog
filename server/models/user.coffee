@@ -58,7 +58,7 @@ usersSchema = new mongoose.Schema
     prefs:
         editorOn: Boolean
         language: String
-        environLang: String
+        interfaceLanguage: String
     members: [String]
     telegram: { type: String, select: false }
 
@@ -208,10 +208,9 @@ usersSchema.methods.setLanguage = (lang) ->
     @prefs.language = lang
     @save()
 
-
-usersSchema.methods.setEnvironLang = (lang) ->
-    logger.info "set environment lang on ", @name, lang
-    @prefs.environLang = lang
+usersSchema.methods.setInterfaceLanguage = (lang) ->
+    logger.info "set interface lang on ", @name, lang
+    @prefs.interfaceLanguage = lang
     @save()
 
 compareLevels = (a, b) ->

@@ -8,19 +8,17 @@ import * as actions from '../redux/actions'
 import callApi from '../lib/callApi'
 
 export LangSwitch = (props) -> 
-    # [shouldReload, setShouldReload] = useState(false);
-    setEnvironLang = (lang) ->
+    setInterfaceLanguage = (lang) ->
         () ->
             props.switchLang(lang)
             await callApi "setLang/#{lang}", {}
-            # setShouldReload(true)
     
     return if props.lang == "ru"
-                <Button onClick={ setEnvironLang("en") } title="English">
+                <Button onClick={ setInterfaceLanguage("en") } title="English">
                     EN
                 </Button>
            else 
-                <Button onClick={ setEnvironLang("ru") } title="Русский">
+                <Button onClick={ setInterfaceLanguage("ru") } title="Русский">
                     RU
                 </Button>
 

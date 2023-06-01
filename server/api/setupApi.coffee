@@ -808,12 +808,8 @@ export default setupApi = (app) ->
     app.post '/api/setLang/:lang', ensureLoggedIn, wrap (req, res) ->
         user = await User.findById(req.user.userKey())
         
-        if req.body.editorOn?
-            await user.setEditorOn(req.body.editorOn)
-
-        await user.setEnvironLang(req.params.lang)
-        res.json({submit: true})
-
+        await user.setInterfaceLanguage(req.params.lang)
+        res.send('OK')
 
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
@@ -1604,5 +1600,3 @@ export default setupApi = (app) ->
             await User.updateUser(newUser._id)
         res.send('OK')
     ###
-
-    app.post "api/"

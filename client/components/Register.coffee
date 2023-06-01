@@ -44,6 +44,7 @@ class Register extends React.Component
             aboutme: ""
             cfLogin: ""
             hasInformatics: undefined
+            interfaceLanguage: props.lang
         @setField = @setField.bind(this)
         @updateInformatics = @updateInformatics.bind(this)
         @tryRegister = @tryRegister.bind(this)
@@ -106,6 +107,7 @@ class Register extends React.Component
                 contact: @state.contact
                 aboutme: @state.aboutme
                 cfLogin: @state.cfLogin
+                interfaceLanguage: @state.interfaceLanguage
             }
             if data.registered.success
                 if window.yaCounter45895896
@@ -422,3 +424,4 @@ mapDispatchToProps = (dispatch) ->
         reloadMyData: () -> dispatch(actions.invalidateAllData())
 
 export default withLang(withRouter(connect(mapStateToProps, mapDispatchToProps)(Register)))
+withLang(Register)
