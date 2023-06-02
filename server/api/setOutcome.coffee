@@ -17,11 +17,11 @@ import setDirty from '../lib/setDirty'
 
 import logger from '../log'
 
-generateMsg = (lang, result, problemName, problemHref) ->
+generateMsg = (user, result, problemName, problemHref) ->
     msg = ""
     problemName = "'<a href='https://algoprog.ru/material/" + problemHref + "'>" + problemName + "</a>'"
 
-    if lang == "!en"
+    if user.getInterfaceLanguage() == "en"
         msg += "The solution for the " + problemName + " problem has been "
 
         if result == "AC"
@@ -56,7 +56,7 @@ storeToDatabase = (req, res) ->
     lang = GROUPS[user.userList].lang
     material = await Material.findById(problemId + lang)
     logger.info("Store to database #{req.params.submitId} #{problemId} #{material._id}")
-    msg = generateMsg(lang, req.body.result, material.title, material._id)
+    msg = generateMsg(user, req.body.result, material.title, material._id)
 
     if req.body.result in ["AC", "IG", "DQ"]
         logger.info("Force-storing to database result #{req.params.submitId}")
