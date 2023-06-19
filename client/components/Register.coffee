@@ -44,7 +44,6 @@ class Register extends React.Component
             aboutme: ""
             cfLogin: ""
             hasInformatics: undefined
-            interfaceLanguage: props.lang
         @setField = @setField.bind(this)
         @updateInformatics = @updateInformatics.bind(this)
         @tryRegister = @tryRegister.bind(this)
@@ -107,7 +106,7 @@ class Register extends React.Component
                 contact: @state.contact
                 aboutme: @state.aboutme
                 cfLogin: @state.cfLogin
-                interfaceLanguage: @state.interfaceLanguage
+                interfaceLanguage: props.lang
             }
             if data.registered.success
                 if window.yaCounter45895896

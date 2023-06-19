@@ -213,9 +213,6 @@ usersSchema.methods.setInterfaceLanguage = (lang) ->
     @prefs.interfaceLanguage = lang
     @save()
 
-usersSchema.methods.getInterfaceLanguage = () ->
-    return @prefs.interfaceLanguage
-
 compareLevels = (a, b) ->
     if a.length != b.length
         return if a.length > b.length then -1 else 1

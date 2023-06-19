@@ -21,7 +21,7 @@ generateMsg = (user, result, problemName, problemHref) ->
     msg = ""
     problemName = "'<a href='https://algoprog.ru/material/" + problemHref + "'>" + problemName + "</a>'"
 
-    if user.getInterfaceLanguage() == "en"
+    if user.prefs.interfaceLanguage == "en"
         msg += "The solution for the " + problemName + " problem has been "
 
         if result == "AC"

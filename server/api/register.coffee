@@ -131,7 +131,7 @@ registerOnInformatics = (data) ->
 
 export default register = (req, res, next) ->
     logger.info("Try register user", req.body.username)
-    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin, promo, contact, whereFrom, hasInformatics, interfaceLanguage} = req.body
+    {username, password, informaticsUsername, informaticsPassword, aboutme, cfLogin, promo, contact, whereFrom, hasInformatics} = req.body
     hasInformatics = true
     if not informaticsUsername
         hasInformatics = false
