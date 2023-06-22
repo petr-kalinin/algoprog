@@ -423,4 +423,3 @@ mapDispatchToProps = (dispatch) ->
         reloadMyData: () -> dispatch(actions.invalidateAllData())
 
 export default withLang(withRouter(connect(mapStateToProps, mapDispatchToProps)(Register)))
-withLang(Register)
