@@ -83,6 +83,9 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             followAllRedirects: true
             timeout: 30 * 1000
             maxAttempts: 1
+            headers:
+                "x-csrf-token": csrf
+                "referer": "#{@baseUrl}/submissions/#{@username}"
         data = await @loggedUser.download "#{@baseUrl}/data/submitSource", postData
         data = JSON.parse(data)
         data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
