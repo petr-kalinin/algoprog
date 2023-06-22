@@ -153,6 +153,8 @@ export default register = (req, res, next) ->
             activated: false,
             lastActivated: new Date()
             registerDate: new Date()
+            prefs:
+                interfaceLanguage: req.body.interfaceLanguage
         )
         if cfLogin
             newUser.cf =

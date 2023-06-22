@@ -106,6 +106,7 @@ class Register extends React.Component
                 contact: @state.contact
                 aboutme: @state.aboutme
                 cfLogin: @state.cfLogin
+                interfaceLanguage: props.lang
             }
             if data.registered.success
                 if window.yaCounter45895896

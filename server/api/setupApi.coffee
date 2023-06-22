@@ -805,6 +805,12 @@ export default setupApi = (app) ->
         await submit.save()
         res.send('OK')
 
+    app.post '/api/setLang/:lang', ensureLoggedIn, wrap (req, res) ->
+        user = await User.findById(req.user.userKey())
+        
+        await user.setInterfaceLanguage(req.params.lang)
+        res.send('OK')
+
     app.post '/api/setCommentViewed/:commentId', ensureLoggedIn, wrap (req, res) ->
         comment = await SubmitComment.findById(req.params.commentId)
         if ""+req.user?.userKey() != "" + comment?.userId

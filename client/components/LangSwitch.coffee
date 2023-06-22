@@ -5,13 +5,20 @@ import Button from 'react-bootstrap/lib/Button'
 import withLang from '../lib/withLang'
 import * as actions from '../redux/actions'
 
-export LangSwitch = (props) ->
+import callApi from '../lib/callApi'
+
+export LangSwitch = (props) -> 
+    setInterfaceLanguage = (lang) ->
+        () ->
+            props.switchLang(lang)
+            await callApi "setLang/#{lang}", {}
+    
     return if props.lang == "ru"
-                <Button onClick={()->props.switchLang("en")} title="English">
+                <Button onClick={ setInterfaceLanguage("en") } title="English">
                     EN
                 </Button>
            else 
-                <Button onClick={()->props.switchLang("ru")} title="Русский">
+                <Button onClick={ setInterfaceLanguage("ru") } title="Русский">
                     RU
                 </Button>
 
