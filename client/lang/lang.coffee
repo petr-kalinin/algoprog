@@ -595,8 +595,8 @@ _LANG =
             search for @getmyid_bot and select the bot named 'Get My ID'), click on the start button (or write /start), and the bot will 
             send you a message with your id.</div>
     telegram_data:
-        ru: "Аккаунт в Телеграм (id или username):"
-        en: "Telegram account (id or username):"
+        ru: "Аккаунт в Телеграм (id, только цифры!):"
+        en: "Telegram account (id, digits only!):"
     password_cant_start_with_space:
         ru: "Пароль не может начинаться с пробела или заканчиваться на него"
         en: "Password cannot start with space or end with it"
