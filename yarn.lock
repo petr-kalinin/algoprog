@@ -6542,7 +6542,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:3.7.3, mongodb@npm:^3.1.0":
+"mongodb@npm:3.7.4":
+  version: 3.7.4
+  resolution: "mongodb@npm:3.7.4"
+  dependencies:
+    bl: ^2.2.1
+    bson: ^1.1.4
+    denque: ^1.4.1
+    optional-require: ^1.1.8
+    safe-buffer: ^5.1.2
+    saslprep: ^1.0.0
+  dependenciesMeta:
+    saslprep:
+      optional: true
+  peerDependenciesMeta:
+    aws4:
+      optional: true
+    bson-ext:
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    mongodb-extjson:
+      optional: true
+    snappy:
+      optional: true
+  checksum: e9b4e932f40029d2fc7b2247737f4fc6fc8951c0ac86530e19d305b58dc8a8251bb42a73af2e9da14fd606856bf240c80951fec9a870719481c0cf2d78327547
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:^3.1.0":
   version: 3.7.3
   resolution: "mongodb@npm:3.7.3"
   dependencies:
@@ -6581,15 +6611,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongoose@npm:^5.9.9":
-  version: 5.13.14
-  resolution: "mongoose@npm:5.13.14"
+"mongoose@npm:5.13.20":
+  version: 5.13.20
+  resolution: "mongoose@npm:5.13.20"
   dependencies:
     "@types/bson": 1.x || 4.0.x
     "@types/mongodb": ^3.5.27
     bson: ^1.1.4
     kareem: 2.3.2
-    mongodb: 3.7.3
+    mongodb: 3.7.4
     mongoose-legacy-pluralize: 1.0.2
     mpath: 0.8.4
     mquery: 3.2.5
@@ -6599,7 +6629,7 @@ __metadata:
     safe-buffer: 5.2.1
     sift: 13.5.2
     sliced: 1.0.1
-  checksum: ce750775f38ebd55d6015d4039a0f7f9876aeaa3475a48b6da1768f97c19166fe839e764162983225b31d111b9878d7bb95cbcc0b0aa2df7f94521fffcd79ab5
+  checksum: 960326fc34d0d8b5c7cf9e97148e1a286aa13b1df96f51c2af83fa64d4e586625616c370ac69f8a64fc05bf3ec64ada0a5b79c85a03a29866ef5ae62d16cbde9
   languageName: node
   linkType: hard
 
@@ -8834,7 +8864,7 @@ __metadata:
     mailparser: ^3.5.0
     mini-css-extract-plugin: ^0.9.0
     moment: ^2.24.0
-    mongoose: ^5.9.9
+    mongoose: 5.13.20
     node-cron: ^2.0.3
     node-statsd: ^0.1.1
     node-telegram-bot-api: ^0.58.0
