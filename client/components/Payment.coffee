@@ -226,7 +226,7 @@ class UnitpayPayment extends React.Component
                         id="amount"
                         label={LangRaw("payment_sum", @props.lang)}
                         type="text"
-                        value={amount}
+                        value={amount + " + 10%"}
                         disabled/>
                     <FieldGroup
                         id="name"
@@ -402,9 +402,9 @@ class Payment extends React.Component
             amount = @props.myUser.price
             warning = null
         switch GROUPS[@props.myUser?.userList]?.paid
-            when "tinkoff" then providers = ["tinkoff", "unitpay", "evoca"]
-            when "unitpay" then providers = ["unitpay"]
-            when "evoca" then providers = ["tinkoff", "unitpay", "evoca"]
+            when "tinkoff" then providers = ["tinkoff", "unitpay"]
+            when "unitpay" then providers = ["tinkoff", "unitpay"]
+            when "evoca" then providers = ["tinkoff", "unitpay"]
             else
                 canSubmit = false
                 providers = ["unitpay"]

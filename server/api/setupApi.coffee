@@ -1294,8 +1294,9 @@ export default setupApi = (app) ->
             res.status(403).send('No price set')
             return
         currency = 'RUB'
+        fee = 0.1
         desc = req.body.desc
-        sum = userPrivate.price
+        sum = Math.floor(userPrivate.price * (1 + fee))
         is_org = req.host.endsWith(".org")
         if UNITPAY_PUBLIC_KEY_ORG && is_org
             logger.info("Payment form opened on org domain")
@@ -1417,6 +1418,7 @@ export default setupApi = (app) ->
         res.status(204).send('')
 
     app.get '/api/unitpayNotify', wrap (req, res) ->
+        fee = 0.1
         order = req.query.params.account
         logger.info("unitpayNotify #{order} #{req.host}")
         data = deepcopy(req.query.params)
@@ -1447,7 +1449,7 @@ export default setupApi = (app) ->
 
         success = true
         amount = data.orderSum
-        await processPayment(order, success, amount, req.query, {system: "unitpay"})
+        await processPayment(order, success, {amount: amount / (1 + fee), taxAmount: amount}, req.query, {system: "unitpay"})
         res.json({result: {message: "OK"}})
 
     app.post '/api/paymentNotify', wrap (req, res) ->

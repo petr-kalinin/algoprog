@@ -763,8 +763,8 @@ _LANG =
         ru: "Оплатить картой российского банка"
         en: "Pay with Russian bank card"
     pay_with_foreign_card:
-        ru: "Оплатить картой не-российского банка"
-        en: "Pay with non-Russian bank card"
+        ru: "Оплатить картой не-российского банка (комиссия 10%)"
+        en: "Pay with non-Russian bank card (10% fee)"
     pay_with_foreign_card_evoca:
         ru: "Оплатить картой не-российского банка (альтернативный способ, комиссия 10%)"
         en: "Pay with non-Russian bank card (alternative way, 10% fee)"
