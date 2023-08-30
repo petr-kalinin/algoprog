@@ -90,4 +90,5 @@ start = () ->
         else
             logger.info("Will not start jobs", process.env["INSTANCE_NUMBER"])
 
+
 start()
