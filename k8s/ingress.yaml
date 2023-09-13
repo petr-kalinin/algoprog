@@ -20,9 +20,11 @@ spec:
     - notes.algoprog.ru
     - notes.algoprog.org
     - algoprog.kalinin.nnov.ru
+    secretName: test-tls
+  - hosts:
     - %fve%
     - www.%fve%
-    secretName: test-tls
+    secretName: fve-tls
   rules:
   - host: algoprog.ru
     http:
@@ -143,7 +145,7 @@ spec:
           service:
             name: fve
             port:
-              number: 80
+              number: 4000
   - host: www.%fve%
     http:
       paths:
@@ -153,4 +155,4 @@ spec:
           service:
             name: fve
             port:
-              number: 80
+              number: 4000
