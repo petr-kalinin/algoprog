@@ -10,12 +10,10 @@ spec:
   - hosts:
     - test.algoprog.ru
     - www.algoprog.ru
-    - adina.algoprog.ru
     - archive.algoprog.ru
     - algoprog.ru
     - algoprog.org
     - www.algoprog.org
-    - online.mathncode.kz
     - redash.algoprog.ru
     - notes.algoprog.ru
     - notes.algoprog.org
@@ -34,26 +32,6 @@ spec:
         backend:
           service:
             name: nodejs
-            port:
-              number: 3000
-  - host: adina.algoprog.ru
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs-adina
-            port:
-              number: 3000
-  - host: online.mathncode.kz
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs-adina
             port:
               number: 3000
   - host: www.algoprog.ru
