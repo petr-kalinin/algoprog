@@ -24,12 +24,12 @@ const actionSchema = new Schema<IAction>({
 actionSchema.methods.upsert = function () {
     try {
         this.date = new Date()
-        this.update(this, {upsert: true})
+        this.save()
     } catch {
         logger.info("Could not upsert a action")
     }
 }
 
-const AdminAction = model<IAction>('AdminActions', actionSchema)
+const AdminAction = model<IAction>('AdminAction', actionSchema)
 
 export default AdminAction

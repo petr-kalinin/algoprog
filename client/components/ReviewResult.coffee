@@ -144,8 +144,8 @@ export class SubmitListWithDiff extends React.Component
         </Grid>
 
 SubmitActions = (props) ->
-    reviewAdmin = hasCapabilityForUserList(@props.me, REVIEW, @props.result.userList)
-    bestSubmitsAdmin = hasCapability(@props.me, ADD_BEST_SUBMITS)
+    reviewAdmin = hasCapabilityForUserList(props.me, REVIEW, props.result.userList)
+    bestSubmitsAdmin = hasCapability(props.me, ADD_BEST_SUBMITS)
     <div>
         {props.currentSubmit && (not props.currentSubmit.similar) && (not props.result.findMistake) && <div>
             <div>
@@ -364,7 +364,7 @@ options =
 
 optionsForSimilar = 
     urls: (props) ->
-        if props.submits and hasCapabilityForUserList(@props.me, REVIEW, props.submits[props.submits.length - 1]?.userList)
+        if props.submits and hasCapabilityForUserList(props.me, REVIEW, props.submits[props.submits.length - 1]?.userList)
             similar: "similarSubmits/#{props.submits[props.submits.length - 1]?._id}"
         else
             {}

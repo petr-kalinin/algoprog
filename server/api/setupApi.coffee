@@ -121,7 +121,7 @@ checkAndLogAdminAction = (req, action, userList) ->
         action: action
         userList: userList
         url: req.url
-        userId: user._id
+        userId: user.userKey()
         allowed: allowed
     action.upsert()
     return allowed
