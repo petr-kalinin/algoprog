@@ -16,6 +16,7 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 import withMyUser from '../lib/withMyUser'
 import withLang from '../lib/withLang'
 import toUtf8 from '../lib/toUtf8'
+import hasCapability, {SEE_FIND_MISTAKES, hasCapabilityForUserList} from '../lib/adminCapabilities'
 
 import getTestSystem from '../testSystems/TestSystemRegistry'
 
@@ -85,7 +86,7 @@ class SubmitList extends React.Component
         <div>
             {if @props.noBestSubmits || not @props.findMistake?.pagesCount
                 null
-            else if @props.result?.solved != 0 || @props.me.admin
+            else if @props.result?.solved != 0 || hasCapability(@props.me, SEE_FIND_MISTAKES)
                 <h4><Link to="/findMistakeProblem/#{@props.material._id}">{LangRaw("find_mistake", @props.lang)}</Link></h4>
             else if @props.result?.solved == 0
                 <h4 className="text-muted"><span title={LangRaw("you_will_be_able_to_find_mistake", @props.lang)}>{LangRaw("find_mistake", @props.lang)} <FontAwesome name="question-circle-o"/></span></h4>

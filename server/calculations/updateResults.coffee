@@ -2,6 +2,7 @@ import awaitAll from '../../client/lib/awaitAll'
 import addTotal from '../../client/lib/addTotal'
 import GROUPS from '../../client/lib/groups'
 import isContestRequired from '../../client/lib/isContestRequired'
+import hasCapability, {SEE_FIND_MISTAKES} from '../../client/lib/adminCapabilities'
 
 import logger from '../log'
 
@@ -143,7 +144,8 @@ updateResultsForFindMistake = (userId, problemId, dirtyResults) ->
         await result.upsert()
         allResults.push result
     allFindMistakes = await FindMistake.findApprovedByProblemAndNotUser(problemId, userId)
-    admin = (await RegisteredUser.findByKey(userId))?.admin
+    user = await RegisteredUser.findByKey(userId)
+    admin = hasCapability(user, SEE_FIND_MISTAKES)
     for fm in allFindMistakes
         if not (fm.id of submitsByFindMistake)
             result = makeResultFromSubmitsList([], userId, problemId, fm.id)

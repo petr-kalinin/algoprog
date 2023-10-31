@@ -19,6 +19,7 @@ import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import outcomeToText from '../lib/outcomeToText'
 import toUtf8 from '../lib/toUtf8'
 import withLang from '../lib/withLang'
+import hasCapability, {REVIEW, hasCapabilityForUserList} from '../lib/adminCapabilities'
 
 import {DiffEditor} from './Editor'
 import UserName from './UserName'
@@ -184,7 +185,7 @@ class Submit extends React.Component
 
     render: () ->
         [cl, message] = outcomeToText(@props.submit.outcome, @props.lang)
-        admin = @props.me?.admin
+        admin = hasCapabilityForUserList(@props.me, REVIEW, @props.submit.userList)
         <div>
             {@props.showHeader && <SubmitHeader submit={@props.submit} admin={admin} sticky={@props.headerSticky} className={@props.headerClassName} lang={@props.lang}/>}
             <Tabs defaultActiveKey={1} id="submitTabs">

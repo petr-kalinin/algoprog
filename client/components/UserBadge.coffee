@@ -12,6 +12,8 @@ import callApi from '../lib/callApi'
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import stripLabel from '../lib/stripLabel'
 import withLang from '../lib/withLang'
+import hasCapability, {SEE_START_LEVEL, EDIT_USER, hasCapabilityForUserList} from '../lib/adminCapabilities'
+
 
 import {BigAchieves} from './Achieves'
 import CfStatus from './CfStatus'
@@ -36,7 +38,7 @@ export default class UserBadge extends React.Component
             <blockquote>
                 {cls && <div>{LANG("class")}: {cls}</div>}
                 <div>{LANG("level")}: {stripLabel(@props.user.level?.current)}</div>
-                { @props.me?.admin &&
+                { hasCapabilityForUserList(@props.me, SEE_START_LEVEL, props.user.userList) &&
                     <div>
                         Уровень на начало полугодия: {@props.user.level?.start}
                     </div> }
@@ -48,7 +50,7 @@ export default class UserBadge extends React.Component
                 else if @props.explain
                         <div>{LANG("cf_login_unknown")}</div>
                 }
-                {@props.me?.admin && <EditingUserForAdmin {...this.props}/>}
+                {hasCapabilityForUserList(@props.me, EDIT_USER, props.user.userList) && <EditingUserForAdmin {...this.props}/>}
                 {if +@props.user._id == @props.me?.informaticsId
                     <Link to="/edituser/#{@props.user._id}">{LANG("edit_profile")}</Link>}
             </blockquote>

@@ -10,6 +10,7 @@ import FieldGroup from './FieldGroup'
 import UserName from './UserName'
 
 import callApi from '../lib/callApi'
+import hasCapability, {CHECKINS} from '../lib/adminCapabilities'
 
 
 #SESSION_TIMES = ["12:00", "13:00", "14:00", "15:00"]
@@ -91,7 +92,7 @@ export default class Checkins extends React.Component
             </p>
 
             {
-            if @props.me?.admin
+            if hasCapability(@props.me, CHECKINS)
                 <ResetForm handleReload={@props.handleReload} newDate={newDate}/>
             }
             
@@ -134,7 +135,7 @@ export default class Checkins extends React.Component
                                             <div>
                                             <UserName user={@props.data.checkins[i].checkins[row].fullUser}/>
                                             {
-                                            if @props.me?.admin
+                                            if hasCapability(@props.me, CHECKINS)
                                                 <button type="button" 
                                                         className="close pull-left"
                                                         onClick={@register(null, @props.data.checkins[i].checkins[row].user)}>

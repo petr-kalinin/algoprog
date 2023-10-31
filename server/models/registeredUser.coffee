@@ -7,6 +7,7 @@ registeredUserSchema = new mongoose.Schema
     admin: Boolean
     adminData:
         defaultUserLists: [String]
+        capabilities: [String]
     informaticsUsername: String
     informaticsPassword: {type: String, select: false}
     informaticsId: Number

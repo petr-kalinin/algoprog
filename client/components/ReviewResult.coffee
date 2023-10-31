@@ -25,6 +25,7 @@ import SubmitListTable from './SubmitListTable'
 
 import callApi from '../lib/callApi'
 import GROUPS from '../lib/groups'
+import hasCapability, {ADD_BEST_SUBMITS, REVIEW, hasCapabilityForUserList} from '../lib/adminCapabilities'
 
 import isPaid, { isMuchUnpaid } from '../lib/isPaid'
 
@@ -60,7 +61,6 @@ ConnectedProblemCommentsLists = ConnectedComponent(ProblemCommentsLists, listOpt
 # TODO: get rid of this wrapper?
 class SubmitForReviewResults extends React.Component
     render: () ->
-        admin = @props.me?.admin
         <div>
             <Submit submit={@props.currentSubmit} showHeader me={@props.me} copyTest={@props.copyTest} headerSticky={true} headerClassName={@props.headerClassName}/>
         </div>
@@ -117,7 +117,7 @@ export class SubmitListWithDiff extends React.Component
         SubmitComponent = @props.SubmitComponent
         allProps = {@props..., @state...}
         PostSubmit = @props.PostSubmit
-        admin = @props.me?.admin
+        admin = hasCapabilityForUserList(@props.me, REVIEW, @props.submits?[0]?.userList)
         <Grid fluid>
             <Col xs={12} sm={12} md={8} lg={8}>
                 {
@@ -144,7 +144,8 @@ export class SubmitListWithDiff extends React.Component
         </Grid>
 
 SubmitActions = (props) ->
-    admin = props.me?.admin
+    reviewAdmin = hasCapabilityForUserList(@props.me, REVIEW, @props.result.userList)
+    bestSubmitsAdmin = hasCapability(@props.me, ADD_BEST_SUBMITS)
     <div>
         {props.currentSubmit && (not props.currentSubmit.similar) && (not props.result.findMistake) && <div>
             <div>
@@ -178,7 +179,7 @@ SubmitActions = (props) ->
                     setField={props.setField}
                     style={{ height: 200 }}
                     state={props}/>
-            {if admin and props.currentSubmit and not props.currentSubmit.similar
+            {if reviewAdmin and props.currentSubmit and not props.currentSubmit.similar
                 <FormGroup>
                     <Button onClick={props.translateComment} bsSize="xsmall">translate</Button>
                     <Button onClick={props.downloadSubmits} bsSize="xsmall">re-download submits</Button>
@@ -202,12 +203,12 @@ SubmitActions = (props) ->
                 }
             </FormGroup>
             {
-            admin and props.currentSubmit and not props.currentSubmit.similar and <Col xs={12} sm={12} md={12} lg={12}>
+            reviewAdmin and props.currentSubmit and not props.currentSubmit.similar and <Col xs={12} sm={12} md={12} lg={12}>
                 <ConnectedProblemCommentsLists problemId={props.result.fullTable._id} handleCommentClicked={props.setComment}/>
             </Col>
             }
             {
-            admin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars admin={admin} handleReload={props.handleReload}/>
+            bestSubmitsAdmin && props.showBestSubmits && <BestSubmits submits={props.bestSubmits} close={props.toggleBestSubmits} stars bestSubmitsAdmin={bestSubmitsAdmin} handleReload={props.handleReload}/>
             }
         </div>}
         {props.result.findMistake && 
@@ -363,7 +364,7 @@ options =
 
 optionsForSimilar = 
     urls: (props) ->
-        if props.submits and props.me?.admin
+        if props.submits and hasCapabilityForUserList(@props.me, REVIEW, props.submits[props.submits.length - 1]?.userList)
             similar: "similarSubmits/#{props.submits[props.submits.length - 1]?._id}"
         else
             {}

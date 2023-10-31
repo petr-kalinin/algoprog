@@ -21,6 +21,31 @@ import ACHIEVES from '../../client/lib/achieves'
 import {getGraduateYear} from '../../client/lib/graduateYearToClass'
 import GROUPS from '../../client/lib/groups'
 import {unpaidBlocked} from '../../client/lib/isPaid'
+import hasCapability, {hasCapabilityForUserList
+ CHECKINS,
+ EDIT_PAGE,
+ ADD_BEST_SUBMITS,
+ SEE_BEST_SUBMITS,
+ SEE_FIND_MISTAKES,
+ SEE_START_LEVEL,
+ EDIT_USER,
+ SEARCH_USERS,
+ VIEW_SUBMITS,
+ SEE_SIMILAR_SUBMITS,
+ SEE_LAST_COMMENTS,
+ REVIEW,
+ VIEW_RECEIPT,
+ MOVE_USER,
+ MOVE_UNKNOWN_USER,
+ SET_DORMANT,
+ ACTIVATE,
+ TRANSLATE,
+ RESET_YEAR,
+ UPDATE_ALL,
+ CREATE_TEAM,
+ DOWNLOADING_STATS,
+ APPROVE_FIND_MISTAKE
+} from '../../client/lib/adminCapabilities'
 
 import {getTables, getUserResult} from '../calculations/updateTableResults'
 
@@ -41,6 +66,7 @@ import {allTables} from '../materials/data/tables'
 import downloadMaterials from '../materials/downloadMaterials'
 import {notify} from '../lib/telegramBot'
 
+import AdminAction from '../models/AdminAction'
 import BlogPost from '../models/BlogPost'
 import Calendar from '../models/Calendar'
 import Checkin, {MAX_CHECKIN_PER_SESSION} from '../models/Checkin'
@@ -87,6 +113,18 @@ EVOCA_PASSWORD = process.env["EVOCA_PASSWORD"]
 INVOICE_PASSWORD = process.env["INVOICE_PASSWORD"]
 INVOICE_IP_DATA = process.env["INVOICE_IP_DATA"]
 INVOICE_IP_SIGNATURE = process.env["INVOICE_IP_SIGNATURE"]
+
+checkAndLogAdminAction = (req, action, userList) ->
+    user = req.user
+    allowed = if userList then hasCapabilityForUserList(user, action, userList) else hasCapability(user, action)
+    action = new AdminAction
+        action: action
+        userList: userList
+        url: req.url
+        userId: user._id
+        allowed: allowed
+    action.upsert()
+    return allowed
 
 wrap = (fn) ->
     (args...) ->
@@ -359,7 +397,8 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/user/:id/setAdmin', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.id)
+        if not checkAndLogAdminAction(req, EDIT_USER, user?.userList)
             res.status(403).send('No permissions')
             return
         cfLogin = req.body.cf.login
@@ -376,7 +415,6 @@ export default setupApi = (app) ->
         password = req.body.password
         achieves = if req.body.achieves.length then req.body.achieves.split(" ") else []
         members = if req.body.members.length then req.body.members.split(" ") else []
-        user = await User.findById(req.params.id)
         registeredUsers = await RegisteredUser.findAllByKey(req.params.id)
         await user.updateName(await User.makeTeamName(req.body.name, members))
         await user.setGraduateYear req.body.graduateYear
@@ -400,16 +438,17 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/user/:id/setChocosGot', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.id)
+        if not checkAndLogAdminAction(req, EDIT_USER, user?.userList)
             res.status(403).send('No permissions')
             return
         chocosGot = req.body.chocosGot
-        user = await User.findById(req.params.id)
         await user.setChocosGot chocosGot
         res.send('OK')
 
     app.post '/api/user/:id/setTShirtsGot', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.id)
+        if not checkAndLogAdminAction(req, EDIT_USER, user?.userList)
             res.status(403).send('No permissions')
             return
         cnt = req.body.TShirts
@@ -421,7 +460,7 @@ export default setupApi = (app) ->
         id = req.params.id
         user = (await User.findById(id))?.toObject() || {}
         userPrivate = {}
-        if req.user?.admin or ""+req.user?.userKey() == ""+req.params.id
+        if checkAndLogAdminAction(req, EDIT_USER, user?.userList) or ""+req.user?.userKey() == ""+req.params.id
             userPrivate = (await UserPrivate.findById(id))?.toObject() || {}
         res.json({user..., userPrivate...})
 
@@ -485,7 +524,7 @@ export default setupApi = (app) ->
 
         userPrivate = {}
         tg = {}
-        if req.user?.admin or ""+req.user?.userKey() == ""+userId
+        if checkAndLogAdminAction(req, EDIT_USER, user?.userList) or ""+req.user?.userKey() == ""+userId
             userPrivate = (await UserPrivate.findById(userId))?.toObject() || {}
             tg = (await User.findTelegram(userId))?.toObject() || {}
         result.user = {result.user..., userPrivate..., tg...}
@@ -511,7 +550,7 @@ export default setupApi = (app) ->
             user.dormant = fullUser?.dormant
             user.activated = fullUser?.activated
 
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, SEARCH_USERS)
             res.status(403).send('No permissions')
             return
         promises = []
@@ -540,7 +579,7 @@ export default setupApi = (app) ->
             user.dormant = fullUser?.dormant
             user.activated = fullUser?.activated
 
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, SEARCH_USERS)
             res.status(403).send('No permissions')
             return
         result = []
@@ -556,36 +595,42 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.get '/api/submits/:user/:problem', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, VIEW_SUBMITS, user.userList)
+        if not admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
         submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
         submits = submits.map((submit) -> submit.toObject())
-        if not req.user?.admin
+        if not admin
             submits = submits.map(hideTests)
         submits = submits.map((s) -> expandSubmit(s))
         submits = await awaitAll(submits)
         res.json(submits)
 
     app.ws '/wsapi/submits/:user/:problem', (ws, req, next) ->
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, VIEW_SUBMITS, user.userList)
         addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
-            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+            if not admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             submits = await Submit.findByUserAndProblem(req.params.user, req.params.problem)
             submits = submits.map((submit) -> submit.toObject())
-            if not req.user?.admin
+            if not admin
                 submits = submits.map(hideTests)
             submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
             ws.send JSON.stringify submits
 
     app.get '/api/submitsForFindMistake/:user/:findMistake', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, SEE_FIND_MISTAKES, user.userList)
+        if not admin and ""+req.user?.userKey() != ""+req.params.user
             res.status(403).send('No permissions')
             return
         fm = await FindMistake.findById(req.params.findMistake)
         allowed = false
-        if req.user.admin 
+        if admin 
             allowed = true
         else 
             result = await Result.findByUserAndTable(req.params.user, fm.problem)
@@ -607,19 +652,21 @@ export default setupApi = (app) ->
             results: submit0.results
         submits = submits.map((submit) -> submit.toObject())
         submits.splice(0, 0, submit0)
-        if not req.user?.admin
+        if not admin
             submits = submits.map(hideTests)
         submits = submits.map((s) -> expandSubmit(s))
         submits = await awaitAll(submits)
         res.json(submits)
 
     app.ws '/wsapi/submitsForFindMistake/:user/:findMistake', (ws, req, next) ->
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, SEE_FIND_MISTAKES, user.userList)
         addMongooseCallback ws, 'update_submit', req.user?.userKey(), ->
-            if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
+            if not admin and ""+req.user?.userKey() != ""+req.params.user
                 return
             fm = await FindMistake.findById(req.params.findMistake)
             allowed = false
-            if req.user.admin 
+            if admin 
                 allowed = true
             else 
                 result = await Result.findByUserAndTable(req.params.user, fm.problem)
@@ -640,7 +687,7 @@ export default setupApi = (app) ->
                 results: submit0.results
             submits = submits.map((submit) -> submit.toObject())
             submits.splice(0, 0, submit0)
-            if not req.user?.admin
+            if not admin
                 submits = submits.map(hideTests)
             submits = submits.map((s) -> expandSubmit(s))
             submits = await awaitAll(submits)
@@ -703,16 +750,9 @@ export default setupApi = (app) ->
     app.get '/api/submit/:id', ensureLoggedIn, wrap (req, res) ->
         res.status(404).send("Not found")
         return
-        if not req.user?.admin and ""+req.user?.userKey() != ""+req.params.user
-            res.status(403).send('No permissions')
-            return
-        submit = (await Submit.findById(req.params.id)).toObject()
-        submit = hideTests(submit)
-        submit = expandSubmit(submit)
-        res.json(submit)
 
     app.get '/api/similarSubmits/:id', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, SEE_SIMILAR_SUBMITS)
             res.status(403).send('No permissions')
             return
         submit = (await Submit.findById(req.params.id)).toObject()
@@ -736,7 +776,9 @@ export default setupApi = (app) ->
 
     app.get '/api/submitSource/:id', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.id)
-        if not req.user?.admin and ""+req.user?.userKey() != ""+submit.user
+        user = await User.findById(submit.user)
+        admin = checkAndLogAdminAction(req, VIEW_SUBMITS, user.userList)
+        if not admin and ""+req.user?.userKey() != ""+submit.user
             if submit.quality == 0
                 res.status(403).send('No permissions')
                 return
@@ -769,14 +811,14 @@ export default setupApi = (app) ->
         res.json(await SubmitComment.findPagesCountByUser(req.user?.userKey()))
 
     app.get '/api/lastCommentsByProblem/:problem', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, SEE_LAST_COMMENTS)
             res.status(403).send('No permissions')
             return
         res.json(await SubmitComment.findLastByProblem(req.params.problem))
 
     app.get '/api/bestSubmits/:problem', ensureLoggedIn, wrap (req, res) ->
         allowed = false
-        if req.user?.admin
+        if checkAndLogAdminAction(req, SEE_BEST_SUBMITS)
             allowed = true
         else if req.user?.userKey()
             result = await Result.findByUserAndTable(req.user?.userKey(), req.params.problem)
@@ -787,14 +829,15 @@ export default setupApi = (app) ->
         res.json(await Submit.findBestByProblem(req.params.problem, 5))
 
     app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        submit = await Submit.findById(req.params.submitId)
+        if not checkAndLogAdminAction(req, REVIEW, submit.userList)
             res.status(403).send('No permissions')
             return
         await setOutcome(req, res)
         res.send('OK')
 
     app.post '/api/setQuality/:submitId/:quality', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, ADD_BEST_SUBMITS)
             res.status(403).send('No permissions')
             return
         submit = await Submit.findById(req.params.submitId)
@@ -839,7 +882,7 @@ export default setupApi = (app) ->
         res.json(result)
 
     app.post '/api/checkin/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        if not checkAndLogAdminAction(req, CHECKINS) and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         session = req.body.session
@@ -866,7 +909,7 @@ export default setupApi = (app) ->
         res.json({ok: "OK"})
 
     app.post '/api/resetCheckins', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, CHECKINS)
             res.status(403).json({error: 'No permissions'})
             return
         date = new Date(req.body.date)
@@ -878,7 +921,9 @@ export default setupApi = (app) ->
         res.json({ok: "OK"})
 
     app.get '/api/recentReceipt/:user', wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, VIEW_RECEIPT, user.userList)
+        if not admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         for i in [1..10]
@@ -890,10 +935,11 @@ export default setupApi = (app) ->
         res.json({})
 
     app.post '/api/moveUserToGroup/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.userId)
+        admin = checkAndLogAdminAction(req, MOVE_USER, user.userList) || (user.userList == "unknown" && checkAndLogAdminAction(req, MOVE_UNKNOWN_USER))
+        if not admin
             res.status(403).send('No permissions')
             return
-        user = await User.findById(req.params.userId)
         if not user
             res.status(400).send("User not found")
             return
@@ -903,10 +949,11 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/forceSetUserList/:userId/:groupName', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.userId)
+        admin = checkAndLogAdminAction(req, MOVE_USER, user.userList) || (user.userList == "unknown" && checkAndLogAdminAction(req, MOVE_UNKNOWN_USER))
+        if not admin
             res.status(403).send('No permissions')
             return
-        user = await User.findById(req.params.userId)
         if not user
             res.status(400).send("User not found")
             return
@@ -916,10 +963,10 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/setDormant/:userId', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.userId)
+        if not checkAndLogAdminAction(req, SET_DORMANT, user.userList)
             res.status(403).send('No permissions')
             return
-        user = await User.findById(req.params.userId)
         if not user
             res.status(400).send("User not found")
             return
@@ -927,10 +974,10 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/setActivated/:userId', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.userId)
+        if not checkAndLogAdminAction(req, ACTIVATE, user.userList)
             res.status(403).send('No permissions')
             return
-        user = await User.findById(req.params.userId)
         if not user
             res.status(400).send("User not found")
             return
@@ -939,7 +986,7 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/editMaterial/:id', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, EDIT_PAGE)
             res.status(403).send('No permissions')
             return
         material = await Material.findById(req.params.id)
@@ -951,14 +998,14 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.post '/api/translateProblems', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, EDIT_PAGE)
             res.status(403).send('No permissions')
             return
         translateProblems()
         res.send('OK')
 
     app.post '/api/translate', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, TRANSLATE)
             res.status(403).send('No permissions')
             return
         text = req.body.text
@@ -966,7 +1013,7 @@ export default setupApi = (app) ->
         res.json({text: result})
 
     app.post '/api/resetYear', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, RESET_YEAR)
             res.status(403).send('No permissions')
             return
 
@@ -985,84 +1032,75 @@ export default setupApi = (app) ->
         res.send('OK')
 
     app.get '/api/updateResults/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.userId)
+        if not checkAndLogAdminAction(req, REVIEW, user.userList)
             res.status(403).send('No permissions')
             return
         await User.updateUser(req.params.user)
         res.send('OK')
 
     app.get '/api/updateAllResults', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, UPDATE_ALL)
             res.status(403).send('No permissions')
             return
         User.updateAllUsers()
         res.send('OK')
 
     app.get '/api/updateAllAllResults', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, UPDATE_ALL)
             res.status(403).send('No permissions')
             return
         User.updateAllUsers(undefined, true)
         res.send('OK')
 
     app.get '/api/updateAllCf', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, UPDATE_ALL)
             res.status(403).send('No permissions')
             return
         User.updateAllCf()
         res.send('OK')
 
-    app.get '/api/downloadMaterials', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        downloadMaterials()
-        res.send('OK')
-
     app.get '/api/updateAllGraduateYears', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, UPDATE_ALL)
             res.status(403).send('No permissions')
             return
         User.updateAllGraduateYears()
         res.send('OK')
 
     app.get '/api/randomizeEjudgePasswords', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, UPDATE_ALL)
             res.status(403).send('No permissions')
             return
         User.randomizeEjudgePasswords()
         res.send('OK')
 
     app.get '/api/downloadSubmits/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.user)
+        if not checkAndLogAdminAction(req, REVIEW, user.userList)
             res.status(403).send('No permissions')
             return
         await downloadSubmits.runForUser(req.params.user, 100, 1e9)
         res.send('OK')
 
     app.get '/api/downloadSubmitsForUserAndProblem/:user/:problem', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        user = await User.findById(req.params.user)
+        if not checkAndLogAdminAction(req, REVIEW, user.userList)
             res.status(403).send('No permissions')
             return
         await downloadSubmits.runForUserAndProblem(req.params.user, req.params.problem, undefined, true)
         res.send('OK')
 
-    app.get '/api/downloadAllSubmits', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
-            res.status(403).send('No permissions')
-            return
-        downloadSubmits.runAll()
-        res.send('OK')
-
+    ###
     app.get '/api/calculateAllHashes', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin
             res.status(403).send('No permissions')
             return
         Submit.calculateAllHashes()
         res.send('OK')
+    ###
 
     app.get '/api/createTeam', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, CREATE_TEAM)
             res.status(403).send('No permissions')
             return
         logger.info("Try create new user user", username)
@@ -1126,14 +1164,17 @@ export default setupApi = (app) ->
             res.json({status: false})
 
     app.get '/api/findMistakePages/:user', wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        user = await User.findById(req.params.user)
+        if not checkAndLogAdminAction(req, SEE_FIND_MISTAKES, user.userList) and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
         res.json(await Result.findPagesCountByUserWithFindMistakeSet(user))
 
     app.get '/api/findMistakeList/:user/:page', wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, SEE_FIND_MISTAKES, user.userList)
+        if not admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
@@ -1141,7 +1182,7 @@ export default setupApi = (app) ->
         lang = req.query.lang || ""
         mistakes = await Result.findPageByUserWithFindMistakeSet(user, req.params.page, order)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistakeResult(mistake, req.user?.admin, user, lang)
+            expandFindMistakeResult(mistake, admin, user, lang)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
@@ -1154,30 +1195,34 @@ export default setupApi = (app) ->
         res.json(await Result.findPagesCountByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem))
 
     app.get '/api/findMistakeProblemList/:user/:problem/:page', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, SEE_FIND_MISTAKES, user.userList)
+        if not admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
         lang = req.query.lang || ""
         mistakes = await Result.findPageByUserAndTableWithFindMistakeSet(req.params.user, req.params.problem, req.params.page)
         mistakes = mistakes.map (mistake) -> 
-            expandFindMistakeResult(mistake, req.user?.admin, req.params.user, lang)
+            expandFindMistakeResult(mistake, admin, req.params.user, lang)
         mistakes = await awaitAll(mistakes)
         mistakes = (m for m in mistakes when m)
         res.json(mistakes)
 
     app.get '/api/findMistake/:id/:user', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin and ""+req.user?.informaticsId != ""+req.params.user
+        user = await User.findById(req.params.user)
+        admin = checkAndLogAdminAction(req, SEE_FIND_MISTAKES, user.userList)
+        if not admin and ""+req.user?.informaticsId != ""+req.params.user
             res.status(403).json({error: 'No permissions'})
             return
         user = req.params.user
         lang = req.query.lang || ""
         mistake = await Result.findByUserAndFindMistake(user, req.params.id)
-        mistake = await expandFindMistakeResult(mistake, req.user?.admin, user, lang)
+        mistake = await expandFindMistakeResult(mistake, admin, user, lang)
         res.json(mistake)
 
     app.get '/api/downloadingStats', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, DOWNLOADING_STATS)
             res.status(403).send('No permissions')
             return
         stats = getStats()
@@ -1185,7 +1230,7 @@ export default setupApi = (app) ->
         res.json(stats)
 
     app.get '/api/approveFindMistake', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, APPROVE_FIND_MISTAKE)
             res.status(403).send('No permissions')
             return
         while true
@@ -1205,7 +1250,7 @@ export default setupApi = (app) ->
             return
 
     app.post '/api/setApproveFindMistake/:id', ensureLoggedIn, wrap (req, res) ->
-        if not req.user?.admin
+        if not checkAndLogAdminAction(req, APPROVE_FIND_MISTAKE)
             res.status(403).send('No permissions')
             return
         approve = req.body.approve
@@ -1213,6 +1258,7 @@ export default setupApi = (app) ->
         await mistake.setApprove(approve)
         res.send('OK')
 
+    ###
     app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
         url = req.query.url
         if not req.user?.admin
@@ -1233,6 +1279,7 @@ export default setupApi = (app) ->
         # assume that if page contains <head>, then it is html
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
+    ###
 
     app.post '/api/xsollaToken', wrap (req, res) ->
         if not req.user

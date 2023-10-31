@@ -9,6 +9,8 @@ import {LangRaw} from '../lang/lang'
 
 import withLang from '../lib/withLang'
 import callApi from '../lib/callApi'
+import hasCapability, {EDIT_PAGE} from '../lib/adminCapabilities'
+
 
 class SimplePage extends React.Component
     updatePreElements: () =>
@@ -78,7 +80,7 @@ class EditablePage extends React.Component
                 title: @props.material.title
 
     render: () ->
-        if not @props.me?.admin
+        if not hasCapability(@props.me, EDIT_PAGE)
             return <SimplePage material={@props.material}/>
         if @state.isEditing
             <div>
