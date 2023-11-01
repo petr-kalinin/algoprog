@@ -21,8 +21,9 @@ export const UPDATE_ALL = "update_all"
 export const CREATE_TEAM = "create_team"
 export const DOWNLOADING_STATS = "downloading_stats"
 export const APPROVE_FIND_MISTAKE = "approve_find_mistake"
+export const ALL_USERLISTS = "all_userlists"
 
-type Capability = typeof CHECKINS | typeof EDIT_PAGE | typeof SEE_BEST_SUBMITS
+type Capability = typeof CHECKINS | typeof EDIT_PAGE | typeof SEE_BEST_SUBMITS | typeof ALL_USERLISTS
 
 interface AdminUser {
     admin: boolean,
@@ -41,5 +42,7 @@ export default function hasCapability(user: AdminUser, capability: Capability): 
 }
 
 export function hasCapabilityForUserList(user: AdminUser, capability: Capability, userList: string): boolean {
-    return user && user.admin && hasCapabilityImpl(user.adminData.capabilities, capability) && user.adminData.defaultUserLists.includes(userList)
+    return user && user.admin && 
+        (hasCapabilityImpl(user.adminData.capabilities, capability) && user.adminData.defaultUserLists.includes(userList)) 
+        || (hasCapabilityImpl(user.adminData.capabilities, ALL_USERLISTS)) 
 }
