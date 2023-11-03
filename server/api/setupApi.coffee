@@ -117,13 +117,14 @@ INVOICE_IP_SIGNATURE = process.env["INVOICE_IP_SIGNATURE"]
 checkAndLogAdminAction = (req, action, userList) ->
     user = req.user
     allowed = if userList then hasCapabilityForUserList(user, action, userList) else hasCapability(user, action)
-    action = new AdminAction
-        action: action
-        userList: userList
-        url: req.url
-        userId: user.userKey()
-        allowed: allowed
-    action.upsert()
+    if allowed
+        action = new AdminAction
+            action: action
+            userList: userList
+            url: req.url
+            userId: user.userKey()
+            allowed: allowed
+        action.upsert()
     return allowed
 
 wrap = (fn) ->
