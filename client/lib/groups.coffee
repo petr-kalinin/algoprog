@@ -119,6 +119,14 @@ export default GROUPS =
         starred: false
         lang: ""
         autoAccept: true
+    pavlovo:
+        paid: false
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        canResetYear: true
+        starred: false
+        lang: ""
+        autoAccept: true
     team:
         paid: false
         chocos: false
