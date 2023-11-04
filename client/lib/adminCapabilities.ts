@@ -43,6 +43,7 @@ export default function hasCapability(user: AdminUser, capability: Capability): 
 
 export function hasCapabilityForUserList(user: AdminUser, capability: Capability, userList: string): boolean {
     return user && user.admin && 
-        (hasCapabilityImpl(user.adminData.capabilities, capability) && user.adminData.defaultUserLists.includes(userList)) 
-        || (hasCapabilityImpl(user.adminData.capabilities, ALL_USERLISTS)) 
+        ((hasCapabilityImpl(user.adminData.capabilities, capability) 
+            && user.adminData.defaultUserLists.includes(userList)) 
+        || (hasCapabilityImpl(user.adminData.capabilities, ALL_USERLISTS)))
 }
