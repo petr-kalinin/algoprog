@@ -4,7 +4,7 @@ import newsItem from "../lib/newsItem"
 export default allNews = () ->
     return news([
         newsItem("Районная олимпиада", String.raw"""
-            <p>Добавлена/обновлена <a href="/material/raion_olympiad">информация про районную олимпиаду</a>, а также <a href="/raion_archive.pdf">архив старых районных олимпиад.</p>
+            <p>Добавлена/обновлена <a href="/material/raion_olympiad">информация про районную олимпиаду</a>, а также <a href="/raion_archive.pdf">архив старых районных олимпиад.</a></p>
         """),
 
         newsItem("С 1 января 2024 года повышается стоимость платных занятий", String.raw"""
