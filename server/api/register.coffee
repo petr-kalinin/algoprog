@@ -51,7 +51,8 @@ getEmails = () ->
         }`
         result = []
         for msg in messages
-            result.push((await mailparser.simpleParser(msg)).text)
+            parsed = await mailparser.simpleParser(msg)
+            result.push(parsed.text + parsed.html)
     finally
         await lock.release()
     return result
