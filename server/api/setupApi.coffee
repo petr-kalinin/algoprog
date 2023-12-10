@@ -831,7 +831,8 @@ export default setupApi = (app) ->
 
     app.post '/api/setOutcome/:submitId', ensureLoggedIn, wrap (req, res) ->
         submit = await Submit.findById(req.params.submitId)
-        if not checkAndLogAdminAction(req, REVIEW, submit.userList)
+        user = await User.findById(submit.user)
+        if not checkAndLogAdminAction(req, REVIEW, user.userList)
             res.status(403).send('No permissions')
             return
         await setOutcome(req, res)
