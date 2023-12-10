@@ -9,6 +9,7 @@ import callApi from '../lib/callApi'
 
 import styles from './EditUser.css'
 
+import hasCapability, {SEE_START_LEVEL, EDIT_USER, MOVE_UNKNOWN_USER, hasCapabilityForUserList} from '../lib/adminCapabilities'
 import GROUPS from '../lib/groups'
 
 
@@ -145,8 +146,9 @@ export default class EditingUserForAdmin extends React.Component
         @props.handleReload()
 
     render: () ->
+        admin = hasCapabilityForUserList(@props.me, EDIT_USER, @props.user.userList) 
         <div>
-            <form className={styles.form} onSubmit={@handleSubmit}>
+            {admin && <form className={styles.form} onSubmit={@handleSubmit}>
                 <div>
                     Имя: <input
                         type="text"
@@ -238,7 +240,7 @@ export default class EditingUserForAdmin extends React.Component
                         onChange={@handlePasswordChange}
                         onKeyPress={@handleKeyPressed} />
                 </div>
-            </form>
+            </form>}
             <GroupSelector user={@props.user} handleReload={@props.handleReload}/>
-            <Button onClick={@updateResults}>Update results</Button>
+            {admin && <Button onClick={@updateResults}>Update results</Button>}
         </div>

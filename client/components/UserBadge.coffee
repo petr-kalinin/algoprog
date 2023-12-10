@@ -12,7 +12,7 @@ import callApi from '../lib/callApi'
 import {getClassStartingFromJuly} from '../lib/graduateYearToClass'
 import stripLabel from '../lib/stripLabel'
 import withLang from '../lib/withLang'
-import hasCapability, {SEE_START_LEVEL, EDIT_USER, hasCapabilityForUserList} from '../lib/adminCapabilities'
+import hasCapability, {SEE_START_LEVEL, EDIT_USER, MOVE_UNKNOWN_USER, hasCapabilityForUserList} from '../lib/adminCapabilities'
 
 
 import {BigAchieves} from './Achieves'
@@ -29,6 +29,8 @@ export default class UserBadge extends React.Component
     render: () ->
         cls = getClassStartingFromJuly(@props.user.graduateYear)
         LANG = (id) => LangRaw(id, @props.lang)
+        showAdmin = hasCapabilityForUserList(@props.me, EDIT_USER, @props.user.userList) || (@props.user.userList == "unknown" && hasCapability(@props.me, MOVE_UNKNOWN_USER))
+        console.log(@props.me, @props.user.userList, showAdmin)
         <div>
             <h1>
                 <UserName user={@props.user} noachieves={true}/>
@@ -50,7 +52,7 @@ export default class UserBadge extends React.Component
                 else if @props.explain
                         <div>{LANG("cf_login_unknown")}</div>
                 }
-                {hasCapabilityForUserList(@props.me, EDIT_USER, @props.user.userList) && <EditingUserForAdmin {...this.props}/>}
+                {showAdmin && <EditingUserForAdmin {...this.props}/>}
                 {if +@props.user._id == @props.me?.informaticsId
                     <Link to="/edituser/#{@props.user._id}">{LANG("edit_profile")}</Link>}
             </blockquote>
