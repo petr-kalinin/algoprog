@@ -38,6 +38,9 @@ MESSAGES =
     CM:
         ru: "Ошибка проверки, свяжитесь со мной"
         en: "Internal error, please contact me"
+    CF:
+        ru: "Ошибка проверки, свяжитесь со мной"
+        en: "Internal error, please contact me"
     WA:
         ru: "Неправильный ответ"
         en: "Wrong answer"
