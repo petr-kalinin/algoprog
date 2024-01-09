@@ -58,7 +58,7 @@ pay = () ->
         
         <p>The course is for-fee. More precisely, actually all the materials in the course are free. Some of them are on the website informatics.msk.ru in the <a href="https://informatics.msk.ru/course/view.php?id=1135">corresponding section</a> (in Russian), you can study there for free. I charge money for adding you to the summary rankings, reviewing and commenting on your solutions, answering your questions, etc., as well as for access to the "Good Solutions" and "Find a Bug" sections.</p>
         
-        <p><b>The cost the course is 2000 Russian rubles per month.</b></p>
+        <p><b>The cost the course is 2500 Russian rubles per month.</b></p>
 
         <p>Payment is not necessarily tied to the 1st of the month; for example, you can pay for the course from the 20th of one month to the 20th of another month.</p>
 
