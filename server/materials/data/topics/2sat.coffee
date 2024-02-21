@@ -14,9 +14,11 @@ export default two_sat = () ->
         [label(ruen(
              "<a href='https://e-maxx.ru/algo/2_sat'>Теория на e-maxx</a>",
              "<a href=\"https://e-maxx.ru/algo/2_sat\">Theory on e-maxx</a>")),
-            problem({testSystem: "codeforces", contest: "587", problem: "D"}),
-            problem({testSystem: "codeforces", contest: "568", problem: "C"}),
-            problem({testSystem: "codeforces", contest: "1239", problem: "D"}),
+            problem({testSystem: "codeforces", contest: "1239", problem: "D"}),  # конкурс котиков
+            problem({testSystem: "codeforces", contest: "1903", problem: "F"}),  # няня
+            problem({testSystem: "codeforces", contest: "1657", problem: "F"}),  # слова
+            problem({testSystem: "codeforces", contest: "568", problem: "C"}),  # новый язык
+            problem({testSystem: "codeforces", contest: "587", problem: "D"}),  # duff
         ], 
         "2sat"),
         advancedProblems: [
