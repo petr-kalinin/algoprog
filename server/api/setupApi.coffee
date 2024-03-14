@@ -1260,7 +1260,6 @@ export default setupApi = (app) ->
         await mistake.setApprove(approve)
         res.send('OK')
 
-    ###
     app.get '/api/markUsers', ensureLoggedIn, wrap (req, res) ->
         url = req.query.url
         if not req.user?.admin
@@ -1281,7 +1280,6 @@ export default setupApi = (app) ->
         # assume that if page contains <head>, then it is html
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
-    ###
 
     app.post '/api/xsollaToken', wrap (req, res) ->
         if not req.user
