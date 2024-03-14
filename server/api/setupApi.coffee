@@ -13,6 +13,7 @@ XRegExp = require('xregexp')
 
 import bodyParser from "body-parser"
 import { renderToString } from 'react-dom/server';
+import { Provider } from 'react-redux'
 import { StaticRouter } from 'react-router'
 
 import {UserNameRaw} from '../../client/components/UserName'
@@ -46,6 +47,7 @@ import hasCapability, {hasCapabilityForUserList
  DOWNLOADING_STATS,
  APPROVE_FIND_MISTAKE
 } from '../../client/lib/adminCapabilities'
+import createStore from '../../client/redux/store'
 
 import {getTables, getUserResult} from '../calculations/updateTableResults'
 
@@ -1266,14 +1268,17 @@ export default setupApi = (app) ->
             res.status(403).send('No permissions')
             return
         text = await download url    
+        store = createStore({lang: "ru"})
         users = await User.find({})
         for user in users
-            name = user.name.replace("е", "[е`]").replace("ё", "[е`]").replace("`","ё")
+            console.log(user.name, user._id)
+            name = user.name.replaceAll("е", "[е`]").replaceAll("ё", "[е`]").replaceAll("`","ё").replaceAll("?", "\\?")
             name1 = name
             name2 = name.split(' ').reverse().join(' ')
+            console.log(name1, name2)
             re = XRegExp("(^|[^\\p{L}])((#{name1})|(#{name2}))($|[^\\p{L}])", "iug")
             context = {}
-            el = <StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter>
+            el = <Provider store={store}><StaticRouter context={context}><UserNameRaw user={user} theme={"light"}/></StaticRouter></Provider>
             html = renderToString(el)
             html = html.replace("/user/", "https://algoprog.ru/user/")
             text = text.replace(re, "$1#{html}$5")
