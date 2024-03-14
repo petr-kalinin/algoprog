@@ -1272,7 +1272,7 @@ export default setupApi = (app) ->
         users = await User.find({})
         for user in users
             console.log(user.name, user._id)
-            name = user.name.replaceAll("е", "[е`]").replaceAll("ё", "[е`]").replaceAll("`","ё").replaceAll("?", "\\?")
+            name = user.name.replaceAll("е", "[е`]").replaceAll("ё", "[е`]").replaceAll("`","ё").replaceAll("?", "\\?").replaceAll("(", "\\(").replaceAll(")", "\\)")
             name1 = name
             name2 = name.split(' ').reverse().join(' ')
             console.log(name1, name2)
