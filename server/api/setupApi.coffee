@@ -1272,6 +1272,8 @@ export default setupApi = (app) ->
         users = await User.find({})
         for user in users
             console.log(user.name, user._id)
+            if user.name.length <= 4
+                continue
             name = user.name.replaceAll("е", "[е`]").replaceAll("ё", "[е`]").replaceAll("`","ё").replaceAll("?", "\\?").replaceAll("(", "\\(").replaceAll(")", "\\)")
             name1 = name
             name2 = name.split(' ').reverse().join(' ')
