@@ -1792,6 +1792,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/request-promise-native@npm:^1.0.21":
+  version: 1.0.21
+  resolution: "@types/request-promise-native@npm:1.0.21"
+  dependencies:
+    "@types/request": "*"
+  checksum: 341af69971a366be4f3f1abf445f88a1edd3ef4a140cf0139d707fd6f66e3b10e94be5561bc3e137a713810f2e62af073b933061995eef4a3731fb7569be4448
+  languageName: node
+  linkType: hard
+
+"@types/request@npm:*":
+  version: 2.48.12
+  resolution: "@types/request@npm:2.48.12"
+  dependencies:
+    "@types/caseless": "*"
+    "@types/node": "*"
+    "@types/tough-cookie": "*"
+    form-data: ^2.5.0
+  checksum: 20dfad0a46b4249bf42f09c51fbd4d02ec6738c5152194b5c7c69bab80b00eae9cc71df4489ffa929d0968d453ef7d0823d1f98871efed563a4fdb57bf0a4c58
+  languageName: node
+  linkType: hard
+
 "@types/request@npm:2.48.1":
   version: 2.48.1
   resolution: "@types/request@npm:2.48.1"
@@ -4566,6 +4587,17 @@ __metadata:
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
   checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^2.5.0":
+  version: 2.5.1
+  resolution: "form-data@npm:2.5.1"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.6
+    mime-types: ^2.1.12
+  checksum: 5134ada56cc246b293a1ac7678dba6830000603a3979cf83ff7b2f21f2e3725202237cfb89e32bcb38a1d35727efbd3c3a22e65b42321e8ade8eec01ce755d08
   languageName: node
   linkType: hard
 
@@ -8831,6 +8863,7 @@ __metadata:
     "@babel/preset-react": ^7.10.4
     "@monaco-editor/react": ^3.5.7
     "@types/jest": ^28.1.7
+    "@types/request-promise-native": ^1.0.21
     "@types/xml2js": ^0.4.11
     body-parser: ^1.19.0
     buffer: ^6.0.3

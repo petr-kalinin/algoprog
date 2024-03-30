@@ -12,6 +12,7 @@ scripts/standings
 *~
 k8s/*secret*
 k8s/ingress-apply.sh
+k8s/apply-ingress.sh
 .pnp.*
 .yarn/*
 !.yarn/patches

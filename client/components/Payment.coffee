@@ -32,6 +32,9 @@ class TinkoffPayment extends React.Component
 
     pay: (e) ->
         console.log "try pay"
+        data = await callApi "tinkoffPrePayment", {
+            email: @state.email,
+        }
         form = document.getElementById("payForm")
         console.log form.terminalkey.value
         pay(form) 

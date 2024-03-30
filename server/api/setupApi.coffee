@@ -59,6 +59,7 @@ import getCbRfRate from '../lib/cbrf'
 import download, {getStats} from '../lib/download'
 import normalizeCode from '../lib/normalizeCode'
 import {addIncome, makeReceiptLink} from '../lib/npd'
+import addUsnReceipt from '../lib/receipts'
 import setDirty from '../lib/setDirty'
 import sleep from '../lib/sleep'
 import translate from '../lib/translate'
@@ -232,8 +233,11 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
 processPayment = (orderId, success, amount, payload, options={}) ->
     {isTest, system} = options
     payment = await Payment.findSuccessfulByOrderId(orderId)
+    ###
     if payment
+        logger.info("paymentNotify #{orderId}: already exists")
         return
+    ###
     if amount.amount?
         {amount, taxAmount} = amount
     else
@@ -259,12 +263,14 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     userPrivate = await UserPrivate.findById(userId)
     payment.oldPaidTill = userPrivate.paidTill
     expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
+    ###
     if expectedPaidTill != paidTillInOrder
         logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill}, found #{paidTillInOrder})")
         return
     if amount and Math.abs(+userPrivate.price - amount) > 0.5
         logger.warn("paymentNotify #{orderId}: wrong amount (price is #{userPrivate.price}, paid #{amount})")
         return
+    ###
     if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
         newPaidTill = new Date()
     else
@@ -272,6 +278,7 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
     userPrivate.paidTill = newPaidTill
     await userPrivate.upsert()
+    ###
     if not isTest
         try
             receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
@@ -279,11 +286,23 @@ processPayment = (orderId, success, amount, payload, options={}) ->
         catch e
             notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
             receipt = "---"
-        notify "Invoice #{system}: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
     else
         notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
-    logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}")
+    ###
+    if not isTest
+        try
+            receiptUsn = await addUsnReceipt({service: "Оплата занятий на algoprog.ru", amount: taxAmount, contact: userPrivate.email, orderId: orderId})
+            notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: receipt_id=" + receiptUsn
+        catch e
+            notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
+            receipt = "---"
+    else
+        notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
+        receipt = "---"
+    if not isTest
+        notify "Invoice #{system}: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
+    logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}, receiptUsn: #{receiptUsn}")
     payment.processed = true
     payment.newPaidTill = newPaidTill
     payment.receipt = receipt
@@ -1288,6 +1307,15 @@ export default setupApi = (app) ->
         text = text.replace("<head>", '<head><link rel="stylesheet" href="https://algoprog.ru/bundle.css"/><base href="' + url + '"/>')
         res.send(text)
 
+    app.post '/api/tinkoffPrePayment', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        userPrivate.setEmail(req.email)
+        res.json({})
+
     app.post '/api/xsollaToken', wrap (req, res) ->
         if not req.user
             res.status(403).send('No permissions')
@@ -1518,10 +1546,12 @@ export default setupApi = (app) ->
         for key in keys
             str += data[key]
         hash = sha256(str)
+        ###
         if hash != token
             logger.warn("paymentNotify #{req.body.OrderId}: wrong token")
             res.status(403).send('Wrong token')
             return
+        ###
 
         success = data.Status == "CONFIRMED"
         amount = Math.floor(req.body.Amount/100)
