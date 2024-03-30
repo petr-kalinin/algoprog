@@ -157,6 +157,21 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: INVOICE_IP_SIGNATURE
+            - name: PAYKEEPER_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: PAYKEEPER_SERVER
+            - name: PAYKEEPER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: PAYKEEPER_USER
+            - name: PAYKEEPER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: PAYKEEPER_PASSWORD
           image: petrkalinin/algoprog-master
           imagePullPolicy: "Always"
           name: nodejs

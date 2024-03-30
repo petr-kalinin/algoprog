@@ -20,6 +20,9 @@ async function getToken() {
 }
 
 export default async function addUsnReceipt({service, amount, contact, orderId}: {service: string, amount: number, contact: string, orderId: string}) {
+    if (!SERVER) {
+        throw "Unknown usn server"
+    }
     const cart = [
       {
         name: service,
