@@ -33,13 +33,13 @@ class TinkoffPayment extends React.Component
 
     pay: (e) ->
         console.log "try pay"
+        e.preventDefault()
         data = await callApi "tinkoffPrePayment", {
             email: @state.email,
         }
         form = document.getElementById("payForm")
         console.log form.terminalkey.value
         pay(form) 
-        e.preventDefault()
         return false
 
     render: () ->
