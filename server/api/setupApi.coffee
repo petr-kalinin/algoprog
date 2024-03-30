@@ -1313,7 +1313,7 @@ export default setupApi = (app) ->
             return
         userId = req.user.userKey()
         userPrivate = await UserPrivate.findById(userId)
-        userPrivate.setEmail(req.email)
+        userPrivate.setEmail(req.body.email)
         res.json({})
 
     app.post '/api/xsollaToken', wrap (req, res) ->

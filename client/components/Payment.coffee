@@ -24,6 +24,7 @@ class TinkoffPayment extends React.Component
             name: ""
             email: ""
         @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
 
     setField: (field, value) ->
         newState = {@state...}
