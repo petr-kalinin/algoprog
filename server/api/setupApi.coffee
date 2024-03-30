@@ -233,11 +233,9 @@ expandFindMistakeResult = (result, admin, userKey, lang="") ->
 processPayment = (orderId, success, amount, payload, options={}) ->
     {isTest, system} = options
     payment = await Payment.findSuccessfulByOrderId(orderId)
-    ###
     if payment
         logger.info("paymentNotify #{orderId}: already exists")
         return
-    ###
     if amount.amount?
         {amount, taxAmount} = amount
     else
@@ -263,14 +261,12 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     userPrivate = await UserPrivate.findById(userId)
     payment.oldPaidTill = userPrivate.paidTill
     expectedPaidTill = moment(userPrivate.paidTill).format("YYYYMMDD")
-    ###
     if expectedPaidTill != paidTillInOrder
         logger.warn("paymentNotify #{orderId}: wrong paid till (current is #{expectedPaidTill}, found #{paidTillInOrder})")
         return
     if amount and Math.abs(+userPrivate.price - amount) > 0.5
         logger.warn("paymentNotify #{orderId}: wrong amount (price is #{userPrivate.price}, paid #{amount})")
         return
-    ###
     if not userPrivate.paidTill or new Date() - userPrivate.paidTill > 5 * 24 * 60 * 60 * 1000
         newPaidTill = new Date()
     else
@@ -278,7 +274,6 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
     userPrivate.paidTill = newPaidTill
     await userPrivate.upsert()
-    ###
     if not isTest
         try
             receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
@@ -289,7 +284,6 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     else
         notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
-    ###
     if not isTest
         try
             receiptUsn = await addUsnReceipt({service: "Оплата занятий на algoprog.ru", amount: taxAmount, contact: userPrivate.email, orderId: orderId})
@@ -1546,12 +1540,10 @@ export default setupApi = (app) ->
         for key in keys
             str += data[key]
         hash = sha256(str)
-        ###
         if hash != token
             logger.warn("paymentNotify #{req.body.OrderId}: wrong token")
             res.status(403).send('Wrong token')
             return
-        ###
 
         success = data.Status == "CONFIRMED"
         amount = Math.floor(req.body.Amount/100)
