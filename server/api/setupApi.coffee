@@ -274,6 +274,7 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     newPaidTill = moment(newPaidTill).add(1, 'months').startOf('day').toDate()
     userPrivate.paidTill = newPaidTill
     await userPrivate.upsert()
+    ###
     if not isTest
         try
             receipt = await addIncome("Оплата занятий на algoprog.ru", taxAmount)
@@ -284,6 +285,7 @@ processPayment = (orderId, success, amount, payload, options={}) ->
     else
         notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
         receipt = "---"
+    ###
     if not isTest
         try
             receiptUsn = await addUsnReceipt({service: "Оплата занятий на algoprog.ru", amount: taxAmount, contact: userPrivate.email, orderId: orderId})
