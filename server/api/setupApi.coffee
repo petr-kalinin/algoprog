@@ -298,7 +298,7 @@ processPayment = (orderId, success, amount, payload, options={}) ->
         receipt = "---"
     if not isTest
         notify "Invoice #{system}: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
-    logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receipt: #{receipt}, receiptUsn: #{receiptUsn}")
+    logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receiptUsn: #{receiptUsn}")
     payment.processed = true
     payment.newPaidTill = newPaidTill
     payment.receipt = receipt
