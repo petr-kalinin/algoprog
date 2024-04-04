@@ -353,14 +353,14 @@ _LANG =
                 Обычно обработка занимает несколько секунд, в особых случаях может продолжаться несколько часов.
                 Если через два часа срок оплаченных занятий не будет продлен, свяжитесь со мной.</p>
 
-                <p>Чек об оплате (в соответствии с законом о самозанятых; чек может появиться не сразу, а через 20-30 секунд):</p>
+                <p>Чек об оплате выслан вам на email, указанный при оплате.</p>
             </>
         en: <>
                 <h1>Payment successful</h1>
                 <p>The payment for course is successful, the paid-for period will be extended in the near future after the payment is processed.
                 Usually processing takes a few seconds, in some cases it can take several hours.
                 If the paid-for period is not extended after two hours, please contact me.</p>
-                <p>The receipt (according to Russia tax law; it may take 20-30 seconds to appear):</p>
+                <p>The receipt has been sent to the email specified.</p>
             </>
     payment_error:
         ru: <>
