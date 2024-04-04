@@ -292,10 +292,10 @@ processPayment = (orderId, success, amount, payload, options={}) ->
             notify "Добавлен чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: receipt_id=" + receiptUsn
         catch e
             notify "Ошибка добавления чека (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n" + e
-            receipt = "---"
+            receiptUsn = "---"
     else
         notify "Тестовый чек (#{orderId}, #{userPrivate.price}р. / #{taxAmount}р.):\n#{user.name}: http://algoprog.ru/user/#{userId}\n"
-        receipt = "---"
+        receiptUsn = "---"
     if not isTest
         notify "Invoice #{system}: http://algoprog.ru/invoice/#{orderId}?password=#{INVOICE_PASSWORD}"
     logger.info("paymentNotify #{orderId}: ok, new paidTill: #{newPaidTill}, receiptUsn: #{receiptUsn}")
