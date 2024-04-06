@@ -15,19 +15,26 @@ export default sqrt_decomposition = () ->
                 <a href=\"https://e-maxx.ru/algo/sqrt_decomposition\">Теория на e-maxx</a><br>
                 <a href=\"https://neerc.ifmo.ru/wiki/index.php?title=Статистики_на_отрезках._Корневая_эвристика\">Теория в конспектах ИТМО</a><br>
                 <a href=\"https://habrahabr.ru/post/138946/\">Статья на хабре</a><br/>
-                <a href=\"https://neerc.ifmo.ru/wiki/index.php?title=Алгоритм_Мо\">Еще полезный прием</a>
+                <a href=\"https://neerc.ifmo.ru/wiki/index.php?title=Алгоритм_Мо\">Алгоритм Мо (немного другой прием для других задач, но базовая идея та же)</a>
                 </p>""",
                 """<p>
                 <a href=\"https://e-maxx.ru/algo/sqrt_decomposition\">Theory on e-maxx</a><br>
                 <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=Statisticsreferences._corn_heuristics\">Theory in ITMO notes</a><br>
                 <a href=\"https://habrahabr.ru/post/138946/\">Article on habr</a><br/>
-                <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=ALGORITHM_MO\">Another useful technique</a>
+                <a href=\"http://neerc.ifmo.ru/wiki/index.php?title=ALGORITHM_MO\">Mo algorithm (a bit different idea, but the basis is same)</a>
                 </p>
                 """)),
-            problem(934),
+            problem(1663),
+            problem(3313),
+            problem(113784),
+            problem(113785),
+            problem(114218),
             problem(1361),
+            problem({testSystem: "codeforces", contest: "220", problem: "B"}),
         ], "sqrt_decomposition"),
         advancedProblems: [
+            problem(934),
+            problem({testSystem: "codeforces", contest: "963", problem: "D"}),
             problem(113099),
             problem({testSystem: "codeforces", contest: "617", problem: "E"}),
             problem({testSystem: "codeforces", contest: "342", problem: "E"}),
