@@ -25,7 +25,6 @@ export default sqrt_decomposition = () ->
                 </p>
                 """)),
             problem(1663),
-            problem(3313),
             problem(113784),
             problem(113785),
             problem(114218),
