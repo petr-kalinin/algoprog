@@ -4,6 +4,8 @@ import level_nnoi2018 from "./level_nnoi2018"
 import level_nnoi2019 from "./level_nnoi2019"
 import level_nnoi2020 from "./level_nnoi2020"
 import level_nnoi2021 from "./level_nnoi2021"
+import level_nnoi2022 from "./level_nnoi2022"
+import level_nnoi2023 from "./level_nnoi2023"
 
 export default level_nnoi = () ->
     return level("nnoi", "Нижегородские городские олимпиады", [
@@ -12,4 +14,6 @@ export default level_nnoi = () ->
         level_nnoi2019(),
         level_nnoi2020(),
         level_nnoi2021(),
+        level_nnoi2022(),
+        level_nnoi2023(),
 ])
