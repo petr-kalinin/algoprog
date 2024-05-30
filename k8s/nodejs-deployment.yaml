@@ -189,10 +189,6 @@ spec:
               path: /api/ping
               port: 3000
             initialDelaySeconds: 5
-            periodSeconds: 2
-      initContainers:
-        - name: init-db
-          image: busybox
-          command: ['sh', '-c', 'until nc -z db:27017; do echo waiting for db; sleep 2; done;']          
+            periodSeconds: 2        
       restartPolicy: Always
 status: {}
