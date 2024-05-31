@@ -174,7 +174,7 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: PAYKEEPER_PASSWORD
-          image: ghcr.io/petrkalinin/algoprog-master
+          image: ghcr.io/petr-kalinin/algoprog:master-latest
           imagePullPolicy: "Always"
           name: nodejs
           ports:
