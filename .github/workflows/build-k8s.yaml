@@ -23,8 +23,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: petr-kalinin/algoprog-master:latest,petr-kalinin/algoprog-master:${{ github.sha }}
-          cache-from: type=registry,ref=petr-kalinin/algoprog-master:latest
+          tags: petr-kalinin/algoprog:master-latest,petr-kalinin/algoprog:${{ github.sha }}
+          cache-from: type=registry,ref=petr-kalinin/algoprog:master-latest
           cache-to: type=inline
 
       - 
@@ -47,5 +47,5 @@ jobs:
           manifests: |
             k8s/nodejs-deployment.yaml
             k8s/nodejs-service.yaml
-          images: 'ghcr.io/petr-kalinin/algoprog-master:${{ github.sha }}'
+          images: 'ghcr.io/petr-kalinin/algoprog:${{ github.sha }}'
           action: deploy
