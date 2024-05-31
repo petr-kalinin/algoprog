@@ -23,8 +23,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: petr-kalinin/algoprog:master-latest,petr-kalinin/algoprog:${{ github.sha }}
-          cache-from: type=registry,ref=petr-kalinin/algoprog:master-latest
+          tags: ghcr.io/petr-kalinin/algoprog:master-latest,ghcr.io/petr-kalinin/algoprog:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/petr-kalinin/algoprog:master-latest
           cache-to: type=inline
 
       - 
