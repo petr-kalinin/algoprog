@@ -10,19 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Login to DockerHub
+        name: Login to Github registry
         uses: docker/login-action@v2 
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       -
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: petrkalinin/algoprog-master:latest,petrkalinin/algoprog-master:${{ github.sha }}
-          cache-from: type=registry,ref=petrkalinin/algoprog-master:latest
+          tags: petr-kalinin/algoprog-master:latest,petr-kalinin/algoprog-master:${{ github.sha }}
+          cache-from: type=registry,ref=petr-kalinin/algoprog-master:latest
           cache-to: type=inline
 
       - 
@@ -45,5 +47,5 @@ jobs:
           manifests: |
             k8s/nodejs-deployment.yaml
             k8s/nodejs-service.yaml
-          images: 'petrkalinin/algoprog-master:${{ github.sha }}'
+          images: 'ghcr.io/petr-kalinin/algoprog-master:${{ github.sha }}'
           action: deploy
