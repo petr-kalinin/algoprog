@@ -18,6 +18,8 @@ spec:
         io.kompose.network/app-network: "true"
         io.kompose.service: nodejs
     spec:
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
       containers:
         - env:
             - name: MONGO_HOST
