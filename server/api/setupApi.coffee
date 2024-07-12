@@ -1610,40 +1610,6 @@ export default setupApi = (app) ->
             currency: currency
             signature: INVOICE_IP_SIGNATURE
 
-    app.get '/api/lastSubmits/:user/:page', ensureLoggedIn, wrap (req, res) -> 
-        user = await User.findById(req.params.user)
-        admin = checkAndLogAdminAction(req, VIEW_SUBMITS, user.userList)
-        if not admin and ""+req.user?.userKey() != ""+req.params.user
-            res.status(403).send('No permissions')
-            return
-        user = req.params.user
-        page = req.params.page
-        lang = req.query.lang || ""
-        submits = await Submit.findByUserAndPage(user, page)
-        submits = submits.map((submit) -> submit.toObject())
-        submits = submits.map(hideTests)
-        submits = submits.map((s) -> expandSubmit(s, lang))
-        submits = await awaitAll(submits)
-        submits = submits.map((submit) ->
-              _id: submit._id
-              problem: submit.problem
-              user: submit.user
-              time: submit.time
-              outcome: submit.outcome
-              language: submit.language
-              fullProblem: submit.fullProblem
-        )
-        res.json(submits)
-
-    app.get '/api/lastSubmitsPages/:user', ensureLoggedIn, wrap (req, res) -> 
-        user = await User.findById(req.params.user)
-        admin = checkAndLogAdminAction(req, VIEW_SUBMITS, user.userList)
-        if not admin and ""+req.user?.userKey() != ""+req.params.user
-            res.status(403).send('No permissions')
-            return
-        user = req.params.user
-        res.json(await Submit.findPagesCountByUser(user))
-    
     ###
     app.get '/api/makeFakeUsers', ensureLoggedIn, wrap (req, res) ->
         if not req.user?.admin

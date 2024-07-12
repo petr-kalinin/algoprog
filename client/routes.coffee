@@ -19,7 +19,6 @@ import FindMistakeProblemListPage from './pages/FindMistakeProblemListPage'
 import FindMistakePage from './pages/FindMistakePage'
 import FullNewsPage from './pages/FullNewsPage'
 import FullUserPage from './pages/FullUserPage'
-import AllSubmitsPage from './pages/AllSubmitsPage'
 import LoginPage from './pages/LoginPage'
 import MaterialPage from './pages/MaterialPage'
 import PaymentPage from './pages/PaymentPage'
@@ -139,10 +138,6 @@ BASE_ROUTES = [
     {
         path: '/comments',
         component: AllCommentsPage,
-    },
-    {
-        path: '/submitsList/:id',
-        component: AllSubmitsPage,
     },
     {
         path: '/usersWithAchieve/:achieve',

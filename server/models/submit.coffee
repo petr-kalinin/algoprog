@@ -16,8 +16,6 @@ outcomeType = (outcome) ->
         when "PS" then "PS"
         else "_"
 
-SUBMITS_PER_PAGE = 20
-
 submitsSchema = new mongoose.Schema
     _id: String
     time: Date
@@ -117,20 +115,6 @@ submitsSchema.statics.findByUserAndProblemWithFindMistakeAny = (userId, problemI
         user: userId
         problem: problemId
     }).sort({time: 1})
-
-submitsSchema.statics.findByUserAndPage = (userId, page) ->
-    return await Submit.find({
-        user: userId
-        findMistake: null
-    }).skip(page * SUBMITS_PER_PAGE).sort({time: 1}).limit(SUBMITS_PER_PAGE)
-
-submitsSchema.statics.findPagesCountByUser = (userId) -> 
-    return
-        pagesCount: Math.ceil(await Submit.find({
-            user: userId,
-            findMistake: null
-        }).countDocuments() / SUBMITS_PER_PAGE)
-        submitsPerPage: SUBMITS_PER_PAGE
 
 submitsSchema.statics.findByUserAndFindMistake = (userId, findMistakeId) ->
     Submit.find({
