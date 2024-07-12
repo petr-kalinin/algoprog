@@ -14,6 +14,9 @@ _LANG =
     all_comments:
         "ru": "Все комментарии"
         "en": "All comments"
+    all_submits:
+        "ru": "Все посылки"
+        "en": "All submits"
     material_suffix:
         "ru": ""
         "en": "!en"
@@ -389,6 +392,9 @@ _LANG =
     source_code:
         ru: "Исходный код"
         en: "Source"
+    submits_list:
+        ru: "Посылки"
+        en: "Submits"
     comments:
         ru: "Комментарии"
         en: "Comments"
