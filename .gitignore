@@ -20,3 +20,4 @@ k8s/apply-ingress.sh
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.DS_Store
