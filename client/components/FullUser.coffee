@@ -8,7 +8,7 @@ import SubmitListTable from './SubmitListTable'
 import Table from './Table'
 
 import { Badge } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom';
 import {LangRaw} from '../lang/lang'
 
 import callApi from '../lib/callApi'
@@ -115,6 +115,7 @@ class FullUser extends React.Component
                     <SubmitsOnDayConnected day={@state.day} userId={@props.user._id}/>
                 </>
             }
+            <div><Link to={"/submitsList/#{@props.user._id}"}>{LangRaw("all_submits", @props.lang)}</Link></div>
             <h2>{LangRaw("results", @props.lang)}</h2>
             {
             res = []
