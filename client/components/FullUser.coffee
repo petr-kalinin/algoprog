@@ -10,7 +10,7 @@ import Table from './Table'
 import { Badge } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import {LangRaw} from '../lang/lang'
-
+import hasCapability, {REVIEW} from '../lib/adminCapabilities'
 import callApi from '../lib/callApi'
 import ConnectedComponent from '../lib/ConnectedComponent'
 import GROUPS from '../lib/groups'
@@ -65,11 +65,12 @@ class SubmitsOnDay extends React.Component
     render: () ->
       # inline-block shrinks table to its content size
       <div style={display: "inline-block"}>
-          <SubmitListTable submits={@props.data} showProblems={true} />
+          <SubmitListTable submits={@props.data} showProblems={true} ReviewLink = {hasCapability(@props.me, REVIEW)} />
       </div>
 
 SubmitsOnDayConnected = withLang ConnectedComponent(SubmitsOnDay, {
-    urls: (props) -> 
+    urls: (props) ->
+        me: "me"
         data: "submitsByDay/#{props.userId}/#{props.day}?lang=#{LangRaw("material_suffix", props.lang)}"
 })
 

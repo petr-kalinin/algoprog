@@ -90,7 +90,11 @@ export default SubmitListTable = withLang (props) ->
                               </>
                         }
                         <td>{if submit.time=="_orig" then LANG("original_submit") else moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
-                        <td>{message}</td>
+                        {if props.ReviewLink?
+                            <td><Link to="/reviewResult/#{submit.user}::#{submit.problem}">{message}</Link></td>
+                         else
+                            <td>{message}</td>
+                        }
                         <td>
                             <div className='visible-xs visible-sm'>{LANGUAGE_ABBREVIATED[submit.language] || submit.language}</div>
                             <div className='hidden-xs hidden-sm'>{submit.language}</div>

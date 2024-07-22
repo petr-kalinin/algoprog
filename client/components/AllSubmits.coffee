@@ -11,6 +11,7 @@ import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 import Lang from '../lang/lang'
 import {LangRaw} from '../lang/lang'
+import hasCapability, {REVIEW} from '../lib/adminCapabilities'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 
@@ -21,11 +22,12 @@ import globalStyles from './global.css'
 class Submits extends React.Component
     render: () ->
         <div>
-            <SubmitListTable submits={@props.data} showProblems={true} />
+            <SubmitListTable submits={@props.data} showProblems={true} ReviewLink={hasCapability(@props.me, REVIEW)} />
         </div>
 
 SubmitsConnected = ConnectedComponent(Submits, {
     urls: (props) ->
+        me: "me"
         data: "lastSubmits/#{props._id}/#{props.page}?lang=#{LangRaw("material_suffix", props.lang)}"
 })
  
