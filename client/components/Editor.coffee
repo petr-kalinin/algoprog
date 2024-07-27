@@ -11,11 +11,13 @@ LANGUAGE_TO_MONACO_STYLE =
     "C++": "cpp",
     " C": "cpp",  # space important
     "Delphi": "pascal",
-    "Java": "java"
+    "C# Mono": "csharp",
+    "Java": "java",
+    "Kotlin": "kotlin",
     "PHP": "php",
     "Perl": "perl",
-    "C#": "csharp",
     "Ruby": "ruby",
+    "Rust": "rust",
     "Go": "go"
     
 getLanguage = (lang) ->

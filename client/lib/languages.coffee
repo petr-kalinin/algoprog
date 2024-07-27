@@ -29,6 +29,12 @@ export default LANGUAGES = {
         ejudge: 2
         codeforces: 43
     },
+    "C# Mono": {
+        extensions: ["cs"]
+        informatics: 25,
+        ejudge: 19,
+        codeforces: 9
+    },
     "Java": {
         extensions: ["java"],
         informatics: 18,
@@ -46,6 +52,12 @@ export default LANGUAGES = {
         informatics: 53
         ejudge: 53
         codeforces: 32
+    },
+    "Rust": {
+        extensions: ["rs"]
+        informatics: null,
+        ejudge: 70,
+        codeforces: 75
     },
     "PHP": {
         extensions: ["php"],
@@ -75,6 +87,6 @@ export default LANGUAGES = {
         extensions: [],
         informatics: 68,
         ejudge: null
-        codeforces: 52
+        codeforces: null
     },
 }
