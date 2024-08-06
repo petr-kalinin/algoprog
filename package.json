@@ -42,7 +42,7 @@
     "node-statsd": "^0.1.1",
     "node-telegram-bot-api": "^0.58.0",
     "nodemon": "^2.0.4",
-    "passport": "^0.4.1",
+    "passport": "^0.6.0",
     "passport-local-mongoose": "^6.0.1",
     "promise-file-reader": "^1.0.2",
     "react": "^16.13.1",
