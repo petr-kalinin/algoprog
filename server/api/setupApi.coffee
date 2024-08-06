@@ -150,12 +150,13 @@ expandSubmit = (submit, lang="") ->
     submit.fullUser = await User.findById(submit.user)
     submit.fullProblem = (await Problem.findById(submit.problem))?.toObject?()
     material = (await Material.findById(submit.problem + lang)) || (await Material.findById(submit.problem))
-    submit.fullProblem.name = material.title
-    tableNamePromises = []
-    for t in submit.fullProblem.tables
-        tableNamePromises.push(Table.findById(t))
-    tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
-    submit.fullProblem.tables = tableNames
+    if submit.fullProblem
+        submit.fullProblem.name = material.title
+        tableNamePromises = []
+        for t in submit.fullProblem.tables
+            tableNamePromises.push(Table.findById(t))
+        tableNames = (await awaitAll(tableNamePromises)).map((table) -> table.name)
+        submit.fullProblem.tables = tableNames
     if (submit.source.length > MAX_SUBMIT_LENGTH or containsBinary(submit.source))
         submit.source = ""
         submit.isBinary = true

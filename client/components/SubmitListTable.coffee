@@ -85,8 +85,8 @@ export default SubmitListTable = withLang (props) ->
                         {
                           if props.showProblems
                               <>
-                                <td>{submit.fullProblem.level}</td>
-                                <td><Link to="/material/#{submit.problem}">{submit.fullProblem.name}</Link></td>
+                                <td>{submit.fullProblem?.level}</td>
+                                <td><Link to="/material/#{submit.problem}">{submit.fullProblem?.name}</Link></td>
                               </>
                         }
                         <td>{if submit.time=="_orig" then LANG("original_submit") else moment(submit.time).format('DD.MM.YY HH:mm:ss')}</td>
