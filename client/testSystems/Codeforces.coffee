@@ -25,7 +25,10 @@ export default class Codeforces extends TestSystem
     submitListLink: (submit, lang) ->
         if not submit.testSystemData.username
             return null
-        href = "https://codeforces.com/submissions/#{submit.testSystemData.username}/contest/#{submit.testSystemData.contest}"
+        if submit.testSystemData.contest.startsWith("gym")
+            href = "https://codeforces.com/submissions/#{submit.testSystemData.username}/#{submit.testSystemData.contest}"
+        else
+            href = "https://codeforces.com/submissions/#{submit.testSystemData.username}/contest/#{submit.testSystemData.contest}"
         <p><a href={href}>
             {LangRaw("codeforces_submits_link", lang)}
         </a></p>
