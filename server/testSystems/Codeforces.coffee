@@ -1,7 +1,13 @@
+moment = require('moment')
+import fs from 'fs/promises'
 import { JSDOM } from 'jsdom'
+import puppeteer from 'puppeteer-extra'
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 request = require('request-promise-native')
+import { Mutex } from 'async-mutex'
 
 import CodeforcesSubmitDownloader from './codeforces/CodeforcesSubmitDownloader'
+import {checkOutcome} from './TestSystem'
 import slowAES from './codeforces/aes.min'
 import TestSystem, {TestSystemUser} from './TestSystem'
 
@@ -13,12 +19,14 @@ import logger from '../log'
 
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
+import Submit from '../models/submit'
 
 
 TIMEOUT = 250
 REQUESTS_LIMIT = 1
 BASE_URL = "https://codeforces.com"
 
+puppeteer.use(StealthPlugin())
 
 class CodeforcesUser extends TestSystemUser
     constructor: (@username) ->
@@ -44,11 +52,11 @@ _toHex = () ->
     return e.toLowerCase()
     
 getRCPC = (page) ->
-    console.log "page=", page
+    #console.log "page=", page
     a = /a=toNumbers\("([^"]*)"\)/.exec(page)[1]
     b = /b=toNumbers\("([^"]*)"\)/.exec(page)[1]
     c = /c=toNumbers\("([^"]*)"\)/.exec(page)[1]
-    console.log "abc=", a, b, c
+    #console.log "abc=", a, b, c
     return _toHex(slowAES.decrypt(_toNumbers(c),2,_toNumbers(a),_toNumbers(b)))
 
 export class LoggedCodeforcesUser
@@ -68,6 +76,28 @@ export class LoggedCodeforcesUser
         @jar = request.jar()
         @requests = 0
         @promises = []
+        @mutex = new Mutex()
+
+###
+    runExclusive: (fn) ->
+        if @pageRunning
+            console.log("Page already used, will wait")
+            promise = new Promise((resolve) => @pageQueue.push(resolve))
+            await promise
+            console.log("Page already used, done wait")
+        if @pageRunning
+            throw new Error("Wrong mutex login in cf")
+        console.log("Page free!")
+        @pageRunning = true
+        try
+            await fn()
+        finally
+            console.log("Done page running")
+            @pageRunning = false
+            if @pageQueue.length
+                resolve = @pageQueue.shift()
+                resolve()
+###
 
     ca76fd64a80cdc35: (_0x87ebx2) ->
         `var _0x87ebx3 = 0;
@@ -105,11 +135,31 @@ export class LoggedCodeforcesUser
     _getCsrf: (page) ->
         return /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]    
 
-    _login: () ->
+    _loginImpl: () ->
         logger.info "Logging in new CodeforcesUser ", @username
         if not @username
             throw "Unknown user"
         try
+            @browser = await puppeteer.launch({
+                devtools: true,
+                args: [ '--no-sandbox' ],
+                headless: 'new'
+            })
+            @page = await @browser.newPage()
+            await @page.goto("#{BASE_URL}/enter")
+            await sleep(2000)
+            await @page.type("#handleOrEmail", @username)
+            await @page.type("#password", @password)
+            promise = @page.waitForNavigation()
+            await @page.click(".submit")
+            #console.log("Done click")
+            await promise
+            cookies = await @page.cookies()
+            for cookie in cookies
+                @jar.setCookie("#{cookie.name}=#{cookie.value}", BASE_URL)
+            #console.log("Cookies in jar:", @jar.getCookieString(BASE_URL))
+            ###
+            csrf = await ppage.evaluate("document.getElementsByName('X-Csrf-Token')[0].getAttribute('content')")
             page = await @download("#{BASE_URL}/enter")
             if page.includes("Redirecting... Please, wait.")
                 RCPC = getRCPC(page)
@@ -135,16 +185,26 @@ export class LoggedCodeforcesUser
                 followAllRedirects: true,
                 timeout: 30 * 1000
             })
-            if page.includes("Некорректный хэндл/email или пароль") or page.includes("Invalid handle/email or password")
+            ###
+            content = await @page.content()
+            if content.includes("Некорректный хэндл/email или пароль") or content.includes("Invalid handle/email or password")
                 throw {badPassword: true}
-            @handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(page)?[1]
+            @handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(content)?[1]
             if not @handle
-                notifyDocument page, {filename: 'page.html', contentType: "text/html"}
-                throw "Can not log user #{@username} in"
+                await sleep(100000)
+                notifyDocument content, {filename: 'page.html', contentType: "text/html"}
+                throw "Can not log user #{@username} in: no handle in response"
             logger.info "Logged in new CodeforcesUser ", @username, @handle
         catch e
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
+            notify "Can not log in new Codeforces user #{@username}"
+            notifyDocument(await @page.content(), {filename: 'page.html', contentType: "text/html"})
             throw e
+
+    _login: () ->
+        #console.log("login: before mutex")
+        await @mutex.runExclusive(@_loginImpl.bind(this))
+        #console.log("login: after  mutex")
 
     download: (href, options) ->
         if @requests >= REQUESTS_LIMIT
@@ -169,14 +229,17 @@ export class LoggedCodeforcesUser
     submit: (problemId, contentType, body) ->
         throw "Not implemented"
 
-    submitWithObject: (problemId, data) ->
+    submitWithObjectImpl: (problemId, data) ->
         {contest, problem} = data.testSystemData
-        if contest.startsWith("gym")
+        isGym = contest.startsWith("gym")
+        if isGym
             href = "#{BASE_URL}/#{contest}/submit"
             csrfHref = "#{BASE_URL}/#{contest}"
         else
             href = "#{BASE_URL}/problemset/problem/#{contest}/#{problem}"
             csrfHref = href
+        #console.log("Will go to #{href}")
+        ###
         page = await @download(csrfHref)
         csrf = @_getCsrf(page)
         logger.info "Found csrf=#{csrf}"
@@ -205,19 +268,146 @@ export class LoggedCodeforcesUser
             followAllRedirects: true,
             timeout: 30 * 1000
         })
-        if page.includes("You have submitted exactly the same code before")
+        ###
+        await @page.goto(href)
+
+        #console.log("Will upload file")
+        inputUploadHandle = await @page.$('input[type=file]')
+        if not inputUploadHandle
+            throw new Error("No file upload!!!")
+        path = "/tmp/sources"
+        await fs.mkdir(path, { recursive: true })
+        fileToUpload = "#{path}/#{Math.random().toString(36).substr(2)}"
+        await fs.writeFile(fileToUpload, Buffer.from(data.source, "latin1"))
+        inputUploadHandle.uploadFile(fileToUpload)
+        await @page.evaluate("document.getElementsByName('programTypeId')[0].value = #{data.language}")
+        if isGym
+            await @page.evaluate("document.getElementsByName('submittedProblemIndex')[0].value = #{problem}")
+
+        promise = @page.waitForNavigation()
+        await @page.click(".submit")
+        await promise
+        content = await @page.content()
+        if content.includes("You have submitted exactly the same code before")
             logger.info "Submit is a duplicate"
             throw {duplicate: true}
-        if page.includes("the programming language of these submissions differs from the selected language")
+        if content.includes("the programming language of these submissions differs from the selected language")
             logger.info "The programming language of these submissions differs from the selected language"
             throw {contactMe: true}
-        if not page.includes("Contest status") and not page.includes("My Submissions")
+        if not content.includes("Contest status") and not content.includes("My Submissions")
             notify "Can't submit to CF"
-            notifyDocument page, {filename: 'page.html', contentType: "text/html"}
+            notifyDocument content, {filename: 'page.html', contentType: "text/html"}
             logger.error "Can't submit"
             throw "Can't submit"
         logger.info "Apparently submitted!"
 
+    submitWithObject: (problemId, data) ->
+        #console.log("submitWithObject: before mutex")
+        await @mutex.runExclusive(() => await @submitWithObjectImpl(problemId, data))
+        #console.log("submitWithObject: after mutex")
+    
+    _getSourceAndResultsImpl: (runid) ->
+        logger.info "Will download source and results for #{runid}"
+        await @page.goto("#{BASE_URL}/submissions/#{@username}")
+        csrf = @_getCsrf(await @page.content())
+        formData = new URLSearchParams({
+            csrf_token: csrf,
+            submissionId: runid
+        })
+        code = "(async () => await (await fetch('#{BASE_URL}/data/submitSource', {
+            'headers': {
+                'cache-control': 'no-cache',
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'pragma': 'no-cache',
+                'x-csrf-token': '#{csrf}',
+                'x-requested-with': 'XMLHttpRequest'
+            },
+            'referrer': '#{BASE_URL}/submissions/#{@username}',
+            'body': '#{formData.toString()}',
+            'method': 'POST',
+            'mode': 'cors',
+            'credentials': 'include'
+        })).json())()"
+        #console.log(code)
+        data = await @page.evaluate(code)
+        ###
+        data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
+        data.protocol = JSON.parse(data.protocol)
+        ###
+        #console.log(data)
+        return data
+
+    _getSourceAndResults: (runid) ->
+        #console.log("_getSourceAndResults: before mutex")
+        result = await @mutex.runExclusive(() => await @_getSourceAndResultsImpl(runid))
+        #console.log("_getSourceAndResults: after mutex")
+        return result
+
+    getSubmitsFromGymImpl: (contest, problem, realUser, realProblem, correctOutcome) ->
+        url = "#{BASE_URL}/#{contest}/my"
+        logger.info("Will get submits from gym, url=#{url}")
+        await @page.goto(url)
+        content = await @page.content()
+        document = (new JSDOM(content, {url: url})).window.document
+        table = document.getElementsByClassName("status-frame-datatable")[0]
+        els = table?.getElementsByTagName("tr")
+        result = []
+        baseProbHref = "#{BASE_URL}/#{contest}/problem/"
+        count = 0
+        for el in els
+            id = el.children[0]?.textContent?.trim()
+            time = el.children[1]?.textContent?.trim()
+            user = el.children[2]?.textContent?.trim()
+            prob = el.children[3]?.getElementsByTagName("a")[0]?.href?.trim()
+            lang = el.children[4]?.textContent?.trim()
+            outcome = el.children[5]?.textContent?.trim()
+            if (!prob || !prob.startsWith(baseProbHref))
+                logger.info "Ignoring problem ", prob
+                continue
+            count += 1
+            prob = prob.substring(baseProbHref.length)
+            time = moment(time, "MMM/DD/YYYY HH:mm", true).subtract(3, 'hours').toDate()
+            if outcome == "In queue" or outcome.startsWith("Running")
+                outcome = "CT"
+            if outcome == "Compilation error"
+                outcome = "CE"
+            if outcome == "Вы уже отправляли этот код"
+                outcome = "DP"
+            if outcome == "Accepted"
+                outcome = "OK"
+            if user.toLowerCase() != @username.toLowerCase()
+                throw "Strange submit: found username  #{user}, expected #{@username}"
+            if prob != problem
+                logger.info "Skipping submit #{id} because it is for a different problem: #{prob} vs #{problem}"
+                continue
+            outcome = correctOutcome(outcome)
+            console.log "found id=#{id}, time=#{time}, user=#{user}, prob=#{prob}, lang=#{lang}, outcome=#{outcome}"
+            result.push new Submit(
+                _id: "c" + id,
+                time: time
+                user: realUser
+                problem: realProblem
+                outcome: outcome
+                language: lang
+                testSystemData: 
+                    runId: id
+                    contest: contest
+                    problem: problem
+                    system: "codeforces"
+                    username: @username
+            )
+            checkOutcome(outcome)
+        if count == 0
+            notify "No submits found in CF table"
+            notifyDocument content, {filename: 'page.html', contentType: "text/html"}
+        return result
+
+    getSubmitsFromGym: (contest, problem, realUser, realProblem, correctOutcome) ->
+        #console.log("getSubmitsFromGym: before mutex")
+        result = await @mutex.runExclusive((() => await @getSubmitsFromGymImpl(contest, problem, realUser, realProblem, correctOutcome)).bind(this))
+        #console.log("getSubmitsFromGym: after mutex")
+        return result
+    
 
 export default class Codeforces extends TestSystem
     _getAdmin: () ->
@@ -278,13 +468,13 @@ export default class Codeforces extends TestSystem
         if page.includes("Redirecting... Please, wait.")
             jar = request.jar()
             RCPC = getRCPC(page)
-            console.log "RCPC", RCPC
+            #console.log "RCPC", RCPC
             jar.setCookie("RCPC=#{RCPC}", BASE_URL)
             logger.info "Cf pre-login cookie=", jar.getCookieString(BASE_URL)
             page = await download("#{href}&f0a28=1", jar)
         document = (new JSDOM(page, {url: href})).window.document
         data = document.getElementsByClassName("problem-statement")
-        console.log(page)
+        #console.log(page)
         if not data or data.length == 0
             logger.warn("Can't find statement for problem " + href)
             seeCfStatement = 

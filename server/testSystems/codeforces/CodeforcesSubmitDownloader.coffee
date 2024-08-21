@@ -72,6 +72,8 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
 
     _getSourceAndResults: (runid) ->
         runid = @_parseRunId(runid)
+        return await @loggedUser._getSourceAndResults(runid)
+        ###
         page = await @loggedUser.download("#{@baseUrl}/submissions/#{@username}")
         csrf = @_getCsrf(page)
         formData = 
@@ -91,6 +93,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
         data.protocol = await @loggedUser.download "#{@baseUrl}/data/judgeProtocol", postData
         data.protocol = JSON.parse(data.protocol)
         return data
+        ###
 
     correctOutcome: (outcome) ->
         parts = /([^:]*) on test \d+/.exec(outcome)
@@ -188,6 +191,7 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
     getSubmitsFromGym: (page) ->
         if page != 0
             return []
+        return await @loggedUser.getSubmitsFromGym(@contest, @problem, @realUser, @realProblem, @correctOutcome.bind(this))        ###
         url = "#{@baseUrl}/#{@contest}/my"
         page = await @loggedUser.download(url)
         document = (new JSDOM(page, {url: url})).window.document
@@ -243,3 +247,4 @@ export default class CodeforcesSubmitDownloader extends TestSystemSubmitDownload
             notify "No submits found in CF table"
             notifyDocument page, {filename: 'page.html', contentType: "text/html"}
         return result
+        ###
