@@ -63,6 +63,8 @@ export class LoggedCodeforcesUser
     @getUser: (username, password) ->
         key = username + "::" + password
         if not userCache[key] or (new Date() - userCache[key].loginTime > 1000 * 60 * 60)
+            if userCache[key]?.browser
+                userCache[key]?.browser.close()
             logger.info "Creating new CodeforcesUser ", username
             newUser = new LoggedCodeforcesUser(username, password)
             await newUser._login()
