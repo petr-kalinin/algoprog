@@ -3,6 +3,10 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
+        newsItem("Добавлена информация про командную олимпиаду", String.raw"""
+            Добавлена <a href='https://algoprog.ru/material/koshp'>информация про командную олимпиаду</a>.
+        """),
+
         newsItem("Занятия в лицее 40 будут по вторникам", String.raw"""
             В этом году занятия в лицее 40 будут по вторникам. Первое занятие — 17 сентября.
         """),
