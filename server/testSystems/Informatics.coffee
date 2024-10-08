@@ -74,10 +74,10 @@ class LoggedInformaticsUser
         if userCache[key]
             logger.info "Has user in cache, will wait for login ", username
             try
-                #await userCache[key]._login()
+                await userCache[key]._login()
                 logger.info "Has user in cache, done wait for login ", username
-                #if await userCache[key].getId()
-                return userCache[key]
+                if await userCache[key].getId()
+                    return userCache[key]
             catch e
                 userCache[key].browser?.close()
                 logger.info "Can't use user from cache, relogin", username, e
@@ -95,6 +95,7 @@ class LoggedInformaticsUser
 
     _login: () ->
         if @loginPromise
+            logger.info("Has loginPromise, will await")
             await @loginPromise
             return
         @loginPromise = new Promise (resolve, reject) => 
@@ -109,8 +110,8 @@ class LoggedInformaticsUser
             })
             @browserWSEndpoint = @browser.wsEndpoint()
             @page = (await @browser.pages())[0]
-            await @page.goto("https://example.org")
-            return
+            #await @page.goto("https://example.org")
+            #return
             await sleep(LOGIN_TIMEOUT)
             await @page.goto('https://informatics.msk.ru/login/index.php', {timeout: 120 * 1000})
             console.log("Will disconnect and sleep")
@@ -164,6 +165,7 @@ class LoggedInformaticsUser
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
             @loginReject(e)
             throw e
+        logger.info "Done _login"
 
     getId: () ->
         await sleep(LOGIN_TIMEOUT)
@@ -197,10 +199,10 @@ class LoggedInformaticsUser
                 for key of options.formData
                     value = options.formData[key]
                     console.log(key, value)
-                    if value.value
-                        fd.append(key, value.value)
+                    if !value.value
+                        fd.append(key, value)
                     else
-                        fd.append(key, value, value.options)
+                        fd.append(key, value.value, value.options)
                 bodyBuffer = Array.from(fd.getBuffer())
                 preFetch = """
                     body = #{JSON.stringify(bodyBuffer)}
