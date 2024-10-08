@@ -148,24 +148,14 @@ export class LoggedCodeforcesUser
                 headless: 'new'
             })
             @page = await @browser.newPage()
-            console.log("---1 #{@username}")
             await @page.goto("#{BASE_URL}/enter")
-            console.log("---2 #{@username}")
-            await sleep(2000)
-            console.log("---3 #{@username}")
+            await sleep(5000)
             await @page.type("#handleOrEmail", @username)
-            console.log("---4 #{@username}")
             await @page.type("#password", @password)
-            console.log("---5 #{@username}")
             promise = @page.waitForNavigation()
-            console.log("---6 #{@username}")
             await @page.click(".submit")
-            console.log("---7 #{@username}")
-            #console.log("Done click")
             await promise
-            console.log("---8 #{@username}")
             cookies = await @page.cookies()
-            console.log("---9 #{@username}")
             for cookie in cookies
                 @jar.setCookie("#{cookie.name}=#{cookie.value}", BASE_URL)
             #console.log("Cookies in jar:", @jar.getCookieString(BASE_URL))
@@ -198,12 +188,9 @@ export class LoggedCodeforcesUser
             })
             ###
             content = await @page.content()
-            console.log("---10 #{@username}")
             if content.includes("Некорректный хэндл/email или пароль") or content.includes("Invalid handle/email or password")
                 throw {badPassword: true}
-            console.log("---11 #{@username}")
             @handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(content)?[1]
-            console.log("---12 #{@username}")
             if not @handle
                 notifyDocument content, {filename: 'page.html', contentType: "text/html"}
                 throw "Can not log user #{@username} in: no handle in response"

@@ -1,5 +1,9 @@
 import { JSDOM } from 'jsdom'
 request = require('request-promise-native')
+import puppeteer from 'puppeteer-extra'
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+import FormData from 'form-data'
+import { Blob } from "buffer";
 
 import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
@@ -19,7 +23,10 @@ TIMEOUT = 1000
 _requests = 0
 _promises = []
 
+BEFORE_PASS_TIMEOUT = 30 * 1000
 LOGIN_TIMEOUT = 1000 * 10
+
+puppeteer.use(StealthPlugin())
 
 
 class InformaticsUser extends TestSystemUser
@@ -32,16 +39,54 @@ class InformaticsUser extends TestSystemUser
 
 userCache = {}
 
+PAGE_SCRIPT = """
+function getH2() {
+    var xpath = "//h2[contains(text(),'you are')]";
+    return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
+function needPass() {
+    return !!getH2()
+}
+function addFakeCheckboxAndClick() {
+    getH2().insertAdjacentHTML('afterend', '<input type="text" id="foobar"/>')
+    document.getElementById("foobar").click()
+    document.getElementById("foobar").focus()
+}
+"""
+
+addScipt = (page) ->
+    i = 0
+    while true
+        i++
+        r = await page.addScriptTag({content: PAGE_SCRIPT})
+        try
+            await page.evaluate("needPass()")
+            break
+        catch
+            console.log("Can't add script, retry")
+            await sleep(1000)
+            if i == 10
+                throw new Error("Can't add script")
+
 class LoggedInformaticsUser
     @getUser: (username, password) ->
         key = username + "::" + password
-        if not userCache[key] or not (await userCache[key].getId())
-            logger.info "Creating new InformaticsUser ", username
-            newUser = new LoggedInformaticsUser(username, password)
-            await newUser._login()
-            userCache[key] = newUser
-            logger.info "Created new InformaticsUser ", username
-        return userCache[key]
+        if userCache[key]
+            logger.info "Has user in cache, will wait for login ", username
+            try
+                await userCache[key]._login()
+                logger.info "Has user in cache, done wait for login ", username
+                if await userCache[key].getId()
+                    return userCache[key]
+            catch e
+                userCache[key].browser?.close()
+                logger.info "Can't use user from cache, relogin", username, e
+        logger.info "Creating new InformaticsUser ", username
+        newUser = new LoggedInformaticsUser(username, password)
+        userCache[key] = newUser
+        await newUser._login()
+        logger.info "Created new InformaticsUser ", username
+        return newUser
 
     constructor: (@username, @password) ->
         @jar = request.jar()
@@ -49,11 +94,52 @@ class LoggedInformaticsUser
         @promises = []
 
     _login: () ->
+        if @loginPromise
+            logger.info("Has loginPromise, will await")
+            await @loginPromise
+            return
+        @loginPromise = new Promise (resolve, reject) => 
+            @loginResolve = resolve
+            @loginReject = reject
         logger.info "Logging in new InformaticsUser ", @username
         try
+            @browser = await puppeteer.launch({
+                devtools: true,
+                args: [ '--no-sandbox' ],
+                headless: false
+            })
+            @browserWSEndpoint = @browser.wsEndpoint()
+            @page = (await @browser.pages())[0]
+            #await @page.goto("https://example.org")
+            #return
             await sleep(LOGIN_TIMEOUT)
-            page = await @download('https://informatics.msk.ru/login/index.php', {timeout: 120 * 1000})
-            token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(page)?[1]
+            await @page.goto('https://informatics.msk.ru/login/index.php', {timeout: 120 * 1000})
+            console.log("Will disconnect and sleep")
+            await @browser.disconnect()
+            await sleep(BEFORE_PASS_TIMEOUT)
+            console.log("Will reconnect and check")
+            @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
+            @page = (await @browser.pages())[0]
+            await addScipt(@page)
+            while (await @page.evaluate("needPass()"))
+                console.log("Need pass")
+                await @page.evaluate('addFakeCheckboxAndClick()')
+                await @page.type("#foobar", "aa")
+                await sleep(100)
+                await @page.keyboard.press('Tab')
+                await sleep(100)
+                await @page.keyboard.press('Space')
+                console.log("Done click")
+                console.log("Will disconnect and sleep")
+                await @browser.disconnect()
+                await sleep(BEFORE_PASS_TIMEOUT)
+                console.log("Will reconnect and check")
+                @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
+                @page = (await @browser.pages())[0]
+                await addScipt(@page)
+            console.log("Passed")
+            content = await @page.content()
+            token = /<input type="hidden" name="logintoken" value="([^"]*)">/.exec(content)?[1]
             await sleep(LOGIN_TIMEOUT)
             page = await @download("https://informatics.msk.ru/login/index.php", {
                 method: 'POST',
@@ -71,11 +157,15 @@ class LoggedInformaticsUser
             if not @id
                 throw "Can not log user #{@username} in"
             logger.info "Logged in new InformaticsUser ", @username
+            @loginResolve()
         catch e
+            @browser?.close()
             if e.badPassword
                 throw e
             logger.error "Can not log in new Informatics user #{@username}", e.message, e
+            @loginReject(e)
             throw e
+        logger.info "Done _login"
 
     getId: () ->
         await sleep(LOGIN_TIMEOUT)
@@ -95,7 +185,39 @@ class LoggedInformaticsUser
         await sleep(TIMEOUT)
         options.timeout = options.timeout || 60 * 1000
         try
-            result = await download(href, @jar, options)
+            fetchOptions = {
+                method: options.method
+                headers: options.headers || {}
+            }
+            preFetch = ""
+            if options.form
+                fetchOptions.body = (new URLSearchParams(options.form)).toString()
+                fetchOptions.headers["Content-Type"] = "application/x-www-form-urlencoded"
+            if options.formData
+                fd = new FormData()
+                console.log(options.formData)
+                for key of options.formData
+                    value = options.formData[key]
+                    console.log(key, value)
+                    if !value.value
+                        fd.append(key, value)
+                    else
+                        fd.append(key, value.value, value.options)
+                bodyBuffer = Array.from(fd.getBuffer())
+                preFetch = """
+                    body = #{JSON.stringify(bodyBuffer)}
+                    options.body = new Uint8Array(body)
+                """
+                fetchOptions.headers = {fetchOptions.headers..., fd.getHeaders()...}
+            code = """
+                (async function(){ 
+                    options = #{JSON.stringify(fetchOptions)}
+                    #{preFetch}
+                    return await (await fetch('#{href}', options)).text() 
+                })()
+            """
+            console.log(code)
+            result = await @page.evaluate(code)
         finally
             _requests--
             if _promises.length

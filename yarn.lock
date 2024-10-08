@@ -4935,7 +4935,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:*":
+"form-data@npm:*, form-data@npm:^4.0.0":
   version: 4.0.0
   resolution: "form-data@npm:4.0.0"
   dependencies:
@@ -9690,6 +9690,7 @@ __metadata:
     express-ws: ^4.0.0
     feedparser-promised: ^2.0.1
     file-type: ^16.5.4
+    form-data: ^4.0.0
     graphite: ^0.1.4
     highlight.js: ^10.4.1
     html-entities: ^1.3.1
