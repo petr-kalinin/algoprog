@@ -151,7 +151,7 @@ export class LoggedCodeforcesUser
             console.log("---1 #{@username}")
             await @page.goto("#{BASE_URL}/enter")
             console.log("---2 #{@username}")
-            await sleep(2000)
+            await sleep(5000)
             console.log("---3 #{@username}")
             await @page.type("#handleOrEmail", @username)
             console.log("---4 #{@username}")
