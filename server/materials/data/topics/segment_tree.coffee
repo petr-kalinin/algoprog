@@ -16,7 +16,6 @@ export default segment_tree = () ->
              "<p><a href=\"https://e-maxx.ru/algo/segment_tree\">Theory on e-maxx</a><br>\n<a href=\"https://neerc.ifmo.ru/wiki/index.php?title=\u0414\u0435\u0440\u0435\u0432\u043e_\u043e\u0442\u0440\u0435\u0437\u043a\u043e\u0432._\u041f\u043e\u0441\u0442\u0440\u043e\u0435\u043d\u0438\u0435\">Theory on the ITMO website</a><br>\n<a href=\"https://habrahabr.ru/post/115026/\">Article on habr</a></p>")),
             problem(752),
             problem(753),
-            problem(1364),
             problem(3312),
             problem(3321),
             problem(3335),
