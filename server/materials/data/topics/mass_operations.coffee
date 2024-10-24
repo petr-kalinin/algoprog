@@ -16,6 +16,7 @@ export default mass_operations = () ->
              "<p>See the <a href=\"https://e-maxx.ru/algo/segment_tree#20\">theory on e-maxx</a>.</p>")),
             problem(3327),
             problem(3329),
+            problem(1364),
             problem(3328),
             problem(111240)
         ], "mass_operations"),
