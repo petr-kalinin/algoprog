@@ -293,10 +293,9 @@ export class LoggedCodeforcesUser
         fileToUpload = "#{path}/#{Math.random().toString(36).substr(2)}"
         await fs.writeFile(fileToUpload, Buffer.from(data.source, "latin1"))
         inputUploadHandle.uploadFile(fileToUpload)
-        await @page.evaluate("document.getElementsByName('programTypeId')[0].value = #{data.language}")
+        await @page.evaluate("document.getElementsByName('programTypeId')[0].value = '#{data.language}'")
         if isGym
-            await @page.evaluate("document.getElementsByName('submittedProblemIndex')[0].value = #{problem}")
-
+            await @page.evaluate("document.getElementsByName('submittedProblemIndex')[0].value = '#{problem}'")
         promise = @page.waitForNavigation()
         await @page.click(".submit")
         await promise
@@ -363,7 +362,7 @@ export class LoggedCodeforcesUser
         content = await @page.content()
         document = (new JSDOM(content, {url: url})).window.document
         table = document.getElementsByClassName("status-frame-datatable")[0]
-        els = table?.getElementsByTagName("tr")
+        els = Array.from(table?.getElementsByTagName("tr"))
         result = []
         baseProbHref = "#{BASE_URL}/#{contest}/problem/"
         count = 0
