@@ -59,6 +59,38 @@ getRCPC = (page) ->
     #console.log "abc=", a, b, c
     return _toHex(slowAES.decrypt(_toNumbers(c),2,_toNumbers(a),_toNumbers(b)))
 
+BEFORE_PASS_TIMEOUT = 20 * 1000
+
+PAGE_SCRIPT = """
+function getH2() {
+    var xpath = "//p[contains(text(),'Verify you are')]";
+    return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
+function needPass() {
+    return !!getH2()
+}
+function addFakeCheckboxAndClick() {
+    getH2().insertAdjacentHTML('afterend', '<input type="text" id="foobar"/>')
+    document.getElementById("foobar").click()
+    document.getElementById("foobar").focus()
+}
+"""
+
+addScipt = (page) ->
+    i = 0
+    while true
+        i++
+        r = await page.evaluate(PAGE_SCRIPT)
+        console.log(r)
+        try
+            await page.evaluate("needPass()")
+            break
+        catch
+            console.log("Can't add script, retry")
+            await sleep(1000)
+            if i == 10
+                throw new Error("Can't add script")
+
 export class LoggedCodeforcesUser
     @getUser: (username, password) ->
         key = username + "::" + password
@@ -145,14 +177,34 @@ export class LoggedCodeforcesUser
             @browser = await puppeteer.launch({
                 devtools: true,
                 args: [ '--no-sandbox' ],
-                headless: 'new'
+                # headless: 'new'
             })
-            @page = await @browser.newPage()
-            console.log("---1 #{@username}")
+            @browserWSEndpoint = @browser.wsEndpoint()
+            @page = (await @browser.pages())[0]
             await @page.goto("#{BASE_URL}/enter")
-            console.log("---2 #{@username}")
-            await sleep(5000)
-            console.log("---3 #{@username}")
+            console.log("Will disconnect and sleep")
+            await @browser.disconnect()
+            await sleep(BEFORE_PASS_TIMEOUT)
+            console.log("Will reconnect and check")
+            @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
+            @page = (await @browser.pages())[0]
+            await addScipt(@page)
+            while (await @page.evaluate("needPass()"))
+                console.log("Need pass")
+                await @page.evaluate('addFakeCheckboxAndClick()')
+                await @page.type("#foobar", "aa")
+                await sleep(100)
+                await @page.keyboard.press('Tab')
+                await sleep(100)
+                await @page.keyboard.press('Space')
+                console.log("Done click")
+                console.log("Will disconnect and sleep")
+                await @browser.disconnect()
+                await sleep(BEFORE_PASS_TIMEOUT)
+                console.log("Will reconnect and check")
+                @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
+                @page = (await @browser.pages())[0]
+                await addScipt(@page)
             await @page.type("#handleOrEmail", @username)
             console.log("---4 #{@username}")
             await @page.type("#password", @password)
