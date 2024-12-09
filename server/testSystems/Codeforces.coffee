@@ -59,7 +59,7 @@ getRCPC = (page) ->
     #console.log "abc=", a, b, c
     return _toHex(slowAES.decrypt(_toNumbers(c),2,_toNumbers(a),_toNumbers(b)))
 
-BEFORE_PASS_TIMEOUT = 20 * 1000
+BEFORE_PASS_TIMEOUT = 15 * 1000
 
 PAGE_SCRIPT = """
 function getH2() {
@@ -175,7 +175,7 @@ export class LoggedCodeforcesUser
             throw "Unknown user"
         try
             @browser = await puppeteer.launch({
-                #devtools: true,
+                # devtools: true,
                 args: [ '--no-sandbox' ],
                 headless: 'new'
             })
@@ -205,6 +205,8 @@ export class LoggedCodeforcesUser
                 @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
                 @page = (await @browser.pages())[0]
                 await addScipt(@page)
+            await sleep(BEFORE_PASS_TIEOUT)
+            await @page.goto("#{BASE_URL}/enter")
             await @page.type("#handleOrEmail", @username)
             console.log("---4 #{@username}")
             await @page.type("#password", @password)
