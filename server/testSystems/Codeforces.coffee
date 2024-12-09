@@ -175,7 +175,7 @@ export class LoggedCodeforcesUser
             throw "Unknown user"
         try
             @browser = await puppeteer.launch({
-                devtools: true,
+                #devtools: true,
                 args: [ '--no-sandbox' ],
                 headless: 'new'
             })
