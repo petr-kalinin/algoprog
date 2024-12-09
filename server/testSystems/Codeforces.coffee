@@ -177,7 +177,7 @@ export class LoggedCodeforcesUser
             @browser = await puppeteer.launch({
                 devtools: true,
                 args: [ '--no-sandbox' ],
-                # headless: 'new'
+                headless: 'new'
             })
             @browserWSEndpoint = @browser.wsEndpoint()
             @page = (await @browser.pages())[0]
