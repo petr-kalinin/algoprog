@@ -266,6 +266,10 @@ export class LoggedCodeforcesUser
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
             notify "Can not log in new Codeforces user #{@username}"
             notifyDocument(await @page.content(), {filename: 'page.html', contentType: "text/html"})
+            try
+                await @browser?.close()
+            catch e
+                logger.error "Can't close browser"
             throw e
 
     _login: () ->
