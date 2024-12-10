@@ -176,8 +176,11 @@ export class LoggedCodeforcesUser
         try
             @browser = await puppeteer.launch({
                 # devtools: true,
-                args: [ '--no-sandbox' ],
-                headless: 'new'
+                args: [ 
+                    '--no-sandbox',
+                    '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                ],
+                headless: 'new', 
             })
             @browserWSEndpoint = @browser.wsEndpoint()
             @page = (await @browser.pages())[0]
@@ -266,6 +269,7 @@ export class LoggedCodeforcesUser
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
             notify "Can not log in new Codeforces user #{@username}"
             notifyDocument(await @page.content(), {filename: 'page.html', contentType: "text/html"})
+            logger.info "User-agent", await @browser.userAgent()
             try
                 await @browser?.close()
             catch e
