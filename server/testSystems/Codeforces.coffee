@@ -205,7 +205,7 @@ export class LoggedCodeforcesUser
                 @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
                 @page = (await @browser.pages())[0]
                 await addScipt(@page)
-            await sleep(BEFORE_PASS_TIEOUT)
+            await sleep(BEFORE_PASS_TIMEOUT)
             await @page.goto("#{BASE_URL}/enter")
             await @page.type("#handleOrEmail", @username)
             console.log("---4 #{@username}")
