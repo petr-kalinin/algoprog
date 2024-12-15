@@ -405,6 +405,7 @@ class Payment extends React.Component
         else 
             amount = @props.myUser.price
             warning = null
+        ###
         switch GROUPS[@props.myUser?.userList]?.paid
             when "tinkoff" then providers = ["tinkoff", "unitpay"]
             when "unitpay" then providers = ["tinkoff", "unitpay"]
@@ -412,6 +413,8 @@ class Payment extends React.Component
             else
                 canSubmit = false
                 providers = ["unitpay"]
+        ###
+        providers = ["tinkoff"]
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             order = "#{@props.myUser._id}:#{paidTill}"
