@@ -41,7 +41,7 @@
     "mongoose": "5.13.20",
     "node-cron": "^2.0.3",
     "node-statsd": "^0.1.1",
-    "node-telegram-bot-api": "^0.58.0",
+    "node-telegram-bot-api": "^0.66.0",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-local-mongoose": "^6.0.1",
