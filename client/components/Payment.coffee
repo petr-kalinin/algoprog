@@ -417,7 +417,8 @@ class Payment extends React.Component
         providers = ["tinkoff"]
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
-            order = "#{@props.myUser._id}:#{paidTill}"
+            now = moment().utc().format("DDHH")
+            order = "#{@props.myUser._id}:#{paidTill}:#{now}"
         else
             order = ""
         <div>
