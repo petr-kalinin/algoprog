@@ -56,7 +56,7 @@ export default LANGUAGES = {
     "Rust": {
         extensions: ["rs"]
         informatics: null,
-        ejudge: 70,
+        ejudge: null,
         codeforces: 75
     },
     "PHP": {
