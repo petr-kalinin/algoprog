@@ -59,7 +59,7 @@ getRCPC = (page) ->
     #console.log "abc=", a, b, c
     return _toHex(slowAES.decrypt(_toNumbers(c),2,_toNumbers(a),_toNumbers(b)))
 
-BEFORE_PASS_TIMEOUT = 15 * 1000
+BEFORE_PASS_TIMEOUT = 30 * 1000
 
 PAGE_SCRIPT = """
 function getH2() {
