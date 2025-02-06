@@ -192,8 +192,10 @@ export class LoggedCodeforcesUser
             @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
             @page = (await @browser.pages())[0]
             await addScipt(@page)
-            while (await @page.evaluate("needPass()"))
-                console.log("Need pass")
+            count = 0
+            while (await @page.evaluate("needPass()")) and count < 10
+                count++
+                console.log("Need pass, count=#{count}")
                 await @page.evaluate('addFakeCheckboxAndClick()')
                 await @page.type("#foobar", "aa")
                 await sleep(100)
