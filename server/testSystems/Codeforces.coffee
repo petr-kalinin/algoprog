@@ -14,6 +14,7 @@ import TestSystem, {TestSystemUser} from './TestSystem'
 import download, {downloadLimited} from '../lib/download'
 import sleep from '../lib/sleep'
 import {notify, notifyDocument} from '../lib/telegramBot'
+import {BrowserWrapper, PageWrapper} from '../lib/browserWrapper'
 
 import logger from '../log'
 
@@ -173,24 +174,15 @@ export class LoggedCodeforcesUser
         logger.info "Logging in new CodeforcesUser ", @username
         if not @username
             throw "Unknown user"
+        browser = await BrowserWrapper.create("", puppeteer, "cf", 0, console.log)
         try
-            @browser = await puppeteer.launch({
-                # devtools: true,
-                args: [ 
-                    '--no-sandbox',
-                    '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
-                ],
-                headless: 'new', 
-            })
-            @browserWSEndpoint = @browser.wsEndpoint()
-            @page = (await @browser.pages())[0]
+            @page = await PageWrapper.Create(puppeteer, browser, "", console.log)
             await @page.goto("#{BASE_URL}/enter")
             console.log("Will disconnect and sleep")
-            await @browser.disconnect()
+            await @page.disconnect()
             await sleep(BEFORE_PASS_TIMEOUT)
             console.log("Will reconnect and check")
-            @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
-            @page = (await @browser.pages())[0]
+            await @page.reconnect()
             await addScipt(@page)
             count = 0
             while (await @page.evaluate("needPass()")) and count < 10
@@ -199,16 +191,15 @@ export class LoggedCodeforcesUser
                 await @page.evaluate('addFakeCheckboxAndClick()')
                 await @page.type("#foobar", "aa")
                 await sleep(100)
-                await @page.keyboard.press('Tab')
+                await @page.keyboard().press('Tab')
                 await sleep(100)
-                await @page.keyboard.press('Space')
+                await @page.keyboard().press('Space')
                 console.log("Done click")
                 console.log("Will disconnect and sleep")
-                await @browser.disconnect()
+                await @page.disconnect()
                 await sleep(BEFORE_PASS_TIMEOUT)
                 console.log("Will reconnect and check")
-                @browser = await puppeteer.connect({ browserWSEndpoint: @browserWSEndpoint })
-                @page = (await @browser.pages())[0]
+                await @page.reconnect()
                 await addScipt(@page)
             console.log("Passed captcha")
             await sleep(BEFORE_PASS_TIMEOUT)
@@ -272,9 +263,8 @@ export class LoggedCodeforcesUser
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
             notify "Can not log in new Codeforces user #{@username}"
             notifyDocument(await @page.content(), {filename: 'page.html', contentType: "text/html"})
-            logger.info "User-agent", await @browser.userAgent()
             try
-                await @browser?.close()
+                await browser?.close()
             catch e
                 logger.error "Can't close browser"
             throw e

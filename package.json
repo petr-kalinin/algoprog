@@ -72,6 +72,7 @@
     "source-map-support": "^0.5.16",
     "tinycolor2": "^1.4.1",
     "universal-cookie": "^4.0.3",
+    "ws": "^8.18.1",
     "xml2js": "^0.4.23",
     "xregexp": "^4.3.0"
   },
