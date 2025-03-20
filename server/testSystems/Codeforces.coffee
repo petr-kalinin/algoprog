@@ -67,13 +67,34 @@ function getH2() {
     var xpath = "//p[contains(text(),'Verify you are')]";
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
+function getTurnstile() {
+    return document.getElementsByClassName("cf-turnstile")[0]
+}
 function needPass() {
-    return !!getH2()
+    return !!getH2() || !!getTurnstile()
 }
 function addFakeCheckboxAndClick() {
-    getH2().insertAdjacentHTML('afterend', '<input type="text" id="foobar"/>')
+    if (getH2()) {
+        getH2().insertAdjacentHTML('afterend', '<input type="text" id="foobar"/>')
+    } else if (getTurnstile()) {
+        getTurnstile().insertAdjacentHTML('beforebegin', '<input type="text" id="foobar"/>')
+    }
     document.getElementById("foobar").click()
     document.getElementById("foobar").focus()
+}
+function removeFakeCheckbox() {
+    const el = document.getElementById("foobar")
+    if (el) {
+        el.parentElement.removeChild(el)
+    }
+}
+function clickButton() {
+    const el = document.getElementById("finalize-button")
+    if (el && !el.disabled) {
+        el.click()
+        return true
+    }
+    return false
 }
 """
 
@@ -186,6 +207,11 @@ export class LoggedCodeforcesUser
             await addScipt(@page)
             count = 0
             while (await @page.evaluate("needPass()")) and count < 10
+                if await @page.evaluate("clickButton()")
+                    console.log("Clicked button, sleep")
+                    await sleep(BEFORE_PASS_TIMEOUT)
+                    await addScipt(@page)
+                    continue
                 count++
                 console.log("Need pass, count=#{count}")
                 await @page.evaluate('addFakeCheckboxAndClick()')
@@ -198,22 +224,25 @@ export class LoggedCodeforcesUser
                 console.log("Will disconnect and sleep")
                 await @page.disconnect()
                 await sleep(BEFORE_PASS_TIMEOUT)
-                console.log("Will reconnect and check")
+                console.log("Will reconnect and  check")
                 await @page.reconnect()
                 await addScipt(@page)
+                await @page.evaluate('removeFakeCheckbox()')
             console.log("Passed captcha")
             await sleep(BEFORE_PASS_TIMEOUT)
             await @page.goto("#{BASE_URL}/enter")
+            await sleep(BEFORE_PASS_TIMEOUT)
             await @page.type("#handleOrEmail", @username)
             console.log("---4 #{@username}")
             await @page.type("#password", @password)
             console.log("---5 #{@username}")
-            promise = @page.waitForNavigation()
+            #promise = @page.waitForNavigation()
             console.log("---6 #{@username}")
             await @page.click(".submit")
             console.log("---7 #{@username}")
             #console.log("Done click")
-            await promise
+            #await promise
+            await sleep(BEFORE_PASS_TIMEOUT)
             console.log("---8 #{@username}")
             cookies = await @page.cookies()
             console.log("---9 #{@username}")
