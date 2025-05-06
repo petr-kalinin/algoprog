@@ -130,7 +130,7 @@ export class OtpGetter {
             authOptional: true,
             onData
         })
-        this.server.listen(+process.env["SMTP_PORT"] || 25, "0.0.0.0")
+        this.server.listen(+process.env["SMTP_PORT"] || 1025, "0.0.0.0")
         this.addToLog("[smtp] Smtp server running")
     }
 
