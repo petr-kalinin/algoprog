@@ -1,5 +1,3 @@
-{ImapFlow} = require('imapflow')
-mailparser = require('mailparser')
 request = require('request-promise-native')
 
 import {getGraduateYear} from '../../client/lib/graduateYearToClass'
@@ -8,6 +6,7 @@ import InformaticsUser from '../informatics/InformaticsUser'
 
 import download from '../lib/download'
 import sleep from '../lib/sleep'
+import {OtpGetter, OtpFilterType} from '../lib/otpGetter'
 import {notify, notifyDocument} from '../lib/telegramBot'
 
 import User from '../models/user'
@@ -17,53 +16,17 @@ import { REGISTRY } from '../testSystems/TestSystemRegistry'
 
 import logger from '../log'
 
-imapClient = undefined
-resetImapClient = () ->
-    if process.env["EMAIL_USER"] and process.env["EMAIL_PASSWORD"]
-        imapClient = new ImapFlow
-            host: 'imap.gmail.com',
-            port: 993,
-            secure: true,
-            auth:
-                user: process.env["EMAIL_USER"],
-                pass: process.env["EMAIL_PASSWORD"]
-
-        await imapClient.connect()
-    else
-        logger.error("No imap data specified")
-resetImapClient()
-
 randomString = (len) ->
     Math.random().toString(36).substr(2, len)
 
 filterUsername = (username) ->
     return username.replace(/[^a-zA-Z]/gm, "").toLowerCase()
 
-getEmails = () ->
-    await resetImapClient()
-    lock = await imapClient.getMailboxLock('INBOX')
-    try
-        count = (await imapClient.status('INBOX', {messages: true})).messages
-        rawMessages = await imapClient.fetch("#{count-10}:#{count}", { source: true })
-        messages = []
-        `for await (let message of rawMessages) {
-            messages.push(message.source.toString('utf8'));
-        }`
-        result = []
-        for msg in messages
-            parsed = await mailparser.simpleParser(msg)
-            result.push(parsed.text + parsed.html)
-    finally
-        await lock.release()
-    return result
+otpGetter = new OtpGetter()
 
-findConfirmLink = (login) ->
+findConfirmLink = (login, email) ->
     try
-        emails = await getEmails()
-        for email in emails
-            res = RegExp("https:\\/\\/informatics\\.msk\\.ru\\/login\\/confirm\\.php\\?data=\\w+\\/#{login}").exec(email)?[0]
-            if res
-                return res
+        return await otpGetter.getOtp(email, OtpFilterType.InformaticsActivate, [], 5 * 60 * 1000)
     catch e
         logger.error(e)
         return undefined
@@ -115,7 +78,7 @@ registerOnInformatics = (data) ->
     timeout = 100
     for i in [1..10]
         await sleep(timeout)
-        link = await findConfirmLink(username)
+        link = await findConfirmLink(username, email)
         if link
             break
         timeout = timeout * 2
