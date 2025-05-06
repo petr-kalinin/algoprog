@@ -1834,6 +1834,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mailparser@npm:^3.4.6":
+  version: 3.4.6
+  resolution: "@types/mailparser@npm:3.4.6"
+  dependencies:
+    "@types/node": "*"
+    iconv-lite: ^0.6.3
+  checksum: 052f7a7ea342eec8d3646cbca1e5846b1fb126837d9d604d13cce60f961c370d5a618d29487c02317a98ab80f2e28a6aaa23431312a0bacf59be6fd80d7f6ee2
+  languageName: node
+  linkType: hard
+
 "@types/minimatch@npm:*":
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
@@ -1862,6 +1872,15 @@ __metadata:
   version: 17.0.15
   resolution: "@types/node@npm:17.0.15"
   checksum: aa64ecf4fbcf9888e794dcdc20e98c49cdcb102b17e57c44ca56943904732d6cc250e766f8448a3cd71d6a40a4b597bd83c565e5bd9b982733fa3f9813d5c291
+  languageName: node
+  linkType: hard
+
+"@types/nodemailer@npm:*":
+  version: 6.4.17
+  resolution: "@types/nodemailer@npm:6.4.17"
+  dependencies:
+    "@types/node": "*"
+  checksum: 498b702575111494a42cf9cdd3d399f0308c3b3b0244e7f53008924327955a16b39ba0bf99a5ccf17af9fd2bc50a61a76ae7e8a75498a426ea2f828a05202eab
   languageName: node
   linkType: hard
 
@@ -1948,6 +1967,16 @@ __metadata:
   version: 0.16.2
   resolution: "@types/scheduler@npm:0.16.2"
   checksum: b6b4dcfeae6deba2e06a70941860fb1435730576d3689225a421280b7742318d1548b3d22c1f66ab68e414f346a9542f29240bc955b6332c5b11e561077583bc
+  languageName: node
+  linkType: hard
+
+"@types/smtp-server@npm:^3.5.10":
+  version: 3.5.10
+  resolution: "@types/smtp-server@npm:3.5.10"
+  dependencies:
+    "@types/node": "*"
+    "@types/nodemailer": "*"
+  checksum: ada57a8f1a60730147a9868c70553d113ab6788e1fc6d52af17cfa275383fd2918ba58abf91600566598f9e3c3c9b3fd80d7531d1a3b6c2ff5cefd159ce09028
   languageName: node
   linkType: hard
 
@@ -2718,6 +2747,13 @@ __metadata:
   dependencies:
     streamx: ^2.18.0
   checksum: d0c0a58de9d0d0bf0a66c71593f42b74fe3a41d13b63a65f9662a8fe11eda3b0166d9bedcb36e6dbbbfe67a70c8d2929db9c2f054b47e749bdc8a135c35fcb43
+  languageName: node
+  linkType: hard
+
+"base32.js@npm:0.1.0":
+  version: 0.1.0
+  resolution: "base32.js@npm:0.1.0"
+  checksum: e1ac2c4c405794bfb30e47c708718544091055371c61040c3d85aba56dd699646f1ae840fb686df9f6da8d9fdee9bbe0a07d04be79d2c13e9bb39595aedecb78
   languageName: node
   linkType: hard
 
@@ -5755,7 +5791,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2":
+"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -5952,6 +5988,13 @@ __metadata:
   version: 1.9.1
   resolution: "ipaddr.js@npm:1.9.1"
   checksum: f88d3825981486f5a1942414c8d77dd6674dd71c065adcfa46f578d677edcb99fda25af42675cb59db492fdf427b34a5abfcde3982da11a8fd83a500b41cfe77
+  languageName: node
+  linkType: hard
+
+"ipv6-normalize@npm:1.0.1":
+  version: 1.0.1
+  resolution: "ipv6-normalize@npm:1.0.1"
+  checksum: 217277069e50eb47f91d0b22e17f47a858cc99785e0e0c1a315e27c1f0c49bcbae448c220c35767666aeb523b87853d5905448ab6c835f0967778d450610cf54
   languageName: node
   linkType: hard
 
@@ -7577,6 +7620,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nodemailer@npm:6.9.15":
+  version: 6.9.15
+  resolution: "nodemailer@npm:6.9.15"
+  checksum: 2d975f5c60f84acde52d79d43287c70197fe94bde4a731682f306e9636a148c49de29a5dd92ce7dc5aac068a148cd91da3401ede80f8f52b9f2bc00439f36ced
+  languageName: node
+  linkType: hard
+
 "nodemon@npm:^2.0.4":
   version: 2.0.19
   resolution: "nodemon@npm:2.0.19"
@@ -8845,6 +8895,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"punycode.js@npm:2.3.1":
+  version: 2.3.1
+  resolution: "punycode.js@npm:2.3.1"
+  checksum: 13466d7ed5e8dacdab8c4cc03837e7dd14218a59a40eb14a837f1f53ca396e18ef2c4ee6d7766b8ed2fc391d6a3ac489eebf2de83b3596f5a54e86df4a251b72
+  languageName: node
+  linkType: hard
+
 "punycode@npm:^1.4.1":
   version: 1.4.1
   resolution: "punycode@npm:1.4.1"
@@ -9846,7 +9903,9 @@ __metadata:
     "@babel/preset-react": ^7.10.4
     "@monaco-editor/react": ^3.5.7
     "@types/jest": ^28.1.7
+    "@types/mailparser": ^3.4.6
     "@types/request-promise-native": ^1.0.21
+    "@types/smtp-server": ^3.5.10
     "@types/xml2js": ^0.4.11
     async-mutex: ^0.5.0
     body-parser: ^1.19.0
@@ -9913,6 +9972,7 @@ __metadata:
     seedrandom: ^3.0.5
     sha1: ^1.1.1
     sha256: ^0.2.0
+    smtp-server: ^3.13.6
     source-map-support: ^0.5.16
     terser-webpack-plugin: ^3.0.8
     tinycolor2: ^1.4.1
@@ -10354,6 +10414,18 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: b5167a7142c1da704c0e3af85c402002b597081dd9575031a90b4f229ca5678e9a36e8a374f1814c8156a725d17008ae3bde63b92f9cfd132526379e580bec8b
+  languageName: node
+  linkType: hard
+
+"smtp-server@npm:^3.13.6":
+  version: 3.13.6
+  resolution: "smtp-server@npm:3.13.6"
+  dependencies:
+    base32.js: 0.1.0
+    ipv6-normalize: 1.0.1
+    nodemailer: 6.9.15
+    punycode.js: 2.3.1
+  checksum: 2e1e64bb1e219dd070f5fbd9fc3d396cdb213dfa738f1305e10e41b0297f12da03b0265f9cf127a4b9290a6f51a8043a4844013e29d478489743134096fcbc2e
   languageName: node
   linkType: hard
 
