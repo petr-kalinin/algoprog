@@ -179,6 +179,7 @@ spec:
           name: nodejs
           ports:
             - containerPort: 3000
+            - containerPort: 1025
           resources: {}
           livenessProbe:
             httpGet:

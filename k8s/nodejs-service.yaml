@@ -14,7 +14,13 @@ spec:
     - name: "3000"
       port: 3000
       targetPort: 3000
+    - name: "25"
+      port: 1025
+      targetPort: 1025
+      nodePort: 30000
   selector:
     io.kompose.service: nodejs
+  externalIPs:
+    - 62.84.115.189
 status:
   loadBalancer: {}
