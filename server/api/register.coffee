@@ -81,6 +81,7 @@ registerOnInformatics = (data) ->
         notify "Can't find notification link for login #{username}\n" + "Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}"
         notifyDocument page, {filename: 'page.html', contentType: "text/html"}
         throw "Can't find notification link for login #{username}"
+    notify "Found notification link for login #{username}\n" + "Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}"
     await download(link)
     return 
         username: username,

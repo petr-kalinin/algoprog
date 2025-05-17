@@ -61,7 +61,7 @@ export class OtpGetter {
             data: mailData,
             source,
         }
-        const to = (mailData.to as mailparser.AddressObject)?.text || ""
+        const to = (mailData.to as mailparser.AddressObject)?.value[0].address || ""
         const request = this.emailRequests[to]
         if (!request) {
             this.addToLog(`Non-interesting email for ${to} ${mailData.subject}, will store for future`)
@@ -186,8 +186,8 @@ export class OtpGetter {
                 shouldDelete: false
             }
             this.emailRequests[login] = request
-            this.addToLog(`Already has email for ${login}, will resolve directly`)
             if (this.lastEmailByTo[login]) {
+                this.addToLog(`Already has email for ${login}, will resolve directly`)
                 this.resolveRequest(request, this.lastEmailByTo[login])
             }
         })
