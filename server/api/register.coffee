@@ -75,13 +75,7 @@ registerOnInformatics = (data) ->
         followAllRedirects: true,
         timeout: 30 * 1000
     })
-    timeout = 100
-    for i in [1..10]
-        await sleep(timeout)
-        link = await findConfirmLink(username, email)
-        if link
-            break
-        timeout = timeout * 2
+    link = await findConfirmLink(username, email)
     if not link
         logger.info("Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}")
         notify "Can't find notification link for login #{username}\n" + "Generated username=#{username}, password=#{password} email=#{email} name=#{name} name=#{name} city=#{city} school=#{school} cls=#{cls}"

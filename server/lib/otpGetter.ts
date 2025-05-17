@@ -167,6 +167,7 @@ export class OtpGetter {
     }
 
     async getOtp(login: string, filterType: OtpFilterType, usedOtp: string[], lifetime: number): Promise<string> {
+        this.addToLog(`Will look for otp for ${login}`)
         const filterFunc = otpFilterFromType(filterType)
         if(this.emailRequests[login]) {
             logger.error(`Have two requests for otp ${login}`)
@@ -185,6 +186,7 @@ export class OtpGetter {
                 shouldDelete: false
             }
             this.emailRequests[login] = request
+            this.addToLog(`Already has email for ${login}, will resolve directly`)
             if (this.lastEmailByTo[login]) {
                 this.resolveRequest(request, this.lastEmailByTo[login])
             }
