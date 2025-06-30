@@ -44,6 +44,16 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
+    zaoch_self:
+        paid: false
+        chocos: false
+        startDayForWeeks: "2020-01-05"
+        tableName: "Нижегородские школьники самостоятельно",
+        tableNameEn: "N.Novgorod self",
+        canResetYear: true
+        starred: false
+        lang: ""
+        autoAccept: true
     unn: 
         paid: false
         chocos: false
