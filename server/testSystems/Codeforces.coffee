@@ -372,6 +372,7 @@ export class LoggedCodeforcesUser
         await @page.goto(href)
         await @_solveCaptcha()
         await @page.goto(href)
+        await sleep(BEFORE_PASS_TIMEOUT)
 
         #console.log("Will upload file")
         inputUploadHandle = await @page.$('input[type=file]')
