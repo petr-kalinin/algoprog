@@ -35,9 +35,9 @@ accumulateRequests = (req, rs, time) ->
     now = new Date()
     passed = now - lastAccumulateTime
     if passed > PERIOD * 1000
-        logger.info "Request statistics for #{passed/1000} s: #{totalCounts} requests, #{totalTime} time, #{totalTime / totalCounts} avg"
-        for path of times
-            logger.info "Request statistics for #{passed/1000} s for path #{path}: #{counts[path]} requests, #{times[path]} time, #{times[path] / counts[path]} avg"
+        #logger.info "Request statistics for #{passed/1000} s: #{totalCounts} requests, #{totalTime} time, #{totalTime / totalCounts} avg"
+        #for path of times
+        #    logger.info "Request statistics for #{passed/1000} s for path #{path}: #{counts[path]} requests, #{times[path]} time, #{times[path] / counts[path]} avg"
         sendToGraphite(passed)
         times = {}
         counts = {}
