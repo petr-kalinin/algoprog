@@ -191,14 +191,7 @@ export class LoggedCodeforcesUser
     _getCsrf: (page) ->
         return /<meta name="X-Csrf-Token" content="([^"]*)"/.exec(page)[1]    
 
-    _loginImpl: () ->
-        logger.info "Logging in new CodeforcesUser ", @username
-        if not @username
-            throw "Unknown user"
-        browser = await BrowserWrapper.create("", puppeteer, "cf", 0, console.log)
-        try
-            @page = await PageWrapper.Create(puppeteer, browser, "", console.log)
-            await @page.goto("#{BASE_URL}/enter")
+    _solveCaptcha: () -> 
             console.log("Will disconnect and sleep")
             await @page.disconnect()
             await sleep(BEFORE_PASS_TIMEOUT)
@@ -229,7 +222,17 @@ export class LoggedCodeforcesUser
                 await addScipt(@page)
                 await @page.evaluate('removeFakeCheckbox()')
             console.log("Passed captcha")
-            await sleep(BEFORE_PASS_TIMEOUT)
+            await sleep(BEFORE_PASS_TIMEOUT)    
+
+    _loginImpl: () ->
+        logger.info "Logging in new CodeforcesUser ", @username
+        if not @username
+            throw "Unknown user"
+        browser = await BrowserWrapper.create("", puppeteer, "cf", 0, console.log)
+        try
+            @page = await PageWrapper.Create(puppeteer, browser, "", console.log)
+            await @page.goto("#{BASE_URL}/enter")
+            await @_solveCaptcha()
             await @page.goto("#{BASE_URL}/enter")
             await sleep(BEFORE_PASS_TIMEOUT)
             await @page.type("#handleOrEmail", @username)
@@ -366,6 +369,8 @@ export class LoggedCodeforcesUser
             timeout: 30 * 1000
         })
         ###
+        await @page.goto(href)
+        await @_solveCaptcha()
         await @page.goto(href)
 
         #console.log("Will upload file")
