@@ -371,6 +371,7 @@ export class LoggedCodeforcesUser
         ###
         await @page.goto(href)
         await @_solveCaptcha()
+        content0 = await @page.content()
         await @page.goto(href)
         await sleep(BEFORE_PASS_TIMEOUT)
 
@@ -398,6 +399,7 @@ export class LoggedCodeforcesUser
             throw {contactMe: true}
         if not content.includes("Contest status") and not content.includes("My Submissions")
             notify "Can't submit to CF"
+            notifyDocument content0, {filename: 'page0.html', contentType: "text/html"}
             notifyDocument content, {filename: 'page.html', contentType: "text/html"}
             logger.error "Can't submit"
             throw "Can't submit"
