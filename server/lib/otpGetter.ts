@@ -126,7 +126,7 @@ export class OtpGetter {
 
         this.addToLog("[smtp] Will start smtp server")
         this.server = new SMTPServer({
-            logger: true,
+            logger: false,
             authOptional: true,
             onData
         })
@@ -136,7 +136,7 @@ export class OtpGetter {
 
     async dropOldLoop() {
         while (true) {
-            this.addToLog(`Check for old requests`)
+            //this.addToLog(`Check for old requests`)
             try {
                 for (const key in this.emailRequests) {
                     if (+new Date() > +this.emailRequests[key].startTime + this.emailRequests[key].lifeTime) {
@@ -149,16 +149,16 @@ export class OtpGetter {
             } catch (e: any) {
                 this.addToLog(`Error in dropOldLoop 1: ${e} ${e.stack}`)
             }
-            this.addToLog(`Check for old emails`)
+            //this.addToLog(`Check for old emails`)
             try {
                 for (const key in this.lastEmailByTo) {
-                    this.addToLog(`Has probably old email for ${key}: date=${this.lastEmailByTo[key].data.date}, now=${new Date()}`)
+                    //this.addToLog(`Has probably old email for ${key}: date=${this.lastEmailByTo[key].data.date}, now=${new Date()}`)
                     if (+new Date() > +this.lastEmailByTo[key].data.date! + MAX_KEEP_TIME) {
                         this.addToLog(`Delete old email for ${key}`)
                         delete this.lastEmailByTo[key]
                     }
                 }
-                this.addToLog(`Done check for old emails`)
+                //this.addToLog(`Done check for old emails`)
             } catch (e: any) {
                 this.addToLog(`Error in dropOldLoop 2: ${e} ${e.stack}`)
             }
