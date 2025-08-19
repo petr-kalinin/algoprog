@@ -388,9 +388,8 @@ export class LoggedCodeforcesUser
         await @page.evaluate("document.getElementsByName('programTypeId')[0].value = '#{data.language}'")
         if isGym
             await @page.evaluate("document.getElementsByName('submittedProblemIndex')[0].value = '#{problem}'")
-        promise = @page.waitForNavigation()
         await @page.click(".submit")
-        await promise
+        await @_solveCaptcha()
         content = await @page.content()
         if content.includes("You have submitted exactly the same code before")
             logger.info "Submit is a duplicate"
