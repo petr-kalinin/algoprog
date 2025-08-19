@@ -64,7 +64,7 @@ BEFORE_PASS_TIMEOUT = 30 * 1000
 
 PAGE_SCRIPT = """
 function getH2() {
-    var xpath = "//p[contains(text(),'Verifying you are human')]";
+    var xpath = "//p[contains(text(),'you are human')]";    
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
 function getTurnstile() {
