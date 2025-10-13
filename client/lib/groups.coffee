@@ -36,6 +36,15 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
+    "dzer-sch2":
+        paid: false
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        tableName: "Школа №2 в Дзержинске (продвинутая группа)",
+        tableNameEn: "Dzerzhinsk, school 2 (advanced)",
+        canResetYear: true
+        starred: false
+        lang: ""
     stud:
         paid: "tinkoff"
         chocos: false
