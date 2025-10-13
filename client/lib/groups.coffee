@@ -8,33 +8,6 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
-    lic87:
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-05"
-        tableName: "Лицей 87",
-        tableNameEn: "School 87, N.Novgorod",
-        canResetYear: true
-        starred: false
-        lang: ""
-    lic38:
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-05"
-        tableName: "Лицей 38",
-        tableNameEn: "School 38, N.Novgorod",
-        canResetYear: true
-        starred: false
-        lang: ""
-    lic38_2:
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-05"
-        tableName: "Лицей 38 (начинающие)",
-        tableNameEn: "School 38 (beginners), N.Novgorod",
-        canResetYear: true
-        starred: false
-        lang: ""
     zaoch:
         paid: false
         chocos: false
@@ -54,24 +27,6 @@ export default GROUPS =
         starred: false
         lang: ""
         autoAccept: true
-    unn: 
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-05"
-        tableName: "Занятия в ННГУ"
-        tableNameEn: "UNN classes",
-        canResetYear: true
-        starred: false
-        lang: ""
-    unn2: 
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-05"
-        tableName: "Занятия в ННГУ (продвинутые)"
-        tableNameEn: "UNN classes (advanced)",
-        canResetYear: true
-        starred: false
-        lang: ""
     notnnov:
         paid: "tinkoff"
         chocos: false
@@ -97,22 +52,6 @@ export default GROUPS =
         canResetYear: true
         starred: false
         lang: ""
-    sop:
-        paid: true
-        chocos: false
-        startDayForWeeks: "2020-01-06"
-        canResetYear: true
-        starred: false
-        lang: ""
-    english:
-        paid: "unitpay"
-        chocos: false
-        startDayForWeeks: "2020-01-06"
-        tableName: "Не-российские ученики"
-        tableNameEn: "Non-Russian students",
-        canResetYear: false
-        starred: true
-        lang: "!en"
     test:
         paid: "unitpay"
         chocos: false
@@ -129,14 +68,6 @@ export default GROUPS =
         lang: ""
         autoAccept: true
     graduated:
-        paid: false
-        chocos: false
-        startDayForWeeks: "2020-01-06"
-        canResetYear: true
-        starred: false
-        lang: ""
-        autoAccept: true
-    pavlovo:
         paid: false
         chocos: false
         startDayForWeeks: "2020-01-06"
