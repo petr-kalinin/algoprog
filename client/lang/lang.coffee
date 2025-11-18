@@ -290,7 +290,7 @@ _LANG =
         ru: "Адрес плательщика для выставления счета (включая страну и город)"
         en: "Payer billing address (including country and city)"
     you_agree_to_oferta:
-        ru: <>Нажимая «Оплатить», вы соглашаетесь с <a href='/oferta.pdf' target='_blank'>офертой</a> оказания услуг, <a href='/privacy.pdf'>политикой</a> обработки персональных данных и <a href='/ib.pdf'>политикой</a> информационной безопасности.</>
+        ru: <>Нажимая «Оплатить», вы соглашаетесь с <a href='/oferta.pdf' target='_blank'>офертой</a> оказания услуг, <a href='/privacy.pdf'>политикой</a> обработки персональных данных и <a href='/ib.pdf'>политикой</a> информационной безопасности.<br/><b>Если кнопка «Оплатить» не работает, обновите страницу и попробуйте еще раз.</b></>
         en: <>By pressing Pay button, you agree to <a href='/oferta.pdf' target='_blank'>oferta</a>, <a href='/privacy.pdf'>privacy policy</a> and <a href='/ib.pdf'>information security policy</a>.</>
     do_pay:
         ru: "Оплатить"
