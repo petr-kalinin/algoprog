@@ -1056,7 +1056,7 @@ export default setupApi = (app) ->
         if not user or not checkAndLogAdminAction(req, REVIEW, user.userList)
             res.status(403).send("No permissions for user #{req.params.userId}")
             return
-        await User.updateUser(req.params.user)
+        await User.updateUser(req.params.userId)
         res.send('OK')
 
     app.get '/api/updateAllResults', ensureLoggedIn, wrap (req, res) ->
