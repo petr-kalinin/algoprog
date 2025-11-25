@@ -9,7 +9,7 @@ class FullContestChocoCalculator
     processContest: (contest) ->
         full = true
         for p in contest
-            if not p or p.solved == 0
+            if not p or p.solved <= 0
                 full = false
         if full
             @fullContests++
@@ -30,7 +30,7 @@ class CleanContestChocoCalculator
     processContest: (contest) ->
         clean = true
         for p in contest
-            if not p or (p.attempts > 0) or (p.solved == 0)
+            if not p or (p.attempts > 0) or (p.solved <= 0)
                 clean = false
         if clean
             @cleanContests++
@@ -46,9 +46,9 @@ class HalfCleanContestChocoCalculator
         clean = true
         half = true
         for p in contest
-            if not p or (p.attempts > 0) or (p.solved == 0)
+            if not p or (p.attempts > 0) or (p.solved <= 0)
                 clean = false
-            if not p or (p.attempts > 1) or (p.solved == 0)
+            if not p or (p.attempts > 1) or (p.solved <= 0)
                 half = false
         if half and (not clean)
             @hcleanContests++
