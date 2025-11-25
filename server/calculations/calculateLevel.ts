@@ -42,6 +42,7 @@ export default async function calculateLevel(user, lastDate: Date) {
                 continue
             let probNumber = 0
             let probAc = 0
+            let probDq = 0
             for (let subTableId of table.tables) {
                 let subTable = await Table.findById(subTableId)
                 if (!subTable)
@@ -58,10 +59,12 @@ export default async function calculateLevel(user, lastDate: Date) {
                     if (submitDate >= lastDate)
                         continue
                     probAc += result.solved
+                    if (result.solved < 0)
+                        probDq += 1
                 }
             }
             let needProblem = requiredProblemsByLevelMinor(minor, probNumber)
-            if ((probAc < needProblem) && ((!baseLevel) || (compareLevels(baseLevel, level) <= 0))) {
+            if (probAc < needProblem && probAc + 3 * probDq != probNumber && ((!baseLevel) || (compareLevels(baseLevel, level) <= 0))) {
                 logger.info("calculated level", userId, levelId, " spent time ", +(new Date()) - start)
                 return levelId
             }
