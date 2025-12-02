@@ -9,7 +9,7 @@ export default GROUPS =
         starred: false
         lang: ""
     zaoch:
-        paid: false
+        paid: "tinkoff"
         chocos: false
         startDayForWeeks: "2020-01-05"
         tableName: "Нижегородские школьники заочно",
