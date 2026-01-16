@@ -70,8 +70,12 @@ function getH2() {
 function getTurnstile() {
     return document.getElementsByClassName("cf-turnstile")[0]
 }
+function alreadyPassed() {
+    var val = document.getElementsByName("turnstileToken")[0]?.value
+    return val && val != ""
+}
 function needPass() {
-    return !!getH2() || !!getTurnstile()
+    return !!getH2() || (!!getTurnstile() && !alreadyPassed())
 }
 function addFakeCheckboxAndClick() {
     if (getH2()) {
@@ -388,6 +392,7 @@ export class LoggedCodeforcesUser
         await @page.evaluate("document.getElementsByName('programTypeId')[0].value = '#{data.language}'")
         if isGym
             await @page.evaluate("document.getElementsByName('submittedProblemIndex')[0].value = '#{problem}'")
+        await @page.evaluate("document.querySelector('.submit').disabled = false")
         await @page.click(".submit")
         await @_solveCaptcha()
         content = await @page.content()
@@ -397,7 +402,7 @@ export class LoggedCodeforcesUser
         if content.includes("the programming language of these submissions differs from the selected language")
             logger.info "The programming language of these submissions differs from the selected language"
             throw {contactMe: true}
-        if not content.includes("Contest status") and not content.includes("My Submissions") and not content.includes("Last submissions")
+        if not content.includes("Contest status") and not content.includes(" My Submissions ") and not content.includes("Last submissions")
             notify "Can't submit to CF"
             notifyDocument content0, {filename: 'page0.html', contentType: "text/html"}
             notifyDocument content, {filename: 'page.html', contentType: "text/html"}
