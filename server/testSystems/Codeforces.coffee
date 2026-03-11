@@ -63,9 +63,16 @@ getRCPC = (page) ->
 BEFORE_PASS_TIMEOUT = 30 * 1000
 
 PAGE_SCRIPT = """
-function getH2() {
+function getH2a() {
     var xpath = "//p[contains(text(),'you are human')]";    
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
+function getH2b() {
+    var xpath = "//p[contains(text(),'Performing security verification')]";    
+    return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
+function getH2() {
+    return getH2a() || getH2b()
 }
 function getTurnstile() {
     return document.getElementsByClassName("cf-turnstile")[0]
