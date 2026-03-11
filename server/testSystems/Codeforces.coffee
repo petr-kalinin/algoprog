@@ -68,7 +68,7 @@ function getH2a() {
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
 function getH2b() {
-    var xpath = "//p[contains(text(),'Performing security verification')]";    
+    var xpath = "//h2[contains(text(),'Performing security verification')]";    
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
 function getH2() {
