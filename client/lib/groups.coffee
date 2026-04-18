@@ -54,6 +54,15 @@ export default GROUPS =
         canResetYear: false
         starred: true
         lang: ""
+    kamchatka_seaside:
+        paid: false
+        chocos: false
+        startDayForWeeks: "2020-01-06"
+        tableName: "Камчатский край и Приморский край"
+        tableNameEn: "Kamchatka and Seaside",
+        canResetYear: false
+        starred: false
+        lang: ""
     ikhlyustov:
         paid: false
         chocos: false
