@@ -3,8 +3,8 @@ import newsItem from "../lib/newsItem"
 
 export default allNews = () ->
     return news([
-        newsItem("24 февраля занятия в лицее 40 не будет", String.raw"""
-            24 февраля занятия в лицее 40 не будет
+        newsItem("17 марта занятия в лицее 40 не будет", String.raw"""
+            17 марта занятия в лицее 40 не будет
         """),
 
         newsItem("Добавлен телеграм-бот, который оповещает о комментариях", String.raw"""
