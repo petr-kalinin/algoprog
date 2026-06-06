@@ -26,11 +26,13 @@ import {REGISTRY} from './testSystems/TestSystemRegistry'
 
 import logger from './log'
 import configurePassport from './passport'
+import { proxyChainManager } from './lib/proxyChainForTg'
 
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
+    proxyChainManager.changeProxy()
 
 requireHTTPS = (req, res, next) ->
     if !req.secure and !req.headers.host.startsWith("127.0.0.1") and req.path != '/api/ping'
