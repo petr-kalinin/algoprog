@@ -103,6 +103,7 @@ ensureLoggedIn = connectEnsureLogin.ensureLoggedIn("/api/forbidden")
 entities = new Entities()
 
 PASSWORD = process.env["TINKOFF_PASSWORD"]
+TERMINAL_KEY = process.env["TINKOFF_TERMINAL_KEY"]
 XSOLLA_MERCHANT_ID = process.env['XSOLLA_MERCHANT_ID']
 XSOLLA_PROJECT_ID = process.env['XSOLLA_PROJECT_ID']
 XSOLLA_API_KEY = process.env["XSOLLA_API_KEY"]
@@ -1453,6 +1454,68 @@ export default setupApi = (app) ->
             console.log "Evoca getOrderStatusExtended answer", result
         res.json
             formUrl: result.formUrl
+
+    app.post '/api/tinkoffNewPayment', wrap (req, res) ->
+        if not req.user
+            res.status(403).send('No permissions')
+            return
+        order = req.body.order
+        userId = req.user.userKey()
+        userPrivate = await UserPrivate.findById(userId)
+        if not userPrivate?.price
+            res.status(403).send('No price set')
+            return
+        
+        # Prepare params for Tinkoff Init API
+        params =
+            TerminalKey: TERMINAL_KEY
+            Amount: userPrivate.price * 100  # Amount in kopecks
+            OrderId: order
+            Description: "Оплата занятий на algoprog.ru"
+        
+        # Create signature token as per https://developer.tbank.ru/eacq/api/request-sign
+        # Add Password to params for signature calculation
+        paramsWithPassword = {params..., Password: PASSWORD}
+        
+        # Sort keys alphabetically
+        keys = (key for own key, value of paramsWithPassword)
+        keys.sort()
+        
+        # Concatenate values
+        str = ""
+        for key in keys
+            value = paramsWithPassword[key]
+            # Skip complex objects in token calculation
+            if typeof value == "object"
+                continue
+            str += value
+        
+        # Calculate token
+        token = sha256(str)
+        
+        # Add token to request params
+        params.Token = token
+        
+        # Call Tinkoff Init API
+        try
+            url = "https://securepay.tinkoff.ru/v2/Init"
+            result = await download(url, undefined, {
+                json: params
+                method: 'POST'
+                headers:
+                    'Content-Type': 'application/json'
+            })
+            logger.info "Tinkoff Init request answer", result
+            
+            if not result.Success
+                logger.error "Tinkoff Init error", result
+                throw "Tinkoff Init failed: #{result.Message || result.Details}"
+            
+            res.json
+                paymentUrl: result.PaymentURL
+        catch e
+            logger.error "Tinkoff Init exception", e
+            throw e
 
     app.post '/xsollaHook', bodyParser.raw({type: "*/*"}), wrap (req, res) ->
         hash = sha1(req.body.toString() + XSOLLA_SECRET_KEY)

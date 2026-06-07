@@ -342,6 +342,67 @@ class EvocaPayment extends React.Component
             }
         </div>
 
+class TinkoffNewPayment extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state =
+            loading: false
+            error: false
+        @setField = @setField.bind(this)
+        @pay = @pay.bind(this)
+
+    setField: (field, value) ->
+        newState = {@state...}
+        newState[field] = value
+        @setState(newState)
+
+    pay: (e) ->
+        e.preventDefault()
+        @setState
+            loading: true
+        try
+            data = await callApi "tinkoffNewPayment", {
+                order: @props.order,
+            }
+            if not data.paymentUrl
+                throw "Error"
+        catch e
+            console.log e
+            @setState
+                error: true
+                loading: false
+            return
+        @setState
+            error: false
+            loading: false
+        open(data.paymentUrl, '_blank').focus()
+
+
+    render: () ->
+        canSubmit = @props.canSubmit
+        amount = @props.amount
+        <div>
+            {@state.loading && <Loader /> }
+            {!@state.loading &&
+                <form onSubmit={@pay}>
+                    <FieldGroup
+                        id="amount"
+                        label={LangRaw("payment_sum", @props.lang)}
+                        type="text"
+                        value={amount}
+                        disabled/>
+                    {@state.error && <Alert bsStyle="danger">
+                        {LangRaw("unknown_error", @props.lang)}
+                    </Alert>}
+                    <p>{LangRaw("you_agree_to_oferta", @props.lang)}</p>
+                    <Button type="submit" bsStyle="primary">
+                        {LangRaw("do_pay", @props.lang)}
+                    </Button>
+                    {LangRaw("payment_official_tinkoff", @props.lang)}
+                </form>
+            }
+        </div>
+
 evocaOptions =
     urls: (props) ->
         evocaPreData: "evocaPreData"
@@ -369,10 +430,12 @@ class PaymentSelector extends React.Component
                 setField={@setField}
                 state={@state}>
                     {"tinkoff" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoff")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)}</Radio>}
+                    {"tinkoffNew" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "tinkoffNew")} className="lead">{LangRaw("pay_with_russian_card", @props.lang)} (new)</Radio>}
                     {"unitpay" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "unitpay")} className="lead">{LangRaw("pay_with_foreign_card", @props.lang)}</Radio>}
                     {"evoca" in @props.providers && <Radio name="provider" onChange={(e) => @setField("provider", "evoca")} className="lead">{LangRaw("pay_with_foreign_card_evoca", @props.lang)}</Radio>}
             </FieldGroup>}
             {@state.provider == "tinkoff" && <TinkoffPayment {@props...}/> }
+            {@state.provider == "tinkoffNew" && <TinkoffNewPayment {@props...}/> }
             {@state.provider == "unitpay" && <UnitpayPayment {@props...}/> }
             {@state.provider == "evoca" && <EvocaPayment {@props...}/> }
         </div>
@@ -414,7 +477,7 @@ class Payment extends React.Component
                 canSubmit = false
                 providers = ["unitpay"]
         ###
-        providers = ["tinkoff"]
+        providers = ["tinkoffNew"]
         if @props.myUser?.paidTill
             paidTill = moment(@props.myUser.paidTill).utc().format("YYYYMMDD")
             now = moment().utc().format("DDHH")
