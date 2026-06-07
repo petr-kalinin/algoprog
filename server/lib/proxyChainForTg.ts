@@ -10,7 +10,7 @@ export function chooseRandom<T>(x: T[] | undefined) {
     return x[Math.floor(Math.random() * x.length)]
 }
 
-const BOT_PROXIES = process.env.BOT_PROXIES.split(';')   
+const BOT_PROXIES = process.env.BOT_PROXIES?.split(';')
 
 
 export class ProxyChainManager {
