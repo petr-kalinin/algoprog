@@ -64,6 +64,11 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: TINKOFF_PASSWORD
+            - name: TINKOFF_TERMINAL_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: TINKOFF_TERMINAL_KEY
             - name: USER_AGENT
               valueFrom:
                 secretKeyRef:
