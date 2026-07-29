@@ -64,25 +64,21 @@ export class BrowserWrapper {
                     id: 1, // Note that IDs are independent between sessions.
                     method: 'Network.setUserAgentOverride',
                     params: {
-                        "userAgent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+                        "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
                         "userAgentMetadata": {
                             "brands": [
                                 {
-                                    "brand": "Not A;Brand",
-                                    "version": "99"
+                                    "brand": "Not;A=Brand",
+                                    "version": "8.0.0.0"
                                 },
                                 {
                                     "brand": "Chromium",
-                                    "version": "133"
-                                },
-                                {
-                                    "brand": "Google Chrome",
-                                    "version": "133"
+                                    "version": "150.0.7871.128"
                                 }
                             ],
-                            "fullVersion": "133.0.0.0",
-                            "platform": "Windows",
-                            "platformVersion": "10.0",
+                            "fullVersion": "150.0.7871.128",
+                            "platform": "Linux",
+                            "platformVersion": "",
                             "architecture": "x86",
                             "model": "",
                             "mobile": false
