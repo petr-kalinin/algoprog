@@ -9,6 +9,19 @@ RUN apt-get update \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Russian Trusted Root CA so Node.js (via --use-openssl-ca) accepts
+# certificates signed by it (e.g. securepay.tinkoff.ru).
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl \
+    && curl -fsSL -o /usr/local/share/ca-certificates/russian_trusted_root_ca.crt \
+       https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Tell Node.js to use the OS OpenSSL CA store (which now includes the Russian CA)
+# instead of its bundled CA bundle.
+ENV NODE_OPTIONS=--use-openssl-ca
+
+
 RUN mkdir -p /home/node/app/node_modules && \
     mkdir -p /home/node/app/.yarn/releases && \
     chown -R node:node /home/node/app
