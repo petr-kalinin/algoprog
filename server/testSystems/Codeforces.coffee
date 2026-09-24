@@ -304,8 +304,9 @@ export class LoggedCodeforcesUser
             logger.info "Logged in new CodeforcesUser ", @username, @handle
         catch e
             logger.error "Can not log in new Codeforces user #{@username}", e.message, e
-            notify "Can not log in new Codeforces user #{@username}: #{e} #{e.message}"
-            notifyDocument(await @page.content(), {filename: 'page.html', contentType: "text/html"})
+            if not e.badPassword
+                notify "Can not log in new Codeforces user #{@username}: #{e} #{e.message}"
+                notifyDocument(await @page.content(), {filename: 'page.html', contentType: "text/html"})
             try
                 await browser?.close()
             catch e
