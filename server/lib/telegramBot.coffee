@@ -12,6 +12,11 @@ import { proxyChainManager } from './proxyChainForTg'
 if TOKEN
     bot = new TelegramBot(TOKEN, {polling: true, request: { proxy: "http://localhost:1234" } })
 
+    bot.on 'polling_error', (error) ->
+        logger.error "Telegram polling error: ", error
+        if /\bstatusCode=590\b/.test(error?.message ? '')
+            proxyChainManager.changeProxy("Telegram polling proxy failed: #{error.message}")
+
     bot.on 'chat_join_request', (request) -> 
         try
             if request.chat.id == ALGOPROG_CHAT_ID
