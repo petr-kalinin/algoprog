@@ -2,7 +2,6 @@ import { Server } from 'proxy-chain'
 
 import logger from '../log'
 
-
 export function chooseRandom<T>(x: T[] | undefined) {
     if (!x) {
         return undefined
