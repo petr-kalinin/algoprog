@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-user
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+data:
+  Corefile: |
+    # The default upstream returns a Cloudflare address (8.6.112.0) whose
+    # TCP connections time out from this cluster. Google DNS currently
+    # returns reachable addresses for these application dependencies.
+    # Use the managed cluster's user configuration so upgrades preserve it.
+    ipify.org:53 informatics.msk.ru:53 codeforces.com:53 {
+      errors
+      cache 30
+      forward . tls://8.8.8.8 tls://8.8.4.4 {
+        tls_servername dns.google
+      }
+    }
