@@ -4,7 +4,7 @@ import newsItem from "../lib/newsItem"
 export default allNews = () ->
     return news([
         newsItem("Канал новостей алгопрога", String.raw"""
-            Напоминаю про существование канала новостей алгопрога в телеграм: <a href=\"https://t.me/algoprog_news\">@algoprog_news</a>,
+            Напоминаю про существование канала новостей алгопрога в телеграм: <a href="https://t.me/algoprog_news">@algoprog_news</a>,
             там я публикую новости и изменения в работе сайта.
             (Если ссылка на t.me заблокирована, просто в телеграмме поищите канал «algoprog_news».)
         """),
