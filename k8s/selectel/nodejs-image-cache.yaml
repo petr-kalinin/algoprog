@@ -1,0 +1,31 @@
+# Pull the next app image before the Recreate rollout stops the serving pod.
+# Override the image command so this pod never starts the app's background jobs.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nodejs-image-cache
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: nodejs-image-cache
+  template:
+    metadata:
+      labels:
+        app: nodejs-image-cache
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
+      containers:
+        - name: image-cache
+          image: ghcr.io/petr-kalinin/algoprog:6a8e70f7ffd584dea2aab4bee2ec2cd787184e9d
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sleep", "infinity"]
+          resources:
+            requests:
+              cpu: 1m
+              memory: 8Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

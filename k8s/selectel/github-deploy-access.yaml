@@ -1,0 +1,87 @@
+# Each GitHub repository receives its own token and can update only its app.
+# The token Secrets are empty here; Kubernetes populates their data after apply.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: github-algoprog-deployer
+  namespace: default
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: github-algoprog-deployer
+  namespace: default
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    resourceNames: [nodejs]
+    verbs: [get, list, watch, patch]
+  - apiGroups: [apps]
+    resources: [daemonsets]
+    resourceNames: [nodejs-image-cache]
+    verbs: [get, list, watch, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: github-algoprog-deployer
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: github-algoprog-deployer
+subjects:
+  - kind: ServiceAccount
+    name: github-algoprog-deployer
+    namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-algoprog-deployer-token
+  namespace: default
+  annotations:
+    kubernetes.io/service-account.name: github-algoprog-deployer
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: github-notes-deployer
+  namespace: default
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: github-notes-deployer
+  namespace: default
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    resourceNames: [progtexts2]
+    verbs: [get, list, watch, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: github-notes-deployer
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: github-notes-deployer
+subjects:
+  - kind: ServiceAccount
+    name: github-notes-deployer
+    namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-notes-deployer-token
+  namespace: default
+  annotations:
+    kubernetes.io/service-account.name: github-notes-deployer
+type: kubernetes.io/service-account-token
