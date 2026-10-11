@@ -19,7 +19,7 @@ spec:
         - name: dockerconfigjson-github-com
       containers:
         - name: image-cache
-          image: ghcr.io/petr-kalinin/algoprog:6a8e70f7ffd584dea2aab4bee2ec2cd787184e9d
+          image: ghcr.io/petr-kalinin/algoprog:23adfc8943a836d64e7dae18e9123ef9703e3ccf
           imagePullPolicy: IfNotPresent
           command: ["/bin/sleep", "infinity"]
           resources:

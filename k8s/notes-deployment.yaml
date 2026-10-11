@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: progtexts2
-          image: docker.io/petrkalinin/progtexts2-master@sha256:b4b5605cb239b25eb44cdc5b381e86a204a3cc7ea6cd4b0f335db50753e44eec
+          image: docker.io/petrkalinin/progtexts2-master:ca8fb2a2c84907d6d4ad06720a0fdcade5c93b6e-2c8bac4d3248d1403122ce2b6cd46d9bbbe317f1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

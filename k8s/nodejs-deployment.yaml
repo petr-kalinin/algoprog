@@ -1,3 +1,4 @@
+# Main app deployment on Selectel. GitHub Actions updates the image after each build.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -10,7 +11,8 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: nodejs
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       creationTimestamp: null
@@ -184,7 +186,7 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: BOT_PROXIES
-          image: ghcr.io/petr-kalinin/algoprog:master-latest
+          image: ghcr.io/petr-kalinin/algoprog:23adfc8943a836d64e7dae18e9123ef9703e3ccf
           imagePullPolicy: "Always"
           name: nodejs
           ports:
@@ -202,6 +204,6 @@ spec:
               path: /api/ping
               port: 3000
             initialDelaySeconds: 5
-            periodSeconds: 2        
+            periodSeconds: 2
       restartPolicy: Always
 status: {}

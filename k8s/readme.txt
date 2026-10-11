@@ -1,1 +1,0 @@
-Ref: https://github.com/Azure/k8s-set-context

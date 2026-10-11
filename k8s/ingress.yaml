@@ -3,101 +3,80 @@ kind: Ingress
 metadata:
   name: algoprog-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/issuer: "letsencrypt-prod"
+    cert-manager.io/issuer: letsencrypt-prod
 spec:
+  ingressClassName: traefik
   tls:
-  - hosts:
-    - test.algoprog.ru
-    - www.algoprog.ru
-    - algoprog.ru
-    - algoprog.org
-    - www.algoprog.org
-    - notes.algoprog.ru
-    - notes.algoprog.org
-    secretName: test-tls
-  - hosts:
-    - %fve%
-    - www.%fve%
-    secretName: fve-tls
+    - hosts:
+        - algoprog.ru
+        - www.algoprog.ru
+      secretName: algoprog-ru-tls
+    - hosts:
+        - algoprog.org
+        - www.algoprog.org
+      secretName: algoprog-org-tls
+    - hosts:
+        - notes.algoprog.ru
+        - notes.algoprog.org
+      secretName: algoprog-notes-tls
   rules:
-  - host: algoprog.ru
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs
-            port:
-              number: 3000
-  - host: www.algoprog.ru
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs
-            port:
-              number: 3000
-  - host: algoprog.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs
-            port:
-              number: 3000
-  - host: www.algoprog.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs
-            port:
-              number: 3000
-  - host: notes.algoprog.ru
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: progtexts2
-            port:
-              number: 80
-  - host: notes.algoprog.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: progtexts2
-            port:
-              number: 80
-  - host: %fve%
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: fve
-            port:
-              number: 4000
-  - host: www.%fve%
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: fve
-            port:
-              number: 4000
+    - host: algoprog.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nodejs
+                port:
+                  number: 3000
+    - host: www.algoprog.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nodejs
+                port:
+                  number: 3000
+    - host: algoprog.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nodejs
+                port:
+                  number: 3000
+    - host: www.algoprog.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nodejs
+                port:
+                  number: 3000
+    - host: notes.algoprog.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: progtexts2
+                port:
+                  number: 80
+    - host: notes.algoprog.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: progtexts2
+                port:
+                  number: 80

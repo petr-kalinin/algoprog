@@ -1,3 +1,5 @@
+# Temporary, private MongoDB instance for restoring the complete archive.
+# Apply k8s/db-deployment.yaml after restore to enable authentication.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,21 +23,10 @@ spec:
         - name: db
           image: mongo:4.1.8-xenial
           args:
-            - --bind_ip_all
-            - --auth
+            - --bind_ip
+            - 127.0.0.1
             - --wiredTigerCacheSizeGB
             - "0.5"
-          env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_USER
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_PASSWORD
           ports:
             - containerPort: 27017
               name: mongo

@@ -1,13 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.23.0 (bc7d9f4f)
-  creationTimestamp: null
+  name: db
   labels:
     io.kompose.service: db
-  name: db
 spec:
   replicas: 1
   selector:
@@ -17,35 +13,40 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.23.0 (bc7d9f4f)
-      creationTimestamp: null
       labels:
         io.kompose.network/app-network: "true"
         io.kompose.service: db
     spec:
       containers:
-        - env:
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mongo-secret
-                key: MONGO_PASSWORD
-          - name: MONGO_INITDB_ROOT_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: mongo-secret
-                key: MONGO_USER
+        - name: db
           image: mongo:4.1.8-xenial
-          name: db
-          resources: {}
+          args:
+            - --bind_ip_all
+            - --auth
+            - --wiredTigerCacheSizeGB
+            - "0.5"
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_USER
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_PASSWORD
+          ports:
+            - containerPort: 27017
+              name: mongo
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
           volumeMounts:
-            - mountPath: /data/db
-              name: data
-      restartPolicy: Always
+            - name: data
+              mountPath: /data/db
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: data
-status: {}

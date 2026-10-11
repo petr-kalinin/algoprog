@@ -1,5 +1,8 @@
 name: Build and deploy algoprog to Selectel
 
+# Cluster setup and manifests are documented in k8s/README.md.
+# This workflow updates images by resource name; it does not apply manifests.
+
 on:
   push:
     branches:

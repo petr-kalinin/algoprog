@@ -1,2 +1,0 @@
-tcp: {25: "default/nodejs:1025"}
-portNamePrefix: "smtp"
