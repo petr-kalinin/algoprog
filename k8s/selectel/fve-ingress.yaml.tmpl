@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: algoprog-fve-ingress
+  annotations:
+    cert-manager.io/issuer: letsencrypt-prod
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - ${FVE_DOMAIN}
+        - www.${FVE_DOMAIN}
+      secretName: algoprog-fve-tls
+  rules:
+    - host: ${FVE_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fve
+                port:
+                  number: 4000
+    - host: www.${FVE_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fve
+                port:
+                  number: 4000

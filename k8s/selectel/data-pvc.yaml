@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+  labels:
+    io.kompose.service: data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast.kz-1
+  resources:
+    requests:
+      storage: 40Gi

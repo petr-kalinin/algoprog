@@ -1,0 +1,9 @@
+# Traefik's web and websecure entrypoints are exposed on ports 80 and 443
+# by the chart's defaults. Add the app's incoming SMTP port to the same LB.
+ports:
+  smtp:
+    port: 1025
+    exposedPort: 25
+    expose:
+      default: true
+    protocol: TCP
