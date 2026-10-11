@@ -186,7 +186,7 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: BOT_PROXIES
-          image: ghcr.io/petr-kalinin/algoprog:master-latest
+          image: ghcr.io/petr-kalinin/algoprog:6a8e70f7ffd584dea2aab4bee2ec2cd787184e9d
           imagePullPolicy: "Always"
           name: nodejs
           ports:
