@@ -9,8 +9,10 @@ spec:
   tls:
     - hosts:
         - ${FVE_DOMAIN}
-        - www.${FVE_DOMAIN}
       secretName: algoprog-fve-tls
+    - hosts:
+        - www.${FVE_DOMAIN}
+      secretName: algoprog-fve-www-tls
   rules:
     - host: ${FVE_DOMAIN}
       http:
