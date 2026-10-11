@@ -35,7 +35,8 @@ process.on 'unhandledRejection', (r) ->
     proxyChainManager.changeProxy()
 
 requireHTTPS = (req, res, next) ->
-    if !req.secure and !req.headers.host.startsWith("127.0.0.1") and req.path != '/api/ping'
+    secure = req.secure or (req.ws? and req.headers['x-forwarded-proto'] == 'wss')
+    if !secure and !req.headers.host.startsWith("127.0.0.1") and req.path != '/api/ping'
         return res.redirect 'https://' + req.headers.host + req.url
     next()
 
