@@ -10,11 +10,9 @@ spec:
   - hosts:
     - test.algoprog.ru
     - www.algoprog.ru
-    - archive.algoprog.ru
     - algoprog.ru
     - algoprog.org
     - www.algoprog.org
-    - redash.algoprog.ru
     - notes.algoprog.ru
     - notes.algoprog.org
     - algoprog.kalinin.nnov.ru
@@ -74,26 +72,6 @@ spec:
             name: nodejs
             port:
               number: 3000
-  - host: archive.algoprog.ru
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nodejs-archive
-            port:
-              number: 3000
-  - host: redash.algoprog.ru
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: redash
-            port:
-              number: 5000
   - host: notes.algoprog.ru
     http:
       paths:
