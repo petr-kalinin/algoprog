@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: progtexts2
+  labels:
+    app: progtexts2
+spec:
+  type: ClusterIP
+  selector:
+    app: progtexts2
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

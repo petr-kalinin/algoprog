@@ -13,6 +13,8 @@ scripts/standings
 k8s/*secret*
 k8s/ingress-apply.sh
 k8s/apply-ingress.sh
+k8s/selectel/apply-ingress.sh
+k8s/_botproxies.txt
 .pnp.*
 .yarn/*
 !.yarn/patches

@@ -20,9 +20,14 @@ and NodePort from the previous provider.
 
 Traefik provides HTTP, HTTPS, and incoming SMTP. Cert-manager manages the web
 certificates through the `letsencrypt-prod.yaml` Issuer. Apply `smtp-route.yaml`
-and `ingress.yaml` only after the app is healthy. The main Ingress retains the
-Notes routes to the future `progtexts2` Service. The FVE routes use a separate
-Ingress and TLS secret so their DNS cannot delay the main site's certificates.
+and `ingress.yaml` only after the app is healthy. The main Ingress routes Notes
+to the `progtexts2` Service. Apply `notes-deployment.yaml` and
+`notes-service.yaml` to serve the static bilingual site; it needs no database
+or runtime Secret. The manifest pins a known image digest for initial setup;
+the Notes GitHub Action updates the deployed image after each publish. Refresh
+the pinned digest when updating this setup manifest. The FVE routes use a
+separate Ingress and TLS secret so their DNS cannot delay the main site's
+certificates.
 Set `FVE_DOMAIN` locally and render `fve-ingress.yaml.tmpl` with `envsubst`
 before applying the rendered manifest. Keep the actual domain and rendered file
 outside the repository.
@@ -30,10 +35,7 @@ outside the repository.
 Once the main HTTP route works, point the A record for `algoprog.ru` to the
 Selectel load balancer. The main `www` and `.org` names are CNAMEs; cert-manager
 can obtain their certificates after DNS reaches Traefik. Both Notes names are
-also CNAMEs to `algoprog.ru`, so they will reach Selectel at the main cutover
-and return 503 until `progtexts2` is
-deployed. To keep Notes at the previous address temporarily, replace those
-CNAMEs with A records for that address before changing the main A record.
+also CNAMEs to `algoprog.ru`, so they reach Selectel through the main A record.
 FVE has its own A record and can be moved separately.
 
 GitHub Actions deploys algoprog and Notes after publishing their images.

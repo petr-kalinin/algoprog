@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: progtexts2
+  labels:
+    app: progtexts2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: progtexts2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: progtexts2
+    spec:
+      containers:
+        - name: progtexts2
+          image: docker.io/petrkalinin/progtexts2-master@sha256:b4b5605cb239b25eb44cdc5b381e86a204a3cc7ea6cd4b0f335db50753e44eec
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /ru/index.html
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /ru/index.html
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
