@@ -1,4 +1,4 @@
-name: "Build docked image from master branch"
+name: "Build container image from master branch"
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     steps:
       -
         name: Login to Github registry
-        uses: docker/login-action@v2 
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -26,26 +26,3 @@ jobs:
           tags: ghcr.io/petr-kalinin/algoprog:master-latest,ghcr.io/petr-kalinin/algoprog:${{ github.sha }}
           cache-from: type=registry,ref=ghcr.io/petr-kalinin/algoprog:master-latest
           cache-to: type=inline
-
-      - 
-        name: Set kubectl context
-        uses: azure/k8s-set-context@v3
-        id: setcontext
-        with:
-          method: service-account
-          k8s-url: ${{ secrets.K8S_URL }}
-          k8s-secret: ${{ secrets.K8S_SECRET }}
-          
-      - 
-        name: Checkout
-        uses: actions/checkout@v3
-
-      - 
-        name: Deploy to k8s
-        uses: Azure/k8s-deploy@v4.3
-        with:
-          manifests: |
-            k8s/nodejs-deployment.yaml
-            k8s/nodejs-service.yaml
-          images: 'ghcr.io/petr-kalinin/algoprog:${{ github.sha }}'
-          action: deploy

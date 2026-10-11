@@ -36,6 +36,6 @@ deployed. To keep Notes at the previous address temporarily, replace those
 CNAMEs with A records for that address before changing the main A record.
 FVE has its own A record and can be moved separately.
 
-The existing GitHub Actions deployment still targets the previous cluster.
-Do not push a change to `master` until its Kubernetes credentials and manifests
-are updated for Selectel.
+GitHub Actions builds and publishes the app image, but does not deploy it.
+Deploy to Selectel manually until its credentials and manifests are configured
+for an approved deployment workflow.
