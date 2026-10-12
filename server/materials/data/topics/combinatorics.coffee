@@ -21,7 +21,7 @@ export default combinatorics = () ->
                 These algorithms are not very applicable (in fact, that's why the topic is on so high a level on algoprog),
                 in most cases it's easier to write an algorithm based on recursive iteration or dynamics,
                 but it is also useful to know specific special algorithms.""")),
-            problem({testSystem: "ejudge", contest: "2001", problem: "3"}),
+            problem({testSystem: "ejudge", contest: "1016", problem: "2", id: "e2001p3"}),
             problem(194),
             problem(190),
             problem(192),

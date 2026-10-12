@@ -19,7 +19,7 @@ export default bit_operations = () ->
             problem(123),
             problem(128),
             problem(111588),
-            problem({testSystem: "ejudge", contest: "2001", problem: "4"}),
+            problem({testSystem: "ejudge", contest: "1016", problem: "3", id: "e2001p4"}),
         ], "bit_operations"),
         advancedProblems: [
             problem(111521),
