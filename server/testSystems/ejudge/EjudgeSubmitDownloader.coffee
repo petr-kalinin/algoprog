@@ -62,12 +62,14 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
     getSubmitsFromContest: () ->
         {languageMap, problemMap} = await @_getMaps()
         data = await @options.admin.download "#{@options.server}/cgi-bin/new-master?action=152", {}, "new-master"
+        #logger.info data
         data = parseCsv data, {delimiter: ";", relax_column_count: true, columns: true}
+        #logger.info JSON.stringify(data)
         results = []
         for submit in data
-            problem = problemMap[submit.Prob]
-            user = submit.User_Login
-            id = "#{@options.contest}r#{submit.Run_Id}p#{problem}"
+            problem = problemMap[submit.Problem]
+            user = submit.Login
+            id = "#{@options.contest}r#{submit.RunId}p#{problem}"
             #logger.info "Found ejudge submit #{id} #{user} #{problem}"
             if @options.ejudgeUser.trim() != user
                 #logger.info "Ignoring submit #{id} #{user} #{problem} because it is from a different user (vs #{@options.ejudgeUser})"
@@ -85,13 +87,14 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
                 user: @options.user,
                 problem: @options.problem,
                 outcome: outcome
-                language: languageMap[submit.Lang]
+                language: languageMap[submit.Language]
                 testSystemData: 
-                    runId: submit.Run_Id
+                    runId: submit.RunId
                     contest: @options.contest
                     problem: @options.ejudgeProblem
                     system: "ejudge"
             )
+        #logger.info "Results:", JSON.stringify(results)
         return results
 
     _parseRunId: (runid) ->

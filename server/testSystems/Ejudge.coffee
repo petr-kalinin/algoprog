@@ -63,7 +63,7 @@ class LoggedEjudgeUser
             logger.info "Can't log user #{@username} in. Page: #{page}"
             throw "Can't log user #{@username} in"
         sidString = page.match(/SID=([0-9a-f]+)/)
-        logger.info "Logged user #{@username} to prog #{prog}, SID=#{sidString[1]}"
+        logger.info "Logged user #{@username} to prog #{prog}, SID=#{JSON.stringify(sidString[1])}"
         @sid[prog] = sidString[1]
 
     download: (href, options, prog="new-client") ->

@@ -570,7 +570,7 @@ export default class Codeforces extends TestSystem
         logger.info "Do nothing to register user in codeforces"
 
     selfTest: () ->
-        await @_getAdmin()
+        #await @_getAdmin()
 
     downloadProblem: (options, label) ->
         locale = 
