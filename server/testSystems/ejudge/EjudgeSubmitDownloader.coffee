@@ -25,7 +25,7 @@ export default class EjudgeSubmitDownloader extends TestSystemSubmitDownloader
     STATUS_MAP:
         PR: "OK"
         OK: "OK"
-        AC: "AC"
+        AC: "OK"
         IG: "IG"
         WA: "WA"
         PT: "WS"
