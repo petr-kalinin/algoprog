@@ -23,8 +23,8 @@ export default dp_sbory = () ->
             problem(24),
             problem(571),
             problem(78),
-            problem({testSystem: "ejudge", contest: "3001", problem: "2"}),
-            problem({testSystem: "ejudge", contest: "3001", problem: "1"}),
+            problem({testSystem: "ejudge", contest: "1016", problem: "5", id: "e3001p2"}),
+            problem({testSystem: "ejudge", contest: "1016", problem: "4", id: "e3001p1"}),
         ], "dp_sbory"),
         count: 0
     }
