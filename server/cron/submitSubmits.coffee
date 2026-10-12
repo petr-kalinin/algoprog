@@ -59,13 +59,14 @@ submitToTestSystem = (submit, submitProcess) ->
 
     testSystem = getTestSystem(submit.testSystemData.system)
     registeredUser = await RegisteredUser.findByKeyWithPassword(submit.user)
+    problem = await Problem.findById(submit.problem)
     try
         try
             logger.info "Try submitWithObject"
             language = LANGUAGES[submit.language][submit.testSystemData.system]
             if not language
                 throw "Unknown language id"
-            await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language, testSystemData: submit.testSystemData})
+            await testSystem.submitWithObject(registeredUser, submit.problem, {source: submit.sourceRaw, language, testSystemData: problem.testSystemData})
             await sleep(1000)
         finally
             await downloadSubmits.runForUserAndProblem(registeredUser.userKey(), submit.problem, onNewSubmit)
