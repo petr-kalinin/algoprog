@@ -12,11 +12,11 @@ export default strings = () ->
         [label(ruen(
              "<a href=\"https://notes.algoprog.ru/python_basics/4_strings.html\">Теория по символам и строкам</a>",
              "<a href=\"https://notes.algoprog.ru/en/python_basics/4_strings.html\">Theory on characters and strings</a>")),
-            problem({testSystem: "ejudge", contest: "3007", problem: "1", id: "102"}),
-            problem({testSystem: "ejudge", contest: "3007", problem: "2", id: "103"}),
-            problem({testSystem: "ejudge", contest: "3007", problem: "3", id: "105"}),
-            problem({testSystem: "ejudge", contest: "3007", problem: "4", id: "106"}),
-            problem({testSystem: "ejudge", contest: "3007", problem: "5", id: "108"}),
+            problem({testSystem: "ejudge", contest: "1005", problem: "1", id: "102"}),
+            problem({testSystem: "ejudge", contest: "1005", problem: "2", id: "103"}),
+            problem({testSystem: "ejudge", contest: "1005", problem: "3", id: "105"}),
+            problem({testSystem: "ejudge", contest: "1005", problem: "4", id: "106"}),
+            problem({testSystem: "ejudge", contest: "1005", problem: "5", id: "108"}),
         ], "strings"),
         advancedTopics: [
             contest(ruen(

@@ -12,12 +12,12 @@ export default floats =  () ->
         [label(ruen(
              "<a href=\"https://notes.algoprog.ru/python_basics/5_float.html\">Теория по вещественным числам (в основном про питон, но читать всем независимо от языка!)</a>",
              "<a href=\"https://notes.algoprog.ru/en/python_basics/5_float.html\">Theory on real numbers (mostly about python, but must-read regardless of language!)</a>")),
-            problem({testSystem: "ejudge", contest: "3008", problem: "1", id: "74"}),
-            problem({testSystem: "ejudge", contest: "3008", problem: "2", id: "3612"}),
-            problem({testSystem: "ejudge", contest: "3008", problem: "3", id: "596"}),
-            problem({testSystem: "ejudge", contest: "3008", problem: "4", id: "597"}),
-            problem({testSystem: "ejudge", contest: "3008", problem: "5", id: "595"}),
-            problem({testSystem: "ejudge", contest: "3008", problem: "6", id: "120"}),
+            problem({testSystem: "ejudge", contest: "1006", problem: "1", id: "74"}),
+            problem({testSystem: "ejudge", contest: "1006", problem: "2", id: "3612"}),
+            problem({testSystem: "ejudge", contest: "1006", problem: "3", id: "596"}),
+            problem({testSystem: "ejudge", contest: "1006", problem: "4", id: "597"}),
+            problem({testSystem: "ejudge", contest: "1006", problem: "5", id: "595"}),
+            problem({testSystem: "ejudge", contest: "1006", problem: "6", id: "120"}),
         ], "floats"),
         advancedTopics: [
             label(ruen(
@@ -31,8 +31,8 @@ export default floats =  () ->
                 problem({testSystem: "ejudge", contest: "3014", problem: "3", id: "3614"}),
                 problem({testSystem: "ejudge", contest: "3014", problem: "4", id: "3622"}),
                 
-                problem({testSystem: "ejudge", contest: "3008", problem: "1", id: "74"}),
-                problem({testSystem: "ejudge", contest: "3008", problem: "5", id: "595"}),
+                problem({testSystem: "ejudge", contest: "1006", problem: "1", id: "74"}),
+                problem({testSystem: "ejudge", contest: "1006", problem: "5", id: "595"}),
             ])
         ]
     }

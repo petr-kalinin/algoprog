@@ -181,11 +181,11 @@ export default ifs = () ->
                 "")),
                 # TODO: en
                 #"<a href=\"https://blog.algoprog.ru/do-not-check-limits/\">It is not necessary to check whether the restrictions from the condition are met</a>")),
-            problem({testSystem: "ejudge", contest: "3004", problem: "1", id: "292"}),
-            problem({testSystem: "ejudge", contest: "3004", problem: "2", id: "293"}),
-            problem({testSystem: "ejudge", contest: "3004", problem: "3", id: "2959"}),
-            problem({testSystem: "ejudge", contest: "3004", problem: "4", id: "294"}),
-            problem({testSystem: "ejudge", contest: "3004", problem: "5", id: "253"}),
+            problem({testSystem: "ejudge", contest: "1002", problem: "1", id: "292"}),
+            problem({testSystem: "ejudge", contest: "1002", problem: "2", id: "293"}),
+            problem({testSystem: "ejudge", contest: "1002", problem: "3", id: "2959"}),
+            problem({testSystem: "ejudge", contest: "1002", problem: "4", id: "294"}),
+            problem({testSystem: "ejudge", contest: "1002", problem: "5", id: "253"}),
         ], "ifs"),
         advancedTopics: [
             contest(ruen(
