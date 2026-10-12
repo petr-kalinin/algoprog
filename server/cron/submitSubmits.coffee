@@ -1,5 +1,6 @@
 iconv = require('iconv-lite')
 
+import Problem from '../models/problem'
 import Result from '../models/result'
 import SubmitProcess from '../models/SubmitProcess'
 import Submit from '../models/submit'
