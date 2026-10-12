@@ -191,15 +191,15 @@ export default ifs = () ->
             contest(ruen(
                 "Продвинутые задачи на условный оператор: в них запрещено пользоваться циклами и массивами",
                 "Advanced problems on conditional operator: it is forbidden to use loops and arrays here"), [
-                problem({testSystem: "ejudge", contest: "3010", problem: "1", id: "297"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "2", id: "255"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "3", id: "258"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "4", id: "38"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "5", id: "264"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "6", id: "235"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "7", id: "303", onlyForLabel: [""]}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "8", id: "481"}),
-                problem({testSystem: "ejudge", contest: "3010", problem: "9", id: "234"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "1", id: "297"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "2", id: "255"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "3", id: "258"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "4", id: "38"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "5", id: "264"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "6", id: "235"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "7", id: "303", onlyForLabel: [""]}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "8", id: "481"}),
+                problem({testSystem: "ejudge", contest: "1008", problem: "9", id: "234"}),
             ]),
             module15986()            
         ]

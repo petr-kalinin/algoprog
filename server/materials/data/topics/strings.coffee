@@ -22,13 +22,13 @@ export default strings = () ->
             contest(ruen(
                 "Продвинутые задачи на строки",
                 "Advanced problems on strings"), [
-                problem({testSystem: "ejudge", contest: "3013", problem: "1", id: "107"}),
-                problem({testSystem: "ejudge", contest: "3013", problem: "2", id: "109"}),
-                problem({testSystem: "ejudge", contest: "3013", problem: "3", id: "112"}),
-                problem({testSystem: "ejudge", contest: "3013", problem: "4", id: "111"}),
-                problem({testSystem: "ejudge", contest: "3013", problem: "5", id: "723"}),
-                problem({testSystem: "ejudge", contest: "3013", problem: "6", id: "792"}),
-                problem({testSystem: "ejudge", contest: "3013", problem: "7", id: "1667"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "1", id: "107"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "2", id: "109"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "3", id: "112"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "4", id: "111"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "5", id: "723"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "6", id: "792"}),
+                problem({testSystem: "ejudge", contest: "1011", problem: "7", id: "1667"}),
             ])
         ]
     }

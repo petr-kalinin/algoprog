@@ -26,10 +26,10 @@ export default arrays = () ->
             contest(ruen(
                 "Продвинутые задачи на массивы",
                 "Advanced problems on arrays"), [
-                problem({testSystem: "ejudge", contest: "3012", problem: "1", id: "1456"}),
-                problem({testSystem: "ejudge", contest: "3012", problem: "2", id: "1228"}),
-                problem({testSystem: "ejudge", contest: "3012", problem: "3", id: "201"}),
-                problem({testSystem: "ejudge", contest: "3012", problem: "4", id: "1568"}),
+                problem({testSystem: "ejudge", contest: "1010", problem: "1", id: "1456"}),
+                problem({testSystem: "ejudge", contest: "1010", problem: "2", id: "1228"}),
+                problem({testSystem: "ejudge", contest: "1010", problem: "3", id: "201"}),
+                problem({testSystem: "ejudge", contest: "1010", problem: "4", id: "1568"}),
             ])
         ]
     }
