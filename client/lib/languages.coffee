@@ -8,7 +8,7 @@ export default LANGUAGES = {
     "Free Pascal 3": {
         extensions: ["pas"],
         informatics: 1,
-        ejudge: 1
+        # ejudge: 1
         codeforces: 4
     },
     "PascalABC 3": {
