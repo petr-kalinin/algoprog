@@ -143,7 +143,7 @@ function clickButton() {
 let currentProxy: string | undefined = undefined
 function changeProxy() {
     currentProxy = chooseRandom(process.env.BOT_PROXIES?.split(';'))
-    console.log(`Changed CF proxy to ${currentProxy}`)
+    notify(`Changed CF proxy to ${currentProxy}`)
 }
 changeProxy()
 
