@@ -180,6 +180,7 @@ export class LoggedCodeforcesUser {
     static async getUser(username: string, password: string): Promise<LoggedCodeforcesUser> {
         const key = username + "::" + password
         const cached = userCache[key]
+        let isCreatingNew = false
         if (!cached || Date.now() - cached.loginTime.getTime() > 1000 * 60 * 60) {
             logger.info("Creating new CodeforcesUser ", username)
             const newUser = new LoggedCodeforcesUser(username, password)
@@ -187,13 +188,16 @@ export class LoggedCodeforcesUser {
                 user: newUser,
                 loginTime: new Date()
             }
-            await newUser.login()
-            logger.info("Created new CodeforcesUser ", username)
+            newUser.login()
+            isCreatingNew = true
         }
         try {
             await userCache[key].user.loginPromise
+            logger.info("Created or got from cache new CodeforcesUser ", username)
         } catch (e) {
-            delete userCache[key]
+            if (isCreatingNew) {
+                delete userCache[key]
+            }
             throw e
         }
         return userCache[key].user
@@ -203,7 +207,10 @@ export class LoggedCodeforcesUser {
         this.username = username
         this.password = password
         this.jar = request.jar()
-        this.loginPromise = new Promise((resolve) => this.loginResolve = resolve)
+        this.loginPromise = new Promise((resolve, reject) => {
+            this.loginResolve = resolve
+            this.loginReject = reject
+        })
     }
 
     ca76fd64a80cdc35(value: string): number {
@@ -288,58 +295,62 @@ export class LoggedCodeforcesUser {
     }
 
     private async loginImpl() {
-        logger.info("Logging in new CodeforcesUser ", this.username)
-        if (!this.username) {
-            throw "Unknown user"
-        }
-        const browser = await BrowserWrapper.create("", puppeteer as any, "cf", currentProxy, console.log)
         try {
-            this.page = await PageWrapper.Create(puppeteer as any, browser, "", console.log)
-            await this.page.goto(`${BASE_URL}/enter`)
-            await this.solveCaptcha()
-            await this.page.goto(`${BASE_URL}/enter`)
-            await sleep(BEFORE_PASS_TIMEOUT)
-            await this.page.type("#handleOrEmail", this.username)
-            console.log(`---4 ${this.username}`)
-            await this.page.type("#password", this.password)
-            console.log(`---5 ${this.username}`)
-            console.log(`---6 ${this.username}`)
-            await this.page.click(".submit")
-            console.log(`---7 ${this.username}`)
-            await sleep(BEFORE_PASS_TIMEOUT)
-            console.log(`---8 ${this.username}`)
-            const cookies = await this.page.cookies()
-            console.log(`---9 ${this.username}`)
-            for (const cookie of cookies) {
-                this.jar.setCookie(`${cookie.name}=${cookie.value}`, BASE_URL)
+            logger.info("Logging in new CodeforcesUser ", this.username)
+            if (!this.username) {
+                throw "Unknown user"
             }
-            const content = await this.page.content()
-            console.log(`---10 ${this.username}`)
-            if (content.includes("Некорректный хэндл/email или пароль") || content.includes("Invalid handle/email or password")) {
-                throw {badPassword: true}
-            }
-            console.log(`---11 ${this.username}`)
-            this.handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(content)?.[1]
-            console.log(`---12 ${this.username}`)
-            if (!this.handle) {
-                notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
-                throw `Can not log user ${this.username} in: no handle in response`
-            }
-            logger.info("Logged in new CodeforcesUser ", this.username, this.handle)
-            this.loginResolve()
-        } catch (e: any) {
-            this.loginReject()
-            logger.error(`Can not log in new Codeforces user ${this.username}`, e.message, e)
-            if (!e.badPassword) {
-                notify(`Can not log in new Codeforces user ${this.username}: ${e} ${e.message}`)
-                notifyDocument(await this.page.content(), {filename: 'page.html', contentType: "text/html"})
-                changeProxy()
-            }
+            const browser = await BrowserWrapper.create("", puppeteer as any, "cf", currentProxy, console.log)
             try {
-                await browser?.close()
-            } catch {
-                logger.error("Can't close browser")
+                this.page = await PageWrapper.Create(puppeteer as any, browser, "", console.log)
+                await this.page.goto(`${BASE_URL}/enter`)
+                await this.solveCaptcha()
+                await this.page.goto(`${BASE_URL}/enter`)
+                await sleep(BEFORE_PASS_TIMEOUT)
+                await this.page.type("#handleOrEmail", this.username)
+                console.log(`---4 ${this.username}`)
+                await this.page.type("#password", this.password)
+                console.log(`---5 ${this.username}`)
+                console.log(`---6 ${this.username}`)
+                await this.page.click(".submit")
+                console.log(`---7 ${this.username}`)
+                await sleep(BEFORE_PASS_TIMEOUT)
+                console.log(`---8 ${this.username}`)
+                const cookies = await this.page.cookies()
+                console.log(`---9 ${this.username}`)
+                for (const cookie of cookies) {
+                    this.jar.setCookie(`${cookie.name}=${cookie.value}`, BASE_URL)
+                }
+                const content = await this.page.content()
+                console.log(`---10 ${this.username}`)
+                if (content.includes("Некорректный хэндл/email или пароль") || content.includes("Invalid handle/email or password")) {
+                    throw {badPassword: true}
+                }
+                console.log(`---11 ${this.username}`)
+                this.handle = /<a href="\/profile\/([^"]*)">[^<]*<\/a>\s*|\s*<a href="\/[^"]*\/logout">/.exec(content)?.[1]
+                console.log(`---12 ${this.username}`)
+                if (!this.handle) {
+                    notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
+                    throw `Can not log user ${this.username} in: no handle in response`
+                }
+                logger.info("Logged in new CodeforcesUser ", this.username, this.handle)
+                this.loginResolve()
+            } catch (e: any) {
+                logger.error(`Can not log in new Codeforces user ${this.username}`, e.message, e)
+                if (!e.badPassword) {
+                    notify(`Can not log in new Codeforces user ${this.username}: ${e} ${e.message}`)
+                    notifyDocument(await this.page.content(), {filename: 'page.html', contentType: "text/html"})
+                    changeProxy()
+                }
+                try {
+                    await browser?.close()
+                } catch {
+                    logger.error("Can't close browser")
+                }
+                throw e
             }
+        } catch (e) {
+            this.loginReject()
             throw e
         }
     }
