@@ -378,7 +378,18 @@ export class LoggedCodeforcesUser {
             : `${BASE_URL}/problemset/problem/${contest}/${problem}`
 
         await this.page.goto(href)
-        await this.solveCaptcha()
+        try {
+            await this.solveCaptcha()
+        } catch (e) {
+            const content0 = await this.page.content()
+            const screenshot0 = await this.page.screenshot({ type: "png" })
+            notify("Can't submit to CF")
+            notifyDocument(content0, { filename: 'page0.html', contentType: "text/html" })
+            notifyDocument(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
+            logger.error("Can't submit")
+            changeProxy()
+            throw e
+        }
         const content0 = await this.page.content()
         const screenshot0 = await this.page.screenshot({type: "png"})
         if (this.page.url() != href) {
