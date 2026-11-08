@@ -13,7 +13,7 @@ const BOT_PROXIES = process.env.BOT_PROXIES?.split(';')
 
 
 export class ProxyChainManager {
-    private allProxies: string[]
+    private allProxies: string[] | undefined
     private currentProxy: string
     private connectionCount: number
     private proxyChainServer: Server

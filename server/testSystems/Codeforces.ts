@@ -270,7 +270,8 @@ export class LoggedCodeforcesUser {
         if (!this.username) {
             throw "Unknown user"
         }
-        const browser = await BrowserWrapper.create("", puppeteer as any, "cf", 0, console.log)
+        const proxy = process.env.BOT_PROXIES?.split(';')[0]
+        const browser = await BrowserWrapper.create("", puppeteer as any, "cf", proxy, console.log)
         try {
             this.page = await PageWrapper.Create(puppeteer as any, browser, "", console.log)
             await this.page.goto(`${BASE_URL}/enter`)

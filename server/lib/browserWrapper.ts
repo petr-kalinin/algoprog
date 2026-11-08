@@ -1,10 +1,11 @@
+// @ts-ignore
 import {WebSocket} from 'ws'
 import * as fs from 'fs/promises'
 
 // @ts-ignore
 import sleep from './sleep'
 
-import { Browser, CDPSession, Frame, FrameAddScriptTagOptions, FrameWaitForFunctionOptions, GoToOptions, HTTPRequest, HTTPResponse, Page, Protocol, Puppeteer, PuppeteerNode, WaitForOptions, WaitForSelectorOptions } from 'puppeteer'
+import { Browser, FrameWaitForFunctionOptions, GoToOptions, HTTPRequest, HTTPResponse, Page, Puppeteer, PuppeteerNode, WaitForOptions, WaitForSelectorOptions } from 'puppeteer'
 
 export class BrowserWrapper {
     id!: string
@@ -17,6 +18,8 @@ export class BrowserWrapper {
     addToLog!: (msg: string) => void
     finished: boolean = false
     ws!: WebSocket
+    authData: { proxy: string, username: string, password: string }[] = []
+
 
     private constructor() {}
 
@@ -98,7 +101,7 @@ export class BrowserWrapper {
         //this.addToLog(`resp=${JSON.stringify(targetsResponse)}`)
     }
 
-    static async create(id: string, puppeteer: PuppeteerNode, dirPrefix: string, priority: number, addToLog: (msg: string) => void ) {
+    static async create(id: string, puppeteer: PuppeteerNode, dirPrefix: string, proxy: string | undefined, addToLog: (msg: string) => void ) {
         const wrapper = new BrowserWrapper()
         wrapper.id = id
         wrapper.addToLog = addToLog
@@ -106,36 +109,51 @@ export class BrowserWrapper {
         const rnd = (Math.random() + 1).toString(36).substring(2)
         wrapper.userDataDir = `/tmp/${dirPrefix}_${rnd}`
         addToLog(`userDataDir=${wrapper.userDataDir}`)
+        const args = [
+            '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+            '--disable-gpu',
+            '--no-sandbox',
+            '--disk-cache-dir=/dev/null',
+            `--user-data-dir=${wrapper.userDataDir}`,
+            '--disable-client-side-phishing-detection',
+            '--disable-component-extensions-with-background-pages',
+            '--disable-default-apps',
+            '--disable-features=InterestFeedContentSuggestions',
+            '--no-default-browser-check',
+            '--no-first-run',
+            '--ash-no-nudges',
+            '--aggressive-cache-discard',
+            '--disable-back-forward-cache',
+            '--disable-features=IsolateOrigins',
+            '--disable-background-networking',
+            '--disable-component-update',
+            '--disable-features=OptimizationHints',
+                //'--single-process',
+        ]
+        addToLog(`proxy: ${proxy}`)
+        const proxyUrl = proxy ? new URL(proxy) : undefined
+        if (proxyUrl) {
+            args.push(`--proxy-server=${proxyUrl.origin}`)
+        }
+        addToLog(`Args: ${JSON.stringify(args)}`)
 
         wrapper.browser = await puppeteer.launch({
             headless: true,
             devtools: false,
-            args: [
-                '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-                '--disable-gpu',
-                '--no-sandbox',
-                '--disk-cache-dir=/dev/null',
-                `--user-data-dir=${wrapper.userDataDir}`,
-                '--disable-client-side-phishing-detection',
-                '--disable-component-extensions-with-background-pages',
-                '--disable-default-apps',
-                '--disable-features=InterestFeedContentSuggestions',
-                '--no-default-browser-check',
-                '--no-first-run',
-                '--ash-no-nudges',
-                '--aggressive-cache-discard',
-                '--disable-back-forward-cache',
-                '--disable-features=IsolateOrigins',
-                '--disable-background-networking',
-                '--disable-component-update',
-                '--disable-features=OptimizationHints',
-                //'--single-process',
-            ],
+            args,
             targetFilter: (target: any) => !!target.url,
         })
         wrapper.pid = wrapper.browser.process()?.pid
         wrapper.addToLog(`Launched browser pid=${wrapper.pid}`)
         wrapper.hideUserAgent()
+        if (proxyUrl && (proxyUrl.username || proxyUrl.password)) {
+            wrapper.authData.push({
+                proxy: proxyUrl.origin,
+                username: decodeURIComponent(proxyUrl.username),
+                password: decodeURIComponent(proxyUrl.password),
+            })
+            addToLog(`Saved proxy authentication data for ${proxyUrl.origin}`)
+        }
         return wrapper
     }
 
@@ -181,9 +199,6 @@ export class PageWrapper {
     puppeteer!: Puppeteer
     _addToLog: ((msg: string) => void) | undefined = undefined
     pid!: number
-    session!: CDPSession
-    authData: {proxy: string, username: string, password: string}[] = []
-
     private constructor() { }
 
     static async Create(puppeteer: Puppeteer, browser: BrowserWrapper, id: string, addToLog?: (msg: string) => void) {
@@ -197,6 +212,7 @@ export class PageWrapper {
             addToLog(`Will create new page, has ${(await result.browser.browser.pages()).length} pages`)
         }
         result.page = (await result.browser.browser.pages())[0]
+        await result.applyProxyAuthentication()
         if (addToLog) {
             addToLog(`Existing page url=${result.page.url()}`)
         }
@@ -252,10 +268,21 @@ export class PageWrapper {
         this.page.on('requestfailed', onRequest)
     }
 
+    private async applyProxyAuthentication() {
+        const authData = this.browser.authData[this.browser.authData.length - 1]
+        if (!authData) {
+            return
+        }
+        this.addToLog(`Applying proxy authentication for ${authData.proxy}`)
+        await this.page.authenticate({
+            username: authData.username,
+            password: authData.password,
+        })
+    }
+
     async authenticate(proxy: string, username: string, password: string) {
-        this.addToLog("authenticate")
-        this.authData.push({proxy, username, password})
-        //await this.page.authenticate(o)
+        this.browser.authData.push({proxy, username, password})
+        await this.applyProxyAuthentication()
     }
 
     async goto(url: string, options?: GoToOptions) {
@@ -378,6 +405,7 @@ export class PageWrapper {
             this.addToLog("Page not found when reconnecting, will create new page")
             this.page = await this.browser.browser.newPage()
         }
+        await this.applyProxyAuthentication()
     }
 
     keyboard() {
@@ -388,39 +416,4 @@ export class PageWrapper {
         await this.browser.close()
     }
 
-    async onRequestPaused(event: Protocol.Fetch.RequestPausedEvent) {
-        try {
-            await this.session.send('Fetch.continueRequest', {
-                requestId: event.requestId,
-            })
-        } catch (e: any) {
-            this.addToLog(`Can't continue request: ${e}`)
-        }
-    }
-
-    async onAuthRequired(event: Protocol.Fetch.AuthRequiredEvent) {
-        try {
-            const response: Protocol.Fetch.AuthChallengeResponse = {
-                response: "ProvideCredentials",
-            }
-            this.addToLog(`Has request for auth for ${event.authChallenge.origin}`)
-            for (const data of this.authData) {
-                this.addToLog(`Has auth data for ${data.proxy}`)
-                if (event.authChallenge.origin.includes(data.proxy)) {
-                    response.username = data.username
-                    response.password = data.password
-                    this.addToLog(`>>>>> will provide auth for ${event.authChallenge.origin} = ${data.proxy}`)
-                }
-            }
-            if (!response.username) {
-                this.addToLog(`>>>>> Can't find auth for ${event.authChallenge.origin}`)
-            }
-            await this.session.send('Fetch.continueWithAuth', {
-                requestId: event.requestId,
-                authChallengeResponse: response,
-            })
-        } catch (e: any) {
-            this.addToLog(`Can't provide auth: ${e}`)
-        }
-    }
 }
