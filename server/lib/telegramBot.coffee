@@ -14,7 +14,7 @@ if TOKEN
 
     bot.on 'polling_error', (error) ->
         logger.error "Telegram polling error: ", error
-        if /\bstatusCode=59\b/.test(error?.message ? '')
+        if /\bstatusCode=59/.test(error?.message ? '')
             proxyChainManager.changeProxy("Telegram polling proxy failed: #{error.message}")
 
     bot.on 'chat_join_request', (request) -> 
