@@ -380,6 +380,7 @@ export class LoggedCodeforcesUser {
         await this.page.goto(href)
         await this.solveCaptcha()
         const content0 = await this.page.content()
+        const screenshot0 = await this.page.screenshot({type: "png"})
         if (this.page.url() != href) {
             await this.page.goto(href)
             await sleep(BEFORE_PASS_TIMEOUT)
@@ -402,6 +403,7 @@ export class LoggedCodeforcesUser {
         await this.page.click(".submit")
         await this.solveCaptcha()
         const content = await this.page.content()
+        const screenshot = await this.page.screenshot({ type: "png" })
         if (content.includes("You have submitted exactly the same code before")) {
             logger.info("Submit is a duplicate")
             throw {duplicate: true}
@@ -414,6 +416,8 @@ export class LoggedCodeforcesUser {
             notify("Can't submit to CF")
             notifyDocument(content0, {filename: 'page0.html', contentType: "text/html"})
             notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
+            notifyDocument(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
+            notifyDocument(screenshot, { filename: 'screenshot.png', contentType: "image/png" })
             logger.error("Can't submit")
             changeProxy()
             throw "Can't submit"
