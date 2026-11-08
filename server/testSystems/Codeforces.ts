@@ -31,6 +31,7 @@ import RegisteredUser from '../models/registeredUser'
 import User from '../models/user'
 // @ts-ignore
 import Submit from '../models/submit'
+import { chooseRandom } from '../lib/proxyChainForTg'
 
 const TIMEOUT = 250
 const REQUESTS_LIMIT = 1
@@ -139,6 +140,13 @@ function clickButton() {
 }
 `
 
+let currentProxy: string | undefined = undefined
+function changeProxy() {
+    currentProxy = chooseRandom(process.env.BOT_PROXIES?.split(';'))
+    console.log(`Changed CF proxy to ${currentProxy}`)
+}
+changeProxy()
+
 async function addScript(page: PageWrapper) {
     for (let i = 1; ; i++) {
         const result = await page.evaluate(PAGE_SCRIPT)
@@ -237,7 +245,8 @@ export class LoggedCodeforcesUser {
         await this.page.reconnect()
         await addScript(this.page)
         let count = 0
-        while (await this.page.evaluate("needPass()") && count < 10) {
+        const MAX_COUNT = 5
+        while (await this.page.evaluate("needPass()") && count < MAX_COUNT) {
             if (await this.page.evaluate("clickButton()")) {
                 console.log("Clicked button, sleep")
                 await sleep(BEFORE_PASS_TIMEOUT)
@@ -261,7 +270,10 @@ export class LoggedCodeforcesUser {
             await addScript(this.page)
             await this.page.evaluate('removeFakeCheckbox()')
         }
-        console.log("Passed captcha")
+        if (count == MAX_COUNT) {
+            throw new Error(`Can't pass captcha`)
+        }
+        console.log(`Passed captcha, count=${count}`)
         await sleep(BEFORE_PASS_TIMEOUT)
     }
 
@@ -270,8 +282,7 @@ export class LoggedCodeforcesUser {
         if (!this.username) {
             throw "Unknown user"
         }
-        const proxy = process.env.BOT_PROXIES?.split(';')[0]
-        const browser = await BrowserWrapper.create("", puppeteer as any, "cf", proxy, console.log)
+        const browser = await BrowserWrapper.create("", puppeteer as any, "cf", currentProxy, console.log)
         try {
             this.page = await PageWrapper.Create(puppeteer as any, browser, "", console.log)
             await this.page.goto(`${BASE_URL}/enter`)
@@ -310,6 +321,7 @@ export class LoggedCodeforcesUser {
             if (!e.badPassword) {
                 notify(`Can not log in new Codeforces user ${this.username}: ${e} ${e.message}`)
                 notifyDocument(await this.page.content(), {filename: 'page.html', contentType: "text/html"})
+                changeProxy()
             }
             try {
                 await browser?.close()
@@ -392,6 +404,7 @@ export class LoggedCodeforcesUser {
             notifyDocument(content0, {filename: 'page0.html', contentType: "text/html"})
             notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
             logger.error("Can't submit")
+            changeProxy()
             throw "Can't submit"
         }
         logger.info("Apparently submitted!")
@@ -499,6 +512,7 @@ export class LoggedCodeforcesUser {
         if (count == 0) {
             notify("No submits found in CF table")
             notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
+            changeProxy()
         }
         return result
     }
