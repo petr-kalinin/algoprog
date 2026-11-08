@@ -173,6 +173,9 @@ export class LoggedCodeforcesUser {
     mutex = new Mutex()
     page!: PageWrapper
     handle?: string
+    loginPromise: Promise<void>
+    loginResolve!: () => void
+    loginReject!: () => void
 
     static async getUser(username: string, password: string): Promise<LoggedCodeforcesUser> {
         const key = username + "::" + password
@@ -180,12 +183,18 @@ export class LoggedCodeforcesUser {
         if (!cached || Date.now() - cached.loginTime.getTime() > 1000 * 60 * 60) {
             logger.info("Creating new CodeforcesUser ", username)
             const newUser = new LoggedCodeforcesUser(username, password)
-            await newUser.login()
             userCache[key] = {
                 user: newUser,
                 loginTime: new Date()
             }
+            await newUser.login()
             logger.info("Created new CodeforcesUser ", username)
+        }
+        try {
+            await userCache[key].user.loginPromise
+        } catch (e) {
+            delete userCache[key]
+            throw e
         }
         return userCache[key].user
     }
@@ -194,6 +203,7 @@ export class LoggedCodeforcesUser {
         this.username = username
         this.password = password
         this.jar = request.jar()
+        this.loginPromise = new Promise((resolve) => this.loginResolve = resolve)
     }
 
     ca76fd64a80cdc35(value: string): number {
@@ -316,7 +326,9 @@ export class LoggedCodeforcesUser {
                 throw `Can not log user ${this.username} in: no handle in response`
             }
             logger.info("Logged in new CodeforcesUser ", this.username, this.handle)
+            this.loginResolve()
         } catch (e: any) {
+            this.loginReject()
             logger.error(`Can not log in new Codeforces user ${this.username}`, e.message, e)
             if (!e.badPassword) {
                 notify(`Can not log in new Codeforces user ${this.username}: ${e} ${e.message}`)
