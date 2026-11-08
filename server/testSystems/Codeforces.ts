@@ -245,7 +245,7 @@ export class LoggedCodeforcesUser {
         await this.page.reconnect()
         await addScript(this.page)
         let count = 0
-        const MAX_COUNT = 5
+        const MAX_COUNT = 2
         while (await this.page.evaluate("needPass()") && count < MAX_COUNT) {
             if (await this.page.evaluate("clickButton()")) {
                 console.log("Clicked button, sleep")
