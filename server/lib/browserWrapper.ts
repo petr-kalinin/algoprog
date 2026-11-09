@@ -135,7 +135,7 @@ export class BrowserWrapper {
         if (proxyUrl) {
             args.push(`--proxy-server=${proxyUrl.origin}`)
         }
-        addToLog(`Args: ${JSON.stringify(args)}`)
+        addToLog(`Args: ${JSON.stringify(args)}, executable path: ${puppeteer.executablePath()}`)
 
         wrapper.browser = await puppeteer.launch({
             headless: true,
