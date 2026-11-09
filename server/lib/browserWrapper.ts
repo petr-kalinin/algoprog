@@ -306,7 +306,7 @@ export class PageWrapper {
     async screenshot(o: any) {
         this.addToLog(`screenshot(${o})`)
         try {
-            return await this.page.screenshot({...o, encoding: 'base64'})
+            return await this.page.screenshot({encoding: 'base64', fullPage: true, ...o})
         } catch (e) {
             this.addToLog("Can not make screenshot: " + e)
         }
