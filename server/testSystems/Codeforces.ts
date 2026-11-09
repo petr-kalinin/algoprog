@@ -20,7 +20,7 @@ import download, {downloadLimited} from '../lib/download'
 // @ts-ignore
 import sleep from '../lib/sleep'
 // @ts-ignore
-import {notify, notifyDocument} from '../lib/telegramBot'
+import { notify, notifyDocument, notifyDocumentBase64 } from '../lib/telegramBot'
 import {BrowserWrapper, PageWrapper} from '../lib/browserWrapper'
 
 // @ts-ignore
@@ -385,7 +385,7 @@ export class LoggedCodeforcesUser {
             const screenshot0 = await this.page.screenshot({ type: "png" })
             notify("Can't submit to CF")
             notifyDocument(content0, { filename: 'page0.html', contentType: "text/html" })
-            notifyDocument(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
+            notifyDocumentBase64(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
             logger.error("Can't submit")
             changeProxy()
             throw e
@@ -427,8 +427,8 @@ export class LoggedCodeforcesUser {
             notify("Can't submit to CF")
             notifyDocument(content0, {filename: 'page0.html', contentType: "text/html"})
             notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
-            notifyDocument(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
-            notifyDocument(screenshot, { filename: 'screenshot.png', contentType: "image/png" })
+            notifyDocumentBase64(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
+            notifyDocumentBase64(screenshot, { filename: 'screenshot.png', contentType: "image/png" })
             logger.error("Can't submit")
             changeProxy()
             throw "Can't submit"

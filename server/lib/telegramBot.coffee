@@ -63,3 +63,12 @@ export notifyDocument = (doc, fileOptions={}) ->
             logger.warn("Notify document ", doc)
     catch
         proxyChainManager.changeProxy()
+
+export notifyDocumentBase64 = (doc, fileOptions={}) ->
+    try
+        if bot
+            bot.sendDocument(ADMIN_CHAT_ID, Buffer.from(doc, 'base64'), undefined, fileOptions)
+        else
+            logger.warn("Notify document ", doc)
+    catch
+        proxyChainManager.changeProxy()
