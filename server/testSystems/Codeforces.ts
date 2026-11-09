@@ -143,7 +143,17 @@ function clickButton() {
 let currentProxy: string | undefined = undefined
 function changeProxy() {
     currentProxy = chooseRandom(process.env.BOT_PROXIES?.split(';'))
+    const oldUserCache = userCache
     userCache = {}
+    (async () => {
+        for (const key in oldUserCache) {
+            try {
+                await userCache[key].user.page.browser.close()
+            } catch (e) {
+                console.log(`Can't close browser for ${key}`)
+            }
+        }
+    })()
     notify(`Changed CF proxy to ${currentProxy}`)
 }
 changeProxy()
