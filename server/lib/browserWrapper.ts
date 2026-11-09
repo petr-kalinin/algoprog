@@ -231,7 +231,7 @@ export class PageWrapper {
             const source = location.url
                 ? ` (${location.url}${location.lineNumber === undefined ? '' : `:${location.lineNumber + 1}`}${location.columnNumber === undefined ? '' : `:${location.columnNumber + 1}`})`
                 : ''
-            this.addToLog(`[page console.${message.type()}] ${message.text()}${source}`)
+            this.addToLog(`[page console.${message.type()}] ${message.text()} ${source}`)
         })
     }
 
