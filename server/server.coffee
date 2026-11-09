@@ -28,7 +28,6 @@ import logger from './log'
 import configurePassport from './passport'
 import { proxyChainManager } from './lib/proxyChainForTg'
 
-
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
