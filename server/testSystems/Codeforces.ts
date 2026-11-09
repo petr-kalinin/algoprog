@@ -339,10 +339,12 @@ export class LoggedCodeforcesUser {
             }
             logger.info("Logged in new CodeforcesUser ", this.username, this.handle)
         } catch (e: any) {
+            const screenshot = await this.page.screenshot({type: "png"})
             logger.error(`Can not log in new Codeforces user ${this.username}`, e.message, e)
             if (!e.badPassword) {
                 notify(`Can not log in new Codeforces user ${this.username}: ${e} ${e.message}`)
                 notifyDocument(await this.page.content(), {filename: 'page.html', contentType: "text/html"})
+                notifyDocumentBase64(screenshot, {filename: 'screenshot.png', contentType: "image/png"})
                 changeProxy()
             }
             try {
