@@ -212,6 +212,7 @@ export class PageWrapper {
             addToLog(`Will create new page, has ${(await result.browser.browser.pages()).length} pages`)
         }
         result.page = (await result.browser.browser.pages())[0]
+        result.forwardConsoleMessages()
         await result.applyProxyAuthentication()
         if (addToLog) {
             addToLog(`Existing page url=${result.page.url()}`)
@@ -222,6 +223,16 @@ export class PageWrapper {
 
     addToLog(msg: string) {
         console.log(">>> " + msg)
+    }
+
+    private forwardConsoleMessages() {
+        this.page.on('console', message => {
+            const location = message.location()
+            const source = location.url
+                ? ` (${location.url}${location.lineNumber === undefined ? '' : `:${location.lineNumber + 1}`}${location.columnNumber === undefined ? '' : `:${location.columnNumber + 1}`})`
+                : ''
+            this.addToLog(`[page console.${message.type()}] ${message.text()}${source}`)
+        })
     }
 
     async $(selector: string) {
@@ -405,6 +416,7 @@ export class PageWrapper {
             this.addToLog("Page not found when reconnecting, will create new page")
             this.page = await this.browser.browser.newPage()
         }
+        this.forwardConsoleMessages()
         await this.applyProxyAuthentication()
     }
 
