@@ -144,7 +144,7 @@ let currentProxy: string | undefined = undefined
 function changeProxy() {
     currentProxy = chooseRandom(process.env.BOT_PROXIES?.split(';'))
     const oldUserCache = userCache
-    userCache = {}
+    userCache = {};
     (async () => {
         for (const key in oldUserCache) {
             try {
