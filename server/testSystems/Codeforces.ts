@@ -69,7 +69,7 @@ interface SubmitData {
     testSystemData: CodeforcesProblemData
 }
 
-const userCache: Record<string, UserCacheEntry> = {}
+let userCache: Record<string, UserCacheEntry> = {}
 const obfuscatedNames = ["length", "charCodeAt", "floor"] as const
 
 function toNumbers(value: string): number[] {
@@ -143,6 +143,7 @@ function clickButton() {
 let currentProxy: string | undefined = undefined
 function changeProxy() {
     currentProxy = chooseRandom(process.env.BOT_PROXIES?.split(';'))
+    userCache = {}
     notify(`Changed CF proxy to ${currentProxy}`)
 }
 changeProxy()
