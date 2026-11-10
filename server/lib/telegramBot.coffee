@@ -63,7 +63,7 @@ export notifyDocument = (doc, fileOptions={}) ->
             bot.sendDocument(ADMIN_CHAT_ID, Buffer.from(doc, 'utf8'), undefined, fileOptions)
         else
             await fs.writeFile('./files_tmp/' + fileOptions.filename, doc)
-            logger.warn("Notify document ", doc)
+            logger.warn("Notify document ", doc.substring(0, 100))
     catch
         proxyChainManager.changeProxy()
 
@@ -73,6 +73,6 @@ export notifyDocumentBase64 = (doc, fileOptions={}) ->
             bot.sendDocument(ADMIN_CHAT_ID, Buffer.from(doc, 'base64'), undefined, fileOptions)
         else
             await fs.writeFile('./files_tmp/' + fileOptions.filename, Buffer.from(doc, 'base64'))
-            logger.warn("Notify document ", fileOptions.filename, doc)
+            logger.warn("Notify document ", fileOptions.filename, doc.substring(0, 100))
     catch
         proxyChainManager.changeProxy()

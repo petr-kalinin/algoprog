@@ -138,6 +138,26 @@ function clickButton() {
     }
     return false
 }
+function turnstileSuccess(token) {
+    console.log("Turnstile success!")
+    const els = document.getElementsByName("turnstileToken")
+    for (const el of els) {
+        el.value = token
+    }
+}
+function resetTurnstile() {
+    const el = getTurnstile()
+    const dict = {}
+    for (const attr of el.attributes) { 
+        if (attr.name.startsWith('data-')) {
+            key = attr.name.substring(5)
+            dict[key] = attr.value
+        }
+    }
+    console.log("Reset turnstile, dict=", dict)
+    dict.callback = turnstileSuccess
+    turnstile.render('.cf-turnstile', dict)
+}
 `
 
 let currentProxy: string | undefined = undefined
@@ -260,6 +280,13 @@ export class LoggedCodeforcesUser {
     }
 
     private async solveCaptcha() {
+        await addScript(this.page)
+        if (await this.page.evaluate("(!!getTurnstile() && !alreadyPassed())")) {
+            console.log("Need to reset turnstile")
+            await this.page.evaluate("resetTurnstile()")
+        } else {
+            console.log("Don't need to reset turnstile")
+        }
         console.log("Will disconnect and sleep")
         await this.page.disconnect()
         await sleep(BEFORE_PASS_TIMEOUT)
