@@ -291,6 +291,10 @@ export class LoggedCodeforcesUser {
             await this.page.reconnect()
             await addScript(this.page)
             await this.page.evaluate('removeFakeCheckbox()')
+            const getH2 = await this.page.evaluate("!!getH2()")
+            const getTurnstile = await this.page.evaluate("!!getTurnstile()")
+            const alreadyPassed = await this.page.evaluate("alreadyPassed()")
+            console.log(`Current captcha status = getH2=${getH2} getTurnstile=${getTurnstile} alreadyPassed=${alreadyPassed}`)
         }
         if (count == MAX_COUNT) {
             throw new Error(`Can't pass captcha`)
