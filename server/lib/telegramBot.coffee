@@ -1,3 +1,5 @@
+import * as fs from 'fs/promises'
+
 TelegramBot = require('node-telegram-bot-api')
 
 TOKEN = process.env["TELEGRAM_TOKEN"]
@@ -60,6 +62,7 @@ export notifyDocument = (doc, fileOptions={}) ->
         if bot
             bot.sendDocument(ADMIN_CHAT_ID, Buffer.from(doc, 'utf8'), undefined, fileOptions)
         else
+            await fs.writeFile('./files_tmp/' + fileOptions.filename, doc)
             logger.warn("Notify document ", doc)
     catch
         proxyChainManager.changeProxy()
@@ -69,6 +72,7 @@ export notifyDocumentBase64 = (doc, fileOptions={}) ->
         if bot
             bot.sendDocument(ADMIN_CHAT_ID, Buffer.from(doc, 'base64'), undefined, fileOptions)
         else
-            logger.warn("Notify document ", doc)
+            await fs.writeFile('./files_tmp/' + fileOptions.filename, Buffer.from(doc, 'base64'))
+            logger.warn("Notify document ", fileOptions.filename, doc)
     catch
         proxyChainManager.changeProxy()

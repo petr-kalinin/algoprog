@@ -275,7 +275,6 @@ export class LoggedCodeforcesUser {
                 await addScript(this.page)
                 continue
             }
-            count++
             console.log(`Need pass, count=${count}`)
             await this.page.evaluate('addFakeCheckboxAndClick()')
             await this.page.type("#foobar", "aa")
@@ -294,8 +293,11 @@ export class LoggedCodeforcesUser {
             const getH2 = await this.page.evaluate("!!getH2()")
             const getTurnstile = await this.page.evaluate("!!getTurnstile()")
             const alreadyPassed = await this.page.evaluate("alreadyPassed()")
-            console.log(`Current captcha status = getH2=${getH2} getTurnstile=${getTurnstile} alreadyPassed=${alreadyPassed}`)
+            console.log(`Current captcha status = getH2=${getH2} getTurnstile=${getTurnstile} alreadyPassed=${alreadyPassed} count=${count}`)
+            count++
         }
+        const netlog = await fs.readFile(this.page.browser.netlogFile)
+        notifyDocument(netlog, { filename: 'netlog.json', contentType: "application/json" })
         if (count == MAX_COUNT) {
             throw new Error(`Can't pass captcha`)
         }

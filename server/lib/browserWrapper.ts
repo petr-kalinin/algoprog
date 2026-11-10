@@ -108,8 +108,11 @@ export class BrowserWrapper {
         wrapper.dirPrefix = dirPrefix
         const rnd = (Math.random() + 1).toString(36).substring(2)
         wrapper.userDataDir = `/tmp/${dirPrefix}_${rnd}`
-        addToLog(`userDataDir=${wrapper.userDataDir}`)
+        wrapper.netlogFile = `/tmp/${dirPrefix}_${rnd}_netlog.json`
+        addToLog(`userDataDir=${wrapper.userDataDir}, netlog file=${wrapper.netlogFile}`)
         const args = [
+            //'--net-log-capture-mode=Everything',
+            `--log-net-log=${wrapper.netlogFile}`,
             '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
             '--disable-gpu',
             '--no-sandbox',
