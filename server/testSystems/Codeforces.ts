@@ -157,6 +157,7 @@ function resetTurnstile() {
     console.log("Reset turnstile, dict=", JSON.stringify(dict))
     dict.callback = turnstileSuccess
     turnstile.render('.cf-turnstile', dict)
+    turnstile1.render2('.cf-turnstile', dict)
 }
 `
 
