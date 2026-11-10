@@ -287,6 +287,7 @@ export class LoggedCodeforcesUser {
         } else {
             console.log("Don't need to reset turnstile")
         }
+        await sleep(10 * 1000)
         console.log("Will disconnect and sleep")
         await this.page.disconnect()
         await sleep(BEFORE_PASS_TIMEOUT)
