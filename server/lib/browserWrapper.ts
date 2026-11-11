@@ -237,6 +237,11 @@ export class PageWrapper {
                 : ''
             this.addToLog(`[page console.${message.type()}] ${message.text()} ${source}`)
         })
+            .on('pageerror', ({ message }) => console.log('Page error: ', message))
+            .on('response', response =>
+                console.log(`Response: ${response.status()} ${response.url()}`))
+            .on('requestfailed', request =>
+                console.log(`Request failed: ${request.failure()?.errorText} ${request.url()}`))        
     }
 
     async $(selector: string) {

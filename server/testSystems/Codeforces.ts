@@ -156,11 +156,12 @@ function resetTurnstile() {
     }
     console.log("Reset turnstile, dict=", JSON.stringify(dict))
     dict.callback = turnstileSuccess
-    console.log("===1")
+    dict['error-callback'] = function(errorCode) {
+        console.log('Challenge Error:', errorCode);
+    },
+    console.error("===1")
     turnstile.render('.cf-turnstile', dict)
     console.log("===2")
-    turnstile1.render2('.cf-turnstile', dict)
-    console.log("===3")
 }
 `
 
@@ -431,13 +432,13 @@ export class LoggedCodeforcesUser {
         await this.page.goto(href)
         try {
             await this.solveCaptcha()
-        } catch (e) {
+        } catch (e: any) {
             const content0 = await this.page.content()
             const screenshot0 = await this.page.screenshot({ type: "png" })
-            notify("Can't submit to CF")
+            notify("Can't submit to CF: " + e.message)
             notifyDocument(content0, { filename: 'page0.html', contentType: "text/html" })
             notifyDocumentBase64(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
-            logger.error("Can't submit")
+            logger.error("Can't submit: " + e.message)
             changeProxy()
             throw e
         }
@@ -475,14 +476,14 @@ export class LoggedCodeforcesUser {
             throw {contactMe: true}
         }
         if (!content.includes("Contest status") && !content.includes(" My Submissions") && !content.includes("Last submissions")) {
-            notify("Can't submit to CF")
+            notify("Can't submit to CF: no contest status page")
             notifyDocument(content0, {filename: 'page0.html', contentType: "text/html"})
             notifyDocument(content, {filename: 'page.html', contentType: "text/html"})
             notifyDocumentBase64(screenshot0, { filename: 'screenshot0.png', contentType: "image/png" })
             notifyDocumentBase64(screenshot, { filename: 'screenshot.png', contentType: "image/png" })
-            logger.error("Can't submit")
+            logger.error("Can't submit: no contest status page")
             changeProxy()
-            throw "Can't submit"
+            throw "Can't submit: no contest status page"
         }
         logger.info("Apparently submitted!")
     }
