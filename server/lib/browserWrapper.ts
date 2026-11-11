@@ -237,7 +237,19 @@ export class PageWrapper {
                 : ''
             this.addToLog(`[page console.${message.type()}] ${message.text()} ${source}`)
         })
-            .on('pageerror', ({ message }) => console.log('Page error: ', message))
+            .on('pageerror', error => {
+                const stackLines = error.stack?.split('\n') ?? []
+                const location = stackLines
+                    .slice(1)
+                    .map(line => line.trim().replace(/^at\s+/, ''))
+                    .find(line => /:\d+:\d+\)?$/.test(line))
+
+                this.addToLog(
+                    `[page error] ${error.name}: ${error.message}; ` +
+                    `page=${this.page.url()}; location=${location ?? 'unknown'}` +
+                    (error.stack ? `\n${error.stack}` : '')
+                )
+            })
             .on('response', response =>
                 console.log(`Response: ${response.status()} ${response.url()}`))
             .on('requestfailed', request =>
