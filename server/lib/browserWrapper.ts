@@ -230,6 +230,7 @@ export class PageWrapper {
 
     private forwardConsoleMessages() {
         this.page.on('console', message => {
+            this.addToLog("<<< console message:")
             const location = message.location()
             const source = location.url
                 ? ` (${location.url}${location.lineNumber === undefined ? '' : `:${location.lineNumber + 1}`}${location.columnNumber === undefined ? '' : `:${location.columnNumber + 1}`})`
