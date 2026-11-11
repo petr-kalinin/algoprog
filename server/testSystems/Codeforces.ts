@@ -146,6 +146,16 @@ function turnstileSuccess(token) {
     }
 }
 function resetTurnstile() {
+    while (true) {
+        const els = document.getElementsByName("tagName")
+        if (els.length == 0) {
+            break
+        }
+        console.log("Have tagName elements: ", els.length)
+        for (const el of els) { 
+            el.remove() 
+        }
+    }
     const el = getTurnstile()
     const dict = {}
     for (const attr of el.attributes) { 
@@ -158,7 +168,7 @@ function resetTurnstile() {
     dict.callback = turnstileSuccess
     dict['error-callback'] = function(errorCode) {
         console.log('Challenge Error:', errorCode);
-    },
+    }
     console.error("===1")
     turnstile.render('.cf-turnstile', dict)
     console.log("===2")
