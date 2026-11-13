@@ -229,7 +229,7 @@ export class PageWrapper {
     }
 
     private forwardConsoleMessages() {
-        this.page.on('console', message => {
+        /*this.page.on('console', message => {
             this.addToLog("<<< console message:")
             const location = message.location()
             const source = location.url
@@ -253,7 +253,7 @@ export class PageWrapper {
             .on('response', response =>
                 console.log(`Response: ${response.status()} ${response.url()}`))
             .on('requestfailed', request =>
-                console.log(`Request failed: ${request.failure()?.errorText} ${request.url()}`))        
+                console.log(`Request failed: ${request.failure()?.errorText} ${request.url()}`))        */
     }
 
     async $(selector: string) {
