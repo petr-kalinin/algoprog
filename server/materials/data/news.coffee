@@ -4,7 +4,7 @@ import newsItem from "../lib/newsItem"
 export default allNews = () ->
     return news([
         newsItem("Добавлены правила использования нейросетей/ИИ", String.raw"""
-            Добавлены <a href='http://localhost:3000/material/about_llm'>правила использования нейросетей/ИИ/LLM.</a>
+            Добавлены <a href='/material/about_llm'>правила использования нейросетей/ИИ/LLM.</a>
         """),
 
         newsItem("Канал новостей алгопрога", String.raw"""
