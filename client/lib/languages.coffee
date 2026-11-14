@@ -5,18 +5,6 @@ export default LANGUAGES = {
         ejudge: 23
         codeforces: 31
     },
-    "Free Pascal 3": {
-        extensions: ["pas"],
-        informatics: 1,
-        # ejudge: 1
-        codeforces: 4
-    },
-    "PascalABC 3": {
-        extensions: [],
-        informatics: 30,
-        ejudge: null
-        codeforces: 51
-    },
     "GNU C++": {
         extensions: ["cpp"],
         informatics: 3,
@@ -64,12 +52,6 @@ export default LANGUAGES = {
         informatics: 22,
         ejudge: 22
         codeforces: 6
-    },
-    "Python 2": {
-        extensions: [],
-        informatics: 23,
-        ejudge: 13
-        codeforces: 7
     },
     "Perl": {
         extensions: ["pl"],
