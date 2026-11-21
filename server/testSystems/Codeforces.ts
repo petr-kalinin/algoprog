@@ -334,6 +334,8 @@ export class LoggedCodeforcesUser {
             console.log("Will reconnect and check")
             await this.page.reconnect()
             await addScript(this.page)
+            const screenshot2 = await this.page.screenshot({ type: "png" })
+            notifyDocumentBase64(screenshot2, { filename: 'screenshot_af_c.png', contentType: "image/png" })
             await this.page.evaluate('removeFakeCheckbox()')
             const getH2 = await this.page.evaluate("!!getH2()")
             const getTurnstile = await this.page.evaluate("!!getTurnstile()")
