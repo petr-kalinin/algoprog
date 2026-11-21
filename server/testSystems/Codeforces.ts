@@ -326,6 +326,8 @@ export class LoggedCodeforcesUser {
             await sleep(100)
             await this.page.keyboard().press('Space')
             console.log("Done click")
+            const screenshot = await this.page.screenshot({ type: "png" })
+            notifyDocumentBase64(screenshot, { filename: 'screenshot_mid_c.png', contentType: "image/png" })
             console.log("Will disconnect and sleep")
             await this.page.disconnect()
             await sleep(BEFORE_PASS_TIMEOUT)
@@ -672,6 +674,7 @@ export default class Codeforces extends TestSystem {
     }
 
     async selfTest() {
+        //this.getAdmin()
         // Intentionally empty.
     }
 
